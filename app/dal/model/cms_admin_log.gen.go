@@ -19,6 +19,7 @@ type CmsAdminLog struct {
 	Path       string    `gorm:"column:path;type:varchar(128)" json:"path" form:"path"`                                     // 请求路径
 	Query      string    `gorm:"column:query;type:varchar(128)" json:"query" form:"query"`                                  // 请求参数
 	StatusCode string    `gorm:"column:status_code;type:varchar(64)" json:"status_code" form:"status_code"`                 // 响应状态码
+	IP         string    `gorm:"column:ip;type:varchar(64)" json:"ip" form:"ip"`                                            // IP地址
 	CreateTime time.Time `gorm:"column:create_time;type:int unsigned;autoCreateTime" json:"create_time" form:"create_time"` // 记录时间
 }
 

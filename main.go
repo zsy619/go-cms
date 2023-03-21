@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/gob"
 	"fmt"
 	"log"
 	"os"
@@ -11,10 +12,10 @@ import (
 	"github.com/beego/beego/v2/server/web/session"
 	"github.com/kardianos/service"
 
+	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/controllers"
 	_ "haedu.gov.cn/cms/controllers"
 	_ "haedu.gov.cn/cms/controllers/admin"
-	"haedu.gov.cn/cms/global"
 )
 
 var globalSessions *session.Manager
@@ -147,6 +148,8 @@ func (p *Program) run() { // 此处编写具体的服务代码
 
 	web.ErrorController(&controllers.ErrorController{})
 
+	gob.Register(&model.CmsAdmin{})
+
 	// https://beego.me/docs/mvc/controller/config.md
 	web.BConfig.RouterCaseSensitive = false                    // 是否路由忽略大小写匹配，默认是 true，区分大小写
 	web.BConfig.WebConfig.Session.SessionOn = true             // 开启Session模块
@@ -162,14 +165,14 @@ func (p *Program) run() { // 此处编写具体的服务代码
 	web.BConfig.WebConfig.DirectoryIndex = true                // 是否开启静态目录的列表显示，默认不显示目录，返回 403 错误。
 
 	// beego过滤器 https://beego.me/docs/mvc/controller/filter.md
-	if global.AllowLogin {
-		// sso过滤器
-		web.InsertFilter("/admin/*", web.BeforeRouter, controllers.FilterAdmin)
-		// web.InsertFilter("/mkt/*", web.BeforeRouter, routers.FilterSSO)
-		// web.InsertFilter("/cms/*", web.BeforeRouter, routers.FilterSSO)
-		// // mobile过滤器
-		// web.InsertFilter("/mobile/x/*", web.BeforeRouter, routers.FilterMobile)
-	}
+	// if global.AllowLogin {
+	// admin过滤器
+	web.InsertFilter("/admin/*", web.BeforeRouter, controllers.FilterAdmin)
+	// web.InsertFilter("/mkt/*", web.BeforeRouter, routers.FilterSSO)
+	// web.InsertFilter("/cms/*", web.BeforeRouter, routers.FilterSSO)
+	// // mobile过滤器
+	// web.InsertFilter("/mobile/x/*", web.BeforeRouter, routers.FilterMobile)
+	// }
 
 	web.Run()
 }

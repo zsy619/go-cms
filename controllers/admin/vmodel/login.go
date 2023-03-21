@@ -1,4 +1,4 @@
-package model
+package vmodel
 
 type LoginResult struct {
 	Code    int    `json:"code"`

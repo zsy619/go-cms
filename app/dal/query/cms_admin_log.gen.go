@@ -34,6 +34,7 @@ func newCmsAdminLog(db *gorm.DB, opts ...gen.DOOption) cmsAdminLog {
 	_cmsAdminLog.Path = field.NewString(tableName, "path")
 	_cmsAdminLog.Query = field.NewString(tableName, "query")
 	_cmsAdminLog.StatusCode = field.NewString(tableName, "status_code")
+	_cmsAdminLog.IP = field.NewString(tableName, "ip")
 	_cmsAdminLog.CreateTime = field.NewTime(tableName, "create_time")
 
 	_cmsAdminLog.fillFieldMap()
@@ -52,6 +53,7 @@ type cmsAdminLog struct {
 	Path       field.String // 请求路径
 	Query      field.String // 请求参数
 	StatusCode field.String // 响应状态码
+	IP         field.String // IP地址
 	CreateTime field.Time   // 记录时间
 
 	fieldMap map[string]field.Expr
@@ -76,6 +78,7 @@ func (c *cmsAdminLog) updateTableName(table string) *cmsAdminLog {
 	c.Path = field.NewString(table, "path")
 	c.Query = field.NewString(table, "query")
 	c.StatusCode = field.NewString(table, "status_code")
+	c.IP = field.NewString(table, "ip")
 	c.CreateTime = field.NewTime(table, "create_time")
 
 	c.fillFieldMap()
@@ -101,7 +104,7 @@ func (c *cmsAdminLog) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *cmsAdminLog) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 8)
+	c.fieldMap = make(map[string]field.Expr, 9)
 	c.fieldMap["log_id"] = c.LogID
 	c.fieldMap["user_id"] = c.UserID
 	c.fieldMap["user_name"] = c.UserName
@@ -109,6 +112,7 @@ func (c *cmsAdminLog) fillFieldMap() {
 	c.fieldMap["path"] = c.Path
 	c.fieldMap["query"] = c.Query
 	c.fieldMap["status_code"] = c.StatusCode
+	c.fieldMap["ip"] = c.IP
 	c.fieldMap["create_time"] = c.CreateTime
 }
 

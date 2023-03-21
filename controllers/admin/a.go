@@ -11,4 +11,9 @@ var (
 
 func init() {
 	web.Router("cms/admin/login", &LoginController{}, "*:AdminLogin")
+	web.Router("cms/admin/login/verify", &LoginController{}, "*:AdminLoginVerify")
+
+	web.Router("admin/index", &IndexController{}, "*:Index")
+	web.Router("admin/site/index", &SiteController{}, "*:Index")
+	web.Router("admin/site/channel", &SiteController{}, "*:Channel")
 }

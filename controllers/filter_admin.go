@@ -9,7 +9,8 @@ import (
 
 // FilterAdmin 过滤器登录判断
 var FilterAdmin = func(ctx *context.Context) {
-	_, ok := ctx.Input.Session("a.id").(string)
+	_, ok := ctx.Input.Session("adminId").(int64)
+	// fmt.Println("filter_admin.go: FilterAdmin: ctx.Input.Session(\"adminId\").(int64) = ", ctx.Input.Session("adminId").(int64))
 	fmt.Println(ctx.Request.RequestURI)
 	ok2 := strings.Contains(ctx.Request.RequestURI, "/cms/admin/login")
 	if !ok && !ok2 {
