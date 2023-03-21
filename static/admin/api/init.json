@@ -188,13 +188,13 @@
                             "target": "_self",
                             "child": [
                                 {
-                                    "title": "链接管理",
+                                    "title": "公众平台管理",
                                     "href": "/admin/weixin/index",
                                     "icon": "fa fa-dashboard",
                                     "target": "_self"
                                 },
                                 {
-                                    "title": "链接类别",
+                                    "title": "自定义菜单",
                                     "href": "/admin/weixin/menu",
                                     "icon": "fa fa-dashboard",
                                     "target": "_self"
