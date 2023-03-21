@@ -28,13 +28,25 @@ func newCmsAdmin(db *gorm.DB, opts ...gen.DOOption) cmsAdmin {
 	tableName := _cmsAdmin.cmsAdminDo.TableName()
 	_cmsAdmin.ALL = field.NewAsterisk(tableName)
 	_cmsAdmin.UserID = field.NewInt64(tableName, "user_id")
-	_cmsAdmin.UserName = field.NewString(tableName, "user_name")
-	_cmsAdmin.Password = field.NewString(tableName, "password")
 	_cmsAdmin.RealName = field.NewString(tableName, "real_name")
+	_cmsAdmin.NickName = field.NewString(tableName, "nick_name")
+	_cmsAdmin.IDCard = field.NewString(tableName, "id_card")
+	_cmsAdmin.Sex = field.NewInt32(tableName, "sex")
+	_cmsAdmin.UserName = field.NewString(tableName, "user_name")
+	_cmsAdmin.UserNumber = field.NewString(tableName, "user_number")
+	_cmsAdmin.Password = field.NewString(tableName, "password")
+	_cmsAdmin.PasswordSalt = field.NewString(tableName, "password_salt")
+	_cmsAdmin.PasswordFormat = field.NewInt32(tableName, "password_format")
+	_cmsAdmin.Email = field.NewString(tableName, "email")
+	_cmsAdmin.Telphone = field.NewString(tableName, "telphone")
+	_cmsAdmin.Mobile = field.NewString(tableName, "mobile")
+	_cmsAdmin.MobilePin = field.NewString(tableName, "mobile_pin")
+	_cmsAdmin.UserType = field.NewInt32(tableName, "user_type")
+	_cmsAdmin.Enabled = field.NewBool(tableName, "enabled")
+	_cmsAdmin.Remark = field.NewString(tableName, "remark")
 	_cmsAdmin.Avatar = field.NewString(tableName, "avatar")
 	_cmsAdmin.IsAudit = field.NewInt32(tableName, "is_audit")
 	_cmsAdmin.SortID = field.NewInt32(tableName, "sort_id")
-	_cmsAdmin.Remark = field.NewString(tableName, "remark")
 	_cmsAdmin.LastIP = field.NewString(tableName, "last_ip")
 	_cmsAdmin.LastTime = field.NewString(tableName, "last_time")
 	_cmsAdmin.IsDeleted = field.NewBool(tableName, "is_deleted")
@@ -49,20 +61,32 @@ func newCmsAdmin(db *gorm.DB, opts ...gen.DOOption) cmsAdmin {
 type cmsAdmin struct {
 	cmsAdminDo cmsAdminDo
 
-	ALL        field.Asterisk
-	UserID     field.Int64  // 主键
-	UserName   field.String // 账号
-	Password   field.String // 密码
-	RealName   field.String // 姓名
-	Avatar     field.String // 会员头像
-	IsAudit    field.Int32  // 启用发布审核
-	SortID     field.Int32  // 排序
-	Remark     field.String // 备注说明
-	LastIP     field.String // 最后登录IP
-	LastTime   field.String // 最后登录时间
-	IsDeleted  field.Bool   // 删除标识
-	CreateTime field.Time   // 创建时间
-	UpdateTime field.Time   // 修改时间
+	ALL            field.Asterisk
+	UserID         field.Int64  // 主键
+	RealName       field.String // 姓名
+	NickName       field.String // 昵称
+	IDCard         field.String // 身份证号
+	Sex            field.Int32  // 性别（0 男 1 女）
+	UserName       field.String // 用户名(登录名),保持系统唯一
+	UserNumber     field.String // 其他唯一特征标识：如教职工的工号或学生的学号
+	Password       field.String // 密码
+	PasswordSalt   field.String // 密码的Hash值
+	PasswordFormat field.Int32  // 密码加密格式 0不加密 1默认加密 2MD5类型
+	Email          field.String // 邮箱
+	Telphone       field.String // 固话
+	Mobile         field.String // 手机号码
+	MobilePin      field.String // 手机PIN码
+	UserType       field.Int32  // 用户类别(0管理员），根据业务定义其他类型（如1学生2教职工；如1商家2卖家）
+	Enabled        field.Bool   // 是否可用:1可用 0禁用
+	Remark         field.String // 描述
+	Avatar         field.String // 会员头像
+	IsAudit        field.Int32  // 启用发布审核
+	SortID         field.Int32  // 排序
+	LastIP         field.String // 最后登录IP
+	LastTime       field.String // 最后登录时间
+	IsDeleted      field.Bool   // 删除标识
+	CreateTime     field.Time   // 创建时间
+	UpdateTime     field.Time   // 修改时间
 
 	fieldMap map[string]field.Expr
 }
@@ -80,13 +104,25 @@ func (c cmsAdmin) As(alias string) *cmsAdmin {
 func (c *cmsAdmin) updateTableName(table string) *cmsAdmin {
 	c.ALL = field.NewAsterisk(table)
 	c.UserID = field.NewInt64(table, "user_id")
-	c.UserName = field.NewString(table, "user_name")
-	c.Password = field.NewString(table, "password")
 	c.RealName = field.NewString(table, "real_name")
+	c.NickName = field.NewString(table, "nick_name")
+	c.IDCard = field.NewString(table, "id_card")
+	c.Sex = field.NewInt32(table, "sex")
+	c.UserName = field.NewString(table, "user_name")
+	c.UserNumber = field.NewString(table, "user_number")
+	c.Password = field.NewString(table, "password")
+	c.PasswordSalt = field.NewString(table, "password_salt")
+	c.PasswordFormat = field.NewInt32(table, "password_format")
+	c.Email = field.NewString(table, "email")
+	c.Telphone = field.NewString(table, "telphone")
+	c.Mobile = field.NewString(table, "mobile")
+	c.MobilePin = field.NewString(table, "mobile_pin")
+	c.UserType = field.NewInt32(table, "user_type")
+	c.Enabled = field.NewBool(table, "enabled")
+	c.Remark = field.NewString(table, "remark")
 	c.Avatar = field.NewString(table, "avatar")
 	c.IsAudit = field.NewInt32(table, "is_audit")
 	c.SortID = field.NewInt32(table, "sort_id")
-	c.Remark = field.NewString(table, "remark")
 	c.LastIP = field.NewString(table, "last_ip")
 	c.LastTime = field.NewString(table, "last_time")
 	c.IsDeleted = field.NewBool(table, "is_deleted")
@@ -114,15 +150,27 @@ func (c *cmsAdmin) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *cmsAdmin) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 13)
+	c.fieldMap = make(map[string]field.Expr, 25)
 	c.fieldMap["user_id"] = c.UserID
-	c.fieldMap["user_name"] = c.UserName
-	c.fieldMap["password"] = c.Password
 	c.fieldMap["real_name"] = c.RealName
+	c.fieldMap["nick_name"] = c.NickName
+	c.fieldMap["id_card"] = c.IDCard
+	c.fieldMap["sex"] = c.Sex
+	c.fieldMap["user_name"] = c.UserName
+	c.fieldMap["user_number"] = c.UserNumber
+	c.fieldMap["password"] = c.Password
+	c.fieldMap["password_salt"] = c.PasswordSalt
+	c.fieldMap["password_format"] = c.PasswordFormat
+	c.fieldMap["email"] = c.Email
+	c.fieldMap["telphone"] = c.Telphone
+	c.fieldMap["mobile"] = c.Mobile
+	c.fieldMap["mobile_pin"] = c.MobilePin
+	c.fieldMap["user_type"] = c.UserType
+	c.fieldMap["enabled"] = c.Enabled
+	c.fieldMap["remark"] = c.Remark
 	c.fieldMap["avatar"] = c.Avatar
 	c.fieldMap["is_audit"] = c.IsAudit
 	c.fieldMap["sort_id"] = c.SortID
-	c.fieldMap["remark"] = c.Remark
 	c.fieldMap["last_ip"] = c.LastIP
 	c.fieldMap["last_time"] = c.LastTime
 	c.fieldMap["is_deleted"] = c.IsDeleted
