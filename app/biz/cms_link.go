@@ -1,0 +1,119 @@
+package biz
+
+import (
+	"errors"
+	"time"
+
+	"haedu.gov.cn/cms/app/dal/model"
+	"haedu.gov.cn/cms/app/dal/query"
+)
+
+type CmsLink struct{}
+
+func NewCmsLink() *CmsLink {
+	return &CmsLink{}
+}
+
+// CategoryPaginate 分页查询
+func (this *CmsLink) CategoryPaginate(page, limit int, siteId, channelId int64, title, callIndex string) ([]*model.CmsLinkCategory, int64, error) {
+	mdl, do := query.CmsLinkCategoryDo()
+	if title != "" {
+		do = do.Where(mdl.Title.Like("%" + title + "%"))
+	}
+	if callIndex != "" {
+		do = do.Where(mdl.CallIndex.Like("%" + callIndex + "%"))
+	}
+	return do.FindByPage((page-1)*limit, limit)
+}
+
+// CategoryFind 获取
+func (this *CmsLink) CategoryFind(categoryId int64) (*model.CmsLinkCategory, error) {
+	mdl, do := query.CmsLinkCategoryDo()
+	return do.Where(mdl.CategoryID.Eq(categoryId)).First()
+}
+
+// CategorySave 保存或更新
+func (this *CmsLink) CategorySave(input *model.CmsLinkCategory) error {
+	mdl, do := query.CmsLinkCategoryDo()
+	if input.CallIndex != "" {
+		if count, _ := do.Where(mdl.CategoryID.Neq(input.CategoryID), mdl.CallIndex.Eq(input.CallIndex)).Count(); count > 0 {
+			return errors.New("调用别名重复")
+		}
+	}
+	var err error
+	input.UpdateTime = time.Now()
+	if input.CategoryID <= 0 {
+		input.CreateTime = time.Now()
+		err = do.Create(input)
+	} else {
+		_, err = do.Updates(input)
+	}
+	return err
+}
+
+// CategoryDestroy 删除
+func (this *CmsLink) CategoryDestroy(categoryId int64) error {
+	mdl, do := query.CmsLinkCategoryDo()
+	if _, err := do.Where(mdl.CategoryID.Eq(categoryId)).Delete(); err != nil {
+		return err
+	}
+	return this.LinkDestroyByCategoryId(categoryId)
+}
+
+// LinkDestroyByCategoryId 删除
+func (this *CmsLink) LinkDestroyByCategoryId(categoryId int64) error {
+	mdl, do := query.CmsLinkDo()
+	if _, err := do.Where(mdl.CategoryID.Eq(categoryId)).Delete(); err != nil {
+		return err
+	}
+	return nil
+}
+
+// LinkPaginate 分页查询
+func (this *CmsLink) LinkPaginate(page, limit int, siteId, channelId, categoryId int64, title, callIndex string) ([]*model.CmsLink, int64, error) {
+	mdl, do := query.CmsLinkDo()
+	if categoryId > 0 {
+		do = do.Where(mdl.CategoryID.Eq(categoryId))
+	}
+	if title != "" {
+		do = do.Where(mdl.Title.Like("%" + title + "%"))
+	}
+	if callIndex != "" {
+		do = do.Where(mdl.CallIndex.Like("%" + callIndex + "%"))
+	}
+	return do.FindByPage((page-1)*limit, limit)
+}
+
+// LinkFind 获取
+func (this *CmsLink) LinkFind(linkId int64) (*model.CmsLink, error) {
+	mdl, do := query.CmsLinkDo()
+	return do.Where(mdl.LinkID.Eq(linkId)).First()
+}
+
+// LinkSave 保存或更新
+func (this *CmsLink) LinkSave(input *model.CmsLink) error {
+	mdl, do := query.CmsLinkDo()
+	if input.CallIndex != "" {
+		if count, _ := do.Where(mdl.LinkID.Neq(input.LinkID), mdl.CallIndex.Eq(input.CallIndex)).Count(); count > 0 {
+			return errors.New("调用别名重复")
+		}
+	}
+	var err error
+	input.UpdateTime = time.Now()
+	if input.LinkID <= 0 {
+		input.CreateTime = time.Now()
+		err = do.Create(input)
+	} else {
+		_, err = do.Updates(input)
+	}
+	return err
+}
+
+// LinkDestroy 删除
+func (this *CmsLink) LinkDestroy(linkId int64) error {
+	mdl, do := query.CmsLinkDo()
+	if _, err := do.Where(mdl.LinkID.Eq(linkId)).Delete(); err != nil {
+		return err
+	}
+	return nil
+}

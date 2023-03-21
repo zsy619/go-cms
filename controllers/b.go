@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/beego/beego/v2/server/web"
+	"haedu.gov.cn/cms/app/lib"
 	"haedu.gov.cn/tools/xphp"
 )
 
@@ -14,6 +15,27 @@ type BaseController struct {
 
 	ControllerName string
 	ActionName     string
+}
+
+// GetPagingParameters 获取分页参数
+func (c *BaseController) GetPagingParameters() (page int, limit int) {
+	page, _ = c.GetInt("page", 1)
+	limit, _ = c.GetInt("limit", 10)
+	return
+}
+
+// JSONPaging 返回分页信息
+func (c *BaseController) JSONPaging(code lib.CodeResult, message string, data interface{}, count int64) {
+	c.Data["json"] = &lib.JSONResponsePage{
+		Count: count,
+		JSONResponse: lib.JSONResponse{
+			Code:    code,
+			Message: message,
+			Data:    data,
+		},
+	}
+	c.ServeJSON()
+	c.StopRun()
 }
 
 func (c *BaseController) Prepare() {
