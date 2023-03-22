@@ -173,8 +173,34 @@
                 return false;
             } else if (obj.event === 'delete') {
                 layer.confirm('真的删除行么', function (index) {
-                    obj.del();
-                    layer.close(index);
+                    $.ajax({
+                        type: "POST",
+                        url: "/admin/link/CategoryDestory", //提交的地址
+                        data: {
+                            "categoryId": data.category_id
+                        },
+                        async: false,
+                        beforeSend: function () { //当一个Ajax请求开始时触发
+                            this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+                        },
+                        error: function (request) {  //失败的话
+                        },
+                        success: function (data) {  //成功
+                            if (data.code == CodeSuccess) {
+                                layer.msg("提交成功", { icon: 1, time: 1000 }, function () {
+                                    $('button[lay-filter="data-search-btn"]').click();
+                                });
+                            } else {
+                                layer.msg(data.msg, { icon: 2, time: 1000 });
+                            }
+                        },
+                        complete: function () {
+                            layer.closeAll();
+                            layer.close(this.layerIndex);
+                        },
+                    });
+                    // obj.del();
+                    // layer.close(index);
                 });
             }
         });

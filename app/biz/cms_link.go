@@ -62,8 +62,8 @@ func (this *CmsLink) CategorySaveSortId(categoryId int64, sortId int32) error {
 	return err
 }
 
-// CategoryDestroy 删除
-func (this *CmsLink) CategoryDestroy(categoryId int64) error {
+// CategoryDestory 删除
+func (this *CmsLink) CategoryDestory(categoryId int64) error {
 	mdl, do := query.CmsLinkCategoryDo()
 	if _, err := do.Where(mdl.CategoryID.Eq(categoryId)).Delete(); err != nil {
 		return err
@@ -120,8 +120,8 @@ func (this *CmsLink) LinkSave(input *model.CmsLink) error {
 	return err
 }
 
-// LinkDestroy 删除
-func (this *CmsLink) LinkDestroy(linkId int64) error {
+// LinkDestory 删除
+func (this *CmsLink) LinkDestory(linkId int64) error {
 	mdl, do := query.CmsLinkDo()
 	if _, err := do.Where(mdl.LinkID.Eq(linkId)).Delete(); err != nil {
 		return err

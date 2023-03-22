@@ -86,6 +86,16 @@ func (c *LinkController) CategorySaveSortId() {
 	c.JSONSuccess("保存成功", nil)
 }
 
+func (c *LinkController) CategoryDestory() {
+	categoryId, _ := c.GetInt64("categoryId")
+	if err := biz.NewCmsLink().CategoryDestory(categoryId); err != nil {
+		logs.Error("CategoryDestory", err.Error())
+		c.JSONError(err.Error())
+		return
+	}
+	c.JSONSuccess("删除成功", nil)
+}
+
 // CategoryPaginate 列表
 // @router /admin/link/categorypaginate [get]
 func (c *LinkController) CategoryPaginate() {
