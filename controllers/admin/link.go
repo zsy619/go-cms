@@ -2,6 +2,7 @@ package admin
 
 import (
 	"haedu.gov.cn/cms/app/biz"
+	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/lib"
 )
 
@@ -34,7 +35,12 @@ func (c *LinkController) Category() {
 
 func (c *LinkController) CategoryEdit() {
 	categoryId, _ := c.GetInt64("categoryId")
-	mdl, _ := biz.NewCmsLink().CategoryFind(categoryId)
+	mdl, err := biz.NewCmsLink().CategoryFind(categoryId)
+	if err != nil {
+		mdl = &model.CmsLinkCategory{
+			SortID: 99,
+		}
+	}
 	c.Data["mdl"] = mdl
 	c.display()
 }

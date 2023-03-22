@@ -11,25 +11,26 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label required">类别标题</label>
                         <div class="layui-input-block">
-                            <input type="text" name="title" lay-verify="required" lay-reqtext="类别标题为必填项" lay-verify="title" autocomplete="off" placeholder="请输入类别标题" class="layui-input">
+                            <input type="hidden" name="category_id" value="{{.mdl.CategoryID}}">
+                            <input type="text" name="title" value="{{.mdl.Title}}" lay-verify="required" lay-reqtext="类别标题为必填项" lay-verify="title" autocomplete="off" placeholder="请输入类别标题" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label required">调用别名</label>
                         <div class="layui-input-block">
-                            <input type="text" name="call_index" lay-verify="required" lay-reqtext="调用别名为必填项" lay-verify="title" autocomplete="off" placeholder="请输入调用别名" class="layui-input">
+                            <input type="text" name="call_index" value="{{.mdl.CallIndex}}" lay-verify="required" lay-reqtext="调用别名为必填项" lay-verify="title" autocomplete="off" placeholder="请输入调用别名" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">外部链接</label>
                         <div class="layui-input-block">
-                            <input type="text" name="call_index" lay-verify="title" autocomplete="off" placeholder="请输入外部链接" class="layui-input">
+                            <input type="text" name="call_index" value="{{.mdl.LinkURL}}" lay-verify="title" autocomplete="off" placeholder="请输入外部链接" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">排序号</label>
                         <div class="layui-input-inline" style="width: 80px;">
-                            <input type="text" name="sort_id" lay-verify="number" value="99" class="layui-input">
+                            <input type="number" name="sort_id" lay-verify="number" value="{{.mdl.SortID}}" class="layui-input">
                         </div>
                         <div class="layui-form-mid layui-word-aux">数字，越小越向前</div>
                     </div>
@@ -38,25 +39,25 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">SEO标题</label>
                         <div class="layui-input-block">
-                            <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入SEO标题" class="layui-input">
+                            <input type="text" value="{{.mdl.SeoTitle}}" name="title" lay-verify="title" autocomplete="off" placeholder="请输入SEO标题" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">SEO关健字</label>
                         <div class="layui-input-block">
-                            <textarea name="seo_keyword" placeholder="请输入SEO关健字" class="layui-textarea"></textarea>
+                            <textarea name="seo_keyword" placeholder="请输入SEO关健字" class="layui-textarea">{{.mdl.SeoKeyword}}</textarea>
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">SEO描述</label>
                         <div class="layui-input-block">
-                            <textarea name="seo_description" placeholder="请输入SEO描述" class="layui-textarea"></textarea>
+                            <textarea name="seo_description" placeholder="请输入SEO描述" class="layui-textarea">{{.mdl.SeoDescription}}</textarea>
                         </div>
                     </div>
                 </div>
                 <div class="layui-tab-item">
-                    <div id="editor" style="margin: 10px 0 10px 0"></div>
-                    <textarea style="display: none;" id="content" name="content" placeholder="" class="layui-textarea"></textarea>
+                    <div id="editor" style="margin: 10px 0 10px 0">{{str2html .mdl.Content}}</div>
+                    <textarea style="display: none;" id="content" name="content" placeholder="" class="layui-textarea">{{.mdl.Content}}</textarea>
                 </div>
             </div>
         </div>
