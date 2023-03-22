@@ -45,6 +45,18 @@ func (c *LinkController) CategoryEdit() {
 	c.display()
 }
 
+func (c *LinkController) CategorySave() {
+	mdl := &model.CmsLinkCategory{}
+	if err := c.ParseForm(&mdl); err != nil {
+		c.JSONError(err.Error())
+	}
+	if err := biz.NewCmsLink().CategorySave(mdl); err != nil {
+		c.JSONError(err.Error())
+		return
+	}
+	c.JSONSuccess("保存成功", nil)
+}
+
 // CategoryPaginate 列表
 // @router /admin/link/categorypaginate [get]
 func (c *LinkController) CategoryPaginate() {

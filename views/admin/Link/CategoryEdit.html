@@ -1,6 +1,6 @@
 <div class="layuimini-main">
     <form class="layui-form" action="">
-        <div class="layui-tab">
+        <div class="layui-tab layui-tab-brief">
             <ul class="layui-tab-title">
                 <li class="layui-this">基本信息</li>
                 <li>SEO配置</li>
@@ -10,22 +10,31 @@
                 <div class="layui-tab-item layui-show">
                     <div class="layui-form-item">
                         <label class="layui-form-label required">类别标题</label>
-                        <div class="layui-input-block">
+                        <div class="layui-input-inline" style="width: 300px;">
                             <input type="hidden" name="category_id" value="{{.mdl.CategoryID}}">
                             <input type="text" name="title" value="{{.mdl.Title}}" lay-verify="required" lay-reqtext="类别标题为必填项" lay-verify="title" autocomplete="off" placeholder="请输入类别标题" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label required">调用别名</label>
-                        <div class="layui-input-block">
+                        <div class="layui-input-inline" style="width: 300px;">
                             <input type="text" name="call_index" value="{{.mdl.CallIndex}}" lay-verify="required" lay-reqtext="调用别名为必填项" lay-verify="title" autocomplete="off" placeholder="请输入调用别名" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">外部链接</label>
-                        <div class="layui-input-block">
+                        <div class="layui-input-inline" style="width: 300px;">
                             <input type="text" name="call_index" value="{{.mdl.LinkURL}}" lay-verify="title" autocomplete="off" placeholder="请输入外部链接" class="layui-input">
                         </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">图片地址</label>
+                        <div class="layui-input-inline" style="width: 300px;">
+                            <input type="text" name="img_url" value="{{.mdl.ImgURL}}" lay-verify="title" autocomplete="off" placeholder="" class="layui-input">
+                        </div>
+                        <button type="button" class="layui-btn layui-btn-primary" id="btnUpload">
+                            <i class="layui-icon">&#xe67c;</i>上传图片
+                        </button>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">排序号</label>
@@ -38,19 +47,19 @@
                 <div class="layui-tab-item">
                     <div class="layui-form-item">
                         <label class="layui-form-label">SEO标题</label>
-                        <div class="layui-input-block">
+                        <div class="layui-input-inline" style="width: 300px;">
                             <input type="text" value="{{.mdl.SeoTitle}}" name="title" lay-verify="title" autocomplete="off" placeholder="请输入SEO标题" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">SEO关健字</label>
-                        <div class="layui-input-block">
+                        <div class="layui-input-inline" style="width: 300px;">
                             <textarea name="seo_keyword" placeholder="请输入SEO关健字" class="layui-textarea">{{.mdl.SeoKeyword}}</textarea>
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">SEO描述</label>
-                        <div class="layui-input-block">
+                        <div class="layui-input-inline" style="width: 300px;">
                             <textarea name="seo_description" placeholder="请输入SEO描述" class="layui-textarea">{{.mdl.SeoDescription}}</textarea>
                         </div>
                     </div>
@@ -69,16 +78,29 @@
     </form>
 </div>
 <script>
-    layui.use(['layer', 'wangEditor'], function () {
+    layui.use(['layer', 'wangEditor', 'upload'], function () {
         var $ = layui.jquery,
             layer = layui.layer,
             wangEditor = layui.wangEditor;
+        var upload = layui.upload;
+
+        //执行实例
+        var uploadInst = upload.render({
+            elem: '#btnUpload' //绑定元素
+            , url: '/admin/api/WeUpload' //上传接口
+            , done: function (res) {
+                //上传完毕回调
+            }
+            , error: function () {
+                //请求异常回调
+            }
+        });
 
         var editor = new wangEditor('#editor');
-        editor.customConfig.uploadImgServer = "/admin/api/wangEditor_upload";
+        editor.customConfig.uploadImgServer = "/admin/tool/WeUpload";
         editor.customConfig.uploadFileName = 'image';
         editor.customConfig.pasteFilterStyle = false;
-        editor.customConfig.uploadImgMaxLength = 5;
+        editor.customConfig.uploadImgMaxLength = 1;
         editor.customConfig.uploadImgHooks = {
             // 上传超时
             timeout: function (xhr, editor) {
@@ -102,5 +124,45 @@
         };
         editor.create();
 
+        // 进行登录操作
+        form.on('submit(login)', function (data) {
+            data = data.field;
+            console.log(data);
+            $.ajax({
+                url: "CategorySave",
+                type: 'post',
+                data: data,
+                beforeSend: function () {
+                    this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+                },
+                success: function (data) {
+                    console.log(data);
+                    switch (data.code) {
+                        case 1:
+                            layer.msg(data.msg, { icon: 5 });//失败的表情
+                            return;
+                        case 0:
+                            layer.msg(data.msg, {
+                                icon: 6,//成功的表情
+                                time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                            }, function () {
+                                window.location = '/admin/index';
+                            });
+                            break;
+                        default:
+                            layer.msg(data.msg, { icon: 5 });//失败的表情
+                            $("input[name=username]").val("");
+                            $("input[name='password']").val("");
+                            return;
+                    }
+                },
+                complete: function () {
+                    $("#captcha").val("");
+                    $("#refreshCaptcha").click();
+                    layer.close(this.layerIndex);
+                },
+            });
+            return false;
+        });
     });
 </script>

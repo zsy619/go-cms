@@ -57,7 +57,7 @@ func (c *BaseController) Finish() {
 }
 
 // 公共返回方法
-func (c *BaseController) OutJson(code int, message string, data interface{}) {
+func (c *BaseController) JSON(code ResCode, message string, data interface{}) {
 	c.Data["json"] = &ResJson{
 		Code:    code,
 		Message: message,
@@ -67,8 +67,16 @@ func (c *BaseController) OutJson(code int, message string, data interface{}) {
 	c.StopRun()
 }
 
-// OutPageJson 返回分页信息
-func (c *BaseController) OutPageJson(code int, message string, count int64, data interface{}) {
+func (c *BaseController) JSONSuccess(message string, data interface{}) {
+	c.JSON(CodeSuccess, message, data)
+}
+
+func (c *BaseController) JSONError(message string) {
+	c.JSON(CodeError, message, nil)
+}
+
+// JSONPage 返回分页信息
+func (c *BaseController) JSONPage(code ResCode, message string, count int64, data interface{}) {
 	c.Data["json"] = &PageResJson{
 		Count: count,
 		ResJson: ResJson{
@@ -82,9 +90,9 @@ func (c *BaseController) OutPageJson(code int, message string, count int64, data
 }
 
 // 公共返回方法
-func (c *BaseController) OutStatus(code int, message string, data interface{}) {
+func (c *BaseController) OutStatus(code ResCode, message string, data interface{}) {
 	if c.Ctx.Input.IsAjax() {
-		c.OutJson(code, message, data)
+		c.JSON(code, message, data)
 	}
 	c.Abort("403")
 }

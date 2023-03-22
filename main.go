@@ -16,6 +16,7 @@ import (
 	"haedu.gov.cn/cms/controllers"
 	_ "haedu.gov.cn/cms/controllers"
 	_ "haedu.gov.cn/cms/controllers/admin"
+	_ "haedu.gov.cn/cms/controllers/www"
 )
 
 var globalSessions *session.Manager

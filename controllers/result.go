@@ -1,8 +1,16 @@
 package controllers
 
+type ResCode int
+
+const (
+	CodeSuccess ResCode = iota
+	CodeError
+	CodeFail
+)
+
 // ResJson 返回统一的格式
 type ResJson struct {
-	Code    int         `json:"code"`
+	Code    ResCode     `json:"code"`
 	Message string      `json:"msg"`
 	Data    interface{} `json:"data"`
 }
