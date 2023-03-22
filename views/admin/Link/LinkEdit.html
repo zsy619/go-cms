@@ -3,16 +3,26 @@
         <div class="layui-tab layui-tab-brief layui-tab-card">
             <ul class="layui-tab-title">
                 <li class="layui-this">基本信息</li>
-                <li>SEO配置</li>
-                <li>详细内容</li>
+                <li>推荐类型</li>
             </ul>
             <div class="layui-tab-content">
                 <div class="layui-tab-item layui-show">
                     <div class="layui-form-item">
-                        <label class="layui-form-label required">类别标题</label>
+                        <label class="layui-form-label required">链接类别</label>
                         <div class="layui-input-inline" style="width: 500px;">
-                            <input type="hidden" name="category_id" value="{{.mdl.CategoryID}}">
-                            <input type="text" name="title" value="{{.mdl.Title}}" lay-verify="required" lay-reqtext="类别标题为必填项" autocomplete="off" placeholder="请输入类别标题" class="layui-input">
+                            <input type="hidden" name="link_id" value="{{.mdl.LinkID}}">
+                            <select name="category_id" lay-verify="required" lay-search="" lay-reqtext="类别标题为必填项">
+                                <option value="">请选择</option>
+                                {{range $index,$item := .categoryList}}
+                                <option value="{{$item.CategoryID}}" {{if eq $.mdl.CategoryID $item.CategoryID}}selected="selected" {{end}}>{{$item.Title}}</option>
+                                {{end}}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">链接标题</label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <input type="text" name="title" value="{{.mdl.Title}}" lay-verify="required" lay-reqtext="链接标题为必填项" autocomplete="off" placeholder="请输入类别标题" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-form-item">
@@ -22,13 +32,20 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label">外部链接</label>
+                        <label class="layui-form-label required">外部链接</label>
                         <div class="layui-input-inline" style="width: 500px;">
-                            <input type="text" name="link_url" value="{{.mdl.LinkURL}}" autocomplete="off" placeholder="请输入外部链接" class="layui-input">
+                            <input type="text" name="link_url" value="{{.mdl.LinkURL}}" autocomplete="off" lay-verify="required" lay-reqtext="外部链接为必填项" placeholder="请输入外部链接" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label">图片地址</label>
+                        <label class="layui-form-label">打开目标</label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <input type="text" name="target" value="{{.mdl.Target}}" autocomplete="off" placeholder="是否开启浏览器新窗口" class="layui-input">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">是否开启浏览器新窗口</div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">网站Logo</label>
                         <div class="layui-input-inline" style="width: 392px;">
                             <input type="text" name="img_url" value="{{.mdl.ImgURL}}" autocomplete="off" placeholder="" class="layui-input">
                         </div>
@@ -43,30 +60,56 @@
                         </div>
                         <div class="layui-form-mid layui-word-aux">数字，越小越向前</div>
                     </div>
-                </div>
-                <div class="layui-tab-item">
                     <div class="layui-form-item">
-                        <label class="layui-form-label">SEO标题</label>
+                        <label class="layui-form-label">备注</label>
                         <div class="layui-input-inline" style="width: 500px;">
-                            <input type="text" value="{{.mdl.SeoTitle}}" name="seo_title" autocomplete="off" placeholder="请输入SEO标题" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">SEO关健字</label>
-                        <div class="layui-input-inline" style="width: 500px;">
-                            <textarea name="seo_keyword" placeholder="请输入SEO关健字" class="layui-textarea">{{.mdl.SeoKeyword}}</textarea>
-                        </div>
-                    </div>
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">SEO描述</label>
-                        <div class="layui-input-inline" style="width: 500px;">
-                            <textarea name="seo_description" placeholder="请输入SEO描述" class="layui-textarea">{{.mdl.SeoDescription}}</textarea>
+                            <textarea name="remark" placeholder="请输入描述信息" class="layui-textarea">{{.mdl.Remark}}</textarea>
                         </div>
                     </div>
                 </div>
                 <div class="layui-tab-item">
-                    <div id="editor" style="margin: 10px">{{str2html .mdl.Content}}</div>
-                    <textarea style="display: none;" id="content" name="content" placeholder="" class="layui-textarea">{{.mdl.Content}}</textarea>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">状态</label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <input type="radio" name="status" value="0" title="草稿" {{if eq .mdl.Status 0}} checked="" {{end}}>
+                            <input type="radio" name="status" value="2" title="通过" {{if eq .mdl.Status 2}} checked="" {{end}}>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="display: none;">
+                        <label class="layui-form-label">评论</label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <input type="radio" name="is_msg" value="0" title="否" {{if eq .mdl.IsMsg 0}} checked="" {{end}}>
+                            <input type="radio" name="is_msg" value="1" title="是" {{if eq .mdl.IsMsg 1}} checked="" {{end}}>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">置顶</label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <input type="radio" name="is_top" value="0" title="否" {{if eq .mdl.IsTop 0}} checked="" {{end}}>
+                            <input type="radio" name="is_top" value="1" title="是" {{if eq .mdl.IsTop 1}} checked="" {{end}}>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">推荐</label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <input type="radio" name="is_red" value="0" title="否" {{if eq .mdl.IsRed 0}} checked="" {{end}}>
+                            <input type="radio" name="is_red" value="1" title="是" {{if eq .mdl.IsRed 1}} checked="" {{end}}>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">热门</label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <input type="radio" name="is_hot" value="0" title="否" {{if eq .mdl.IsHot 0}} checked="" {{end}}>
+                            <input type="radio" name="is_hot" value="1" title="是" {{if eq .mdl.IsHot 1}} checked="" {{end}}>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">幻灯片</label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <input type="radio" name="is_slide" value="0" title="否" {{if eq .mdl.IsSlide 0}} checked="" {{end}}>
+                            <input type="radio" name="is_slide" value="1" title="是" {{if eq .mdl.IsSlide 1}} checked="" {{end}}>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -164,7 +207,7 @@
             form.submit('frmEdit', function (data) {
                 $.ajax({
                     type: "POST", //提交的方法
-                    url: "/admin/link/CategorySave", //提交的地址
+                    url: "/admin/link/LinkSave", //提交的地址
                     data: $('#frmEdit').serialize(), // 序列化表单值
                     async: false,
                     beforeSend: function () { //当一个Ajax请求开始时触发

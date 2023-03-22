@@ -46,7 +46,17 @@ func (this *CmsLink) CategorySave(input *model.CmsLinkCategory) error {
 		input.CreateTime = time.Now()
 		err = do.Create(input)
 	} else {
-		_, err = do.Updates(input)
+		_, err = do.Where(mdl.CategoryID.Eq(input.CategoryID)).Updates(map[string]interface{}{
+			mdl.Title.ColumnName().String():          input.Title,
+			mdl.CallIndex.ColumnName().String():      input.CallIndex,
+			mdl.LinkURL.ColumnName().String():        input.LinkURL,
+			mdl.SeoTitle.ColumnName().String():       input.SeoTitle,
+			mdl.SeoKeyword.ColumnName().String():     input.SeoKeyword,
+			mdl.SeoDescription.ColumnName().String(): input.SeoDescription,
+			mdl.Content.ColumnName().String():        input.Content,
+			mdl.SortID.ColumnName().String():         input.SortID,
+			mdl.UpdateTime.ColumnName().String():     input.UpdateTime,
+		})
 	}
 	return err
 }
@@ -92,7 +102,7 @@ func (this *CmsLink) LinkPaginate(page, limit int, siteId, channelId, categoryId
 	if callIndex != "" {
 		do = do.Where(mdl.CallIndex.Like("%" + callIndex + "%"))
 	}
-	return do.FindByPage((page-1)*limit, limit)
+	return do.Order(mdl.IsTop.Desc(), mdl.SortID).FindByPage((page-1)*limit, limit)
 }
 
 // LinkFind 获取
@@ -115,7 +125,24 @@ func (this *CmsLink) LinkSave(input *model.CmsLink) error {
 		input.CreateTime = time.Now()
 		err = do.Create(input)
 	} else {
-		_, err = do.Updates(input)
+		_, err = do.Where(mdl.LinkID.Eq(input.LinkID)).Updates(map[string]interface{}{
+			mdl.CategoryID.ColumnName().String(): input.CategoryID,
+			mdl.Title.ColumnName().String():      input.Title,
+			mdl.CallIndex.ColumnName().String():  input.CallIndex,
+			mdl.LinkURL.ColumnName().String():    input.LinkURL,
+			mdl.Target.ColumnName().String():     input.Target,
+			mdl.ImgURL.ColumnName().String():     input.ImgURL,
+			mdl.Remark.ColumnName().String():     input.Remark,
+			mdl.SortID.ColumnName().String():     input.SortID,
+			mdl.Status.ColumnName().String():     input.Status,
+			mdl.IsLock.ColumnName().String():     input.IsLock,
+			mdl.IsMsg.ColumnName().String():      input.IsMsg,
+			mdl.IsTop.ColumnName().String():      input.IsTop,
+			mdl.IsRed.ColumnName().String():      input.IsRed,
+			mdl.IsHot.ColumnName().String():      input.IsHot,
+			mdl.IsSlide.ColumnName().String():    input.IsSlide,
+			mdl.UpdateTime.ColumnName().String(): input.UpdateTime,
+		})
 	}
 	return err
 }
@@ -127,4 +154,15 @@ func (this *CmsLink) LinkDestory(linkId int64) error {
 		return err
 	}
 	return nil
+}
+
+func (this *CmsLink) LinkSaveSortId(linkId int64, sortId int32) error {
+	mdl, do := query.CmsLinkDo()
+	_, err := do.Where(mdl.LinkID.Eq(linkId)).UpdateColumns(
+		map[string]interface{}{
+			mdl.SortID.ColumnName().String():     sortId,
+			mdl.UpdateTime.ColumnName().String(): time.Now(),
+		},
+	)
+	return err
 }

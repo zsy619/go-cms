@@ -7,6 +7,7 @@ import (
 	"haedu.gov.cn/cms/app/biz"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/lib"
+	"haedu.gov.cn/cms/controllers/admin/vmodel"
 	"haedu.gov.cn/tools/xjson"
 )
 
@@ -18,6 +19,63 @@ func (c *LinkController) Index() {
 	list, _, _ := biz.NewCmsLink().CategoryPaginate(1, 99999, -1, -1, "", "")
 	c.Data["categoryList"] = list
 	c.display()
+}
+
+func (c *LinkController) LinkEdit() {
+	linkId, _ := c.GetInt64("linkId")
+	mdl, err := biz.NewCmsLink().LinkFind(linkId)
+	if err != nil {
+		mdl = &model.CmsLink{
+			SortID: 99,
+			Target: "_blank",
+		}
+	}
+	c.Data["mdl"] = mdl
+	list, _, _ := biz.NewCmsLink().CategoryPaginate(1, 99999, -1, -1, "", "")
+	c.Data["categoryList"] = list
+	c.display()
+}
+
+func (c *LinkController) LinkSave() {
+	mdl := model.CmsLink{}
+	if err := c.ParseForm(&mdl); err != nil {
+		logs.Error("LinkSave", err.Error())
+		c.JSONError(err.Error())
+	}
+	if err := biz.NewCmsLink().LinkSave(&mdl); err != nil {
+		logs.Error("LinkSave", err.Error())
+		c.JSONError(err.Error())
+		return
+	}
+	c.JSONSuccess("保存成功", nil)
+}
+
+func (c *LinkController) LinkSaveSortId() {
+	mdls := []vmodel.Link_SaveSortIdModel{}
+	data := c.Ctx.Input.RequestBody
+	fmt.Println("LinkSaveSortId", string(data))
+	if err := xjson.Unmarshal(c.Ctx.Input.RequestBody, &mdls); err != nil {
+		logs.Error("LinkSaveSortId", err.Error())
+		c.JSONError(err.Error())
+	}
+	for _, mdl := range mdls {
+		if err := biz.NewCmsLink().LinkSaveSortId(mdl.LinkId, int32(mdl.SortId)); err != nil {
+			logs.Error("LinkSaveSortId", err.Error())
+			c.JSONError(err.Error())
+			return
+		}
+	}
+	c.JSONSuccess("保存成功", nil)
+}
+
+func (c *LinkController) LinkDestory() {
+	linkId, _ := c.GetInt64("linkId")
+	if err := biz.NewCmsLink().LinkDestory(linkId); err != nil {
+		logs.Error("LinkDestory", err.Error())
+		c.JSONError(err.Error())
+		return
+	}
+	c.JSONSuccess("删除成功", nil)
 }
 
 // LinkPaginate 列表
@@ -63,13 +121,8 @@ func (c *LinkController) CategorySave() {
 	c.JSONSuccess("保存成功", nil)
 }
 
-type CategorySaveSortIdModel struct {
-	CategoryId int64 `json:"category_id"`
-	SortId     int   `json:"sort_id"`
-}
-
 func (c *LinkController) CategorySaveSortId() {
-	mdls := []CategorySaveSortIdModel{}
+	mdls := []vmodel.Category_SaveSortIdModel{}
 	data := c.Ctx.Input.RequestBody
 	fmt.Println("CategorySaveSortId", string(data))
 	if err := xjson.Unmarshal(c.Ctx.Input.RequestBody, &mdls); err != nil {
