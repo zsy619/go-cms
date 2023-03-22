@@ -78,7 +78,8 @@
     </form>
 </div>
 <script>
-    layui.use(['layer', 'wangEditor', 'upload'], function () {
+    layui.use(['form', 'layer', 'wangEditor', 'upload'], function () {
+        var form = layui.form;
         var $ = layui.jquery,
             layer = layui.layer,
             wangEditor = layui.wangEditor;
@@ -87,9 +88,14 @@
         //执行实例
         var uploadInst = upload.render({
             elem: '#btnUpload' //绑定元素
-            , url: '/admin/api/WeUpload' //上传接口
+            , url: '/admin/tools/ImageUpload' //上传接口
             , done: function (res) {
                 //上传完毕回调
+                if (res.code == 0) {
+                    $("input[name='img_url']").val(res.file.url2);
+                } else {
+                    layer.msg(res.msg);
+                }
             }
             , error: function () {
                 //请求异常回调
@@ -97,8 +103,8 @@
         });
 
         var editor = new wangEditor('#editor');
-        editor.customConfig.uploadImgServer = "/admin/tool/WeUpload";
-        editor.customConfig.uploadFileName = 'image';
+        editor.customConfig.uploadImgServer = "/admin/tools/ImageUpload";
+        editor.customConfig.uploadFileName = 'file';
         editor.customConfig.pasteFilterStyle = false;
         editor.customConfig.uploadImgMaxLength = 1;
         editor.customConfig.uploadImgHooks = {
@@ -109,11 +115,12 @@
             // 如果服务器端返回的不是 {errno:0, data: [...]} 这种格式，可使用该配置
             customInsert: function (insertImg, result, editor) {
                 console.log(result);
-                if (result.code == 1) {
-                    var url = result.data.url;
-                    url.forEach(function (e) {
-                        insertImg(e);
-                    })
+                if (result.code == 0) {
+                    var url = result.file.url2;
+                    insertImg(url);
+                    // url.forEach(function (e) {
+                    //     insertImg(e);
+                    // })
                 } else {
                     layer.msg(result.msg);
                 }
@@ -146,19 +153,15 @@
                                 icon: 6,//成功的表情
                                 time: 1000 //1秒关闭（如果不配置，默认是3秒）
                             }, function () {
-                                window.location = '/admin/index';
+
                             });
                             break;
                         default:
                             layer.msg(data.msg, { icon: 5 });//失败的表情
-                            $("input[name=username]").val("");
-                            $("input[name='password']").val("");
                             return;
                     }
                 },
                 complete: function () {
-                    $("#captcha").val("");
-                    $("#refreshCaptcha").click();
                     layer.close(this.layerIndex);
                 },
             });

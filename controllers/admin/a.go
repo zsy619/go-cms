@@ -13,7 +13,7 @@ func init() {
 	web.Router("cms/admin/login", &LoginController{}, "*:AdminLogin")
 	web.Router("cms/admin/login/verify", &LoginController{}, "*:AdminLoginVerify")
 
-	web.Router("admin/tool/WeUpload", &ToolController{}, "*:WeUpload")
+	web.AutoPrefix("admin", &ToolsController{})
 
 	web.Router("admin/index", &IndexController{}, "*:Index")
 	web.Router("admin/site/index", &SiteController{}, "*:Index")
