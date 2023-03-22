@@ -33,6 +33,11 @@ var (
 	CmsSiteChannel             *cmsSiteChannel
 	CmsSiteChannelField        *cmsSiteChannelField
 	CmsSiteDomain              *cmsSiteDomain
+	WeixinAccount              *weixinAccount
+	WeixinMenu                 *weixinMenu
+	WeixinRequestContent       *weixinRequestContent
+	WeixinRequestRule          *weixinRequestRule
+	WeixinResponseContent      *weixinResponseContent
 )
 
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
@@ -53,6 +58,11 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	CmsSiteChannel = &Q.CmsSiteChannel
 	CmsSiteChannelField = &Q.CmsSiteChannelField
 	CmsSiteDomain = &Q.CmsSiteDomain
+	WeixinAccount = &Q.WeixinAccount
+	WeixinMenu = &Q.WeixinMenu
+	WeixinRequestContent = &Q.WeixinRequestContent
+	WeixinRequestRule = &Q.WeixinRequestRule
+	WeixinResponseContent = &Q.WeixinResponseContent
 }
 
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
@@ -74,6 +84,11 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		CmsSiteChannel:             newCmsSiteChannel(db, opts...),
 		CmsSiteChannelField:        newCmsSiteChannelField(db, opts...),
 		CmsSiteDomain:              newCmsSiteDomain(db, opts...),
+		WeixinAccount:              newWeixinAccount(db, opts...),
+		WeixinMenu:                 newWeixinMenu(db, opts...),
+		WeixinRequestContent:       newWeixinRequestContent(db, opts...),
+		WeixinRequestRule:          newWeixinRequestRule(db, opts...),
+		WeixinResponseContent:      newWeixinResponseContent(db, opts...),
 	}
 }
 
@@ -96,6 +111,11 @@ type Query struct {
 	CmsSiteChannel             cmsSiteChannel
 	CmsSiteChannelField        cmsSiteChannelField
 	CmsSiteDomain              cmsSiteDomain
+	WeixinAccount              weixinAccount
+	WeixinMenu                 weixinMenu
+	WeixinRequestContent       weixinRequestContent
+	WeixinRequestRule          weixinRequestRule
+	WeixinResponseContent      weixinResponseContent
 }
 
 func (q *Query) Available() bool { return q.db != nil }
@@ -119,6 +139,11 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		CmsSiteChannel:             q.CmsSiteChannel.clone(db),
 		CmsSiteChannelField:        q.CmsSiteChannelField.clone(db),
 		CmsSiteDomain:              q.CmsSiteDomain.clone(db),
+		WeixinAccount:              q.WeixinAccount.clone(db),
+		WeixinMenu:                 q.WeixinMenu.clone(db),
+		WeixinRequestContent:       q.WeixinRequestContent.clone(db),
+		WeixinRequestRule:          q.WeixinRequestRule.clone(db),
+		WeixinResponseContent:      q.WeixinResponseContent.clone(db),
 	}
 }
 
@@ -149,6 +174,11 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		CmsSiteChannel:             q.CmsSiteChannel.replaceDB(db),
 		CmsSiteChannelField:        q.CmsSiteChannelField.replaceDB(db),
 		CmsSiteDomain:              q.CmsSiteDomain.replaceDB(db),
+		WeixinAccount:              q.WeixinAccount.replaceDB(db),
+		WeixinMenu:                 q.WeixinMenu.replaceDB(db),
+		WeixinRequestContent:       q.WeixinRequestContent.replaceDB(db),
+		WeixinRequestRule:          q.WeixinRequestRule.replaceDB(db),
+		WeixinResponseContent:      q.WeixinResponseContent.replaceDB(db),
 	}
 }
 
@@ -169,6 +199,11 @@ type queryCtx struct {
 	CmsSiteChannel             *cmsSiteChannelDo
 	CmsSiteChannelField        *cmsSiteChannelFieldDo
 	CmsSiteDomain              *cmsSiteDomainDo
+	WeixinAccount              *weixinAccountDo
+	WeixinMenu                 *weixinMenuDo
+	WeixinRequestContent       *weixinRequestContentDo
+	WeixinRequestRule          *weixinRequestRuleDo
+	WeixinResponseContent      *weixinResponseContentDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
@@ -189,6 +224,11 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 		CmsSiteChannel:             q.CmsSiteChannel.WithContext(ctx),
 		CmsSiteChannelField:        q.CmsSiteChannelField.WithContext(ctx),
 		CmsSiteDomain:              q.CmsSiteDomain.WithContext(ctx),
+		WeixinAccount:              q.WeixinAccount.WithContext(ctx),
+		WeixinMenu:                 q.WeixinMenu.WithContext(ctx),
+		WeixinRequestContent:       q.WeixinRequestContent.WithContext(ctx),
+		WeixinRequestRule:          q.WeixinRequestRule.WithContext(ctx),
+		WeixinResponseContent:      q.WeixinResponseContent.WithContext(ctx),
 	}
 }
 

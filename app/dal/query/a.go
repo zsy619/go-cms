@@ -97,3 +97,33 @@ func CmsLinkDo() (cmsLink, *cmsLinkDo) {
 	u := Use(dal.CmsDatabase.DB).CmsLink
 	return u, u.WithContext(defaultContext).Debug()
 }
+
+// WeixinAccountDo
+func WeixinAccountDo() (weixinAccount, *weixinAccountDo) {
+	u := Use(dal.CmsDatabase.DB).WeixinAccount
+	return u, u.WithContext(defaultContext).Debug()
+}
+
+// WeixinMenuDo
+func WeixinMenuDo() (weixinMenu, *weixinMenuDo) {
+	u := Use(dal.CmsDatabase.DB).WeixinMenu
+	return u, u.WithContext(defaultContext).Debug()
+}
+
+// WeixinRequestRuleDo
+func WeixinRequestRuleDo() (weixinRequestRule, *weixinRequestRuleDo) {
+	u := Use(dal.CmsDatabase.DB).WeixinRequestRule
+	return u, u.WithContext(defaultContext).Debug()
+}
+
+// WeixinRequestContentDo
+func WeixinRequestContentDo() (weixinRequestContent, *weixinRequestContentDo) {
+	u := Use(dal.CmsDatabase.DB).WeixinRequestContent
+	return u, u.WithContext(defaultContext).Debug()
+}
+
+// WeixinResponseContentDo
+func WeixinResponseContentDo() (weixinResponseContent, *weixinResponseContentDo) {
+	u := Use(dal.CmsDatabase.DB).WeixinResponseContent
+	return u, u.WithContext(defaultContext).Debug()
+}
