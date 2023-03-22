@@ -57,8 +57,8 @@ func (c *BaseController) Finish() {
 }
 
 // 公共返回方法
-func (c *BaseController) JSON(code ResCode, message string, data interface{}) {
-	c.Data["json"] = &ResJson{
+func (c *BaseController) JSON(code lib.CodeResult, message string, data interface{}) {
+	c.Data["json"] = &lib.JSONResponse{
 		Code:    code,
 		Message: message,
 		Data:    data,
@@ -68,18 +68,18 @@ func (c *BaseController) JSON(code ResCode, message string, data interface{}) {
 }
 
 func (c *BaseController) JSONSuccess(message string, data interface{}) {
-	c.JSON(CodeSuccess, message, data)
+	c.JSON(lib.CodeSuccess, message, data)
 }
 
 func (c *BaseController) JSONError(message string) {
-	c.JSON(CodeError, message, nil)
+	c.JSON(lib.CodeError, message, nil)
 }
 
 // JSONPage 返回分页信息
-func (c *BaseController) JSONPage(code ResCode, message string, count int64, data interface{}) {
-	c.Data["json"] = &PageResJson{
+func (c *BaseController) JSONPage(code lib.CodeResult, message string, count int64, data interface{}) {
+	c.Data["json"] = &lib.JSONResponsePage{
 		Count: count,
-		ResJson: ResJson{
+		JSONResponse: lib.JSONResponse{
 			Code:    code,
 			Message: message,
 			Data:    data,
@@ -90,7 +90,7 @@ func (c *BaseController) JSONPage(code ResCode, message string, count int64, dat
 }
 
 // 公共返回方法
-func (c *BaseController) OutStatus(code ResCode, message string, data interface{}) {
+func (c *BaseController) OutStatus(code lib.CodeResult, message string, data interface{}) {
 	if c.Ctx.Input.IsAjax() {
 		c.JSON(code, message, data)
 	}

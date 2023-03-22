@@ -23,7 +23,7 @@ func (this *CmsLink) CategoryPaginate(page, limit int, siteId, channelId int64, 
 	if callIndex != "" {
 		do = do.Where(mdl.CallIndex.Like("%" + callIndex + "%"))
 	}
-	return do.FindByPage((page-1)*limit, limit)
+	return do.Order(mdl.SortID).FindByPage((page-1)*limit, limit)
 }
 
 // CategoryFind 获取
@@ -48,6 +48,17 @@ func (this *CmsLink) CategorySave(input *model.CmsLinkCategory) error {
 	} else {
 		_, err = do.Updates(input)
 	}
+	return err
+}
+
+func (this *CmsLink) CategorySaveSortId(categoryId int64, sortId int32) error {
+	mdl, do := query.CmsLinkCategoryDo()
+	_, err := do.Where(mdl.CategoryID.Eq(categoryId)).UpdateColumns(
+		map[string]interface{}{
+			mdl.SortID.ColumnName().String():     sortId,
+			mdl.UpdateTime.ColumnName().String(): time.Now(),
+		},
+	)
 	return err
 }
 

@@ -70,7 +70,7 @@ func (c *ToolsController) ImageUpload() {
 	filename := generateFilename(ext)
 
 	// 保存上传的文件到指定目录
-	uploadDir := "Uploads/images" + time.Now().Format("2006/01/")
+	uploadDir := "Uploads/images/" + time.Now().Format("2006/01/")
 	if err := os.MkdirAll(uploadDir, os.ModePerm); err != nil {
 		fmt.Println("err", err.Error())
 		result.Code = 1
@@ -133,7 +133,7 @@ func (c *ToolsController) Upload() {
 	filename := generateFilename(ext)
 
 	// 保存上传的文件到指定目录
-	uploadDir := "Uploads/images" + time.Now().Format("2006/01/")
+	uploadDir := "Uploads/files/" + time.Now().Format("2006/01/")
 	if err := os.MkdirAll(uploadDir, os.ModePerm); err != nil {
 		fmt.Println("err", err.Error())
 		result.Code = 1

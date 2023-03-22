@@ -1,9 +1,13 @@
 package admin
 
 import (
+	"fmt"
+
+	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/cms/app/biz"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/lib"
+	"haedu.gov.cn/tools/xjson"
 )
 
 type LinkController struct{ BaseController }
@@ -46,13 +50,38 @@ func (c *LinkController) CategoryEdit() {
 }
 
 func (c *LinkController) CategorySave() {
-	mdl := &model.CmsLinkCategory{}
+	mdl := model.CmsLinkCategory{}
 	if err := c.ParseForm(&mdl); err != nil {
+		logs.Error("CategorySave", err.Error())
 		c.JSONError(err.Error())
 	}
-	if err := biz.NewCmsLink().CategorySave(mdl); err != nil {
+	if err := biz.NewCmsLink().CategorySave(&mdl); err != nil {
+		logs.Error("CategorySave", err.Error())
 		c.JSONError(err.Error())
 		return
+	}
+	c.JSONSuccess("保存成功", nil)
+}
+
+type CategorySaveSortIdModel struct {
+	CategoryId int64 `json:"category_id"`
+	SortId     int   `json:"sort_id"`
+}
+
+func (c *LinkController) CategorySaveSortId() {
+	mdls := []CategorySaveSortIdModel{}
+	data := c.Ctx.Input.RequestBody
+	fmt.Println("CategorySaveSortId", string(data))
+	if err := xjson.Unmarshal(c.Ctx.Input.RequestBody, &mdls); err != nil {
+		logs.Error("CategorySaveSortId", err.Error())
+		c.JSONError(err.Error())
+	}
+	for _, mdl := range mdls {
+		if err := biz.NewCmsLink().CategorySaveSortId(mdl.CategoryId, int32(mdl.SortId)); err != nil {
+			logs.Error("CategorySaveSortId", err.Error())
+			c.JSONError(err.Error())
+			return
+		}
 	}
 	c.JSONSuccess("保存成功", nil)
 }

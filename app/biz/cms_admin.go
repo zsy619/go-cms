@@ -1,6 +1,7 @@
 package biz
 
 import (
+	"context"
 	"errors"
 	"time"
 
@@ -31,22 +32,38 @@ func NewCmsAdmin() *CmsAdmin {
 // Login 登录
 func (m *CmsAdmin) Login(login_key, password string, user_type int, login_type LoginType) (*model.CmsAdmin, error) {
 	mdl, do := query.CmsAdminDo()
-	do = do.Where(mdl.IsDeleted.Is(false))
+	ctx := context.Background()
 	switch login_type {
 	case LoginName:
-		do = do.Where(mdl.UserName.Eq(login_key))
+		do = do.Where(mdl.IsDeleted.Is(false), mdl.UserName.Eq(login_key))
 	case LoginMobile:
-		do = do.Where(mdl.Mobile.Eq(login_key))
+		do = do.Where(mdl.IsDeleted.Is(false), mdl.Mobile.Eq(login_key))
 	case LoginEmail:
-		do = do.Where(mdl.Email.Eq(login_key))
+		do = do.Where(mdl.IsDeleted.Is(false), mdl.Email.Eq(login_key))
 	case LoginNameMobile:
-		do = do.Or(mdl.UserName.Eq(login_key)).Or(mdl.Mobile.Eq(login_key))
+		do = do.Where(
+			do.WithContext(ctx).Where(mdl.IsDeleted.Is(false)),
+		).Where(
+			do.Or(mdl.UserName.Eq(login_key)).Or(mdl.Mobile.Eq(login_key)),
+		)
 	case LoginNameEmail:
-		do = do.Or(mdl.UserName.Eq(login_key)).Or(mdl.Email.Eq(login_key))
+		do = do.Where(
+			do.WithContext(ctx).Where(mdl.IsDeleted.Is(false)),
+		).Where(
+			do.Or(mdl.UserName.Eq(login_key)).Or(mdl.Email.Eq(login_key)),
+		)
 	case LoginMobileEmail:
-		do = do.Or(mdl.Mobile.Eq(login_key)).Or(mdl.Email.Eq(login_key))
+		do = do.Where(
+			do.WithContext(ctx).Where(mdl.IsDeleted.Is(false)),
+		).Where(
+			do.Or(mdl.Mobile.Eq(login_key)).Or(mdl.Email.Eq(login_key)),
+		)
 	case LoginAll:
-		do = do.Or(mdl.UserName.Eq(login_key)).Or(mdl.Mobile.Eq(login_key)).Or(mdl.Email.Eq(login_key))
+		do = do.Where(
+			do.WithContext(ctx).Where(mdl.IsDeleted.Is(false)),
+		).Where(
+			do.Or(mdl.UserName.Eq(login_key)).Or(mdl.Mobile.Eq(login_key)).Or(mdl.Email.Eq(login_key)),
+		)
 	}
 	find, err := do.First()
 	if err != nil {
