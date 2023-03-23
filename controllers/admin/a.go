@@ -20,4 +20,5 @@ func init() {
 	web.Router("admin/site/channel", &SiteController{}, "*:Channel")
 
 	web.AutoPrefix("admin", &LinkController{})
+	web.AutoPrefix("admin", &AdminController{})
 }

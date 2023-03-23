@@ -112,3 +112,11 @@ func (m *CmsAdmin) LoginLog(userId int64, userName string, method, path, queryx,
 		},
 	)
 }
+
+func (m *CmsAdmin) LogPaginate(page, limit int, userId int64, userName string) ([]*model.CmsAdminLog, int64, error) {
+	mdl, do := query.CmsAdminLogDo()
+	if userId > 0 {
+		do = do.Where(mdl.UserID.Eq(userId))
+	}
+	return do.Where(mdl.UserName.Like("%"+userName+"%")).FindByPage((page-1)*limit, limit)
+}
