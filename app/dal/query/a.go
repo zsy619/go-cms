@@ -8,6 +8,24 @@ import (
 
 var defaultContext = context.Background()
 
+// CmsAdminRoleDo
+func CmsAdminRoleDo() (cmsAdminRole, *cmsAdminRoleDo) {
+	u := Use(dal.CmsDatabase.DB).CmsAdminRole
+	return u, u.WithContext(defaultContext).Debug()
+}
+
+// CmsAdminRoleValueDo
+func CmsAdminRoleValueDo() (cmsAdminRoleValue, *cmsAdminRoleValueDo) {
+	u := Use(dal.CmsDatabase.DB).CmsAdminRoleValue
+	return u, u.WithContext(defaultContext).Debug()
+}
+
+// CmsAdminNavDo
+func CmsAdminNavDo() (cmsAdminNav, *cmsAdminNavDo) {
+	u := Use(dal.CmsDatabase.DB).CmsAdminNav
+	return u, u.WithContext(defaultContext).Debug()
+}
+
 // CmsAdminDo
 func CmsAdminDo() (cmsAdmin, *cmsAdminDo) {
 	u := Use(dal.CmsDatabase.DB).CmsAdmin

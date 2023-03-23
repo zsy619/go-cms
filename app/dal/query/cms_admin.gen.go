@@ -28,6 +28,8 @@ func newCmsAdmin(db *gorm.DB, opts ...gen.DOOption) cmsAdmin {
 	tableName := _cmsAdmin.cmsAdminDo.TableName()
 	_cmsAdmin.ALL = field.NewAsterisk(tableName)
 	_cmsAdmin.UserID = field.NewInt64(tableName, "user_id")
+	_cmsAdmin.RoleID = field.NewInt64(tableName, "role_id")
+	_cmsAdmin.RoleType = field.NewString(tableName, "role_type")
 	_cmsAdmin.RealName = field.NewString(tableName, "real_name")
 	_cmsAdmin.NickName = field.NewString(tableName, "nick_name")
 	_cmsAdmin.IDCard = field.NewString(tableName, "id_card")
@@ -63,6 +65,8 @@ type cmsAdmin struct {
 
 	ALL            field.Asterisk
 	UserID         field.Int64  // 主键
+	RoleID         field.Int64  // 角色ID
+	RoleType       field.String // 角色类型supper超级用户,system系统用户
 	RealName       field.String // 姓名
 	NickName       field.String // 昵称
 	IDCard         field.String // 身份证号
@@ -104,6 +108,8 @@ func (c cmsAdmin) As(alias string) *cmsAdmin {
 func (c *cmsAdmin) updateTableName(table string) *cmsAdmin {
 	c.ALL = field.NewAsterisk(table)
 	c.UserID = field.NewInt64(table, "user_id")
+	c.RoleID = field.NewInt64(table, "role_id")
+	c.RoleType = field.NewString(table, "role_type")
 	c.RealName = field.NewString(table, "real_name")
 	c.NickName = field.NewString(table, "nick_name")
 	c.IDCard = field.NewString(table, "id_card")
@@ -150,8 +156,10 @@ func (c *cmsAdmin) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *cmsAdmin) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 25)
+	c.fieldMap = make(map[string]field.Expr, 27)
 	c.fieldMap["user_id"] = c.UserID
+	c.fieldMap["role_id"] = c.RoleID
+	c.fieldMap["role_type"] = c.RoleType
 	c.fieldMap["real_name"] = c.RealName
 	c.fieldMap["nick_name"] = c.NickName
 	c.fieldMap["id_card"] = c.IDCard

@@ -19,6 +19,9 @@ var (
 	Q                          = new(Query)
 	CmsAdmin                   *cmsAdmin
 	CmsAdminLog                *cmsAdminLog
+	CmsAdminNav                *cmsAdminNav
+	CmsAdminRole               *cmsAdminRole
+	CmsAdminRoleValue          *cmsAdminRoleValue
 	CmsArticle                 *cmsArticle
 	CmsArticleAlbum            *cmsArticleAlbum
 	CmsArticleAttach           *cmsArticleAttach
@@ -44,6 +47,9 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	*Q = *Use(db, opts...)
 	CmsAdmin = &Q.CmsAdmin
 	CmsAdminLog = &Q.CmsAdminLog
+	CmsAdminNav = &Q.CmsAdminNav
+	CmsAdminRole = &Q.CmsAdminRole
+	CmsAdminRoleValue = &Q.CmsAdminRoleValue
 	CmsArticle = &Q.CmsArticle
 	CmsArticleAlbum = &Q.CmsArticleAlbum
 	CmsArticleAttach = &Q.CmsArticleAttach
@@ -70,6 +76,9 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		db:                         db,
 		CmsAdmin:                   newCmsAdmin(db, opts...),
 		CmsAdminLog:                newCmsAdminLog(db, opts...),
+		CmsAdminNav:                newCmsAdminNav(db, opts...),
+		CmsAdminRole:               newCmsAdminRole(db, opts...),
+		CmsAdminRoleValue:          newCmsAdminRoleValue(db, opts...),
 		CmsArticle:                 newCmsArticle(db, opts...),
 		CmsArticleAlbum:            newCmsArticleAlbum(db, opts...),
 		CmsArticleAttach:           newCmsArticleAttach(db, opts...),
@@ -97,6 +106,9 @@ type Query struct {
 
 	CmsAdmin                   cmsAdmin
 	CmsAdminLog                cmsAdminLog
+	CmsAdminNav                cmsAdminNav
+	CmsAdminRole               cmsAdminRole
+	CmsAdminRoleValue          cmsAdminRoleValue
 	CmsArticle                 cmsArticle
 	CmsArticleAlbum            cmsArticleAlbum
 	CmsArticleAttach           cmsArticleAttach
@@ -125,6 +137,9 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		db:                         db,
 		CmsAdmin:                   q.CmsAdmin.clone(db),
 		CmsAdminLog:                q.CmsAdminLog.clone(db),
+		CmsAdminNav:                q.CmsAdminNav.clone(db),
+		CmsAdminRole:               q.CmsAdminRole.clone(db),
+		CmsAdminRoleValue:          q.CmsAdminRoleValue.clone(db),
 		CmsArticle:                 q.CmsArticle.clone(db),
 		CmsArticleAlbum:            q.CmsArticleAlbum.clone(db),
 		CmsArticleAttach:           q.CmsArticleAttach.clone(db),
@@ -160,6 +175,9 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		db:                         db,
 		CmsAdmin:                   q.CmsAdmin.replaceDB(db),
 		CmsAdminLog:                q.CmsAdminLog.replaceDB(db),
+		CmsAdminNav:                q.CmsAdminNav.replaceDB(db),
+		CmsAdminRole:               q.CmsAdminRole.replaceDB(db),
+		CmsAdminRoleValue:          q.CmsAdminRoleValue.replaceDB(db),
 		CmsArticle:                 q.CmsArticle.replaceDB(db),
 		CmsArticleAlbum:            q.CmsArticleAlbum.replaceDB(db),
 		CmsArticleAttach:           q.CmsArticleAttach.replaceDB(db),
@@ -185,6 +203,9 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 type queryCtx struct {
 	CmsAdmin                   *cmsAdminDo
 	CmsAdminLog                *cmsAdminLogDo
+	CmsAdminNav                *cmsAdminNavDo
+	CmsAdminRole               *cmsAdminRoleDo
+	CmsAdminRoleValue          *cmsAdminRoleValueDo
 	CmsArticle                 *cmsArticleDo
 	CmsArticleAlbum            *cmsArticleAlbumDo
 	CmsArticleAttach           *cmsArticleAttachDo
@@ -210,6 +231,9 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
 		CmsAdmin:                   q.CmsAdmin.WithContext(ctx),
 		CmsAdminLog:                q.CmsAdminLog.WithContext(ctx),
+		CmsAdminNav:                q.CmsAdminNav.WithContext(ctx),
+		CmsAdminRole:               q.CmsAdminRole.WithContext(ctx),
+		CmsAdminRoleValue:          q.CmsAdminRoleValue.WithContext(ctx),
 		CmsArticle:                 q.CmsArticle.WithContext(ctx),
 		CmsArticleAlbum:            q.CmsArticleAlbum.WithContext(ctx),
 		CmsArticleAttach:           q.CmsArticleAttach.WithContext(ctx),

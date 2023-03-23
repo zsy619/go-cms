@@ -13,6 +13,8 @@ const TableNameCmsAdmin = "cms_admin"
 // CmsAdmin mapped from table <cms_admin>
 type CmsAdmin struct {
 	UserID         int64     `gorm:"column:user_id;type:bigint;primaryKey;autoIncrement:true" json:"user_id" form:"user_id"`    // 主键
+	RoleID         int64     `gorm:"column:role_id;type:bigint;not null" json:"role_id" form:"role_id"`                         // 角色ID
+	RoleType       string    `gorm:"column:role_type;type:varchar(64);not null" json:"role_type" form:"role_type"`              // 角色类型supper超级用户,system系统用户
 	RealName       string    `gorm:"column:real_name;type:varchar(128)" json:"real_name" form:"real_name"`                      // 姓名
 	NickName       string    `gorm:"column:nick_name;type:varchar(64)" json:"nick_name" form:"nick_name"`                       // 昵称
 	IDCard         string    `gorm:"column:id_card;type:varchar(32)" json:"id_card" form:"id_card"`                             // 身份证号
