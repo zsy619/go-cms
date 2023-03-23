@@ -6,15 +6,26 @@
                 <form class="layui-form layui-form-pane" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">类别标题</label>
+                            <label class="layui-form-label">角色列表</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="title" autocomplete="off" class="layui-input">
+                                <select name="roleId">
+                                    <option value="0">选择角色</option>
+                                    {{range $key, $value := .roleList}}
+                                    <option value="{{$value.RoleID}}">{{$value.Name}}</option>
+                                    {{end}}
+                                </select>
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <label class="layui-form-label">调用别名</label>
+                            <label class="layui-form-label">姓名</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="callIndex" autocomplete="off" class="layui-input">
+                                <input type="text" name="realName" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">账号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="userName" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -47,27 +58,36 @@
 
         table.render({
             elem: '#currentTableId',
-            url: '/admin/link/categorypaginate',
+            url: '/admin/admin/adminpaginate',
             toolbar: '#toolbarDemo',
             height: "full-170",
             defaultToolbar: ['filter', 'exports', 'print'],
             cols: [[
                 // { type: "checkbox", width: 50 },
-                { field: 'category_id', width: 80, title: 'ID', sort: true },
-                { field: 'title', title: '类别标题' },
-                { field: 'call_index', minWidth: 150, title: '调用别名', sort: true },
-                { field: 'link_url', title: '外部链接', minWidth: 150 },
+                { field: 'user_id', width: 80, title: 'ID', sort: true },
+                { field: 'real_name', title: '姓名' },
+                { field: 'nick_name', title: '昵称', sort: true },
+                { field: 'user_number', title: '特征标识' },
+                { field: 'email', title: '邮箱' },
                 {
-                    field: 'img_url', title: '图片地址', width: 150, templet: function (d) {
-                        if (d.img_url != "") {
-                            return '<img src="' + d.img_url + '" style="max-width: 100px;max-height: 100px;" />';
+                    field: 'avatar', title: '头像', width: 150, templet: function (d) {
+                        if (d.avatar != "") {
+                            return '<img src="' + d.avatar + '" style="max-width: 100px;max-height: 100px;" />';
                         }
                         return "";
                     }
                 },
                 {
+                    field: 'enabled', title: '状态', width: 70, templet: function (d) {
+                        if (d.enabled == 1) {
+                            return '<span class="layui-badge layui-bg-green">启用</span>';
+                        }
+                        return '<span class="layui-badge layui-bg-gray">禁用</span>';
+                    }
+                },
+                {
                     field: 'sort_id', width: 100, align: "center", title: '排序', templet: function (d) {
-                        return '<input type="number" name="sort_id" category_id="' + d.category_id + '" value="' + d.sort_id + '" class="layui-input" style="" />';
+                        return '<input type="number" name="sort_id" user_id="' + d.user_id + '" value="' + d.sort_id + '" class="layui-input" style="" />';
                     }
                 },
                 { title: '操作', width: 150, toolbar: '#currentTableBar', align: "center" }
@@ -90,8 +110,9 @@
                     curr: 1
                 }
                 , where: {
-                    title: $("input[name='title']").val(),
-                    callIndex: $("input[name='callIndex']").val(),
+                    roleId: parseInt($("select[name='roleId']").val()),
+                    realName: $("input[name='realName']").val(),
+                    userName: $("input[name='userName']").val(),
                 }
             }, 'data');
 
@@ -110,7 +131,7 @@
                     maxmin: true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: 'CategoryEdit',
+                    content: 'AdminEdit',
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -119,7 +140,7 @@
                 var sorts = [];
                 $("input[name='sort_id']").each(function () {
                     var sort = {
-                        category_id: parseInt($(this).attr("category_id")),
+                        user_id: parseInt($(this).attr("user_id")),
                         sort_id: parseInt($(this).val())
                     };
                     sorts.push(sort);
@@ -127,7 +148,7 @@
                 console.log(sorts);
                 $.ajax({
                     type: "POST",
-                    url: "/admin/link/CategorySaveSortId", //提交的地址
+                    url: "/admin/admin/AdminSaveSortId", //提交的地址
                     data: JSON.stringify(sorts),
                     async: false,
                     beforeSend: function () { //当一个Ajax请求开始时触发
@@ -161,13 +182,13 @@
             if (obj.event === 'edit') {
                 console.log(data);
                 var index = layer.open({
-                    title: '用户',
+                    title: '修改',
                     type: 2,
                     shade: 0.2,
                     maxmin: true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: 'CategoryEdit?categoryId=' + data.category_id,
+                    content: 'AdminEdit?userId=' + data.user_id,
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -177,9 +198,9 @@
                 layer.confirm('真的删除行么', function (index) {
                     $.ajax({
                         type: "POST",
-                        url: "/admin/link/CategoryDestory", //提交的地址
+                        url: "/admin/admin/AdminDestory", //提交的地址
                         data: {
-                            "categoryId": data.category_id
+                            "userId": data.user_id
                         },
                         async: false,
                         beforeSend: function () { //当一个Ajax请求开始时触发

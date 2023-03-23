@@ -18,7 +18,7 @@ type CmsAdmin struct {
 	RealName       string    `gorm:"column:real_name;type:varchar(128)" json:"real_name" form:"real_name"`                      // 姓名
 	NickName       string    `gorm:"column:nick_name;type:varchar(64)" json:"nick_name" form:"nick_name"`                       // 昵称
 	IDCard         string    `gorm:"column:id_card;type:varchar(32)" json:"id_card" form:"id_card"`                             // 身份证号
-	Sex            int32     `gorm:"column:sex;type:int" json:"sex" form:"sex"`                                                 // 性别（0 男 1 女）
+	Sex            int32     `gorm:"column:sex;type:int" json:"sex" form:"sex"`                                                 // 性别（1男2女0未知）
 	UserName       string    `gorm:"column:user_name;type:varchar(128)" json:"user_name" form:"user_name"`                      // 用户名(登录名),保持系统唯一
 	UserNumber     string    `gorm:"column:user_number;type:varchar(32)" json:"user_number" form:"user_number"`                 // 其他唯一特征标识：如教职工的工号或学生的学号
 	Password       string    `gorm:"column:password;type:varchar(64)" json:"password" form:"password"`                          // 密码
