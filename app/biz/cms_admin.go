@@ -120,3 +120,62 @@ func (m *CmsAdmin) LogPaginate(page, limit int, userId int64, userName string) (
 	}
 	return do.Where(mdl.UserName.Like("%"+userName+"%")).FindByPage((page-1)*limit, limit)
 }
+
+func (m *CmsAdmin) RolePaginate(page, limit int, name string) ([]*model.CmsAdminRole, int64, error) {
+	mdl, do := query.CmsAdminRoleDo()
+	return do.Where(mdl.Name.Like("%"+name+"%")).Order(mdl.SortID).FindByPage((page-1)*limit, limit)
+}
+
+func (m *CmsAdmin) RoleFind(roleId int64) (*model.CmsAdminRole, error) {
+	mdl, do := query.CmsAdminRoleDo()
+	return do.Where(mdl.RoleID.Eq(roleId)).First()
+}
+
+// RoleSave 保存或更新
+func (this *CmsAdmin) RoleSave(input *model.CmsAdminRole) error {
+	mdl, do := query.CmsAdminRoleDo()
+	if input.Name != "" {
+		if count, _ := do.Where(mdl.RoleID.Neq(input.RoleID), mdl.Name.Eq(input.Name)).Count(); count > 0 {
+			return errors.New("调用别名重复")
+		}
+	}
+	var err error
+	input.UpdateTime = time.Now()
+	if input.RoleID <= 0 {
+		input.CreateTime = time.Now()
+		err = do.Create(input)
+	} else {
+		_, err = do.Where(mdl.RoleID.Eq(input.RoleID)).Updates(map[string]interface{}{
+			mdl.Name.ColumnName().String():       input.Name,
+			mdl.Type.ColumnName().String():       input.Type,
+			mdl.Remark.ColumnName().String():     input.Remark,
+			mdl.SortID.ColumnName().String():     input.SortID,
+			mdl.UpdateTime.ColumnName().String(): input.UpdateTime,
+		})
+	}
+	return err
+}
+
+// RoleDestory 删除
+func (this *CmsAdmin) RoleDestory(roleId int64) error {
+	adminMdl, adminDo := query.CmsAdminDo()
+	if count, _ := adminDo.Where(adminMdl.RoleID.Eq(roleId)).Count(); count > 0 {
+		return errors.New("该角色下有用户，无法删除")
+	}
+	mdl, do := query.CmsAdminRoleDo()
+	if _, err := do.Where(mdl.RoleID.Eq(roleId)).Delete(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (this *CmsAdmin) RoleSaveSortId(roleId int64, sortId int32) error {
+	mdl, do := query.CmsAdminRoleDo()
+	_, err := do.Where(mdl.RoleID.Eq(roleId)).UpdateColumns(
+		map[string]interface{}{
+			mdl.SortID.ColumnName().String():     sortId,
+			mdl.UpdateTime.ColumnName().String(): time.Now(),
+		},
+	)
+	return err
+}
