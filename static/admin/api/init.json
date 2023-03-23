@@ -269,7 +269,7 @@
                         },
                         {
                             "title": "频道管理",
-                            "href": "/admin/site/channel",
+                            "href": "/admin/link/category",
                             "icon": "fa fa-snowflake-o",
                             "target": "_self"
                         }
