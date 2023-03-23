@@ -53,7 +53,18 @@ func (c *AdminController) RoleSave() {
 		logs.Error("RoleSave", err.Error())
 		c.JSONError(err.Error())
 	}
-	if err := biz.NewCmsAdmin().RoleSave(&mdl); err != nil {
+	actions := c.Ctx.Request.FormValue("action")
+	role_vals := map[string]string{}
+	if err := xjson.Unmarshal([]byte(actions), &role_vals); err != nil {
+		fmt.Println(err.Error())
+	}
+	do := biz.NewCmsAdmin()
+	if err := do.RoleSave(&mdl); err != nil {
+		logs.Error("RoleSave", err.Error())
+		c.JSONError(err.Error())
+		return
+	}
+	if err := do.RoleValSave(mdl.RoleID, role_vals); err != nil {
 		logs.Error("RoleSave", err.Error())
 		c.JSONError(err.Error())
 		return
@@ -87,4 +98,22 @@ func (c *AdminController) RoleDestory() {
 		return
 	}
 	c.JSONSuccess("删除成功", nil)
+}
+
+func (c *AdminController) NavFind() {
+	roleId, _ := c.GetInt64("roleId")
+	list, count, err := biz.NewCmsAdmin().NavFind(roleId)
+	if err != nil {
+		logs.Error("NavFind", err.Error())
+	}
+	c.JSONPaging(lib.CodeSuccess, "", list, count)
+}
+
+func (c *AdminController) RoleValueFind() {
+	roleId, _ := c.GetInt64("roleId")
+	list, count, err := biz.NewCmsAdmin().RoleValueFind(roleId)
+	if err != nil {
+		logs.Error("RoleValueFind", err.Error())
+	}
+	c.JSONPaging(lib.CodeSuccess, "", list, count)
 }

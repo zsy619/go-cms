@@ -3,6 +3,7 @@
         <div class="layui-tab layui-tab-brief layui-tab-card">
             <ul class="layui-tab-title">
                 <li class="layui-this">基本信息</li>
+                <li>管理权限</li>
             </ul>
             <div class="layui-tab-content">
                 <div class="layui-tab-item layui-show">
@@ -37,6 +38,16 @@
                         </div>
                     </div>
                 </div>
+                <div class="layui-tab-item">
+                    <div class="layui-form-item" style="margin: 10px;">
+                        <div class="layui-btn-container layui-btn-group">
+                            <button type="button" class="layui-btn layui-btn-sm" id="btn-expand">全部展开</button>
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" id="btn-fold">全部折叠</button>
+                        </div>
+                    </div>
+                    <table id="tabNav" class="layui-table" lay-filter="tabNav"></table>
+                    <input type="hidden" name="action" value="">
+                </div>
             </div>
         </div>
         <div class="layui-form-item">
@@ -49,12 +60,106 @@
     </form>
 </div>
 <script>
-    layui.use(['form', 'layer', 'wangEditor', 'upload'], function () {
+    var actionChn = { "Show": "显示", "View": "查看", "Add": "添加", "Edit": "修改", "Delete": "删除" };
+    layui.use(['form', 'layer', 'wangEditor', 'upload', 'treetable'], function () {
         var form = layui.form;
         var $ = layui.jquery,
             layer = layui.layer,
             wangEditor = layui.wangEditor;
         var upload = layui.upload;
+        var treetable = layui.treetable;
+
+        form.on('checkbox(nav-id)', function (data) {
+            var nav_id = $(data.elem).attr('data-index');
+            var chk = data.elem.checked;
+            $("input[data-index='" + nav_id + "']").each(function () {
+                $(this).prop("checked", chk);
+            });
+            form.render();
+        });
+
+        layer.load(2);
+        treetable.render({
+            treeColIndex: 1,
+            treeSpid: 0,
+            treeIdName: 'nav_id',
+            treePidName: 'parent_id',
+            elem: '#tabNav',
+            url: '/admin/admin/NavFind?roleId={{.mdl.RoleID}}',
+            page: false,
+            cols: [[
+                { type: 'numbers' },
+                { field: 'title', minWidth: 200, title: '权限名称' },
+                { field: 'name', width: 160, title: '权限标识' },
+                { field: 'link_url', title: '菜单url' },
+                { field: 'sort_id', width: 80, align: 'center', title: '排序号' },
+                {
+                    field: 'action', title: "权限分配", templet: function (d) {
+                        var outHtml = "";
+                        if (d.action != null) {
+                            var actions = d.action.split(',');
+                            var len = actions.length;
+                            for (var i = 0; i < len; i++) {
+                                var item = actions[i];
+                                outHtml += '<input type="checkbox" id="' + d.name + '_' + d.nav_id + '_' + item + '" data-key="' + d.name + '" data-index="' + d.nav_id + '" value="' + item + '" lay-skin="primary" lay-filter="">';
+                                outHtml += '<label for="' + d.name + '_' + d.nav_id + '_' + item + '">' + actionChn[item] + '</label>'
+                            }
+                        }
+                        return outHtml;
+                    }
+                },
+                {
+                    field: 'is_sys', width: 90, align: 'center', title: '选择', templet: function (d) {
+                        return '<input type="checkbox" data-index="' + d.nav_id + '" lay-skin="primary" lay-filter="nav-id">';
+                    }
+                },
+            ]],
+            done: function () {
+                layer.closeAll('loading');
+                $.ajax({
+                    type: "POST", //提交的方法
+                    url: "/admin/admin/RoleValueFind?roleId={{.mdl.RoleID}}", //提交的地址
+                    data: $('#frmEdit').serialize(), // 序列化表单值
+                    async: false,
+                    beforeSend: function () { //当一个Ajax请求开始时触发
+                        this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+                    },
+                    error: function (request) {  //失败的话
+                    },
+                    success: function (data) {  //成功
+                        console.log(data);
+                        layer.closeAll();
+                        if (data.code == CodeSuccess) {
+                            var len = data.data.length;
+                            for (var i = 0; i < len; i++) {
+                                var item = data.data[i];
+                                var nav_name = item.nav_name;
+                                var actions = item.action.split(',');
+                                var len2 = actions.length;
+                                for (var j = 0; j < len2; j++) {
+                                    var action = actions[j];
+                                    $("input[data-key='" + nav_name + "'][value='" + action + "']").prop("checked", true);
+                                }
+                            }
+                            form.render();
+                        } else {
+                            layer.msg(data.msg, { icon: 2, time: 1000 });
+                        }
+                    },
+                    complete: function () {
+                        layer.close(this.layerIndex);
+                    },
+                });
+            }
+        });
+
+        $('#btn-expand').click(function () {
+            treetable.expandAll('#tabNav');
+        });
+
+        $('#btn-fold').click(function () {
+            treetable.foldAll('#tabNav');
+        });
 
         //自定义验证规则
         form.verify({
@@ -79,6 +184,20 @@
 
         //方法提交
         $('#btnSubmit').on('click', function () {
+            var actions = {};
+            $('input[data-key]:checked').each(function (idx, obj) {
+                var key = $(obj).attr("data-key");
+                var val = $(obj).val();
+                if (actions[key]) {
+                    actions[key] += "," + val;
+                } else {
+                    actions[key] = val;
+                }
+            });
+            console.log(JSON.stringify(actions));
+            $('input[name=action]').val(JSON.stringify(actions));
+            // console.log($('#frmEdit').serialize());
+            // return false;
             form.submit('frmEdit', function (data) {
                 $.ajax({
                     type: "POST", //提交的方法
@@ -91,7 +210,7 @@
                     error: function (request) {  //失败的话
                     },
                     success: function (data) {  //成功
-                        console.log(data);
+                        // console.log(data);
                         layer.closeAll();
                         if (data.code == CodeSuccess) {
                             layer.msg("提交成功", { icon: 1, time: 1000 }, function () {

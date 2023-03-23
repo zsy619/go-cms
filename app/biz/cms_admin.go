@@ -156,11 +156,28 @@ func (this *CmsAdmin) RoleSave(input *model.CmsAdminRole) error {
 	return err
 }
 
+func (this *CmsAdmin) RoleValSave(roleId int64, values map[string]string) error {
+	mdl, do := query.CmsAdminRoleValueDo()
+	_, err := do.Where(mdl.RoleID.Eq(roleId)).Delete()
+	for k, v := range values {
+		err = do.Save(&model.CmsAdminRoleValue{
+			RoleID:  roleId,
+			NavName: k,
+			Action:  v,
+		})
+	}
+	return err
+}
+
 // RoleDestory 删除
 func (this *CmsAdmin) RoleDestory(roleId int64) error {
 	adminMdl, adminDo := query.CmsAdminDo()
 	if count, _ := adminDo.Where(adminMdl.RoleID.Eq(roleId)).Count(); count > 0 {
 		return errors.New("该角色下有用户，无法删除")
+	}
+	valueMdl, valueDo := query.CmsAdminRoleValueDo()
+	if _, err := valueDo.Where(valueMdl.RoleID.Eq(roleId)).Delete(); err != nil {
+		return err
 	}
 	mdl, do := query.CmsAdminRoleDo()
 	if _, err := do.Where(mdl.RoleID.Eq(roleId)).Delete(); err != nil {
@@ -178,4 +195,14 @@ func (this *CmsAdmin) RoleSaveSortId(roleId int64, sortId int32) error {
 		},
 	)
 	return err
+}
+
+func (this *CmsAdmin) RoleValueFind(roleId int64) ([]*model.CmsAdminRoleValue, int64, error) {
+	mdl, do := query.CmsAdminRoleValueDo()
+	return do.Where(mdl.RoleID.Eq(roleId)).FindByPage(0, 99999)
+}
+
+func (this *CmsAdmin) NavFind(roleId int64) ([]*model.CmsAdminNav, int64, error) {
+	mdl, do := query.CmsAdminNavDo()
+	return do.Order(mdl.SortID).FindByPage(0, 99999)
 }
