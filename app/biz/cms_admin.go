@@ -325,3 +325,12 @@ func (this *CmsAdmin) NavFind(roleId int64) ([]*model.CmsAdminNav, int64, error)
 	mdl, do := query.CmsAdminNavDo()
 	return do.Order(mdl.SortID).FindByPage(0, 99999)
 }
+
+func (this *CmsAdmin) OneByUserId(userId int64) *model.CmsAdmin {
+	mdl, do := query.CmsAdminDo()
+	first, err := do.Where(mdl.UserID.Eq(userId)).First()
+	if err != nil {
+		return nil
+	}
+	return first
+}
