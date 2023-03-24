@@ -29,6 +29,7 @@ func newCmsAdminNav(db *gorm.DB, opts ...gen.DOOption) cmsAdminNav {
 	_cmsAdminNav.ALL = field.NewAsterisk(tableName)
 	_cmsAdminNav.NavID = field.NewInt64(tableName, "nav_id")
 	_cmsAdminNav.ParentID = field.NewInt64(tableName, "parent_id")
+	_cmsAdminNav.ChannelID = field.NewInt64(tableName, "channel_id")
 	_cmsAdminNav.Type = field.NewString(tableName, "type")
 	_cmsAdminNav.Name = field.NewString(tableName, "name")
 	_cmsAdminNav.Title = field.NewString(tableName, "title")
@@ -39,6 +40,13 @@ func newCmsAdminNav(db *gorm.DB, opts ...gen.DOOption) cmsAdminNav {
 	_cmsAdminNav.SortID = field.NewInt32(tableName, "sort_id")
 	_cmsAdminNav.Action = field.NewString(tableName, "action")
 	_cmsAdminNav.IsSys = field.NewInt32(tableName, "is_sys")
+	_cmsAdminNav.Remark = field.NewString(tableName, "remark")
+	_cmsAdminNav.CreateID = field.NewInt32(tableName, "create_id")
+	_cmsAdminNav.CreateName = field.NewString(tableName, "create_name")
+	_cmsAdminNav.CreateTime = field.NewTime(tableName, "create_time")
+	_cmsAdminNav.UpdateID = field.NewInt32(tableName, "update_id")
+	_cmsAdminNav.UpdateName = field.NewString(tableName, "update_name")
+	_cmsAdminNav.UpdateTime = field.NewTime(tableName, "update_time")
 
 	_cmsAdminNav.fillFieldMap()
 
@@ -48,19 +56,27 @@ func newCmsAdminNav(db *gorm.DB, opts ...gen.DOOption) cmsAdminNav {
 type cmsAdminNav struct {
 	cmsAdminNavDo cmsAdminNavDo
 
-	ALL      field.Asterisk
-	NavID    field.Int64  // 主键
-	ParentID field.Int64  // 父节点
-	Type     field.String // 导航类别
-	Name     field.String // 导航ID
-	Title    field.String // 标题
-	SubTitle field.String // 副标题
-	IconURL  field.String // 图标地址
-	LinkURL  field.String // 链接地址
-	IsHide   field.Int32  // 是否隐藏0显示1隐藏
-	SortID   field.Int32  // 排序
-	Action   field.String // 权限资源
-	IsSys    field.Int32  // 是否系统默认0否1是
+	ALL        field.Asterisk
+	NavID      field.Int64  // 主键
+	ParentID   field.Int64  // 父节点
+	ChannelID  field.Int64  // 频道ID
+	Type       field.String // 导航类别
+	Name       field.String // 导航ID
+	Title      field.String // 标题
+	SubTitle   field.String // 副标题
+	IconURL    field.String // 图标地址
+	LinkURL    field.String // 链接地址
+	IsHide     field.Int32  // 是否隐藏0显示1隐藏
+	SortID     field.Int32  // 排序
+	Action     field.String // 权限资源
+	IsSys      field.Int32  // 是否系统默认0否1是
+	Remark     field.String // 备注
+	CreateID   field.Int32  // 创建人ID
+	CreateName field.String // 创建人姓名
+	CreateTime field.Time   // 创建时间
+	UpdateID   field.Int32  // 更新人ID
+	UpdateName field.String // 更新人姓名
+	UpdateTime field.Time   // 修改时间
 
 	fieldMap map[string]field.Expr
 }
@@ -79,6 +95,7 @@ func (c *cmsAdminNav) updateTableName(table string) *cmsAdminNav {
 	c.ALL = field.NewAsterisk(table)
 	c.NavID = field.NewInt64(table, "nav_id")
 	c.ParentID = field.NewInt64(table, "parent_id")
+	c.ChannelID = field.NewInt64(table, "channel_id")
 	c.Type = field.NewString(table, "type")
 	c.Name = field.NewString(table, "name")
 	c.Title = field.NewString(table, "title")
@@ -89,6 +106,13 @@ func (c *cmsAdminNav) updateTableName(table string) *cmsAdminNav {
 	c.SortID = field.NewInt32(table, "sort_id")
 	c.Action = field.NewString(table, "action")
 	c.IsSys = field.NewInt32(table, "is_sys")
+	c.Remark = field.NewString(table, "remark")
+	c.CreateID = field.NewInt32(table, "create_id")
+	c.CreateName = field.NewString(table, "create_name")
+	c.CreateTime = field.NewTime(table, "create_time")
+	c.UpdateID = field.NewInt32(table, "update_id")
+	c.UpdateName = field.NewString(table, "update_name")
+	c.UpdateTime = field.NewTime(table, "update_time")
 
 	c.fillFieldMap()
 
@@ -113,9 +137,10 @@ func (c *cmsAdminNav) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *cmsAdminNav) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 12)
+	c.fieldMap = make(map[string]field.Expr, 20)
 	c.fieldMap["nav_id"] = c.NavID
 	c.fieldMap["parent_id"] = c.ParentID
+	c.fieldMap["channel_id"] = c.ChannelID
 	c.fieldMap["type"] = c.Type
 	c.fieldMap["name"] = c.Name
 	c.fieldMap["title"] = c.Title
@@ -126,6 +151,13 @@ func (c *cmsAdminNav) fillFieldMap() {
 	c.fieldMap["sort_id"] = c.SortID
 	c.fieldMap["action"] = c.Action
 	c.fieldMap["is_sys"] = c.IsSys
+	c.fieldMap["remark"] = c.Remark
+	c.fieldMap["create_id"] = c.CreateID
+	c.fieldMap["create_name"] = c.CreateName
+	c.fieldMap["create_time"] = c.CreateTime
+	c.fieldMap["update_id"] = c.UpdateID
+	c.fieldMap["update_name"] = c.UpdateName
+	c.fieldMap["update_time"] = c.UpdateTime
 }
 
 func (c cmsAdminNav) clone(db *gorm.DB) cmsAdminNav {

@@ -8,10 +8,71 @@ import (
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/lib"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
+	"haedu.gov.cn/tools/xcrypto"
 	"haedu.gov.cn/tools/xjson"
+	"haedu.gov.cn/tools/xstring"
 )
 
 type AdminController struct{ BaseController }
+
+func (c *AdminController) Index() {
+	roleList, _, _ := biz.NewCmsAdmin().RolePaginate(0, 99999, "")
+	c.Data["roleList"] = roleList
+	c.display()
+}
+
+func (c *AdminController) AdminPaginate() {
+	page, limit := c.GetPagingParameters()
+	roleId, _ := c.GetInt64("roleId")
+	realName := c.GetString("realName")
+	userName := c.GetString("userName")
+	list, count, _ := biz.NewCmsAdmin().AdminPaginate(page, limit, roleId, realName, userName)
+	c.JSONPaging(lib.CodeSuccess, "", list, count)
+}
+
+func (c *AdminController) AdminEdit() {
+	roleList, _, _ := biz.NewCmsAdmin().RolePaginate(0, 99999, "")
+	c.Data["roleList"] = roleList
+	userId, _ := c.GetInt64("userId")
+	mdl, err := biz.NewCmsAdmin().AdminFind(userId)
+	if err != nil {
+		mdl = &model.CmsAdmin{
+			SortID: 99,
+		}
+	}
+	c.Data["mdl"] = mdl
+	c.display()
+}
+
+func (c *AdminController) AdminSave() {
+	mdl := model.CmsAdmin{}
+	if err := c.ParseForm(&mdl); err != nil {
+		logs.Error("AdminSave", err.Error())
+		c.JSONError(err.Error())
+	}
+	if mdl.Password != "" {
+		mdl.PasswordSalt, _ = xstring.RandomHexStr(6)
+		mdl.PasswordFormat = 2
+		mdl.Password = xcrypto.GetMD5Hash(mdl.Password + mdl.PasswordSalt)
+	}
+	do := biz.NewCmsAdmin()
+	if err := do.AdminSave(&mdl); err != nil {
+		logs.Error("AdminSave", err.Error())
+		c.JSONError(err.Error())
+		return
+	}
+	c.JSONSuccess("保存成功", nil)
+}
+
+func (c *AdminController) AdminDestory() {
+	userId, _ := c.GetInt64("userId")
+	if err := biz.NewCmsAdmin().AdminDestory(userId); err != nil {
+		logs.Error("AdminDestory", err.Error())
+		c.JSONError(err.Error())
+		return
+	}
+	c.JSONSuccess("删除成功", nil)
+}
 
 func (c *AdminController) Log() {
 	c.display()

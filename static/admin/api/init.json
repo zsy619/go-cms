@@ -16,20 +16,20 @@
             "target": "_self",
             "child": [
                 {
-                    "title": "主页模板",
+                    "title": "内容管理",
                     "href": "",
                     "icon": "fa fa-home",
                     "target": "_self",
                     "child": [
                         {
-                            "title": "主页一",
-                            "href": "page/welcome-1.html",
+                            "title": "内容管理",
+                            "href": "/admin/article/index?channelId=100000",
                             "icon": "fa fa-tachometer",
                             "target": "_self"
                         },
                         {
-                            "title": "主页二",
-                            "href": "page/welcome-2.html",
+                            "title": "栏目管理",
+                            "href": "/admin/article/category?channelId=100000",
                             "icon": "fa fa-tachometer",
                             "target": "_self"
                         },

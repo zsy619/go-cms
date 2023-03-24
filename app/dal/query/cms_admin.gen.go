@@ -70,7 +70,7 @@ type cmsAdmin struct {
 	RealName       field.String // 姓名
 	NickName       field.String // 昵称
 	IDCard         field.String // 身份证号
-	Sex            field.Int32  // 性别（0 男 1 女）
+	Sex            field.Int32  // 性别（1男2女0未知）
 	UserName       field.String // 用户名(登录名),保持系统唯一
 	UserNumber     field.String // 其他唯一特征标识：如教职工的工号或学生的学号
 	Password       field.String // 密码
