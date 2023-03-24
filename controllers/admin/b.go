@@ -69,3 +69,19 @@ func (c *BaseController) JSONData(data *lib.JSONResponse) {
 	c.ServeJSON()
 	c.StopRun()
 }
+
+// 登录人ID
+func (this *BaseController) IsLogin() int64 {
+	id := this.GetSession(`adminId`)
+	if id == nil {
+		return 0
+	} else {
+		switch id.(type) {
+		case int64:
+			rt := id.(int64)
+			return rt
+		default:
+			return 0
+		}
+	}
+}
