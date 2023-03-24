@@ -32,6 +32,7 @@ func newCmsArticle(db *gorm.DB, opts ...gen.DOOption) cmsArticle {
 	_cmsArticle.ChannelID = field.NewInt64(tableName, "channel_id")
 	_cmsArticle.CategoryID = field.NewInt64(tableName, "category_id")
 	_cmsArticle.Title = field.NewString(tableName, "title")
+	_cmsArticle.SubTitle = field.NewString(tableName, "sub_title")
 	_cmsArticle.CallIndex = field.NewString(tableName, "call_index")
 	_cmsArticle.Source = field.NewString(tableName, "source")
 	_cmsArticle.Author = field.NewString(tableName, "author")
@@ -56,6 +57,7 @@ func newCmsArticle(db *gorm.DB, opts ...gen.DOOption) cmsArticle {
 	_cmsArticle.StaticURL = field.NewString(tableName, "static_url")
 	_cmsArticle.IsDeleted = field.NewBool(tableName, "is_deleted")
 	_cmsArticle.Status = field.NewInt32(tableName, "status")
+	_cmsArticle.PublishTime = field.NewTime(tableName, "publish_time")
 	_cmsArticle.BelongTo = field.NewString(tableName, "belong_to")
 	_cmsArticle.CreateID = field.NewInt32(tableName, "create_id")
 	_cmsArticle.CreateName = field.NewString(tableName, "create_name")
@@ -77,7 +79,8 @@ type cmsArticle struct {
 	SiteID         field.Int64  // 所属站点
 	ChannelID      field.Int64  // 所属频道
 	CategoryID     field.Int64  // 类别ID
-	Title          field.String // 标题
+	Title          field.String // 内容标题
+	SubTitle       field.String // 副标题
 	CallIndex      field.String // 调用别名
 	Source         field.String // 来源
 	Author         field.String // 作者
@@ -102,6 +105,7 @@ type cmsArticle struct {
 	StaticURL      field.String // 静态链接
 	IsDeleted      field.Bool   // 删除标识
 	Status         field.Int32  // 状态0草稿1提交2审核通过3审核未通过4驳回
+	PublishTime    field.Time   // 发布时间
 	BelongTo       field.String // 归属
 	CreateID       field.Int32  // 创建人ID
 	CreateName     field.String // 创建人姓名
@@ -130,6 +134,7 @@ func (c *cmsArticle) updateTableName(table string) *cmsArticle {
 	c.ChannelID = field.NewInt64(table, "channel_id")
 	c.CategoryID = field.NewInt64(table, "category_id")
 	c.Title = field.NewString(table, "title")
+	c.SubTitle = field.NewString(table, "sub_title")
 	c.CallIndex = field.NewString(table, "call_index")
 	c.Source = field.NewString(table, "source")
 	c.Author = field.NewString(table, "author")
@@ -154,6 +159,7 @@ func (c *cmsArticle) updateTableName(table string) *cmsArticle {
 	c.StaticURL = field.NewString(table, "static_url")
 	c.IsDeleted = field.NewBool(table, "is_deleted")
 	c.Status = field.NewInt32(table, "status")
+	c.PublishTime = field.NewTime(table, "publish_time")
 	c.BelongTo = field.NewString(table, "belong_to")
 	c.CreateID = field.NewInt32(table, "create_id")
 	c.CreateName = field.NewString(table, "create_name")
@@ -185,12 +191,13 @@ func (c *cmsArticle) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *cmsArticle) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 36)
+	c.fieldMap = make(map[string]field.Expr, 38)
 	c.fieldMap["article_id"] = c.ArticleID
 	c.fieldMap["site_id"] = c.SiteID
 	c.fieldMap["channel_id"] = c.ChannelID
 	c.fieldMap["category_id"] = c.CategoryID
 	c.fieldMap["title"] = c.Title
+	c.fieldMap["sub_title"] = c.SubTitle
 	c.fieldMap["call_index"] = c.CallIndex
 	c.fieldMap["source"] = c.Source
 	c.fieldMap["author"] = c.Author
@@ -215,6 +222,7 @@ func (c *cmsArticle) fillFieldMap() {
 	c.fieldMap["static_url"] = c.StaticURL
 	c.fieldMap["is_deleted"] = c.IsDeleted
 	c.fieldMap["status"] = c.Status
+	c.fieldMap["publish_time"] = c.PublishTime
 	c.fieldMap["belong_to"] = c.BelongTo
 	c.fieldMap["create_id"] = c.CreateID
 	c.fieldMap["create_name"] = c.CreateName

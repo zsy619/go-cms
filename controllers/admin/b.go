@@ -2,6 +2,7 @@ package admin
 
 import (
 	"fmt"
+
 	"haedu.gov.cn/cms/app/lib"
 
 	"haedu.gov.cn/cms/controllers"
@@ -55,6 +56,11 @@ func (c *BaseController) JSONPaging(code lib.CodeResult, message string, data in
 	}
 	c.ServeJSON()
 	c.StopRun()
+}
+
+// JSONPaging 返回分页信息
+func (c *BaseController) JSONPagingSuccess(data interface{}, count int64) {
+	c.JSONPaging(lib.CodeSuccess, "", data, count)
 }
 
 // JSONData 公共返回方法

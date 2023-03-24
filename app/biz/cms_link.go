@@ -91,7 +91,7 @@ func (this *CmsLink) LinkDestroyByCategoryId(categoryId int64) error {
 }
 
 // LinkPaginate 分页查询
-func (this *CmsLink) LinkPaginate(page, limit int, siteId, channelId, categoryId int64, title, callIndex string) ([]*model.CmsLink, int64, error) {
+func (this *CmsLink) LinkPaginate(page, limit int, siteId, channelId, categoryId int64, title, callIndex string, status int32) ([]*model.CmsLink, int64, error) {
 	mdl, do := query.CmsLinkDo()
 	if categoryId > 0 {
 		do = do.Where(mdl.CategoryID.Eq(categoryId))
@@ -101,6 +101,9 @@ func (this *CmsLink) LinkPaginate(page, limit int, siteId, channelId, categoryId
 	}
 	if callIndex != "" {
 		do = do.Where(mdl.CallIndex.Like("%" + callIndex + "%"))
+	}
+	if status >= 0 {
+		do = do.Where(mdl.Status.Eq(status))
 	}
 	return do.Order(mdl.IsTop.Desc(), mdl.SortID).FindByPage((page-1)*limit, limit)
 }
@@ -136,7 +139,6 @@ func (this *CmsLink) LinkSave(input *model.CmsLink) error {
 			mdl.SortID.ColumnName().String():     input.SortID,
 			mdl.Status.ColumnName().String():     input.Status,
 			mdl.IsLock.ColumnName().String():     input.IsLock,
-			mdl.IsMsg.ColumnName().String():      input.IsMsg,
 			mdl.IsTop.ColumnName().String():      input.IsTop,
 			mdl.IsRed.ColumnName().String():      input.IsRed,
 			mdl.IsHot.ColumnName().String():      input.IsHot,

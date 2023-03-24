@@ -41,7 +41,6 @@ func newCmsLink(db *gorm.DB, opts ...gen.DOOption) cmsLink {
 	_cmsLink.Click = field.NewInt32(tableName, "click")
 	_cmsLink.Status = field.NewInt32(tableName, "status")
 	_cmsLink.IsLock = field.NewInt32(tableName, "is_lock")
-	_cmsLink.IsMsg = field.NewInt32(tableName, "is_msg")
 	_cmsLink.IsTop = field.NewInt32(tableName, "is_top")
 	_cmsLink.IsRed = field.NewInt32(tableName, "is_red")
 	_cmsLink.IsHot = field.NewInt32(tableName, "is_hot")
@@ -77,7 +76,6 @@ type cmsLink struct {
 	Click      field.Int32  // 浏览次数
 	Status     field.Int32  // 状态0草稿1提交2审核通过3审核未通过4驳回
 	IsLock     field.Int32  // 是否锁定（不允许编辑）
-	IsMsg      field.Int32  // 是否允许评论
 	IsTop      field.Int32  // 是否置顶
 	IsRed      field.Int32  // 是否推荐
 	IsHot      field.Int32  // 是否热门
@@ -119,7 +117,6 @@ func (c *cmsLink) updateTableName(table string) *cmsLink {
 	c.Click = field.NewInt32(table, "click")
 	c.Status = field.NewInt32(table, "status")
 	c.IsLock = field.NewInt32(table, "is_lock")
-	c.IsMsg = field.NewInt32(table, "is_msg")
 	c.IsTop = field.NewInt32(table, "is_top")
 	c.IsRed = field.NewInt32(table, "is_red")
 	c.IsHot = field.NewInt32(table, "is_hot")
@@ -153,7 +150,7 @@ func (c *cmsLink) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *cmsLink) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 26)
+	c.fieldMap = make(map[string]field.Expr, 25)
 	c.fieldMap["link_id"] = c.LinkID
 	c.fieldMap["site_id"] = c.SiteID
 	c.fieldMap["channel_id"] = c.ChannelID
@@ -168,7 +165,6 @@ func (c *cmsLink) fillFieldMap() {
 	c.fieldMap["click"] = c.Click
 	c.fieldMap["status"] = c.Status
 	c.fieldMap["is_lock"] = c.IsLock
-	c.fieldMap["is_msg"] = c.IsMsg
 	c.fieldMap["is_top"] = c.IsTop
 	c.fieldMap["is_red"] = c.IsRed
 	c.fieldMap["is_hot"] = c.IsHot

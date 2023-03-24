@@ -83,9 +83,10 @@ func (c *LinkController) LinkDestory() {
 func (c *LinkController) LinkPaginate() {
 	page, limit := c.GetPagingParameters()
 	categoryId, _ := c.GetInt64("categoryId")
+	status, _ := c.GetInt32("status")
 	title := c.GetString("title")
 	callIndex := c.GetString("callIndex")
-	list, count, _ := biz.NewCmsLink().LinkPaginate(page, limit, -1, -1, categoryId, title, callIndex)
+	list, count, _ := biz.NewCmsLink().LinkPaginate(page, limit, -1, -1, categoryId, title, callIndex, status)
 	c.JSONPaging(lib.CodeSuccess, "", list, count)
 }
 

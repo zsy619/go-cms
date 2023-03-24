@@ -29,6 +29,17 @@
                             </div>
                         </div>
                         <div class="layui-inline">
+                            <label class="layui-form-label">审核状态</label>
+                            <div class="layui-input-inline">
+                                <select name="status">
+                                    <option value="-1">状态</option>
+                                    <option value="0">草稿</option>
+                                    <option value="2">通过</option>
+                                    <option value="3">拒绝</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
                             <button type="submit" class="layui-btn layui-btn-primary layui-btn-radius" lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                         </div>
                     </div>
@@ -58,7 +69,7 @@
 
         table.render({
             elem: '#currentTableId',
-            url: '/admin/link/linkpaginate',
+            url: '/admin/link/linkpaginate?status=-1',
             toolbar: '#toolbarDemo',
             height: "full-170",
             defaultToolbar: ['filter', 'exports', 'print'],
@@ -78,8 +89,8 @@
                     }
                 },
                 {
-                    field: 'img_url', title: '推荐类型', width: 220, templet: function (d) {
-                        var outText = d.status == 2 ? "通过" : "草稿";
+                    field: 'img_url', title: '属性', width: 220, templet: function (d) {
+                        var outText = d.status == 2 ? "通过" : (d.status == 3 ? "未通过" : "草稿");
                         if (d.is_top == 1) {
                             outText += "/置顶";
                         }
@@ -133,6 +144,7 @@
                 }
                 , where: {
                     categoryId: parseInt($("select[name='category_id']").val()),
+                    status: parseInt($("select[name='status']").val()),
                     title: $("input[name='title']").val(),
                     callIndex: $("input[name='callIndex']").val(),
                 }

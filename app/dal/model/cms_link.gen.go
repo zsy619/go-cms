@@ -26,7 +26,6 @@ type CmsLink struct {
 	Click      int32     `gorm:"column:click;type:int" json:"click" form:"click"`                                           // 浏览次数
 	Status     int32     `gorm:"column:status;type:tinyint" json:"status" form:"status"`                                    // 状态0草稿1提交2审核通过3审核未通过4驳回
 	IsLock     int32     `gorm:"column:is_lock;type:tinyint" json:"is_lock" form:"is_lock"`                                 // 是否锁定（不允许编辑）
-	IsMsg      int32     `gorm:"column:is_msg;type:tinyint" json:"is_msg" form:"is_msg"`                                    // 是否允许评论
 	IsTop      int32     `gorm:"column:is_top;type:tinyint" json:"is_top" form:"is_top"`                                    // 是否置顶
 	IsRed      int32     `gorm:"column:is_red;type:tinyint" json:"is_red" form:"is_red"`                                    // 是否推荐
 	IsHot      int32     `gorm:"column:is_hot;type:tinyint" json:"is_hot" form:"is_hot"`                                    // 是否热门

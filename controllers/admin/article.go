@@ -2,6 +2,7 @@ package admin
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/cms/app/biz"
@@ -24,6 +25,74 @@ func (c *ArticleController) Index() {
 	c.display()
 }
 
+func (c *ArticleController) ArticlePaginate() {
+	page, limit := c.GetPagingParameters()
+	channelId, _ := c.GetInt64("channelId")
+	categoryId, _ := c.GetInt64("categoryId")
+	fmt.Println("categoryId", categoryId, "channelId", channelId)
+	title := c.GetString("title")
+	callIndex := c.GetString("callIndex")
+	status, _ := c.GetInt32("status")
+	list, count, err := biz.NewCmsArticle().ArticlePaginate(page, limit, channelId, categoryId, title, callIndex, status)
+	if err != nil {
+		logs.Error("CategoryFind", err.Error())
+	}
+	c.JSONPagingSuccess(list, count)
+}
+
+func (c *ArticleController) ArticleEdit() {
+	channelId, _ := c.GetInt64("channelId")
+	if channelId <= 0 {
+		c.Abort("404")
+		c.StopRun()
+		return
+	}
+	articleId, _ := c.GetInt64("articleId")
+	mdl, err := biz.NewCmsArticle().ArticleFind(articleId)
+	if err != nil {
+		mdl = &model.CmsArticle{
+			SortID:      99,
+			Author:      GlobalAdminName,
+			ChannelID:   channelId,
+			PublishTime: time.Now(),
+		}
+	}
+	c.Data["mdl"] = mdl
+	c.display()
+}
+
+func (c *ArticleController) ArticleSave() {
+	mdl := model.CmsArticle{}
+	if err := c.ParseForm(&mdl); err != nil {
+		logs.Error("ArticleSave", err.Error())
+		c.JSONError(err.Error())
+	}
+	if err := biz.NewCmsArticle().ArticleSave(&mdl); err != nil {
+		logs.Error("ArticleSave", err.Error())
+		c.JSONError(err.Error())
+		return
+	}
+	c.JSONSuccess("保存成功", nil)
+}
+
+func (c *ArticleController) ArticleSaveSortId() {
+	mdls := []vmodel.Article_SaveSortIdModel{}
+	data := c.Ctx.Input.RequestBody
+	fmt.Println("ArticleSaveSortId", string(data))
+	if err := xjson.Unmarshal(c.Ctx.Input.RequestBody, &mdls); err != nil {
+		logs.Error("ArticleSaveSortId", err.Error())
+		c.JSONError(err.Error())
+	}
+	for _, mdl := range mdls {
+		if err := biz.NewCmsArticle().ArticleSaveSortId(mdl.ArticleId, int32(mdl.SortId)); err != nil {
+			logs.Error("ArticleSaveSortId", err.Error())
+			c.JSONError(err.Error())
+			return
+		}
+	}
+	c.JSONSuccess("保存成功", nil)
+}
+
 func (c *ArticleController) Category() {
 	channelId, _ := c.GetInt64("channelId")
 	if channelId <= 0 {
@@ -37,7 +106,7 @@ func (c *ArticleController) Category() {
 
 func (c *ArticleController) CategoryFind() {
 	channelId, _ := c.GetInt64("channelId")
-	list, count, err := biz.NewCmsArticle().CategoryPagination(0, 99999, channelId, "", "")
+	list, count, err := biz.NewCmsArticle().CategoryPaginate(1, 99999, channelId, "", "")
 	if err != nil {
 		logs.Error("CategoryFind", err.Error())
 	}
@@ -106,4 +175,23 @@ func (c *ArticleController) CategoryDestory() {
 		return
 	}
 	c.JSONSuccess("删除成功", nil)
+}
+
+func (c *ArticleController) CategoryTree() {
+	channelId, _ := c.GetInt64("channelId")
+	if channelId <= 0 {
+		c.Abort("404")
+		c.StopRun()
+		return
+	}
+	categoryId, _ := c.GetInt64("categoryId")
+	tree, err := biz.NewCmsArticle().CategoryTree(channelId, categoryId)
+	if err != nil {
+		logs.Error("CategoryTree", err.Error())
+		c.JSONError(err.Error())
+		return
+	}
+	c.Data["json"] = tree
+	c.ServeJSON()
+	c.StopRun()
 }

@@ -1,12 +1,19 @@
 <div class="layuimini-container">
     <div class="layuimini-main">
-        <!-- <fieldset class="table-search-fieldset">
+        <fieldset class="table-search-fieldset">
             <legend>搜索信息</legend>
             <div style="margin: 10px 10px 10px 10px">
                 <form class="layui-form layui-form-pane" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">类别标题</label>
+                            <label class="layui-form-label">栏目类别</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="tree" id="tree" autocomplete="off" class="layui-input">
+                                <input type="hidden" name="categoryId" value="0">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">内容标题</label>
                             <div class="layui-input-inline">
                                 <input type="text" name="title" autocomplete="off" class="layui-input">
                             </div>
@@ -18,79 +25,134 @@
                             </div>
                         </div>
                         <div class="layui-inline">
+                            <label class="layui-form-label">审核状态</label>
+                            <div class="layui-input-inline">
+                                <select name="status">
+                                    <option value="-1">状态</option>
+                                    <option value="0">草稿</option>
+                                    <option value="2">通过</option>
+                                    <option value="3">拒绝</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
                             <button type="submit" class="layui-btn layui-btn-primary layui-btn-radius" lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                         </div>
                     </div>
                 </form>
             </div>
-        </fieldset> -->
+        </fieldset>
         <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container layui-btn-group">
-                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn layui-btn-radius" lay-event="add"> 添加 </button>
-                <button class="layui-btn layui-btn-sm layui-btn-primary data-delete-btn layui-btn-radius" lay-event="save"> 保存 </button>
+                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加 </button>
+                <button class="layui-btn layui-btn-primary layui-btn-sm data-add-btn" lay-event="audit"> 通过 </button>
+                <button class="layui-btn layui-btn-danger layui-btn-sm data-add-btn" lay-event="reject"> 拒绝 </button>
+                <button class="layui-btn layui-btn-sm layui-btn-primary data-delete-btn" lay-event="save"> 保存 </button>
             </div>
         </script>
         <table class="layui-hide" id="tableContainer" lay-filter="currentTableFilter"></table>
         <script type="text/html" id="currentTableBar">
             <div class="layui-btn-group">
-                <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit layui-btn-radius" lay-event="edit">编辑</a>
-                <a class="layui-btn layui-btn-primary layui-btn-xs data-count-add layui-btn-radius" lay-event="add">添加子类</a>
-                <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete layui-btn-radius" lay-event="delete">删除</a>
+                <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
+                <a class="layui-btn layui-btn-primary layui-btn-xs data-count-copy" lay-event="copy">拷贝</a>
+                <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
             </div>
         </script>
     </div>
 </div>
 <script>
     var channelId = parseInt("{{.channelId}}");
-    layui.use(['form', 'table', 'layer', 'wangEditor', 'upload', 'treetable'], function () {
-        var form = layui.form;
+    layui.use(['form', 'table', 'treeSelect'], function () {
         var $ = layui.jquery,
-            layer = layui.layer,
-            wangEditor = layui.wangEditor;
-        var upload = layui.upload;
-        var treetable = layui.treetable;
-        var table = layui.table;
+            form = layui.form,
+            table = layui.table;
+        var treeSelect = layui.treeSelect;
 
-        layer.load(2);
-        treetable.render({
-            treeColIndex: 1,
-            treeSpid: 0,
-            treeIdName: 'category_id',
-            treePidName: 'parent_id',
+        treeSelect.render({
+            // 选择器
+            elem: '#tree',
+            // 异步获取下拉树需要显示的数据
+            data: '/admin/article/CategoryTree?channelId=' + channelId,
+            // 异步加载方式：get/post，默认get
+            type: 'post',
+            // 占位符
+            placeholder: '栏目类别',
+            // 是否开启搜索功能：true/false，默认false
+            search: true,
+            // 一些可定制的样式
+            style: {
+                line: {
+                    enable: true
+                }
+            },
+            // 点击节点回调
+            click: function (d) {
+                $("input[name='categoryId']").val(d.current.id);
+            },
+            // 加载完成后的回调函数
+            success: function (d) {
+            }
+        });
+
+        table.render({
             elem: '#tableContainer',
-            url: '/admin/article/categoryfind?channelId=' + channelId,
+            url: '/admin/article/ArticlePaginate?status=-1&channelId=' + channelId,
             toolbar: '#toolbarDemo',
-            height: "full",
+            height: "full-170",
             defaultToolbar: ['filter', 'exports', 'print'],
             cols: [[
-                // { type: "checkbox", width: 50 },
-                { field: 'category_id', width: 80, title: 'ID' },
-                { field: 'title', title: '类别标题' },
-                { field: 'call_index', minWidth: 150, title: '调用别名' },
-                { field: 'link_url', title: '外部链接', minWidth: 150 },
+                { type: "checkbox", width: 50 },
+                { field: 'article_id', width: 80, title: 'ID', sort: true },
                 {
-                    field: 'img_url', title: '图片地址', width: 150, templet: function (d) {
-                        if (d.img_url != "") {
-                            return '<img src="' + d.img_url + '" style="max-width: 100px;max-height: 100px;" />';
+                    field: 'title', title: '内容标题', templet: function (d) {
+                        if (d.sub_title != "") {
+                            return d.title + "<br/><span style='color:#999'>" + d.sub_title + "</span>";
                         }
-                        return "";
+                        return d.title;
+                    }
+                },
+                { field: 'call_index', title: '调用链接' },
+                {
+                    field: 'publish_time', title: '发布时间', width: 170, templet: function (d) {
+                        return layui.util.toDateString(d.publish_time, 'yyyy-MM-dd HH:mm:ss');
                     }
                 },
                 {
+                    field: 'img_url', title: '属性', width: 220, templet: function (d) {
+                        var outText = d.status == 2 ? "通过" : (d.status == 3 ? "未通过" : "草稿");
+                        if (d.is_command == 1) {
+                            outText += "/评论";
+                        }
+                        if (d.is_top == 1) {
+                            outText += "/置顶";
+                        }
+                        if (d.is_red == 1) {
+                            outText += "/推荐";
+                        }
+                        if (d.is_hot == 1) {
+                            outText += "/热门";
+                        }
+                        if (d.is_slide == 1) {
+                            outText += "/幻灯片";
+                        }
+                        return outText;
+                    }
+                },
+                { field: 'remark', title: '备注' },
+                {
                     field: 'sort_id', width: 100, align: "center", title: '排序', templet: function (d) {
-                        return '<input type="number" name="sort_id" category_id="' + d.category_id + '" value="' + d.sort_id + '" class="layui-input" style="" />';
+                        return '<input type="number" name="sort_id" role_id="' + d.role_id + '" value="' + d.sort_id + '" class="layui-input" style="" />';
                     }
                 },
                 { title: '操作', width: 150, toolbar: '#currentTableBar', align: "center", fixed: "right" }
             ]],
             limits: [10, 15, 20, 25, 50, 100],
             limit: 20,
-            page: false,
+            page: true,
             // skin: 'line',
             even: true,
             size: 'lg',
             done: function () {
-                layer.closeAll('loading');
                 $(".layui-table-main tr").each(function (index, val) {
                     $(".layui-table-fixed").each(function () {
                         $($(this).find(".layui-table-body tbody tr")[index]).height($(val).height());
@@ -114,8 +176,10 @@
                     curr: 1
                 }
                 , where: {
+                    categoryId: parseInt($("input[name='categoryId']").val()),
                     title: $("input[name='title']").val(),
                     callIndex: $("input[name='callIndex']").val(),
+                    status: $("select[name='status']").val(),
                 }
             }, 'data');
 
@@ -128,13 +192,13 @@
         table.on('toolbar(currentTableFilter)', function (obj) {
             if (obj.event === 'add') {  // 监听添加操作
                 var index = layer.open({
-                    title: '添加',
+                    title: '添加内容',
                     type: 2,
                     shade: 0.2,
                     maxmin: true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: 'CategoryEdit?channelId=' + channelId,
+                    content: 'ArticleEdit?channelId=' + channelId,
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -143,15 +207,16 @@
                 var sorts = [];
                 $("input[name='sort_id']").each(function () {
                     var sort = {
-                        category_id: parseInt($(this).attr("category_id")),
+                        article_id: parseInt($(this).attr("article_id")),
                         sort_id: parseInt($(this).val())
                     };
                     sorts.push(sort);
                 });
                 console.log(sorts);
+                // return false;
                 $.ajax({
                     type: "POST",
-                    url: "/admin/article/CategorySaveSortId", //提交的地址
+                    url: "/admin/article/ArticleSaveSortId", //提交的地址
                     data: JSON.stringify(sorts),
                     async: false,
                     beforeSend: function () { //当一个Ajax请求开始时触发
@@ -163,7 +228,6 @@
                         if (data.code == CodeSuccess) {
                             layer.msg("提交成功", { icon: 1, time: 1000 }, function () {
                                 $('button[lay-filter="data-search-btn"]').click();
-                                location.reload();
                             });
                         } else {
                             layer.msg(data.msg, { icon: 2, time: 1000 });
@@ -186,28 +250,13 @@
             if (obj.event === 'edit') {
                 console.log(data);
                 var index = layer.open({
-                    title: '编辑',
+                    title: '编辑内容',
                     type: 2,
                     shade: 0.2,
                     maxmin: true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: 'CategoryEdit?categoryId=' + data.category_id + '&channelId=' + channelId,
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-                return false;
-            } else if (obj.event === 'add') {
-                console.log(data);
-                var index = layer.open({
-                    title: '添加',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin: true,
-                    shadeClose: true,
-                    area: ['100%', '100%'],
-                    content: 'CategoryEdit?parentId=' + data.category_id + '&channelId=' + channelId,
+                    content: 'ArticleEdit?articleId=' + data.article_id + '&channelId=' + channelId,
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -217,9 +266,9 @@
                 layer.confirm('真的删除行么', function (index) {
                     $.ajax({
                         type: "POST",
-                        url: "/admin/article/CategoryDestory", //提交的地址
+                        url: "/admin/article/ArticleDestory", //提交的地址
                         data: {
-                            "categoryId": data.category_id
+                            "roleId": data.role_id
                         },
                         async: false,
                         beforeSend: function () { //当一个Ajax请求开始时触发
@@ -237,6 +286,7 @@
                             }
                         },
                         complete: function () {
+                            layer.closeAll();
                             layer.close(this.layerIndex);
                         },
                     });

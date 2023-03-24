@@ -14,21 +14,105 @@ func NewCmsArticle() *CmsArticle {
 	return &CmsArticle{}
 }
 
-func (this *CmsArticle) ArticlePaginate(page, limit int, channelId, categoryId int64, title string) ([]*model.CmsArticle, int64, error) {
+func (this *CmsArticle) ArticlePaginate(page, limit int, channelId, categoryId int64, title, callIndex string, status int32) ([]*model.CmsArticle, int64, error) {
 	mdl, do := query.CmsArticleDo()
 	if channelId > 0 {
 		do = do.Where(mdl.ChannelID.Eq(channelId))
 	}
-	if channelId > 0 {
-		do = do.Where(mdl.ChannelID.Eq(channelId))
+	if categoryId > 0 {
+		do = do.Where(mdl.CategoryID.Eq(categoryId))
 	}
 	if title != "" {
 		do = do.Where(mdl.Title.Like("%" + title + "%"))
 	}
-	return do.FindByPage((page-1)*limit, limit)
+	if callIndex != "" {
+		do = do.Where(mdl.CallIndex.Like("%" + callIndex + "%"))
+	}
+	if status >= 0 {
+		do = do.Where(mdl.Status.Eq(status))
+	}
+	return do.Order(mdl.IsTop.Desc()).Order(mdl.SortID).FindByPage((page-1)*limit, limit)
 }
 
-func (this *CmsArticle) CategoryPagination(page, limit int, channelId int64, title, callIndex string) ([]*model.CmsArticleCategory, int64, error) {
+// ArticleFind 获取
+func (this *CmsArticle) ArticleFind(articleId int64) (*model.CmsArticle, error) {
+	mdl, do := query.CmsArticleDo()
+	return do.Where(mdl.ArticleID.Eq(articleId)).First()
+}
+
+// ArticleSave 保存或更新
+func (this *CmsArticle) ArticleSave(input *model.CmsArticle) error {
+	mdl, do := query.CmsArticleDo()
+	if input.CallIndex != "" {
+		if count, _ := do.Where(mdl.ArticleID.Neq(input.ArticleID), mdl.CallIndex.Eq(input.CallIndex)).Count(); count > 0 {
+			return errors.New("调用别名重复")
+		}
+	}
+	{
+		chnMdl, chnDo := query.CmsSiteChannelDo()
+		var siteId int64
+		chnDo.Where(chnMdl.ChannelID.Eq(input.ChannelID)).Pluck(chnMdl.SiteID, &siteId)
+		input.SiteID = siteId
+	}
+	var err error
+	input.UpdateTime = time.Now()
+	if input.ArticleID <= 0 {
+		input.CreateTime = time.Now()
+		err = do.Create(input)
+	} else {
+		_, err = do.Where(mdl.ArticleID.Eq(input.ArticleID)).Updates(map[string]interface{}{
+			mdl.ChannelID.ColumnName().String():      input.ChannelID,
+			mdl.SiteID.ColumnName().String():         input.SiteID,
+			mdl.CategoryID.ColumnName().String():     input.CategoryID,
+			mdl.Title.ColumnName().String():          input.Title,
+			mdl.SubTitle.ColumnName().String():       input.SubTitle,
+			mdl.CallIndex.ColumnName().String():      input.CallIndex,
+			mdl.Source.ColumnName().String():         input.Source,
+			mdl.Author.ColumnName().String():         input.Author,
+			mdl.LinkURL.ColumnName().String():        input.LinkURL,
+			mdl.ImgURL.ColumnName().String():         input.ImgURL,
+			mdl.SeoTitle.ColumnName().String():       input.SeoTitle,
+			mdl.SeoKeyword.ColumnName().String():     input.SeoKeyword,
+			mdl.SeoDescription.ColumnName().String(): input.SeoDescription,
+			mdl.Tags.ColumnName().String():           input.Tags,
+			mdl.Summary.ColumnName().String():        input.Summary,
+			mdl.Content.ColumnName().String():        input.Content,
+			mdl.SortID.ColumnName().String():         input.SortID,
+			mdl.IsLock.ColumnName().String():         input.IsLock,
+			mdl.IsComment.ColumnName().String():      input.IsComment,
+			mdl.IsTop.ColumnName().String():          input.IsTop,
+			mdl.IsRed.ColumnName().String():          input.IsRed,
+			mdl.IsHot.ColumnName().String():          input.IsHot,
+			mdl.IsSlide.ColumnName().String():        input.IsSlide,
+			mdl.Status.ColumnName().String():         input.Status,
+			mdl.PublishTime.ColumnName().String():    input.PublishTime,
+			mdl.UpdateTime.ColumnName().String():     input.UpdateTime,
+		})
+	}
+	return err
+}
+
+func (this *CmsArticle) ArticleSaveSortId(ArticleId int64, sortId int32) error {
+	mdl, do := query.CmsArticleDo()
+	_, err := do.Where(mdl.ArticleID.Eq(ArticleId)).UpdateColumns(
+		map[string]interface{}{
+			mdl.SortID.ColumnName().String():     sortId,
+			mdl.UpdateTime.ColumnName().String(): time.Now(),
+		},
+	)
+	return err
+}
+
+// ArticleDestory 删除
+func (this *CmsArticle) ArticleDestory(ArticleId int64) error {
+	mdl, do := query.CmsArticleDo()
+	if _, err := do.Where(mdl.ArticleID.Eq(ArticleId)).Delete(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (this *CmsArticle) CategoryPaginate(page, limit int, channelId int64, title, callIndex string) ([]*model.CmsArticleCategory, int64, error) {
 	mdl, do := query.CmsArticleCategoryDo()
 	if channelId > 0 {
 		do = do.Where(mdl.ChannelID.Eq(channelId))
@@ -117,4 +201,53 @@ func (this *CmsArticle) CategoryDestory(categoryId int64) error {
 		return err
 	}
 	return nil
+}
+
+func (this *CmsArticle) CategoryTree(channelId, categoryId int64) ([]*TreeNode, error) {
+	out := make([]*TreeNode, 0)
+	mdl, do := query.CmsArticleCategoryDo()
+	list, err := do.Where(mdl.ChannelID.Eq(channelId), mdl.ParentID.Eq(0)).Order(mdl.SortID).Find()
+	if err != nil {
+		return out, err
+	}
+	for _, item := range list {
+		child := &TreeNode{
+			Id:       item.CategoryID,
+			Name:     item.Title,
+			Open:     true,
+			Checked:  item.CategoryID == categoryId,
+			Selected: item.CategoryID == categoryId,
+			Children: nil,
+		}
+		children, _ := this.CategoryTreeByParentId(item.CategoryID, categoryId)
+		if children != nil {
+			child.Children = children
+		}
+		out = append(out, child)
+	}
+	return out, nil
+}
+
+func (this *CmsArticle) CategoryTreeByParentId(parentId, categoryId int64) ([]*TreeNode, error) {
+	out := make([]*TreeNode, 0)
+	mdl, do := query.CmsArticleCategoryDo()
+	list, err := do.Where(mdl.ParentID.Eq(parentId)).Order(mdl.SortID).Find()
+	if err != nil {
+		return out, err
+	}
+	for _, item := range list {
+		child := &TreeNode{
+			Id:       item.CategoryID,
+			Name:     item.Title,
+			Checked:  item.CategoryID == categoryId,
+			Selected: item.CategoryID == categoryId,
+			Children: nil,
+		}
+		children, _ := this.CategoryTreeByParentId(item.CategoryID, categoryId)
+		if children != nil {
+			child.Children = children
+		}
+		out = append(out, child)
+	}
+	return out, nil
 }
