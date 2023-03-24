@@ -21,4 +21,5 @@ func init() {
 
 	web.AutoPrefix("admin", &LinkController{})
 	web.AutoPrefix("admin", &AdminController{})
+	web.AutoPrefix("admin", &ArticleController{})
 }

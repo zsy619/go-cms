@@ -1,6 +1,6 @@
 <div class="layuimini-container">
     <div class="layuimini-main">
-        <fieldset class="table-search-fieldset">
+        <!-- <fieldset class="table-search-fieldset">
             <legend>搜索信息</legend>
             <div style="margin: 10px 10px 10px 10px">
                 <form class="layui-form layui-form-pane" action="">
@@ -23,33 +23,44 @@
                     </div>
                 </form>
             </div>
-        </fieldset>
+        </fieldset> -->
         <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container layui-btn-group">
                 <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn layui-btn-radius" lay-event="add"> 添加 </button>
                 <button class="layui-btn layui-btn-sm layui-btn-primary data-delete-btn layui-btn-radius" lay-event="save"> 保存 </button>
             </div>
         </script>
-        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+        <table class="layui-hide" id="tableContainer" lay-filter="currentTableFilter"></table>
         <script type="text/html" id="currentTableBar">
             <div class="layui-btn-group">
                 <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit layui-btn-radius" lay-event="edit">编辑</a>
+                <a class="layui-btn layui-btn-primary layui-btn-xs data-count-add layui-btn-radius" lay-event="add">添加</a>
                 <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete layui-btn-radius" lay-event="delete">删除</a>
             </div>
         </script>
     </div>
 </div>
 <script>
-    layui.use(['form', 'table'], function () {
+    var channelId = parseInt("{{.channelId}}");
+    layui.use(['form', 'table', 'layer', 'wangEditor', 'upload', 'treetable'], function () {
+        var form = layui.form;
         var $ = layui.jquery,
-            form = layui.form,
-            table = layui.table;
+            layer = layui.layer,
+            wangEditor = layui.wangEditor;
+        var upload = layui.upload;
+        var treetable = layui.treetable;
+        var table = layui.table;
 
-        table.render({
-            elem: '#currentTableId',
-            url: '/admin/link/categorypaginate',
+        layer.load(2);
+        treetable.render({
+            treeColIndex: 1,
+            treeSpid: 0,
+            treeIdName: 'category_id',
+            treePidName: 'parent_id',
+            elem: '#tableContainer',
+            url: '/admin/article/categoryfind?channelId=' + channelId,
             toolbar: '#toolbarDemo',
-            height: "full-170",
+            height: "full",
             defaultToolbar: ['filter', 'exports', 'print'],
             cols: [[
                 // { type: "checkbox", width: 50 },
@@ -74,11 +85,12 @@
             ]],
             limits: [10, 15, 20, 25, 50, 100],
             limit: 20,
-            page: true,
+            page: false,
             // skin: 'line',
             even: true,
             size: 'lg',
             done: function () {
+                layer.closeAll('loading');
                 $(".layui-table-main tr").each(function (index, val) {
                     $(".layui-table-fixed").each(function () {
                         $($(this).find(".layui-table-body tbody tr")[index]).height($(val).height());
@@ -97,7 +109,7 @@
             var result = JSON.stringify(data.field);
             console.log(result);
             //执行搜索重载
-            table.reload('currentTableId', {
+            table.reload('tableContainer', {
                 page: {
                     curr: 1
                 }
@@ -122,7 +134,7 @@
                     maxmin: true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: 'CategoryEdit',
+                    content: 'CategoryEdit?channelId=' + channelId,
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -139,7 +151,7 @@
                 console.log(sorts);
                 $.ajax({
                     type: "POST",
-                    url: "/admin/link/CategorySaveSortId", //提交的地址
+                    url: "/admin/article/CategorySaveSortId", //提交的地址
                     data: JSON.stringify(sorts),
                     async: false,
                     beforeSend: function () { //当一个Ajax请求开始时触发
@@ -151,6 +163,7 @@
                         if (data.code == CodeSuccess) {
                             layer.msg("提交成功", { icon: 1, time: 1000 }, function () {
                                 $('button[lay-filter="data-search-btn"]').click();
+                                location.reload();
                             });
                         } else {
                             layer.msg(data.msg, { icon: 2, time: 1000 });
@@ -179,7 +192,22 @@
                     maxmin: true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: 'CategoryEdit?categoryId=' + data.category_id,
+                    content: 'CategoryEdit?categoryId=' + data.category_id + '&channelId=' + channelId,
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            } else if (obj.event === 'add') {
+                console.log(data);
+                var index = layer.open({
+                    title: '添加',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin: true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: 'CategoryEdit?parentId=' + data.category_id + '&channelId=' + channelId,
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -189,7 +217,7 @@
                 layer.confirm('真的删除行么', function (index) {
                     $.ajax({
                         type: "POST",
-                        url: "/admin/link/CategoryDestory", //提交的地址
+                        url: "/admin/article/CategoryDestory", //提交的地址
                         data: {
                             "categoryId": data.category_id
                         },
@@ -201,7 +229,7 @@
                         },
                         success: function (data) {  //成功
                             if (data.code == CodeSuccess) {
-                                layer.msg("提交成功", { icon: 1, time: 1000 }, function () {
+                                layer.msg("删除成功", { icon: 1, time: 1000 }, function () {
                                     $('button[lay-filter="data-search-btn"]').click();
                                 });
                             } else {
@@ -209,7 +237,6 @@
                             }
                         },
                         complete: function () {
-                            layer.closeAll();
                             layer.close(this.layerIndex);
                         },
                     });

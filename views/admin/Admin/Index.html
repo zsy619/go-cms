@@ -90,7 +90,7 @@
                         return '<input type="number" name="sort_id" user_id="' + d.user_id + '" value="' + d.sort_id + '" class="layui-input" style="" />';
                     }
                 },
-                { title: '操作', width: 150, toolbar: '#currentTableBar', align: "center" }
+                { title: '操作', width: 150, toolbar: '#currentTableBar', align: "center", fixed: "right" }
             ]],
             limits: [10, 15, 20, 25, 50, 100],
             limit: 20,
@@ -98,6 +98,18 @@
             // skin: 'line',
             even: true,
             size: 'lg',
+            done: function () {
+                $(".layui-table-main tr").each(function (index, val) {
+                    $(".layui-table-fixed").each(function () {
+                        $($(this).find(".layui-table-body tbody tr")[index]).height($(val).height());
+                    });
+                });
+                $(".layui-table-header tr").each(function (index, val) {
+                    $(".layui-table-fixed").each(function () {
+                        $($(this).find(".layui-table-header thead tr")[index]).height($(val).height());
+                    });
+                });
+            }
         });
 
         // 监听搜索操作
