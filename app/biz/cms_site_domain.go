@@ -28,11 +28,11 @@ func (this *CmsSiteDomain) Delete(ids string) {
 	}
 }
 
-func (this *CmsSiteDomain) One(siteID int64) *model.CmsSiteDomain {
+func (this *CmsSiteDomain) List(siteID int64) []*model.CmsSiteDomain {
 	domain, domainDo := query.CmsSiteDomainDo()
 	list, err := domainDo.Where(domain.SiteID.Eq(siteID)).Find()
 	if err != nil {
 		return nil
 	}
-	return list[0]
+	return list
 }
