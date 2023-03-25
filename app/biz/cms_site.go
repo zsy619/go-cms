@@ -25,7 +25,7 @@ func (this *CmsSite) List(name string, title string, domainStr string, page int,
 	if limit == 0 {
 		limit = 15
 	}
-	db := dal.CmsDatabase.Table("cms_site").Joins("inner join cms_site_domain on(cms_site.site_id=cms_site_domain.site_id and cms_site.is_deleted=0)").Select("cms_site.site_id,cms_site.name,cms_site.dir_path,cms_site.title,cms_site_domain.domain,cms_site.sort_id,cms_site.mobile,cms_site.is_default")
+	db := dal.CmsDatabase.Table("cms_site").Joins("left join cms_site_domain on(cms_site.site_id=cms_site_domain.site_id and cms_site.is_deleted=0)").Select("cms_site.site_id,cms_site.name,cms_site.dir_path,cms_site.title,cms_site_domain.domain,cms_site.sort_id,cms_site.mobile,cms_site.is_default")
 	if name != "" {
 		db = db.Where(site.Name.Like("%" + name + "%"))
 	}
@@ -68,7 +68,7 @@ func (this *CmsSite) One(id int64) *model.CmsSite {
 	return list[0]
 }
 
-func (this *CmsSite) Save(mdl *model.CmsSite, domain *model.CmsSiteDomain) error {
+func (this *CmsSite) Save(mdl *model.CmsSite, domains []string, remarks []string) error {
 	if mdl.Title == "" {
 		return errors.New("站点名称不能为空")
 	}
@@ -88,8 +88,20 @@ func (this *CmsSite) Save(mdl *model.CmsSite, domain *model.CmsSiteDomain) error
 	if err != nil {
 		return err
 	}
-	_, domainDo := query.CmsSiteDomainDo()
-	domain.SiteID = mdl.SiteID
-	err = domainDo.Save(domain)
+	domain, domainDo := query.CmsSiteDomainDo()
+	_, err = domainDo.Where(domain.SiteID.Eq(mdl.SiteID)).Delete()
+	if domains != nil {
+		domainLen := len(domains)
+		for i := 0; i < domainLen; i++ {
+			if domains[i] == "" {
+				continue
+			}
+			domain := &model.CmsSiteDomain{}
+			domain.Domain = domains[i]
+			domain.Remark = remarks[i]
+			domain.SiteID = mdl.SiteID
+			domainDo.Save(domain)
+		}
+	}
 	return err
 }
