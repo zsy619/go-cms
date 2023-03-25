@@ -119,7 +119,7 @@
                     }
                 },
                 {
-                    field: 'img_url', title: '属性', width: 230, align: "center", templet: function (d) {
+                    field: 'img_url', title: '属性', width: 230, templet: function (d) {
                         var outText = d.status == 2 ? '<span class="layui-badge layui-bg-green">通过</span>' : (d.status == 3 ? '<span class="layui-badge">拒绝</span>' : '<span class="layui-badge layui-bg-gray">草稿</span>');
                         if (d.is_command == 1) {
                             outText += '<span class="layui-badge layui-bg-cyan">评论</span>';
