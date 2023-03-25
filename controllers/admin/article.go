@@ -1,10 +1,13 @@
 package admin
 
 import (
+	"bytes"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/beego/beego/v2/core/logs"
+	"golang.org/x/net/html"
 	"haedu.gov.cn/cms/app/biz"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/lib"
@@ -71,6 +74,45 @@ func (c *ArticleController) ArticleSave() {
 	if err := c.ParseForm(&mdl); err != nil {
 		logs.Error("ArticleSave", err.Error())
 		c.JSONError(err.Error())
+	}
+	if mdl.Summary == "" {
+		// 解析 HTML 文本
+		doc, err := html.Parse(strings.NewReader(mdl.Content))
+		if err != nil {
+			logs.Error(err)
+		} else {
+			// 拼接文本节点的内容
+			var buf bytes.Buffer
+			var traverse func(*html.Node)
+			traverse = func(n *html.Node) {
+				if n.Type == html.TextNode {
+					buf.WriteString(n.Data)
+				}
+				for c := n.FirstChild; c != nil; c = c.NextSibling {
+					traverse(c)
+				}
+			}
+			traverse(doc)
+			outStr := buf.String()
+			// 替换制表符为4个空格
+			outStr = strings.ReplaceAll(outStr, "\t", "")
+			// 替换回车换行为换行符
+			outStr = strings.ReplaceAll(outStr, "\r\n", "")
+			outStr = strings.ReplaceAll(outStr, "\r", "")
+			outStr = strings.ReplaceAll(outStr, "\n", "")
+			// 替换多个连续空格为一个空格
+			outStr = strings.ReplaceAll(outStr, "  ", "")
+			outStr = strings.ReplaceAll(outStr, " ", "")
+			fmt.Println(outStr)
+			if len(outStr) > 200 {
+				mdl.Summary = outStr[:255]
+			} else {
+				mdl.Summary = outStr[:]
+			}
+		}
+	}
+	if mdl.Tags != "" {
+		mdl.Tags = strings.ReplaceAll(mdl.Tags, "，", ",")
 	}
 	if err := biz.NewCmsArticle().ArticleSave(&mdl); err != nil {
 		logs.Error("ArticleSave", err.Error())

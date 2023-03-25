@@ -201,7 +201,8 @@
 <script>
     KindEditor.ready(function (K) {
         editor = K.create('textarea[name="content"]', {
-            uploadJson: '/admin/tools/ImageUpload', //KindEditor上传图片的接口
+            themeType: 'simple',
+            uploadJson: '/admin/tools/KindEditorUpload', //KindEditor上传图片的接口
             allowImageUpload: true, //运行上传图片
             allowFileManager: true, //浏览图片空间
             allowImageRemote: false, //上传图片框网络图片的功能，false为隐藏，默认为true
@@ -269,40 +270,6 @@
                 //请求异常回调
             }
         });
-
-        var editor = new wangEditor('#editor');
-        editor.customConfig.uploadImgServer = "/admin/tools/ImageUpload";
-        editor.customConfig.uploadFileName = 'file';
-        editor.customConfig.pasteFilterStyle = false;
-        editor.customConfig.uploadImgMaxSize = 3 * 1024 * 1024; // 将图片大小限制为 3M
-        editor.customConfig.uploadImgMaxLength = 1;
-        editor.customConfig.onchange = function (html) {
-            // 第二步，监控变化，同步更新到 textarea
-            $("textarea[name='content']").val(html);
-        }
-        editor.customConfig.uploadImgHooks = {
-            // 上传超时
-            timeout: function (xhr, editor) {
-                layer.msg('上传超时！')
-            },
-            // 如果服务器端返回的不是 {errno:0, data: [...]} 这种格式，可使用该配置
-            customInsert: function (insertImg, result, editor) {
-                console.log(result);
-                if (result.code == 0) {
-                    var url = result.file.url2;
-                    insertImg(url);
-                    // url.forEach(function (e) {
-                    //     insertImg(e);
-                    // })
-                } else {
-                    layer.msg(result.msg);
-                }
-            }
-        };
-        editor.customConfig.customAlert = function (info) {
-            layer.msg(info);
-        };
-        editor.create();
 
         //自定义验证规则
         form.verify({

@@ -2,12 +2,17 @@ package admin
 
 import (
 	"fmt"
+	"io"
+	"log"
 	"math/rand"
 	"os"
 	"path"
+	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 
+	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/cms/app/lib"
 	"haedu.gov.cn/tools/xgeneric"
 )
@@ -159,6 +164,50 @@ func (c *ToolsController) Upload() {
 	result.File.Url2 = xgeneric.IFF(strings.HasSuffix(lib.C_LOCAL_DOMAIN(), "/"), lib.C_LOCAL_DOMAIN()+uploadDir+filename, lib.C_LOCAL_DOMAIN()+"/"+uploadDir+filename)
 	c.Data["json"] = result
 	c.ServeJSON()
+}
+
+// kindeditor 图片上传
+// @router admin/tools/KindEditorUpload [post]
+func (c *ToolsController) KindEditorUpload() {
+	// 获取上传文件
+	file, header, err := c.GetFile("imgFile")
+	if err != nil {
+		logs.Error(err)
+		fmt.Fprintln(c.Ctx.ResponseWriter, "{\"error\": 1, \"message\": \""+err.Error()+"\"}")
+		return
+	}
+	defer file.Close()
+
+	// 创建目标文件夹
+	targetDir := "Uploads/images/" + time.Now().Format("2006/01/")
+	if err := os.MkdirAll(targetDir, os.ModePerm); err != nil {
+		logs.Error(err)
+		fmt.Fprintln(c.Ctx.ResponseWriter, "{\"error\": 1, \"message\": \""+err.Error()+"\"}")
+		return
+	}
+	// 创建目标文件
+	ext := filepath.Ext(header.Filename)
+	filename := strconv.FormatInt(time.Now().UnixNano(), 10) + ext
+	targetPath := targetDir + filename
+	targetFile, err := os.OpenFile(targetPath, os.O_WRONLY|os.O_CREATE, os.ModePerm)
+	if err != nil {
+		log.Println(err)
+		fmt.Fprintln(c.Ctx.ResponseWriter, "{\"error\": 1, \"message\": \""+err.Error()+"\"}")
+		return
+	}
+	defer targetFile.Close()
+
+	// 将上传文件拷贝到目标文件
+	_, err = io.Copy(targetFile, file)
+	if err != nil {
+		log.Println(err)
+		fmt.Fprintln(c.Ctx.ResponseWriter, "{\"error\": 1, \"message\": \""+err.Error()+"\"}")
+		return
+	}
+	outPath := xgeneric.IFF(strings.HasSuffix(lib.C_LOCAL_DOMAIN(), "/"), lib.C_LOCAL_DOMAIN()+strings.ReplaceAll(targetPath, "\\", "/"), lib.C_LOCAL_DOMAIN()+"/"+strings.ReplaceAll(targetPath, "\\", "/"))
+	// 返回上传结果
+	result := "{\"error\": 0, \"url\": \"" + outPath + "\"}"
+	fmt.Fprintln(c.Ctx.ResponseWriter, result)
 }
 
 func generateFilename(ext string) string {
