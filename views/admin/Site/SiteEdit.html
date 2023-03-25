@@ -4,6 +4,7 @@
             <ul class="layui-tab-title">
                 <li class="layui-this">站点信息</li>
                 <li>网站信息</li>
+                <li>域名信息</li>
             </ul>
             <div class="layui-tab-content">
                 <div class="layui-tab-item layui-show">
@@ -11,7 +12,6 @@
                         <label class="layui-form-label required"><font color="red">*</font> 站点名称</label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="hidden" name="site_id" value="{{.site.SiteID}}">
-                            <input type="hidden" name="domain_id" value="{{.domain.DomainID}}">
                             <input type="text" maxlength="50" id="title" name="title" value="{{.site.Title}}" lay-verify="required" lay-reqtext="站点名称为必填项" autocomplete="off" placeholder="请输入站点名称" class="layui-input">
                         </div>
                     </div>
@@ -19,12 +19,6 @@
                         <label class="layui-form-label required"><font color="red">*</font> 生成目录名</label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="text" maxlength="50" id="dir_path" name="dir_path" value="{{.site.DirPath}}" lay-verify="required" lay-reqtext="生成目录名为必填项" autocomplete="off" placeholder="请输入生成目录名" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">绑定域名</label>
-                        <div class="layui-input-inline" style="width: 500px;">
-                            <input type="text" maxlength="50" id="domain" name="domain" value="{{.domain.Domain}}" autocomplete="off" placeholder="请输入绑定域名" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-form-item">
@@ -136,6 +130,25 @@
                         </div>
                     </div>
                 </div>
+                <div class="layui-tab-item" id="domainDiv">
+                    {{range $k,$v :=.domainList}}
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">域名</label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <input type="text" maxlength="50" name="domain" value="{{$v.Domain}}" autocomplete="off" placeholder="请输入域名" class="layui-input">
+                        </div>
+
+                        <label class="layui-form-label required">备注</label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <input type="text" maxlength="50" name="remark" value="{{$v.Remark}}" autocomplete="off" placeholder="请输入域名备注" class="layui-input">
+                        </div>
+                        {{if eq $k $.listSize}}
+                        <a onclick="addDomian(this)" href="#" style="vertical-align: center"> 增加 </a>
+                        {{end}}
+                        <a onclick="delDomian(this)" href="#" style="vertical-align: center"> 删除 </a>
+                    </div>
+                    {{end}}
+                </div>
             </div>
         </div>
         <div class="layui-form-item">
@@ -147,11 +160,28 @@
         </div>
     </form>
 </div>
+<div id="domainTemplate" style="display: none">
+    <div class="layui-form-item">
+        <label class="layui-form-label required">域名</label>
+        <div class="layui-input-inline" style="width: 500px;">
+            <input type="text" maxlength="50" name="domain" value="" autocomplete="off" placeholder="请输入域名" class="layui-input">
+        </div>
+
+        <label class="layui-form-label required">备注</label>
+        <div class="layui-input-inline" style="width: 500px;">
+            <input type="text" maxlength="50" name="remark" value="" autocomplete="off" placeholder="请输入域名备注" class="layui-input">
+        </div>
+
+        <a onclick="addDomian(this)" href="#" style="vertical-align: center"> 增加 </a>
+        <a onclick="delDomian(this)" href="#" style="vertical-align: center"> 删除 </a>
+    </div>
+</div>
 <script>
+    var $;
     layui.use(['form', 'layer', 'wangEditor', 'upload'], function () {
         var form = layui.form;
-        var $ = layui.jquery,
-            layer = layui.layer,
+        $ = layui.jquery;
+        var layer = layui.layer,
             wangEditor = layui.wangEditor;
         var upload = layui.upload;
 
@@ -243,5 +273,29 @@
             $("img").attr("src","");
             form.render();
         })
+
     });
+
+    function addDomian(e){
+        $(e).remove();
+        var html = $("#domainTemplate").html()
+        $("#domainDiv").append(html);
+    }
+
+    function delDomian(e){
+        var number = $("#domainDiv").find(".layui-form-item").length;
+        if(number == 1){
+            layer.msg("无法删除最后一个域名");
+            return;
+        }
+        $(e).parent().remove();
+        number = $("#domainDiv").find(".layui-form-item").length;
+        $("#domainDiv").find(".layui-form-item").each(function(i,o){
+            if(i == number-1){
+                $(o).find("a").remove();
+                $(o).append("<a onclick='addDomian(this)' href='#' style='vertical-align: center'> 增加 </a>");
+                $(o).append("<a onclick='delDomian(this)' href='#' style='vertical-align: center'> 删除 </a>");
+            }
+        })
+    }
 </script>
