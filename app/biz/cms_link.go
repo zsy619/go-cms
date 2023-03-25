@@ -72,6 +72,33 @@ func (this *CmsLink) CategorySaveSortId(categoryId int64, sortId int32) error {
 	return err
 }
 
+// LinkClone 克隆
+func (this *CmsLink) LinkClone(linkId int64) (int64, error) {
+	mdl, do := query.CmsLinkDo()
+	art, err := do.Where(mdl.LinkID.Eq(linkId)).First()
+	if err != nil {
+		return 0, err
+	}
+	art.LinkID = 0
+	art.CreateTime = time.Now()
+	art.UpdateTime = time.Now()
+	art.Status = 0
+	err = do.Create(art)
+	return art.LinkID, err
+}
+
+// LinkChangeStatus 修改状态
+func (this *CmsLink) LinkChangeStatus(linkId int64, status int32) error {
+	mdl, do := query.CmsLinkDo()
+	_, err := do.Where(mdl.LinkID.Eq(linkId)).UpdateColumns(
+		map[string]interface{}{
+			mdl.Status.ColumnName().String():     status,
+			mdl.UpdateTime.ColumnName().String(): time.Now(),
+		},
+	)
+	return err
+}
+
 // CategoryDestory 删除
 func (this *CmsLink) CategoryDestory(categoryId int64) error {
 	mdl, do := query.CmsLinkCategoryDo()

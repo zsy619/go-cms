@@ -8,7 +8,9 @@
             <div class="layui-tab-content">
                 <div class="layui-tab-item layui-show">
                     <div class="layui-form-item">
-                        <label class="layui-form-label required">链接类别</label>
+                        <label class="layui-form-label required">
+                            <font color="red">*</font> 链接类别
+                        </label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="hidden" name="link_id" value="{{.mdl.LinkID}}">
                             <select name="category_id" lay-verify="required" lay-search="" lay-reqtext="类别标题为必填项">
@@ -20,27 +22,32 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label required">链接标题</label>
+                        <label class="layui-form-label required">
+                            <font color="red">*</font> 链接标题
+                        </label>
                         <div class="layui-input-inline" style="width: 500px;">
-                            <input type="text" name="title" value="{{.mdl.Title}}" lay-verify="required" lay-reqtext="链接标题为必填项" autocomplete="off" placeholder="请输入类别标题" class="layui-input">
+                            <input type="text" name="title" value="{{.mdl.Title}}" lay-verify="required" lay-reqtext="链接标题为必填项" autocomplete="off" placeholder="" class="layui-input">
                         </div>
+                        <div class="layui-form-mid layui-word-aux">别名访问，非必填，不可重复</div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label required">调用别名</label>
                         <div class="layui-input-inline" style="width: 500px;">
-                            <input type="text" name="call_index" value="{{.mdl.CallIndex}}" lay-verify="required" lay-reqtext="调用别名为必填项" autocomplete="off" placeholder="请输入调用别名" class="layui-input">
+                            <input type="text" name="call_index" value="{{.mdl.CallIndex}}" autocomplete="off" placeholder="" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label required">URL链接</label>
+                        <label class="layui-form-label required">
+                            <font color="red">*</font> URL链接
+                        </label>
                         <div class="layui-input-inline" style="width: 500px;">
-                            <input type="text" name="link_url" value="{{.mdl.LinkURL}}" autocomplete="off" lay-verify="required" lay-reqtext="URL链接为必填项" placeholder="请输入外部链接" class="layui-input">
+                            <input type="text" name="link_url" value="{{.mdl.LinkURL}}" autocomplete="off" lay-verify="url" lay-reqtext="URL链接为必填项" placeholder="" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">打开目标</label>
                         <div class="layui-input-inline" style="width: 500px;">
-                            <input type="text" name="target" value="{{.mdl.Target}}" autocomplete="off" placeholder="是否开启浏览器新窗口" class="layui-input">
+                            <input type="text" name="target" value="{{.mdl.Target}}" autocomplete="off" placeholder="" class="layui-input">
                         </div>
                         <div class="layui-form-mid layui-word-aux">是否开启浏览器新窗口</div>
                     </div>
@@ -63,7 +70,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">备注</label>
                         <div class="layui-input-inline" style="width: 500px;">
-                            <textarea name="remark" placeholder="请输入描述信息" class="layui-textarea">{{.mdl.Remark}}</textarea>
+                            <textarea name="remark" placeholder="" class="layui-textarea">{{.mdl.Remark}}</textarea>
                         </div>
                     </div>
                 </div>
@@ -73,7 +80,7 @@
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="radio" name="status" value="0" title="草稿" {{if eq .mdl.Status 0}}checked="checked" {{end}}>
                             <input type="radio" name="status" value="2" title="通过" {{if eq .mdl.Status 2}}checked="checked" {{end}}>
-                            <input type="radio" name="status" value="3" title="未通过" {{if eq .mdl.Status 3}}checked="checked" {{end}}>
+                            <input type="radio" name="status" value="3" title="拒绝" {{if eq .mdl.Status 3}}checked="checked" {{end}}>
                         </div>
                     </div>
                     <div class="layui-form-item">

@@ -8,7 +8,9 @@
             <div class="layui-tab-content">
                 <div class="layui-tab-item layui-show">
                     <div class="layui-form-item">
-                        <label class="layui-form-label required">角色类型</label>
+                        <label class="layui-form-label required">
+                            <font color="red">*</font> 角色类型
+                        </label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="hidden" name="role_id" value="{{.mdl.RoleID}}">
                             <select name="type" lay-verify="required" lay-search="" lay-reqtext="角色类型为必选项">
@@ -19,10 +21,13 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label required">角色名称</label>
+                        <label class="layui-form-label required">
+                            <font color="red">*</font> 角色名称
+                        </label>
                         <div class="layui-input-inline" style="width: 500px;">
-                            <input type="text" name="name" value="{{.mdl.Name}}" lay-verify="required" lay-reqtext="角色为必填项" autocomplete="off" placeholder="请输入角色" class="layui-input">
+                            <input type="text" name="name" value="{{.mdl.Name}}" lay-verify="required" lay-reqtext="角色为必填项" autocomplete="off" placeholder="" class="layui-input">
                         </div>
+                        <div class="layui-form-mid layui-word-aux">角色名称确保唯一</div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">排序号</label>
@@ -34,7 +39,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">备注</label>
                         <div class="layui-input-inline" style="width: 500px;">
-                            <textarea name="remark" placeholder="请输入描述信息" class="layui-textarea">{{.mdl.Remark}}</textarea>
+                            <textarea name="remark" placeholder="" class="layui-textarea">{{.mdl.Remark}}</textarea>
                         </div>
                     </div>
                 </div>

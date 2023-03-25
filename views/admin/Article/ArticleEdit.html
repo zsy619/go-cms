@@ -10,7 +10,9 @@
             <div class="layui-tab-content">
                 <div class="layui-tab-item layui-show">
                     <div class="layui-form-item">
-                        <label class="layui-form-label required">所属类别</label>
+                        <label class="layui-form-label required">
+                            <font color="red">*</font> 所属类别
+                        </label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="hidden" name="article_id" value="{{.mdl.ArticleID}}">
                             <input type="hidden" name="channel_id" value="{{.mdl.ChannelID}}">
@@ -19,7 +21,9 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label required">内容标题</label>
+                        <label class="layui-form-label required">
+                            <font color="red">*</font> 内容标题
+                        </label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="text" name="title" value="{{.mdl.Title}}" maxlength="256" lay-verify="required" lay-reqtext="内容标题为必填项" autocomplete="off" placeholder="" class="layui-input">
                         </div>
@@ -93,7 +97,7 @@
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="radio" name="status" value="0" title="草稿" {{if eq .mdl.Status 0}}checked="checked" {{end}}>
                             <input type="radio" name="status" value="2" title="通过" {{if eq .mdl.Status 2}}checked="checked" {{end}}>
-                            <input type="radio" name="status" value="3" title="未通过" {{if eq .mdl.Status 3}}checked="checked" {{end}}>
+                            <input type="radio" name="status" value="3" title="拒绝" {{if eq .mdl.Status 3}}checked="checked" {{end}}>
                         </div>
                     </div>
                     <div class="layui-form-item" style="display: none;">
@@ -155,9 +159,11 @@
                         <div class="layui-form-mid layui-word-aux">不填写则自动截取内容前255字符</div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label">内容描述</label>
+                        <label class="layui-form-label">
+                            <font color="red">*</font> 内容描述
+                        </label>
                         <div class="layui-input-inline" style="width: 100%;">
-                            <textarea id="content" name="content" style="width: 100%;height: 500px;" class="layui-textarea">{{.mdl.Content}}</textarea>
+                            <textarea id="content" name="content" lay-verify="required" lay-reqtext="内容描述不允许为空" style="width: 100%;height: 500px;" class="layui-textarea">{{.mdl.Content}}</textarea>
                         </div>
                     </div>
                 </div>

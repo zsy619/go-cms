@@ -9,7 +9,9 @@
             <div class="layui-tab-content">
                 <div class="layui-tab-item layui-show">
                     <div class="layui-form-item">
-                        <label class="layui-form-label required">类别标题</label>
+                        <label class="layui-form-label required">
+                            <font color="red">*</font> 类别标题
+                        </label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="hidden" name="category_id" value="{{.mdl.CategoryID}}">
                             <input type="hidden" name="channel_id" value="{{.mdl.ChannelID}}">
@@ -18,7 +20,9 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label required">调用别名</label>
+                        <label class="layui-form-label required">
+                            <font color="red">*</font> 调用别名
+                        </label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="text" name="call_index" value="{{.mdl.CallIndex}}" lay-verify="required" lay-reqtext="调用别名为必填项" autocomplete="off" placeholder="请输入调用别名" class="layui-input">
                         </div>

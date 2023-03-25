@@ -48,6 +48,7 @@ func (c *ArticleController) ArticleEdit() {
 		return
 	}
 	articleId, _ := c.GetInt64("articleId")
+	clone, _ := c.GetInt("clone")
 	mdl, err := biz.NewCmsArticle().ArticleFind(articleId)
 	if err != nil {
 		mdl = &model.CmsArticle{
@@ -56,6 +57,10 @@ func (c *ArticleController) ArticleEdit() {
 			ChannelID:   channelId,
 			PublishTime: time.Now(),
 		}
+	}
+	// 是否克隆
+	if clone == 1 {
+		mdl.ArticleID = 0
 	}
 	c.Data["mdl"] = mdl
 	c.display()
@@ -73,6 +78,43 @@ func (c *ArticleController) ArticleSave() {
 		return
 	}
 	c.JSONSuccess("保存成功", nil)
+}
+
+func (c *ArticleController) ArticleClone() {
+	articleId, _ := c.GetInt64("articleId")
+	if _, err := biz.NewCmsArticle().ArticleClone(articleId); err != nil {
+		logs.Error("ArticleClone", err.Error())
+		c.JSONError(err.Error())
+		return
+	}
+	c.JSONSuccess("复制成功", nil)
+}
+
+func (c *ArticleController) ArticleDestory() {
+	articleId, _ := c.GetInt64("articleId")
+	if err := biz.NewCmsArticle().ArticleDestory(articleId); err != nil {
+		logs.Error("ArticleDestory", err.Error())
+		c.JSONError(err.Error())
+		return
+	}
+	c.JSONSuccess("删除成功", nil)
+}
+
+func (c *ArticleController) ArticleChangeStatus() {
+	var mdl vmodel.Article_ChangeStatusModel
+	if err := xjson.Unmarshal(c.Ctx.Input.RequestBody, &mdl); err != nil {
+		logs.Error("ArticleChangeStatus", err.Error())
+		c.JSONError(err.Error())
+		return
+	}
+	for _, articleId := range mdl.ArticleIds {
+		if err := biz.NewCmsArticle().ArticleChangeStatus(articleId, mdl.Status); err != nil {
+			logs.Error("ArticleChangeStatus", err.Error())
+			c.JSONError(err.Error())
+			return
+		}
+	}
+	c.JSONSuccess("更改状态成功", nil)
 }
 
 func (c *ArticleController) ArticleSaveSortId() {

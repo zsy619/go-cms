@@ -92,9 +92,9 @@ func (this *CmsArticle) ArticleSave(input *model.CmsArticle) error {
 	return err
 }
 
-func (this *CmsArticle) ArticleSaveSortId(ArticleId int64, sortId int32) error {
+func (this *CmsArticle) ArticleSaveSortId(articleId int64, sortId int32) error {
 	mdl, do := query.CmsArticleDo()
-	_, err := do.Where(mdl.ArticleID.Eq(ArticleId)).UpdateColumns(
+	_, err := do.Where(mdl.ArticleID.Eq(articleId)).UpdateColumns(
 		map[string]interface{}{
 			mdl.SortID.ColumnName().String():     sortId,
 			mdl.UpdateTime.ColumnName().String(): time.Now(),
@@ -104,9 +104,17 @@ func (this *CmsArticle) ArticleSaveSortId(ArticleId int64, sortId int32) error {
 }
 
 // ArticleDestory 删除
-func (this *CmsArticle) ArticleDestory(ArticleId int64) error {
+func (this *CmsArticle) ArticleDestory(articleId int64) error {
+	attachMdl, attachDo := query.CmsArticleAttachDo()
+	if _, err := attachDo.Where(attachMdl.ArticleID.Eq(articleId)).Delete(); err != nil {
+		return err
+	}
+	albumMdl, albumDo := query.CmsArticleAlbumDo()
+	if _, err := albumDo.Where(albumMdl.ArticleID.Eq(articleId)).Delete(); err != nil {
+		return err
+	}
 	mdl, do := query.CmsArticleDo()
-	if _, err := do.Where(mdl.ArticleID.Eq(ArticleId)).Delete(); err != nil {
+	if _, err := do.Where(mdl.ArticleID.Eq(articleId)).Delete(); err != nil {
 		return err
 	}
 	return nil
@@ -201,6 +209,33 @@ func (this *CmsArticle) CategoryDestory(categoryId int64) error {
 		return err
 	}
 	return nil
+}
+
+// ArticleClone 克隆
+func (this *CmsArticle) ArticleClone(articleId int64) (int64, error) {
+	mdl, do := query.CmsArticleDo()
+	art, err := do.Where(mdl.ArticleID.Eq(articleId)).First()
+	if err != nil {
+		return 0, err
+	}
+	art.ArticleID = 0
+	art.CreateTime = time.Now()
+	art.UpdateTime = time.Now()
+	art.Status = 0
+	err = do.Create(art)
+	return art.ArticleID, err
+}
+
+// ArticleChangeStatus 修改状态
+func (this *CmsArticle) ArticleChangeStatus(articleId int64, status int32) error {
+	mdl, do := query.CmsArticleDo()
+	_, err := do.Where(mdl.ArticleID.Eq(articleId)).UpdateColumns(
+		map[string]interface{}{
+			mdl.Status.ColumnName().String():     status,
+			mdl.UpdateTime.ColumnName().String(): time.Now(),
+		},
+	)
+	return err
 }
 
 func (this *CmsArticle) CategoryTree(channelId, categoryId int64) ([]*TreeNode, error) {

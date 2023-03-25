@@ -23,12 +23,17 @@ func (c *LinkController) Index() {
 
 func (c *LinkController) LinkEdit() {
 	linkId, _ := c.GetInt64("linkId")
+	clone, _ := c.GetInt("clone")
 	mdl, err := biz.NewCmsLink().LinkFind(linkId)
 	if err != nil {
 		mdl = &model.CmsLink{
 			SortID: 99,
 			Target: "_blank",
 		}
+	}
+	// 是否克隆
+	if clone == 1 {
+		mdl.LinkID = 0
 	}
 	c.Data["mdl"] = mdl
 	list, _, _ := biz.NewCmsLink().CategoryPaginate(1, 99999, -1, -1, "", "")
@@ -76,6 +81,23 @@ func (c *LinkController) LinkDestory() {
 		return
 	}
 	c.JSONSuccess("删除成功", nil)
+}
+
+func (c *LinkController) LinkChangeStatus() {
+	var mdl vmodel.Link_ChangeStatusModel
+	if err := xjson.Unmarshal(c.Ctx.Input.RequestBody, &mdl); err != nil {
+		logs.Error("LinkChangeStatus", err.Error())
+		c.JSONError(err.Error())
+		return
+	}
+	for _, linkid := range mdl.LinkIds {
+		if err := biz.NewCmsLink().LinkChangeStatus(linkid, mdl.Status); err != nil {
+			logs.Error("LinkChangeStatus", err.Error())
+			c.JSONError(err.Error())
+			return
+		}
+	}
+	c.JSONSuccess("更改状态成功", nil)
 }
 
 // LinkPaginate 列表
