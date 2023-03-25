@@ -51,7 +51,7 @@ func (c *AdminController) AdminSave() {
 		c.JSONError(err.Error())
 	}
 	if mdl.Password != "" {
-		mdl.PasswordSalt, _ = xstring.RandomHexStr(6)
+		mdl.PasswordSalt, _ = xstring.RandomHexStr(8)
 		mdl.PasswordFormat = 2
 		mdl.Password = xcrypto.GetMD5Hash(mdl.Password + mdl.PasswordSalt)
 	}

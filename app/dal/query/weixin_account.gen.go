@@ -29,8 +29,8 @@ func newWeixinAccount(db *gorm.DB, opts ...gen.DOOption) weixinAccount {
 	_weixinAccount.ALL = field.NewAsterisk(tableName)
 	_weixinAccount.AccountID = field.NewInt64(tableName, "account_id")
 	_weixinAccount.Name = field.NewString(tableName, "name")
-	_weixinAccount.Originalid = field.NewString(tableName, "originalid")
-	_weixinAccount.Wxcode = field.NewString(tableName, "wxcode")
+	_weixinAccount.OriginalID = field.NewString(tableName, "original_id")
+	_weixinAccount.WxCode = field.NewString(tableName, "wx_code")
 	_weixinAccount.Token = field.NewString(tableName, "token")
 	_weixinAccount.AppID = field.NewString(tableName, "app_id")
 	_weixinAccount.AppSecret = field.NewString(tableName, "app_secret")
@@ -57,8 +57,8 @@ type weixinAccount struct {
 	ALL        field.Asterisk
 	AccountID  field.Int64  // 主键
 	Name       field.String // 公众号名称
-	Originalid field.String // 公众号原始ID
-	Wxcode     field.String // 公众平台微信号
+	OriginalID field.String // 公众号原始ID
+	WxCode     field.String // 公众平台微信号
 	Token      field.String // ToKen
 	AppID      field.String // AppId
 	AppSecret  field.String // AppSecret
@@ -91,8 +91,8 @@ func (w *weixinAccount) updateTableName(table string) *weixinAccount {
 	w.ALL = field.NewAsterisk(table)
 	w.AccountID = field.NewInt64(table, "account_id")
 	w.Name = field.NewString(table, "name")
-	w.Originalid = field.NewString(table, "originalid")
-	w.Wxcode = field.NewString(table, "wxcode")
+	w.OriginalID = field.NewString(table, "original_id")
+	w.WxCode = field.NewString(table, "wx_code")
 	w.Token = field.NewString(table, "token")
 	w.AppID = field.NewString(table, "app_id")
 	w.AppSecret = field.NewString(table, "app_secret")
@@ -134,8 +134,8 @@ func (w *weixinAccount) fillFieldMap() {
 	w.fieldMap = make(map[string]field.Expr, 18)
 	w.fieldMap["account_id"] = w.AccountID
 	w.fieldMap["name"] = w.Name
-	w.fieldMap["originalid"] = w.Originalid
-	w.fieldMap["wxcode"] = w.Wxcode
+	w.fieldMap["original_id"] = w.OriginalID
+	w.fieldMap["wx_code"] = w.WxCode
 	w.fieldMap["token"] = w.Token
 	w.fieldMap["app_id"] = w.AppID
 	w.fieldMap["app_secret"] = w.AppSecret

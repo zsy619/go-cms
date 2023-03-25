@@ -3,6 +3,7 @@ package admin
 import (
 	"fmt"
 
+	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/lib"
 
 	"haedu.gov.cn/cms/controllers"
@@ -15,6 +16,14 @@ type BaseController struct {
 func (c *BaseController) Prepare() {
 	fmt.Println("Admin BaseController Prepare")
 	c.BaseController.Prepare()
+
+	if GlobalAdminId == 0 {
+		user := c.GetSession("user").(*model.CmsAdmin)
+		GlobalAdminId = user.UserID
+		GlobalAuthFlag = int(user.UserType) // 1:管理员 2:学校
+		GlobalAdminName = user.UserName
+		GlobalRealName = user.RealName
+	}
 }
 
 func (c *BaseController) Finish() {

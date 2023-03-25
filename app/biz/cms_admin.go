@@ -9,6 +9,7 @@ import (
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
 	"haedu.gov.cn/tools/xcrypto"
+	"haedu.gov.cn/tools/xstring"
 )
 
 type LoginType int
@@ -30,39 +31,39 @@ func NewCmsAdmin() *CmsAdmin {
 }
 
 // Login 登录
-func (m *CmsAdmin) Login(login_key, password string, user_type int, login_type LoginType) (*model.CmsAdmin, error) {
+func (m *CmsAdmin) Login(userKey, password string, userType int, loginType LoginType) (*model.CmsAdmin, error) {
 	mdl, do := query.CmsAdminDo()
 	ctx := context.Background()
-	switch login_type {
+	switch loginType {
 	case LoginName:
-		do = do.Where(mdl.IsDeleted.Is(false), mdl.UserName.Eq(login_key))
+		do = do.Where(mdl.IsDeleted.Is(false), mdl.UserName.Eq(userKey))
 	case LoginMobile:
-		do = do.Where(mdl.IsDeleted.Is(false), mdl.Mobile.Eq(login_key))
+		do = do.Where(mdl.IsDeleted.Is(false), mdl.Mobile.Eq(userKey))
 	case LoginEmail:
-		do = do.Where(mdl.IsDeleted.Is(false), mdl.Email.Eq(login_key))
+		do = do.Where(mdl.IsDeleted.Is(false), mdl.Email.Eq(userKey))
 	case LoginNameMobile:
 		do = do.Where(
 			do.WithContext(ctx).Where(mdl.IsDeleted.Is(false)),
 		).Where(
-			do.Or(mdl.UserName.Eq(login_key)).Or(mdl.Mobile.Eq(login_key)),
+			do.Or(mdl.UserName.Eq(userKey)).Or(mdl.Mobile.Eq(userKey)),
 		)
 	case LoginNameEmail:
 		do = do.Where(
 			do.WithContext(ctx).Where(mdl.IsDeleted.Is(false)),
 		).Where(
-			do.Or(mdl.UserName.Eq(login_key)).Or(mdl.Email.Eq(login_key)),
+			do.Or(mdl.UserName.Eq(userKey)).Or(mdl.Email.Eq(userKey)),
 		)
 	case LoginMobileEmail:
 		do = do.Where(
 			do.WithContext(ctx).Where(mdl.IsDeleted.Is(false)),
 		).Where(
-			do.Or(mdl.Mobile.Eq(login_key)).Or(mdl.Email.Eq(login_key)),
+			do.Or(mdl.Mobile.Eq(userKey)).Or(mdl.Email.Eq(userKey)),
 		)
 	case LoginAll:
 		do = do.Where(
 			do.WithContext(ctx).Where(mdl.IsDeleted.Is(false)),
 		).Where(
-			do.Or(mdl.UserName.Eq(login_key)).Or(mdl.Mobile.Eq(login_key)).Or(mdl.Email.Eq(login_key)),
+			do.Or(mdl.UserName.Eq(userKey)).Or(mdl.Mobile.Eq(userKey)).Or(mdl.Email.Eq(userKey)),
 		)
 	}
 	find, err := do.First()
@@ -78,7 +79,6 @@ func (m *CmsAdmin) Login(login_key, password string, user_type int, login_type L
 	// 密码加密格式 0不加密 1默认加密 2MD5类型
 	switch find.PasswordFormat {
 	case 1: // 默认加密
-
 		break
 	case 2: // MD5加密
 		password = xcrypto.GetMD5Hash(password + find.PasswordSalt)
@@ -333,4 +333,58 @@ func (this *CmsAdmin) OneByUserId(userId int64) *model.CmsAdmin {
 		return nil
 	}
 	return first
+}
+
+func (this *CmsAdmin) OneByUserName(userName string) *model.CmsAdmin {
+	mdl, do := query.CmsAdminDo()
+	first, err := do.Where(mdl.UserName.Eq(userName)).First()
+	if err != nil {
+		return nil
+	}
+	return first
+}
+
+func (this *CmsAdmin) ModifyPassword(userId int64, oldPassword, newPassword string) error {
+	mdl, do := query.CmsAdminDo()
+	admin, err := do.Where(mdl.UserID.Eq(userId)).First()
+	if err != nil {
+		return err
+	}
+	{
+		// 密码加密格式 0不加密 1默认加密 2MD5类型
+		switch admin.PasswordFormat {
+		case 1: // 默认加密
+			break
+		case 2: // MD5加密
+			oldPassword = xcrypto.GetMD5Hash(oldPassword + admin.PasswordSalt)
+			break
+		default:
+			break
+		}
+		logs.Debug("ModifyPassword --> ", admin.Password, oldPassword)
+		if admin.Password != oldPassword {
+			return errors.New("旧密码错误")
+		}
+	}
+	// 密码加密格式 0不加密 1默认加密 2MD5类型
+	password := newPassword
+	passwordSalt := ""
+	// 密码加密格式 0不加密 1默认加密 2MD5类型
+	switch admin.PasswordFormat {
+	case 1: // 默认加密
+		break
+	case 2: // MD5加密
+		passwordSalt, _ = xstring.RandomHexStr(8)
+		password = xcrypto.GetMD5Hash(password + passwordSalt)
+		break
+	default:
+		break
+	}
+	_, err = do.Where(mdl.UserID.Eq(userId)).UpdateColumns(map[string]interface{}{
+		mdl.Password.ColumnName().String():       password,
+		mdl.PasswordSalt.ColumnName().String():   passwordSalt,
+		mdl.PasswordFormat.ColumnName().String(): admin.PasswordFormat,
+		mdl.UpdateTime.ColumnName().String():     time.Now(),
+	})
+	return err
 }

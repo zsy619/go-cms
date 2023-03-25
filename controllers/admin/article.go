@@ -38,7 +38,7 @@ func (c *ArticleController) ArticlePaginate() {
 	status, _ := c.GetInt32("status")
 	list, count, err := biz.NewCmsArticle().ArticlePaginate(page, limit, channelId, categoryId, title, callIndex, status)
 	if err != nil {
-		logs.Error("CategoryFind", err.Error())
+		logs.Error("ArticlePaginate", err.Error())
 	}
 	c.JSONPagingSuccess(list, count)
 }
