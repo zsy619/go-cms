@@ -54,21 +54,22 @@ func (this *SiteController) Delete() {
 func (this *SiteController) SiteEdit() {
 	id, _ := this.GetInt64("id", 0)
 	site := &model.CmsSite{}
-	domain := &model.CmsSiteDomain{}
 	if id != 0 {
 		service := biz.NewCmsSiteModel()
 		domainService := biz.NewCmsSiteDomainModel()
 		site = service.One(id)
-		domain = domainService.One(id)
+		list := domainService.List(id)
+
+		if list == nil || len(list) == 0 {
+			list = append(list, &model.CmsSiteDomain{})
+		}
+		this.Data["listSize"] = len(list) - 1
+		this.Data["domainList"] = list
 	}
 	if site == nil {
 		site = &model.CmsSite{}
 	}
 	this.Data["site"] = site
-	if domain == nil {
-		domain = &model.CmsSiteDomain{}
-	}
-	this.Data["domain"] = domain
 	this.display()
 }
 
@@ -79,17 +80,24 @@ func (this *SiteController) Save() {
 	adminSerice := biz.NewCmsAdmin()
 
 	site := model.CmsSite{}
-	domain := model.CmsSiteDomain{}
 	result := lib.NewJSONResponse(lib.CodeSuccess, "保存成功")
 	if err := this.ParseForm(&site); err != nil {
 		logs.Error("Save", err)
 		result.SetResult(lib.CodeParamError, err.Error())
 		this.JSONData(result)
 	}
-	if err := this.ParseForm(&domain); err != nil {
-		logs.Error("Save", err)
-		result.SetResult(lib.CodeParamError, err.Error())
-		this.JSONData(result)
+	//if err := this.ParseForm(&domainList); err != nil {
+	//	logs.Error("Save", err)
+	//	result.SetResult(lib.CodeParamError, err.Error())
+	//	this.JSONData(result)
+	//}
+	domains := this.GetStrings("domain", nil)
+	remarks := this.GetStrings("remark", nil)
+	if domains == nil {
+		domains = []string{}
+	}
+	if remarks == nil {
+		remarks = []string{}
 	}
 
 	user := adminSerice.OneByUserId(this.IsLogin())
@@ -102,7 +110,7 @@ func (this *SiteController) Save() {
 		site.UpdateID = int32(this.IsLogin())
 		site.UpdateName = user.RealName
 	}
-	err := service.Save(&site, &domain)
+	err := service.Save(&site, domains, remarks)
 	if err != nil {
 		result.SetResult(lib.CodeFatal, err.Error())
 	}
