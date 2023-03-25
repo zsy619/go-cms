@@ -8,7 +8,7 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">公众账号</label>
                             <div class="layui-input-inline">
-                                <select name="account_id" lay-filter="account">
+                                <select name="accountId" lay-filter="accountId">
                                     {{range $index,$item := .accountList}}
                                     <option value="{{$item.AccountID}}">{{$item.Name}}</option>
                                     {{end}}
@@ -48,6 +48,11 @@
         var treetable = layui.treetable;
         var table = layui.table;
 
+        form.on('select(accountId)', function (data) {
+            console.log(data);
+            $('button[lay-filter="data-search-btn"]').click();
+        });
+
         layer.load(2);
         treetable.render({
             treeColIndex: 1,
@@ -55,7 +60,7 @@
             treeIdName: 'menu_id',
             treePidName: 'parent_id',
             elem: '#tableContainer',
-            url: '/admin/weixin/MenuFind?accountId=' + ($("select[name=account_id]").val() ? parseInt($("select[name=account_id]").val()) : 0),
+            url: '/admin/weixin/MenuFind?accountId=' + ($("select[name=accountId]").val() ? parseInt($("select[name=accountId]").val()) : 0),
             toolbar: '#toolbarDemo',
             height: "full",
             defaultToolbar: ['filter', 'exports', 'print'],
@@ -63,19 +68,11 @@
                 // { type: "checkbox", width: 50 },
                 { field: 'menu_id', width: 80, title: 'ID' },
                 { field: 'name', title: '菜单' },
-                { field: 'call_index', minWidth: 150, title: '调用别名' },
-                { field: 'link_url', title: '外部链接', minWidth: 150 },
-                {
-                    field: 'img_url', title: '图片地址', width: 150, templet: function (d) {
-                        if (d.img_url != "") {
-                            return '<img src="' + d.img_url + '" style="max-width: 100px;max-height: 100px;" />';
-                        }
-                        return "";
-                    }
-                },
+                { field: 'type', minWidth: 150, title: '类型' },
+                { field: 'url', title: '链接地址', minWidth: 150 },
                 {
                     field: 'sort_id', width: 100, align: "center", title: '排序', templet: function (d) {
-                        return '<input type="number" name="sort_id" category_id="' + d.category_id + '" value="' + d.sort_id + '" class="layui-input" style="" />';
+                        return '<input type="number" name="sort_id" menu_id="' + d.menu_id + '" value="' + d.sort_id + '" class="layui-input" style="" />';
                     }
                 },
                 { title: '操作', width: 150, toolbar: '#currentTableBar', align: "center", fixed: "right" }
@@ -106,14 +103,49 @@
             var result = JSON.stringify(data.field);
             console.log(result);
             //执行搜索重载
-            table.reload('tableContainer', {
-                page: {
-                    curr: 1
+            treetable.render({
+                treeColIndex: 1,
+                treeSpid: 0,
+                treeIdName: 'menu_id',
+                treePidName: 'parent_id',
+                elem: '#tableContainer',
+                url: '/admin/weixin/MenuFind?accountId=' + ($("select[name=accountId]").val() ? parseInt($("select[name=accountId]").val()) : 0),
+                toolbar: '#toolbarDemo',
+                height: "full",
+                defaultToolbar: ['filter', 'exports', 'print'],
+                cols: [[
+                    // { type: "checkbox", width: 50 },
+                    { field: 'menu_id', width: 80, title: 'ID' },
+                    { field: 'name', title: '菜单' },
+                    { field: 'type', minWidth: 150, title: '类型' },
+                    { field: 'url', title: '链接地址', minWidth: 150 },
+                    {
+                        field: 'sort_id', width: 100, align: "center", title: '排序', templet: function (d) {
+                            return '<input type="number" name="sort_id" menu_id="' + d.menu_id + '" value="' + d.sort_id + '" class="layui-input" style="" />';
+                        }
+                    },
+                    { title: '操作', width: 150, toolbar: '#currentTableBar', align: "center", fixed: "right" }
+                ]],
+                limits: [10, 15, 20, 25, 50, 100],
+                limit: 20,
+                page: false,
+                // skin: 'line',
+                even: true,
+                size: 'lg',
+                done: function () {
+                    layer.closeAll('loading');
+                    $(".layui-table-main tr").each(function (index, val) {
+                        $(".layui-table-fixed").each(function () {
+                            $($(this).find(".layui-table-body tbody tr")[index]).height($(val).height());
+                        });
+                    });
+                    $(".layui-table-header tr").each(function (index, val) {
+                        $(".layui-table-fixed").each(function () {
+                            $($(this).find(".layui-table-header thead tr")[index]).height($(val).height());
+                        });
+                    });
                 }
-                , where: {
-                    accountId: $("select[name=account_id]").val() ? parseInt($("select[name=account_id]").val()) : 0
-                }
-            }, 'data');
+            });
 
             return false;
         });
@@ -122,7 +154,7 @@
          * toolbar监听事件
          */
         table.on('toolbar(currentTableFilter)', function (obj) {
-            var accountId = $("select[name=account_id]").val() ? parseInt($("select[name=account_id]").val()) : 0;
+            var accountId = $("select[name=accountId]").val() ? parseInt($("select[name=accountId]").val()) : 0;
             if (accountId <= 0) {
                 layer.msg("请选择公众号");
                 return false;
@@ -182,7 +214,7 @@
         });
 
         table.on('tool(currentTableFilter)', function (obj) {
-            var accountId = $("select[name=account_id]").val() ? parseInt($("select[name=account_id]").val()) : 0;
+            var accountId = $("select[name=accountId]").val() ? parseInt($("select[name=accountId]").val()) : 0;
             var data = obj.data;
             if (obj.event === 'edit') {
                 console.log(data);
@@ -241,8 +273,6 @@
                             layer.close(this.layerIndex);
                         },
                     });
-                    // obj.del();
-                    // layer.close(index);
                 });
             }
         });

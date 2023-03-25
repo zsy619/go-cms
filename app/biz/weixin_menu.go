@@ -32,7 +32,7 @@ func (this *WeixinMenu) MenuFind(menuId int64) (*model.WeixinMenu, error) {
 func (this *WeixinMenu) MenuSave(input *model.WeixinMenu) error {
 	mdl, do := query.WeixinMenuDo()
 	if input.Name != "" {
-		if count, _ := do.Where(mdl.MenuID.Neq(input.MenuID), mdl.Name.Eq(input.Name)).Count(); count > 0 {
+		if count, _ := do.Where(mdl.MenuID.Neq(input.MenuID), mdl.AccountID.Eq(input.AccountID), mdl.Name.Eq(input.Name)).Count(); count > 0 {
 			return errors.New("菜单名称重复")
 		}
 	}

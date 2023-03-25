@@ -75,8 +75,8 @@ func (c *WeixinController) MenuSaveSortId() {
 }
 
 func (c *WeixinController) MenuDestory() {
-	MenuId, _ := c.GetInt64("MenuId")
-	if err := biz.NewWeixinMenu().MenuDestory(MenuId); err != nil {
+	menuId, _ := c.GetInt64("menuId")
+	if err := biz.NewWeixinMenu().MenuDestory(menuId); err != nil {
 		logs.Error("MenuDestory", err.Error())
 		c.JSONError(err.Error())
 		return

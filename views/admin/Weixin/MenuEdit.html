@@ -14,19 +14,12 @@
                 <div class="layui-tab-item layui-show">
                     <div class="layui-form-item">
                         <label class="layui-form-label required">
-                            <font color="red">*</font> 公众号名称
-                        </label>
-                        <div class="layui-input-inline" style="width: 500px;">
-                            <input type="hidden" name="account_id" value="{{.mdl.AccountID}}">
-                            <input type="text" name="name" value="{{.mdl.Name}}" maxlength="64" lay-verify="required" lay-reqtext="公众号名称为必填项" autocomplete="off" placeholder="" class="layui-input">
-                        </div>
-                        <div class="layui-form-mid layui-word-aux">公众平台账号名称，最多64个字符，且唯一</div>
-                    </div>
-                    <div class="layui-form-item">
-                        <label class="layui-form-label required">
                             <font color="red">*</font> 菜单
                         </label>
                         <div class="layui-input-inline" style="width: 500px;">
+                            <input type="hidden" name="menu_id" value="{{.mdl.MenuID}}">
+                            <input type="hidden" name="parent_id" value="{{.mdl.ParentID}}">
+                            <input type="hidden" name="account_id" value="{{.mdl.AccountID}}">
                             <input type="text" name="name" value="{{.mdl.Name}}" maxlength="512" lay-verify="required" lay-reqtext="菜单为必填项" autocomplete="off" placeholder="" class="layui-input">
                         </div>
                     </div>
@@ -40,7 +33,7 @@
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label required">
-                            <font color="red">*</font> Token
+                            <font color="red">*</font> 标识
                         </label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="text" name="key" value="{{.mdl.Key}}" autocomplete="off" lay-verify="required" lay-reqtext="Token为必填项" placeholder="" class="layui-input">
@@ -49,7 +42,7 @@
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label required">
-                            AppId
+                            链接地址
                         </label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="text" name="url" value="{{.mdl.URL}}" autocomplete="off" placeholder="" class="layui-input">
@@ -58,7 +51,7 @@
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">排序号</label>
-                        <div class="layui-input-inline" style="width: 80px;">
+                        <div class="layui-input-inline" style="width: 70px;">
                             <input type="number" name="sort_id" lay-verify="number" value="{{.mdl.SortID}}" class="layui-input">
                         </div>
                         <div class="layui-form-mid layui-word-aux">数字，越小越向前</div>
@@ -69,7 +62,7 @@
                         <label class="layui-form-label required">
                             注意事项说明
                         </label>
-                        <div class="layui-input-inline" style="width: 500px;">
+                        <div class="layui-input-inline" style="width: 90%;">
                             1、自定义菜单最多包括3个一级菜单，每个一级菜单最多包含5个二级菜单。<br>
                             2、一级菜单最多4个汉字，二级菜单最多7个汉字，多出来的部分将会以“...”代替。<br>
                             3、创建自定义菜单后，由于微信客户端缓存，需要24小时微信客户端才会展现出来。测试时可以尝试取消关注公众账号后再次关注，则可以看到创建后的效果。
@@ -79,7 +72,7 @@
                         <label class="layui-form-label required">
                             按钮类型说明
                         </label>
-                        <div class="layui-input-inline" style="width: 500px;">
+                        <div class="layui-input-inline" style="width: 70%;">
                             1、click：点击推事件<br>
                             用户点击click类型按钮后，微信服务器会通过消息接口推送消息类型为event的结构给开发者（参考消息接口指南），并且带上按钮中开发者填写的key值，开发者可以通过自定义的key值与用户进行交互；<br>
                             2、view：跳转URL<br>
