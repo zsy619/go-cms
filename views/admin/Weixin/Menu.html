@@ -15,6 +15,9 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="layui-inline">
+                            <button type="submit" class="layui-btn layui-btn-danger layui-btn-radius" lay-submit lay-filter="data-sync-btn"><i class="layui-icon layui-icon-ok"></i> 同步到公众号</button>
+                        </div>
                         <div class="layui-inline" style="display: none;">
                             <button type="submit" class="layui-btn layui-btn-primary layui-btn-radius" lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                         </div>
@@ -49,7 +52,7 @@
         var table = layui.table;
 
         form.on('select(accountId)', function (data) {
-            console.log(data);
+            // console.log(data);
             $('button[lay-filter="data-search-btn"]').click();
         });
 
@@ -68,7 +71,8 @@
                 // { type: "checkbox", width: 50 },
                 { field: 'menu_id', width: 80, title: 'ID' },
                 { field: 'name', title: '菜单' },
-                { field: 'type', minWidth: 150, title: '类型' },
+                { field: 'key', title: '标识', minWidth: 150 },
+                { field: 'type', width: 150, title: '类型' },
                 { field: 'url', title: '链接地址', minWidth: 150 },
                 {
                     field: 'sort_id', width: 100, align: "center", title: '排序', templet: function (d) {
@@ -232,7 +236,14 @@
                 });
                 return false;
             } else if (obj.event === 'add') {
-                console.log(data);
+                if (data.type != "view") {
+                    layer.msg("只有链接类型才能添加子菜单");
+                    return false;
+                }
+                if (data.parent_id > 0) {
+                    layer.msg("只有一级菜单才能添加子菜单");
+                    return false;
+                }
                 var index = layer.open({
                     title: '添加',
                     type: 2,

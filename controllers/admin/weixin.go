@@ -22,6 +22,8 @@ func (c *WeixinController) Menu() {
 
 // 关注回复
 func (c *WeixinController) Subscribe() {
+	list, _, _ := biz.NewWeixinAccount().AccountPaginate(1, 9999, "", -1)
+	c.Data["accountList"] = list
 	c.display()
 }
 

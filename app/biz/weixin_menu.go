@@ -32,8 +32,13 @@ func (this *WeixinMenu) MenuFind(menuId int64) (*model.WeixinMenu, error) {
 func (this *WeixinMenu) MenuSave(input *model.WeixinMenu) error {
 	mdl, do := query.WeixinMenuDo()
 	if input.Name != "" {
-		if count, _ := do.Where(mdl.MenuID.Neq(input.MenuID), mdl.AccountID.Eq(input.AccountID), mdl.Name.Eq(input.Name)).Count(); count > 0 {
+		if count, _ := do.Where(mdl.MenuID.Neq(input.MenuID), mdl.AccountID.Eq(input.AccountID), mdl.ParentID.Eq(input.ParentID), mdl.Name.Eq(input.Name)).Count(); count > 0 {
 			return errors.New("菜单名称重复")
+		}
+	}
+	if input.Key != "" {
+		if count, _ := do.Where(mdl.MenuID.Neq(input.MenuID), mdl.Key.Eq(input.Key)).Count(); count > 0 {
+			return errors.New("菜单Key重复")
 		}
 	}
 	var err error
@@ -47,6 +52,10 @@ func (this *WeixinMenu) MenuSave(input *model.WeixinMenu) error {
 			mdl.Type.ColumnName().String():       input.Type,
 			mdl.Key.ColumnName().String():        input.Key,
 			mdl.URL.ColumnName().String():        input.URL,
+			mdl.MediaID.ColumnName().String():    input.MediaID,
+			mdl.AppID.ColumnName().String():      input.AppID,
+			mdl.PagePath.ColumnName().String():   input.PagePath,
+			mdl.ArticleID.ColumnName().String():  input.ArticleID,
 			mdl.SortID.ColumnName().String():     input.SortID,
 			mdl.UpdateTime.ColumnName().String(): input.UpdateTime,
 		})

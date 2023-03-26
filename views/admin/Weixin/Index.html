@@ -62,6 +62,7 @@
     </div>
 </div>
 <script>
+    var website = "{{.website}}";
     layui.use(['form', 'table', 'treeSelect'], function () {
         var $ = layui.jquery,
             form = layui.form,
@@ -84,8 +85,7 @@
                 { field: 'wx_code', title: '公众平台微信号' },
                 {
                     field: 'account_id', title: '微信认证URL', templet: function (d) {
-                        var outText = d.is_push ? '<span class="layui-badge layui-bg-green">√</span>' : '<span class="layui-badge">×</span>';
-                        return outText;
+                        return website + "weixin/AccountAuth?accountId=" + d.account_id;
                     }
                 },
                 {

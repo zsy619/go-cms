@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"haedu.gov.cn/cms/app/dal/model"
-	"haedu.gov.cn/cms/app/lib"
 
 	"haedu.gov.cn/cms/controllers"
 )
@@ -51,32 +50,6 @@ func (this *BaseController) displayNoLayout(tpl ...string) {
 		tplname = "admin/" + this.ControllerName + "/" + this.ActionName + ".html"
 	}
 	this.TplName = tplname
-}
-
-// JSONPaging 返回分页信息
-func (c *BaseController) JSONPaging(code lib.CodeResult, message string, data interface{}, count int64) {
-	c.Data["json"] = &lib.JSONResponsePage{
-		Count: count,
-		JSONResponse: lib.JSONResponse{
-			Code:    code,
-			Message: message,
-			Data:    data,
-		},
-	}
-	c.ServeJSON()
-	c.StopRun()
-}
-
-// JSONPaging 返回分页信息
-func (c *BaseController) JSONPagingSuccess(data interface{}, count int64) {
-	c.JSONPaging(lib.CodeSuccess, "", data, count)
-}
-
-// JSONData 公共返回方法
-func (c *BaseController) JSONData(data *lib.JSONResponse) {
-	c.Data["json"] = data
-	c.ServeJSON()
-	c.StopRun()
 }
 
 // 登录人ID

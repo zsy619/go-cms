@@ -25,10 +25,35 @@
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label required">
+                        </label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <div class="layui-form-mid layui-word-aux">一级菜单数个数应为1~3个；二级菜单个数应为1~5个<br>菜单标题，不超过16个字节，子菜单不超过60个字节</div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">
                             <font color="red">*</font> 类型
                         </label>
                         <div class="layui-input-inline" style="width: 500px;">
-                            <input type="text" name="type" value="{{.mdl.Type}}" maxlength="64" autocomplete="off" placeholder="" class="layui-input">
+                            <select name="type" lay-filter="type" lay-verify="required" lay-reqtext="类型为必选项">
+                                <option value="click" {{if eq .mdl.Type "click" }}selected="selected" {{end}}>点击推事件[click]</option>
+                                <option value="view" {{if eq .mdl.Type "view" }}selected="selected" {{end}}>跳转URL[view]</option>
+                                <option value="scancode_push" {{if eq .mdl.Type "scancode_push" }}selected="selected" {{end}}>扫码推事件[scancode_push]</option>
+                                <option value="scancode_waitmsg" {{if eq .mdl.Type "scancode_waitmsg" }}selected="selected" {{end}}>扫码推事件且弹出“消息接收中”提示框[scancode_waitmsg]</option>
+                                <option value="pic_sysphoto" {{if eq .mdl.Type "pic_sysphoto" }}selected="selected" {{end}}>弹出系统拍照发图[pic_sysphoto]</option>
+                                <option value="pic_photo_or_album" {{if eq .mdl.Type "pic_photo_or_album" }}selected="selected" {{end}}>弹出拍照或者相册发图[pic_photo_or_album]</option>
+                                <option value="pic_weixin" {{if eq .mdl.Type "pic_weixin" }}selected="selected" {{end}}>弹出微信相册发图器[pic_weixin]</option>
+                                <option value="location_select" {{if eq .mdl.Type "location_select" }}selected="selected" {{end}}>弹出地理位置选择器[location_select]</option>
+                                <option value="media_id" {{if eq .mdl.Type "media_id" }}selected="selected" {{end}}>下发消息（除文本消息）[media_id]</option>
+                                <option value="view_limited" {{if eq .mdl.Type "view_limited" }}selected="selected" {{end}}>跳转图文消息URL[view_limited]</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">
+                        </label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <div class="layui-form-mid layui-word-aux">菜单的响应动作类型，view表示网页类型，<br>click表示点击类型，miniprogram表示小程序类型</div>
                         </div>
                     </div>
                     <div class="layui-form-item">
@@ -36,9 +61,15 @@
                             <font color="red">*</font> 标识
                         </label>
                         <div class="layui-input-inline" style="width: 500px;">
-                            <input type="text" name="key" value="{{.mdl.Key}}" autocomplete="off" lay-verify="required" lay-reqtext="Token为必填项" placeholder="" class="layui-input">
+                            <input type="text" name="key" value="{{.mdl.Key}}" lay-verify="required" lay-reqtext="标识为必填项" autocomplete="off" placeholder="" class="layui-input">
                         </div>
-                        <!-- <div class="layui-form-mid layui-word-aux">ToKen值必须与公众平台对应</div> -->
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">
+                        </label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <div class="layui-form-mid layui-word-aux">菜单KEY值，用于消息接口推送，不超过128字节</div>
+                        </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label required">
@@ -47,7 +78,73 @@
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="text" name="url" value="{{.mdl.URL}}" autocomplete="off" placeholder="" class="layui-input">
                         </div>
-                        <!-- <div class="layui-form-mid layui-word-aux">非必填，仅用于高级接口</div> -->
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">
+                        </label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <div class="layui-form-mid layui-word-aux">网页 链接，用户点击菜单可打开链接，不超过1024字节。 type为miniprogram时，不支持小程序的老版本客户端将打开本url。</div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">
+                            MediaID
+                        </label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <input type="text" name="media_id" value="{{.mdl.MediaID}}" autocomplete="off" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">
+                        </label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <div class="layui-form-mid layui-word-aux">media_id类型和view_limited类型必须</div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">
+                            AppID
+                        </label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <input type="text" name="app_id" value="{{.mdl.AppID}}" autocomplete="off" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">
+                        </label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <div class="layui-form-mid layui-word-aux">miniprogram类型必须；小程序的appid（仅认证公众号可配置）</div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">
+                            PagePath
+                        </label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <input type="text" name="page_path" value="{{.mdl.PagePath}}" autocomplete="off" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">
+                        </label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <div class="layui-form-mid layui-word-aux">miniprogram类型必须；小程序的页面路径</div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">
+                            ArticleID
+                        </label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <input type="text" name="article_id" value="{{.mdl.ArticleID}}" autocomplete="off" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">
+                        </label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <div class="layui-form-mid layui-word-aux">article_id类型和article_view_limited类型必须</div>
+                        </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">排序号</label>
@@ -62,7 +159,7 @@
                         <label class="layui-form-label required">
                             注意事项说明
                         </label>
-                        <div class="layui-input-inline" style="width: 90%;">
+                        <div class="layui-input-inline" style="width: 70%;">
                             1、自定义菜单最多包括3个一级菜单，每个一级菜单最多包含5个二级菜单。<br>
                             2、一级菜单最多4个汉字，二级菜单最多7个汉字，多出来的部分将会以“...”代替。<br>
                             3、创建自定义菜单后，由于微信客户端缓存，需要24小时微信客户端才会展现出来。测试时可以尝试取消关注公众账号后再次关注，则可以看到创建后的效果。
@@ -92,7 +189,11 @@
                             9、media_id：下发消息（除文本消息）<br>
                             用户点击media_id类型按钮后，微信服务器会将开发者填写的永久素材id对应的素材下发给用户，永久素材类型可以是图片、音频、视频、图文消息。请注意：永久素材id必须是在“素材管理/新增永久素材”接口上传后获得的合法id。<br>
                             10、view_limited：跳转图文消息URL<br>
-                            用户点击view_limited类型按钮后，微信客户端将打开开发者在按钮中填写的永久素材id对应的图文消息URL，永久素材类型只支持图文消息。请注意：永久素材id必须是在“素材管理/新增永久素材”接口上传后获得的合法id。
+                            用户点击view_limited类型按钮后，微信客户端将打开开发者在按钮中填写的永久素材id对应的图文消息URL，永久素材类型只支持图文消息。请注意：永久素材id必须是在“素材管理/新增永久素材”接口上传后获得的合法id。<br>
+                            11、article_id：卡片图文信息<br>
+                            用户点击 article_id 类型按钮后，微信客户端将会以卡片形式，下发开发者在按钮中填写的图文消息。<br>
+                            12、article_view_limited：<br>
+                            类似view_limited，但不使用 media_id 而使用 article_id。
                         </div>
                     </div>
                 </div>

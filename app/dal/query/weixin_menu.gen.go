@@ -34,6 +34,10 @@ func newWeixinMenu(db *gorm.DB, opts ...gen.DOOption) weixinMenu {
 	_weixinMenu.Type = field.NewString(tableName, "type")
 	_weixinMenu.Key = field.NewString(tableName, "key")
 	_weixinMenu.URL = field.NewString(tableName, "url")
+	_weixinMenu.AppID = field.NewString(tableName, "app_id")
+	_weixinMenu.PagePath = field.NewString(tableName, "page_path")
+	_weixinMenu.MediaID = field.NewString(tableName, "media_id")
+	_weixinMenu.ArticleID = field.NewString(tableName, "article_id")
 	_weixinMenu.SortID = field.NewInt32(tableName, "sort_id")
 	_weixinMenu.CreateID = field.NewInt32(tableName, "create_id")
 	_weixinMenu.CreateName = field.NewString(tableName, "create_name")
@@ -54,10 +58,14 @@ type weixinMenu struct {
 	MenuID     field.Int64  // 主键
 	ParentID   field.Int64  // 父级ID
 	AccountID  field.Int64  // 归属公众号
-	Name       field.String // 菜单
-	Type       field.String // 类型
-	Key        field.String // 标识
-	URL        field.String // 链接地址
+	Name       field.String // 菜单标题，不超过16个字节，子菜单不超过40个字节
+	Type       field.String // 菜单的响应动作类型，view表示网页类型，click表示点击类型，miniprogram表示小程序类型
+	Key        field.String // 菜单KEY值，用于消息接口推送，不超过128字节
+	URL        field.String // 网页链接，用户点击菜单可打开链接，不超过1024字节。当type为miniprogram时，不支持小程序的老版本客户端将打开本url
+	AppID      field.String // 小程序appid
+	PagePath   field.String // 小程序页面路径
+	MediaID    field.String // media_id类型和view_limited类型必须
+	ArticleID  field.String // article_id类型和article_view_limited类型必须
 	SortID     field.Int32  // 排序
 	CreateID   field.Int32  // 创建人ID
 	CreateName field.String // 创建人姓名
@@ -88,6 +96,10 @@ func (w *weixinMenu) updateTableName(table string) *weixinMenu {
 	w.Type = field.NewString(table, "type")
 	w.Key = field.NewString(table, "key")
 	w.URL = field.NewString(table, "url")
+	w.AppID = field.NewString(table, "app_id")
+	w.PagePath = field.NewString(table, "page_path")
+	w.MediaID = field.NewString(table, "media_id")
+	w.ArticleID = field.NewString(table, "article_id")
 	w.SortID = field.NewInt32(table, "sort_id")
 	w.CreateID = field.NewInt32(table, "create_id")
 	w.CreateName = field.NewString(table, "create_name")
@@ -119,7 +131,7 @@ func (w *weixinMenu) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (w *weixinMenu) fillFieldMap() {
-	w.fieldMap = make(map[string]field.Expr, 14)
+	w.fieldMap = make(map[string]field.Expr, 18)
 	w.fieldMap["menu_id"] = w.MenuID
 	w.fieldMap["parent_id"] = w.ParentID
 	w.fieldMap["account_id"] = w.AccountID
@@ -127,6 +139,10 @@ func (w *weixinMenu) fillFieldMap() {
 	w.fieldMap["type"] = w.Type
 	w.fieldMap["key"] = w.Key
 	w.fieldMap["url"] = w.URL
+	w.fieldMap["app_id"] = w.AppID
+	w.fieldMap["page_path"] = w.PagePath
+	w.fieldMap["media_id"] = w.MediaID
+	w.fieldMap["article_id"] = w.ArticleID
 	w.fieldMap["sort_id"] = w.SortID
 	w.fieldMap["create_id"] = w.CreateID
 	w.fieldMap["create_name"] = w.CreateName

@@ -36,6 +36,7 @@ func (c *WeixinController) MenuEdit() {
 			AccountID: accountId,
 			ParentID:  parentId,
 			SortID:    99,
+			Type:      "view",
 		}
 	}
 	c.Data["mdl"] = mdl
