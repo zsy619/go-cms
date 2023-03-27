@@ -1,11 +1,15 @@
 package admin
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/cms/app/biz"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/lib"
-	"time"
+	"haedu.gov.cn/cms/controllers/admin/vmodel"
+	"haedu.gov.cn/tools/xjson"
 )
 
 type SiteController struct{ BaseController }
@@ -21,17 +25,19 @@ func (c *SiteController) Index() {
 func (this *SiteController) SiteData() {
 	name := this.GetString("name", "")
 	title := this.GetString("title", "")
-	domain := this.GetString("domain", "")
 	page, _ := this.GetInt("page")
 	limit, _ := this.GetInt("limit")
-	service := biz.NewCmsSiteModel()
-	list, count, _ := service.List(name, title, domain, page, limit)
+	service := biz.NewCmsSite()
+	list, count, _ := service.SitePaginate(page, limit, name, title)
 	this.JSONPaging(lib.CodeSuccess, "", list, count)
 }
 
 // Channel 站点栏目管理
 // @router /admin/site/channel [get]
 func (c *SiteController) Channel() {
+	service := biz.NewCmsSite()
+	list, _, _ := service.SitePaginate(1, 999999, "", "")
+	c.Data["siteList"] = list
 	c.display()
 }
 
@@ -43,8 +49,8 @@ func (this *SiteController) Delete() {
 		this.JSONError("参数丢失")
 		return
 	}
-	service := biz.NewCmsSiteModel()
-	service.Delete(ids)
+	service := biz.NewCmsSite()
+	service.SiteDelete(ids)
 	data := lib.NewJSONResponse(lib.CodeSuccess, "")
 	this.JSONData(data)
 }
@@ -56,19 +62,20 @@ func (this *SiteController) SiteEdit() {
 	site := &model.CmsSite{}
 	var list []*model.CmsSiteDomain
 	if id != 0 {
-		service := biz.NewCmsSiteModel()
+		service := biz.NewCmsSite()
 		domainService := biz.NewCmsSiteDomainModel()
-		site = service.One(id)
+		site = service.SiteOne(id)
 		list = domainService.List(id)
+	} else {
+		site = &model.CmsSite{
+			SortID: 99,
+		}
 	}
 	if list == nil || len(list) == 0 {
 		list = append(list, &model.CmsSiteDomain{})
 	}
 	this.Data["listSize"] = len(list) - 1
 	this.Data["domainList"] = list
-	if site == nil {
-		site = &model.CmsSite{}
-	}
 	this.Data["site"] = site
 	this.display()
 }
@@ -76,7 +83,7 @@ func (this *SiteController) SiteEdit() {
 // SiteEdit 站点列表数据
 // @router admin/site/save [post]
 func (this *SiteController) Save() {
-	service := biz.NewCmsSiteModel()
+	service := biz.NewCmsSite()
 	adminSerice := biz.NewCmsAdmin()
 
 	site := model.CmsSite{}
@@ -110,9 +117,27 @@ func (this *SiteController) Save() {
 		site.UpdateID = int32(this.IsLogin())
 		site.UpdateName = user.RealName
 	}
-	err := service.Save(&site, domains, remarks)
+	err := service.SiteSave(&site, domains, remarks)
 	if err != nil {
 		result.SetResult(lib.CodeFatal, err.Error())
 	}
 	this.JSONData(result)
+}
+
+func (c *SiteController) SiteSaveSortId() {
+	mdls := []vmodel.Site_SaveSortIdModel{}
+	data := c.Ctx.Input.RequestBody
+	fmt.Println("SiteSaveSortId", string(data))
+	if err := xjson.Unmarshal(c.Ctx.Input.RequestBody, &mdls); err != nil {
+		logs.Error("SiteSaveSortId", err.Error())
+		c.JSONError(err.Error())
+	}
+	for _, mdl := range mdls {
+		if err := biz.NewCmsSite().SiteSaveSortId(mdl.SiteId, mdl.SortId); err != nil {
+			logs.Error("SiteSaveSortId", err.Error())
+			c.JSONError(err.Error())
+			return
+		}
+	}
+	c.JSONSuccess("保存成功", nil)
 }

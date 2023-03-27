@@ -1,3 +1,8 @@
+<style>
+    .layui-form-label {
+        width: 120px;
+    }
+</style>
 <div class="layuimini-main">
     <form class="layui-form" method="get" lay-filter="frmEdit" id="frmEdit" name="frmEdit">
         <div class="layui-tab layui-tab-brief layui-tab-card">
@@ -9,35 +14,39 @@
             <div class="layui-tab-content">
                 <div class="layui-tab-item layui-show">
                     <div class="layui-form-item">
-                        <label class="layui-form-label required"><font color="red">*</font> 站点名称</label>
+                        <label class="layui-form-label required">
+                            <font color="red">*</font> 站点名称
+                        </label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="hidden" name="site_id" value="{{.site.SiteID}}">
                             <input type="text" maxlength="50" id="title" name="title" value="{{.site.Title}}" lay-verify="required" lay-reqtext="站点名称为必填项" autocomplete="off" placeholder="请输入站点名称" class="layui-input">
                         </div>
+                        <div class="layui-form-mid layui-word-aux">标题备注，允许中文</div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label required"><font color="red">*</font> 生成目录名</label>
+                        <label class="layui-form-label required">
+                            <font color="red">*</font> 生成目录名
+                        </label>
                         <div class="layui-input-inline" style="width: 500px;">
-                            <input type="text" maxlength="50" id="dir_path" name="dir_path" value="{{.site.DirPath}}" lay-verify="required" lay-reqtext="生成目录名为必填项" autocomplete="off" placeholder="请输入生成目录名" class="layui-input">
+                            <input type="text" maxlength="50" id="dir_path" name="dir_path" value="{{.site.DirPath}}" lay-verify="required|dir_path" lay-reqtext="生成目录名为必填项" autocomplete="off" placeholder="请输入生成目录名" class="layui-input">
                         </div>
+                        <div class="layui-form-mid layui-word-aux">目录，只允许使用英文、下划线</div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">是否默认</label>
-                        <div class="layui-input-inline" style="width: 80px;">
-                            <select  name="is_default" class="layui-select">
-                                <option value="0">否</option>
-                                <option value="1" {{if .site.IsDefault}}selected="selected"{{end}}>是</option>
-                            </select>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <input type="radio" name="is_default" value="0" title="否" {{if eq .site.IsDefault false}} checked="" {{end}}>
+                            <input type="radio" name="is_default" value="1" title="是" {{if eq .site.IsDefault true}} checked="" {{end}}>
                         </div>
+                        <div class="layui-form-mid layui-word-aux">只允许一个默认站点，默认则不能绑定域名</div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">移动站点</label>
-                        <div class="layui-input-inline" style="width: 80px;">
-                            <select id="mobile" name="mobile" class="layui-select">
-                                <option value="0" {{if eq .site.Mobile 0}}selected="selected"{{end}}>否</option>
-                                <option value="1" {{if eq .site.Mobile 1}}selected="selected"{{end}}>是</option>
-                            </select>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <input type="radio" name="is_mobile" value="0" title="否" {{if eq .site.IsMobile false}} checked="" {{end}}>
+                            <input type="radio" name="is_mobile" value="1" title="是" {{if eq .site.IsMobile true}} checked="" {{end}}>
                         </div>
+                        <div class="layui-form-mid layui-word-aux">移动站点仅适用于移动设备访问</div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">排序数字</label>
@@ -49,21 +58,22 @@
                 </div>
                 <div class="layui-tab-item">
                     <div class="layui-form-item">
-                        <label class="layui-form-label"><font color="red">*</font> 网站名称</label>
+                        <label class="layui-form-label">
+                            <font color="red">*</font> 网站名称
+                        </label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="text" maxlength="50" value="{{.site.Name}}" id="name" name="name" lay-verify="required" lay-reqtext="网站名称为必填项" autocomplete="off" placeholder="网站名称" class="layui-input">
                         </div>
-                        <div class="layui-form-mid layui-word-aux">任意字符</div>
+                        <div class="layui-form-mid layui-word-aux">任意字符，控制在255个字符内</div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">网站LOGO</label>
-                        <div class="layui-input-inline" style="width: 500px;">
-                            <img src="{{.site.Logo}}" width="120px" height="60px" />
-                            <input type="hidden" value="{{.site.Logo}}" id="logo" name="logo" autocomplete="off" placeholder="网站LOGO" class="layui-input">
-                            <button type="button" class="layui-btn layui-btn-primary" id="btnUpload">
-                                <i class="layui-icon">&#xe67c;</i>浏览...
-                            </button>
+                        <div class="layui-input-inline" style="width: 392px;">
+                            <input type="text" id="logo" name="logo" value="{{.site.Logo}}" autocomplete="off" placeholder="" class="layui-input">
                         </div>
+                        <button type="button" class="layui-btn layui-btn-primary" id="btnUpload">
+                            <i class="layui-icon">&#xe67c;</i>浏览...
+                        </button>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">公司名称</label>
@@ -82,14 +92,14 @@
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="text" maxlength="30" value="{{.site.Telphone}}" id="telphone" name="telphone" autocomplete="off" placeholder="联系电话" class="layui-input">
                         </div>
-                        <div class="layui-form-mid layui-word-aux">非必填,区号+电话号码</div>
+                        <div class="layui-form-mid layui-word-aux">非必填，区号+电话号码</div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">传值号码</label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="text" maxlength="30" value="{{.site.Fax}}" id="fax" name="fax" autocomplete="off" placeholder="传值号码" class="layui-input">
                         </div>
-                        <div class="layui-form-mid layui-word-aux">非必填,区号+传值号码</div>
+                        <div class="layui-form-mid layui-word-aux">非必填，区号+传真号码</div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">电子邮箱</label>
@@ -126,56 +136,69 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">底部版权信息</label>
                         <div class="layui-input-inline" style="width: 500px;">
-                            <input type="text" maxlength="50" value="{{.site.Copyright}}" id="copyright" name="copyright" autocomplete="off" placeholder="底部版权信息" class="layui-input">
+                            <textarea id="copyright" name="copyright" class="layui-textarea">{{.site.Copyright}}</textarea>
                         </div>
+                        <div class="layui-form-mid layui-word-aux">支持HTML</div>
                     </div>
                 </div>
                 <div class="layui-tab-item" id="domainDiv">
-                    {{range $k,$v :=.domainList}}
                     <div class="layui-form-item">
-                        <label class="layui-form-label required">域名</label>
-                        <div class="layui-input-inline" style="width: 500px;">
-                            <input type="text" maxlength="50" name="domain" value="{{$v.Domain}}" autocomplete="off" placeholder="请输入域名" class="layui-input">
-                        </div>
-
-                        <label class="layui-form-label required">备注</label>
-                        <div class="layui-input-inline" style="width: 500px;">
-                            <input type="text" maxlength="50" name="remark" value="{{$v.Remark}}" autocomplete="off" placeholder="请输入域名备注" class="layui-input">
-                        </div>
-                        {{if eq $k $.listSize}}
-                        <a onclick="addDomian(this)" href="#" style="vertical-align: center"> 增加 </a>
-                        {{end}}
-                        <a onclick="delDomian(this)" href="#" style="vertical-align: center"> 删除 </a>
+                        <label class="layui-form-label">
+                            <button type="button" class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" onclick="addDomian(this)"><i class="layui-icon layui-icon-addition"></i>添加</button>
+                        </label>
                     </div>
-                    {{end}}
+                    <div class="layui-form-item">
+                        <div class="layui-input-inline" style="width: 600px;margin-left: 68px;">
+                            <table class="layui-table">
+                                <thead>
+                                    <tr>
+                                        <th>域名</th>
+                                        <th width="130">备注</th>
+                                        <th width="60">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="domainBody">
+                                    {{range $k,$v :=.domainList}}
+                                    <tr>
+                                        <td>
+                                            <input type="text" maxlength="50" name="domain" lay-verify="domain" value="{{$v.Domain}}" autocomplete="off" placeholder="请输入域名" class="layui-input">
+                                        </td>
+                                        <td>
+                                            <input type="text" maxlength="50" name="remark" value="{{$v.Remark}}" autocomplete="off" placeholder="请输入域名备注" class="layui-input">
+                                        </td>
+                                        <td>
+                                            <a onclick="delDomian(this)" class="layui-btn layui-btn-xs layui-btn-danger data-count-delete layui-btn-radius" lay-event="delete"><i class="layui-icon layui-icon-close"></i>删除</a>
+                                        </td>
+                                    </tr>
+                                    {{end}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="layui-form-item">
             <div class="layui-input-block" style="text-align: center;">
-                <!-- <button class="layui-btn" id="btnSubmit">立即提交</button> -->
                 <button class="layui-btn layui-btn-radius" id="btnSubmit">立即提交</button>
                 <button type="button" class="layui-btn layui-btn-primary layui-btn-radius" id="resetBtn">重置</button>
             </div>
         </div>
     </form>
 </div>
-<div id="domainTemplate" style="display: none">
-    <div class="layui-form-item">
-        <label class="layui-form-label required">域名</label>
-        <div class="layui-input-inline" style="width: 500px;">
-            <input type="text" maxlength="50" name="domain" value="" autocomplete="off" placeholder="请输入域名" class="layui-input">
-        </div>
-
-        <label class="layui-form-label required">备注</label>
-        <div class="layui-input-inline" style="width: 500px;">
+<script type="text/template" id="domainTemplate">
+    <tr>
+        <td>
+            <input type="text" maxlength="50" name="domain" lay-verify="domain" value="" autocomplete="off" placeholder="请输入域名" class="layui-input">
+        </td>
+        <td>
             <input type="text" maxlength="50" name="remark" value="" autocomplete="off" placeholder="请输入域名备注" class="layui-input">
-        </div>
-
-        <a onclick="addDomian(this)" href="#" style="vertical-align: center"> 增加 </a>
-        <a onclick="delDomian(this)" href="#" style="vertical-align: center"> 删除 </a>
-    </div>
-</div>
+        </td>
+        <td>
+            <a onclick="delDomian(this)" class="layui-btn layui-btn-xs layui-btn-danger data-count-delete layui-btn-radius" lay-event="delete"><i class="layui-icon layui-icon-close"></i>删除</a>
+        </td>
+    </tr>
+</script>
 <script>
     var $;
     layui.use(['form', 'layer', 'wangEditor', 'upload'], function () {
@@ -193,7 +216,7 @@
                 //上传完毕回调
                 if (res.code == 0) {
                     $("input[name='logo']").val(res.file.url2);
-                    $("img").attr("src",res.file.url2);
+                    $("img").attr("src", res.file.url2);
                 } else {
                     layer.msg(res.msg);
                 }
@@ -202,7 +225,20 @@
                 //请求异常回调
             }
         });
-
+        //自定义验证规则
+        form.verify({
+            // title: function (value) {
+            //     if (value.length < 5) {
+            //         return '标题也太短了吧';
+            //     }
+            // }
+            dir_path: [/^[a-zA-Z0-9\-\_]{2,50}$/, "目录只能为字母、数字、下划线、中划线"]
+            , domain: [/^\s*$|^([a-zA-Z0-9\-\u4e00-\u9fa5]+\.)+[a-zA-Z\u4e00-\u9fa5]+$/, "域名是去除“http(s)://”部分"]
+            // , money: [
+            //     /^\d+\.\b\d{2}\b$/
+            //     , '金额必须为小数保留两位'
+            // ]
+        });
         // 提交事件
         form.on('submit(*)', function (data) {
             console.log(data)
@@ -213,7 +249,7 @@
         //方法提交
         $('#btnSubmit').on('click', function () {
             var sortId = $("#sort_id").val();
-            if(sortId > 999 || sortId < 0){
+            if (sortId > 999 || sortId < 0) {
                 layer.msg("排序数字应为0-999的正整数", { icon: 2, time: 2000 });
                 return false;
             }
@@ -252,50 +288,36 @@
         $('#resetBtn').on('click', function () {
             form.val("frmEdit", {
                 "title": ""
-                ,"dir_path": ""
-                ,"domain": ""
-                ,"is_default": 0
-                ,"mobile": 0
-                ,"sort_id": 0
-                ,"name": ""
-                ,"logo": ""
-                ,"company": ""
-                ,"address": ""
-                ,"telphone": ""
-                ,"fax": ""
-                ,"email": ""
-                ,"crod": ""
-                ,"home_title": ""
-                ,"meta_keyword": ""
-                ,"meta_description": ""
-                ,"copyright": ""
+                , "dir_path": ""
+                , "domain": ""
+                , "is_default": 0
+                , "is_mobile": 0
+                , "sort_id": 0
+                , "name": ""
+                , "logo": ""
+                , "company": ""
+                , "address": ""
+                , "telphone": ""
+                , "fax": ""
+                , "email": ""
+                , "crod": ""
+                , "home_title": ""
+                , "meta_keyword": ""
+                , "meta_description": ""
+                , "copyright": ""
             });
-            $("img").attr("src","");
+            $("img").attr("src", "");
             form.render();
         })
 
     });
 
-    function addDomian(e){
-        $(e).remove();
+    function addDomian(e) {
         var html = $("#domainTemplate").html()
-        $("#domainDiv").append(html);
+        $("#domainBody").append(html);
     }
 
-    function delDomian(e){
-        var number = $("#domainDiv").find(".layui-form-item").length;
-        if(number == 1){
-            layer.msg("无法删除最后一个域名");
-            return;
-        }
-        $(e).parent().remove();
-        number = $("#domainDiv").find(".layui-form-item").length;
-        $("#domainDiv").find(".layui-form-item").each(function(i,o){
-            if(i == number-1){
-                $(o).find("a").remove();
-                $(o).append("<a onclick='addDomian(this)' href='#' style='vertical-align: center'> 增加 </a>");
-                $(o).append("<a onclick='delDomian(this)' href='#' style='vertical-align: center'> 删除 </a>");
-            }
-        })
+    function delDomian(e) {
+        $(e).parent().parent().remove();
     }
 </script>

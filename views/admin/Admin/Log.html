@@ -49,7 +49,7 @@
                 // { type: "checkbox", width: 50 },
                 { field: 'log_id', width: 80, title: 'ID', sort: true },
                 { field: 'user_name', title: '账号' },
-                { field: 'call_index', minWidth: 150, title: '调用别名', sort: true },
+                // { field: 'call_index', minWidth: 150, title: '调用别名', sort: true },
                 { field: 'method', title: '请求方法', minWidth: 150 },
                 { field: 'path', title: '请求路径', minWidth: 80 },
                 {
@@ -62,8 +62,9 @@
                     field: 'ip', title: 'IP地址', width: 220
                 },
                 {
-                    field: 'create_time', width: 120, title: '记录时间', templet: function (d) {
-                        return d.create_time;
+                    field: 'create_time', width: 180, title: '记录时间', templet: function (d) {
+                        return layui.util.toDateString(Date.parse(d.create_time), 'yyyy-MM-dd HH:mm:ss');
+                        // return d.create_time;
                     }
                 },
                 // { title: '操作', width: 150, toolbar: '#currentTableBar', align: "center" }
@@ -196,8 +197,6 @@
                             layer.close(this.layerIndex);
                         },
                     });
-                    // obj.del();
-                    // layer.close(index);
                 });
             }
         });

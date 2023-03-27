@@ -18,21 +18,10 @@
                 </form>
             </div>
         </fieldset>
-        <script type="text/html" id="toolbarDemo">
-            <div class="layui-btn-container layui-btn-group">
-                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加 </button>
-                <button class="layui-btn layui-btn-sm layui-btn-primary data-delete-btn" lay-event="save"> 保存 </button>
-            </div>
-        </script>
         <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
-        <script type="text/html" id="currentTableBar">
-            <div class="layui-btn-group">
-                <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
-                <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
-            </div>
-        </script>
     </div>
 </div>
+{{template "admin/Public/Button.html" }}
 <script>
     layui.use(['form', 'table'], function () {
         var $ = layui.jquery,

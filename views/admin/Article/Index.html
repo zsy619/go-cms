@@ -42,24 +42,11 @@
                 </form>
             </div>
         </fieldset>
-        <script type="text/html" id="toolbarDemo">
-            <div class="layui-btn-container layui-btn-group">
-                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加 </button>
-                <button class="layui-btn layui-btn-primary layui-btn-sm data-add-btn" lay-event="audit"> 通过 </button>
-                <button class="layui-btn layui-btn-danger layui-btn-sm data-add-btn" lay-event="reject"> 拒绝 </button>
-                <button class="layui-btn layui-btn-sm layui-btn-primary data-delete-btn" lay-event="save"> 保存 </button>
-            </div>
-        </script>
         <table class="layui-hide" id="tableContainer" lay-filter="currentTableFilter"></table>
-        <script type="text/html" id="currentTableBar">
-            <div class="layui-btn-group">
-                <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
-                <a class="layui-btn layui-btn-primary layui-btn-xs data-count-clone" lay-event="clone">拷贝</a>
-                <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
-            </div>
-        </script>
     </div>
 </div>
+{{template "admin/Public/Button_AddAuditSave.html" }}
+{{template "admin/Public/Button_EditCopyDelete.html" }}
 <script>
     var channelId = parseInt("{{.channelId}}");
     layui.use(['form', 'table', 'treeSelect'], function () {
@@ -152,7 +139,7 @@
                         return '<input type="number" name="sort_id" article_id="' + d.article_id + '" value="' + d.sort_id + '" class="layui-input" style="" />';
                     }
                 },
-                { title: '操作', width: 150, toolbar: '#currentTableBar', align: "center", fixed: "right" }
+                { title: '操作', width: 210, toolbar: '#currentTableBar', align: "center", fixed: "right" }
             ]],
             limits: [10, 15, 20, 25, 50, 100],
             limit: 20,

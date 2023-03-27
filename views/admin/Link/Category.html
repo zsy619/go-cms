@@ -7,7 +7,7 @@
                     <div class="layui-form-item">
                         <div class="layui-inline">
                             <label class="layui-form-label">
-                                <font color="red">*</font> 类别标题
+                                类别标题
                             </label>
                             <div class="layui-input-inline">
                                 <input type="text" name="title" autocomplete="off" class="layui-input">
@@ -15,7 +15,7 @@
                         </div>
                         <div class="layui-inline">
                             <label class="layui-form-label">
-                                <font color="red">*</font> 调用别名
+                                调用别名
                             </label>
                             <div class="layui-input-inline">
                                 <input type="text" name="callIndex" autocomplete="off" class="layui-input">
@@ -28,21 +28,10 @@
                 </form>
             </div>
         </fieldset>
-        <script type="text/html" id="toolbarDemo">
-            <div class="layui-btn-container layui-btn-group">
-                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn layui-btn-radius" lay-event="add"> 添加 </button>
-                <button class="layui-btn layui-btn-sm layui-btn-primary data-delete-btn layui-btn-radius" lay-event="save"> 保存 </button>
-            </div>
-        </script>
         <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
-        <script type="text/html" id="currentTableBar">
-            <div class="layui-btn-group">
-                <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit layui-btn-radius" lay-event="edit">编辑</a>
-                <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete layui-btn-radius" lay-event="delete">删除</a>
-            </div>
-        </script>
     </div>
 </div>
+{{template "admin/Public/Button.html" }}
 <script>
     layui.use(['form', 'table'], function () {
         var $ = layui.jquery,

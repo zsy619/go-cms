@@ -18,6 +18,7 @@ type CmsSite struct {
 	Title           string    `gorm:"column:title;type:varchar(128)" json:"title" form:"title"`                                             // 标题
 	DirPath         string    `gorm:"column:dir_path;type:varchar(128)" json:"dir_path" form:"dir_path"`                                    // 模板目录名
 	IsDefault       bool      `gorm:"column:is_default;type:tinyint(1)" json:"is_default" form:"is_default"`                                // 是否默认站
+	IsMobile        bool      `gorm:"column:is_mobile;type:tinyint(1)" json:"is_mobile" form:"is_mobile"`                                   // 是否移动端
 	Logo            string    `gorm:"column:logo;type:varchar(512)" json:"logo" form:"logo"`                                                // 网站LOGO
 	Company         string    `gorm:"column:company;type:varchar(512)" json:"company" form:"company"`                                       // 公司名称
 	Address         string    `gorm:"column:address;type:varchar(512)" json:"address" form:"address"`                                       // 通讯地址
@@ -41,7 +42,6 @@ type CmsSite struct {
 	UpdateID        int32     `gorm:"column:update_id;type:int" json:"update_id" form:"update_id"`                                          // 更新人ID
 	UpdateName      string    `gorm:"column:update_name;type:varchar(64)" json:"update_name" form:"update_name"`                            // 更新人姓名
 	UpdateTime      time.Time `gorm:"column:update_time;type:int unsigned;autoUpdateTime" json:"update_time" form:"update_time"`            // 修改时间
-	Mobile          int32     `gorm:"column:mobile;type:int" json:"mobile" form:"mobile"`                                                   // 手机端
 }
 
 // TableName CmsSite's table name

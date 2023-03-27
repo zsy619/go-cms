@@ -33,6 +33,7 @@ func newCmsSite(db *gorm.DB, opts ...gen.DOOption) cmsSite {
 	_cmsSite.Title = field.NewString(tableName, "title")
 	_cmsSite.DirPath = field.NewString(tableName, "dir_path")
 	_cmsSite.IsDefault = field.NewBool(tableName, "is_default")
+	_cmsSite.IsMobile = field.NewBool(tableName, "is_mobile")
 	_cmsSite.Logo = field.NewString(tableName, "logo")
 	_cmsSite.Company = field.NewString(tableName, "company")
 	_cmsSite.Address = field.NewString(tableName, "address")
@@ -56,7 +57,6 @@ func newCmsSite(db *gorm.DB, opts ...gen.DOOption) cmsSite {
 	_cmsSite.UpdateID = field.NewInt32(tableName, "update_id")
 	_cmsSite.UpdateName = field.NewString(tableName, "update_name")
 	_cmsSite.UpdateTime = field.NewTime(tableName, "update_time")
-	_cmsSite.Mobile = field.NewInt32(tableName, "mobile")
 
 	_cmsSite.fillFieldMap()
 
@@ -73,6 +73,7 @@ type cmsSite struct {
 	Title           field.String // 标题
 	DirPath         field.String // 模板目录名
 	IsDefault       field.Bool   // 是否默认站
+	IsMobile        field.Bool   // 是否移动端
 	Logo            field.String // 网站LOGO
 	Company         field.String // 公司名称
 	Address         field.String // 通讯地址
@@ -96,7 +97,6 @@ type cmsSite struct {
 	UpdateID        field.Int32  // 更新人ID
 	UpdateName      field.String // 更新人姓名
 	UpdateTime      field.Time   // 修改时间
-	Mobile          field.Int32  // 手机端
 
 	fieldMap map[string]field.Expr
 }
@@ -119,6 +119,7 @@ func (c *cmsSite) updateTableName(table string) *cmsSite {
 	c.Title = field.NewString(table, "title")
 	c.DirPath = field.NewString(table, "dir_path")
 	c.IsDefault = field.NewBool(table, "is_default")
+	c.IsMobile = field.NewBool(table, "is_mobile")
 	c.Logo = field.NewString(table, "logo")
 	c.Company = field.NewString(table, "company")
 	c.Address = field.NewString(table, "address")
@@ -142,7 +143,6 @@ func (c *cmsSite) updateTableName(table string) *cmsSite {
 	c.UpdateID = field.NewInt32(table, "update_id")
 	c.UpdateName = field.NewString(table, "update_name")
 	c.UpdateTime = field.NewTime(table, "update_time")
-	c.Mobile = field.NewInt32(table, "mobile")
 
 	c.fillFieldMap()
 
@@ -172,6 +172,7 @@ func (c *cmsSite) fillFieldMap() {
 	c.fieldMap["title"] = c.Title
 	c.fieldMap["dir_path"] = c.DirPath
 	c.fieldMap["is_default"] = c.IsDefault
+	c.fieldMap["is_mobile"] = c.IsMobile
 	c.fieldMap["logo"] = c.Logo
 	c.fieldMap["company"] = c.Company
 	c.fieldMap["address"] = c.Address
@@ -195,7 +196,6 @@ func (c *cmsSite) fillFieldMap() {
 	c.fieldMap["update_id"] = c.UpdateID
 	c.fieldMap["update_name"] = c.UpdateName
 	c.fieldMap["update_time"] = c.UpdateTime
-	c.fieldMap["mobile"] = c.Mobile
 }
 
 func (c cmsSite) clone(db *gorm.DB) cmsSite {

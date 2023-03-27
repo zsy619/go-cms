@@ -25,6 +25,7 @@ func init() {
 	web.Router("admin/site/delete", &SiteController{}, "*:Delete")
 	web.Router("admin/site/save", &SiteController{}, "*:Save")
 
+	web.AutoPrefix("admin", &SiteController{})
 	web.AutoPrefix("admin", &IndexController{})
 	web.AutoPrefix("admin", &LinkController{})
 	web.AutoPrefix("admin", &AdminController{})
