@@ -24,20 +24,6 @@ func (c *BaseController) GetPagingParameters() (page int, limit int) {
 	return
 }
 
-// JSONPaging 返回分页信息
-func (c *BaseController) JSONPaging(code lib.CodeResult, message string, data interface{}, count int64) {
-	c.Data["json"] = &lib.JSONResponsePage{
-		Count: count,
-		JSONResponse: lib.JSONResponse{
-			Code:    code,
-			Message: message,
-			Data:    data,
-		},
-	}
-	c.ServeJSON()
-	c.StopRun()
-}
-
 func (c *BaseController) Prepare() {
 	fmt.Println("BaseController Prepare")
 	controllerName, actionName := c.GetControllerAndAction()
@@ -85,6 +71,32 @@ func (c *BaseController) JSONPage(code lib.CodeResult, message string, count int
 			Data:    data,
 		},
 	}
+	c.ServeJSON()
+	c.StopRun()
+}
+
+// JSONPaging 返回分页信息
+func (c *BaseController) JSONPaging(code lib.CodeResult, message string, data interface{}, count int64) {
+	c.Data["json"] = &lib.JSONResponsePage{
+		Count: count,
+		JSONResponse: lib.JSONResponse{
+			Code:    code,
+			Message: message,
+			Data:    data,
+		},
+	}
+	c.ServeJSON()
+	c.StopRun()
+}
+
+// JSONPaging 返回分页信息
+func (c *BaseController) JSONPagingSuccess(data interface{}, count int64) {
+	c.JSONPaging(lib.CodeSuccess, "", data, count)
+}
+
+// JSONData 公共返回方法
+func (c *BaseController) JSONData(data *lib.JSONResponse) {
+	c.Data["json"] = data
 	c.ServeJSON()
 	c.StopRun()
 }

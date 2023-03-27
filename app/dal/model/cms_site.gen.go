@@ -41,7 +41,6 @@ type CmsSite struct {
 	UpdateID        int32     `gorm:"column:update_id;type:int" json:"update_id" form:"update_id"`                                          // 更新人ID
 	UpdateName      string    `gorm:"column:update_name;type:varchar(64)" json:"update_name" form:"update_name"`                            // 更新人姓名
 	UpdateTime      time.Time `gorm:"column:update_time;type:int unsigned;autoUpdateTime" json:"update_time" form:"update_time"`            // 修改时间
-	Mobile          int32     `gorm:"column:mobile;type:int" json:"mobile" form:"mobile"`                                                   // 手机端
 }
 
 // TableName CmsSite's table name

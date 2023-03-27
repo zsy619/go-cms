@@ -5,6 +5,7 @@ import (
 
 	"github.com/beego/beego/v2/server/web"
 	"haedu.gov.cn/tools/xcas"
+	"haedu.gov.cn/tools/xgeneric"
 )
 
 const (
@@ -97,6 +98,11 @@ func C_LOCAL_DOMAIN() string {
 		return C("LOCAL_DOMAIN", "")
 	}
 	return local_domain
+}
+
+func C_LOCAL_DOMAIN_Backslash() string {
+	local_domain := C_LOCAL_DOMAIN()
+	return xgeneric.IFF(strings.HasSuffix(local_domain, "/"), local_domain, local_domain+"/")
 }
 
 func C_LOCAL_DOMAIN_SET(domain string) {

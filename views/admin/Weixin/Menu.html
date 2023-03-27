@@ -1,0 +1,292 @@
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <fieldset class="table-search-fieldset">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">公众账号</label>
+                            <div class="layui-input-inline">
+                                <select name="accountId" lay-filter="accountId">
+                                    {{range $index,$item := .accountList}}
+                                    <option value="{{$item.AccountID}}">{{$item.Name}}</option>
+                                    {{end}}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="submit" class="layui-btn layui-btn-danger layui-btn-radius" lay-submit lay-filter="data-sync-btn"><i class="layui-icon layui-icon-ok"></i> 同步到公众号</button>
+                        </div>
+                        <div class="layui-inline" style="display: none;">
+                            <button type="submit" class="layui-btn layui-btn-primary layui-btn-radius" lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container layui-btn-group">
+                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn layui-btn-radius" lay-event="add"> 添加 </button>
+                <button class="layui-btn layui-btn-sm layui-btn-primary data-delete-btn layui-btn-radius" lay-event="save"> 保存 </button>
+            </div>
+        </script>
+        <table class="layui-hide" id="tableContainer" lay-filter="currentTableFilter"></table>
+        <script type="text/html" id="currentTableBar">
+            <div class="layui-btn-group">
+                <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit layui-btn-radius" lay-event="edit">编辑</a>
+                <a class="layui-btn layui-btn-primary layui-btn-xs data-count-add layui-btn-radius" lay-event="add">添加子类</a>
+                <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete layui-btn-radius" lay-event="delete">删除</a>
+            </div>
+        </script>
+    </div>
+</div>
+<script>
+    layui.use(['form', 'table', 'layer', 'wangEditor', 'upload', 'treetable'], function () {
+        var form = layui.form;
+        var $ = layui.jquery,
+            layer = layui.layer,
+            wangEditor = layui.wangEditor;
+        var upload = layui.upload;
+        var treetable = layui.treetable;
+        var table = layui.table;
+
+        form.on('select(accountId)', function (data) {
+            // console.log(data);
+            $('button[lay-filter="data-search-btn"]').click();
+        });
+
+        layer.load(2);
+        treetable.render({
+            treeColIndex: 1,
+            treeSpid: 0,
+            treeIdName: 'menu_id',
+            treePidName: 'parent_id',
+            elem: '#tableContainer',
+            url: '/admin/weixin/MenuFind?accountId=' + ($("select[name=accountId]").val() ? parseInt($("select[name=accountId]").val()) : 0),
+            toolbar: '#toolbarDemo',
+            height: "full",
+            defaultToolbar: ['filter', 'exports', 'print'],
+            cols: [[
+                // { type: "checkbox", width: 50 },
+                { field: 'menu_id', width: 80, title: 'ID' },
+                { field: 'name', title: '菜单' },
+                { field: 'key', title: '标识', minWidth: 150 },
+                { field: 'type', width: 150, title: '类型' },
+                { field: 'url', title: '链接地址', minWidth: 150 },
+                {
+                    field: 'sort_id', width: 100, align: "center", title: '排序', templet: function (d) {
+                        return '<input type="number" name="sort_id" menu_id="' + d.menu_id + '" value="' + d.sort_id + '" class="layui-input" style="" />';
+                    }
+                },
+                { title: '操作', width: 150, toolbar: '#currentTableBar', align: "center", fixed: "right" }
+            ]],
+            limits: [10, 15, 20, 25, 50, 100],
+            limit: 20,
+            page: false,
+            // skin: 'line',
+            even: true,
+            size: 'lg',
+            done: function () {
+                layer.closeAll('loading');
+                $(".layui-table-main tr").each(function (index, val) {
+                    $(".layui-table-fixed").each(function () {
+                        $($(this).find(".layui-table-body tbody tr")[index]).height($(val).height());
+                    });
+                });
+                $(".layui-table-header tr").each(function (index, val) {
+                    $(".layui-table-fixed").each(function () {
+                        $($(this).find(".layui-table-header thead tr")[index]).height($(val).height());
+                    });
+                });
+            }
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            var result = JSON.stringify(data.field);
+            console.log(result);
+            //执行搜索重载
+            treetable.render({
+                treeColIndex: 1,
+                treeSpid: 0,
+                treeIdName: 'menu_id',
+                treePidName: 'parent_id',
+                elem: '#tableContainer',
+                url: '/admin/weixin/MenuFind?accountId=' + ($("select[name=accountId]").val() ? parseInt($("select[name=accountId]").val()) : 0),
+                toolbar: '#toolbarDemo',
+                height: "full",
+                defaultToolbar: ['filter', 'exports', 'print'],
+                cols: [[
+                    // { type: "checkbox", width: 50 },
+                    { field: 'menu_id', width: 80, title: 'ID' },
+                    { field: 'name', title: '菜单' },
+                    { field: 'type', minWidth: 150, title: '类型' },
+                    { field: 'url', title: '链接地址', minWidth: 150 },
+                    {
+                        field: 'sort_id', width: 100, align: "center", title: '排序', templet: function (d) {
+                            return '<input type="number" name="sort_id" menu_id="' + d.menu_id + '" value="' + d.sort_id + '" class="layui-input" style="" />';
+                        }
+                    },
+                    { title: '操作', width: 150, toolbar: '#currentTableBar', align: "center", fixed: "right" }
+                ]],
+                limits: [10, 15, 20, 25, 50, 100],
+                limit: 20,
+                page: false,
+                // skin: 'line',
+                even: true,
+                size: 'lg',
+                done: function () {
+                    layer.closeAll('loading');
+                    $(".layui-table-main tr").each(function (index, val) {
+                        $(".layui-table-fixed").each(function () {
+                            $($(this).find(".layui-table-body tbody tr")[index]).height($(val).height());
+                        });
+                    });
+                    $(".layui-table-header tr").each(function (index, val) {
+                        $(".layui-table-fixed").each(function () {
+                            $($(this).find(".layui-table-header thead tr")[index]).height($(val).height());
+                        });
+                    });
+                }
+            });
+
+            return false;
+        });
+
+        /**
+         * toolbar监听事件
+         */
+        table.on('toolbar(currentTableFilter)', function (obj) {
+            var accountId = $("select[name=accountId]").val() ? parseInt($("select[name=accountId]").val()) : 0;
+            if (accountId <= 0) {
+                layer.msg("请选择公众号");
+                return false;
+            }
+            if (obj.event === 'add') {  // 监听添加操作
+                var index = layer.open({
+                    title: '添加',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin: true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: 'MenuEdit?accountId=' + accountId,
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+            } else if (obj.event === 'save') {  // 监听保存操作
+                var sorts = [];
+                $("input[name='sort_id']").each(function () {
+                    var sort = {
+                        menu_id: parseInt($(this).attr("menu_id")),
+                        sort_id: parseInt($(this).val())
+                    };
+                    sorts.push(sort);
+                });
+                console.log(sorts);
+                $.ajax({
+                    type: "POST",
+                    url: "/admin/weixin/MenuSaveSortId", //提交的地址
+                    data: JSON.stringify(sorts),
+                    async: false,
+                    beforeSend: function () { //当一个Ajax请求开始时触发
+                        this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+                    },
+                    error: function (request) {  //失败的话
+                    },
+                    success: function (data) {  //成功
+                        if (data.code == CodeSuccess) {
+                            layer.msg("提交成功", { icon: 1, time: 1000 }, function () {
+                                $('button[lay-filter="data-search-btn"]').click();
+                            });
+                        } else {
+                            layer.msg(data.msg, { icon: 2, time: 1000 });
+                        }
+                    },
+                    complete: function () {
+                        layer.close(this.layerIndex);
+                    },
+                });
+            }
+        });
+
+        //监听表格复选框选择
+        table.on('checkbox(currentTableFilter)', function (obj) {
+            console.log(obj)
+        });
+
+        table.on('tool(currentTableFilter)', function (obj) {
+            var accountId = $("select[name=accountId]").val() ? parseInt($("select[name=accountId]").val()) : 0;
+            var data = obj.data;
+            if (obj.event === 'edit') {
+                console.log(data);
+                var index = layer.open({
+                    title: '编辑',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin: true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: 'MenuEdit?menuId=' + data.menu_id + '&accountId=' + accountId,
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            } else if (obj.event === 'add') {
+                if (data.type != "view") {
+                    layer.msg("只有链接类型才能添加子菜单");
+                    return false;
+                }
+                if (data.parent_id > 0) {
+                    layer.msg("只有一级菜单才能添加子菜单");
+                    return false;
+                }
+                var index = layer.open({
+                    title: '添加',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin: true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: 'MenuEdit?parentId=' + data.menu_id + '&accountId=' + accountId,
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            } else if (obj.event === 'delete') {
+                layer.confirm('真的删除行么', function (index) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/admin/weixin/MenuDestory", //提交的地址
+                        data: {
+                            "menuId": data.menu_id
+                        },
+                        async: false,
+                        beforeSend: function () { //当一个Ajax请求开始时触发
+                            this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+                        },
+                        error: function (request) {  //失败的话
+                        },
+                        success: function (data) {  //成功
+                            if (data.code == CodeSuccess) {
+                                layer.msg("删除成功", { icon: 1, time: 1000 }, function () {
+                                    $('button[lay-filter="data-search-btn"]').click();
+                                });
+                            } else {
+                                layer.msg(data.msg, { icon: 2, time: 1000 });
+                            }
+                        },
+                        complete: function () {
+                            layer.close(this.layerIndex);
+                        },
+                    });
+                });
+            }
+        });
+
+    });
+</script>

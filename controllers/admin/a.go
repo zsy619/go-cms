@@ -11,6 +11,7 @@ var (
 
 func init() {
 	web.Router("cms/admin/login", &LoginController{}, "*:AdminLogin")
+	web.Router("cms/admin/logout", &LoginController{}, "*:Logout")
 	web.Router("cms/admin/login/verify", &LoginController{}, "*:AdminLoginVerify")
 
 	web.AutoPrefix("admin", &ToolsController{})
@@ -24,7 +25,16 @@ func init() {
 	web.Router("admin/site/delete", &SiteController{}, "*:Delete")
 	web.Router("admin/site/save", &SiteController{}, "*:Save")
 
+	web.AutoPrefix("admin", &IndexController{})
 	web.AutoPrefix("admin", &LinkController{})
 	web.AutoPrefix("admin", &AdminController{})
 	web.AutoPrefix("admin", &ArticleController{})
+
+	web.AutoPrefix("admin", &WeixinController{})
+	web.Router("admin/weixin/message/subscribe", &WeixinController{}, "*:Subscribe")
+	web.Router("admin/weixin/message/default", &WeixinController{}, "*:Default")
+	web.Router("admin/weixin/message/text", &WeixinController{}, "*:Text")
+	web.Router("admin/weixin/message/picture", &WeixinController{}, "*:Picture")
+	web.Router("admin/weixin/message/sound", &WeixinController{}, "*:Sound")
+	web.Router("admin/weixin/message/response", &WeixinController{}, "*:Response")
 }

@@ -1,0 +1,240 @@
+<style>
+    .layui-form-label {
+        width: 120px;
+    }
+</style>
+<div class="layuimini-main">
+    <form class="layui-form" method="get" lay-filter="frmEdit" id="frmEdit">
+        <div class="layui-tab layui-tab-brief layui-tab-card">
+            <ul class="layui-tab-title">
+                <li class="layui-this">基本信息</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">
+                            <font color="red">*</font> 公众账户
+                        </label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <input type="hidden" name="request_type" value="6">
+                            <select name="account_id" lay-filter="account_id" lay-verify="required" lay-reqtext="微信公账号必选项">
+                                {{range $index,$item := .accountList}}
+                                <option value="{{$item.AccountID}}">{{$item.Name}}</option>
+                                {{end}}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required" style="width: 40px;">
+                        </label>
+                        <div class="layui-input-inline" style="width: 680px;">
+                            <div class="layui-tab">
+                                <ul class="layui-tab-title">
+                                    <li class="layui-this">文本消息</li>
+                                    <li>图文回复</li>
+                                    <li>语音回复</li>
+                                </ul>
+                                <div class="layui-tab-content">
+                                    <div class="layui-tab-item layui-show">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label required" style="width: 60px;margin-left: -10px;">
+                                                回复内容
+                                            </label>
+                                            <div class="layui-input-inline" style="width: 590px;">
+                                                <textarea name="remark" placeholder="" style="height: 282px;" class="layui-textarea"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-tab-item">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label required" style="width: 60px;margin-left: -10px;">
+                                                图文列表
+                                            </label>
+                                            <div class="layui-input-inline" style="width: 590px;">
+                                                <button type="button" class="layui-btn layui-btn-sm layui-btn-primary"><i class="layui-icon layui-icon-addition"></i> 添加</button>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <table class="layui-hide" id="tableContainer" lay-filter="currentTableFilter"></table>
+                                        </div>
+                                    </div>
+                                    <div class="layui-tab-item">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label required" style="width: 60px;margin-left: -10px;">
+                                                语音标题
+                                            </label>
+                                            <div class="layui-input-inline" style="width: 590px;">
+                                                <input type="text" name="img_url" autocomplete="off" placeholder="" class="layui-input">
+                                            </div>
+                                            <div class="layui-form-mid layui-word-aux" style="margin-left: 80px;">最多30个字符</div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label required" style="width: 60px;margin-left: -10px;">
+                                                文件地址
+                                            </label>
+                                            <div class="layui-input-inline" style="width: 480px;">
+                                                <input type="text" name="img_url" autocomplete="off" placeholder="" class="layui-input">
+                                            </div>
+                                            <button type="button" class="layui-btn layui-btn-primary" id="btnUpload">
+                                                <i class="layui-icon">&#xe67c;</i>浏览...
+                                            </button>
+                                            <div class="layui-form-mid layui-word-aux" style="margin-left: 80px;">MP3格式，填写链接或本地上传！</div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label required" style="width: 60px;margin-left: -10px;">
+                                                语音描述
+                                            </label>
+                                            <div class="layui-input-inline" style="width: 590px;">
+                                                <textarea name="remark" placeholder="" class="layui-textarea"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block" style="text-align: center;">
+                <!-- <button class="layui-btn" id="btnSubmit">立即提交</button> -->
+                <button class="layui-btn layui-btn-radius" id="btnSubmit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary layui-btn-radius">重置</button>
+            </div>
+        </div>
+    </form>
+    <script type="text/html" id="currentTableBar">
+        <div class="layui-btn-group">
+            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
+            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
+        </div>
+    </script>
+</div>
+<script>
+    layui.use(['form', 'layer', 'upload', 'laydate', 'table'], function () {
+        var form = layui.form;
+        var $ = layui.jquery,
+            layer = layui.layer;
+        var upload = layui.upload;
+        var table = layui.table;
+
+        form.on('select(account_id)', function (data) {
+            console.log(data);
+            loadContent();
+        });
+
+        table.render({
+            elem: '#tableContainer',
+            url: '/admin/weixin/EmptyImageReply',
+            height: "229",
+            defaultToolbar: ['filter', 'exports', 'print'],
+            cols: [[
+                // { type: "checkbox", width: 50 },
+                { field: 'img_url', width: 80, title: '图片' },
+                {
+                    field: 'title', title: '标题'
+                },
+                { field: 'link_url', title: '链接' },
+                {
+                    field: 'sort_id', width: 100, align: "center", title: '排序'
+                },
+                { title: '操作', width: 120, toolbar: '#currentTableBar', align: "center", fixed: "right" }
+            ]],
+            limits: [10, 15, 20, 25, 50, 100],
+            limit: 20,
+            page: false,
+            // skin: 'line',
+            even: true,
+            size: 'lg',
+            done: function () {
+                $(".layui-table-main tr").each(function (index, val) {
+                    $(".layui-table-fixed").each(function () {
+                        $($(this).find(".layui-table-body tbody tr")[index]).height($(val).height());
+                    });
+                });
+                $(".layui-table-header tr").each(function (index, val) {
+                    $(".layui-table-fixed").each(function () {
+                        $($(this).find(".layui-table-header thead tr")[index]).height($(val).height());
+                    });
+                });
+            }
+        });
+
+        //自定义验证规则
+        form.verify({
+        });
+
+        // 提交事件
+        form.on('submit(*)', function (data) {
+            console.log(data)
+            // alert(JSON.stringify(data.field));
+            return false;
+        });
+
+        function loadContent() {
+            if ($("select[name=account_id]").val() == undefined || $("select[name=account_id]").val() == "") {
+                layer.msg("请选择公众号", { icon: 2, time: 1000 });
+                return;
+            }
+            $.ajax({
+                type: "GET", //提交的方法
+                url: "/admin/weixin/ContentFindSubscribeOrDefault", //提交的地址
+                data: {
+                    "account_id": parseInt($("select[name=account_id]").val()),
+                    "request_type": parseInt($("input[name=request_type]").val())
+                }, // 序列化表单值
+                async: false,
+                beforeSend: function () { //当一个Ajax请求开始时触发
+                    this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+                },
+                error: function (request) {  //失败的话
+                },
+                success: function (data) {  //成功
+                    console.log(data);
+                    if (data.code == CodeSuccess) {
+
+                    } else {
+                        layer.msg(data.msg, { icon: 2, time: 1000 });
+                    }
+                },
+                complete: function () {
+                    layer.close(this.layerIndex);
+                },
+            });
+        }
+
+        loadContent();
+
+        //方法提交
+        $('#btnSubmit').on('click', function () {
+            form.submit('frmEdit', function (data) {
+                $.ajax({
+                    type: "POST", //提交的方法
+                    url: "/admin/weixin/ContentSaveSubscribeOrDefault", //提交的地址
+                    data: $('#frmEdit').serialize(), // 序列化表单值
+                    async: false,
+                    beforeSend: function () { //当一个Ajax请求开始时触发
+                        this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+                    },
+                    error: function (request) {  //失败的话
+                    },
+                    success: function (data) {  //成功
+                        // console.log(data);
+                        if (data.code == CodeSuccess) {
+                            layer.msg("提交成功", { icon: 1, time: 1000 }, function () {
+
+                            });
+                        } else {
+                            layer.msg(data.msg, { icon: 2, time: 1000 });
+                        }
+                    },
+                    complete: function () {
+                        layer.close(this.layerIndex);
+                    },
+                });
+            });
+            return false;
+        });
+    });
+</script>

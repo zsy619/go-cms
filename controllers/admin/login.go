@@ -13,6 +13,8 @@ type LoginController struct {
 	controllers.BaseController
 }
 
+// AdminLogin 管理员登录
+// @router cms/admin/login [get]
 func (c *LoginController) AdminLogin() {
 	c.Data["captcha"] = "/captcha"
 	c.TplName = "admin/login/login.html"
@@ -28,11 +30,13 @@ func (c *LoginController) SavaAdminState(user *model.CmsAdmin) {
 	c.SetSession("user", user)
 
 	GlobalAdminId = user.UserID
-	GlobalAuthFlag = 1 // 1:管理员 2:学校
+	GlobalAuthFlag = int(user.UserType) // 1:管理员 2:学校
 	GlobalAdminName = user.UserName
 	GlobalRealName = user.RealName
 }
 
+// AdminLoginVerify 管理员登录验证
+// @router cms/admin/login/verify [post]
 func (c *LoginController) AdminLoginVerify() {
 	result := vmodel.LoginResult{
 		Code:    0,
@@ -68,4 +72,11 @@ func (c *LoginController) AdminLoginVerify() {
 	c.Data["json"] = &result
 	c.ServeJSON()
 	return
+}
+
+// Logout 退出登录
+// @router cms/admin/logout [get]
+func (c *LoginController) Logout() {
+	c.DestroySession()
+	c.Redirect("/admin/login", 302)
 }

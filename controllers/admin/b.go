@@ -3,7 +3,7 @@ package admin
 import (
 	"fmt"
 
-	"haedu.gov.cn/cms/app/lib"
+	"haedu.gov.cn/cms/app/dal/model"
 
 	"haedu.gov.cn/cms/controllers"
 )
@@ -15,6 +15,14 @@ type BaseController struct {
 func (c *BaseController) Prepare() {
 	fmt.Println("Admin BaseController Prepare")
 	c.BaseController.Prepare()
+
+	if GlobalAdminId == 0 {
+		user := c.GetSession("user").(*model.CmsAdmin)
+		GlobalAdminId = user.UserID
+		GlobalAuthFlag = int(user.UserType) // 1:管理员 2:学校
+		GlobalAdminName = user.UserName
+		GlobalRealName = user.RealName
+	}
 }
 
 func (c *BaseController) Finish() {
@@ -42,32 +50,6 @@ func (this *BaseController) displayNoLayout(tpl ...string) {
 		tplname = "admin/" + this.ControllerName + "/" + this.ActionName + ".html"
 	}
 	this.TplName = tplname
-}
-
-// JSONPaging 返回分页信息
-func (c *BaseController) JSONPaging(code lib.CodeResult, message string, data interface{}, count int64) {
-	c.Data["json"] = &lib.JSONResponsePage{
-		Count: count,
-		JSONResponse: lib.JSONResponse{
-			Code:    code,
-			Message: message,
-			Data:    data,
-		},
-	}
-	c.ServeJSON()
-	c.StopRun()
-}
-
-// JSONPaging 返回分页信息
-func (c *BaseController) JSONPagingSuccess(data interface{}, count int64) {
-	c.JSONPaging(lib.CodeSuccess, "", data, count)
-}
-
-// JSONData 公共返回方法
-func (c *BaseController) JSONData(data *lib.JSONResponse) {
-	c.Data["json"] = data
-	c.ServeJSON()
-	c.StopRun()
 }
 
 // 登录人ID

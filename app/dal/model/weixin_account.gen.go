@@ -14,8 +14,8 @@ const TableNameWeixinAccount = "weixin_account"
 type WeixinAccount struct {
 	AccountID  int64     `gorm:"column:account_id;type:bigint;primaryKey;autoIncrement:true" json:"account_id" form:"account_id"` // 主键
 	Name       string    `gorm:"column:name;type:varchar(64)" json:"name" form:"name"`                                            // 公众号名称
-	Originalid string    `gorm:"column:originalid;type:varchar(64)" json:"originalid" form:"originalid"`                          // 公众号原始ID
-	Wxcode     string    `gorm:"column:wxcode;type:varchar(64)" json:"wxcode" form:"wxcode"`                                      // 公众平台微信号
+	OriginalID string    `gorm:"column:original_id;type:varchar(64)" json:"original_id" form:"original_id"`                       // 公众号原始ID
+	WxCode     string    `gorm:"column:wx_code;type:varchar(64)" json:"wx_code" form:"wx_code"`                                   // 公众平台微信号
 	Token      string    `gorm:"column:token;type:varchar(512)" json:"token" form:"token"`                                        // ToKen
 	AppID      string    `gorm:"column:app_id;type:varchar(128)" json:"app_id" form:"app_id"`                                     // AppId
 	AppSecret  string    `gorm:"column:app_secret;type:varchar(128)" json:"app_secret" form:"app_secret"`                         // AppSecret

@@ -14,7 +14,6 @@ import (
 
 	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/cms/app/lib"
-	"haedu.gov.cn/tools/xgeneric"
 )
 
 type UploadResult struct {
@@ -98,7 +97,7 @@ func (c *ToolsController) ImageUpload() {
 	result.File.Ext = ext
 	result.File.Name = filename
 	result.File.Url1 = "/" + uploadDir + filename
-	result.File.Url2 = xgeneric.IFF(strings.HasSuffix(lib.C_LOCAL_DOMAIN(), "/"), lib.C_LOCAL_DOMAIN()+uploadDir+filename, lib.C_LOCAL_DOMAIN()+"/"+uploadDir+filename)
+	result.File.Url2 = lib.C_LOCAL_DOMAIN_Backslash() + uploadDir + filename
 	c.Data["json"] = result
 	c.ServeJSON()
 }
@@ -161,7 +160,7 @@ func (c *ToolsController) Upload() {
 	result.File.Ext = ext
 	result.File.Name = filename
 	result.File.Url1 = "/" + uploadDir + filename
-	result.File.Url2 = xgeneric.IFF(strings.HasSuffix(lib.C_LOCAL_DOMAIN(), "/"), lib.C_LOCAL_DOMAIN()+uploadDir+filename, lib.C_LOCAL_DOMAIN()+"/"+uploadDir+filename)
+	result.File.Url2 = lib.C_LOCAL_DOMAIN_Backslash() + uploadDir + filename
 	c.Data["json"] = result
 	c.ServeJSON()
 }
@@ -204,7 +203,7 @@ func (c *ToolsController) KindEditorUpload() {
 		fmt.Fprintln(c.Ctx.ResponseWriter, "{\"error\": 1, \"message\": \""+err.Error()+"\"}")
 		return
 	}
-	outPath := xgeneric.IFF(strings.HasSuffix(lib.C_LOCAL_DOMAIN(), "/"), lib.C_LOCAL_DOMAIN()+strings.ReplaceAll(targetPath, "\\", "/"), lib.C_LOCAL_DOMAIN()+"/"+strings.ReplaceAll(targetPath, "\\", "/"))
+	outPath := lib.C_LOCAL_DOMAIN_Backslash() + strings.ReplaceAll(targetPath, "\\", "/")
 	// 返回上传结果
 	result := "{\"error\": 0, \"url\": \"" + outPath + "\"}"
 	fmt.Fprintln(c.Ctx.ResponseWriter, result)
