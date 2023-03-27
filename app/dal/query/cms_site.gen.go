@@ -56,6 +56,7 @@ func newCmsSite(db *gorm.DB, opts ...gen.DOOption) cmsSite {
 	_cmsSite.UpdateID = field.NewInt32(tableName, "update_id")
 	_cmsSite.UpdateName = field.NewString(tableName, "update_name")
 	_cmsSite.UpdateTime = field.NewTime(tableName, "update_time")
+	_cmsSite.Mobile = field.NewInt32(tableName, "mobile")
 
 	_cmsSite.fillFieldMap()
 
@@ -95,6 +96,7 @@ type cmsSite struct {
 	UpdateID        field.Int32  // 更新人ID
 	UpdateName      field.String // 更新人姓名
 	UpdateTime      field.Time   // 修改时间
+	Mobile          field.Int32  // 手机端
 
 	fieldMap map[string]field.Expr
 }
@@ -140,6 +142,7 @@ func (c *cmsSite) updateTableName(table string) *cmsSite {
 	c.UpdateID = field.NewInt32(table, "update_id")
 	c.UpdateName = field.NewString(table, "update_name")
 	c.UpdateTime = field.NewTime(table, "update_time")
+	c.Mobile = field.NewInt32(table, "mobile")
 
 	c.fillFieldMap()
 
@@ -162,7 +165,7 @@ func (c *cmsSite) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *cmsSite) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 29)
+	c.fieldMap = make(map[string]field.Expr, 30)
 	c.fieldMap["site_id"] = c.SiteID
 	c.fieldMap["parent_id"] = c.ParentID
 	c.fieldMap["name"] = c.Name
@@ -192,6 +195,7 @@ func (c *cmsSite) fillFieldMap() {
 	c.fieldMap["update_id"] = c.UpdateID
 	c.fieldMap["update_name"] = c.UpdateName
 	c.fieldMap["update_time"] = c.UpdateTime
+	c.fieldMap["mobile"] = c.Mobile
 }
 
 func (c cmsSite) clone(db *gorm.DB) cmsSite {
