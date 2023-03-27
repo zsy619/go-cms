@@ -54,18 +54,18 @@ func (this *SiteController) Delete() {
 func (this *SiteController) SiteEdit() {
 	id, _ := this.GetInt64("id", 0)
 	site := &model.CmsSite{}
+	var list []*model.CmsSiteDomain
 	if id != 0 {
 		service := biz.NewCmsSiteModel()
 		domainService := biz.NewCmsSiteDomainModel()
 		site = service.One(id)
-		list := domainService.List(id)
-
-		if list == nil || len(list) == 0 {
-			list = append(list, &model.CmsSiteDomain{})
-		}
-		this.Data["listSize"] = len(list) - 1
-		this.Data["domainList"] = list
+		list = domainService.List(id)
 	}
+	if list == nil || len(list) == 0 {
+		list = append(list, &model.CmsSiteDomain{})
+	}
+	this.Data["listSize"] = len(list) - 1
+	this.Data["domainList"] = list
 	if site == nil {
 		site = &model.CmsSite{}
 	}
