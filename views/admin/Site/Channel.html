@@ -1,0 +1,254 @@
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <fieldset class="table-search-fieldset">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">站点列表</label>
+                            <div class="layui-input-inline">
+                                <select id="siteId" name="siteId" lay-filter="siteId">
+                                    {{range $index,$item := .siteList}}
+                                    <option value="{{$item.SiteID}}">{{$item.Title}}</option>
+                                    {{end}}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline" style="display: none;">
+                            <button type="submit" class="layui-btn layui-btn-primary layui-btn-radius" lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+        <table class="layui-hide" id="tableContainer" lay-filter="currentTableFilter"></table>
+    </div>
+</div>
+{{template "admin/Public/Button_AddSave.html" }}
+{{template "admin/Public/Button_EditChild.html" }}
+<script>
+    layui.use(['form', 'table', 'layer', 'wangEditor', 'upload', 'treetable'], function () {
+        var form = layui.form;
+        var $ = layui.jquery,
+            layer = layui.layer,
+            wangEditor = layui.wangEditor;
+        var upload = layui.upload;
+        var treetable = layui.treetable;
+        var table = layui.table;
+
+        var treeObject = {
+            reload: function () {
+                layer.load(2);
+                treetable.render({
+                    treeColIndex: 1,
+                    treeSpid: 0,
+                    treeIdName: 'channel_id',
+                    treePidName: 'parent_id',
+                    elem: '#tableContainer',
+                    url: '/admin/site/channelfind?siteId=' + $("#siteId").val(),
+                    toolbar: '#toolbarDemo',
+                    height: "full-170",
+                    defaultToolbar: ['filter', 'exports', 'print'],
+                    cols: [[
+                        // { type: "checkbox", width: 50 },
+                        { field: 'channel_id', width: 80, title: 'ID' },
+                        { field: 'name', title: '频道名称' },
+                        { field: 'title', title: '频道标题' },
+                        {
+                            field: 'is_comment', title: '评论', width: 80, align: "center", templet: function (d) {
+                                return d.is_comment == 1 ? "√" : "×";
+                            }
+                        },
+                        {
+                            field: 'is_album', title: '相册', width: 80, align: "center", templet: function (d) {
+                                return d.is_album == 1 ? "√" : "×";
+                            }
+                        },
+                        {
+                            field: 'is_attach', title: '附件', width: 80, align: "center", templet: function (d) {
+                                return d.is_attach == 1 ? "√" : "×";
+                            }
+                        },
+                        {
+                            field: 'is_spec', title: '规格', width: 80, align: "center", templet: function (d) {
+                                return d.is_spec == 1 ? "√" : "×";
+                            }
+                        },
+                        {
+                            field: 'sort_id', width: 100, align: "center", title: '排序', templet: function (d) {
+                                return '<input type="number" name="sort_id" channel_id="' + d.channel_id + '" value="' + d.sort_id + '" class="layui-input" style="" />';
+                            }
+                        },
+                        { title: '操作', width: 210, toolbar: '#currentTableBar', align: "center", fixed: "right" }
+                    ]],
+                    limits: [10, 15, 20, 25, 50, 100],
+                    limit: 20,
+                    page: false,
+                    // skin: 'line',
+                    even: true,
+                    size: 'lg',
+                    done: function () {
+                        layer.closeAll('loading');
+                        $(".layui-table-main tr").each(function (index, val) {
+                            $(".layui-table-fixed").each(function () {
+                                $($(this).find(".layui-table-body tbody tr")[index]).height($(val).height());
+                            });
+                        });
+                        $(".layui-table-header tr").each(function (index, val) {
+                            $(".layui-table-fixed").each(function () {
+                                $($(this).find(".layui-table-header thead tr")[index]).height($(val).height());
+                            });
+                        });
+                    }
+                });
+
+                /**
+                 * toolbar监听事件
+                 */
+                table.on('toolbar(currentTableFilter)', function (obj) {
+                    if (obj.event === 'add') {  // 监听添加操作
+                        var index = layer.open({
+                            title: '添加',
+                            type: 2,
+                            shade: 0.2,
+                            maxmin: true,
+                            shadeClose: true,
+                            area: ['100%', '100%'],
+                            content: 'ChannelEdit?siteId=' + $("#siteId").val(),
+                        });
+                        $(window).on("resize", function () {
+                            layer.full(index);
+                        });
+                    } else if (obj.event === 'save') {  // 监听保存操作
+                        var sorts = [];
+                        $("input[name='sort_id']").each(function () {
+                            var sort = {
+                                channel_id: parseInt($(this).attr("channel_id")),
+                                sort_id: parseInt($(this).val())
+                            };
+                            sorts.push(sort);
+                        });
+                        // console.log(sorts);
+                        $.ajax({
+                            type: "POST",
+                            url: "/admin/site/ChannelSaveSortId", //提交的地址
+                            data: JSON.stringify(sorts),
+                            async: false,
+                            beforeSend: function () { //当一个Ajax请求开始时触发
+                                this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+                            },
+                            error: function (request) {  //失败的话
+                            },
+                            success: function (data) {  //成功
+                                if (data.code == CodeSuccess) {
+                                    layer.msg("修改排序成功", { icon: 1, time: 1000 }, function () {
+                                        // $('button[lay-filter="data-search-btn"]').click();
+                                        treeObject.reload();
+                                    });
+                                } else {
+                                    layer.msg(data.msg, { icon: 2, time: 1000 });
+                                }
+                            },
+                            complete: function () {
+                                layer.close(this.layerIndex);
+                            },
+                        });
+                    }
+                });
+
+                //监听表格复选框选择
+                table.on('checkbox(currentTableFilter)', function (obj) {
+                    console.log(obj)
+                });
+
+                table.on('tool(currentTableFilter)', function (obj) {
+                    var data = obj.data;
+                    if (obj.event === 'edit') {
+                        console.log(data);
+                        var index = layer.open({
+                            title: '编辑',
+                            type: 2,
+                            shade: 0.2,
+                            maxmin: true,
+                            shadeClose: true,
+                            area: ['100%', '100%'],
+                            content: 'ChannelEdit?channelId=' + data.channel_id + '&siteId=' + $("#siteId").val(),
+                        });
+                        $(window).on("resize", function () {
+                            layer.full(index);
+                        });
+                        return false;
+                    } else if (obj.event === 'add') {
+                        console.log(data);
+                        var index = layer.open({
+                            title: '添加',
+                            type: 2,
+                            shade: 0.2,
+                            maxmin: true,
+                            shadeClose: true,
+                            area: ['100%', '100%'],
+                            content: 'ChannelEdit?parentId=' + data.channel_id + '&siteId=' + $("#siteId").val(),
+                        });
+                        $(window).on("resize", function () {
+                            layer.full(index);
+                        });
+                        return false;
+                    } else if (obj.event === 'delete') {
+                        layer.confirm('真的删除行么', function (index) {
+                            $.ajax({
+                                type: "POST",
+                                url: "/admin/site/ChannelDestory", //提交的地址
+                                data: {
+                                    "channelId": data.channel_id,
+                                    "siteId": data.site_id,
+                                },
+                                async: false,
+                                beforeSend: function () { //当一个Ajax请求开始时触发
+                                    this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+                                },
+                                error: function (request) {  //失败的话
+                                },
+                                success: function (data) {  //成功
+                                    if (data.code == CodeSuccess) {
+                                        layer.msg("删除成功", { icon: 1, time: 1000 }, function () {
+                                            // $('button[lay-filter="data-search-btn"]').click();
+                                            treeObject.reload();
+                                        });
+                                    } else {
+                                        layer.msg(data.msg, { icon: 2, time: 1000 });
+                                    }
+                                },
+                                complete: function () {
+                                    layer.close(this.layerIndex);
+                                },
+                            });
+                        });
+                    }
+                });
+            }
+        };
+
+        treeObject.reload();
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            var result = JSON.stringify(data.field);
+            //执行搜索重载
+            table.reload('tableContainer', {
+                page: {
+                    curr: 1
+                }
+                , where: {
+                    siteId: $("#siteId").val(),
+                }
+            }, 'data');
+            return false;
+        });
+
+        form.on('select(siteId)', function (data) {
+            treeObject.reload();
+        });
+
+    });
+</script>

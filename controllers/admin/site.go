@@ -141,3 +141,94 @@ func (c *SiteController) SiteSaveSortId() {
 	}
 	c.JSONSuccess("保存成功", nil)
 }
+
+func (c *SiteController) ChannelFind() {
+	siteId, _ := c.GetInt64("siteId")
+	list, count, err := biz.NewCmsSite().ChannelPaginate(1, 99999, siteId, "", "")
+	if err != nil {
+		logs.Error("ChannelFind", err.Error())
+	}
+	c.JSONPaging(lib.CodeSuccess, "", list, count)
+}
+
+func (c *SiteController) ChannelEdit() {
+	service := biz.NewCmsSite()
+	// list, _, _ := service.SitePaginate(1, 999999, "", "")
+	// c.Data["siteList"] = list
+	channelId, _ := c.GetInt64("channelId")
+	parentId, _ := c.GetInt64("parentId")
+	siteId, _ := c.GetInt64("siteId")
+	mdl, err := service.ChannelFind(channelId)
+	if err != nil {
+		mdl = &model.CmsSiteChannel{
+			ParentID: parentId,
+			SiteID:   siteId,
+			SortID:   99,
+		}
+	}
+	c.Data["mdl"] = mdl
+	c.display()
+}
+
+func (c *SiteController) ChannelSave() {
+	mdl := model.CmsSiteChannel{}
+	if err := c.ParseForm(&mdl); err != nil {
+		logs.Error("ChannelSave", err.Error())
+		c.JSONError(err.Error())
+	}
+	// fmt.Println("site_id--------->", c.GetString("site_id"), mdl.SiteID)
+	if err := biz.NewCmsSite().ChannelSave(&mdl); err != nil {
+		logs.Error("ChannelSave", err.Error())
+		c.JSONError(err.Error())
+		return
+	}
+	c.JSONSuccess("保存成功", nil)
+}
+
+func (c *SiteController) ChannelSaveSortId() {
+	mdls := []vmodel.Channel_SaveSortIdModel{}
+	data := c.Ctx.Input.RequestBody
+	fmt.Println("ChannelSaveSortId", string(data))
+	if err := xjson.Unmarshal(c.Ctx.Input.RequestBody, &mdls); err != nil {
+		logs.Error("ChannelSaveSortId", err.Error())
+		c.JSONError(err.Error())
+	}
+	for _, mdl := range mdls {
+		if err := biz.NewCmsSite().ChannelSaveSortId(mdl.ChannelID, mdl.SortId); err != nil {
+			logs.Error("ChannelSaveSortId", err.Error())
+			c.JSONError(err.Error())
+			return
+		}
+	}
+	c.JSONSuccess("保存成功", nil)
+}
+
+func (c *SiteController) ChannelDestory() {
+	channelId, _ := c.GetInt64("channelId")
+	siteId, _ := c.GetInt64("siteId")
+	if err := biz.NewCmsSite().ChannelDestory(siteId, channelId); err != nil {
+		logs.Error("ChannelDestory", err.Error())
+		c.JSONError(err.Error())
+		return
+	}
+	c.JSONSuccess("删除成功", nil)
+}
+
+func (c *SiteController) ChannelTree() {
+	channelId, _ := c.GetInt64("channelId")
+	if channelId <= 0 {
+		c.Abort("404")
+		c.StopRun()
+		return
+	}
+	ChannelId, _ := c.GetInt64("ChannelId")
+	tree, err := biz.NewCmsSite().ChannelTree(channelId, ChannelId)
+	if err != nil {
+		logs.Error("ChannelTree", err.Error())
+		c.JSONError(err.Error())
+		return
+	}
+	c.Data["json"] = tree
+	c.ServeJSON()
+	c.StopRun()
+}

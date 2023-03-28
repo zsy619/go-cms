@@ -2,6 +2,7 @@ package biz
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 	"strings"
 	"time"
@@ -88,6 +89,13 @@ func (this *CmsSite) SiteSave(mdl *model.CmsSite, domains []string, remarks []st
 			return err
 		}
 	} else {
+		// 修改 cms_admin_nav
+		nav, navDo := query.CmsAdminNavDo()
+		navDo.Where(nav.SiteID.Eq(mdl.SiteID), nav.Type.Eq("Site")).UpdateColumns(map[string]interface{}{
+			nav.Title.ColumnName().String():      mdl.Title,
+			nav.SortID.ColumnName().String():     mdl.SortID,
+			nav.UpdateTime.ColumnName().String(): time.Now(),
+		})
 		if _, err := siteDo.Where(site.SiteID.Eq(mdl.SiteID)).UpdateColumns(map[string]interface{}{
 			site.Name.ColumnName().String():            mdl.Name,
 			site.Title.ColumnName().String():           mdl.Title,
@@ -124,4 +132,258 @@ func (this *CmsSite) SiteSave(mdl *model.CmsSite, domains []string, remarks []st
 		}
 	}
 	return nil
+}
+
+func (this *CmsSite) ChannelPaginate(page, limit int, siteId int64, name, title string) ([]*model.CmsSiteChannel, int64, error) {
+	mdl, do := query.CmsSiteChannelDo()
+	if siteId > 0 {
+		do = do.Where(mdl.SiteID.Eq(siteId))
+	}
+	if name != "" {
+		do = do.Where(mdl.Name.Like("%" + name + "%"))
+	}
+	if title != "" {
+		do = do.Where(mdl.Title.Like("%" + title + "%"))
+	}
+	return do.Order(mdl.SortID).FindByPage((page-1)*limit, limit)
+}
+
+// ChannelFind 获取
+func (this *CmsSite) ChannelFind(channelId int64) (*model.CmsSiteChannel, error) {
+	mdl, do := query.CmsSiteChannelDo()
+	return do.Where(mdl.ChannelID.Eq(channelId)).First()
+}
+
+// ChannelSave 保存或更新
+func (this *CmsSite) ChannelSave(input *model.CmsSiteChannel) error {
+	mdl, do := query.CmsSiteChannelDo()
+	if input.Name != "" {
+		if count, _ := do.Where(mdl.ChannelID.Neq(input.ChannelID), mdl.Name.Eq(input.Name)).Count(); count > 0 {
+			return errors.New("频道名称不能重复，确保唯一")
+		}
+	}
+	{
+		var classLayer int32
+		do.Where(mdl.ChannelID.Eq(input.ParentID)).Pluck(mdl.ClassLayer, &classLayer)
+		classLayer++
+		input.ClassLayer = classLayer
+	}
+	var err error
+	input.UpdateTime = time.Now()
+	if input.ChannelID <= 0 {
+		input.CreateTime = time.Now()
+		err = do.Create(input)
+	} else {
+		_, err = do.Where(mdl.ChannelID.Eq(input.ChannelID)).Updates(map[string]interface{}{
+			mdl.ChannelID.ColumnName().String():  input.ChannelID,
+			mdl.SiteID.ColumnName().String():     input.SiteID,
+			mdl.Title.ColumnName().String():      input.Title,
+			mdl.Kind.ColumnName().String():       input.Kind,
+			mdl.ClassLayer.ColumnName().String(): input.ClassLayer,
+			mdl.IsComment.ColumnName().String():  input.IsComment,
+			mdl.IsAlbum.ColumnName().String():    input.IsAlbum,
+			mdl.IsAttach.ColumnName().String():   input.IsAttach,
+			mdl.IsSpec.ColumnName().String():     input.IsSpec,
+			mdl.SortID.ColumnName().String():     input.SortID,
+			mdl.Status.ColumnName().String():     input.Status,
+			mdl.UpdateTime.ColumnName().String(): input.UpdateTime,
+		})
+	}
+	if err == nil {
+		this.ChannelNav(input)
+	}
+	return err
+}
+
+func (this *CmsSite) ChannelNav(input *model.CmsSiteChannel) error {
+	dt, _ := time.Parse("2006-01-02 15:04:05", "2023-03-20 00:00:00")
+	// cms_admin_nav
+	var siteNavId int64
+	navMdl, navDo := query.CmsAdminNavDo()
+	navDo.Where(navMdl.SiteID.Eq(input.SiteID), navMdl.Type.Eq("Site")).Pluck(navMdl.NavID, &siteNavId)
+	if siteNavId <= 0 {
+		siteMdl, siteDo := query.CmsSiteDo()
+		site, _ := siteDo.Where(siteMdl.SiteID.Eq(input.SiteID)).First()
+		// 创建站点导航
+		nav := &model.CmsAdminNav{
+			SiteID:     input.SiteID,
+			ParentID:   100000,
+			Type:       "Site",
+			Name:       fmt.Sprintf("site_%d", site.SiteID),
+			Title:      site.Title,
+			SubTitle:   "",
+			SortID:     site.SortID,
+			Action:     "Show",
+			IconURL:    "fa fa-website",
+			IsHide:     0,
+			IsSys:      1,
+			CreateTime: dt,
+			UpdateTime: dt,
+		}
+		navDo.Create(nav)
+		siteNavId = nav.NavID
+	}
+	if siteNavId > 0 {
+		var channelNavId int64
+		// 创建频道导航
+		navDo.Where(navMdl.ChannelID.Eq(input.ChannelID), navMdl.Type.Eq("Channel")).Pluck(navMdl.NavID, &channelNavId)
+		if channelNavId <= 0 {
+			nav := &model.CmsAdminNav{
+				SiteID:     input.SiteID,
+				ChannelID:  input.ChannelID,
+				ParentID:   siteNavId,
+				Type:       "Channel",
+				Name:       fmt.Sprintf("channel_%d", input.ChannelID),
+				Title:      input.Title,
+				SubTitle:   "",
+				SortID:     input.SortID,
+				Action:     "Show",
+				LinkURL:    "",
+				IconURL:    "fa fa-template",
+				IsHide:     0,
+				IsSys:      1,
+				CreateTime: dt,
+				UpdateTime: dt,
+			}
+			navDo.Create(nav)
+			channelNavId = nav.NavID
+		} else {
+			navDo.Where(navMdl.NavID.Eq(channelNavId)).Updates(map[string]interface{}{
+				navMdl.Title.ColumnName().String():      input.Title,
+				navMdl.SortID.ColumnName().String():     input.SortID,
+				navMdl.UpdateTime.ColumnName().String(): input.UpdateTime,
+			})
+		}
+		if channelNavId > 0 {
+			// 创建文章导航
+			navArticle := &model.CmsAdminNav{
+				SiteID:     input.SiteID,
+				ChannelID:  input.ChannelID,
+				ParentID:   channelNavId,
+				Type:       "Article",
+				Name:       fmt.Sprintf("channel_%d_%s", input.ChannelID, "article"),
+				Title:      "内容管理",
+				SubTitle:   "内容管理",
+				SortID:     1,
+				Action:     "Show,View,Add,Edit,Delete,Audit",
+				LinkURL:    fmt.Sprintf("/admin/article/index?channelId=%d", input.ChannelID),
+				IconURL:    "fa fa-tachometer",
+				IsHide:     0,
+				IsSys:      1,
+				CreateTime: dt,
+				UpdateTime: dt,
+			}
+			navDo.Create(navArticle)
+			navCategory := &model.CmsAdminNav{
+				SiteID:     input.SiteID,
+				ChannelID:  input.ChannelID,
+				ParentID:   channelNavId,
+				Type:       "Article",
+				Name:       fmt.Sprintf("channel_%d_%s", input.ChannelID, "category"),
+				Title:      "栏目管理",
+				SubTitle:   "栏目管理",
+				SortID:     2,
+				Action:     "Show,View,Add,Edit,Delete",
+				LinkURL:    fmt.Sprintf("/admin/article/category?channelId=%d", input.ChannelID),
+				IconURL:    "fa fa-tachometer",
+				IsHide:     0,
+				IsSys:      1,
+				CreateTime: dt,
+				UpdateTime: dt,
+			}
+			navDo.Create(navCategory)
+			navComment := &model.CmsAdminNav{
+				SiteID:     input.SiteID,
+				ChannelID:  input.ChannelID,
+				ParentID:   channelNavId,
+				Type:       "Article",
+				Name:       fmt.Sprintf("channel_%d_%s", input.ChannelID, "comment"),
+				Title:      "评论管理",
+				SubTitle:   "评论管理",
+				SortID:     3,
+				Action:     "Show,View,Add,Edit,Delete,Audit",
+				LinkURL:    fmt.Sprintf("/admin/article/comment?channelId=%d", input.ChannelID),
+				IconURL:    "fa fa-tachometer",
+				IsHide:     0,
+				IsSys:      1,
+				CreateTime: dt,
+				UpdateTime: dt,
+			}
+			navDo.Create(navComment)
+		}
+	}
+	return nil
+}
+
+func (this *CmsSite) ChannelSaveSortId(channelId int64, sortId int32) error {
+	mdl, do := query.CmsSiteChannelDo()
+	_, err := do.Where(mdl.ChannelID.Eq(channelId)).UpdateColumns(
+		map[string]interface{}{
+			mdl.SortID.ColumnName().String():     sortId,
+			mdl.UpdateTime.ColumnName().String(): time.Now(),
+		},
+	)
+	return err
+}
+
+// ChannelDestory 删除
+func (this *CmsSite) ChannelDestory(siteId, channelId int64) error {
+	mdl, do := query.CmsSiteChannelDo()
+	if count, _ := do.Where(mdl.ParentID.Eq(channelId)).Count(); count > 0 {
+		return errors.New("请先删除子分类")
+	}
+	// 删除频道
+	if _, err := do.Where(mdl.ChannelID.Eq(channelId)).Delete(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (this *CmsSite) ChannelTree(siteId, channelId int64) ([]*TreeNode, error) {
+	out := make([]*TreeNode, 0)
+	mdl, do := query.CmsSiteChannelDo()
+	list, err := do.Where(mdl.SiteID.Eq(siteId), mdl.ParentID.Eq(0)).Order(mdl.SortID).Find()
+	if err != nil {
+		return out, err
+	}
+	for _, item := range list {
+		child := &TreeNode{
+			Id:       item.ChannelID,
+			Name:     item.Title,
+			Open:     true,
+			Checked:  item.ChannelID == channelId,
+			Selected: item.ChannelID == channelId,
+			Children: nil,
+		}
+		children, _ := this.ChannelTreeByParentId(item.ChannelID, channelId)
+		if children != nil {
+			child.Children = children
+		}
+		out = append(out, child)
+	}
+	return out, nil
+}
+
+func (this *CmsSite) ChannelTreeByParentId(parentId, channelId int64) ([]*TreeNode, error) {
+	out := make([]*TreeNode, 0)
+	mdl, do := query.CmsSiteChannelDo()
+	list, err := do.Where(mdl.ParentID.Eq(parentId)).Order(mdl.SortID).Find()
+	if err != nil {
+		return out, err
+	}
+	for _, item := range list {
+		child := &TreeNode{
+			Id:       item.ChannelID,
+			Name:     item.Title,
+			Checked:  item.ChannelID == channelId,
+			Selected: item.ChannelID == channelId,
+			Children: nil,
+		}
+		children, _ := this.ChannelTreeByParentId(item.ChannelID, channelId)
+		if children != nil {
+			child.Children = children
+		}
+		out = append(out, child)
+	}
+	return out, nil
 }

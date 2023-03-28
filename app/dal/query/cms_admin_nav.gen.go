@@ -29,6 +29,7 @@ func newCmsAdminNav(db *gorm.DB, opts ...gen.DOOption) cmsAdminNav {
 	_cmsAdminNav.ALL = field.NewAsterisk(tableName)
 	_cmsAdminNav.NavID = field.NewInt64(tableName, "nav_id")
 	_cmsAdminNav.ParentID = field.NewInt64(tableName, "parent_id")
+	_cmsAdminNav.SiteID = field.NewInt64(tableName, "site_id")
 	_cmsAdminNav.ChannelID = field.NewInt64(tableName, "channel_id")
 	_cmsAdminNav.Type = field.NewString(tableName, "type")
 	_cmsAdminNav.Name = field.NewString(tableName, "name")
@@ -59,6 +60,7 @@ type cmsAdminNav struct {
 	ALL        field.Asterisk
 	NavID      field.Int64  // 主键
 	ParentID   field.Int64  // 父节点
+	SiteID     field.Int64  // 站点ID
 	ChannelID  field.Int64  // 频道ID
 	Type       field.String // 导航类别
 	Name       field.String // 导航ID
@@ -95,6 +97,7 @@ func (c *cmsAdminNav) updateTableName(table string) *cmsAdminNav {
 	c.ALL = field.NewAsterisk(table)
 	c.NavID = field.NewInt64(table, "nav_id")
 	c.ParentID = field.NewInt64(table, "parent_id")
+	c.SiteID = field.NewInt64(table, "site_id")
 	c.ChannelID = field.NewInt64(table, "channel_id")
 	c.Type = field.NewString(table, "type")
 	c.Name = field.NewString(table, "name")
@@ -137,9 +140,10 @@ func (c *cmsAdminNav) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *cmsAdminNav) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 20)
+	c.fieldMap = make(map[string]field.Expr, 21)
 	c.fieldMap["nav_id"] = c.NavID
 	c.fieldMap["parent_id"] = c.ParentID
+	c.fieldMap["site_id"] = c.SiteID
 	c.fieldMap["channel_id"] = c.ChannelID
 	c.fieldMap["type"] = c.Type
 	c.fieldMap["name"] = c.Name

@@ -27,7 +27,8 @@
         <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
     </div>
 </div>
-{{template "admin/Public/Button.html" }}
+{{template "admin/Public/Button_AddSave.html" }}
+{{template "admin/Public/Button_Edit.html" }}
 <script>
     layui.use(['form', 'table'], function () {
         var $ = layui.jquery,
@@ -123,8 +124,6 @@
                     };
                     sorts.push(sort);
                 });
-                console.log(sorts);
-                // return false;
                 $.ajax({
                     type: "POST",
                     url: "/admin/site/SiteSaveSortId", //提交的地址

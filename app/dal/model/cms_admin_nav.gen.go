@@ -14,6 +14,7 @@ const TableNameCmsAdminNav = "cms_admin_nav"
 type CmsAdminNav struct {
 	NavID      int64     `gorm:"column:nav_id;type:bigint;primaryKey;autoIncrement:true" json:"nav_id" form:"nav_id"`       // 主键
 	ParentID   int64     `gorm:"column:parent_id;type:bigint" json:"parent_id" form:"parent_id"`                            // 父节点
+	SiteID     int64     `gorm:"column:site_id;type:bigint" json:"site_id" form:"site_id"`                                  // 站点ID
 	ChannelID  int64     `gorm:"column:channel_id;type:bigint" json:"channel_id" form:"channel_id"`                         // 频道ID
 	Type       string    `gorm:"column:type;type:varchar(32);default:System" json:"type" form:"type"`                       // 导航类别
 	Name       string    `gorm:"column:name;type:varchar(128)" json:"name" form:"name"`                                     // 导航ID

@@ -17,8 +17,6 @@ func init() {
 	web.AutoPrefix("admin", &ToolsController{})
 
 	web.Router("admin/index", &IndexController{}, "*:Index")
-	web.Router("admin/site/index", &SiteController{}, "*:Index")
-	web.Router("admin/site/channel", &SiteController{}, "*:Channel")
 
 	web.Router("admin/site/edit", &SiteController{}, "get:SiteEdit")
 	web.Router("admin/site/data", &SiteController{}, "*:SiteData")
