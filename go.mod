@@ -3,6 +3,7 @@ module haedu.gov.cn/cms
 go 1.20
 
 require (
+	github.com/ahmetb/go-linq/v3 v3.2.0
 	github.com/beego/beego/v2 v2.0.7
 	github.com/kardianos/service v1.2.2
 	github.com/mojocn/base64Captcha v1.3.5

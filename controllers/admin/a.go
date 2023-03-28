@@ -28,6 +28,7 @@ func init() {
 	web.AutoPrefix("admin", &LinkController{})
 	web.AutoPrefix("admin", &AdminController{})
 	web.AutoPrefix("admin", &ArticleController{})
+	web.AutoPrefix("admin", &MenuController{})
 
 	web.AutoPrefix("admin", &WeixinController{})
 	web.Router("admin/weixin/message/subscribe", &WeixinController{}, "*:Subscribe")

@@ -34,8 +34,8 @@
                             "target": "_self"
                         },
                         {
-                            "title": "主页三",
-                            "href": "page/welcome-3.html",
+                            "title": "评论管理",
+                            "href": "/admin/article/comment?channelId=100000",
                             "icon": "fa fa-tachometer",
                             "target": "_self"
                         }
