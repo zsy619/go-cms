@@ -3,8 +3,10 @@ package biz
 import (
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/beego/beego/v2/core/logs"
+	"gorm.io/gorm"
 	"haedu.gov.cn/cms/app/dal/query"
 	"haedu.gov.cn/tools/xgeneric"
 )
@@ -74,4 +76,13 @@ func (this *ApiLink) Paginate(page, limit int, call_index string) ([]map[string]
 		Cache_LinkFindByCategory[call_index] = outLink
 	}
 	return outLink, count, err
+}
+
+func (this *ApiLink) Click(link_id int64) error {
+	mdl, do := query.CmsLinkDo()
+	do.Where(mdl.LinkID.Eq(link_id), mdl.Status.Eq(2)).Updates(map[string]interface{}{
+		mdl.Click.ColumnName().String():      gorm.Expr("click + ?", 1),
+		mdl.UpdateTime.ColumnName().String(): time.Now(),
+	})
+	return nil
 }

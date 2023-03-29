@@ -36,3 +36,14 @@ func (this *ApiLinkController) Paginate() {
 	}
 	this.JSONPageSuccess(out, len)
 }
+
+// @router /api/link/click [get]
+func (this *ApiLinkController) Click() {
+	link_id, _ := this.GetInt64("link_id", 0)
+	err := biz.NewApiLink().Click(link_id)
+	if err != nil {
+		logs.Error("Click", err.Error())
+		this.JSONError(err.Error())
+	}
+	this.JSONSuccess("", nil)
+}
