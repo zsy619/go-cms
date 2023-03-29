@@ -5,18 +5,34 @@ import (
 
 	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/cms/app/biz"
+	"haedu.gov.cn/cms/app/lib"
 )
 
 type ApiLinkController struct{ BaseController }
 
-// LinkFindByCategory 获取链接列表
-// @router /api/link/find-by-category [get]
-func (this *ApiLinkController) LinkFindByCategory() {
-	callIndex := this.GetString("callIndex")
-	out, len, err := biz.NewWebRoot().FindByCategory(callIndex)
+// Find 获取链接列表
+// @router /api/link/find [get]
+func (this *ApiLinkController) Find() {
+	call_index := this.GetString("call_index")
+	limit, _ := this.GetInt("limit", 6)
+	out, len, err := biz.NewApiLink().Find(limit, call_index)
 	if err != nil {
-		logs.Error("LinkFindByCategory::", "callIndex", callIndex, "err", err)
+		logs.Error("Find::", "callIndex", call_index, "err", err)
 		this.JSONErrorOfData(err.Error(), out)
 	}
 	this.JSONSuccess(strconv.FormatInt(len, 10), out)
+}
+
+// Paginate 获取链接列表
+// @router /api/link/paginate [get]
+func (this *ApiLinkController) Paginate() {
+	call_index := this.GetString("call_index")
+	limit, _ := this.GetInt("limit", 12)
+	page, _ := this.GetInt("page", 1)
+	out, len, err := biz.NewApiLink().Paginate(page, limit, call_index)
+	if err != nil {
+		logs.Error("Paginate::", "callIndex", call_index, "err", err)
+		this.JSONPage(lib.CodeError, err.Error(), out, len)
+	}
+	this.JSONPageSuccess(out, len)
 }

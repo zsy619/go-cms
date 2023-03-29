@@ -29,7 +29,7 @@ func (this *SiteController) SiteData() {
 	limit, _ := this.GetInt("limit")
 	service := biz.NewCmsSite()
 	list, count, _ := service.SitePaginate(page, limit, name, title)
-	this.JSONPaging(lib.CodeSuccess, "", list, count)
+	this.JSONPage(lib.CodeSuccess, "", list, count)
 }
 
 // Channel 站点栏目管理
@@ -64,7 +64,7 @@ func (this *SiteController) SiteEdit() {
 	if id != 0 {
 		service := biz.NewCmsSite()
 		domainService := biz.NewCmsSiteDomainModel()
-		site = service.SiteOne(id)
+		site, _ = service.SiteOne(id)
 		list = domainService.List(id)
 	} else {
 		site = &model.CmsSite{
@@ -148,7 +148,7 @@ func (c *SiteController) ChannelFind() {
 	if err != nil {
 		logs.Error("ChannelFind", err.Error())
 	}
-	c.JSONPaging(lib.CodeSuccess, "", list, count)
+	c.JSONPage(lib.CodeSuccess, "", list, count)
 }
 
 func (c *SiteController) ChannelEdit() {
@@ -200,6 +200,7 @@ func (c *SiteController) ChannelSaveSortId() {
 			return
 		}
 	}
+	biz.Cache_ApiSiteChannelFind = make(map[int64][]map[string]interface{})
 	c.JSONSuccess("保存成功", nil)
 }
 

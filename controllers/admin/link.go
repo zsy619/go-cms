@@ -63,13 +63,15 @@ func (c *LinkController) LinkSaveSortId() {
 		logs.Error("LinkSaveSortId", err.Error())
 		c.JSONError(err.Error())
 	}
+	service := biz.NewCmsLink()
 	for _, mdl := range mdls {
-		if err := biz.NewCmsLink().LinkSaveSortId(mdl.LinkId, int32(mdl.SortId)); err != nil {
+		if err := service.LinkSaveSortId(mdl.LinkId, int32(mdl.SortId)); err != nil {
 			logs.Error("LinkSaveSortId", err.Error())
 			c.JSONError(err.Error())
 			return
 		}
 	}
+	biz.NewApiLink().InitCache()
 	c.JSONSuccess("保存成功", nil)
 }
 
@@ -109,7 +111,7 @@ func (c *LinkController) LinkPaginate() {
 	title := c.GetString("title")
 	callIndex := c.GetString("callIndex")
 	list, count, _ := biz.NewCmsLink().LinkPaginate(page, limit, -1, -1, categoryId, title, callIndex, status)
-	c.JSONPaging(lib.CodeSuccess, "", list, count)
+	c.JSONPage(lib.CodeSuccess, "", list, count)
 }
 
 // Category 链接分类
@@ -179,5 +181,5 @@ func (c *LinkController) CategoryPaginate() {
 	title := c.GetString("title")
 	callIndex := c.GetString("callIndex")
 	list, count, _ := biz.NewCmsLink().CategoryPaginate(page, limit, -1, -1, title, callIndex)
-	c.JSONPaging(lib.CodeSuccess, "", list, count)
+	c.JSONPage(lib.CodeSuccess, "", list, count)
 }

@@ -44,5 +44,5 @@ func (c *WeixinController) ContentSaveSubscribeOrDefault() {
 
 func (c *WeixinController) EmptyImageReply() {
 	images := []*model.WeixinRequestContent{}
-	c.JSONPagingSuccess(images, int64(len(images)))
+	c.JSONPageSuccess(images, int64(len(images)))
 }

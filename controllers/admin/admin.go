@@ -27,7 +27,7 @@ func (c *AdminController) AdminPaginate() {
 	realName := c.GetString("realName")
 	userName := c.GetString("userName")
 	list, count, _ := biz.NewCmsAdmin().AdminPaginate(page, limit, roleId, realName, userName)
-	c.JSONPaging(lib.CodeSuccess, "", list, count)
+	c.JSONPage(lib.CodeSuccess, "", list, count)
 }
 
 func (c *AdminController) AdminEdit() {
@@ -82,7 +82,7 @@ func (c *AdminController) LogPaginate() {
 	page, limit := c.GetPagingParameters()
 	userName := c.GetString("userName")
 	list, count, _ := biz.NewCmsAdmin().LogPaginate(page, limit, 0, userName)
-	c.JSONPaging(lib.CodeSuccess, "", list, count)
+	c.JSONPage(lib.CodeSuccess, "", list, count)
 }
 
 func (c *AdminController) Role() {
@@ -93,7 +93,7 @@ func (c *AdminController) RolePaginate() {
 	page, limit := c.GetPagingParameters()
 	name := c.GetString("name")
 	list, count, _ := biz.NewCmsAdmin().RolePaginate(page, limit, name)
-	c.JSONPaging(lib.CodeSuccess, "", list, count)
+	c.JSONPage(lib.CodeSuccess, "", list, count)
 }
 
 func (c *AdminController) RoleEdit() {
@@ -167,7 +167,7 @@ func (c *AdminController) NavFind() {
 	if err != nil {
 		logs.Error("NavFind", err.Error())
 	}
-	c.JSONPaging(lib.CodeSuccess, "", list, count)
+	c.JSONPage(lib.CodeSuccess, "", list, count)
 }
 
 func (c *AdminController) RoleValueFind() {
@@ -176,5 +176,5 @@ func (c *AdminController) RoleValueFind() {
 	if err != nil {
 		logs.Error("RoleValueFind", err.Error())
 	}
-	c.JSONPaging(lib.CodeSuccess, "", list, count)
+	c.JSONPage(lib.CodeSuccess, "", list, count)
 }

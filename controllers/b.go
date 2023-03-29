@@ -66,7 +66,7 @@ func (c *BaseController) JSONErrorOfData(message string, data interface{}) {
 }
 
 // JSONPage 返回分页信息
-func (c *BaseController) JSONPage(code lib.CodeResult, message string, count int64, data interface{}) {
+func (c *BaseController) JSONPage(code lib.CodeResult, message string, data interface{}, count int64) {
 	c.Data["json"] = &lib.JSONResponsePage{
 		Count: count,
 		JSONResponse: lib.JSONResponse{
@@ -79,23 +79,14 @@ func (c *BaseController) JSONPage(code lib.CodeResult, message string, count int
 	c.StopRun()
 }
 
-// JSONPaging 返回分页信息
-func (c *BaseController) JSONPaging(code lib.CodeResult, message string, data interface{}, count int64) {
-	c.Data["json"] = &lib.JSONResponsePage{
-		Count: count,
-		JSONResponse: lib.JSONResponse{
-			Code:    code,
-			Message: message,
-			Data:    data,
-		},
-	}
-	c.ServeJSON()
-	c.StopRun()
+// JSONPageSuccess 返回分页信息
+func (c *BaseController) JSONPageSuccess(data interface{}, count int64) {
+	c.JSONPage(lib.CodeSuccess, "", data, count)
 }
 
-// JSONPaging 返回分页信息
-func (c *BaseController) JSONPagingSuccess(data interface{}, count int64) {
-	c.JSONPaging(lib.CodeSuccess, "", data, count)
+// JSONPageError 返回分页信息
+func (c *BaseController) JSONPageError(msg string, data interface{}, count int64) {
+	c.JSONPage(lib.CodeError, "", data, count)
 }
 
 // JSONData 公共返回方法

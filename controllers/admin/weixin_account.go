@@ -18,7 +18,7 @@ func (c *WeixinController) AccountPaginate() {
 	if err != nil {
 		logs.Error("AccountPaginate", err.Error())
 	}
-	c.JSONPagingSuccess(list, count)
+	c.JSONPageSuccess(list, count)
 }
 
 func (c *WeixinController) AccountEdit() {

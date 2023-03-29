@@ -40,7 +40,7 @@ func (c *ArticleController) ArticlePaginate() {
 	if err != nil {
 		logs.Error("ArticlePaginate", err.Error())
 	}
-	c.JSONPagingSuccess(list, count)
+	c.JSONPageSuccess(list, count)
 }
 
 func (c *ArticleController) ArticleEdit() {
@@ -156,6 +156,8 @@ func (c *ArticleController) ArticleChangeStatus() {
 			return
 		}
 	}
+	biz.Cache_ApiArticleCategoryFind = make(map[string][]map[string]interface{})
+	biz.Cache_ApiArticleFind = make(map[string][]map[string]interface{})
 	c.JSONSuccess("更改状态成功", nil)
 }
 
@@ -174,6 +176,7 @@ func (c *ArticleController) ArticleSaveSortId() {
 			return
 		}
 	}
+	biz.Cache_ApiArticleFind = make(map[string][]map[string]interface{})
 	c.JSONSuccess("保存成功", nil)
 }
 
@@ -194,7 +197,7 @@ func (c *ArticleController) CategoryFind() {
 	if err != nil {
 		logs.Error("CategoryFind", err.Error())
 	}
-	c.JSONPaging(lib.CodeSuccess, "", list, count)
+	c.JSONPage(lib.CodeSuccess, "", list, count)
 }
 
 func (c *ArticleController) CategoryEdit() {
@@ -248,6 +251,7 @@ func (c *ArticleController) CategorySaveSortId() {
 			return
 		}
 	}
+	biz.Cache_ApiArticleCategoryFind = make(map[string][]map[string]interface{})
 	c.JSONSuccess("保存成功", nil)
 }
 

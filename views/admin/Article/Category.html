@@ -69,6 +69,12 @@
                     }
                 },
                 {
+                    field: 'img_url', title: '状态', width: 80, align: "center", templet: function (d) {
+                        var outText = d.status == 2 ? '<span class="layui-badge layui-bg-green">通过</span>' : (d.status == 3 ? '<span class="layui-badge">拒绝</span>' : '<span class="layui-badge layui-bg-gray">草稿</span>');
+                        return outText;
+                    }
+                },
+                {
                     field: 'sort_id', width: 100, align: "center", title: '排序', templet: function (d) {
                         return '<input type="number" name="sort_id" category_id="' + d.category_id + '" value="' + d.sort_id + '" class="layui-input" style="" />';
                     }

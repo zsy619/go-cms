@@ -17,7 +17,7 @@ func (c *WeixinController) MenuFind() {
 	if err != nil {
 		logs.Error("MenuFind", err.Error())
 	}
-	c.JSONPaging(lib.CodeSuccess, "", list, count)
+	c.JSONPage(lib.CodeSuccess, "", list, count)
 }
 
 func (c *WeixinController) MenuEdit() {

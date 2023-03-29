@@ -55,13 +55,9 @@ func (this *CmsSite) SiteDelete(ids string) {
 	}
 }
 
-func (this *CmsSite) SiteOne(id int64) *model.CmsSite {
+func (this *CmsSite) SiteOne(id int64) (*model.CmsSite, error) {
 	site, siteDo := query.CmsSiteDo()
-	list, err := siteDo.Where(site.SiteID.Eq(id)).Find()
-	if err != nil {
-		return nil
-	}
-	return list[0]
+	return siteDo.Where(site.SiteID.Eq(id)).First()
 }
 
 func (this *CmsSite) SiteSave(mdl *model.CmsSite, domains []string, remarks []string) error {
@@ -115,6 +111,7 @@ func (this *CmsSite) SiteSave(mdl *model.CmsSite, domains []string, remarks []st
 		}); err != nil {
 			return err
 		}
+		Cache_ApiSiteGet = make(map[int64]*model.CmsSite)
 	}
 	domain, domainDo := query.CmsSiteDomainDo()
 	domainDo.Where(domain.SiteID.Eq(mdl.SiteID)).Delete()
@@ -188,6 +185,10 @@ func (this *CmsSite) ChannelSave(input *model.CmsSiteChannel) error {
 			mdl.Status.ColumnName().String():     input.Status,
 			mdl.UpdateTime.ColumnName().String(): input.UpdateTime,
 		})
+		if err == nil {
+			Cache_ApiSiteChannelFind = make(map[int64][]map[string]interface{})
+			Cache_ApiArticleCategoryFind = make(map[string][]map[string]interface{})
+		}
 	}
 	if err == nil {
 		this.ChannelNav(input)
