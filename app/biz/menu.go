@@ -3,7 +3,7 @@ package biz
 import (
 	"fmt"
 
-	linq "github.com/ahmetb/go-linq/v3"
+	. "github.com/szmcdull/glinq/unsafe"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
 )
@@ -76,12 +76,14 @@ ORDER BY a.sort_id`, role.RoleID)
 	if err := adminNavDo.UnderlyingDB().Exec(sqlNav).Find(&navs).Error; err != nil {
 		return outerMenu
 	}
-	parentNavs := []*model.CmsAdminNav{}
-	linq.From(navs).WhereT(func(s *model.CmsAdminNav) bool {
-		return s.ParentID == 0
-	}).OrderByT(func(s *model.CmsAdminNav) int32 {
-		return s.SortID
-	}).ToSlice(&parentNavs)
+	parentNavs := ToSlice(Where(FromSlice(navs), func(s *model.CmsAdminNav) bool {
+		return s.ParentID == 0 && s.IsHide == 0
+	}))
+	// linq.From(navs).WhereT(func(s *model.CmsAdminNav) bool {
+	// 	return s.ParentID == 0 && s.IsHide == 0
+	// }).OrderByT(func(s *model.CmsAdminNav) int32 {
+	// 	return s.SortID
+	// }).ToSlice(&parentNavs)
 
 	for _, parentNav := range parentNavs {
 		parentMenuInfo := &MenuInfo{
@@ -106,12 +108,12 @@ func (this *Menu) ChildMenu(navs []*model.CmsAdminNav, parentId int64) ([]*MenuI
 		return nil, nil
 	}
 	outMenu := []*MenuInfo{}
-	childNavs := []*model.CmsAdminNav{}
-	{
-		linq.From(navs).WhereT(func(s *model.CmsAdminNav) bool {
-			return s.ParentID == parentId
-		}).ToSlice(&childNavs)
-	}
+	childNavs := ToSlice(Where(FromSlice(navs), func(s *model.CmsAdminNav) bool {
+		return s.ParentID == parentId && s.IsHide == 0
+	}))
+	// linq.From(navs).WhereT(func(s *model.CmsAdminNav) bool {
+	// 	return s.ParentID == parentId && s.IsHide == 0
+	// }).ToSlice(&childNavs)
 	for _, childNav := range childNavs {
 		childMenuInfo := &MenuInfo{
 			Title:  childNav.Title,

@@ -3,10 +3,10 @@ module haedu.gov.cn/cms
 go 1.20
 
 require (
-	github.com/ahmetb/go-linq/v3 v3.2.0
 	github.com/beego/beego/v2 v2.0.7
 	github.com/kardianos/service v1.2.2
 	github.com/mojocn/base64Captcha v1.3.5
+	github.com/szmcdull/glinq v0.0.0-20230323232310-05acf528ac23
 	golang.org/x/net v0.8.0
 	gorm.io/driver/mysql v1.4.7
 	gorm.io/gen v0.3.21
@@ -40,6 +40,7 @@ require (
 	github.com/prometheus/procfs v0.9.0 // indirect
 	github.com/shiena/ansicolor v0.0.0-20200904210342-c7312218db18 // indirect
 	golang.org/x/crypto v0.7.0 // indirect
+	golang.org/x/exp v0.0.0-20230321023759-10a507213a29 // indirect
 	golang.org/x/image v0.6.0 // indirect
 	golang.org/x/mod v0.9.0 // indirect
 	golang.org/x/sys v0.6.0 // indirect
