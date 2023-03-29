@@ -50,13 +50,14 @@ func (this *ApiArticle) CategoryFind(channel_name string) ([]map[string]interfac
 /**
 * @description: Find 获取文章列表
 * @param {int} limit 获取数量
-* @param {int64} channel_id 栏目ID
+* @param {int64} channel_id 频道ID
+* @param {int64} category_id 栏目ID
 * @param {string} call_index 栏目别名
 * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
 * @param {bool} is_cache 是否使用缓存
 * @return {*}
  */
-func (this *ApiArticle) Find(limit int, channel_id int64, call_index string, order_by string, is_cache bool) ([]map[string]interface{}, int64, error) {
+func (this *ApiArticle) Find(limit int, channel_id, category_id int64, call_index string, order_by string, is_cache bool) ([]map[string]interface{}, int64, error) {
 	order_by = xgeneric.IFF(order_by == "", "sort_id", order_by)
 	cacheKey := fmt.Sprintf("%s_%d_%d_%s", call_index, channel_id, limit, order_by)
 	if is_cache {
@@ -69,6 +70,7 @@ func (this *ApiArticle) Find(limit int, channel_id int64, call_index string, ord
 	sqlSelect := "a.article_id,a.site_id,a.channel_id,a.category_id,a.title,a.sub_title,a.call_index,a.source,a.author,a.link_url,a.seo_title,a.seo_keyword,a.seo_description,a.tags,a.summary,a.click,a.is_lock,a.is_comment,a.like_count,a.is_top,a.is_hot,a.is_slide,a.static_url,a.publish_time"
 	sql := "SELECT " + sqlSelect + " FROM cms_article a LEFT JOIN cms_article_category b ON a.category_id=b.category_id WHERE a.`status`=2 AND b.`status`=2" +
 		xgeneric.IFF(channel_id <= 0, "", " And b.channel_id="+strconv.FormatInt(channel_id, 10)) +
+		xgeneric.IFF(category_id <= 0, "", " And b.category_id="+strconv.FormatInt(category_id, 10)) +
 		xgeneric.IFF(call_index == "", "", " And b.call_index='"+call_index+"'") +
 		" ORDER BY a.is_top DESC,a." + order_by +
 		" LIMIT ?"
@@ -83,18 +85,20 @@ func (this *ApiArticle) Find(limit int, channel_id int64, call_index string, ord
  * @description: Paginate 获取文章分页列表
  * @param {*} page 页码
  * @param {int} limit 每页数量
- * @param {int64} channel_id 栏目ID
+ * @param {int64} channel_id 频道ID
+ * @param {int64} category_id 栏目ID
  * @param {string} call_index 栏目别名
  * @param {string} keyword 关键词：按标题、摘要进行搜索
  * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
  * @return {*}
  */
-func (this *ApiArticle) Paginate(page, limit int, channel_id int64, call_index string, keyword string, order_by string) ([]map[string]interface{}, int64, error) {
+func (this *ApiArticle) Paginate(page, limit int, channel_id, category_id int64, call_index string, keyword string, order_by string) ([]map[string]interface{}, int64, error) {
 	order_by = xgeneric.IFF(order_by == "", "sort_id", order_by)
 	_, do := query.CmsArticleDo()
 	sqlSelectCount := "COUNT(1) as count"
 	sqlCount := "SELECT " + sqlSelectCount + " FROM cms_article a LEFT JOIN cms_article_category b ON a.category_id=b.category_id WHERE a.`status`=2 AND b.`status`=2" +
 		xgeneric.IFF(channel_id <= 0, "", " And b.channel_id="+strconv.FormatInt(channel_id, 10)) +
+		xgeneric.IFF(category_id <= 0, "", " And b.category_id="+strconv.FormatInt(category_id, 10)) +
 		xgeneric.IFF(call_index == "", "", " And b.call_index='"+call_index+"'") +
 		xgeneric.IFF(keyword == "", "", " And (a.title LIKE '%"+keyword+"%' OR a.summary LIKE '%"+keyword+"%')")
 	var count int64
@@ -115,7 +119,7 @@ func (this *ApiArticle) Paginate(page, limit int, channel_id int64, call_index s
 }
 
 /**
- * @description: One 根据article_id获取文章详情
+ * @description: One 根据article_id获取文章详情、相册、附件
  * @param {int64} article_id 文章id
  * @return {*}
  */
@@ -135,6 +139,41 @@ func (this *ApiArticle) One(article_id int64) (*model.CmsArticle, []*model.CmsAr
 	return article, articleAlbum, articleAttach, nil
 }
 
+/**
+ * @description: Article 获取文章详情
+ * @param {int64} article_id 文章id
+ * @return {*}
+ */
+func (this *ApiArticle) Article(article_id int64) (*model.CmsArticle, error) {
+	mdl, do := query.CmsArticleDo()
+	return do.Where(mdl.ArticleID.Eq(article_id), mdl.Status.Eq(2)).First()
+}
+
+/**
+ * @description: Album 获取文章相册列表
+ * @param {int64} article_id 文章id
+ * @return {*}
+ */
+func (this *ApiArticle) Album(article_id int64) ([]*model.CmsArticleAlbum, error) {
+	albumMdl, alblumDo := query.CmsArticleAlbumDo()
+	return alblumDo.Where(albumMdl.ArticleID.Eq(article_id)).Order(albumMdl.SortID).Find()
+}
+
+/**
+ * @description: Attach 获取文章附件列表
+ * @param {int64} article_id 文章id
+ * @return {*}
+ */
+func (this *ApiArticle) Attach(article_id int64) ([]*model.CmsArticleAttach, error) {
+	attachMdl, attachDo := query.CmsArticleAttachDo()
+	return attachDo.Where(attachMdl.ArticleID.Eq(article_id)).Order(attachMdl.SortID).Find()
+}
+
+/**
+ * @description: Click 点击数+1
+ * @param {int64} article_id 文章id
+ * @return {*}
+ */
 func (this *ApiArticle) Click(article_id int64) error {
 	mdl, do := query.CmsArticleDo()
 	do.Where(mdl.ArticleID.Eq(article_id), mdl.Status.Eq(2)).Updates(map[string]interface{}{
@@ -144,6 +183,11 @@ func (this *ApiArticle) Click(article_id int64) error {
 	return nil
 }
 
+/**
+ * @description: Like 点赞数+1
+ * @param {int64} article_id 文章id
+ * @return {*}
+ */
 func (this *ApiArticle) Like(article_id int64) error {
 	mdl, do := query.CmsArticleDo()
 	do.Where(mdl.ArticleID.Eq(article_id), mdl.Status.Eq(2)).Updates(map[string]interface{}{

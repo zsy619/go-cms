@@ -17,6 +17,9 @@ func init() {
 	web.Router("/api/article/find", &ApiArticleController{}, "*:Find")
 	web.Router("/api/article/paginate", &ApiArticleController{}, "*:Paginate")
 	web.Router("/api/article/one", &ApiArticleController{}, "*:One")
+	web.Router("/api/article/article", &ApiArticleController{}, "*:Article")
+	web.Router("/api/article/album", &ApiArticleController{}, "*:Album")
+	web.Router("/api/article/attach", &ApiArticleController{}, "*:Attach")
 	web.Router("/api/article/click", &ApiArticleController{}, "*:Click")
 	web.Router("/api/article/like", &ApiArticleController{}, "*:Like")
 }

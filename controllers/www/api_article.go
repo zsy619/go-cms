@@ -11,6 +11,11 @@ import (
 
 type ApiArticleController struct{ BaseController }
 
+/**
+ * @description: CategoryFind 获取栏目列表
+ * @param {string} channel_name 频道名称
+ * @return {*}
+ */
 // @router /api/category/find [get]
 func (this *ApiArticleController) CategoryFind() {
 	channel_name := this.GetString("channel_name")
@@ -24,6 +29,16 @@ func (this *ApiArticleController) CategoryFind() {
 	this.JSONSuccess(strconv.FormatInt(count, 10), outChannel)
 }
 
+/**
+* @description: Find 获取文章列表
+* @param {int} limit 获取数量
+* @param {int64} channel_id 频道ID
+* @param {int64} category_id 栏目ID
+* @param {string} call_index 栏目别名
+* @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
+* @param {bool} is_cache 是否使用缓存
+* @return {*}
+ */
 // @router /api/article/find [get]
 func (this *ApiArticleController) Find() {
 	limit, _ := this.GetInt("limit", 6)
@@ -31,13 +46,25 @@ func (this *ApiArticleController) Find() {
 	order_by := this.GetString("order_by", "sort_id")
 	is_cache, _ := this.GetBool("is_cache", true)
 	channel_id, _ := this.GetInt64("channel_id", 0)
-	outArticle, count, err := biz.NewApiArticle().Find(limit, channel_id, call_index, order_by, is_cache)
+	category_id, _ := this.GetInt64("category_id", 0)
+	outArticle, count, err := biz.NewApiArticle().Find(limit, channel_id, category_id, call_index, order_by, is_cache)
 	if err != nil {
 		this.JSONErrorOfData(err.Error(), outArticle)
 	}
 	this.JSONSuccess(strconv.FormatInt(count, 10), outArticle)
 }
 
+/**
+ * @description: Paginate 获取文章分页列表
+ * @param {*} page 页码
+ * @param {int} limit 每页数量
+ * @param {int64} channel_id 频道ID
+ * @param {int64} category_id 栏目ID
+ * @param {string} call_index 栏目别名
+ * @param {string} keyword 关键词：按标题、摘要进行搜索
+ * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
+ * @return {*}
+ */
 // @router /api/article/paginate [get]
 func (this *ApiArticleController) Paginate() {
 	limit, _ := this.GetInt("limit", 6)
@@ -46,13 +73,19 @@ func (this *ApiArticleController) Paginate() {
 	call_index := this.GetString("call_index")
 	keyword := this.GetString("keyword")
 	channel_id, _ := this.GetInt64("channel_id", 0)
-	outArticle, count, err := biz.NewApiArticle().Paginate(page, limit, channel_id, call_index, keyword, order_by)
+	category_id, _ := this.GetInt64("category_id", 0)
+	outArticle, count, err := biz.NewApiArticle().Paginate(page, limit, channel_id, category_id, call_index, keyword, order_by)
 	if err != nil {
 		this.JSONPage(lib.CodeError, err.Error(), outArticle, count)
 	}
 	this.JSONPageSuccess(outArticle, count)
 }
 
+/**
+ * @description: One 根据article_id获取文章详情、相册、附件
+ * @param {int64} article_id 文章id
+ * @return {*}
+ */
 // @router /api/article/one [get]
 func (this *ApiArticleController) One() {
 	article_id, _ := this.GetInt64("article_id", 0)
@@ -73,6 +106,59 @@ func (this *ApiArticleController) One() {
 	this.JSONSuccess("", result)
 }
 
+/**
+ * @description: Article 获取文章详情
+ * @param {int64} article_id 文章id
+ * @return {*}
+ */
+// @router /api/article/article [get]
+func (this *ApiArticleController) Article() {
+	article_id, _ := this.GetInt64("article_id", 0)
+	article, err := biz.NewApiArticle().Article(article_id)
+	if err != nil {
+		logs.Error("", err.Error())
+		this.JSONErrorOfData(err.Error(), article)
+	}
+	this.JSONSuccess("", article)
+}
+
+/**
+ * @description: Album 获取文章相册列表
+ * @param {int64} article_id 文章id
+ * @return {*}
+ */
+// @router /api/article/album [get]
+func (this *ApiArticleController) Album() {
+	article_id, _ := this.GetInt64("article_id", 0)
+	album, err := biz.NewApiArticle().Album(article_id)
+	if err != nil {
+		logs.Error("", err.Error())
+		this.JSONErrorOfData(err.Error(), album)
+	}
+	this.JSONSuccess("", album)
+}
+
+/**
+ * @description: Attach 获取文章附件列表
+ * @param {int64} article_id 文章id
+ * @return {*}
+ */
+// @router /api/article/attach [get]
+func (this *ApiArticleController) Attach() {
+	article_id, _ := this.GetInt64("article_id", 0)
+	attach, err := biz.NewApiArticle().Attach(article_id)
+	if err != nil {
+		logs.Error("", err.Error())
+		this.JSONErrorOfData(err.Error(), attach)
+	}
+	this.JSONSuccess("", attach)
+}
+
+/**
+ * @description: Click 点击数+1
+ * @param {int64} article_id 文章id
+ * @return {*}
+ */
 // @router /api/article/click [get]
 func (this *ApiArticleController) Click() {
 	article_id, _ := this.GetInt64("article_id", 0)
@@ -84,6 +170,11 @@ func (this *ApiArticleController) Click() {
 	this.JSONSuccess("", nil)
 }
 
+/**
+ * @description: Like 点赞数+1
+ * @param {int64} article_id 文章id
+ * @return {*}
+ */
 // @router /api/article/like [get]
 func (this *ApiArticleController) Like() {
 	article_id, _ := this.GetInt64("article_id", 0)

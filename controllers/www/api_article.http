@@ -1,0 +1,41 @@
+
+
+@host = http://localhost:8125
+
+###
+
+GET {{host}}/api/category/find?channel_name=2aaa
+
+###
+
+GET {{host}}/api/article/find?limit=2&call_index=xxxx&order_by=sort_id&is_cache=true&category_id=100004&channel_id=0
+
+###
+
+GET {{host}}/api/article/paginate?page=1&limit=3&call_index=xxxx&order_by=sort_id&is_cache=true&category_id=100004&channel_id=0
+
+###
+
+GET {{host}}/api/article/one?article_id=100000
+
+###
+
+GET {{host}}/api/article/article?article_id=100000
+
+###
+
+GET {{host}}/api/article/album?article_id=100000
+
+###
+
+GET {{host}}/api/article/attach?article_id=100000
+
+###
+
+GET {{host}}/api/article/click?article_id=100000
+
+###
+
+GET {{host}}/api/article/like?article_id=100000
+
+###

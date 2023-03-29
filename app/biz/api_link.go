@@ -27,8 +27,12 @@ func (this *ApiLink) InitCache() {
 	Cache_LinkFindByCategory = make(map[string][]map[string]interface{})
 }
 
-// Find 获取链接列表
-// 排序规则：is_top desc,order_id asc
+/**
+ * @description: Find 获取链接列表
+ * @param {int} limit 获取数量
+ * @param {string} call_index 链接分类标识
+ * @return {*}
+ */
 func (this *ApiLink) Find(limit int, call_index string) ([]map[string]interface{}, int64, error) {
 	outLink := []map[string]interface{}{}
 	if call_index == "" {
@@ -52,8 +56,13 @@ func (this *ApiLink) Find(limit int, call_index string) ([]map[string]interface{
 	return outLink, int64(len(outLink)), err
 }
 
-// Paginate 获取链接列表
-// 排序规则：is_top desc,order_id asc
+/**
+ * @description: Paginate 获取链接列表
+ * @param {*} page 页码
+ * @param {int} limit 获取数量
+ * @param {string} call_index 链接分类标识
+ * @return {*}
+ */
 func (this *ApiLink) Paginate(page, limit int, call_index string) ([]map[string]interface{}, int64, error) {
 	outLink := []map[string]interface{}{}
 	_, linkDo := query.CmsLinkDo()
@@ -78,6 +87,11 @@ func (this *ApiLink) Paginate(page, limit int, call_index string) ([]map[string]
 	return outLink, count, err
 }
 
+/**
+ * @description: Click 点击数+1
+ * @param {int64} link_id 链接ID
+ * @return {*}
+ */
 func (this *ApiLink) Click(link_id int64) error {
 	mdl, do := query.CmsLinkDo()
 	do.Where(mdl.LinkID.Eq(link_id), mdl.Status.Eq(2)).Updates(map[string]interface{}{

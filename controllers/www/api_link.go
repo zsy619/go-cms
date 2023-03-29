@@ -10,7 +10,12 @@ import (
 
 type ApiLinkController struct{ BaseController }
 
-// Find 获取链接列表
+/**
+ * @description: Find 获取链接列表
+ * @param {int} limit 获取数量
+ * @param {string} call_index 链接分类标识
+ * @return {*}
+ */
 // @router /api/link/find [get]
 func (this *ApiLinkController) Find() {
 	call_index := this.GetString("call_index")
@@ -23,7 +28,13 @@ func (this *ApiLinkController) Find() {
 	this.JSONSuccess(strconv.FormatInt(len, 10), out)
 }
 
-// Paginate 获取链接列表
+/**
+ * @description: Paginate 获取链接列表
+ * @param {*} page 页码
+ * @param {int} limit 获取数量
+ * @param {string} call_index 链接分类标识
+ * @return {*}
+ */
 // @router /api/link/paginate [get]
 func (this *ApiLinkController) Paginate() {
 	call_index := this.GetString("call_index")
@@ -37,6 +48,11 @@ func (this *ApiLinkController) Paginate() {
 	this.JSONPageSuccess(out, len)
 }
 
+/**
+ * @description: Click 点击数+1
+ * @param {int64} link_id 链接ID
+ * @return {*}
+ */
 // @router /api/link/click [get]
 func (this *ApiLinkController) Click() {
 	link_id, _ := this.GetInt64("link_id", 0)

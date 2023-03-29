@@ -1,0 +1,17 @@
+
+
+@host = http://localhost:8125
+
+###
+
+GET {{host}}/api/link/find?call_index=
+
+###
+
+GET {{host}}/api/link/paginate?call_index=
+
+###
+
+GET {{host}}/api/link/click?link_id=22
+
+###
