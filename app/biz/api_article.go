@@ -3,7 +3,10 @@ package biz
 import (
 	"fmt"
 	"strconv"
+	"time"
 
+	"gorm.io/gorm"
+	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
 	"haedu.gov.cn/tools/xgeneric"
 )
@@ -109,4 +112,43 @@ func (this *ApiArticle) Paginate(page, limit int, channel_id int64, call_index s
 	outArticle := []map[string]interface{}{}
 	err := do.UnderlyingDB().Raw(sql, limit, (page-1)*limit).Scan(&outArticle).Error
 	return outArticle, count, err
+}
+
+/**
+ * @description: One 根据article_id获取文章详情
+ * @param {int64} article_id 文章id
+ * @return {*}
+ */
+func (this *ApiArticle) One(article_id int64) (*model.CmsArticle, []*model.CmsArticleAlbum, []*model.CmsArticleAttach, error) {
+	mdl, do := query.CmsArticleDo()
+	article, err := do.Where(mdl.ArticleID.Eq(article_id), mdl.Status.Eq(2)).First()
+	if err != nil {
+		return nil, nil, nil, err
+	}
+
+	albumMdl, alblumDo := query.CmsArticleAlbumDo()
+	articleAlbum, _ := alblumDo.Where(albumMdl.ArticleID.Eq(article_id)).Order(albumMdl.SortID).Find()
+
+	attachMdl, attachDo := query.CmsArticleAttachDo()
+	articleAttach, _ := attachDo.Where(attachMdl.ArticleID.Eq(article_id)).Order(attachMdl.SortID).Find()
+
+	return article, articleAlbum, articleAttach, nil
+}
+
+func (this *ApiArticle) Click(article_id int64) error {
+	mdl, do := query.CmsArticleDo()
+	do.Where(mdl.ArticleID.Eq(article_id), mdl.Status.Eq(2)).Updates(map[string]interface{}{
+		mdl.Click.ColumnName().String():      gorm.Expr("click + ?", 1),
+		mdl.UpdateTime.ColumnName().String(): time.Now(),
+	})
+	return nil
+}
+
+func (this *ApiArticle) Like(article_id int64) error {
+	mdl, do := query.CmsArticleDo()
+	do.Where(mdl.ArticleID.Eq(article_id), mdl.Status.Eq(2)).Updates(map[string]interface{}{
+		mdl.LikeCount.ColumnName().String():  gorm.Expr("like_count + ?", 1),
+		mdl.UpdateTime.ColumnName().String(): time.Now(),
+	})
+	return nil
 }
