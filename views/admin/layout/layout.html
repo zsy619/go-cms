@@ -20,10 +20,16 @@
     <script src="/static/admin/lib/ztree-v3.5.48/jquery.ztree.exhide.min.js"></script>
     <script charset="utf-8" src='/static/admin/lib/kindeditor-v4.1.11/kindeditor-all-min.js'></script>
     <script charset="utf-8" src='/static/admin/lib/kindeditor-v4.1.11/lang/zh-CN.js'></script>
-    <script src="/static/const.js"></script>
+    <script src="/static/const.js?r={{.time}}"></script>
     <style>
         body {
             background-color: #ffffff;
+        }
+
+        /* 给红色的必填项打红色星号（文字后）如果打前面用before*/
+        label.required:after {
+            content: ' *';
+            color: red;
         }
     </style>
 </head>

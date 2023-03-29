@@ -9,7 +9,7 @@
                 <div class="layui-tab-item layui-show">
                     <div class="layui-form-item">
                         <label class="layui-form-label required">
-                            <font color="red">*</font> 链接类别
+                            链接类别
                         </label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="hidden" name="link_id" value="{{.mdl.LinkID}}">
@@ -23,22 +23,22 @@
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label required">
-                            <font color="red">*</font> 链接标题
+                            链接标题
                         </label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="text" name="title" value="{{.mdl.Title}}" lay-verify="required" lay-reqtext="链接标题为必填项" autocomplete="off" placeholder="" class="layui-input">
                         </div>
-                        <div class="layui-form-mid layui-word-aux">别名访问，非必填，不可重复</div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label required">调用别名</label>
                         <div class="layui-input-inline" style="width: 500px;">
-                            <input type="text" name="call_index" value="{{.mdl.CallIndex}}" autocomplete="off" placeholder="" class="layui-input">
+                            <input type="text" name="call_index" value="{{.mdl.CallIndex}}" lay-verify="call_index" autocomplete="off" placeholder="" class="layui-input">
                         </div>
+                        <div class="layui-form-mid layui-word-aux">别名访问，非必填，不可重复</div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label required">
-                            <font color="red">*</font> URL链接
+                            URL链接
                         </label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="text" name="link_url" value="{{.mdl.LinkURL}}" autocomplete="off" lay-verify="url" lay-reqtext="URL链接为必填项" placeholder="" class="layui-input">
@@ -184,16 +184,7 @@
 
         //自定义验证规则
         form.verify({
-            // title: function (value) {
-            //     if (value.length < 5) {
-            //         return '标题也太短了吧';
-            //     }
-            // }
-            // , pass: [/(.+){6,12}$/, '密码必须6到12位']
-            // , money: [
-            //     /^\d+\.\b\d{2}\b$/
-            //     , '金额必须为小数保留两位'
-            // ]
+            call_index: [/^[a-zA-Z0-9\-\_]{2,50}$/, '请填写正确的调用别名']
         });
 
         // 提交事件

@@ -11,7 +11,7 @@
                 <div class="layui-tab-item layui-show">
                     <div class="layui-form-item">
                         <label class="layui-form-label required">
-                            <font color="red">*</font> 姓名
+                            姓名
                         </label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="hidden" name="user_id" value="{{.mdl.UserID}}">
@@ -28,7 +28,7 @@
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label required">
-                            <font color="red">*</font> 昵称
+                            昵称
                         </label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="text" name="nick_name" value="{{.mdl.NickName}}" lay-verify="required" lay-reqtext="昵称为必填项" autocomplete="off" placeholder="请输入昵称" class="layui-input">
@@ -60,7 +60,7 @@
                 <div class="layui-tab-item">
                     <div class="layui-form-item">
                         <label class="layui-form-label required">
-                            <font color="red">*</font> 管理角色
+                            管理角色
                         </label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <select name="role_id" lay-verify="required" lay-reqtext="管理角色为必选项">
@@ -73,15 +73,15 @@
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label required">
-                            <font color="red">*</font> 登录账号
+                            登录账号
                         </label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="text" name="user_name" value="{{.mdl.UserName}}" lay-verify="required" lay-reqtext="登录账号为必填项" autocomplete="off" placeholder="请输入登录账号" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label required">
-                            {{if eq .mdl.UserID 0}}<font color="red">*</font> {{end}}登录密码
+                        <label class="layui-form-label {{if eq .mdl.UserID 0}}required{{end}}">
+                            登录密码
                         </label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="password" name="password" value="" {{if eq .mdl.UserID 0}}lay-verify="required" lay-reqtext="登录密码为必填项" {{end}} autocomplete="off" placeholder="请输入登录密码" class="layui-input">

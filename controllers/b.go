@@ -61,6 +61,10 @@ func (c *BaseController) JSONError(message string) {
 	c.JSON(lib.CodeError, message, nil)
 }
 
+func (c *BaseController) JSONErrorOfData(message string, data interface{}) {
+	c.JSON(lib.CodeError, message, data)
+}
+
 // JSONPage 返回分页信息
 func (c *BaseController) JSONPage(code lib.CodeResult, message string, count int64, data interface{}) {
 	c.Data["json"] = &lib.JSONResponsePage{

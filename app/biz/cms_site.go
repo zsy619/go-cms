@@ -255,61 +255,63 @@ func (this *CmsSite) ChannelNav(input *model.CmsSiteChannel) error {
 			})
 		}
 		if channelNavId > 0 {
-			// 创建文章导航
-			navArticle := &model.CmsAdminNav{
-				SiteID:     input.SiteID,
-				ChannelID:  input.ChannelID,
-				ParentID:   channelNavId,
-				Type:       "Article",
-				Name:       fmt.Sprintf("channel_%d_%s", input.ChannelID, "article"),
-				Title:      "内容管理",
-				SubTitle:   "内容管理",
-				SortID:     1,
-				Action:     "Show,View,Add,Edit,Delete,Audit",
-				LinkURL:    fmt.Sprintf("/admin/article/index?channelId=%d", input.ChannelID),
-				IconURL:    "fa fa-tachometer",
-				IsHide:     0,
-				IsSys:      1,
-				CreateTime: dt,
-				UpdateTime: dt,
+			if count, _ := navDo.Where(navMdl.ParentID.Eq(channelNavId)).Count(); count == 0 {
+				// 创建文章导航
+				navArticle := &model.CmsAdminNav{
+					SiteID:     input.SiteID,
+					ChannelID:  input.ChannelID,
+					ParentID:   channelNavId,
+					Type:       "Article",
+					Name:       fmt.Sprintf("channel_%d_%s", input.ChannelID, "article"),
+					Title:      "内容管理",
+					SubTitle:   "内容管理",
+					SortID:     1,
+					Action:     "Show,View,Add,Edit,Delete,Audit",
+					LinkURL:    fmt.Sprintf("/admin/article/index?channelId=%d", input.ChannelID),
+					IconURL:    "fa fa-tachometer",
+					IsHide:     0,
+					IsSys:      1,
+					CreateTime: dt,
+					UpdateTime: dt,
+				}
+				navDo.Create(navArticle)
+				navCategory := &model.CmsAdminNav{
+					SiteID:     input.SiteID,
+					ChannelID:  input.ChannelID,
+					ParentID:   channelNavId,
+					Type:       "Article",
+					Name:       fmt.Sprintf("channel_%d_%s", input.ChannelID, "category"),
+					Title:      "栏目管理",
+					SubTitle:   "栏目管理",
+					SortID:     2,
+					Action:     "Show,View,Add,Edit,Delete",
+					LinkURL:    fmt.Sprintf("/admin/article/category?channelId=%d", input.ChannelID),
+					IconURL:    "fa fa-tachometer",
+					IsHide:     0,
+					IsSys:      1,
+					CreateTime: dt,
+					UpdateTime: dt,
+				}
+				navDo.Create(navCategory)
+				navComment := &model.CmsAdminNav{
+					SiteID:     input.SiteID,
+					ChannelID:  input.ChannelID,
+					ParentID:   channelNavId,
+					Type:       "Article",
+					Name:       fmt.Sprintf("channel_%d_%s", input.ChannelID, "comment"),
+					Title:      "评论管理",
+					SubTitle:   "评论管理",
+					SortID:     3,
+					Action:     "Show,View,Add,Edit,Delete,Audit",
+					LinkURL:    fmt.Sprintf("/admin/article/comment?channelId=%d", input.ChannelID),
+					IconURL:    "fa fa-tachometer",
+					IsHide:     0,
+					IsSys:      1,
+					CreateTime: dt,
+					UpdateTime: dt,
+				}
+				navDo.Create(navComment)
 			}
-			navDo.Create(navArticle)
-			navCategory := &model.CmsAdminNav{
-				SiteID:     input.SiteID,
-				ChannelID:  input.ChannelID,
-				ParentID:   channelNavId,
-				Type:       "Article",
-				Name:       fmt.Sprintf("channel_%d_%s", input.ChannelID, "category"),
-				Title:      "栏目管理",
-				SubTitle:   "栏目管理",
-				SortID:     2,
-				Action:     "Show,View,Add,Edit,Delete",
-				LinkURL:    fmt.Sprintf("/admin/article/category?channelId=%d", input.ChannelID),
-				IconURL:    "fa fa-tachometer",
-				IsHide:     0,
-				IsSys:      1,
-				CreateTime: dt,
-				UpdateTime: dt,
-			}
-			navDo.Create(navCategory)
-			navComment := &model.CmsAdminNav{
-				SiteID:     input.SiteID,
-				ChannelID:  input.ChannelID,
-				ParentID:   channelNavId,
-				Type:       "Article",
-				Name:       fmt.Sprintf("channel_%d_%s", input.ChannelID, "comment"),
-				Title:      "评论管理",
-				SubTitle:   "评论管理",
-				SortID:     3,
-				Action:     "Show,View,Add,Edit,Delete,Audit",
-				LinkURL:    fmt.Sprintf("/admin/article/comment?channelId=%d", input.ChannelID),
-				IconURL:    "fa fa-tachometer",
-				IsHide:     0,
-				IsSys:      1,
-				CreateTime: dt,
-				UpdateTime: dt,
-			}
-			navDo.Create(navComment)
 		}
 	}
 	return nil

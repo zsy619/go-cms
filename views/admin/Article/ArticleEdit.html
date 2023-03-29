@@ -11,7 +11,7 @@
                 <div class="layui-tab-item layui-show">
                     <div class="layui-form-item">
                         <label class="layui-form-label required">
-                            <font color="red">*</font> 所属类别
+                            所属类别
                         </label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="hidden" name="article_id" value="{{.mdl.ArticleID}}">
@@ -22,7 +22,7 @@
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label required">
-                            <font color="red">*</font> 内容标题
+                            内容标题
                         </label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="text" name="title" value="{{.mdl.Title}}" maxlength="256" lay-verify="required" lay-reqtext="内容标题为必填项" autocomplete="off" placeholder="" class="layui-input">
@@ -30,27 +30,27 @@
                         <div class="layui-form-mid layui-word-aux">标题最多256个字符</div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label required">副标题</label>
+                        <label class="layui-form-label">副标题</label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="text" name="sub_title" value="{{.mdl.SubTitle}}" maxlength="128" autocomplete="off" placeholder="" class="layui-input">
                         </div>
                         <div class="layui-form-mid layui-word-aux">标题最多128个字符</div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label required">Tags标签</label>
+                        <label class="layui-form-label">Tags标签</label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="text" name="tags" value="{{.mdl.Tags}}" autocomplete="off" placeholder="" class="layui-input">
                         </div>
                         <div class="layui-form-mid layui-word-aux">多个可用英文逗号分隔开，如：a,b</div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label required">来&nbsp;&nbsp;源</label>
+                        <label class="layui-form-label">来&nbsp;&nbsp;源</label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="text" name="source" value="{{.mdl.Source}}" autocomplete="off" placeholder="" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label required">作&nbsp;&nbsp;者</label>
+                        <label class="layui-form-label">作&nbsp;&nbsp;者</label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="text" name="author" value="{{.mdl.Author}}" autocomplete="off" placeholder="" class="layui-input">
                         </div>
@@ -138,11 +138,11 @@
                 </div>
                 <div class="layui-tab-item">
                     <div class="layui-form-item">
-                        <label class="layui-form-label required">调用别名</label>
+                        <label class="layui-form-label">调用别名</label>
                         <div class="layui-input-inline" style="width: 500px;">
-                            <input type="text" name="call_index" value="{{.mdl.CallIndex}}" autocomplete="off" placeholder="" class="layui-input">
+                            <input type="text" name="call_index" value="{{.mdl.CallIndex}}" lay-verify="call_index" autocomplete="off" placeholder="" class="layui-input">
                         </div>
-                        <div class="layui-form-mid layui-word-aux">别名访问，非必填，不可重复</div>
+                        <div class="layui-form-mid layui-word-aux">别名访问，非必填，不可重复；只允许使用英文、数字或下划线</div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">URL链接</label>
@@ -159,8 +159,8 @@
                         <div class="layui-form-mid layui-word-aux">不填写则自动截取内容前255字符</div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label">
-                            <font color="red">*</font> 内容描述
+                        <label class="layui-form-label required">
+                            内容描述
                         </label>
                         <div class="layui-input-inline" style="width: 100%;">
                             <textarea id="content" name="content" lay-verify="required" lay-reqtext="内容描述不允许为空" style="width: 100%;height: 500px;" class="layui-textarea">{{.mdl.Content}}</textarea>
@@ -192,7 +192,7 @@
         <div class="layui-form-item">
             <div class="layui-input-block" style="text-align: center;">
                 <!-- <button class="layui-btn" id="btnSubmit">立即提交</button> -->
-                <button class="layui-btn layui-btn-radius" id="btnSubmit">立即提交</button>
+                <button type="button" class="layui-btn layui-btn-radius" id="btnSubmit">立即提交</button>
                 <button type="reset" class="layui-btn layui-btn-primary layui-btn-radius">重置</button>
             </div>
         </div>
@@ -273,22 +273,12 @@
 
         //自定义验证规则
         form.verify({
-            // title: function (value) {
-            //     if (value.length < 5) {
-            //         return '标题也太短了吧';
-            //     }
-            // }
-            // , pass: [/(.+){6,12}$/, '密码必须6到12位']
-            // , money: [
-            //     /^\d+\.\b\d{2}\b$/
-            //     , '金额必须为小数保留两位'
-            // ]
+            call_index: v_call_index
         });
 
         // 提交事件
         form.on('submit(*)', function (data) {
             console.log(data)
-            // alert(JSON.stringify(data.field));
             return false;
         });
 

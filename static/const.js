@@ -30,6 +30,54 @@ var Shzt_Approval = "APPROVAL"; // 审核通过
 var Shzt_Reject = "REJECT";   // 审核拒绝
 var Shzt_Recall = "RECALL";   // 撤回
 
+var v_email = function (value, item) {
+    var exp = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    if (value && !exp.test(value)) {
+        return '邮箱格式不正确';
+    }
+}
+
+var v_phone = function (value, item) {
+    var exp = /^1[0-9]{10}$/;
+    if (value && !exp.test(value)) {
+        return '请输入正确的手机';
+    }
+}
+
+var v_url = function (value, item) {
+    var exp = /(^#)|(^http(s*):\/\/[^\s]+\.[^\s]+)/;
+    if (value && !exp.test(value)) {
+        return '链接格式不正确';
+    }
+}
+
+var v_number = function (value, item) {
+    if (value && isNaN(value)) {
+        return '只能填写数字';
+    }
+}
+
+var v_date = function (value, item) {
+    var exp = /^(\d{4})[-\/](\d{1}|0\d{1}|1[0-2])([-\/](\d{1}|0\d{1}|[1-2][0-9]|3[0-1]))*$/;
+    if (value && !exp.test(value)) {
+        return '日期格式不正确';
+    }
+}
+
+var v_identity = function (value, item) {
+    var exp = /(^\d{15}$)|(^\d{17}(x|X|\d)$)/;
+    if (value && !exp.test(value)) {
+        return '请输入正确的身份证';
+    }
+}
+
+var v_call_index = function (value, item) {
+    var exp = /^[a-zA-Z0-9\-\_]{2,50}$/;
+    if (value && !exp.test(value)) {
+        return '请填写正确的调用别名';
+    }
+}
+
 function PrintLayuiTable(tablelayid) {
     //自定义打印table
     let h = window.open("Print_window", "_blank");
@@ -48,3 +96,4 @@ function PrintLayuiTable(tablelayid) {
         layer.msg("打印窗口被阻塞~");
     }
 }
+
