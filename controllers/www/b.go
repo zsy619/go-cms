@@ -2,6 +2,7 @@ package www
 
 import (
 	"fmt"
+	"time"
 
 	"haedu.gov.cn/cms/app/biz"
 	"haedu.gov.cn/cms/app/dal/model"
@@ -17,6 +18,9 @@ func (c *BaseController) Prepare() {
 	c.BaseController.Prepare()
 	defaultSite, _ := c.SiteDefault()
 	c.Data["site"] = defaultSite
+	c.Data["time"] = time.Now().Unix()
+	c.Data["webroot"] = "/static/www/"
+	c.Data["year"] = time.Now().Year()
 }
 
 func (c *BaseController) Finish() {

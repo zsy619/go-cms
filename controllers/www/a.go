@@ -25,4 +25,6 @@ func init() {
 	web.Router("/api/article/like", &ApiArticleController{}, "*:Like")
 
 	web.Router("/api/cache/clear", &ApiCacheController{}, "*:Clear")
+
+	web.Router("/", &IndexController{}, "*:Index")
 }

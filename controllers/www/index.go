@@ -5,5 +5,5 @@ type IndexController struct {
 }
 
 func (c *IndexController) Index() {
-	c.Data["website"] = ""
+	c.display()
 }

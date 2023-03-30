@@ -1,0 +1,87 @@
+document.write(`<div class="footer">
+			<div class="top">
+				<div class="w1200">
+					<div class="left">
+						<img src="images/logo.png" alt="" class="logo" />
+						<div class="tel-box">
+							<img src="images/tel.png" class="icon"/>招生热线
+						</div>
+						<div class="txt">
+							0371-63388979<br />
+							0371-63398979<br />
+							17737115578
+						</div>
+					</div>
+					<div class="right">
+						<ul class="foot-nav">
+							<li>
+								<a href="#" class="level-one">学校概况</a>
+								<div class="sub">
+									<a href="">学校简介</a>
+									<a href="">学校荣誉</a>
+									<a href="">校园风光</a>
+								</div>
+							</li>
+							<li>
+								<a href="#" class="level-one">机构设置</a>
+								<div class="sub">
+									<a href="">校长办公室</a>
+									<a href="">党政办公室</a>
+									<a href="">人事处</a>
+									<a href="">教育处</a>
+									<a href="">学生处</a>
+									<a href="">团委</a>
+									<a href="">财务处</a>
+									<a href="">招生就业办公室</a>
+									<a href="">总务处</a>
+									<a href="">档案管理中心</a>
+								</div>
+							</li>
+							<li>
+								<a href="#" class="level-one">校园资讯</a>
+								<div class="sub">
+									<a href="">校园新闻</a>
+									<a href="">通知公告</a>
+								</div>
+							</li>
+							<li>
+								<a href="#" class="level-one">教育教学</a>
+								<div class="sub">
+									<a href="">专业介绍</a>
+									<a href="">特色班型</a>
+									<a href="">教学活动</a>
+									<a href="">教师风采</a>
+								</div>
+							</li>
+							<li>
+								<a href="#" class="level-one">招生就业</a>
+								<div class="sub">
+									<a href="">招生简章</a>
+									<a href="">线上报名</a>
+									<a href="">就业服务</a>
+								</div>
+							</li>
+							<li>
+								<a href="#" class="level-one">联系我们</a>
+								<div class="sub">
+									<a href="">办公室电话</a>
+									<a href="">校长邮箱</a>
+									<a href="">地理位置</a>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="bot">
+				<div class="w1200">
+					<div class="copy">Copyright © 2022 河南省工业学校 All rights reserved</div>
+					<div class="right">
+						<img src="images/footer_ico_shiye.png"/>
+						<img src="images/footer_ico_h.png"/>
+						<a href="javascript:void(0)">豫ICP备10201850号</a>
+						<a href="javascript:void(0)">技术支持：河南省教育网</a>
+					</div>
+				</div>
+			</div>
+		</div>`)
