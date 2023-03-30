@@ -53,13 +53,13 @@
                 { field: 'name', title: '网站名称', sort: true },
                 { field: 'crod', title: '网站备案号', sort: true },
                 {
-                    field: 'is_mobile', width: 120, title: '移动站', sort: true, templet: function (d) {
-                        return d.is_mobile ? "×" : "√";
+                    field: 'is_mobile', width: 120, title: '移动站', align: "center", sort: true, templet: function (d) {
+                        return d.is_mobile == false ? "×" : "√";
                     }
                 },
                 {
-                    field: 'is_default', width: 120, title: '默认', sort: true, templet: function (d) {
-                        return d.is_default ? "×" : "√";
+                    field: 'is_default', width: 120, title: '默认', align: "center", sort: true, templet: function (d) {
+                        return d.is_default == false ? "×" : "√";
                     }
                 },
                 {

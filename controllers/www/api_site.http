@@ -1,0 +1,16 @@
+
+@host = http://localhost:8125
+
+###
+
+GET {{host}}/api/site/default
+
+###
+
+GET {{host}}/api/site/default?site_id=100000
+
+###
+
+GET {{host}}/api/channel/find?site_id=100000
+
+###

@@ -119,11 +119,11 @@ func (this *ApiArticle) Paginate(page, limit int, channel_id, category_id int64,
 }
 
 /**
- * @description: One 根据article_id获取文章详情、相册、附件
+ * @description: Get 根据article_id获取文章详情、相册、附件
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *ApiArticle) One(article_id int64) (*model.CmsArticle, []*model.CmsArticleAlbum, []*model.CmsArticleAttach, error) {
+func (this *ApiArticle) Get(article_id int64) (*model.CmsArticle, []*model.CmsArticleAlbum, []*model.CmsArticleAttach, error) {
 	mdl, do := query.CmsArticleDo()
 	article, err := do.Where(mdl.ArticleID.Eq(article_id), mdl.Status.Eq(2)).First()
 	if err != nil {

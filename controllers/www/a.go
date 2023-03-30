@@ -10,6 +10,7 @@ func init() {
 	web.Router("/api/link/paginate", &ApiLinkController{}, "*:Paginate")
 	web.Router("/api/link/click", &ApiLinkController{}, "*:Click")
 
+	web.Router("/api/site/default", &ApiSiteController{}, "*:Default")
 	web.Router("/api/site/get", &ApiSiteController{}, "*:Get")
 	web.Router("/api/channel/find", &ApiSiteController{}, "*:ChannelFind")
 
@@ -22,4 +23,6 @@ func init() {
 	web.Router("/api/article/attach", &ApiArticleController{}, "*:Attach")
 	web.Router("/api/article/click", &ApiArticleController{}, "*:Click")
 	web.Router("/api/article/like", &ApiArticleController{}, "*:Like")
+
+	web.Router("/api/cache/clear", &ApiCacheController{}, "*:Clear")
 }

@@ -139,6 +139,8 @@ func (c *SiteController) SiteSaveSortId() {
 			return
 		}
 	}
+	biz.Cache_ApiSiteDefault = nil
+	biz.Cache_ApiSiteGet = make(map[int64]*model.CmsSite, 0)
 	c.JSONSuccess("保存成功", nil)
 }
 

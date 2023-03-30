@@ -37,7 +37,7 @@ func (this *CmsSite) SitePaginate(page, limit int, name string, title string) ([
 	if title != "" {
 		siteDo = siteDo.Where(site.Title.Like("%" + title + "%"))
 	}
-	return siteDo.FindByPage((page-1)*limit, limit)
+	return siteDo.Order(site.IsDefault.Desc(), site.SortID).FindByPage((page-1)*limit, limit)
 }
 
 func (this *CmsSite) SiteDelete(ids string) {
@@ -70,7 +70,7 @@ func (this *CmsSite) SiteSave(mdl *model.CmsSite, domains []string, remarks []st
 
 	site, siteDo := query.CmsSiteDo()
 	if mdl.IsDefault {
-		if count, _ := siteDo.Where(site.IsDefault.Is(mdl.IsDefault), site.IsDeleted.Is(false), site.SiteID.Neq(mdl.SiteID)).Count(); count > 0 {
+		if count, _ := siteDo.Where(site.IsDefault.Is(true), site.IsDeleted.Is(false), site.SiteID.Neq(mdl.SiteID)).Count(); count > 0 {
 			return errors.New("默认站点只能有一个，请修改后重试")
 		}
 	}
@@ -128,6 +128,7 @@ func (this *CmsSite) SiteSave(mdl *model.CmsSite, domains []string, remarks []st
 			domainDo.Save(domain)
 		}
 	}
+	Cache_ApiSiteDefault = nil
 	return nil
 }
 

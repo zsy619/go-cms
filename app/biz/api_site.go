@@ -7,11 +7,13 @@ import (
 )
 
 var (
+	Cache_ApiSiteDefault     *model.CmsSite
 	Cache_ApiSiteGet         map[int64]*model.CmsSite
 	Cache_ApiSiteChannelFind map[int64][]map[string]interface{}
 )
 
 func init() {
+	Cache_ApiSiteDefault = nil
 	Cache_ApiSiteGet = make(map[int64]*model.CmsSite)
 	Cache_ApiSiteChannelFind = make(map[int64][]map[string]interface{})
 }
@@ -22,7 +24,28 @@ func NewApiSite() *ApiSite {
 	return &ApiSite{}
 }
 
-// Get 获取站点信息
+/**
+ * @description: Default 获取站点信息
+ * @return {*}
+ */
+func (this *ApiSite) Default() (*model.CmsSite, error) {
+	if Cache_ApiSiteDefault != nil {
+		logs.Debug("Cache_ApiSiteDefault")
+		return Cache_ApiSiteDefault, nil
+	}
+	site, siteDo := query.CmsSiteDo()
+	find, err := siteDo.Where(site.IsDefault.Is(true), site.IsDeleted.Is(false)).First()
+	if err == nil {
+		Cache_ApiSiteDefault = find
+	}
+	return find, nil
+}
+
+/**
+ * @description: Get 获取站点信息
+ * @param {int64} site_id 站点ID
+ * @return {*}
+ */
 func (this *ApiSite) Get(site_id int64) (*model.CmsSite, error) {
 	if v, ok := Cache_ApiSiteGet[site_id]; ok {
 		logs.Debug("Cache_ApiSiteGet")
@@ -37,7 +60,11 @@ func (this *ApiSite) Get(site_id int64) (*model.CmsSite, error) {
 	return out, nil
 }
 
-// ChannelFind 获取站点栏目
+/**
+ * @description: ChannelFind 获取站点频道
+ * @param {int64} site_id 站点ID
+ * @return {*}
+ */
 func (this *ApiSite) ChannelFind(site_id int64) ([]map[string]interface{}, int64, error) {
 	if find, ok := Cache_ApiSiteChannelFind[site_id]; ok {
 		logs.Debug("Cache_ApiSiteChannelFind")

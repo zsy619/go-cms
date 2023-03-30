@@ -47,11 +47,8 @@
                     }
                 },
                 {
-                    field: 'is_sys', title: '系统默认', width: 120, sort: true, templet: function (d) {
-                        if (d.is_sys == 1) {
-                            return '是';
-                        }
-                        return "否";
+                    field: 'is_sys', title: '系统默认', width: 120, align: "center", sort: true, templet: function (d) {
+                        return d.is_sys == 0 ? "×" : "√";
                     }
                 },
                 { field: 'remark', title: '备注' },

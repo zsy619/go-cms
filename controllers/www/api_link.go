@@ -4,7 +4,6 @@ import (
 	"strconv"
 
 	"github.com/beego/beego/v2/core/logs"
-	"haedu.gov.cn/cms/app/biz"
 	"haedu.gov.cn/cms/app/lib"
 )
 
@@ -13,14 +12,16 @@ type ApiLinkController struct{ BaseController }
 /**
  * @description: Find 获取链接列表
  * @param {int} limit 获取数量
+ * @param {int64} category_id 链接分类ID
  * @param {string} call_index 链接分类标识
  * @return {*}
  */
 // @router /api/link/find [get]
 func (this *ApiLinkController) Find() {
+	category_id, _ := this.GetInt64("category_id")
 	call_index := this.GetString("call_index")
 	limit, _ := this.GetInt("limit", 6)
-	out, len, err := biz.NewApiLink().Find(limit, call_index)
+	out, len, err := this.BaseController.LinkFind(limit, category_id, call_index)
 	if err != nil {
 		logs.Error("Find::", "callIndex", call_index, "err", err)
 		this.JSONErrorOfData(err.Error(), out)
@@ -32,15 +33,17 @@ func (this *ApiLinkController) Find() {
  * @description: Paginate 获取链接列表
  * @param {*} page 页码
  * @param {int} limit 获取数量
+ * @param {int64} category_id 链接分类ID
  * @param {string} call_index 链接分类标识
  * @return {*}
  */
 // @router /api/link/paginate [get]
 func (this *ApiLinkController) Paginate() {
+	category_id, _ := this.GetInt64("category_id")
 	call_index := this.GetString("call_index")
 	limit, _ := this.GetInt("limit", 12)
 	page, _ := this.GetInt("page", 1)
-	out, len, err := biz.NewApiLink().Paginate(page, limit, call_index)
+	out, len, err := this.BaseController.LinkPaginate(page, limit, category_id, call_index)
 	if err != nil {
 		logs.Error("Paginate::", "callIndex", call_index, "err", err)
 		this.JSONPage(lib.CodeError, err.Error(), out, len)
@@ -56,7 +59,7 @@ func (this *ApiLinkController) Paginate() {
 // @router /api/link/click [get]
 func (this *ApiLinkController) Click() {
 	link_id, _ := this.GetInt64("link_id", 0)
-	err := biz.NewApiLink().Click(link_id)
+	err := this.BaseController.LinkClick(link_id)
 	if err != nil {
 		logs.Error("Click", err.Error())
 		this.JSONError(err.Error())

@@ -4,7 +4,6 @@ import (
 	"strconv"
 
 	"github.com/beego/beego/v2/core/logs"
-	"haedu.gov.cn/cms/app/biz"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/lib"
 )
@@ -22,7 +21,7 @@ func (this *ApiArticleController) CategoryFind() {
 	if channel_name == "" {
 		this.JSONErrorOfData("频道名称不能为空", nil)
 	}
-	outChannel, count, err := biz.NewApiArticle().CategoryFind(channel_name)
+	outChannel, count, err := this.BaseController.CategoryFind(channel_name)
 	if err != nil {
 		this.JSONErrorOfData(err.Error(), outChannel)
 	}
@@ -47,7 +46,7 @@ func (this *ApiArticleController) Find() {
 	is_cache, _ := this.GetBool("is_cache", true)
 	channel_id, _ := this.GetInt64("channel_id", 0)
 	category_id, _ := this.GetInt64("category_id", 0)
-	outArticle, count, err := biz.NewApiArticle().Find(limit, channel_id, category_id, call_index, order_by, is_cache)
+	outArticle, count, err := this.BaseController.ArticleFind(limit, channel_id, category_id, call_index, order_by, is_cache)
 	if err != nil {
 		this.JSONErrorOfData(err.Error(), outArticle)
 	}
@@ -74,7 +73,7 @@ func (this *ApiArticleController) Paginate() {
 	keyword := this.GetString("keyword")
 	channel_id, _ := this.GetInt64("channel_id", 0)
 	category_id, _ := this.GetInt64("category_id", 0)
-	outArticle, count, err := biz.NewApiArticle().Paginate(page, limit, channel_id, category_id, call_index, keyword, order_by)
+	outArticle, count, err := this.BaseController.ArticlePaginate(page, limit, channel_id, category_id, call_index, keyword, order_by)
 	if err != nil {
 		this.JSONPage(lib.CodeError, err.Error(), outArticle, count)
 	}
@@ -89,7 +88,7 @@ func (this *ApiArticleController) Paginate() {
 // @router /api/article/one [get]
 func (this *ApiArticleController) One() {
 	article_id, _ := this.GetInt64("article_id", 0)
-	aritcle, album, attatch, err := biz.NewApiArticle().One(article_id)
+	aritcle, album, attatch, err := this.BaseController.ArticleGet(article_id)
 	result := struct {
 		Article *model.CmsArticle         `json:"article"`
 		Album   []*model.CmsArticleAlbum  `json:"album"`
@@ -114,7 +113,7 @@ func (this *ApiArticleController) One() {
 // @router /api/article/article [get]
 func (this *ApiArticleController) Article() {
 	article_id, _ := this.GetInt64("article_id", 0)
-	article, err := biz.NewApiArticle().Article(article_id)
+	article, err := this.BaseController.ArticleArticle(article_id)
 	if err != nil {
 		logs.Error("", err.Error())
 		this.JSONErrorOfData(err.Error(), article)
@@ -130,7 +129,7 @@ func (this *ApiArticleController) Article() {
 // @router /api/article/album [get]
 func (this *ApiArticleController) Album() {
 	article_id, _ := this.GetInt64("article_id", 0)
-	album, err := biz.NewApiArticle().Album(article_id)
+	album, err := this.BaseController.ArticleAlbum(article_id)
 	if err != nil {
 		logs.Error("", err.Error())
 		this.JSONErrorOfData(err.Error(), album)
@@ -146,7 +145,7 @@ func (this *ApiArticleController) Album() {
 // @router /api/article/attach [get]
 func (this *ApiArticleController) Attach() {
 	article_id, _ := this.GetInt64("article_id", 0)
-	attach, err := biz.NewApiArticle().Attach(article_id)
+	attach, err := this.BaseController.ArticleAttach(article_id)
 	if err != nil {
 		logs.Error("", err.Error())
 		this.JSONErrorOfData(err.Error(), attach)
@@ -162,7 +161,7 @@ func (this *ApiArticleController) Attach() {
 // @router /api/article/click [get]
 func (this *ApiArticleController) Click() {
 	article_id, _ := this.GetInt64("article_id", 0)
-	err := biz.NewApiArticle().Click(article_id)
+	err := this.BaseController.ArticleClick(article_id)
 	if err != nil {
 		logs.Error("Click", err.Error())
 		this.JSONError(err.Error())
@@ -178,7 +177,7 @@ func (this *ApiArticleController) Click() {
 // @router /api/article/like [get]
 func (this *ApiArticleController) Like() {
 	article_id, _ := this.GetInt64("article_id", 0)
-	err := biz.NewApiArticle().Like(article_id)
+	err := this.BaseController.ArticleLike(article_id)
 	if err != nil {
 		logs.Error("Like", err.Error())
 		this.JSONError(err.Error())
