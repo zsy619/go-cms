@@ -29,14 +29,18 @@ func (this *ApiArticleController) CategoryFind() {
 }
 
 /**
-* @description: Find 获取文章列表
-* @param {int} limit 获取数量
-* @param {int64} channel_id 频道ID
-* @param {int64} category_id 栏目ID
-* @param {string} call_index 栏目别名
-* @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
-* @param {bool} is_cache 是否使用缓存
-* @return {*}
+ * @description: Find 获取文章列表
+ * @param {int} limit 获取数量
+ * @param {int64} channel_id 频道ID
+ * @param {int64} category_id 栏目ID
+ * @param {string} call_index 栏目别名
+ * @param {int} is_top 是否置顶
+ * @param {int} is_red 是否推荐
+ * @param {int} is_hot 是否热门
+ * @param {int} is_slide 是否幻灯片
+ * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
+ * @param {bool} is_cache 是否使用缓存
+ * @return {*}
  */
 // @router /api/article/find [get]
 func (this *ApiArticleController) Find() {
@@ -46,7 +50,11 @@ func (this *ApiArticleController) Find() {
 	is_cache, _ := this.GetBool("is_cache", true)
 	channel_id, _ := this.GetInt64("channel_id", 0)
 	category_id, _ := this.GetInt64("category_id", 0)
-	outArticle, count, err := this.BaseController.ArticleFind(limit, channel_id, category_id, call_index, order_by, is_cache)
+	is_top, _ := this.GetInt("is_top", 0)
+	is_red, _ := this.GetInt("is_red", 0)
+	is_hot, _ := this.GetInt("is_hot", 0)
+	is_slide, _ := this.GetInt("is_slide", 0)
+	outArticle, count, err := this.BaseController.ArticleFind(limit, channel_id, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by, is_cache)
 	if err != nil {
 		this.JSONErrorOfData(err.Error(), outArticle)
 	}
@@ -54,13 +62,17 @@ func (this *ApiArticleController) Find() {
 }
 
 /**
- * @description: Paginate 获取文章分页列表
+ * @description: ArticlePaginate 获取文章分页列表
  * @param {*} page 页码
  * @param {int} limit 每页数量
  * @param {int64} channel_id 频道ID
  * @param {int64} category_id 栏目ID
  * @param {string} call_index 栏目别名
  * @param {string} keyword 关键词：按标题、摘要进行搜索
+ * @param {int} is_top 是否置顶
+ * @param {int} is_red 是否推荐
+ * @param {int} is_hot 是否热门
+ * @param {int} is_slide 是否幻灯片
  * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
  * @return {*}
  */
@@ -73,7 +85,11 @@ func (this *ApiArticleController) Paginate() {
 	keyword := this.GetString("keyword")
 	channel_id, _ := this.GetInt64("channel_id", 0)
 	category_id, _ := this.GetInt64("category_id", 0)
-	outArticle, count, err := this.BaseController.ArticlePaginate(page, limit, channel_id, category_id, call_index, keyword, order_by)
+	is_top, _ := this.GetInt("is_top", 0)
+	is_red, _ := this.GetInt("is_red", 0)
+	is_hot, _ := this.GetInt("is_hot", 0)
+	is_slide, _ := this.GetInt("is_slide", 0)
+	outArticle, count, err := this.BaseController.ArticlePaginate(page, limit, channel_id, category_id, call_index, keyword, is_top, is_red, is_hot, is_slide, order_by)
 	if err != nil {
 		this.JSONPage(lib.CodeError, err.Error(), outArticle, count)
 	}

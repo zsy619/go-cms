@@ -89,7 +89,7 @@ func (this *CmsArticle) ArticleSave(input *model.CmsArticle) error {
 			mdl.UpdateTime.ColumnName().String():     input.UpdateTime,
 		})
 		if err == nil {
-			Cache_ApiArticleFind = make(map[string][]map[string]interface{})
+			// Cache_ApiArticleFind = make(map[string][]map[string]interface{})
 		}
 	}
 	return err
@@ -120,7 +120,7 @@ func (this *CmsArticle) ArticleDestory(articleId int64) error {
 	if _, err := do.Where(mdl.ArticleID.Eq(articleId)).Delete(); err != nil {
 		return err
 	}
-	Cache_ApiArticleCategoryFind = make(map[string][]map[string]interface{})
+	// Cache_ApiArticleCategoryFind = make(map[string][]map[string]interface{})
 	return nil
 }
 
@@ -185,7 +185,7 @@ func (this *CmsArticle) CategorySave(input *model.CmsArticleCategory) error {
 			mdl.UpdateTime.ColumnName().String():     input.UpdateTime,
 		})
 		if err == nil {
-			Cache_ApiArticleCategoryFind = make(map[string][]map[string]interface{})
+			// Cache_ApiArticleCategoryFind = make(map[string][]map[string]interface{})
 		}
 	}
 	return err
@@ -215,8 +215,8 @@ func (this *CmsArticle) CategoryDestory(categoryId int64) error {
 	if _, err := do.Where(mdl.CategoryID.Eq(categoryId)).Delete(); err != nil {
 		return err
 	}
-	Cache_ApiArticleCategoryFind = make(map[string][]map[string]interface{})
-	Cache_ApiArticleFind = make(map[string][]map[string]interface{})
+	// Cache_ApiArticleCategoryFind = make(map[string][]map[string]interface{})
+	// Cache_ApiArticleFind = make(map[string][]map[string]interface{})
 	return nil
 }
 

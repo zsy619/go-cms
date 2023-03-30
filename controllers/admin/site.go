@@ -139,8 +139,8 @@ func (c *SiteController) SiteSaveSortId() {
 			return
 		}
 	}
-	biz.Cache_ApiSiteDefault = nil
-	biz.Cache_ApiSiteGet = make(map[int64]*model.CmsSite, 0)
+	// biz.Cache_ApiSiteDefault = nil
+	// biz.Cache_ApiSiteGet = make(map[int64]*model.CmsSite, 0)
 	c.JSONSuccess("保存成功", nil)
 }
 
@@ -202,7 +202,7 @@ func (c *SiteController) ChannelSaveSortId() {
 			return
 		}
 	}
-	biz.Cache_ApiSiteChannelFind = make(map[int64][]map[string]interface{})
+	// biz.Cache_ApiSiteChannelFind = make(map[int64][]map[string]interface{})
 	c.JSONSuccess("保存成功", nil)
 }
 

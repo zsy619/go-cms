@@ -71,7 +71,7 @@ func (c *LinkController) LinkSaveSortId() {
 			return
 		}
 	}
-	biz.NewApiLink().InitCache()
+	// biz.NewApiLink().InitCache()
 	c.JSONSuccess("保存成功", nil)
 }
 

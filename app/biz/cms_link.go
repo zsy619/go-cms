@@ -173,7 +173,7 @@ func (this *CmsLink) LinkSave(input *model.CmsLink) error {
 			mdl.UpdateTime.ColumnName().String(): input.UpdateTime,
 		})
 		if err == nil {
-			NewApiLink().InitCache()
+			// NewApiLink().InitCache()
 		}
 	}
 	return err
@@ -185,7 +185,7 @@ func (this *CmsLink) LinkDestory(linkId int64) error {
 	if _, err := do.Where(mdl.LinkID.Eq(linkId)).Delete(); err != nil {
 		return err
 	}
-	NewApiLink().InitCache()
+	// NewApiLink().InitCache()
 	return nil
 }
 

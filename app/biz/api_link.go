@@ -11,20 +11,16 @@ import (
 	"haedu.gov.cn/tools/xgeneric"
 )
 
-var Cache_LinkFindByCategory map[string][]map[string]interface{}
+// var Cache_LinkFindByCategory map[string][]map[string]interface{}
 
-func init() {
-	Cache_LinkFindByCategory = make(map[string][]map[string]interface{})
-}
+// func init() {
+// 	Cache_LinkFindByCategory = make(map[string][]map[string]interface{})
+// }
 
 type ApiLink struct{}
 
 func NewApiLink() *ApiLink {
 	return &ApiLink{}
-}
-
-func (this *ApiLink) InitCache() {
-	Cache_LinkFindByCategory = make(map[string][]map[string]interface{})
 }
 
 /**
@@ -37,14 +33,16 @@ func (this *ApiLink) InitCache() {
 func (this *ApiLink) Find(limit int, category_id int64, call_index string) ([]map[string]interface{}, int64, error) {
 	outLink := []map[string]interface{}{}
 	cacheKey := fmt.Sprintf("LinkFind::%d::%d::%s", limit, category_id, call_index)
-	// if call_index == "" {
-	// 	return outLink, 0, errors.New("调用链接分类标识不能为空")
-	// }
-	if links, ok := Cache_LinkFindByCategory[cacheKey]; ok {
+	if found, item := ApiCache.Get(cacheKey); found {
+		links := item.([]map[string]interface{})
 		logs.Debug("LinkFindByCategory[Cache]::", "cacheKey", cacheKey, "links", links)
-		// fmt.Println("LinkFindByCategory[Cache]::", "callIndex", callIndex, "links", links)
 		return links, int64(len(links)), nil
 	}
+	// if links, ok := Cache_LinkFindByCategory[cacheKey]; ok {
+	// 	logs.Debug("LinkFindByCategory[Cache]::", "cacheKey", cacheKey, "links", links)
+	// 	// fmt.Println("LinkFindByCategory[Cache]::", "callIndex", callIndex, "links", links)
+	// 	return links, int64(len(links)), nil
+	// }
 	_, linkDo := query.CmsLinkDo()
 	sqlSelect := "a.link_id,a.site_id,a.channel_id,a.category_id,a.title,a.link_url,a.target,a.click,a.img_url,a.is_lock,a.is_red,a.is_hot,a.is_slide"
 	sql := "SELECT " + sqlSelect + " FROM cms_link a LEFT JOIN cms_link_category b ON a.category_id = b.category_id WHERE a.`status`=2 " +
@@ -56,7 +54,8 @@ func (this *ApiLink) Find(limit int, category_id int64, call_index string) ([]ma
 	}
 	err := linkDo.UnderlyingDB().Raw(sql).Scan(&outLink).Error
 	if err == nil {
-		Cache_LinkFindByCategory[cacheKey] = outLink
+		// Cache_LinkFindByCategory[cacheKey] = outLink
+		ApiCache.Set(cacheKey, outLink, 1800)
 	}
 	return outLink, int64(len(outLink)), err
 }
@@ -88,9 +87,6 @@ func (this *ApiLink) Paginate(page, limit int, category_id int64, call_index str
 
 	sqlRow += fmt.Sprintf(" LIMIT %d,%d", (page-1)*limit, limit)
 	err := linkDo.UnderlyingDB().Raw(sqlRow).Scan(&outLink).Error
-	if err == nil {
-		Cache_LinkFindByCategory[call_index] = outLink
-	}
 	return outLink, count, err
 }
 

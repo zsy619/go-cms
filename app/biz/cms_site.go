@@ -111,7 +111,7 @@ func (this *CmsSite) SiteSave(mdl *model.CmsSite, domains []string, remarks []st
 		}); err != nil {
 			return err
 		}
-		Cache_ApiSiteGet = make(map[int64]*model.CmsSite)
+		// Cache_ApiSiteGet = make(map[int64]*model.CmsSite)
 	}
 	domain, domainDo := query.CmsSiteDomainDo()
 	domainDo.Where(domain.SiteID.Eq(mdl.SiteID)).Delete()
@@ -128,7 +128,7 @@ func (this *CmsSite) SiteSave(mdl *model.CmsSite, domains []string, remarks []st
 			domainDo.Save(domain)
 		}
 	}
-	Cache_ApiSiteDefault = nil
+	// Cache_ApiSiteDefault = nil
 	return nil
 }
 
@@ -175,6 +175,7 @@ func (this *CmsSite) ChannelSave(input *model.CmsSiteChannel) error {
 		_, err = do.Where(mdl.ChannelID.Eq(input.ChannelID)).Updates(map[string]interface{}{
 			mdl.ChannelID.ColumnName().String():  input.ChannelID,
 			mdl.SiteID.ColumnName().String():     input.SiteID,
+			mdl.Name.ColumnName().String():       input.Name,
 			mdl.Title.ColumnName().String():      input.Title,
 			mdl.Kind.ColumnName().String():       input.Kind,
 			mdl.ClassLayer.ColumnName().String(): input.ClassLayer,
@@ -187,8 +188,8 @@ func (this *CmsSite) ChannelSave(input *model.CmsSiteChannel) error {
 			mdl.UpdateTime.ColumnName().String(): input.UpdateTime,
 		})
 		if err == nil {
-			Cache_ApiSiteChannelFind = make(map[int64][]map[string]interface{})
-			Cache_ApiArticleCategoryFind = make(map[string][]map[string]interface{})
+			// Cache_ApiSiteChannelFind = make(map[int64][]map[string]interface{})
+			// Cache_ApiArticleCategoryFind = make(map[string][]map[string]interface{})
 		}
 	}
 	if err == nil {

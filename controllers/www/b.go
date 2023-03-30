@@ -118,17 +118,21 @@ func (this *BaseController) CategoryFind(channel_name string) ([]map[string]inte
 }
 
 /**
-* @description: ArticleFind 获取文章列表
-* @param {int} limit 获取数量
-* @param {int64} channel_id 频道ID
-* @param {int64} category_id 栏目ID
-* @param {string} call_index 栏目别名
-* @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
-* @param {bool} is_cache 是否使用缓存
-* @return {*}
+ * @description: Find 获取文章列表
+ * @param {int} limit 获取数量
+ * @param {int64} channel_id 频道ID
+ * @param {int64} category_id 栏目ID
+ * @param {string} call_index 栏目别名
+ * @param {int} is_top 是否置顶
+ * @param {int} is_red 是否推荐
+ * @param {int} is_hot 是否热门
+ * @param {int} is_slide 是否幻灯片
+ * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
+ * @param {bool} is_cache 是否使用缓存
+ * @return {*}
  */
-func (this *BaseController) ArticleFind(limit int, channel_id, category_id int64, call_index string, order_by string, is_cache bool) ([]map[string]interface{}, int64, error) {
-	return biz.NewApiArticle().Find(limit, channel_id, category_id, call_index, order_by, is_cache)
+func (this *BaseController) ArticleFind(limit int, channel_id, category_id int64, call_index string, is_top, is_red, is_hot, is_slide int, order_by string, is_cache bool) ([]map[string]interface{}, int64, error) {
+	return biz.NewApiArticle().Find(limit, channel_id, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by, is_cache)
 }
 
 /**
@@ -139,11 +143,15 @@ func (this *BaseController) ArticleFind(limit int, channel_id, category_id int64
  * @param {int64} category_id 栏目ID
  * @param {string} call_index 栏目别名
  * @param {string} keyword 关键词：按标题、摘要进行搜索
+ * @param {int} is_top 是否置顶
+ * @param {int} is_red 是否推荐
+ * @param {int} is_hot 是否热门
+ * @param {int} is_slide 是否幻灯片
  * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
  * @return {*}
  */
-func (this *BaseController) ArticlePaginate(page, limit int, channel_id, category_id int64, call_index string, keyword string, order_by string) ([]map[string]interface{}, int64, error) {
-	return biz.NewApiArticle().Paginate(page, limit, channel_id, category_id, call_index, keyword, order_by)
+func (this *BaseController) ArticlePaginate(page, limit int, channel_id, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide int, order_by string) ([]map[string]interface{}, int64, error) {
+	return biz.NewApiArticle().Paginate(page, limit, channel_id, category_id, call_index, keyword, is_top, is_red, is_hot, is_slide, order_by)
 }
 
 /**
