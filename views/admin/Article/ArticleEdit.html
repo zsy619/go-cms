@@ -37,6 +37,15 @@
                         <div class="layui-form-mid layui-word-aux">标题最多128个字符</div>
                     </div>
                     <div class="layui-form-item">
+                        <label class="layui-form-label">标题图标</label>
+                        <div class="layui-input-inline" style="width: 392px;">
+                            <input type="text" name="ico_url" value="{{.mdl.IcoURL}}" autocomplete="off" placeholder="" class="layui-input">
+                        </div>
+                        <button type="button" class="layui-btn layui-btn-primary" id="btnUploadIco">
+                            <i class="layui-icon">&#xe67c;</i>浏览...
+                        </button>
+                    </div>
+                    <div class="layui-form-item">
                         <label class="layui-form-label">Tags标签</label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="text" name="tags" value="{{.mdl.Tags}}" autocomplete="off" placeholder="" class="layui-input">
@@ -262,6 +271,23 @@
                 //上传完毕回调
                 if (res.code == 0) {
                     $("input[name='img_url']").val(res.file.url2);
+                } else {
+                    layer.msg(res.msg);
+                }
+            }
+            , error: function () {
+                //请求异常回调
+            }
+        });
+
+        //执行实例
+        var uploadInstIco = upload.render({
+            elem: '#btnUploadIco' //绑定元素
+            , url: '/admin/tools/ImageUpload?path=ico' //上传接口
+            , done: function (res) {
+                //上传完毕回调
+                if (res.code == 0) {
+                    $("input[name='ico_url']").val(res.file.url2);
                 } else {
                     layer.msg(res.msg);
                 }

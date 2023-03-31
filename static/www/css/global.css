@@ -32,6 +32,12 @@ img {
 table {
   border-collapse: collapse;
 }
+.ellip {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	display: block;
+}
 input, textarea {
   	outline: none;
   	border: 0;

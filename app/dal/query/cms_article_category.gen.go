@@ -41,6 +41,8 @@ func newCmsArticleCategory(db *gorm.DB, opts ...gen.DOOption) cmsArticleCategory
 	_cmsArticleCategory.SeoDescription = field.NewString(tableName, "seo_description")
 	_cmsArticleCategory.Content = field.NewString(tableName, "content")
 	_cmsArticleCategory.SortID = field.NewInt32(tableName, "sort_id")
+	_cmsArticleCategory.IsShow = field.NewBool(tableName, "is_show")
+	_cmsArticleCategory.IsSearch = field.NewBool(tableName, "is_search")
 	_cmsArticleCategory.IsDeleted = field.NewBool(tableName, "is_deleted")
 	_cmsArticleCategory.Status = field.NewInt32(tableName, "status")
 	_cmsArticleCategory.BelongTo = field.NewString(tableName, "belong_to")
@@ -74,6 +76,8 @@ type cmsArticleCategory struct {
 	SeoDescription field.String // SEO描述
 	Content        field.String // 内容介绍
 	SortID         field.Int32  // 排序
+	IsShow         field.Bool   // 是否显示:1显示，0隐藏
+	IsSearch       field.Bool   // 允许检索:1允许，0禁止
 	IsDeleted      field.Bool   // 删除标识
 	Status         field.Int32  // 状态0草稿1提交2审核通过3审核未通过4驳回
 	BelongTo       field.String // 归属
@@ -113,6 +117,8 @@ func (c *cmsArticleCategory) updateTableName(table string) *cmsArticleCategory {
 	c.SeoDescription = field.NewString(table, "seo_description")
 	c.Content = field.NewString(table, "content")
 	c.SortID = field.NewInt32(table, "sort_id")
+	c.IsShow = field.NewBool(table, "is_show")
+	c.IsSearch = field.NewBool(table, "is_search")
 	c.IsDeleted = field.NewBool(table, "is_deleted")
 	c.Status = field.NewInt32(table, "status")
 	c.BelongTo = field.NewString(table, "belong_to")
@@ -146,7 +152,7 @@ func (c *cmsArticleCategory) GetFieldByName(fieldName string) (field.OrderExpr, 
 }
 
 func (c *cmsArticleCategory) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 23)
+	c.fieldMap = make(map[string]field.Expr, 25)
 	c.fieldMap["category_id"] = c.CategoryID
 	c.fieldMap["parent_id"] = c.ParentID
 	c.fieldMap["site_id"] = c.SiteID
@@ -161,6 +167,8 @@ func (c *cmsArticleCategory) fillFieldMap() {
 	c.fieldMap["seo_description"] = c.SeoDescription
 	c.fieldMap["content"] = c.Content
 	c.fieldMap["sort_id"] = c.SortID
+	c.fieldMap["is_show"] = c.IsShow
+	c.fieldMap["is_search"] = c.IsSearch
 	c.fieldMap["is_deleted"] = c.IsDeleted
 	c.fieldMap["status"] = c.Status
 	c.fieldMap["belong_to"] = c.BelongTo

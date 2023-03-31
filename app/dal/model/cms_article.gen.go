@@ -18,6 +18,7 @@ type CmsArticle struct {
 	CategoryID     int64     `gorm:"column:category_id;type:bigint" json:"category_id" form:"category_id"`                                // 类别ID
 	Title          string    `gorm:"column:title;type:varchar(256)" json:"title" form:"title"`                                            // 内容标题
 	SubTitle       string    `gorm:"column:sub_title;type:varchar(128)" json:"sub_title" form:"sub_title"`                                // 副标题
+	IcoURL         string    `gorm:"column:ico_url;type:varchar(256)" json:"ico_url" form:"ico_url"`                                      // 标题图标
 	CallIndex      string    `gorm:"column:call_index;type:varchar(64)" json:"call_index" form:"call_index"`                              // 调用别名
 	Source         string    `gorm:"column:source;type:varchar(64)" json:"source" form:"source"`                                          // 来源
 	Author         string    `gorm:"column:author;type:varchar(64)" json:"author" form:"author"`                                          // 作者

@@ -44,7 +44,7 @@ func (this *ApiArticle) CategoryFind(channel_name string) ([]map[string]interfac
 	outChannel := []map[string]interface{}{}
 	_, do := query.CmsArticleCategoryDo()
 	sqlSelect := "a.category_id,a.parent_id,a.site_id,a.channel_id,a.title,a.call_index,a.link_url,a.img_url,a.sort_id"
-	sql := "SELECT " + sqlSelect + " FROM cms_article_category a LEFT JOIN cms_site_channel b ON a.channel_id=b.channel_id WHERE a.`status`=2 AND b.`name`=? ORDER BY a.sort_id"
+	sql := "SELECT " + sqlSelect + " FROM cms_article_category a LEFT JOIN cms_site_channel b ON a.channel_id=b.channel_id WHERE a.`status`=2 AND a.`is_show`=1 AND b.`name`=? ORDER BY a.sort_id"
 	err := do.UnderlyingDB().Raw(sql, channel_name).Scan(&outChannel).Error
 	if err != nil {
 		return nil, 0, err
@@ -81,7 +81,7 @@ func (this *ApiArticle) Find(limit int, channel_id, category_id int64, call_inde
 	}
 	outArticle := []map[string]interface{}{}
 	_, do := query.CmsArticleDo()
-	sqlSelect := "a.article_id,a.site_id,a.channel_id,a.category_id,a.title,a.sub_title,a.call_index,a.source,a.author,a.link_url,a.img_url,a.seo_title,a.seo_keyword,a.seo_description,a.tags,a.summary,a.click,a.is_lock,a.is_comment,a.like_count,a.is_top,a.is_hot,a.is_slide,a.static_url,a.publish_time"
+	sqlSelect := "a.article_id,a.site_id,a.channel_id,a.category_id,a.title,a.sub_title,a.ico_url,a.call_index,a.source,a.author,a.link_url,a.img_url,a.seo_title,a.seo_keyword,a.seo_description,a.tags,a.summary,a.click,a.is_lock,a.is_comment,a.like_count,a.is_top,a.is_hot,a.is_slide,a.static_url,a.publish_time"
 	sql := "SELECT " + sqlSelect + " FROM cms_article a LEFT JOIN cms_article_category b ON a.category_id=b.category_id WHERE a.`status`=2 AND b.`status`=2" +
 		xgeneric.IFF(channel_id <= 0, "", " And b.channel_id="+strconv.FormatInt(channel_id, 10)) +
 		xgeneric.IFF(category_id <= 0, "", " And b.category_id="+strconv.FormatInt(category_id, 10)) +
@@ -133,7 +133,7 @@ func (this *ApiArticle) Paginate(page, limit int, channel_id, category_id int64,
 		return nil, 0, err
 	}
 
-	sqlSelect := "a.article_id,a.site_id,a.channel_id,a.category_id,a.title,a.sub_title,a.call_index,a.source,a.author,a.link_url,a.seo_title,a.seo_keyword,a.seo_description,a.tags,a.summary,a.click,a.is_lock,a.is_comment,a.like_count,a.is_top,a.is_hot,a.is_slide,a.static_url,a.publish_time"
+	sqlSelect := "a.article_id,a.site_id,a.channel_id,a.category_id,a.title,a.sub_title,a.call_index,a.ico_url,a.source,a.author,a.link_url,a.seo_title,a.seo_keyword,a.seo_description,a.tags,a.summary,a.click,a.is_lock,a.is_comment,a.like_count,a.is_top,a.is_hot,a.is_slide,a.static_url,a.publish_time"
 	sql := "SELECT " + sqlSelect + " FROM cms_article a LEFT JOIN cms_article_category b ON a.category_id=b.category_id WHERE a.`status`=2 AND b.`status`=2" +
 		xgeneric.IFF(channel_id <= 0, "", " And b.channel_id="+strconv.FormatInt(channel_id, 10)) +
 		xgeneric.IFF(call_index == "", "", " And b.call_index='"+call_index+"'") +

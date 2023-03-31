@@ -133,6 +133,7 @@ func (p *Program) run() { // 此处编写具体的服务代码
 
 	// 例: /images/user/1.jpg 实际访问的是 static/images/user/1.jpg
 	web.SetStaticPath("/images", "static/images")
+	web.SetStaticPath("/static/www/images", "static/www/images")
 	// 通过 /css/资源路径  可以访问static/css目录的内容
 	web.SetStaticPath("/css", "static/css")
 	// 通过 /js/资源路径  可以访问static/js目录的内容

@@ -66,6 +66,7 @@ func (this *CmsArticle) ArticleSave(input *model.CmsArticle) error {
 			mdl.CategoryID.ColumnName().String():     input.CategoryID,
 			mdl.Title.ColumnName().String():          input.Title,
 			mdl.SubTitle.ColumnName().String():       input.SubTitle,
+			mdl.IcoURL.ColumnName().String():         input.IcoURL,
 			mdl.CallIndex.ColumnName().String():      input.CallIndex,
 			mdl.Source.ColumnName().String():         input.Source,
 			mdl.Author.ColumnName().String():         input.Author,
@@ -181,6 +182,8 @@ func (this *CmsArticle) CategorySave(input *model.CmsArticleCategory) error {
 			mdl.SeoDescription.ColumnName().String(): input.SeoDescription,
 			mdl.Content.ColumnName().String():        input.Content,
 			mdl.SortID.ColumnName().String():         input.SortID,
+			mdl.IsSearch.ColumnName().String():       input.IsSearch,
+			mdl.IsShow.ColumnName().String():         input.IsShow,
 			mdl.Status.ColumnName().String():         input.Status,
 			mdl.UpdateTime.ColumnName().String():     input.UpdateTime,
 		})

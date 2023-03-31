@@ -75,6 +75,16 @@
                     }
                 },
                 {
+                    field: 'is_show', title: '显示', width: 80, align: "center", templet: function (d) {
+                        return d.is_show == 1 ? '√' : "×";
+                    }
+                },
+                {
+                    field: 'is_search', title: '检索', width: 80, align: "center", templet: function (d) {
+                        return d.is_search == 1 ? '√' : "×";
+                    }
+                },
+                {
                     field: 'sort_id', width: 100, align: "center", title: '排序', templet: function (d) {
                         return '<input type="number" name="sort_id" category_id="' + d.category_id + '" value="' + d.sort_id + '" class="layui-input" style="" />';
                     }
@@ -241,6 +251,5 @@
                 });
             }
         });
-
     });
 </script>

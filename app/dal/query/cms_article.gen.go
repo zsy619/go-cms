@@ -33,6 +33,7 @@ func newCmsArticle(db *gorm.DB, opts ...gen.DOOption) cmsArticle {
 	_cmsArticle.CategoryID = field.NewInt64(tableName, "category_id")
 	_cmsArticle.Title = field.NewString(tableName, "title")
 	_cmsArticle.SubTitle = field.NewString(tableName, "sub_title")
+	_cmsArticle.IcoURL = field.NewString(tableName, "ico_url")
 	_cmsArticle.CallIndex = field.NewString(tableName, "call_index")
 	_cmsArticle.Source = field.NewString(tableName, "source")
 	_cmsArticle.Author = field.NewString(tableName, "author")
@@ -81,6 +82,7 @@ type cmsArticle struct {
 	CategoryID     field.Int64  // 类别ID
 	Title          field.String // 内容标题
 	SubTitle       field.String // 副标题
+	IcoURL         field.String // 标题图标
 	CallIndex      field.String // 调用别名
 	Source         field.String // 来源
 	Author         field.String // 作者
@@ -135,6 +137,7 @@ func (c *cmsArticle) updateTableName(table string) *cmsArticle {
 	c.CategoryID = field.NewInt64(table, "category_id")
 	c.Title = field.NewString(table, "title")
 	c.SubTitle = field.NewString(table, "sub_title")
+	c.IcoURL = field.NewString(table, "ico_url")
 	c.CallIndex = field.NewString(table, "call_index")
 	c.Source = field.NewString(table, "source")
 	c.Author = field.NewString(table, "author")
@@ -191,13 +194,14 @@ func (c *cmsArticle) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *cmsArticle) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 38)
+	c.fieldMap = make(map[string]field.Expr, 39)
 	c.fieldMap["article_id"] = c.ArticleID
 	c.fieldMap["site_id"] = c.SiteID
 	c.fieldMap["channel_id"] = c.ChannelID
 	c.fieldMap["category_id"] = c.CategoryID
 	c.fieldMap["title"] = c.Title
 	c.fieldMap["sub_title"] = c.SubTitle
+	c.fieldMap["ico_url"] = c.IcoURL
 	c.fieldMap["call_index"] = c.CallIndex
 	c.fieldMap["source"] = c.Source
 	c.fieldMap["author"] = c.Author

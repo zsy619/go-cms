@@ -1,0 +1,10 @@
+<div id="ad-move">
+    <a href="#"><img src="{{.webroot}}images/hot_line.png" alt="" /></a>
+</div>
+<script src="{{.webroot}}js/adMove.js?r={{.time}}"></script>
+<script>
+    $(function () {
+        var adMove = new AdMove('ad-move');
+        adMove.Run();
+    });
+</script>

@@ -213,6 +213,8 @@ func (c *ArticleController) CategoryEdit() {
 	mdl, err := biz.NewCmsArticle().CategoryFind(categoryId)
 	if err != nil {
 		mdl = &model.CmsArticleCategory{
+			IsShow:    true,
+			IsSearch:  true,
 			ParentID:  parentId,
 			ChannelID: channelId,
 			SortID:    99,
