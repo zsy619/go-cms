@@ -46,6 +46,7 @@ func (this *PlgOnlineRegisterController) Edit() {
 		logs.Error(err.Error())
 		mdl = &model.PlgOnlineRegister{
 			CreateTime: time.Now(),
+			IP:         this.Ctx.Input.IP(),
 		}
 	}
 	this.Data["mdl"] = mdl

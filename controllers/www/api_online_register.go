@@ -22,6 +22,7 @@ func (this *ApiOnlineRegisterController) Save() {
 		logs.Error("Save", err.Error())
 		this.JSONError(err.Error())
 	}
+	mdl.IP = this.Ctx.Input.IP()
 
 	if err := biz.NewPlgOnlineRegister().Save(&mdl); err != nil {
 		logs.Error("Save", err.Error())

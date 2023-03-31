@@ -80,6 +80,12 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
+                        <label class="layui-form-label">IP地址</label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <input type="text" name="ip" readonly value='{{.mdl.IP}}' class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
                         <label class="layui-form-label">提交时间</label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="text" name="CreateTime" readonly value='{{dateformat .mdl.CreateTime "2006-01-02 15:04:05"}}' class="layui-input">

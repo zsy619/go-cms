@@ -23,6 +23,7 @@ type PlgOnlineRegister struct {
 	Wechat     string    `gorm:"column:wechat;type:varchar(64)" json:"wechat" form:"wechat"`                                         // 微信号
 	Address    string    `gorm:"column:address;type:varchar(128)" json:"address" form:"address"`                                     // 家庭地址
 	Content    string    `gorm:"column:content;type:varchar(512)" json:"content" form:"content"`                                     // 留言内容
+	IP         string    `gorm:"column:ip;type:varchar(64)" json:"ip" form:"ip"`                                                     // IP地址
 	IsRead     int32     `gorm:"column:is_read;type:tinyint" json:"is_read" form:"is_read"`                                          // 是否已读
 	Tags       string    `gorm:"column:tags;type:varchar(128)" json:"tags" form:"tags"`                                              // 标签
 	Remark     string    `gorm:"column:remark;type:varchar(128)" json:"remark" form:"remark"`                                        // 备注

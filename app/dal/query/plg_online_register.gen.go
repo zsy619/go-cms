@@ -38,6 +38,7 @@ func newPlgOnlineRegister(db *gorm.DB, opts ...gen.DOOption) plgOnlineRegister {
 	_plgOnlineRegister.Wechat = field.NewString(tableName, "wechat")
 	_plgOnlineRegister.Address = field.NewString(tableName, "address")
 	_plgOnlineRegister.Content = field.NewString(tableName, "content")
+	_plgOnlineRegister.IP = field.NewString(tableName, "ip")
 	_plgOnlineRegister.IsRead = field.NewInt32(tableName, "is_read")
 	_plgOnlineRegister.Tags = field.NewString(tableName, "tags")
 	_plgOnlineRegister.Remark = field.NewString(tableName, "remark")
@@ -69,6 +70,7 @@ type plgOnlineRegister struct {
 	Wechat     field.String // 微信号
 	Address    field.String // 家庭地址
 	Content    field.String // 留言内容
+	IP         field.String // IP地址
 	IsRead     field.Int32  // 是否已读
 	Tags       field.String // 标签
 	Remark     field.String // 备注
@@ -106,6 +108,7 @@ func (p *plgOnlineRegister) updateTableName(table string) *plgOnlineRegister {
 	p.Wechat = field.NewString(table, "wechat")
 	p.Address = field.NewString(table, "address")
 	p.Content = field.NewString(table, "content")
+	p.IP = field.NewString(table, "ip")
 	p.IsRead = field.NewInt32(table, "is_read")
 	p.Tags = field.NewString(table, "tags")
 	p.Remark = field.NewString(table, "remark")
@@ -140,7 +143,7 @@ func (p *plgOnlineRegister) GetFieldByName(fieldName string) (field.OrderExpr, b
 }
 
 func (p *plgOnlineRegister) fillFieldMap() {
-	p.fieldMap = make(map[string]field.Expr, 21)
+	p.fieldMap = make(map[string]field.Expr, 22)
 	p.fieldMap["register_id"] = p.RegisterID
 	p.fieldMap["real_name"] = p.RealName
 	p.fieldMap["sex"] = p.Sex
@@ -152,6 +155,7 @@ func (p *plgOnlineRegister) fillFieldMap() {
 	p.fieldMap["wechat"] = p.Wechat
 	p.fieldMap["address"] = p.Address
 	p.fieldMap["content"] = p.Content
+	p.fieldMap["ip"] = p.IP
 	p.fieldMap["is_read"] = p.IsRead
 	p.fieldMap["tags"] = p.Tags
 	p.fieldMap["remark"] = p.Remark

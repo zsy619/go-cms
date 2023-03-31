@@ -105,6 +105,9 @@
                     }
                 },
                 {
+                    field: 'ip', title: '提交IP', width: 120
+                },
+                {
                     field: 'is_read', title: '是否已读', width: 90, align: "center", templet: function (d) {
                         return d.is_read == 1 ? '<span class="layui-badge layui-bg-green">已读</span>' : '<span class="layui-badge layui-bg-gray">未读</span>';
                     }
@@ -136,7 +139,7 @@
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
             var result = JSON.stringify(data.field);
-            console.log(result);
+            // console.log(result);
             //执行搜索重载
             table.reload('tableContainer', {
                 page: {
@@ -258,7 +261,7 @@
                         type: "POST",
                         url: "/admin/plg/register/destory", //提交的地址
                         data: {
-                            "linkId": data.link_id
+                            "registerId": data.register_id
                         },
                         async: false,
                         beforeSend: function () { //当一个Ajax请求开始时触发
