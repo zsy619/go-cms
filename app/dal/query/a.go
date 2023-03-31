@@ -145,3 +145,9 @@ func WeixinResponseContentDo() (weixinResponseContent, *weixinResponseContentDo)
 	u := Use(dal.CmsDatabase.DB).WeixinResponseContent
 	return u, u.WithContext(defaultContext).Debug()
 }
+
+// PlgOnlineRegisterDo
+func PlgOnlineRegisterDo() (plgOnlineRegister, *plgOnlineRegisterDo) {
+	u := Use(dal.CmsDatabase.DB).PlgOnlineRegister
+	return u, u.WithContext(defaultContext).Debug()
+}

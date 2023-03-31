@@ -37,4 +37,11 @@ func init() {
 	web.Router("admin/weixin/message/picture", &WeixinController{}, "*:Picture")
 	web.Router("admin/weixin/message/sound", &WeixinController{}, "*:Sound")
 	web.Router("admin/weixin/message/response", &WeixinController{}, "*:Response")
+
+	web.Router("/admin/plg/register", &PlgOnlineRegisterController{}, "*:Index")
+	web.Router("/admin/plg/register/paginate", &PlgOnlineRegisterController{}, "*:Paginate")
+	web.Router("/admin/plg/register/edit", &PlgOnlineRegisterController{}, "*:Edit")
+	web.Router("/admin/plg/register/save", &PlgOnlineRegisterController{}, "*:Save")
+	web.Router("/admin/plg/register/destory", &PlgOnlineRegisterController{}, "*:Destory")
+	web.Router("/admin/plg/register/read", &PlgOnlineRegisterController{}, "*:ChangeRead")
 }

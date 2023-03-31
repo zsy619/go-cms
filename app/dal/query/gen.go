@@ -36,6 +36,7 @@ var (
 	CmsSiteChannel             *cmsSiteChannel
 	CmsSiteChannelField        *cmsSiteChannelField
 	CmsSiteDomain              *cmsSiteDomain
+	PlgOnlineRegister          *plgOnlineRegister
 	WeixinAccount              *weixinAccount
 	WeixinMenu                 *weixinMenu
 	WeixinRequestContent       *weixinRequestContent
@@ -64,6 +65,7 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	CmsSiteChannel = &Q.CmsSiteChannel
 	CmsSiteChannelField = &Q.CmsSiteChannelField
 	CmsSiteDomain = &Q.CmsSiteDomain
+	PlgOnlineRegister = &Q.PlgOnlineRegister
 	WeixinAccount = &Q.WeixinAccount
 	WeixinMenu = &Q.WeixinMenu
 	WeixinRequestContent = &Q.WeixinRequestContent
@@ -93,6 +95,7 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		CmsSiteChannel:             newCmsSiteChannel(db, opts...),
 		CmsSiteChannelField:        newCmsSiteChannelField(db, opts...),
 		CmsSiteDomain:              newCmsSiteDomain(db, opts...),
+		PlgOnlineRegister:          newPlgOnlineRegister(db, opts...),
 		WeixinAccount:              newWeixinAccount(db, opts...),
 		WeixinMenu:                 newWeixinMenu(db, opts...),
 		WeixinRequestContent:       newWeixinRequestContent(db, opts...),
@@ -123,6 +126,7 @@ type Query struct {
 	CmsSiteChannel             cmsSiteChannel
 	CmsSiteChannelField        cmsSiteChannelField
 	CmsSiteDomain              cmsSiteDomain
+	PlgOnlineRegister          plgOnlineRegister
 	WeixinAccount              weixinAccount
 	WeixinMenu                 weixinMenu
 	WeixinRequestContent       weixinRequestContent
@@ -154,6 +158,7 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		CmsSiteChannel:             q.CmsSiteChannel.clone(db),
 		CmsSiteChannelField:        q.CmsSiteChannelField.clone(db),
 		CmsSiteDomain:              q.CmsSiteDomain.clone(db),
+		PlgOnlineRegister:          q.PlgOnlineRegister.clone(db),
 		WeixinAccount:              q.WeixinAccount.clone(db),
 		WeixinMenu:                 q.WeixinMenu.clone(db),
 		WeixinRequestContent:       q.WeixinRequestContent.clone(db),
@@ -192,6 +197,7 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		CmsSiteChannel:             q.CmsSiteChannel.replaceDB(db),
 		CmsSiteChannelField:        q.CmsSiteChannelField.replaceDB(db),
 		CmsSiteDomain:              q.CmsSiteDomain.replaceDB(db),
+		PlgOnlineRegister:          q.PlgOnlineRegister.replaceDB(db),
 		WeixinAccount:              q.WeixinAccount.replaceDB(db),
 		WeixinMenu:                 q.WeixinMenu.replaceDB(db),
 		WeixinRequestContent:       q.WeixinRequestContent.replaceDB(db),
@@ -220,6 +226,7 @@ type queryCtx struct {
 	CmsSiteChannel             *cmsSiteChannelDo
 	CmsSiteChannelField        *cmsSiteChannelFieldDo
 	CmsSiteDomain              *cmsSiteDomainDo
+	PlgOnlineRegister          *plgOnlineRegisterDo
 	WeixinAccount              *weixinAccountDo
 	WeixinMenu                 *weixinMenuDo
 	WeixinRequestContent       *weixinRequestContentDo
@@ -248,6 +255,7 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 		CmsSiteChannel:             q.CmsSiteChannel.WithContext(ctx),
 		CmsSiteChannelField:        q.CmsSiteChannelField.WithContext(ctx),
 		CmsSiteDomain:              q.CmsSiteDomain.WithContext(ctx),
+		PlgOnlineRegister:          q.PlgOnlineRegister.WithContext(ctx),
 		WeixinAccount:              q.WeixinAccount.WithContext(ctx),
 		WeixinMenu:                 q.WeixinMenu.WithContext(ctx),
 		WeixinRequestContent:       q.WeixinRequestContent.WithContext(ctx),
