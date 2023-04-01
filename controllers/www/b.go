@@ -2,9 +2,11 @@ package www
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"haedu.gov.cn/cms/app/biz"
+	"haedu.gov.cn/cms/app/biz/bmodel"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/controllers"
 )
@@ -21,6 +23,8 @@ func (c *BaseController) Prepare() {
 	c.Data["time"] = time.Now().Unix()
 	c.Data["webroot"] = "/static/www/"
 	c.Data["year"] = time.Now().Year()
+	c.Data["controllerName"] = strings.ToLower(c.ControllerName)
+	c.Data["actionName"] = strings.ToLower(c.ActionName)
 }
 
 func (c *BaseController) Finish() {
@@ -36,6 +40,17 @@ func (this *BaseController) display(tpl ...string) {
 		tplname = "www/" + this.ControllerName + "/" + this.ActionName + ".html"
 	}
 	this.Layout = "www/layout/layout.html"
+	this.TplName = tplname
+}
+
+func (this *BaseController) displayCategory(tpl ...string) {
+	var tplname string
+	if len(tpl) > 0 {
+		tplname = tpl[0] + ".html"
+	} else {
+		tplname = "www/" + this.ControllerName + "/" + this.ActionName + ".html"
+	}
+	this.Layout = "www/layout/category.html"
 	this.TplName = tplname
 }
 
@@ -115,6 +130,16 @@ func (this *BaseController) LinkClick(link_id int64) error {
  */
 func (this *BaseController) CategoryFind(channel_name string) ([]map[string]interface{}, int64, error) {
 	return biz.NewApiArticle().CategoryFind(channel_name)
+}
+
+/**
+ * @description: CategoryOne 获取栏目详情
+ * @param {int64} category_id 栏目ID
+ * @param {string} call_index 栏目别名
+ * @return {*}
+ */
+func (this *BaseController) CategoryOne(category_id int64, call_index string) (*bmodel.CategoryOneModel, error) {
+	return biz.NewApiArticle().CategoryOne(category_id, call_index)
 }
 
 /**

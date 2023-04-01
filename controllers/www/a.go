@@ -15,6 +15,7 @@ func init() {
 	web.Router("/api/channel/find", &ApiSiteController{}, "*:ChannelFind")
 
 	web.Router("/api/category/find", &ApiArticleController{}, "*:CategoryFind")
+	web.Router("/api/category/one", &ApiArticleController{}, "*:CategoryOne")
 	web.Router("/api/article/find", &ApiArticleController{}, "*:Find")
 	web.Router("/api/article/paginate", &ApiArticleController{}, "*:Paginate")
 	web.Router("/api/article/one", &ApiArticleController{}, "*:One")
@@ -29,4 +30,6 @@ func init() {
 	web.Router("/api/cache/clear", &ApiCacheController{}, "*:Clear")
 
 	web.Router("/", &IndexController{}, "*:Index")
+
+	web.AutoPrefix("/", &ZsjyController{})
 }

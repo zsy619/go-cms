@@ -9,7 +9,7 @@ import (
 
 type ApiOnlineRegisterController struct{ BaseController }
 
-// @router /api/online/register [get]
+// @router /api/online/register [post]
 func (this *ApiOnlineRegisterController) Save() {
 	captcha := this.GetString("captcha")
 	if controllers.VerifyCode(captcha) == false {

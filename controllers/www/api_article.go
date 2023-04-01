@@ -29,6 +29,23 @@ func (this *ApiArticleController) CategoryFind() {
 }
 
 /**
+ * @description: CategoryOne 获取栏目详情
+ * @param {int64} category_id 栏目ID
+ * @param {string} call_index 栏目别名
+ * @return {*}
+ */
+// @router /api/category/one [get]
+func (this *ApiArticleController) CategoryOne() {
+	category_id, _ := this.GetInt64("category_id")
+	call_index := this.GetString("call_index")
+	outChannel, err := this.BaseController.CategoryOne(category_id, call_index)
+	if err != nil {
+		this.JSONErrorOfData(err.Error(), outChannel)
+	}
+	this.JSONSuccess("1", outChannel)
+}
+
+/**
  * @description: Find 获取文章列表
  * @param {int} limit 获取数量
  * @param {int64} channel_id 频道ID

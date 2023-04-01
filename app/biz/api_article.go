@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"gorm.io/gorm"
+	"haedu.gov.cn/cms/app/biz/bmodel"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
 	"haedu.gov.cn/tools/xgeneric"
@@ -43,14 +44,39 @@ func (this *ApiArticle) CategoryFind(channel_name string) ([]map[string]interfac
 	// }
 	outChannel := []map[string]interface{}{}
 	_, do := query.CmsArticleCategoryDo()
-	sqlSelect := "a.category_id,a.parent_id,a.site_id,a.channel_id,a.title,a.call_index,a.link_url,a.img_url,a.sort_id"
-	sql := "SELECT " + sqlSelect + " FROM cms_article_category a LEFT JOIN cms_site_channel b ON a.channel_id=b.channel_id WHERE a.`status`=2 AND a.`is_show`=1 AND b.`name`=? ORDER BY a.sort_id"
+	sqlSelect := "b.`name` as channel_name,b.title as channel_title,a.category_id,a.parent_id,a.site_id,a.channel_id,a.title,a.call_index,a.link_url,a.img_url,a.sort_id"
+	sql := "SELECT " + sqlSelect + " FROM cms_article_category a LEFT JOIN cms_site_channel b ON a.channel_id=b.channel_id WHERE a.is_deleted=0 AND a.`status`=2 AND a.`is_show`=1 AND b.`name`=? ORDER BY a.sort_id"
 	err := do.UnderlyingDB().Raw(sql, channel_name).Scan(&outChannel).Error
 	if err != nil {
 		return nil, 0, err
 	}
 	ApiCache.Set(cacheKey, outChannel, 1800)
 	return outChannel, int64(len(outChannel)), nil
+}
+
+/**
+ * @description: CategoryOne 获取栏目详情
+ * @param {int64} category_id 栏目ID
+ * @param {string} call_index 栏目别名
+ * @return {*}
+ */
+func (this *ApiArticle) CategoryOne(category_id int64, call_index string) (*bmodel.CategoryOneModel, error) {
+	cacheKey := fmt.Sprintf("ApiArticleCategoryOne_%d_%s", category_id, call_index)
+	if found, item := ApiCache.Get(cacheKey); found {
+		return item.(*bmodel.CategoryOneModel), nil
+	}
+	outChannel := &bmodel.CategoryOneModel{}
+	_, do := query.CmsArticleCategoryDo()
+	sqlSelect := "b.`name` as channel_name,b.title as channel_title,a.category_id,a.channel_id,a.title,a.call_index,a.link_url,a.img_url,a.seo_title,a.seo_keyword,a.seo_description,a.content"
+	sql := "SELECT " + sqlSelect + " FROM cms_article_category a LEFT JOIN cms_site_channel b ON a.channel_id=b.channel_id WHERE a.is_deleted=0 AND a.`status`=2 AND a.`is_show`=1" +
+		xgeneric.IFF(category_id > 0, " AND a.category_id="+strconv.FormatInt(category_id, 10), "") +
+		xgeneric.IFF(call_index != "", " AND a.call_index='"+call_index+"'", "")
+	err := do.UnderlyingDB().Raw(sql).Scan(&outChannel).Error
+	if err != nil {
+		return nil, err
+	}
+	ApiCache.Set(cacheKey, outChannel, 1800)
+	return outChannel, nil
 }
 
 /**

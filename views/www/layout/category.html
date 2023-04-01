@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>{{.category.SeoTitle}} - {{.site.Title}}</title>
+    <link href="/static/favicon.ico" rel="icon">
+    <meta name="Keywords" content="{{.category.SeoKeyword}}" />
+    <meta name="description" content="{{.category.SeoKeyword}}" />
+    <script src="{{.webroot}}js/common/common.js?r={{.time}}"></script>
+    <link href="/static/plugins/loading/app.min.css?r={{.time}}" rel="stylesheet" />
+    <script src="/static/plugins/loading/app.min.js?r={{.time}}"></script>
+    <script src="/static/plugins/moment/moment.min.js?r={{.time}}"></script>
+    <script src="/static/plugins/layui/layui.js?r={{.time}}"></script>
+    <script src="/static/const.js?r={{.time}}"></script>
+    <script>
+        var webroot = "{{.webroot}}";
+        var controllerName = "{{.controllerName}}";
+        var actionName = "{{.actionName}}";
+    </script>
+</head>
+
+<body>
+    {{template "www/layout/header.html" .}}
+    <div class="other-banner">
+        <img src="{{.webroot}}images/other_banner.png" class="img" />
+    </div>
+    <div class="main">
+        <div class="w1200 clearfix">
+            <div class="nav-aside">
+                <div class="top" id="channelName">招生就业</div>
+                <ul id="urlNav">
+                    <li><a href="1.2-文字列表页.html">招生简章</a></li>
+                    <li class="active"><a href="2.1-招生就业-线上报名.html">线上报名</a></li>
+                    <li><a href="1.2-文字列表页.html">就业服务</a></li>
+                </ul>
+            </div>
+            {{.LayoutContent}}
+        </div>
+        {{template "www/layout/footer.html" .}}
+        <script type="text/javascript">
+            $(function () {
+                $.ajax({
+                    url: "/api/category/find?channel_name=" + controllerName + "&r=" + Math.random(),
+                    dataType: "json",
+                    type: "get",
+                    beforeSend: function () {
+                        $("#channelName").html("");
+                        $("#urlNav").html("");
+                        $(".nav-aside").busyLoad("show", { spinner: "circle-line" });
+                    },
+                    success: function (res) {
+                        // console.log(res);
+                        if (res.code == 0) {
+                            var len = res.data.length;
+                            for (var i = 0; i < len; i++) {
+                                var item = res.data[i];
+                                if (i == 0) {
+                                    $("#channelName").html(item.channel_title);
+                                }
+                                var url = item.link_url;
+                                var title = item.title;
+                                var liItem = item.call_index == actionName ? ('<li class="active"><a href="' + url + '">' + title + '</a></li>') : ('<li><a href="' + url + '">' + title + '</a></li>');
+                                $("#urlNav").append(liItem);
+                            }
+                        }
+                    },
+                    error: function () {
+                        alert('failed!');
+                    },
+                    complete: function () {
+                        $(".nav-aside").busyLoad("hide", { animate: "fade" });
+                    }
+                });
+            })
+            layui.use(['form', 'element', 'laypage', 'layer'], function () {
+                var form = layui.form,
+                    element = layui.element
+                laypage = layui.laypage,
+                    layer = layui.layer;
+
+                form.render(); //刷新所有渲染效果，也可以单独熟悉某个效果	
+                form.render('select'); //刷新select选择框渲染
+                laypage.render({
+                    elem: 'pagination',
+                    count: 100,
+                    theme: '#1A54AD'
+                });
+            })
+
+        </script>
+</body>
+
+</html>
