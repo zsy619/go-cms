@@ -55,6 +55,7 @@ func (c *LinkController) LinkSave() {
 	c.JSONSuccess("保存成功", nil)
 }
 
+// LinkPaginate 保存排序
 func (c *LinkController) LinkSaveSortId() {
 	mdls := []vmodel.Link_SaveSortIdModel{}
 	data := c.Ctx.Input.RequestBody

@@ -1,13 +1,7 @@
 package www
 
 // 招生就业
-type ZsjyController struct{ BaseController }
-
-func (this *ZsjyController) Prepare() {
-	this.BaseController.Prepare()
-	category, _ := this.CategoryOne(0, this.ActionName)
-	this.Data["category"] = category
-}
+type ZsjyController struct{ CategoryBaseController }
 
 // 招生简章
 // @router zsjy/zsjz [get]

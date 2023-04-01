@@ -31,5 +31,6 @@ func init() {
 
 	web.Router("/", &IndexController{}, "*:Index")
 
-	web.AutoPrefix("/", &ZsjyController{})
+	web.AutoPrefix("/", &XxgkController{}) // 学校概况
+	web.AutoPrefix("/", &ZsjyController{}) // 招生就业
 }

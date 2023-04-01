@@ -87,7 +87,7 @@ func (this *BaseController) SiteGet(site_id int64) (*model.CmsSite, error) {
  * @param {int64} site_id 站点ID
  * @return {*}
  */
-func (this *BaseController) ChannelFind(site_id int64) ([]map[string]interface{}, int64, error) {
+func (this *BaseController) ChannelFind(site_id int64) ([]*bmodel.ApiChannelFindModel, int64, error) {
 	return biz.NewApiSite().ChannelFind(site_id)
 }
 
@@ -98,7 +98,7 @@ func (this *BaseController) ChannelFind(site_id int64) ([]map[string]interface{}
 * @param {string} call_index 链接分类标识
 * @return {*}
  */
-func (this *BaseController) LinkFind(limit int, category_id int64, call_index string) ([]map[string]interface{}, int64, error) {
+func (this *BaseController) LinkFind(limit int, category_id int64, call_index string) ([]*bmodel.ApiLinkListModel, int64, error) {
 	return biz.NewApiLink().Find(limit, category_id, call_index)
 }
 
@@ -110,7 +110,7 @@ func (this *BaseController) LinkFind(limit int, category_id int64, call_index st
  * @param {string} call_index 链接分类标识
  * @return {*}
  */
-func (this *BaseController) LinkPaginate(page, limit int, category_id int64, call_index string) ([]map[string]interface{}, int64, error) {
+func (this *BaseController) LinkPaginate(page, limit int, category_id int64, call_index string) ([]*bmodel.ApiLinkListModel, int64, error) {
 	return biz.NewApiLink().Paginate(page, limit, category_id, call_index)
 }
 
@@ -128,7 +128,7 @@ func (this *BaseController) LinkClick(link_id int64) error {
  * @param {string} channel_name 频道名称
  * @return {*}
  */
-func (this *BaseController) CategoryFind(channel_name string) ([]map[string]interface{}, int64, error) {
+func (this *BaseController) CategoryFind(channel_name string) ([]*bmodel.ApiCategoryFindModel, int64, error) {
 	return biz.NewApiArticle().CategoryFind(channel_name)
 }
 
@@ -138,7 +138,7 @@ func (this *BaseController) CategoryFind(channel_name string) ([]map[string]inte
  * @param {string} call_index 栏目别名
  * @return {*}
  */
-func (this *BaseController) CategoryOne(category_id int64, call_index string) (*bmodel.CategoryOneModel, error) {
+func (this *BaseController) CategoryOne(category_id int64, call_index string) (*bmodel.ApiCategoryOneModel, error) {
 	return biz.NewApiArticle().CategoryOne(category_id, call_index)
 }
 
@@ -156,8 +156,8 @@ func (this *BaseController) CategoryOne(category_id int64, call_index string) (*
  * @param {bool} is_cache 是否使用缓存
  * @return {*}
  */
-func (this *BaseController) ArticleFind(limit int, channel_id, category_id int64, call_index string, is_top, is_red, is_hot, is_slide int, order_by string, is_cache bool) ([]map[string]interface{}, int64, error) {
-	return biz.NewApiArticle().Find(limit, channel_id, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by, is_cache)
+func (this *BaseController) ArticleFind(limit int, channel_id, category_id int64, call_index string, is_top, is_red, is_hot, is_slide int, order_by string) ([]*bmodel.ApiArticleListModel, int64, error) {
+	return biz.NewApiArticle().Find(limit, channel_id, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
 }
 
 /**
@@ -175,7 +175,7 @@ func (this *BaseController) ArticleFind(limit int, channel_id, category_id int64
  * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
  * @return {*}
  */
-func (this *BaseController) ArticlePaginate(page, limit int, channel_id, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide int, order_by string) ([]map[string]interface{}, int64, error) {
+func (this *BaseController) ArticlePaginate(page, limit int, channel_id, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide int, order_by string) ([]*bmodel.ApiArticleListModel, int64, error) {
 	return biz.NewApiArticle().Paginate(page, limit, channel_id, category_id, call_index, keyword, is_top, is_red, is_hot, is_slide, order_by)
 }
 
@@ -231,4 +231,12 @@ func (this *BaseController) ArticleClick(article_id int64) error {
  */
 func (this *BaseController) ArticleLike(article_id int64) error {
 	return biz.NewApiArticle().Like(article_id)
+}
+
+type CategoryBaseController struct{ BaseController }
+
+func (this *CategoryBaseController) Prepare() {
+	this.BaseController.Prepare()
+	category, _ := this.CategoryOne(0, this.ActionName)
+	this.Data["category"] = category
 }

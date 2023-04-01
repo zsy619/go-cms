@@ -2,6 +2,7 @@ package biz
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"haedu.gov.cn/cms/app/dal/model"
@@ -121,7 +122,6 @@ func (this *CmsArticle) ArticleDestory(articleId int64) error {
 	if _, err := do.Where(mdl.ArticleID.Eq(articleId)).Delete(); err != nil {
 		return err
 	}
-	// Cache_ApiArticleCategoryFind = make(map[string][]map[string]interface{})
 	return nil
 }
 
@@ -187,13 +187,37 @@ func (this *CmsArticle) CategorySave(input *model.CmsArticleCategory) error {
 			mdl.Status.ColumnName().String():         input.Status,
 			mdl.UpdateTime.ColumnName().String():     input.UpdateTime,
 		})
-		if err == nil {
-			// Cache_ApiArticleCategoryFind = make(map[string][]map[string]interface{})
-		}
 	}
 	return err
 }
 
+// CategoryAutoUrl 自动生成Url
+func (this *CmsArticle) CategoryAutoUrl(channelId int64) error {
+	mdl, do := query.CmsArticleCategoryDo()
+	categories, err := do.Where(mdl.ChannelID.Eq(channelId), mdl.LinkURL.Eq("")).Find()
+	if err != nil {
+		return err
+	}
+	channelMdl, channelDo := query.CmsSiteChannelDo()
+	var name string
+	if err := channelDo.Where(channelMdl.ChannelID.Eq(channelId)).Pluck(channelMdl.Name, &name); err != nil {
+		return err
+	}
+	var errOut error
+	for _, category := range categories {
+		linkUrl := fmt.Sprintf("/%s/%s", name, category.CallIndex)
+		_, errOut = do.Where(mdl.CategoryID.Eq(category.CategoryID)).UpdateColumns(map[string]interface{}{
+			mdl.LinkURL.ColumnName().String():    linkUrl,
+			mdl.UpdateTime.ColumnName().String(): time.Now(),
+		})
+		if errOut != nil {
+			return errOut
+		}
+	}
+	return nil
+}
+
+// CategorySaveSortId 保存排序
 func (this *CmsArticle) CategorySaveSortId(categoryId int64, sortId int32) error {
 	mdl, do := query.CmsArticleCategoryDo()
 	_, err := do.Where(mdl.CategoryID.Eq(categoryId)).UpdateColumns(
@@ -218,8 +242,6 @@ func (this *CmsArticle) CategoryDestory(categoryId int64) error {
 	if _, err := do.Where(mdl.CategoryID.Eq(categoryId)).Delete(); err != nil {
 		return err
 	}
-	// Cache_ApiArticleCategoryFind = make(map[string][]map[string]interface{})
-	// Cache_ApiArticleFind = make(map[string][]map[string]interface{})
 	return nil
 }
 

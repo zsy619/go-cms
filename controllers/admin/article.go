@@ -238,6 +238,20 @@ func (c *ArticleController) CategorySave() {
 	c.JSONSuccess("保存成功", nil)
 }
 
+func (c *ArticleController) CategoryAutoUrl() {
+	channelId, _ := c.GetInt64("channelId")
+	if channelId <= 0 {
+		c.JSONError("频道参数错误")
+		return
+	}
+	if err := biz.NewCmsArticle().CategoryAutoUrl(channelId); err != nil {
+		logs.Error("CategoryAutoUrl", err.Error())
+		c.JSONError(err.Error())
+		return
+	}
+	c.JSONSuccess("保存成功", nil)
+}
+
 func (c *ArticleController) CategorySaveSortId() {
 	mdls := []vmodel.Category_SaveSortIdModel{}
 	data := c.Ctx.Input.RequestBody

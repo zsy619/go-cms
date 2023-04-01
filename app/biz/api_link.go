@@ -7,15 +7,10 @@ import (
 
 	"github.com/beego/beego/v2/core/logs"
 	"gorm.io/gorm"
+	"haedu.gov.cn/cms/app/biz/bmodel"
 	"haedu.gov.cn/cms/app/dal/query"
 	"haedu.gov.cn/tools/xgeneric"
 )
-
-// var Cache_LinkFindByCategory map[string][]map[string]interface{}
-
-// func init() {
-// 	Cache_LinkFindByCategory = make(map[string][]map[string]interface{})
-// }
 
 type ApiLink struct{}
 
@@ -30,19 +25,15 @@ func NewApiLink() *ApiLink {
 * @param {string} call_index 链接分类标识
 * @return {*}
  */
-func (this *ApiLink) Find(limit int, category_id int64, call_index string) ([]map[string]interface{}, int64, error) {
-	outLink := []map[string]interface{}{}
+func (this *ApiLink) Find(limit int, category_id int64, call_index string) ([]*bmodel.ApiLinkListModel, int64, error) {
 	cacheKey := fmt.Sprintf("LinkFind::%d::%d::%s", limit, category_id, call_index)
 	if found, item := ApiCache.Get(cacheKey); found {
-		links := item.([]map[string]interface{})
+		links := item.([]*bmodel.ApiLinkListModel)
 		logs.Debug("LinkFindByCategory[Cache]::", "cacheKey", cacheKey, "links", links)
 		return links, int64(len(links)), nil
 	}
-	// if links, ok := Cache_LinkFindByCategory[cacheKey]; ok {
-	// 	logs.Debug("LinkFindByCategory[Cache]::", "cacheKey", cacheKey, "links", links)
-	// 	// fmt.Println("LinkFindByCategory[Cache]::", "callIndex", callIndex, "links", links)
-	// 	return links, int64(len(links)), nil
-	// }
+	outLink := []*bmodel.ApiLinkListModel{}
+
 	_, linkDo := query.CmsLinkDo()
 	sqlSelect := "a.link_id,a.site_id,a.channel_id,a.category_id,a.title,a.link_url,a.target,a.click,a.img_url,a.is_lock,a.is_red,a.is_hot,a.is_slide"
 	sql := "SELECT " + sqlSelect + " FROM cms_link a LEFT JOIN cms_link_category b ON a.category_id = b.category_id WHERE a.`status`=2 " +
@@ -54,7 +45,6 @@ func (this *ApiLink) Find(limit int, category_id int64, call_index string) ([]ma
 	}
 	err := linkDo.UnderlyingDB().Raw(sql).Scan(&outLink).Error
 	if err == nil {
-		// Cache_LinkFindByCategory[cacheKey] = outLink
 		ApiCache.Set(cacheKey, outLink, 1800)
 	}
 	return outLink, int64(len(outLink)), err
@@ -68,8 +58,8 @@ func (this *ApiLink) Find(limit int, category_id int64, call_index string) ([]ma
  * @param {string} call_index 链接分类标识
  * @return {*}
  */
-func (this *ApiLink) Paginate(page, limit int, category_id int64, call_index string) ([]map[string]interface{}, int64, error) {
-	outLink := []map[string]interface{}{}
+func (this *ApiLink) Paginate(page, limit int, category_id int64, call_index string) ([]*bmodel.ApiLinkListModel, int64, error) {
+	outLink := []*bmodel.ApiLinkListModel{}
 	_, linkDo := query.CmsLinkDo()
 	sqlSelectRow := "a.link_id,a.site_id,a.channel_id,a.category_id,a.title,a.link_url,a.target,a.click,a.img_url,a.is_lock,a.is_red,a.is_hot,a.is_slide"
 	sqlRow := "SELECT " + sqlSelectRow + " FROM cms_link a LEFT JOIN cms_link_category b ON a.category_id = b.category_id WHERE a.`status`=2" +

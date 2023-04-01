@@ -36,7 +36,7 @@
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <button type="submit" class="layui-btn layui-btn-primary layui-btn-radius" lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                            <button id="btnSearch" type="submit" class="layui-btn layui-btn-primary layui-btn-radius" lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                         </div>
                     </div>
                 </form>
@@ -100,7 +100,8 @@
                         return outText;
                     }
                 },
-                { field: 'call_index', title: '调用链接' },
+                { field: 'call_index', title: '调用别名' },
+                { field: 'link_url', title: 'URL链接' },
                 { field: 'tags', title: 'Tags标签' },
                 {
                     field: 'publish_time', title: '发布时间', width: 170, templet: function (d) {

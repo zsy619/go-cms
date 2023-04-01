@@ -64,14 +64,13 @@ func (this *ApiArticleController) Find() {
 	limit, _ := this.GetInt("limit", 6)
 	call_index := this.GetString("call_index")
 	order_by := this.GetString("order_by", "sort_id")
-	is_cache, _ := this.GetBool("is_cache", true)
 	channel_id, _ := this.GetInt64("channel_id", 0)
 	category_id, _ := this.GetInt64("category_id", 0)
 	is_top, _ := this.GetInt("is_top", 0)
 	is_red, _ := this.GetInt("is_red", 0)
 	is_hot, _ := this.GetInt("is_hot", 0)
 	is_slide, _ := this.GetInt("is_slide", 0)
-	outArticle, count, err := this.BaseController.ArticleFind(limit, channel_id, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by, is_cache)
+	outArticle, count, err := this.BaseController.ArticleFind(limit, channel_id, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
 	if err != nil {
 		this.JSONErrorOfData(err.Error(), outArticle)
 	}

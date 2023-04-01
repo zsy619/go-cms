@@ -4,21 +4,15 @@ import (
 	"haedu.gov.cn/tools/xcache"
 )
 
+// ApiCache 缓存
 var ApiCache *xcache.ExpiredMap
 
+// init 初始化
 func init() {
 	ApiCache = xcache.NewExpiredMap()
 }
 
+// CleanCahe 清除缓存
 func CleanCahe() {
 	ApiCache = xcache.NewExpiredMap()
-
-	// Cache_ApiArticleCategoryFind = make(map[string][]map[string]interface{})
-	// Cache_ApiArticleFind = make(map[string][]map[string]interface{})
-
-	// Cache_ApiSiteDefault = nil
-	// Cache_ApiSiteGet = make(map[int64]*model.CmsSite)
-	// Cache_ApiSiteChannelFind = make(map[int64][]map[string]interface{})
-
-	// Cache_LinkFindByCategory = make(map[string][]map[string]interface{})
 }

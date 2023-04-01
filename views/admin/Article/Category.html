@@ -30,7 +30,13 @@
         <table class="layui-hide" id="tableContainer" lay-filter="currentTableFilter"></table>
     </div>
 </div>
-{{template "admin/Public/Button_AddSave.html" }}
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container layui-btn-group">
+        <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"><i class="layui-icon layui-icon-addition"></i>添加</button>
+        <button class="layui-btn layui-btn-sm layui-btn-primary data-delete-btn" lay-event="save"><i class="layui-icon layui-icon-ok"></i>保存</button>
+        <button class="layui-btn layui-btn-sm layui-btn-default data-url-btn" lay-event="url"><i class="layui-icon layui-icon-url"></i>自动生成外链</button>
+    </div>
+</script>
 {{template "admin/Public/Button_EditChildDelete.html" }}
 <script>
     var channelId = parseInt("{{.channelId}}");
@@ -170,6 +176,30 @@
                     success: function (data) {  //成功
                         if (data.code == CodeSuccess) {
                             layer.msg("提交成功", { icon: 1, time: 1000 }, function () {
+                                $('button[lay-filter="data-search-btn"]').click();
+                                location.reload();
+                            });
+                        } else {
+                            layer.msg(data.msg, { icon: 2, time: 1000 });
+                        }
+                    },
+                    complete: function () {
+                        layer.close(this.layerIndex);
+                    },
+                });
+            } else if (obj.event === 'url') {  // 
+                $.ajax({
+                    type: "POST",
+                    url: "/admin/article/CategoryAutoUrl?channelId=" + channelId, //提交的地址
+                    async: false,
+                    beforeSend: function () { //当一个Ajax请求开始时触发
+                        this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+                    },
+                    error: function (request) {  //失败的话
+                    },
+                    success: function (data) {  //成功
+                        if (data.code == CodeSuccess) {
+                            layer.msg("生成外链成功", { icon: 1, time: 1000 }, function () {
                                 $('button[lay-filter="data-search-btn"]').click();
                                 location.reload();
                             });
