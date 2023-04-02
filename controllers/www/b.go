@@ -25,6 +25,8 @@ func (c *BaseController) Prepare() {
 	c.Data["year"] = time.Now().Year()
 	c.Data["controllerName"] = strings.ToLower(c.ControllerName)
 	c.Data["actionName"] = strings.ToLower(c.ActionName)
+	debug := c.GetString("debug")
+	c.Data["debug"] = debug
 }
 
 func (c *BaseController) Finish() {
@@ -121,6 +123,19 @@ func (this *BaseController) LinkPaginate(page, limit int, category_id int64, cal
  */
 func (this *BaseController) LinkClick(link_id int64) error {
 	return biz.NewApiLink().Click(link_id)
+}
+
+/**
+ * @description: CategoryNav 获取栏目导航
+ * @param {string} channel_name 频道名称
+ * @param {in64} channel_id 频道ID
+ * @param {string} call_index 栏目别名
+ * @param {in64} category_id 栏目ID
+ * @param {int64} article_id 文章ID
+ * @return {*}
+ */
+func (this *BaseController) CategoryNav(channel_name string, channel_id int64, call_index string, category_id int64, article_id int64) ([]*bmodel.ApiCategoryNav, error) {
+	return biz.NewApiArticle().CategoryNav(channel_name, channel_id, call_index, category_id, article_id)
 }
 
 /**

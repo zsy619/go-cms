@@ -59,3 +59,11 @@ type ApiArticleListModel struct {
 	StaticURL      string    `gorm:"column:static_url;type:varchar(256)" json:"static_url" form:"static_url"`                // 静态化地址
 	PublishTime    time.Time `gorm:"column:publish_time;type:datetime" json:"publish_time" form:"publish_time"`              // 发布时间
 }
+
+// ApiCategoryNav 导航栏目
+type ApiCategoryNav struct {
+	Title     string `json:"title"`
+	CallIndex string `json:"call_index"`
+	LinkURL   string `json:"link_url"`
+	NavType   string `json:"nav_type"`
+}

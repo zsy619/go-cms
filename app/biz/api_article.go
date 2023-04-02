@@ -10,6 +10,7 @@ import (
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
 	"haedu.gov.cn/tools/xgeneric"
+	"haedu.gov.cn/tools/xstring"
 )
 
 // ApiArticle 文章
@@ -18,6 +19,100 @@ type ApiArticle struct{}
 // NewApiArticle 实例化
 func NewApiArticle() *ApiArticle {
 	return &ApiArticle{}
+}
+
+/**
+ * @description: CategoryNav 获取栏目导航
+ * @param {string} channel_name 频道名称
+ * @param {in64} channel_id 频道ID
+ * @param {string} call_index 栏目别名
+ * @param {in64} category_id 栏目ID
+ * @param {int64} article_id 文章ID
+ * @return {*}
+ */
+func (this *ApiArticle) CategoryNav(channel_name string, channel_id int64, call_index string, category_id int64, article_id int64) ([]*bmodel.ApiCategoryNav, error) {
+	if article_id > 0 && category_id <= 0 {
+		cacheKey := fmt.Sprintf("ApiArticleCategoryNav_%d", article_id)
+		if found, item := ApiCache.Get(cacheKey); found {
+			if oks, ok := xstring.ToInt64Array(item.(string), "#"); ok && len(oks) == 2 {
+				channel_id = oks[0]
+				category_id = oks[1]
+			}
+		} else {
+			mdl, do := query.CmsArticleDo()
+			if article, err := do.Where(mdl.ArticleID.Eq(article_id)).Select(mdl.ChannelID, mdl.CategoryID, mdl.SiteID).First(); err != nil {
+			} else {
+				category_id = article.CategoryID
+				channel_id = article.ChannelID
+				ApiCache.Set(cacheKey, fmt.Sprintf("%d#%d", channel_id, category_id), 1800)
+			}
+		}
+	}
+	if (channel_name == "" && channel_id <= 0) && (call_index != "" || category_id > 0) {
+		cacheKey := fmt.Sprintf("ApiArticleCategoryNav_%s_%d", call_index, category_id)
+		if found, item := ApiCache.Get(cacheKey); found {
+			channel_name = item.(string)
+		} else {
+			_, do := query.CmsSiteChannelDo()
+			sql := `SELECT a.name FROM cms_site_channel a LEFT JOIN cms_article_category b ON a.channel_id = b.channel_id`
+			if call_index != "" {
+				sql += ` WHERE b.call_index='` + call_index + `'`
+			} else {
+				sql += ` WHERE b.category_id=` + fmt.Sprintf("%d", category_id)
+			}
+			if err := do.Debug().UnderlyingDB().Raw(sql).Scan(&channel_name); err != nil {
+			} else {
+				ApiCache.Set(cacheKey, channel_name, 1800)
+			}
+		}
+	}
+	cacheKey := fmt.Sprintf("ApiArticleCategoryNav_%s_%d_%s_%d_%d", channel_name, channel_id, call_index, category_id, article_id)
+	if found, item := ApiCache.Get(cacheKey); found {
+		return item.([]*bmodel.ApiCategoryNav), nil
+	}
+	outResult := []*bmodel.ApiCategoryNav{}
+	// 获取 频道信息
+	{
+		mdl, do := query.CmsSiteChannelDo()
+		channel := &model.CmsSiteChannel{}
+		if channel_name != "" {
+			channel, _ = do.Or(mdl.Name.Eq(channel_name)).Select(mdl.ChannelID, mdl.Name, mdl.Title).First()
+		} else {
+			channel, _ = do.Or(mdl.ChannelID.Eq(channel_id)).Select(mdl.ChannelID, mdl.Name, mdl.Title).First()
+		}
+		if channel != nil {
+			channelItem := &bmodel.ApiCategoryNav{
+				Title:     channel.Title,
+				CallIndex: channel.Name,
+				LinkURL:   "",
+				NavType:   "channel",
+			}
+			outResult = append(outResult, channelItem)
+		}
+	}
+	// 获取 栏目信息
+	{
+		mdl, do := query.CmsArticleCategoryDo()
+		category := &model.CmsArticleCategory{}
+		if call_index != "" {
+			category, _ = do.Where(mdl.CallIndex.Eq(call_index)).First()
+		} else {
+			category, _ = do.Where(mdl.CategoryID.Eq(category_id)).First()
+		}
+		if category != nil {
+			categoryItem := &bmodel.ApiCategoryNav{
+				Title:     category.Title,
+				CallIndex: category.CallIndex,
+				LinkURL:   category.LinkURL,
+				NavType:   "category",
+			}
+			outResult = append(outResult, categoryItem)
+		}
+	}
+
+	ApiCache.Set(cacheKey, outResult, 1800)
+
+	return outResult, nil
 }
 
 /**

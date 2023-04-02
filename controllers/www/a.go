@@ -14,6 +14,7 @@ func init() {
 	web.Router("/api/site/get", &ApiSiteController{}, "*:Get")
 	web.Router("/api/channel/find", &ApiSiteController{}, "*:ChannelFind")
 
+	web.Router("/api/category/nav", &ApiArticleController{}, "*:CategoryNav")
 	web.Router("/api/category/find", &ApiArticleController{}, "*:CategoryFind")
 	web.Router("/api/category/one", &ApiArticleController{}, "*:CategoryOne")
 	web.Router("/api/article/find", &ApiArticleController{}, "*:Find")
@@ -34,4 +35,6 @@ func init() {
 	web.AutoPrefix("/", &XxgkController{}) // 学校概况
 	web.AutoPrefix("/", &ZsjyController{}) // 招生就业
 	web.AutoPrefix("/", &XyzxController{}) // 校园资讯
+	web.AutoPrefix("/", &JyjxController{}) // 教育教学
+	web.AutoPrefix("/", &LxwmController{}) // 联系我们
 }

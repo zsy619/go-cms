@@ -1,26 +1,32 @@
 <div class="cont-right">
     <div class="breadcrumb">
         <img src="{{.webroot}}images/position.png" alt="" class="position" /> 您所在的位置：
-        <a href="/">首页</a>
-        &gt;
-        <a href="javascript:void(0)">学校概况</a>
-        &gt;
+        <a href="/">首页</a>&gt;
+        <a href="javascript:void(0)">学校概况</a>&gt;
         <a href="javascript:void(0)" class="active">列表</a>
     </div>
     <div class="list-con">
-        <ul class="list-ul">
+        <ul class="imglist-ul">
             <li>
-                <a href="#">标题</a>
-                <span class="fr">发布日期</span>
+                <a href="#">
+                    <div class="img-box">
+                        <img src="{{.webroot}}images/school_img1.png" class="img" />
+                    </div>
+                    <p class="title">从 内容标题 取值</p>
+                </a>
             </li>
         </ul>
         <div id="pagination" class="pagination"></div>
     </div>
 </div>
-<script type="text/template" id="list">
+<script id="templateLi" type="text/template">
     <li>
-        <a href="${url}" onclick="ArtilceClick(${article_id})" target="_blank" title="${title}">${title}</a>
-        <span class="fr">%{publish_time}</span>
+        <a href="${url}" onclick="ArtilceClick(${article_id})" target="_blank" title="${title}">
+            <div class="img-box">
+                <img src="${img_url}" class="img" />
+            </div>
+            <p class="title">${title}</p>
+        </a>
     </li>
 </script>
 <script type="text/javascript">
@@ -56,34 +62,42 @@
             dataType: "json",
             type: "get",
             beforeSend: function () {
-                $(".list-ul").html("");
+                if (debug != "debug") {
+                    $(".imglist-ul").html("");
+                }
                 $(".list-con").busyLoad("show", { spinner: "circle-line" });
             },
             success: function (res) {
                 if (res.code == 0) {
-                    var len = res.data.length;
-                    var tmpl = $("#list").html();
-                    for (var i = 0; i < len; i++) {
-                        var item = res.data[i];
-                        var url = item.link_url == "" ? "/article/" + item.article_id : item.link_url;
-                        var html = tmpl.replaceAll("${url}", url).replaceAll("${article_id}", item.article_id).replaceAll("${title}", item.title).
-                            replaceAll("%{publish_time}", moment(item.publish_time).format('YYYY-MM-DD'));
-                        $(".list-ul").append(html);
-                    }
-                    if (page == 1 && len > 0) {
-                        laypage.render({
-                            elem: 'pagination'
-                            , limit: 20
-                            , prev: '上页'
-                            , next: '下页'
-                            , limits: [10, 20, 30, 40, 50, 100]
-                            , count: res.count //数据总数，从服务端得到
-                            , jump: function (obj, first) {
-                                if (!first) {
-                                    loadData(obj.curr, obj.limit, call_index);
+                    if (debug != "debug") {
+                        var len = res.data.length;
+                        var tmpl = $('#templateLi').html();
+                        for (var i = 0; i < len; i++) {
+                            var item = res.data[i];
+                            var url = item.link_url == "" ? "/article/" + item.article_id : item.link_url;
+                            var html = tmpl.replaceAll("${url}", url)
+                                .replaceAll("${article_id}", item.article_id)
+                                .replaceAll("${title}", item.title)
+                                .replaceAll("${img_url}", item.img_url);
+                            $(".imglist-ul").append(html);
+                        }
+                        if (page == 1 && len > 0) {
+                            laypage.render({
+                                elem: 'pagination'
+                                , limit: 9
+                                , prev: '上页'
+                                , next: '下页'
+                                , limits: [6, 9, 12, 15, 18, 24, 30]
+                                , count: res.count //数据总数，从服务端得到
+                                , jump: function (obj, first) {
+                                    //首次不执行
+                                    if (!first) {
+                                        //do something
+                                        loadData(obj.curr, obj.limit, call_index);
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
                     }
                 }
             },
@@ -102,7 +116,7 @@
         laypage = layui.laypage,
             layer = layui.layer;
 
-        loadData(1, 20, actionName)
+        loadData(1, 9, actionName)
 
         form.render(); //刷新所有渲染效果，也可以单独熟悉某个效果	
         form.render('select'); //刷新select选择框渲染

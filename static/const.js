@@ -97,3 +97,18 @@ function PrintLayuiTable(tablelayid) {
     }
 }
 
+function ArtilceClick(articleId) {
+    $.ajax({
+        url: "/api/article/click?article_id=" + articleId + "&r=" + Math.random(),
+        dataType: "json",
+        type: "get",
+        beforeSend: function () {
+        },
+        success: function (res) {
+        },
+        error: function () {
+        },
+        complete: function () {
+        }
+    });
+}

@@ -11,6 +11,30 @@ import (
 type ApiArticleController struct{ BaseController }
 
 /**
+ * @description: CategoryNav 获取栏目导航
+ * @param {string} channel_name 频道名称
+ * @param {in64} channel_id 频道ID
+ * @param {string} call_index 栏目别名
+ * @param {in64} category_id 栏目ID
+ * @param {int64} article_id 文章ID
+ * @return {*}
+ */
+// @router /api/category/nav [get]
+func (this *ApiArticleController) CategoryNav() {
+	channel_name := this.GetString("channel_name")
+	channel_id, _ := this.GetInt64("channel_id")
+	call_index := this.GetString("call_index")
+	category_id, _ := this.GetInt64("category_id")
+	article_id, _ := this.GetInt64("article_id")
+
+	outNav, err := this.BaseController.CategoryNav(channel_name, channel_id, call_index, category_id, article_id)
+	if err != nil {
+		this.JSONErrorOfData(err.Error(), outNav)
+	}
+	this.JSONSuccess("", outNav)
+}
+
+/**
  * @description: CategoryFind 获取栏目列表
  * @param {string} channel_name 频道名称
  * @return {*}
