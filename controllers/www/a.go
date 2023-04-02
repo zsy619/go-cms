@@ -33,4 +33,5 @@ func init() {
 
 	web.AutoPrefix("/", &XxgkController{}) // 学校概况
 	web.AutoPrefix("/", &ZsjyController{}) // 招生就业
+	web.AutoPrefix("/", &XyzxController{}) // 校园资讯
 }
