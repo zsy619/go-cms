@@ -255,3 +255,21 @@ func (this *ApiArticleController) Like() {
 	}
 	this.JSONSuccess("", nil)
 }
+
+/**
+ * @description: AlbumClick 点击数+1
+ * @param {int64} article_id 文章id
+ * @param {int64} ablum_id 图片id
+ * @return {*}
+ */
+// @router /api/article/album/click [get]
+func (this *ApiArticleController) AlbumClick() {
+	article_id, _ := this.GetInt64("article_id", 0)
+	ablum_id, _ := this.GetInt64("ablum_id", 0)
+	err := this.BaseController.AlbumClick(article_id, ablum_id)
+	if err != nil {
+		logs.Error("AlbumClick", err.Error())
+		this.JSONError(err.Error())
+	}
+	this.JSONSuccess("", nil)
+}

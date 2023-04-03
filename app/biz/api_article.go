@@ -387,3 +387,18 @@ func (this *ApiArticle) Like(call_index string, article_id int64) error {
 	})
 	return nil
 }
+
+/**
+ * @description: AlbumClick 点击数+1
+ * @param {int64} article_id 文章id
+ * @param {int64} ablum_id 图片id
+ * @return {*}
+ */
+func (this *ApiArticle) AlbumClick(article_id, ablum_id int64) error {
+	mdl, do := query.CmsArticleAlbumDo()
+	do.Where(mdl.AlbumID.Eq(ablum_id), mdl.IsShow.Eq(1)).Updates(map[string]interface{}{
+		mdl.Click.ColumnName().String():      gorm.Expr("click + ?", 1),
+		mdl.UpdateTime.ColumnName().String(): time.Now(),
+	})
+	return nil
+}

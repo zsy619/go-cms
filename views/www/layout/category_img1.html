@@ -6,7 +6,7 @@
         <a href="javascript:void(0)" class="active">列表</a>
     </div>
     <div class="list-con">
-        <ul class="imglist-ul">
+        <ul class="imglist-ul" id="divImg">
             <li>
                 <a href="#">
                     <div class="img-box">
@@ -23,12 +23,15 @@
     <li>
         <a href="${url}" onclick="ArtilceClick(${article_id})" target="_blank" title="${title}">
             <div class="img-box">
-                <img src="${img_url}" class="img" />
+                <img data-original="${img_url}" src="${img_url}" class="img" />
             </div>
             <p class="title">${title}</p>
         </a>
     </li>
 </script>
+<script type="text/javascript" src="/static/plugins/jquery-viewer/viewer.js"></script>
+<link rel="stylesheet" href="/static/plugins/jquery-viewer/viewer.css">
+<script type="text/javascript" src="/static/plugins/jquery-viewer/jquery-viewer.js"></script>
 <script type="text/javascript">
     $(function () {
         $.ajax({
@@ -81,6 +84,9 @@
                                 .replaceAll("${img_url}", item.img_url);
                             $(".imglist-ul").append(html);
                         }
+                        var viewer = new Viewer(document.getElementById('divImg'), {
+                            url: 'data-original'
+                        });
                         if (page == 1 && len > 0) {
                             laypage.render({
                                 elem: 'pagination'

@@ -262,6 +262,16 @@ func (this *BaseController) ArticleLike(call_index string, article_id int64) err
 	return biz.NewApiArticle().Like(call_index, article_id)
 }
 
+/**
+ * @description: AlbumClick 点击数+1
+ * @param {int64} article_id 文章id
+ * @param {int64} ablum_id 图片id
+ * @return {*}
+ */
+func (this *BaseController) AlbumClick(article_id, ablum_id int64) error {
+	return biz.NewApiArticle().AlbumClick(article_id, ablum_id)
+}
+
 type CategoryBaseController struct{ BaseController }
 
 func (this *CategoryBaseController) Prepare() {

@@ -1,7 +1,7 @@
 <div class="cont-right">
     <div class="breadcrumb">
-        <img src="images/position.png" alt="" class="position" /> 您所在的位置：
-        <a href="index.html">首页</a>&gt;
+        <img src="{{.webroot}}images/position.png" alt="" class="position" /> 您所在的位置：
+        <a href="/">首页</a>&gt;
         <a href="javascript:void(0)">机构设置</a>&gt;
         <a href="javascript:void(0)" class="active">学生处</a>
     </div>
@@ -18,53 +18,30 @@
             <div class="tabTop">
                 <span class="title">工作风采</span>
             </div>
-            <ul class="imglist-ul">
+            <ul class="imglist-ul" id="divImg">
+                {{range $index,$item := .album}}
                 <li>
-                    <a href="#">
+                    <a>
                         <div class="img-box">
-                            <img src="images/school_img1.png" class="img" />
+                            <img data-original="{{$item.OriginalPath}}" src="{{$item.OriginalPath}}" class="img" />
                         </div>
-                        <p class="title">素质拓展</p>
+                        <p class="title">{{$item.Title}}</p>
                     </a>
                 </li>
-                <li>
-                    <a href="#">
-                        <div class="img-box">
-                            <img src="images/school_img1.png" class="img" />
-                        </div>
-                        <p class="title">素质拓展</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <div class="img-box">
-                            <img src="images/school_img1.png" class="img" />
-                        </div>
-                        <p class="title">素质拓展</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <div class="img-box">
-                            <img src="images/school_img1.png" class="img" />
-                        </div>
-                        <p class="title">素质拓展</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <div class="img-box">
-                            <img src="images/school_img1.png" class="img" />
-                        </div>
-                        <p class="title">素质拓展</p>
-                    </a>
-                </li>
+                {{end}}
             </ul>
         </div>
     </div>
 </div>
+<script type="text/javascript" src="/static/plugins/jquery-viewer/viewer.js"></script>
+<link rel="stylesheet" href="/static/plugins/jquery-viewer/viewer.css">
+<script type="text/javascript" src="/static/plugins/jquery-viewer/jquery-viewer.js"></script>
 <script type="text/javascript">
     $(function () {
+        var viewer = new Viewer(document.getElementById('divImg'), {
+            url: 'data-original'
+        });
+
         $.ajax({
             url: "/api/category/nav?call_index=" + actionName + "&r=" + Math.random(),
             dataType: "json",
