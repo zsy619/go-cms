@@ -32,13 +32,19 @@ func newCmsArticleAlbum(db *gorm.DB, opts ...gen.DOOption) cmsArticleAlbum {
 	_cmsArticleAlbum.Title = field.NewString(tableName, "title")
 	_cmsArticleAlbum.ThumbPath = field.NewString(tableName, "thumb_path")
 	_cmsArticleAlbum.OriginalPath = field.NewString(tableName, "original_path")
-	_cmsArticleAlbum.FileSize = field.NewInt32(tableName, "file_size")
+	_cmsArticleAlbum.FileSize = field.NewInt64(tableName, "file_size")
 	_cmsArticleAlbum.FileExt = field.NewString(tableName, "file_ext")
 	_cmsArticleAlbum.LinkURL = field.NewString(tableName, "link_url")
 	_cmsArticleAlbum.Click = field.NewInt32(tableName, "click")
 	_cmsArticleAlbum.SortID = field.NewInt32(tableName, "sort_id")
+	_cmsArticleAlbum.IsShow = field.NewInt32(tableName, "is_show")
 	_cmsArticleAlbum.Remark = field.NewString(tableName, "remark")
+	_cmsArticleAlbum.CreateID = field.NewInt32(tableName, "create_id")
+	_cmsArticleAlbum.CreateName = field.NewString(tableName, "create_name")
 	_cmsArticleAlbum.CreateTime = field.NewTime(tableName, "create_time")
+	_cmsArticleAlbum.UpdateID = field.NewInt32(tableName, "update_id")
+	_cmsArticleAlbum.UpdateName = field.NewString(tableName, "update_name")
+	_cmsArticleAlbum.UpdateTime = field.NewTime(tableName, "update_time")
 
 	_cmsArticleAlbum.fillFieldMap()
 
@@ -54,13 +60,19 @@ type cmsArticleAlbum struct {
 	Title        field.String // 标题
 	ThumbPath    field.String // 缩略图地址
 	OriginalPath field.String // 原图地址
-	FileSize     field.Int32  // 文件大小(字节)
+	FileSize     field.Int64  // 文件大小(字节)
 	FileExt      field.String // 文件扩展名
 	LinkURL      field.String // 外部链接
 	Click        field.Int32  // 点击次数
 	SortID       field.Int32  // 排序
+	IsShow       field.Int32  // 是否显示：1显示2隐藏
 	Remark       field.String // 图片描述
+	CreateID     field.Int32  // 创建人ID
+	CreateName   field.String // 创建人姓名
 	CreateTime   field.Time   // 创建时间
+	UpdateID     field.Int32  // 更新人ID
+	UpdateName   field.String // 更新人姓名
+	UpdateTime   field.Time   // 修改时间
 
 	fieldMap map[string]field.Expr
 }
@@ -82,13 +94,19 @@ func (c *cmsArticleAlbum) updateTableName(table string) *cmsArticleAlbum {
 	c.Title = field.NewString(table, "title")
 	c.ThumbPath = field.NewString(table, "thumb_path")
 	c.OriginalPath = field.NewString(table, "original_path")
-	c.FileSize = field.NewInt32(table, "file_size")
+	c.FileSize = field.NewInt64(table, "file_size")
 	c.FileExt = field.NewString(table, "file_ext")
 	c.LinkURL = field.NewString(table, "link_url")
 	c.Click = field.NewInt32(table, "click")
 	c.SortID = field.NewInt32(table, "sort_id")
+	c.IsShow = field.NewInt32(table, "is_show")
 	c.Remark = field.NewString(table, "remark")
+	c.CreateID = field.NewInt32(table, "create_id")
+	c.CreateName = field.NewString(table, "create_name")
 	c.CreateTime = field.NewTime(table, "create_time")
+	c.UpdateID = field.NewInt32(table, "update_id")
+	c.UpdateName = field.NewString(table, "update_name")
+	c.UpdateTime = field.NewTime(table, "update_time")
 
 	c.fillFieldMap()
 
@@ -113,7 +131,7 @@ func (c *cmsArticleAlbum) GetFieldByName(fieldName string) (field.OrderExpr, boo
 }
 
 func (c *cmsArticleAlbum) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 12)
+	c.fieldMap = make(map[string]field.Expr, 18)
 	c.fieldMap["album_id"] = c.AlbumID
 	c.fieldMap["article_id"] = c.ArticleID
 	c.fieldMap["title"] = c.Title
@@ -124,8 +142,14 @@ func (c *cmsArticleAlbum) fillFieldMap() {
 	c.fieldMap["link_url"] = c.LinkURL
 	c.fieldMap["click"] = c.Click
 	c.fieldMap["sort_id"] = c.SortID
+	c.fieldMap["is_show"] = c.IsShow
 	c.fieldMap["remark"] = c.Remark
+	c.fieldMap["create_id"] = c.CreateID
+	c.fieldMap["create_name"] = c.CreateName
 	c.fieldMap["create_time"] = c.CreateTime
+	c.fieldMap["update_id"] = c.UpdateID
+	c.fieldMap["update_name"] = c.UpdateName
+	c.fieldMap["update_time"] = c.UpdateTime
 }
 
 func (c cmsArticleAlbum) clone(db *gorm.DB) cmsArticleAlbum {

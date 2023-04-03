@@ -22,6 +22,7 @@ type UploadResult struct {
 	File struct {
 		Name string `json:"name"` // 保存文件名称
 		Ext  string `json:"ext"`  // 文件后缀
+		Size int64  `json:"size"` // 文件大小
 		Url1 string `json:"url1"` // 文件相对路径
 		Url2 string `json:"url2"` // 文件绝对路径
 	} `json:"file"`
@@ -44,10 +45,11 @@ func (c *ToolsController) ImageUpload() {
 		Code: 1,
 		Msg:  "上传失败",
 		File: struct {
-			Name string "json:\"name\""
-			Ext  string "json:\"ext\""
-			Url1 string "json:\"url1\""
-			Url2 string "json:\"url2\""
+			Name string `json:"name"` // 保存文件名称
+			Ext  string `json:"ext"`  // 文件后缀
+			Size int64  `json:"size"` // 文件大小
+			Url1 string `json:"url1"` // 文件相对路径
+			Url2 string `json:"url2"` // 文件绝对路径
 		}{},
 	}
 	file, head, err := c.GetFile("file")
@@ -60,9 +62,11 @@ func (c *ToolsController) ImageUpload() {
 	}
 	defer file.Close()
 
+	result.File.Size = head.Size
+
 	ext := strings.ToLower(path.Ext(head.Filename))
 	fmt.Println(ext)
-	if !strings.Contains(".jpg,.jpeg,.png,.gif", ext) {
+	if !strings.Contains(".jpg,.jpeg,.png,.gif,.bmp,.ico", ext) {
 		result.Code = 1
 		result.Msg = "不支持的文件类型"
 		c.Data["json"] = result
@@ -72,9 +76,12 @@ func (c *ToolsController) ImageUpload() {
 
 	// 生成唯一的文件名
 	filename := generateFilename(ext)
-
+	pth := c.GetString("path")
+	if pth == "" {
+		pth = "images"
+	}
 	// 保存上传的文件到指定目录
-	uploadDir := "Uploads/images/" + time.Now().Format("2006/01/")
+	uploadDir := "Uploads/" + pth + "/" + time.Now().Format("2006/01/")
 	if err := os.MkdirAll(uploadDir, os.ModePerm); err != nil {
 		fmt.Println("err", err.Error())
 		result.Code = 1
@@ -108,10 +115,11 @@ func (c *ToolsController) Upload() {
 		Code: 1,
 		Msg:  "上传失败",
 		File: struct {
-			Name string "json:\"name\""
-			Ext  string "json:\"ext\""
-			Url1 string "json:\"url1\""
-			Url2 string "json:\"url2\""
+			Name string `json:"name"` // 保存文件名称
+			Ext  string `json:"ext"`  // 文件后缀
+			Size int64  `json:"size"` // 文件大小
+			Url1 string `json:"url1"` // 文件相对路径
+			Url2 string `json:"url2"` // 文件绝对路径
 		}{},
 	}
 	file, head, err := c.GetFile("file")
@@ -123,6 +131,8 @@ func (c *ToolsController) Upload() {
 		return
 	}
 	defer file.Close()
+
+	result.File.Size = head.Size
 
 	ext := strings.ToLower(path.Ext(head.Filename))
 	// if !strings.Contains("jpg,jpeg,png,gif", ext) {

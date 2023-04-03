@@ -615,6 +615,7 @@ html{
         float: left;
         position: relative;
         z-index: 2;
+        min-height: 37.5rem;
         .top{
             height: 5.875rem;
             line-height: 5.875rem;
@@ -660,6 +661,17 @@ html{
         padding: 0;
         width: 74%;
         float: right;
+    }
+}
+.error-page{
+    text-align: center;
+    padding-bottom: 10rem;
+    padding-top: 2rem;
+    .img{
+        width: 14.375rem;
+    }
+    .tip{
+        color: #999;
     }
 }
 .cont-detail{
@@ -750,6 +762,7 @@ html{
         li{
             margin-bottom: 1.5rem;
             background: #fff;
+            box-shadow: 0px 4px 14px 1px rgba(221,221,221,0.60); 
             a{
                 display: flex;
                 justify-content: space-between;
@@ -962,6 +975,25 @@ html{
             border-radius: 0;
         }
     }
+}
+.contrast-us{
+    .cont-right{
+        .cont-detail{
+            display: flex;
+           
+        }
+        .left{
+             margin-right: 7rem;
+             width: 17.5rem;
+        }
+        .right{
+            width: calc(100% - 25rem);
+        }
+    }
+}
+#map{
+    width: 100%;
+    height: 25rem;
 }
 @media (min-width:1200px) and (max-width:1600px){
     html{

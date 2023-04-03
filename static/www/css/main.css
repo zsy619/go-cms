@@ -584,6 +584,7 @@ html {
   float: left;
   position: relative;
   z-index: 2;
+  min-height: 37.5rem;
 }
 .main .nav-aside .top {
   height: 5.875rem;
@@ -629,6 +630,17 @@ html {
   padding: 0;
   width: 74%;
   float: right;
+}
+.error-page {
+  text-align: center;
+  padding-bottom: 10rem;
+  padding-top: 2rem;
+}
+.error-page .img {
+  width: 14.375rem;
+}
+.error-page .tip {
+  color: #999;
 }
 .cont-detail {
   margin-top: 2rem;
@@ -708,6 +720,7 @@ html {
 .search-list .list-ul li {
   margin-bottom: 1.5rem;
   background: #fff;
+  box-shadow: 0px 4px 14px 1px rgba(221, 221, 221, 0.6);
 }
 .search-list .list-ul li a {
   display: flex;
@@ -902,6 +915,20 @@ html {
 .form-box .layui-form .layui-select,
 .form-box .layui-form .layui-textarea {
   border-radius: 0;
+}
+.contrast-us .cont-right .cont-detail {
+  display: flex;
+}
+.contrast-us .cont-right .left {
+  margin-right: 7rem;
+  width: 17.5rem;
+}
+.contrast-us .cont-right .right {
+  width: calc(100% - 25rem);
+}
+#map {
+  width: 100%;
+  height: 25rem;
 }
 @media (min-width: 1200px) and (max-width: 1600px) {
   html {

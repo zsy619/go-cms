@@ -283,12 +283,12 @@ func (this *ApiArticle) Get(call_index string, article_id int64) (*bmodel.ApiArt
 	}
 
 	albumMdl, alblumDo := query.CmsArticleAlbumDo()
-	articleAlbum, _ := alblumDo.Where(albumMdl.ArticleID.Eq(article_id)).Order(albumMdl.SortID).Find()
+	articleAlbum, _ := alblumDo.Where(albumMdl.ArticleID.Eq(article_id), albumMdl.IsShow.Eq(1)).Order(albumMdl.SortID).Find()
 	if articleAlbum == nil {
 		articleAlbum = []*model.CmsArticleAlbum{}
 	}
 	attachMdl, attachDo := query.CmsArticleAttachDo()
-	articleAttach, _ := attachDo.Where(attachMdl.ArticleID.Eq(article_id)).Order(attachMdl.SortID).Find()
+	articleAttach, _ := attachDo.Where(attachMdl.ArticleID.Eq(article_id), attachMdl.IsShow.Eq(1)).Order(attachMdl.SortID).Find()
 	if articleAttach == nil {
 		articleAttach = []*model.CmsArticleAttach{}
 	}
@@ -334,7 +334,7 @@ func (this *ApiArticle) Album(call_index string, article_id int64) ([]*model.Cms
 		articleDo.Where(article.CallIndex.Eq(call_index), article.Status.Eq(2)).Pluck(article.ArticleID, &article_id)
 	}
 	albumMdl, alblumDo := query.CmsArticleAlbumDo()
-	return alblumDo.Where(albumMdl.ArticleID.Eq(article_id)).Order(albumMdl.SortID).Find()
+	return alblumDo.Where(albumMdl.ArticleID.Eq(article_id), albumMdl.IsShow.Eq(1)).Order(albumMdl.SortID).Find()
 }
 
 /**
@@ -349,7 +349,7 @@ func (this *ApiArticle) Attach(call_index string, article_id int64) ([]*model.Cm
 		articleDo.Where(article.CallIndex.Eq(call_index), article.Status.Eq(2)).Pluck(article.ArticleID, &article_id)
 	}
 	attachMdl, attachDo := query.CmsArticleAttachDo()
-	return attachDo.Where(attachMdl.ArticleID.Eq(article_id)).Order(attachMdl.SortID).Find()
+	return attachDo.Where(attachMdl.ArticleID.Eq(article_id)).Order(attachMdl.SortID, attachMdl.IsShow.Eq(1)).Find()
 }
 
 /**
