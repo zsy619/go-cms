@@ -138,13 +138,15 @@ func (this *ApiArticleController) Paginate() {
 
 /**
  * @description: One 根据article_id获取文章详情、相册、附件
+ * @param {string} call_index 调用别名
  * @param {int64} article_id 文章id
  * @return {*}
  */
 // @router /api/article/one [get]
 func (this *ApiArticleController) One() {
 	article_id, _ := this.GetInt64("article_id", 0)
-	aritcle, album, attatch, err := this.BaseController.ArticleGet(article_id)
+	call_index := this.GetString("call_index")
+	aritcle, album, attatch, err := this.BaseController.ArticleGet(call_index, article_id)
 	result := struct {
 		Article *model.CmsArticle         `json:"article"`
 		Album   []*model.CmsArticleAlbum  `json:"album"`
@@ -163,13 +165,15 @@ func (this *ApiArticleController) One() {
 
 /**
  * @description: Article 获取文章详情
+ * @param {string} call_index 调用别名
  * @param {int64} article_id 文章id
  * @return {*}
  */
 // @router /api/article/article [get]
 func (this *ApiArticleController) Article() {
 	article_id, _ := this.GetInt64("article_id", 0)
-	article, err := this.BaseController.ArticleArticle(article_id)
+	call_index := this.GetString("call_index")
+	article, err := this.BaseController.ArticleArticle(call_index, article_id)
 	if err != nil {
 		logs.Error("", err.Error())
 		this.JSONErrorOfData(err.Error(), article)
@@ -179,13 +183,15 @@ func (this *ApiArticleController) Article() {
 
 /**
  * @description: Album 获取文章相册列表
+ * @param {string} call_index 调用别名
  * @param {int64} article_id 文章id
  * @return {*}
  */
 // @router /api/article/album [get]
 func (this *ApiArticleController) Album() {
 	article_id, _ := this.GetInt64("article_id", 0)
-	album, err := this.BaseController.ArticleAlbum(article_id)
+	call_index := this.GetString("call_index")
+	album, err := this.BaseController.ArticleAlbum(call_index, article_id)
 	if err != nil {
 		logs.Error("", err.Error())
 		this.JSONErrorOfData(err.Error(), album)
@@ -195,13 +201,15 @@ func (this *ApiArticleController) Album() {
 
 /**
  * @description: Attach 获取文章附件列表
+ * @param {string} call_index 调用别名
  * @param {int64} article_id 文章id
  * @return {*}
  */
 // @router /api/article/attach [get]
 func (this *ApiArticleController) Attach() {
 	article_id, _ := this.GetInt64("article_id", 0)
-	attach, err := this.BaseController.ArticleAttach(article_id)
+	call_index := this.GetString("call_index")
+	attach, err := this.BaseController.ArticleAttach(call_index, article_id)
 	if err != nil {
 		logs.Error("", err.Error())
 		this.JSONErrorOfData(err.Error(), attach)
@@ -211,13 +219,15 @@ func (this *ApiArticleController) Attach() {
 
 /**
  * @description: Click 点击数+1
+ * @param {string} call_index 调用别名
  * @param {int64} article_id 文章id
  * @return {*}
  */
 // @router /api/article/click [get]
 func (this *ApiArticleController) Click() {
 	article_id, _ := this.GetInt64("article_id", 0)
-	err := this.BaseController.ArticleClick(article_id)
+	call_index := this.GetString("call_index")
+	err := this.BaseController.ArticleClick(call_index, article_id)
 	if err != nil {
 		logs.Error("Click", err.Error())
 		this.JSONError(err.Error())
@@ -227,13 +237,15 @@ func (this *ApiArticleController) Click() {
 
 /**
  * @description: Like 点赞数+1
+ * @param {string} call_index 调用别名
  * @param {int64} article_id 文章id
  * @return {*}
  */
 // @router /api/article/like [get]
 func (this *ApiArticleController) Like() {
 	article_id, _ := this.GetInt64("article_id", 0)
-	err := this.BaseController.ArticleLike(article_id)
+	call_index := this.GetString("call_index")
+	err := this.BaseController.ArticleLike(call_index, article_id)
 	if err != nil {
 		logs.Error("Like", err.Error())
 		this.JSONError(err.Error())

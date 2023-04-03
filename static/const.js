@@ -97,9 +97,14 @@ function PrintLayuiTable(tablelayid) {
     }
 }
 
-function ArtilceClick(articleId) {
+function ArtilceClick(articleId, callIndex) {
+    var url = "/api/article/click?article_id=" + articleId;
+    if (callIndex) {
+        url += "&call_index=" + callIndex;
+    }
+    url += "&t=" + new Date().getTime();
     $.ajax({
-        url: "/api/article/click?article_id=" + articleId + "&r=" + Math.random(),
+        url: url,
         dataType: "json",
         type: "get",
         beforeSend: function () {

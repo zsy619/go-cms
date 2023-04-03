@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/beego/beego/v2/core/logs"
 	"gorm.io/gorm"
 	"haedu.gov.cn/cms/app/biz/bmodel"
 	"haedu.gov.cn/cms/app/dal/model"
@@ -255,11 +256,19 @@ func (this *ApiArticle) Paginate(page, limit int, channel_id, category_id int64,
 
 /**
  * @description: Get 根据article_id获取文章详情、相册、附件
+ * @param {string} call_index 文章调用别名
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *ApiArticle) Get(article_id int64) (*model.CmsArticle, []*model.CmsArticleAlbum, []*model.CmsArticleAttach, error) {
+func (this *ApiArticle) Get(call_index string, article_id int64) (*model.CmsArticle, []*model.CmsArticleAlbum, []*model.CmsArticleAttach, error) {
 	mdl, do := query.CmsArticleDo()
+	if call_index != "" {
+		if article_id <= 0 {
+			if err := do.Where(mdl.CallIndex.Eq(call_index), mdl.Status.Eq(2)).Pluck(mdl.ArticleID, &article_id); err != nil {
+				logs.Error("Get", err.Error())
+			}
+		}
+	}
 	article, err := do.Where(mdl.ArticleID.Eq(article_id), mdl.Status.Eq(2)).First()
 	if err != nil {
 		return nil, nil, nil, err
@@ -276,41 +285,62 @@ func (this *ApiArticle) Get(article_id int64) (*model.CmsArticle, []*model.CmsAr
 
 /**
  * @description: Article 获取文章详情
+ * @param {string} call_index 文章调用别名
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *ApiArticle) Article(article_id int64) (*model.CmsArticle, error) {
+func (this *ApiArticle) Article(call_index string, article_id int64) (*model.CmsArticle, error) {
 	mdl, do := query.CmsArticleDo()
+	if call_index != "" {
+		return do.Where(mdl.CallIndex.Eq(call_index), mdl.Status.Eq(2)).First()
+	}
 	return do.Where(mdl.ArticleID.Eq(article_id), mdl.Status.Eq(2)).First()
 }
 
 /**
  * @description: Album 获取文章相册列表
+ * @param {string} call_index 文章调用别名
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *ApiArticle) Album(article_id int64) ([]*model.CmsArticleAlbum, error) {
+func (this *ApiArticle) Album(call_index string, article_id int64) ([]*model.CmsArticleAlbum, error) {
+	if call_index != "" {
+		article, articleDo := query.CmsArticleDo()
+		articleDo.Where(article.CallIndex.Eq(call_index), article.Status.Eq(2)).Pluck(article.ArticleID, &article_id)
+	}
 	albumMdl, alblumDo := query.CmsArticleAlbumDo()
 	return alblumDo.Where(albumMdl.ArticleID.Eq(article_id)).Order(albumMdl.SortID).Find()
 }
 
 /**
  * @description: Attach 获取文章附件列表
+ * @param {string} call_index 文章调用别名
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *ApiArticle) Attach(article_id int64) ([]*model.CmsArticleAttach, error) {
+func (this *ApiArticle) Attach(call_index string, article_id int64) ([]*model.CmsArticleAttach, error) {
+	if call_index != "" {
+		article, articleDo := query.CmsArticleDo()
+		articleDo.Where(article.CallIndex.Eq(call_index), article.Status.Eq(2)).Pluck(article.ArticleID, &article_id)
+	}
 	attachMdl, attachDo := query.CmsArticleAttachDo()
 	return attachDo.Where(attachMdl.ArticleID.Eq(article_id)).Order(attachMdl.SortID).Find()
 }
 
 /**
  * @description: Click 点击数+1
+ * @param {string} call_index 文章调用别名
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *ApiArticle) Click(article_id int64) error {
+func (this *ApiArticle) Click(call_index string, article_id int64) error {
 	mdl, do := query.CmsArticleDo()
+	if call_index != "" {
+		do.Where(mdl.CallIndex.Eq(call_index), mdl.Status.Eq(2)).Updates(map[string]interface{}{
+			mdl.Click.ColumnName().String():      gorm.Expr("click + ?", 1),
+			mdl.UpdateTime.ColumnName().String(): time.Now(),
+		})
+	}
 	do.Where(mdl.ArticleID.Eq(article_id), mdl.Status.Eq(2)).Updates(map[string]interface{}{
 		mdl.Click.ColumnName().String():      gorm.Expr("click + ?", 1),
 		mdl.UpdateTime.ColumnName().String(): time.Now(),
@@ -320,10 +350,11 @@ func (this *ApiArticle) Click(article_id int64) error {
 
 /**
  * @description: Like 点赞数+1
+ * @param {string} call_index 文章调用别名
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *ApiArticle) Like(article_id int64) error {
+func (this *ApiArticle) Like(call_index string, article_id int64) error {
 	mdl, do := query.CmsArticleDo()
 	do.Where(mdl.ArticleID.Eq(article_id), mdl.Status.Eq(2)).Updates(map[string]interface{}{
 		mdl.LikeCount.ColumnName().String():  gorm.Expr("like_count + ?", 1),

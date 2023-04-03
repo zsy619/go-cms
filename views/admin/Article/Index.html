@@ -167,7 +167,6 @@
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
             var result = JSON.stringify(data.field);
-            console.log(result);
             //执行搜索重载
             table.reload('tableContainer', {
                 page: {
@@ -292,13 +291,11 @@
 
         //监听表格复选框选择
         table.on('checkbox(currentTableFilter)', function (obj) {
-            console.log(obj)
         });
 
         table.on('tool(currentTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event === 'clone') {
-                console.log(data);
                 var index = layer.open({
                     title: '克隆内容',
                     type: 2,
@@ -313,7 +310,6 @@
                 });
                 return false;
             } else if (obj.event === 'edit') {
-                console.log(data);
                 var index = layer.open({
                     title: '编辑内容',
                     type: 2,
@@ -333,7 +329,7 @@
                         type: "POST",
                         url: "/admin/article/ArticleDestory", //提交的地址
                         data: {
-                            "roleId": data.role_id
+                            "articleId": data.article_id
                         },
                         async: false,
                         beforeSend: function () { //当一个Ajax请求开始时触发

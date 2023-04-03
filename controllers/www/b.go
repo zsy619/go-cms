@@ -196,20 +196,22 @@ func (this *BaseController) ArticlePaginate(page, limit int, channel_id, categor
 
 /**
  * @description: ArticleGet 根据article_id获取文章详情、相册、附件
+ * @param {string} call_index 调用别名
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *BaseController) ArticleGet(article_id int64) (*model.CmsArticle, []*model.CmsArticleAlbum, []*model.CmsArticleAttach, error) {
-	return biz.NewApiArticle().Get(article_id)
+func (this *BaseController) ArticleGet(call_index string, article_id int64) (*model.CmsArticle, []*model.CmsArticleAlbum, []*model.CmsArticleAttach, error) {
+	return biz.NewApiArticle().Get(call_index, article_id)
 }
 
 /**
- * @description: ArticleArticle 获取文章详情
+ * @description: Article 获取文章详情
+ * @param {string} call_index 调用别名
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *BaseController) ArticleArticle(article_id int64) (*model.CmsArticle, error) {
-	return biz.NewApiArticle().Article(article_id)
+func (this *BaseController) ArticleArticle(call_index string, article_id int64) (*model.CmsArticle, error) {
+	return biz.NewApiArticle().Article(call_index, article_id)
 }
 
 /**
@@ -217,8 +219,8 @@ func (this *BaseController) ArticleArticle(article_id int64) (*model.CmsArticle,
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *BaseController) ArticleAlbum(article_id int64) ([]*model.CmsArticleAlbum, error) {
-	return biz.NewApiArticle().Album(article_id)
+func (this *BaseController) ArticleAlbum(call_index string, article_id int64) ([]*model.CmsArticleAlbum, error) {
+	return biz.NewApiArticle().Album(call_index, article_id)
 }
 
 /**
@@ -226,8 +228,8 @@ func (this *BaseController) ArticleAlbum(article_id int64) ([]*model.CmsArticleA
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *BaseController) ArticleAttach(article_id int64) ([]*model.CmsArticleAttach, error) {
-	return biz.NewApiArticle().Attach(article_id)
+func (this *BaseController) ArticleAttach(call_index string, article_id int64) ([]*model.CmsArticleAttach, error) {
+	return biz.NewApiArticle().Attach(call_index, article_id)
 }
 
 /**
@@ -235,8 +237,8 @@ func (this *BaseController) ArticleAttach(article_id int64) ([]*model.CmsArticle
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *BaseController) ArticleClick(article_id int64) error {
-	return biz.NewApiArticle().Click(article_id)
+func (this *BaseController) ArticleClick(call_index string, article_id int64) error {
+	return biz.NewApiArticle().Click(call_index, article_id)
 }
 
 /**
@@ -244,8 +246,8 @@ func (this *BaseController) ArticleClick(article_id int64) error {
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *BaseController) ArticleLike(article_id int64) error {
-	return biz.NewApiArticle().Like(article_id)
+func (this *BaseController) ArticleLike(call_index string, article_id int64) error {
+	return biz.NewApiArticle().Like(call_index, article_id)
 }
 
 type CategoryBaseController struct{ BaseController }

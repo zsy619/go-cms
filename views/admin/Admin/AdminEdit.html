@@ -188,22 +188,10 @@
 
         //自定义验证规则
         form.verify({
-            // title: function (value) {
-            //     if (value.length < 5) {
-            //         return '标题也太短了吧';
-            //     }
-            // }
-            // , pass: [/(.+){6,12}$/, '密码必须6到12位']
-            // , money: [
-            //     /^\d+\.\b\d{2}\b$/
-            //     , '金额必须为小数保留两位'
-            // ]
         });
 
         // 提交事件
         form.on('submit(*)', function (data) {
-            console.log(data)
-            // alert(JSON.stringify(data.field));
             return false;
         });
 
