@@ -1,0 +1,97 @@
+<div class="cont-right">
+    <div class="breadcrumb">
+        <img src="images/position.png" alt="" class="position" /> 您所在的位置：
+        <a href="index.html">首页</a>&gt;
+        <a href="javascript:void(0)">机构设置</a>&gt;
+        <a href="javascript:void(0)" class="active">学生处</a>
+    </div>
+    <div class="cont-detail">
+        <div class="box">
+            <div class="tabTop">
+                <span class="title">{{.article.Title}}</span>
+            </div>
+            <div class="detail-box">
+                {{str2html .article.Content}}
+            </div>
+        </div>
+        <div class="box list-con">
+            <div class="tabTop">
+                <span class="title">工作风采</span>
+            </div>
+            <ul class="imglist-ul">
+                <li>
+                    <a href="#">
+                        <div class="img-box">
+                            <img src="images/school_img1.png" class="img" />
+                        </div>
+                        <p class="title">素质拓展</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <div class="img-box">
+                            <img src="images/school_img1.png" class="img" />
+                        </div>
+                        <p class="title">素质拓展</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <div class="img-box">
+                            <img src="images/school_img1.png" class="img" />
+                        </div>
+                        <p class="title">素质拓展</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <div class="img-box">
+                            <img src="images/school_img1.png" class="img" />
+                        </div>
+                        <p class="title">素质拓展</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <div class="img-box">
+                            <img src="images/school_img1.png" class="img" />
+                        </div>
+                        <p class="title">素质拓展</p>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $.ajax({
+            url: "/api/category/nav?call_index=" + actionName + "&r=" + Math.random(),
+            dataType: "json",
+            type: "get",
+            beforeSend: function () {
+                $(".breadcrumb").html("");
+            },
+            success: function (res) {
+                $(".breadcrumb").append('<img src="{{.webroot}}images/position.png" alt="" class="position" /> 您所在的位置：');
+                $(".breadcrumb").append('<a href="/">首页</a>&nbsp;&gt;');
+                if (res.code == 0) {
+                    var len = res.data.length;
+                    for (var i = 0; i < len; i++) {
+                        if (i != len - 1) {
+                            $(".breadcrumb").append('&nbsp;<a href="javascript:void(0)">' + res.data[i].title + '</a>&nbsp;&gt;');
+                        } else {
+                            $(".breadcrumb").append('&nbsp;<a href="javascript:void(0)" class="active">' + res.data[i].title + '</a>');
+                        }
+                    }
+                }
+            },
+            error: function () {
+            },
+            complete: function () {
+            }
+        });
+
+        ArtilceClick(0, actionName);
+    })
+</script>

@@ -44,4 +44,5 @@ func init() {
 	web.AutoPrefix("/", &XyzxController{}) // 校园资讯
 	web.AutoPrefix("/", &JyjxController{}) // 教育教学
 	web.AutoPrefix("/", &LxwmController{}) // 联系我们
+	web.AutoPrefix("/", &JgszController{}) // 机构设置
 }
