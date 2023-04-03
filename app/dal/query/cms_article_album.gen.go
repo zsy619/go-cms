@@ -32,6 +32,8 @@ func newCmsArticleAlbum(db *gorm.DB, opts ...gen.DOOption) cmsArticleAlbum {
 	_cmsArticleAlbum.Title = field.NewString(tableName, "title")
 	_cmsArticleAlbum.ThumbPath = field.NewString(tableName, "thumb_path")
 	_cmsArticleAlbum.OriginalPath = field.NewString(tableName, "original_path")
+	_cmsArticleAlbum.FileSize = field.NewInt32(tableName, "file_size")
+	_cmsArticleAlbum.FileExt = field.NewString(tableName, "file_ext")
 	_cmsArticleAlbum.LinkURL = field.NewString(tableName, "link_url")
 	_cmsArticleAlbum.Click = field.NewInt32(tableName, "click")
 	_cmsArticleAlbum.SortID = field.NewInt32(tableName, "sort_id")
@@ -52,6 +54,8 @@ type cmsArticleAlbum struct {
 	Title        field.String // 标题
 	ThumbPath    field.String // 缩略图地址
 	OriginalPath field.String // 原图地址
+	FileSize     field.Int32  // 文件大小(字节)
+	FileExt      field.String // 文件扩展名
 	LinkURL      field.String // 外部链接
 	Click        field.Int32  // 点击次数
 	SortID       field.Int32  // 排序
@@ -78,6 +82,8 @@ func (c *cmsArticleAlbum) updateTableName(table string) *cmsArticleAlbum {
 	c.Title = field.NewString(table, "title")
 	c.ThumbPath = field.NewString(table, "thumb_path")
 	c.OriginalPath = field.NewString(table, "original_path")
+	c.FileSize = field.NewInt32(table, "file_size")
+	c.FileExt = field.NewString(table, "file_ext")
 	c.LinkURL = field.NewString(table, "link_url")
 	c.Click = field.NewInt32(table, "click")
 	c.SortID = field.NewInt32(table, "sort_id")
@@ -107,12 +113,14 @@ func (c *cmsArticleAlbum) GetFieldByName(fieldName string) (field.OrderExpr, boo
 }
 
 func (c *cmsArticleAlbum) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 10)
+	c.fieldMap = make(map[string]field.Expr, 12)
 	c.fieldMap["album_id"] = c.AlbumID
 	c.fieldMap["article_id"] = c.ArticleID
 	c.fieldMap["title"] = c.Title
 	c.fieldMap["thumb_path"] = c.ThumbPath
 	c.fieldMap["original_path"] = c.OriginalPath
+	c.fieldMap["file_size"] = c.FileSize
+	c.fieldMap["file_ext"] = c.FileExt
 	c.fieldMap["link_url"] = c.LinkURL
 	c.fieldMap["click"] = c.Click
 	c.fieldMap["sort_id"] = c.SortID

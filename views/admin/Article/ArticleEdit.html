@@ -250,7 +250,6 @@
                 $("input[name='category_id']").val(d.current.id);
             },
             success: function (d) {
-                // console.log(d);
                 var categoryId = parseInt($("input[name='category_id']").val());
                 if (categoryId != 0) {
                     treeSelect.checkNode('tree', categoryId);
@@ -304,7 +303,6 @@
 
         // 提交事件
         form.on('submit(*)', function (data) {
-            console.log(data)
             return false;
         });
 
@@ -322,7 +320,6 @@
                     error: function (request) {  //失败的话
                     },
                     success: function (data) {  //成功
-                        console.log(data);
                         layer.closeAll();
                         if (data.code == CodeSuccess) {
                             layer.msg("提交成功", { icon: 1, time: 1000 }, function () {

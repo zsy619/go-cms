@@ -46,7 +46,15 @@
     </div>
 </div>
 {{template "admin/Public/Button_AddAuditSave.html" }}
-{{template "admin/Public/Button_EditCopyDelete.html" }}
+<script type="text/html" id="currentTableBar">
+    <div class="layui-btn-group">
+        <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit layui-btn-radius" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+        <a class="layui-btn layui-btn-primary layui-btn-xs data-count-clone" lay-event="clone"><i class="layui-icon layui-icon-form"></i>拷贝</a>
+        <a class="layui-btn layui-btn-xs layui-btn-normal data-count-album layui-btn-radius" lay-event="album"><i class="layui-icon layui-icon-picture"></i>相册</a>
+        <a class="layui-btn layui-btn-xs layui-btn-primary data-count-attach layui-btn-radius" lay-event="attach"><i class="layui-icon layui-icon-file"></i>附件</a>
+        <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete layui-btn-radius" lay-event="delete"><i class="layui-icon layui-icon-close"></i>删除</a>
+    </div>
+</script>
 <script>
     var channelId = parseInt("{{.channelId}}");
     layui.use(['form', 'table', 'treeSelect'], function () {
@@ -142,7 +150,7 @@
                         return '<input type="number" name="sort_id" article_id="' + d.article_id + '" value="' + d.sort_id + '" class="layui-input" style="" />';
                     }
                 },
-                { title: '操作', width: 210, toolbar: '#currentTableBar', align: "center", fixed: "right" }
+                { title: '操作', width: 290, toolbar: '#currentTableBar', align: "center", fixed: "right" }
             ]],
             limits: [10, 15, 20, 25, 50, 100],
             limit: 20,
@@ -295,7 +303,35 @@
 
         table.on('tool(currentTableFilter)', function (obj) {
             var data = obj.data;
-            if (obj.event === 'clone') {
+            if (obj.event === 'album') {
+                var index = layer.open({
+                    title: '相册管理',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin: true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: 'ArticleAlbum?articleId=' + data.article_id + '&channelId=' + channelId,
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            } else if (obj.event === 'attach') {
+                var index = layer.open({
+                    title: '附件管理',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin: true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: 'ArticleAttach?articleId=' + data.article_id + '&channelId=' + channelId,
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            } else if (obj.event === 'clone') {
                 var index = layer.open({
                     title: '克隆内容',
                     type: 2,

@@ -149,7 +149,6 @@
             },
             // 如果服务器端返回的不是 {errno:0, data: [...]} 这种格式，可使用该配置
             customInsert: function (insertImg, result, editor) {
-                console.log(result);
                 if (result.code == 0) {
                     var url = result.file.url2;
                     insertImg(url);
@@ -169,16 +168,6 @@
         //自定义验证规则
         form.verify({
             call_index: [/^[a-zA-Z0-9\-\_]{2,50}$/, '请填写正确的调用别名']
-            // title: function (value) {
-            //     if (value.length < 5) {
-            //         return '标题也太短了吧';
-            //     }
-            // }
-            // , pass: [/(.+){6,12}$/, '密码必须6到12位']
-            // , money: [
-            //     /^\d+\.\b\d{2}\b$/
-            //     , '金额必须为小数保留两位'
-            // ]
         });
 
         // 提交事件
@@ -200,7 +189,6 @@
                     error: function (request) {  //失败的话
                     },
                     success: function (data) {  //成功
-                        console.log(data);
                         layer.closeAll();
                         if (data.code == CodeSuccess) {
                             layer.msg("提交成功", { icon: 1, time: 1000 }, function () {

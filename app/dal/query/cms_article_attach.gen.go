@@ -36,6 +36,7 @@ func newCmsArticleAttach(db *gorm.DB, opts ...gen.DOOption) cmsArticleAttach {
 	_cmsArticleAttach.Point = field.NewInt32(tableName, "point")
 	_cmsArticleAttach.DownCount = field.NewInt32(tableName, "down_count")
 	_cmsArticleAttach.SortID = field.NewInt32(tableName, "sort_id")
+	_cmsArticleAttach.Remark = field.NewString(tableName, "remark")
 	_cmsArticleAttach.CreateTime = field.NewTime(tableName, "create_time")
 
 	_cmsArticleAttach.fillFieldMap()
@@ -56,6 +57,7 @@ type cmsArticleAttach struct {
 	Point      field.Int32  // 下载所需积分
 	DownCount  field.Int32  // 下载次数
 	SortID     field.Int32  // 排序
+	Remark     field.String // 附件描述
 	CreateTime field.Time   // 创建时间
 
 	fieldMap map[string]field.Expr
@@ -82,6 +84,7 @@ func (c *cmsArticleAttach) updateTableName(table string) *cmsArticleAttach {
 	c.Point = field.NewInt32(table, "point")
 	c.DownCount = field.NewInt32(table, "down_count")
 	c.SortID = field.NewInt32(table, "sort_id")
+	c.Remark = field.NewString(table, "remark")
 	c.CreateTime = field.NewTime(table, "create_time")
 
 	c.fillFieldMap()
@@ -107,7 +110,7 @@ func (c *cmsArticleAttach) GetFieldByName(fieldName string) (field.OrderExpr, bo
 }
 
 func (c *cmsArticleAttach) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 10)
+	c.fieldMap = make(map[string]field.Expr, 11)
 	c.fieldMap["attach_id"] = c.AttachID
 	c.fieldMap["article_id"] = c.ArticleID
 	c.fieldMap["file_name"] = c.FileName
@@ -117,6 +120,7 @@ func (c *cmsArticleAttach) fillFieldMap() {
 	c.fieldMap["point"] = c.Point
 	c.fieldMap["down_count"] = c.DownCount
 	c.fieldMap["sort_id"] = c.SortID
+	c.fieldMap["remark"] = c.Remark
 	c.fieldMap["create_time"] = c.CreateTime
 }
 

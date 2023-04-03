@@ -21,6 +21,7 @@ type CmsArticleAttach struct {
 	Point      int32     `gorm:"column:point;type:int" json:"point" form:"point"`                                              // 下载所需积分
 	DownCount  int32     `gorm:"column:down_count;type:int" json:"down_count" form:"down_count"`                               // 下载次数
 	SortID     int32     `gorm:"column:sort_id;type:int" json:"sort_id" form:"sort_id"`                                        // 排序
+	Remark     string    `gorm:"column:remark;type:varchar(256)" json:"remark" form:"remark"`                                  // 附件描述
 	CreateTime time.Time `gorm:"column:create_time;type:int unsigned;autoCreateTime" json:"create_time" form:"create_time"`    // 创建时间
 }
 
