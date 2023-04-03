@@ -18,8 +18,8 @@
             </div>
             <div class="right-box">
                 <div class="search-box">
-                    <input type="text" placeholder="请输入搜索内容" class="ipt" />
-                    <span class="btn-search">搜索</span>
+                    <input type="text" placeholder="请输入搜索内容" class="ipt" value="{{.keyword}}" id="txtKeyword" />
+                    <span class="btn-search" onclick="location.href='/article/search/' + $('#txtKeyword').val();">搜索</span>
                 </div>
                 <span class="line"></span>
                 <a href="/zsjy/xsbm" class="btn">在线报名

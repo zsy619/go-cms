@@ -217,35 +217,39 @@ func (this *ApiArticle) Find(limit int, channel_id, category_id int64, call_inde
  * @param {int} is_red 是否推荐
  * @param {int} is_hot 是否热门
  * @param {int} is_slide 是否幻灯片
+ * @param {int} is_search 是否搜索
  * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
  * @return {*}
  */
-func (this *ApiArticle) Paginate(page, limit int, channel_id, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide int, order_by string) ([]*bmodel.ApiArticleListModel, int64, error) {
+func (this *ApiArticle) Paginate(page, limit int, channel_id, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide, is_search int, order_by string) ([]*bmodel.ApiArticleListModel, int64, error) {
 	order_by = xgeneric.IFF(order_by == "", "sort_id", order_by)
 	_, do := query.CmsArticleDo()
 	sqlSelectCount := "COUNT(1) as count"
-	sqlCount := "SELECT " + sqlSelectCount + " FROM cms_article a LEFT JOIN cms_article_category b ON a.category_id=b.category_id WHERE a.`status`=2 AND b.`status`=2" +
+	sqlCount := "SELECT " + sqlSelectCount + " FROM cms_article a LEFT JOIN cms_article_category b ON a.category_id=b.category_id LEFT JOIN cms_site_channel c ON a.channel_id = c.channel_id WHERE a.`status`=2 AND b.`status`=2" +
 		xgeneric.IFF(channel_id <= 0, "", " And b.channel_id="+strconv.FormatInt(channel_id, 10)) +
 		xgeneric.IFF(category_id <= 0, "", " And b.category_id="+strconv.FormatInt(category_id, 10)) +
 		xgeneric.IFF(call_index == "", "", " And b.call_index='"+call_index+"'") +
-		xgeneric.IFF(is_top <= 0, "", " And a.is_top="+strconv.Itoa(is_hot)) +
-		xgeneric.IFF(is_red <= 0, "", " And a.is_red="+strconv.Itoa(is_hot)) +
-		xgeneric.IFF(is_hot <= 0, "", " And a.is_hot="+strconv.Itoa(is_hot)) +
-		xgeneric.IFF(is_slide <= 0, "", " And a.is_slide="+strconv.Itoa(is_slide)) +
+		xgeneric.IFF(is_top < 0, "", " And a.is_top="+strconv.Itoa(is_hot)) +
+		xgeneric.IFF(is_red < 0, "", " And a.is_red="+strconv.Itoa(is_hot)) +
+		xgeneric.IFF(is_hot < 0, "", " And a.is_hot="+strconv.Itoa(is_hot)) +
+		xgeneric.IFF(is_slide < 0, "", " And a.is_slide="+strconv.Itoa(is_slide)) +
+		xgeneric.IFF(is_search < 0, "", " And b.is_search="+strconv.Itoa(is_search)) +
 		xgeneric.IFF(keyword == "", "", " And (a.title LIKE '%"+keyword+"%' OR a.summary LIKE '%"+keyword+"%')")
 	var count int64
 	if err := do.UnderlyingDB().Raw(sqlCount).Pluck("count", &count).Error; err != nil {
 		return nil, 0, err
 	}
 
-	sqlSelect := "a.article_id,a.site_id,a.channel_id,a.category_id,a.title,a.sub_title,a.call_index,a.ico_url,a.source,a.author,a.link_url,a.img_url,a.seo_title,a.seo_keyword,a.seo_description,a.tags,a.summary,a.click,a.is_lock,a.is_comment,a.like_count,a.is_top,a.is_hot,a.is_slide,a.static_url,a.publish_time"
-	sql := "SELECT " + sqlSelect + " FROM cms_article a LEFT JOIN cms_article_category b ON a.category_id=b.category_id WHERE a.`status`=2 AND b.`status`=2" +
+	sqlSelect := `a.article_id,a.site_id,a.channel_id,a.category_id,a.title,a.sub_title,a.call_index,a.ico_url,a.source,a.author,a.link_url,a.img_url,a.seo_title,a.seo_keyword,a.seo_description,a.tags,a.summary,a.click,a.is_lock,a.is_comment,a.like_count,a.is_top,a.is_hot,a.is_slide,a.static_url,a.publish_time`
+	sqlSelect += `,b.call_index as category_call_index,b.title as category_title,b.link_url as category_link_url,c.name as channel_name,c.title as channel_title`
+	sql := "SELECT " + sqlSelect + " FROM cms_article a LEFT JOIN cms_article_category b ON a.category_id=b.category_id LEFT JOIN cms_site_channel c ON a.channel_id = c.channel_id WHERE a.`status`=2 AND b.`status`=2" +
 		xgeneric.IFF(channel_id <= 0, "", " And b.channel_id="+strconv.FormatInt(channel_id, 10)) +
 		xgeneric.IFF(call_index == "", "", " And b.call_index='"+call_index+"'") +
-		xgeneric.IFF(is_top <= 0, "", " And a.is_top="+strconv.Itoa(is_hot)) +
-		xgeneric.IFF(is_red <= 0, "", " And a.is_red="+strconv.Itoa(is_hot)) +
-		xgeneric.IFF(is_hot <= 0, "", " And a.is_hot="+strconv.Itoa(is_hot)) +
-		xgeneric.IFF(is_slide <= 0, "", " And a.is_slide="+strconv.Itoa(is_slide)) +
+		xgeneric.IFF(is_top < 0, "", " And a.is_top="+strconv.Itoa(is_hot)) +
+		xgeneric.IFF(is_red < 0, "", " And a.is_red="+strconv.Itoa(is_hot)) +
+		xgeneric.IFF(is_hot < 0, "", " And a.is_hot="+strconv.Itoa(is_hot)) +
+		xgeneric.IFF(is_slide < 0, "", " And a.is_slide="+strconv.Itoa(is_slide)) +
+		xgeneric.IFF(is_search < 0, "", " And b.is_search="+strconv.Itoa(is_search)) +
 		xgeneric.IFF(keyword == "", "", " And (a.title LIKE '%"+keyword+"%' OR a.summary LIKE '%"+keyword+"%')") +
 		" ORDER BY a.is_top DESC,a." + order_by +
 		" LIMIT ? OFFSET ?"
@@ -260,7 +264,7 @@ func (this *ApiArticle) Paginate(page, limit int, channel_id, category_id int64,
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *ApiArticle) Get(call_index string, article_id int64) (*model.CmsArticle, []*model.CmsArticleAlbum, []*model.CmsArticleAttach, error) {
+func (this *ApiArticle) Get(call_index string, article_id int64) (*bmodel.ApiArticleOneModel, []*model.CmsArticleAlbum, []*model.CmsArticleAttach, error) {
 	mdl, do := query.CmsArticleDo()
 	if call_index != "" {
 		if article_id <= 0 {
@@ -269,18 +273,26 @@ func (this *ApiArticle) Get(call_index string, article_id int64) (*model.CmsArti
 			}
 		}
 	}
-	article, err := do.Where(mdl.ArticleID.Eq(article_id), mdl.Status.Eq(2)).First()
-	if err != nil {
-		return nil, nil, nil, err
+	field := `a.*,b.call_index as category_call_index,b.title as category_title,b.link_url as category_link_url,c.name as channel_name,c.title as channel_title`
+	sql := `SELECT ` + field + ` FROM cms_article a LEFT JOIN cms_article_category b ON a.category_id = b.category_id LEFT JOIN cms_site_channel c ON a.channel_id = c.channel_id`
+	sql += ` WHERE a.article_id=? AND a.is_deleted=0 AND a.status=2 AND b.status=2`
+	artilce := &bmodel.ApiArticleOneModel{}
+	if err := do.Debug().UnderlyingDB().Raw(sql, article_id).Scan(&artilce).Error; err != nil {
+		logs.Error("Get", err.Error())
+		return artilce, []*model.CmsArticleAlbum{}, []*model.CmsArticleAttach{}, err
 	}
 
 	albumMdl, alblumDo := query.CmsArticleAlbumDo()
 	articleAlbum, _ := alblumDo.Where(albumMdl.ArticleID.Eq(article_id)).Order(albumMdl.SortID).Find()
-
+	if articleAlbum == nil {
+		articleAlbum = []*model.CmsArticleAlbum{}
+	}
 	attachMdl, attachDo := query.CmsArticleAttachDo()
 	articleAttach, _ := attachDo.Where(attachMdl.ArticleID.Eq(article_id)).Order(attachMdl.SortID).Find()
-
-	return article, articleAlbum, articleAttach, nil
+	if articleAttach == nil {
+		articleAttach = []*model.CmsArticleAttach{}
+	}
+	return artilce, articleAlbum, articleAttach, nil
 }
 
 /**
@@ -289,12 +301,25 @@ func (this *ApiArticle) Get(call_index string, article_id int64) (*model.CmsArti
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *ApiArticle) Article(call_index string, article_id int64) (*model.CmsArticle, error) {
-	mdl, do := query.CmsArticleDo()
+func (this *ApiArticle) Article(call_index string, article_id int64) (*bmodel.ApiArticleOneModel, error) {
+	_, do := query.CmsArticleDo()
+	field := `a.*,b.call_index as category_call_index,b.title as category_title,b.link_url as category_link_url,c.name as channel_name,c.title as channel_title`
+	sql := `SELECT ` + field + ` FROM cms_article a LEFT JOIN cms_article_category b ON a.category_id = b.category_id LEFT JOIN cms_site_channel c ON a.channel_id = c.channel_id`
+	artilce := &bmodel.ApiArticleOneModel{}
 	if call_index != "" {
-		return do.Where(mdl.CallIndex.Eq(call_index), mdl.Status.Eq(2)).First()
+		sql += ` WHERE a.call_index=? AND a.is_deleted=0 AND a.status=2 AND b.status=2`
+		if err := do.Debug().UnderlyingDB().Raw(sql, call_index).Scan(&artilce).Error; err != nil {
+			logs.Error("Get", err.Error())
+			return artilce, err
+		}
+		return artilce, nil
 	}
-	return do.Where(mdl.ArticleID.Eq(article_id), mdl.Status.Eq(2)).First()
+	sql += ` WHERE a.article_id=? AND a.is_deleted=0 AND a.status=2 AND b.status=2`
+	if err := do.Debug().UnderlyingDB().Raw(sql, article_id).Scan(&artilce).Error; err != nil {
+		logs.Error("Get", err.Error())
+		return artilce, err
+	}
+	return artilce, nil
 }
 
 /**

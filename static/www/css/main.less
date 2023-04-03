@@ -599,6 +599,7 @@ html{
 .other-banner{
     height: 25rem;
     img{
+        width: 100%;
         height: 100%;
     }
 }
@@ -628,6 +629,7 @@ html{
             li{
                 font-size: 1.125rem;
                 position: relative;
+                border-bottom: 1px solid #ddd;
                 a{
                     display: block;
                     height: 100%;
@@ -655,15 +657,13 @@ html{
         }
     }
     .cont-right{
-        padding: 1.875rem 0 0.625rem;
+        padding: 0;
         width: 74%;
         float: right;
-        
-        
     }
 }
 .cont-detail{
-    margin-top: 3rem;
+    margin-top: 2rem;
     .title{
         font-size: 1.25rem;
         text-align: center;
@@ -689,7 +689,7 @@ html{
         color: #333333;
         min-height: 30rem;
         p{
-            margin-bottom: 1rem;
+            //margin-bottom: 1rem;
         }
     }
     .form-box{
@@ -709,6 +709,74 @@ html{
             }
         }
     }
+    .box{
+        .tabTop{
+            margin-top: 2rem;
+            margin-bottom: 1.5rem;
+            .title{
+                margin-bottom: 0;
+            }
+        }
+        .cont-detail{
+            margin-top: 1.5rem;
+        }
+        .detail-box{
+            min-height: auto;
+        }
+       .imglist-ul li a .title{
+           text-align: left;
+       }
+    }
+}
+.bg-gray{
+    background: #F0F0F0;
+}
+.search-list{
+    .top{
+        padding: 2.1875rem 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .title{
+            font-size: 1.75rem;
+            color: #666;
+        }
+        .total{
+            font-size: 0.875rem;
+            color: #999;
+        }
+    }
+    .list-ul{
+        li{
+            margin-bottom: 1.5rem;
+            background: #fff;
+            a{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 2rem;
+            }
+            .left{
+                .tit{
+                    font-size: 1.25rem;
+                    margin-bottom: 1rem;
+                }
+                .cont{
+                    font-size: 0.75rem;
+                    color: #999;
+                }
+            }
+            .right{
+                color: #1A54AD;
+            }
+        }
+    }
+    .pagination{
+        text-align: center;
+    }
+}
+.bt0{
+    border-bottom: 0;
 }
 .list-con{
     min-height: 30rem;
@@ -736,12 +804,16 @@ html{
     }
     .imglist-ul{
         display: flex;
-        justify-content: space-between;
+        justify-content:flex-start;
         flex-wrap: wrap;
         margin-top: 2rem;
         li{
             width: 32%;
             margin-bottom: 1rem;
+            margin-right: 2%;
+            &:nth-child(3n+3){
+                margin-right: 0;
+            }
             a{
                 width: 100%;
                 display: block;               

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>{{.keyword}} - {{.site.Title}}</title>
+    <link href="/static/favicon.ico" rel="icon">
+    <meta name="Keywords" content="{{.site.MetaKeyword}}" />
+    <meta name="description" content="{{.site.MetaDescription}}" />
+    <script src="{{.webroot}}js/common/common.js?r={{.time}}"></script>
+    <link href="/static/plugins/loading/app.min.css?r={{.time}}" rel="stylesheet" />
+    <script src="/static/plugins/loading/app.min.js?r={{.time}}"></script>
+    <script src="/static/plugins/moment/moment.min.js?r={{.time}}"></script>
+    <script src="/static/plugins/layui/layui.js?r={{.time}}"></script>
+    <script src="/static/const.js?r={{.time}}"></script>
+    <script>
+        var webroot = "{{.webroot}}";
+        var keyword = "{{.keyword}}";
+    </script>
+</head>
+
+<body>
+    {{template "www/layout/header.html" .}}
+    <div class="main bg-gray">
+        <div class="w1200 clearfix">
+            <div class="search-list">
+                <div class="top">
+                    <p class="title">搜索结果</p>
+                    <span class="total">共9条</span>
+                </div>
+                <ul class="list-ul">
+                    <li>
+                        <a href="#">
+                            <div class="left">
+                                <p class="tit">从 内容标题 取值</p>
+                                <p class="cont">从 摘要 取值</p>
+                            </div>
+                            <div class="right">查看更多</div>
+                        </a>
+                    </li>
+                </ul>
+                <div id="pagination" class="pagination"></div>
+            </div>
+        </div>
+    </div>
+    {{template "www/layout/footer.html" .}}
+    <script id="templateLi" type="text/template">
+        <li>
+            <a href="${url}" title="${title}" target="_blank" onclick="ArtilceClick(${article_id})" >
+                <div class="left">
+                    <p class="tit">【${category_title}】${title}</p>
+                    <p class="cont">${summary}</p>
+                </div>
+                <div class="right">查看更多</div>
+            </a>
+        </li>
+    </script>
+    <script type="text/javascript">
+        var loadData = function (page, limit) {
+            $.ajax({
+                url: "/api/article/paginate?is_search=1&keyword=" + keyword + "&limit=" + limit + "&page=" + page + "&r=" + Math.random(),
+                dataType: "json",
+                type: "get",
+                beforeSend: function () {
+                    $(".total").html("");
+                    $(".list-ul").html("");
+                    $(".search-list").busyLoad("show", { spinner: "circle-line" });
+                },
+                success: function (res) {
+                    if (res.code == 0) {
+                        var len = res.data.length;
+                        console.log(res.data);
+                        var tmpl = $("#templateLi").html();
+                        for (var i = 0; i < len; i++) {
+                            var item = res.data[i];
+                            var url = "";
+                            switch (item.category_call_index) {
+                                case "jsfc":
+                                    url = item.link_url == "" ? "/article/teacher/" + item.article_id : item.link_url;
+                                    break;
+                                default:
+                                    url = item.link_url == "" ? "/article/detail/" + item.article_id : item.link_url;
+                                    break;
+                            }
+                            var html = tmpl.replaceAll("${url}", url).replaceAll("${article_id}", item.article_id).replaceAll("${summary}", item.summary).replaceAll("${category_title}", item.category_title)
+                                .replaceAll("${title}", item.title).replaceAll("%{publish_time}", moment(item.publish_time).format('YYYY-MM-DD'));
+                            $(".list-ul").append(html);
+                        }
+                        $(".total").html("共" + res.count + "条");
+                        if (page == 1 && len > 0) {
+                            laypage.render({
+                                elem: 'pagination'
+                                , limit: 20
+                                , prev: '上页'
+                                , next: '下页'
+                                , limits: [10, 20, 30, 40, 50, 100]
+                                , count: res.count //数据总数，从服务端得到
+                                , jump: function (obj, first) {
+                                    if (!first) {
+                                        loadData(obj.curr, obj.limit, call_index);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                },
+                error: function () {
+                    alert('failed!');
+                },
+                complete: function () {
+                    $(".search-list").busyLoad("hide", { animate: "fade" });
+                }
+            });
+        };
+
+        layui.use(['form', 'element', 'laypage', 'layer'], function () {
+            var form = layui.form,
+                element = layui.element
+            laypage = layui.laypage,
+                layer = layui.layer;
+
+            loadData(1, 20)
+
+            form.render(); //刷新所有渲染效果，也可以单独熟悉某个效果	
+            form.render('select'); //刷新select选择框渲染
+        })
+    </script>
+</body>
+
+</html>

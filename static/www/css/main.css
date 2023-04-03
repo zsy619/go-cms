@@ -571,6 +571,7 @@ html {
   height: 25rem;
 }
 .other-banner img {
+  width: 100%;
   height: 100%;
 }
 .main .w1200 {
@@ -599,6 +600,7 @@ html {
 .main .nav-aside ul li {
   font-size: 1.125rem;
   position: relative;
+  border-bottom: 1px solid #ddd;
 }
 .main .nav-aside ul li a {
   display: block;
@@ -624,12 +626,12 @@ html {
   background: #1a54ad;
 }
 .main .cont-right {
-  padding: 1.875rem 0 0.625rem;
+  padding: 0;
   width: 74%;
   float: right;
 }
 .cont-detail {
-  margin-top: 3rem;
+  margin-top: 2rem;
 }
 .cont-detail .title {
   font-size: 1.25rem;
@@ -656,9 +658,6 @@ html {
   color: #333333;
   min-height: 30rem;
 }
-.cont-detail .detail-box p {
-  margin-bottom: 1rem;
-}
 .cont-detail .form-box {
   margin: 0 auto;
 }
@@ -672,6 +671,66 @@ html {
 .cont-detail .form-box .flex .layui-form-item {
   width: 50%;
   margin-bottom: 1.5rem;
+}
+.cont-detail .box .tabTop {
+  margin-top: 2rem;
+  margin-bottom: 1.5rem;
+}
+.cont-detail .box .tabTop .title {
+  margin-bottom: 0;
+}
+.cont-detail .box .cont-detail {
+  margin-top: 1.5rem;
+}
+.cont-detail .box .detail-box {
+  min-height: auto;
+}
+.cont-detail .box .imglist-ul li a .title {
+  text-align: left;
+}
+.bg-gray {
+  background: #F0F0F0;
+}
+.search-list .top {
+  padding: 2.1875rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.search-list .top .title {
+  font-size: 1.75rem;
+  color: #666;
+}
+.search-list .top .total {
+  font-size: 0.875rem;
+  color: #999;
+}
+.search-list .list-ul li {
+  margin-bottom: 1.5rem;
+  background: #fff;
+}
+.search-list .list-ul li a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem;
+}
+.search-list .list-ul li .left .tit {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+.search-list .list-ul li .left .cont {
+  font-size: 0.75rem;
+  color: #999;
+}
+.search-list .list-ul li .right {
+  color: #1A54AD;
+}
+.search-list .pagination {
+  text-align: center;
+}
+.bt0 {
+  border-bottom: 0;
 }
 .list-con {
   min-height: 30rem;
@@ -697,13 +756,17 @@ html {
 }
 .list-con .imglist-ul {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   flex-wrap: wrap;
   margin-top: 2rem;
 }
 .list-con .imglist-ul li {
   width: 32%;
   margin-bottom: 1rem;
+  margin-right: 2%;
+}
+.list-con .imglist-ul li:nth-child(3n+3) {
+  margin-right: 0;
 }
 .list-con .imglist-ul li a {
   width: 100%;

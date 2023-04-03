@@ -45,6 +45,17 @@ func (this *BaseController) display(tpl ...string) {
 	this.TplName = tplname
 }
 
+func (this *BaseController) displayArticle(tpl ...string) {
+	var tplname string
+	if len(tpl) > 0 {
+		tplname = tpl[0] + ".html"
+	} else {
+		tplname = "www/" + this.ControllerName + "/" + this.ActionName + ".html"
+	}
+	this.Layout = "www/layout/article.html"
+	this.TplName = tplname
+}
+
 func (this *BaseController) displayCategory(tpl ...string) {
 	var tplname string
 	if len(tpl) > 0 {
@@ -187,11 +198,12 @@ func (this *BaseController) ArticleFind(limit int, channel_id, category_id int64
  * @param {int} is_red 是否推荐
  * @param {int} is_hot 是否热门
  * @param {int} is_slide 是否幻灯片
+ * @param {int} is_search 是否搜索
  * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
  * @return {*}
  */
-func (this *BaseController) ArticlePaginate(page, limit int, channel_id, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide int, order_by string) ([]*bmodel.ApiArticleListModel, int64, error) {
-	return biz.NewApiArticle().Paginate(page, limit, channel_id, category_id, call_index, keyword, is_top, is_red, is_hot, is_slide, order_by)
+func (this *BaseController) ArticlePaginate(page, limit int, channel_id, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide, is_search int, order_by string) ([]*bmodel.ApiArticleListModel, int64, error) {
+	return biz.NewApiArticle().Paginate(page, limit, channel_id, category_id, call_index, keyword, is_top, is_red, is_hot, is_slide, is_search, order_by)
 }
 
 /**
@@ -200,7 +212,7 @@ func (this *BaseController) ArticlePaginate(page, limit int, channel_id, categor
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *BaseController) ArticleGet(call_index string, article_id int64) (*model.CmsArticle, []*model.CmsArticleAlbum, []*model.CmsArticleAttach, error) {
+func (this *BaseController) ArticleGet(call_index string, article_id int64) (*bmodel.ApiArticleOneModel, []*model.CmsArticleAlbum, []*model.CmsArticleAttach, error) {
 	return biz.NewApiArticle().Get(call_index, article_id)
 }
 
@@ -210,7 +222,7 @@ func (this *BaseController) ArticleGet(call_index string, article_id int64) (*mo
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *BaseController) ArticleArticle(call_index string, article_id int64) (*model.CmsArticle, error) {
+func (this *BaseController) ArticleArticle(call_index string, article_id int64) (*bmodel.ApiArticleOneModel, error) {
 	return biz.NewApiArticle().Article(call_index, article_id)
 }
 

@@ -4,6 +4,7 @@ import (
 	"strconv"
 
 	"github.com/beego/beego/v2/core/logs"
+	"haedu.gov.cn/cms/app/biz/bmodel"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/lib"
 )
@@ -113,6 +114,7 @@ func (this *ApiArticleController) Find() {
  * @param {int} is_red 是否推荐
  * @param {int} is_hot 是否热门
  * @param {int} is_slide 是否幻灯片
+ * @param {int} is_search 是否搜索
  * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
  * @return {*}
  */
@@ -123,13 +125,14 @@ func (this *ApiArticleController) Paginate() {
 	order_by := this.GetString("order_by", "sort_id")
 	call_index := this.GetString("call_index")
 	keyword := this.GetString("keyword")
-	channel_id, _ := this.GetInt64("channel_id", 0)
-	category_id, _ := this.GetInt64("category_id", 0)
-	is_top, _ := this.GetInt("is_top", 0)
-	is_red, _ := this.GetInt("is_red", 0)
-	is_hot, _ := this.GetInt("is_hot", 0)
-	is_slide, _ := this.GetInt("is_slide", 0)
-	outArticle, count, err := this.BaseController.ArticlePaginate(page, limit, channel_id, category_id, call_index, keyword, is_top, is_red, is_hot, is_slide, order_by)
+	channel_id, _ := this.GetInt64("channel_id", -1)
+	category_id, _ := this.GetInt64("category_id", -1)
+	is_top, _ := this.GetInt("is_top", -1)
+	is_red, _ := this.GetInt("is_red", -1)
+	is_hot, _ := this.GetInt("is_hot", -1)
+	is_slide, _ := this.GetInt("is_slide", -1)
+	is_search, _ := this.GetInt("is_search", -1)
+	outArticle, count, err := this.BaseController.ArticlePaginate(page, limit, channel_id, category_id, call_index, keyword, is_top, is_red, is_hot, is_slide, is_search, order_by)
 	if err != nil {
 		this.JSONPage(lib.CodeError, err.Error(), outArticle, count)
 	}
@@ -148,9 +151,9 @@ func (this *ApiArticleController) One() {
 	call_index := this.GetString("call_index")
 	aritcle, album, attatch, err := this.BaseController.ArticleGet(call_index, article_id)
 	result := struct {
-		Article *model.CmsArticle         `json:"article"`
-		Album   []*model.CmsArticleAlbum  `json:"album"`
-		Attach  []*model.CmsArticleAttach `json:"attatch"`
+		Article *bmodel.ApiArticleOneModel `json:"article"`
+		Album   []*model.CmsArticleAlbum   `json:"album"`
+		Attach  []*model.CmsArticleAttach  `json:"attatch"`
 	}{
 		Article: aritcle,
 		Album:   album,

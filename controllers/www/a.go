@@ -32,6 +32,13 @@ func init() {
 
 	web.Router("/", &IndexController{}, "*:Index")
 
+	// web.Include(&ArticleController{})
+
+	web.Router("/article/detail/:article_id", &ArticleController{}, "*:Detail")   // 文章详情
+	web.Router("/article/teacher/:article_id", &ArticleController{}, "*:Teacher") // 教师风采
+	web.Router("/article/search/:keyword", &ArticleController{}, "*:Search")      // 搜索页面
+	web.Router("/article/search", &ArticleController{}, "*:Search")               // 搜索页面
+
 	web.AutoPrefix("/", &XxgkController{}) // 学校概况
 	web.AutoPrefix("/", &ZsjyController{}) // 招生就业
 	web.AutoPrefix("/", &XyzxController{}) // 校园资讯
