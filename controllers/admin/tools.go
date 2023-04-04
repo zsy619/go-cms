@@ -145,9 +145,12 @@ func (c *ToolsController) Upload() {
 
 	// 生成唯一的文件名
 	filename := generateFilename(ext)
-
+	pth := c.GetString("path")
+	if pth == "" {
+		pth = "files"
+	}
 	// 保存上传的文件到指定目录
-	uploadDir := "Uploads/files/" + time.Now().Format("2006/01/")
+	uploadDir := "Uploads/" + pth + "/" + time.Now().Format("2006/01/")
 	if err := os.MkdirAll(uploadDir, os.ModePerm); err != nil {
 		fmt.Println("err", err.Error())
 		result.Code = 1

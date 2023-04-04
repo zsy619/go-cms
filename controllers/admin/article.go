@@ -299,17 +299,3 @@ func (c *ArticleController) CategoryTree() {
 	c.ServeJSON()
 	c.StopRun()
 }
-
-// ArticleAttach 附件管理
-func (c *ArticleController) ArticleAttach() {
-	articleId, _ := c.GetInt64("articleId")
-	if articleId <= 0 {
-		c.Abort("404")
-		c.StopRun()
-		return
-	}
-	channelId, _ := c.GetInt64("channelId")
-	c.Data["articleId"] = articleId
-	c.Data["channelId"] = channelId
-	c.display()
-}

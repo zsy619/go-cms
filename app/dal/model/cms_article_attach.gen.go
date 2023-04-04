@@ -14,12 +14,12 @@ const TableNameCmsArticleAttach = "cms_article_attach"
 type CmsArticleAttach struct {
 	AttachID   int64     `gorm:"column:attach_id;type:bigint;primaryKey;autoIncrement:true" json:"attach_id" form:"attach_id"` // 主键
 	ArticleID  int64     `gorm:"column:article_id;type:bigint" json:"article_id" form:"article_id"`                            // 文章ID
-	FileName   string    `gorm:"column:file_name;type:varchar(256)" json:"file_name" form:"file_name"`                         // 文件名
+	Title      string    `gorm:"column:title;type:varchar(128)" json:"title" form:"title"`                                     // 标题
 	FilePath   string    `gorm:"column:file_path;type:varchar(512)" json:"file_path" form:"file_path"`                         // 文件路径
 	FileSize   int64     `gorm:"column:file_size;type:bigint" json:"file_size" form:"file_size"`                               // 文件大小(字节)
 	FileExt    string    `gorm:"column:file_ext;type:varchar(16)" json:"file_ext" form:"file_ext"`                             // 文件扩展名
 	Point      int32     `gorm:"column:point;type:int" json:"point" form:"point"`                                              // 下载所需积分
-	DownCount  int32     `gorm:"column:down_count;type:int" json:"down_count" form:"down_count"`                               // 下载次数
+	Click      int32     `gorm:"column:click;type:int" json:"click" form:"click"`                                              // 下载次数
 	SortID     int32     `gorm:"column:sort_id;type:int" json:"sort_id" form:"sort_id"`                                        // 排序
 	IsShow     int32     `gorm:"column:is_show;type:tinyint" json:"is_show" form:"is_show"`                                    // 是否显示：1显示2隐藏
 	Remark     string    `gorm:"column:remark;type:varchar(256)" json:"remark" form:"remark"`                                  // 附件描述

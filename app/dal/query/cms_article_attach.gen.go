@@ -29,12 +29,12 @@ func newCmsArticleAttach(db *gorm.DB, opts ...gen.DOOption) cmsArticleAttach {
 	_cmsArticleAttach.ALL = field.NewAsterisk(tableName)
 	_cmsArticleAttach.AttachID = field.NewInt64(tableName, "attach_id")
 	_cmsArticleAttach.ArticleID = field.NewInt64(tableName, "article_id")
-	_cmsArticleAttach.FileName = field.NewString(tableName, "file_name")
+	_cmsArticleAttach.Title = field.NewString(tableName, "title")
 	_cmsArticleAttach.FilePath = field.NewString(tableName, "file_path")
 	_cmsArticleAttach.FileSize = field.NewInt64(tableName, "file_size")
 	_cmsArticleAttach.FileExt = field.NewString(tableName, "file_ext")
 	_cmsArticleAttach.Point = field.NewInt32(tableName, "point")
-	_cmsArticleAttach.DownCount = field.NewInt32(tableName, "down_count")
+	_cmsArticleAttach.Click = field.NewInt32(tableName, "click")
 	_cmsArticleAttach.SortID = field.NewInt32(tableName, "sort_id")
 	_cmsArticleAttach.IsShow = field.NewInt32(tableName, "is_show")
 	_cmsArticleAttach.Remark = field.NewString(tableName, "remark")
@@ -56,12 +56,12 @@ type cmsArticleAttach struct {
 	ALL        field.Asterisk
 	AttachID   field.Int64  // 主键
 	ArticleID  field.Int64  // 文章ID
-	FileName   field.String // 文件名
+	Title      field.String // 标题
 	FilePath   field.String // 文件路径
 	FileSize   field.Int64  // 文件大小(字节)
 	FileExt    field.String // 文件扩展名
 	Point      field.Int32  // 下载所需积分
-	DownCount  field.Int32  // 下载次数
+	Click      field.Int32  // 下载次数
 	SortID     field.Int32  // 排序
 	IsShow     field.Int32  // 是否显示：1显示2隐藏
 	Remark     field.String // 附件描述
@@ -89,12 +89,12 @@ func (c *cmsArticleAttach) updateTableName(table string) *cmsArticleAttach {
 	c.ALL = field.NewAsterisk(table)
 	c.AttachID = field.NewInt64(table, "attach_id")
 	c.ArticleID = field.NewInt64(table, "article_id")
-	c.FileName = field.NewString(table, "file_name")
+	c.Title = field.NewString(table, "title")
 	c.FilePath = field.NewString(table, "file_path")
 	c.FileSize = field.NewInt64(table, "file_size")
 	c.FileExt = field.NewString(table, "file_ext")
 	c.Point = field.NewInt32(table, "point")
-	c.DownCount = field.NewInt32(table, "down_count")
+	c.Click = field.NewInt32(table, "click")
 	c.SortID = field.NewInt32(table, "sort_id")
 	c.IsShow = field.NewInt32(table, "is_show")
 	c.Remark = field.NewString(table, "remark")
@@ -131,12 +131,12 @@ func (c *cmsArticleAttach) fillFieldMap() {
 	c.fieldMap = make(map[string]field.Expr, 17)
 	c.fieldMap["attach_id"] = c.AttachID
 	c.fieldMap["article_id"] = c.ArticleID
-	c.fieldMap["file_name"] = c.FileName
+	c.fieldMap["title"] = c.Title
 	c.fieldMap["file_path"] = c.FilePath
 	c.fieldMap["file_size"] = c.FileSize
 	c.fieldMap["file_ext"] = c.FileExt
 	c.fieldMap["point"] = c.Point
-	c.fieldMap["down_count"] = c.DownCount
+	c.fieldMap["click"] = c.Click
 	c.fieldMap["sort_id"] = c.SortID
 	c.fieldMap["is_show"] = c.IsShow
 	c.fieldMap["remark"] = c.Remark
