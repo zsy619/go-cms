@@ -657,12 +657,10 @@ html {
   justify-content: center;
   margin-bottom: 1.5rem;
   padding-bottom: 1.5rem;
+  color: #999;
 }
 .cont-detail .cont-info div {
-  margin-right: 0.5rem;
-}
-.cont-detail .cont-info div span {
-  color: #f80;
+  margin-right: 1rem;
 }
 .cont-detail .detail-box {
   font-size: 15px;
@@ -741,6 +739,29 @@ html {
 }
 .search-list .pagination {
   text-align: center;
+}
+.list-other {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: dashed 1px #ccc;
+  padding: 2rem 0 1rem;
+  margin-bottom: 5rem;
+}
+.list-other .left ul li {
+  line-height: 2rem;
+}
+.list-other .left ul li a {
+  font-size: 1rem;
+}
+.list-other .btn-return {
+  background: #1A54AD;
+  color: #fff;
+  display: block;
+  padding: 0.875rem 3rem;
+  border-radius: 0.2rem;
+  text-align: center;
+  font-size: 1rem;
 }
 .bt0 {
   border-bottom: 0;
