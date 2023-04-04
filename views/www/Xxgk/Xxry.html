@@ -1,0 +1,76 @@
+<link rel="stylesheet" type="text/css" href="/static/plugins/picCarousel/picCarousel.css?r={{.time}}" />
+<script src="/static/plugins/picCarousel/picCarousel.js?r={{.time}}"></script>
+<script type="text/javascript" src="/static/plugins/jquery-viewer/viewer.js"></script>
+<link rel="stylesheet" href="/static/plugins/jquery-viewer/viewer.css">
+<script type="text/javascript" src="/static/plugins/jquery-viewer/jquery-viewer.js"></script>
+<div class="cont-right">
+    <div class="breadcrumb">
+        <img src="{{.webroot}}images/position.png" alt="" class="position" /> 您所在的位置：
+        <a href="/">首页</a>&gt;
+        <a href="javascript:void(0)">学校概况</a>&gt;
+        <a href="javascript:void(0)" class="active">学校荣誉</a>
+    </div>
+    <div class="cont-detail">
+        <div class="poster-main 3Dimg-box" id="divImg">
+            <div class="poster-btn poster-prev-btn"></div>
+            <ul class="poster-list">
+                {{range $index,$item := .album}}
+                <li class="poster-item"><img data-original="{{$item.OriginalPath}}" src="{{$item.OriginalPath}}"></li>
+                {{end}}
+                <!-- <li class="poster-item"><img data-original="{{.webroot}}images/school_honor_img1.png" src="{{.webroot}}images/school_honor_img1.png"></li>
+                <li class="poster-item"><img data-original="{{.webroot}}images/school_honor_img1.png" src="{{.webroot}}images/school_honor_img1.png"></li>
+                <li class="poster-item"><img data-original="{{.webroot}}images/school_honor_img1.png" src="{{.webroot}}images/school_honor_img1.png"></li>
+                <li class="poster-item"><img data-original="{{.webroot}}images/school_honor_img1.png" src="{{.webroot}}images/school_honor_img1.png"></li>
+                <li class="poster-item"><img data-original="{{.webroot}}images/school_honor_img1.png" src="{{.webroot}}images/school_honor_img1.png"></li> -->
+            </ul>
+            <div class="poster-btn poster-next-btn"></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        var viewer = new Viewer(document.getElementById('divImg'), {
+            url: 'data-original'
+        });
+
+        $(".3Dimg-box").PicCarousel({
+            "width": 1000, //幻灯片的宽度
+            "height": 306, //幻灯片的高度
+            "posterWidth": 460, //幻灯片第一张的宽度
+            "posterHeight": 306, //幻灯片第一张的高度
+            "scale": 0.8, //记录显示比例关系
+            "speed": 1000, //记录幻灯片滚动速度
+            "autoPlay": true, //是否开启自动播放
+            "delay": 2000, //自动播放间隔
+            "verticalAlign": "middle" //图片对齐位置
+        });
+
+        $.ajax({
+            url: "/api/category/nav?call_index=" + actionName + "&r=" + Math.random(),
+            dataType: "json",
+            type: "get",
+            beforeSend: function () {
+                $(".breadcrumb").html("");
+            },
+            success: function (res) {
+                $(".breadcrumb").append('<img src="{{.webroot}}images/position.png" alt="" class="position" /> 您所在的位置：');
+                $(".breadcrumb").append('<a href="/">首页</a>&nbsp;&gt;');
+                if (res.code == 0) {
+                    var len = res.data.length;
+                    for (var i = 0; i < len; i++) {
+                        if (i != len - 1) {
+                            $(".breadcrumb").append('&nbsp;<a href="javascript:void(0)">' + res.data[i].title + '</a>&nbsp;&gt;');
+                        } else {
+                            $(".breadcrumb").append('&nbsp;<a href="javascript:void(0)" class="active">' + res.data[i].title + '</a>');
+                        }
+                    }
+                }
+            },
+            error: function () {
+            },
+            complete: function () {
+            }
+        });
+
+    })
+</script>

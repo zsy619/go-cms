@@ -1,5 +1,7 @@
 package www
 
+import "haedu.gov.cn/cms/app/dal/model"
+
 // XxgkController 学校概况
 type XxgkController struct{ CategoryBaseController }
 
@@ -12,6 +14,11 @@ func (this *XxgkController) Xxjj() {
 // Xxry 学校荣誉
 // @router /xxgk/xxry [get]
 func (this *XxgkController) Xxry() {
+	album, err := this.ArticleAlbum(this.ActionName, 0)
+	if err != nil {
+		album = []*model.CmsArticleAlbum{}
+	}
+	this.Data["album"] = album
 	this.displayCategory()
 }
 
