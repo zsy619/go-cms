@@ -15,6 +15,9 @@
     <script src="/static/plugins/moment/moment.min.js?r={{.time}}"></script>
     <script src="/static/plugins/layui/layui.js?r={{.time}}"></script>
     <script src="/static/const.js?r={{.time}}"></script>
+    <script type="text/javascript" src="/static/plugins/jquery-viewer/viewer.js"></script>
+    <link rel="stylesheet" href="/static/plugins/jquery-viewer/viewer.css">
+    <script type="text/javascript" src="/static/plugins/jquery-viewer/jquery-viewer.js"></script>
     <script>
         var webroot = "{{.webroot}}";
     </script>
@@ -52,6 +55,31 @@
                     <div class="detail-box">
                         {{str2html .article.Content}}
                     </div>
+                    {{if gt (len .album) 0}}
+                    <div class="news-list" id="divImg">
+                        <ul>
+                            {{range $index, $item := .album}}
+                            <li>
+                                <img data-original="{{$item.OriginalPath}}" title="{{$item.Title}}" src="{{$item.OriginalPath}}" />
+                                <p class="title ellip">{{$item.Title}}</p>
+                            </li>
+                            {{end}}
+                        </ul>
+                    </div>
+                    {{end}}
+                    {{if gt (len .attach) 0}}
+                    <div class="fj-box">
+                        <span class="label">附件：</span>
+                        <div>
+                            {{range $index, $item := .attach}}
+                            <p>
+                                <img src="{{$.webroot}}images/icon_link.png" />
+                                <a target="_blank" href="{{$item.OriginalPath}}">{{$item.Title}}</a>
+                            </p>
+                            {{end}}
+                        </div>
+                    </div>
+                    {{end}}
                 </div>
             </div>
         </div>
@@ -59,6 +87,10 @@
     {{template "www/layout/footer.html" .}}
     <script type="text/javascript">
         $(function () {
+            var viewer = new Viewer(document.getElementById('divImg'), {
+                url: 'data-original'
+            });
+
             $.ajax({
                 url: "/api/category/nav?call_index={{.article.CategoryCallIndex}}&r=" + Math.random(),
                 dataType: "json",

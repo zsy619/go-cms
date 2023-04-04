@@ -33,7 +33,7 @@ html {
   justify-content: space-between;
   align-items: center;
   color: #fff;
-  padding: 5px 0;
+  padding: 5px 50px;
 }
 .header-box .center .right-box {
   display: flex;
@@ -89,6 +89,12 @@ html {
 .header-box .m-nav .level-one li > a {
   font-size: 1rem;
   text-align: center;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.header-box .m-nav .level-one li > a:hover {
+  color: #fff;
 }
 .header-box .m-nav .level-one li {
   position: relative;
@@ -223,6 +229,27 @@ html {
 }
 #ad-move {
   z-index: 999;
+  position: relative;
+}
+#ad-move a {
+  display: block;
+}
+#ad-move .cha {
+  position: absolute;
+  left: 50%;
+  bottom: -40px;
+  background: #fff;
+  width: 2rem;
+  height: 2rem;
+  line-height: 2rem;
+  border-radius: 50%;
+  margin-left: -1rem;
+  text-align: center;
+  cursor: pointer;
+}
+#ad-move .cha img {
+  width: 100%;
+  width: 1.6rem;
 }
 .banner-box .sliderList {
   /*padding-top:20px;*/
@@ -510,11 +537,22 @@ html {
 }
 .other-media .content .item-box .item .hover {
   display: none;
+  padding: 0.4rem;
+  width: 5.625rem;
+  height: 5.9375rem;
   position: absolute;
+  line-height: 4.825rem;
+  text-align: center;
+}
+.other-media .content .item-box .item .hover img {
+  width: 100%;
+  vertical-align: middle;
 }
 .other-media .content .item-box .item:nth-child(1) .hover,
 .other-media .content .item-box .item:nth-child(2) .hover {
   top: -4rem;
+  background: url(../images/tip.png) no-repeat;
+  background-size: contain;
 }
 .other-media .content .item-box .item:nth-child(3) .hover,
 .other-media .content .item-box .item:nth-child(4) .hover {
@@ -597,6 +635,7 @@ html {
 .main .nav-aside ul {
   background: #F7F7F7 url(../images/bg_aside.png) no-repeat left bottom;
   background-size: contain;
+  padding-bottom: 8rem;
 }
 .main .nav-aside ul li {
   font-size: 1.125rem;
@@ -644,6 +683,7 @@ html {
 }
 .cont-detail {
   margin-top: 2rem;
+  padding-bottom: 5rem;
 }
 .cont-detail .title {
   font-size: 1.25rem;
@@ -666,7 +706,6 @@ html {
   font-size: 15px;
   line-height: 36px;
   color: #333333;
-  min-height: 30rem;
 }
 .cont-detail .form-box {
   margin: 0 auto;
@@ -697,6 +736,37 @@ html {
 }
 .cont-detail .box .imglist-ul li a .title {
   text-align: left;
+}
+.cont-detail .news-list {
+  margin-bottom: 2rem;
+}
+.cont-detail .news-list ul {
+  display: flex;
+  flex-wrap: wrap;
+}
+.cont-detail .news-list ul li {
+  width: 25%;
+  border-right: 0.875rem solid #fff;
+}
+.cont-detail .news-list ul li img {
+  width: 100%;
+  height: 11.25rem;
+}
+.cont-detail .news-list ul li .title {
+  width: 100%;
+  text-align: center;
+  color: #666;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+}
+.cont-detail .fj-box {
+  display: flex;
+}
+.cont-detail .fj-box p {
+  line-height: 1.5rem;
+}
+.cont-detail .fj-box p a {
+  color: #1A54AD;
 }
 .bg-gray {
   background: #F0F0F0;
@@ -838,6 +908,7 @@ html {
 }
 .list-con .imgTextlist-ul li .img-box .img {
   width: 100%;
+  height: 20rem;
   transition: all 0.9s ease-in-out;
 }
 .list-con .imgTextlist-ul li .info-box {
@@ -849,10 +920,17 @@ html {
   font-size: 1.25rem;
   margin-bottom: 1.25rem;
 }
+.list-con .imgTextlist-ul li .info-box .intro {
+  color: #333;
+  font-size: 1rem;
+  font-weight: normal;
+  text-indent: 2rem;
+  line-height: 1.8rem;
+}
 .list-con .imgTextlist-ul li .info-box .item {
   display: flex;
   font-size: 1rem;
-  line-height: 1.8em;
+  line-height: 1.6em;
   margin-top: 1rem;
 }
 .list-con .imgTextlist-ul li .info-box .name {

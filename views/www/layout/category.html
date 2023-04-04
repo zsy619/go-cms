@@ -26,16 +26,18 @@
 <body>
     {{template "www/layout/header.html" .}}
     <div class="other-banner">
-        <img src="{{.webroot}}images/other_banner.png" class="img" />
+        <img src="{{.webroot}}images/other_banner.png" id="banner_xxgk" style="display: none;" class="img" />
+        <img src="{{.webroot}}images/other_banner3.png" id="banner_jgsz" style="display: none;" class="img" />
+        <img src="{{.webroot}}images/other_banner4.png" id="banner_xyzx" style="display: none;" class="img" />
+        <img src="{{.webroot}}images/other_banner5.png" id="banner_jyjx" style="display: none;" class="img" />
+        <img src="{{.webroot}}images/other_banner6.png" id="banner_zsjy" style="display: none;" class="img" />
+        <img src="{{.webroot}}images/other_banner2.png" id="banner_lxwm" style="display: none;" class="img" />
     </div>
     <div class="main">
         <div class="w1200 clearfix">
             <div class="nav-aside">
-                <div class="top" id="channelName">招生就业</div>
+                <div class="top" id="channelName">&nbsp;</div>
                 <ul id="urlNav">
-                    <li><a href="1.2-文字列表页.html">招生简章</a></li>
-                    <li class="active"><a href="2.1-招生就业-线上报名.html">线上报名</a></li>
-                    <li><a href="1.2-文字列表页.html">就业服务</a></li>
                 </ul>
             </div>
             {{.LayoutContent}}
@@ -43,6 +45,7 @@
         {{template "www/layout/footer.html" .}}
         <script type="text/javascript">
             $(function () {
+                $("#banner_" + controllerName).show();
                 $.ajax({
                     url: "/api/category/find?channel_name=" + controllerName + "&r=" + Math.random(),
                     dataType: "json",

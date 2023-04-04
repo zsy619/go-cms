@@ -36,7 +36,7 @@ html{
             justify-content: space-between;
             align-items: center;
             color: #fff;
-            padding: 5px 0;
+            padding: 5px 50px;
         }
         .right-box{
             display: flex;
@@ -91,6 +91,12 @@ html{
             li>a{
                font-size: 1rem; 
                text-align: center;
+               width: 100%;
+               height: 100%;
+               display: block;
+               &:hover{
+                   color: #fff;
+               }
             }
             li{
                 position: relative;
@@ -235,6 +241,28 @@ html{
 }
 #ad-move{
     z-index: 999;
+    position: relative;
+    a{
+        display: block;
+    }
+    .cha{
+        position: absolute;
+        left: 50%;
+        bottom: -40px;
+        background: #fff;
+        width: 2rem;
+        height: 2rem;
+        line-height: 2rem;
+        border-radius: 50%;
+        margin-left: -1rem;
+        text-align: center;
+        cursor: pointer;
+        img{
+            width: 100%;
+            width: 1.6rem;
+        }
+//      border-radius: 50%;
+    }
 }
 .banner-box .sliderList {
     /*padding-top:20px;*/
@@ -444,6 +472,7 @@ html{
                 }
             }
             &:hover{
+               
                 .img{
                     transform: scale(1.08);
                 }
@@ -532,12 +561,23 @@ html{
                 }
                 .hover{
                     display: none;
+                     padding: 0.4rem;
+                     width: 5.625rem;
+                     height: 5.9375rem;
                     position: absolute;
+                    line-height: 4.825rem;
+                    text-align: center;
+                    img{
+                        width: 100%;
+                         vertical-align: middle;
+                    }
                     
                 }
                 &:nth-child(1) .hover,
                 &:nth-child(2) .hover{
                     top: -4rem;
+                    background: url(../images/tip.png) no-repeat;
+                    background-size: contain;
                 }
                 &:nth-child(3) .hover,
                 &:nth-child(4) .hover{
@@ -627,6 +667,7 @@ html{
         ul{
             background:#F7F7F7 url(../images/bg_aside.png) no-repeat left bottom;
             background-size: contain;
+            padding-bottom: 8rem;
             li{
                 font-size: 1.125rem;
                 position: relative;
@@ -676,6 +717,7 @@ html{
 }
 .cont-detail{
     margin-top: 2rem;
+    padding-bottom: 5rem;
     .title{
         font-size: 1.25rem;
         text-align: center;
@@ -697,7 +739,7 @@ html{
         font-size: 15px;
         line-height: 36px;
         color: #333333;
-        min-height: 30rem;
+//      min-height: 30rem;
         p{
             //margin-bottom: 1rem;
         }
@@ -736,6 +778,38 @@ html{
        .imglist-ul li a .title{
            text-align: left;
        }
+    }
+    .news-list{
+        margin-bottom: 2rem;
+        ul{
+            display: flex;
+            flex-wrap: wrap;
+            li{
+                width: 25%;
+                border-right: 0.875rem solid #fff;
+                img{
+                    width: 100%;
+                    height: 11.25rem;
+                }
+                .title{
+                    width: 100%;
+                    text-align: center;
+                    color: #666;
+                    margin-top: 0.5rem;
+                    font-size: 0.875rem;
+                }
+            }
+        }
+    }
+    .fj-box{
+        display: flex;
+        p{
+            line-height: 1.5rem;
+            
+            a{
+               color: #1A54AD; 
+            }
+        }
     }
 }
 .bg-gray{
@@ -890,6 +964,7 @@ html{
                 overflow: hidden;
                 .img{
                     width: 100%;
+                    height: 20rem;
                     transition: all 0.9s ease-in-out;
                 }
             }
@@ -901,10 +976,17 @@ html{
                     font-size: 1.25rem;
                     margin-bottom: 1.25rem;
                 }
+                .intro{
+                    color: #333;
+                    font-size: 1rem;
+                    font-weight: normal;
+                    text-indent: 2rem;
+                    line-height: 1.8rem;
+                }
                 .item{
                     display: flex;
                     font-size: 1rem;
-                    line-height: 1.8em;
+                    line-height: 1.6em;
                     margin-top: 1rem;
                 }
                 .name{
