@@ -5,7 +5,7 @@
         <a href="javascript:void(0)">学校概况</a>&gt;
         <a href="javascript:void(0)" class="active">列表</a>
     </div>
-    <div class="list-con">
+    <div class="list-con" id="divImg">
         <ul class="imgTextlist-ul">
             <li>
                 <div class="img-box">
@@ -32,7 +32,7 @@
 <script id="templateLi" type="text/template">
     <li>
         <div class="img-box">
-            <img src="${img_url}" class="img" />
+            <img data-original="${img_url}" src="${img_url}" class="img" />
         </div>
         <div class="info-box">
             <div class="title">${title}</div>
@@ -49,6 +49,9 @@
         </div>
     </li>
 </script>
+<script type="text/javascript" src="/static/plugins/jquery-viewer/viewer.js"></script>
+<link rel="stylesheet" href="/static/plugins/jquery-viewer/viewer.css">
+<script type="text/javascript" src="/static/plugins/jquery-viewer/jquery-viewer.js"></script>
 <script type="text/javascript">
     $(function () {
         $.ajax({
@@ -118,6 +121,10 @@
                                 }
                             });
                         }
+
+                        var viewer = new Viewer(document.getElementById('divImg'), {
+                            url: 'data-original'
+                        });
                     }
                 }
             },
