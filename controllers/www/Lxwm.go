@@ -5,15 +5,15 @@ type LxwmController struct{ CategoryBaseController }
 
 // Bgsdh 办公室电话
 func (this *LxwmController) Bgsdh() {
-	this.displayCategory()
+	this.displayNoLayout()
 }
 
 // Xzyx 校长邮箱
 func (this *LxwmController) Xzyx() {
-	this.displayCategory()
+	this.displayNoLayout()
 }
 
 // Dlwz 地理位置
 func (this *LxwmController) Dlwz() {
-	this.displayCategory()
+	this.displayNoLayout()
 }
