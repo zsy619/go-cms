@@ -47,7 +47,7 @@
                     <div class="cont-info">
                         <div>所属分类：<span>{{.article.CategoryTitle}}</span></div>
                         <div>发布时间：<span>{{dateformat .article.PublishTime "2006-01-02"}}</span></div>
-                        <div>浏览次数：<span id="countnum">{{.article.Click}}</span></div>
+                        <div>浏览次数：<span id="countnum">{{if eq .article.Click 0}}1{{else}}{{.article.Click}}{{end}}</span></div>
                     </div>
                     <div class="detail-box">
                         {{str2html .article.Content}}
