@@ -17,6 +17,7 @@ type CmsArticleAlbum struct {
 	Title        string    `gorm:"column:title;type:varchar(128)" json:"title" form:"title"`                                  // 标题
 	ThumbPath    string    `gorm:"column:thumb_path;type:varchar(512)" json:"thumb_path" form:"thumb_path"`                   // 缩略图地址
 	OriginalPath string    `gorm:"column:original_path;type:varchar(512)" json:"original_path" form:"original_path"`          // 原图地址
+	FilePath     string    `gorm:"column:file_path;type:varchar(512)" json:"file_path" form:"file_path"`                      // 文件路径（带域名）
 	FileSize     int64     `gorm:"column:file_size;type:bigint" json:"file_size" form:"file_size"`                            // 文件大小(字节)
 	FileExt      string    `gorm:"column:file_ext;type:varchar(16)" json:"file_ext" form:"file_ext"`                          // 文件扩展名
 	LinkURL      string    `gorm:"column:link_url;type:varchar(256)" json:"link_url" form:"link_url"`                         // 外部链接

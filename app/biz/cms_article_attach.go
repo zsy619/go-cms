@@ -1,8 +1,10 @@
 package biz
 
 import (
+	"os"
 	"time"
 
+	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
 )
@@ -35,6 +37,16 @@ func (this *CmsArticle) AttachSave(input *model.CmsArticleAttach) error {
 // AttachDestory 删除
 func (this *CmsArticle) AttachDestory(attachId int64) error {
 	mdl, do := query.CmsArticleAttachDo()
+	if finder, err := do.Where(mdl.AttachID.Eq(attachId)).First(); err != nil {
+		return err
+	} else {
+		if finder != nil && finder.OriginalPath != "" {
+			err := os.Remove(finder.OriginalPath[1:])
+			if err != nil {
+				logs.Error("AttachDestory", err.Error())
+			}
+		}
+	}
 	_, err := do.Where(mdl.AttachID.Eq(attachId)).Delete()
 	return err
 }

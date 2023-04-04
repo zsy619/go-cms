@@ -3,8 +3,10 @@ package biz
 import (
 	"errors"
 	"fmt"
+	"os"
 	"time"
 
+	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
 )
@@ -111,10 +113,28 @@ func (this *CmsArticle) ArticleSaveSortId(articleId int64, sortId int32) error {
 // ArticleDestory 删除
 func (this *CmsArticle) ArticleDestory(articleId int64) error {
 	attachMdl, attachDo := query.CmsArticleAttachDo()
+	if attachList, err := attachDo.Where(attachMdl.ArticleID.Eq(articleId)).Find(); err != nil {
+		logs.Error(err.Error())
+	} else {
+		for _, attach := range attachList {
+			if attach.OriginalPath != "" {
+				os.Remove(attach.OriginalPath[1:])
+			}
+		}
+	}
 	if _, err := attachDo.Where(attachMdl.ArticleID.Eq(articleId)).Delete(); err != nil {
 		return err
 	}
 	albumMdl, albumDo := query.CmsArticleAlbumDo()
+	if albumList, err := albumDo.Where(albumMdl.ArticleID.Eq(articleId)).Find(); err != nil {
+		logs.Error(err.Error())
+	} else {
+		for _, album := range albumList {
+			if album.OriginalPath != "" {
+				os.Remove(album.OriginalPath[1:])
+			}
+		}
+	}
 	if _, err := albumDo.Where(albumMdl.ArticleID.Eq(articleId)).Delete(); err != nil {
 		return err
 	}

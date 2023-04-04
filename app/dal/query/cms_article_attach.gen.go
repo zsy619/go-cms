@@ -30,6 +30,7 @@ func newCmsArticleAttach(db *gorm.DB, opts ...gen.DOOption) cmsArticleAttach {
 	_cmsArticleAttach.AttachID = field.NewInt64(tableName, "attach_id")
 	_cmsArticleAttach.ArticleID = field.NewInt64(tableName, "article_id")
 	_cmsArticleAttach.Title = field.NewString(tableName, "title")
+	_cmsArticleAttach.OriginalPath = field.NewString(tableName, "original_path")
 	_cmsArticleAttach.FilePath = field.NewString(tableName, "file_path")
 	_cmsArticleAttach.FileSize = field.NewInt64(tableName, "file_size")
 	_cmsArticleAttach.FileExt = field.NewString(tableName, "file_ext")
@@ -53,24 +54,25 @@ func newCmsArticleAttach(db *gorm.DB, opts ...gen.DOOption) cmsArticleAttach {
 type cmsArticleAttach struct {
 	cmsArticleAttachDo cmsArticleAttachDo
 
-	ALL        field.Asterisk
-	AttachID   field.Int64  // 主键
-	ArticleID  field.Int64  // 文章ID
-	Title      field.String // 标题
-	FilePath   field.String // 文件路径
-	FileSize   field.Int64  // 文件大小(字节)
-	FileExt    field.String // 文件扩展名
-	Point      field.Int32  // 下载所需积分
-	Click      field.Int32  // 下载次数
-	SortID     field.Int32  // 排序
-	IsShow     field.Int32  // 是否显示：1显示2隐藏
-	Remark     field.String // 附件描述
-	CreateID   field.Int32  // 创建人ID
-	CreateName field.String // 创建人姓名
-	CreateTime field.Time   // 创建时间
-	UpdateID   field.Int32  // 更新人ID
-	UpdateName field.String // 更新人姓名
-	UpdateTime field.Time   // 修改时间
+	ALL          field.Asterisk
+	AttachID     field.Int64  // 主键
+	ArticleID    field.Int64  // 文章ID
+	Title        field.String // 标题
+	OriginalPath field.String // 原始地址
+	FilePath     field.String // 文件路径（带域名）
+	FileSize     field.Int64  // 文件大小(字节)
+	FileExt      field.String // 文件扩展名
+	Point        field.Int32  // 下载所需积分
+	Click        field.Int32  // 下载次数
+	SortID       field.Int32  // 排序
+	IsShow       field.Int32  // 是否显示：1显示2隐藏
+	Remark       field.String // 附件描述
+	CreateID     field.Int32  // 创建人ID
+	CreateName   field.String // 创建人姓名
+	CreateTime   field.Time   // 创建时间
+	UpdateID     field.Int32  // 更新人ID
+	UpdateName   field.String // 更新人姓名
+	UpdateTime   field.Time   // 修改时间
 
 	fieldMap map[string]field.Expr
 }
@@ -90,6 +92,7 @@ func (c *cmsArticleAttach) updateTableName(table string) *cmsArticleAttach {
 	c.AttachID = field.NewInt64(table, "attach_id")
 	c.ArticleID = field.NewInt64(table, "article_id")
 	c.Title = field.NewString(table, "title")
+	c.OriginalPath = field.NewString(table, "original_path")
 	c.FilePath = field.NewString(table, "file_path")
 	c.FileSize = field.NewInt64(table, "file_size")
 	c.FileExt = field.NewString(table, "file_ext")
@@ -128,10 +131,11 @@ func (c *cmsArticleAttach) GetFieldByName(fieldName string) (field.OrderExpr, bo
 }
 
 func (c *cmsArticleAttach) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 17)
+	c.fieldMap = make(map[string]field.Expr, 18)
 	c.fieldMap["attach_id"] = c.AttachID
 	c.fieldMap["article_id"] = c.ArticleID
 	c.fieldMap["title"] = c.Title
+	c.fieldMap["original_path"] = c.OriginalPath
 	c.fieldMap["file_path"] = c.FilePath
 	c.fieldMap["file_size"] = c.FileSize
 	c.fieldMap["file_ext"] = c.FileExt

@@ -20,11 +20,12 @@ type UploadResult struct {
 	Code int    `json:"code"`
 	Msg  string `json:"msg"`
 	File struct {
-		Name string `json:"name"` // 保存文件名称
-		Ext  string `json:"ext"`  // 文件后缀
-		Size int64  `json:"size"` // 文件大小
-		Url1 string `json:"url1"` // 文件相对路径
-		Url2 string `json:"url2"` // 文件绝对路径
+		Name1 string `json:"name1"` // 原始文件名称
+		Name2 string `json:"name2"` // 保存文件名称
+		Ext   string `json:"ext"`   // 文件后缀
+		Size  int64  `json:"size"`  // 文件大小
+		Url1  string `json:"url1"`  // 文件相对路径
+		Url2  string `json:"url2"`  // 文件绝对路径
 	} `json:"file"`
 }
 
@@ -45,11 +46,12 @@ func (c *ToolsController) ImageUpload() {
 		Code: 1,
 		Msg:  "上传失败",
 		File: struct {
-			Name string `json:"name"` // 保存文件名称
-			Ext  string `json:"ext"`  // 文件后缀
-			Size int64  `json:"size"` // 文件大小
-			Url1 string `json:"url1"` // 文件相对路径
-			Url2 string `json:"url2"` // 文件绝对路径
+			Name1 string `json:"name1"` // 原始文件名称
+			Name2 string `json:"name2"` // 保存文件名称
+			Ext   string `json:"ext"`   // 文件后缀
+			Size  int64  `json:"size"`  // 文件大小
+			Url1  string `json:"url1"`  // 文件相对路径
+			Url2  string `json:"url2"`  // 文件绝对路径
 		}{},
 	}
 	file, head, err := c.GetFile("file")
@@ -62,10 +64,11 @@ func (c *ToolsController) ImageUpload() {
 	}
 	defer file.Close()
 
+	result.File.Name1 = head.Filename
 	result.File.Size = head.Size
 
 	ext := strings.ToLower(path.Ext(head.Filename))
-	fmt.Println(ext)
+	// fmt.Println(ext)
 	if !strings.Contains(".jpg,.jpeg,.png,.gif,.bmp,.ico", ext) {
 		result.Code = 1
 		result.Msg = "不支持的文件类型"
@@ -102,7 +105,7 @@ func (c *ToolsController) ImageUpload() {
 	result.Code = 0
 	result.Msg = "succcess"
 	result.File.Ext = ext
-	result.File.Name = filename
+	result.File.Name2 = filename
 	result.File.Url1 = "/" + uploadDir + filename
 	result.File.Url2 = lib.C_LOCAL_DOMAIN_Backslash() + uploadDir + filename
 	c.Data["json"] = result
@@ -115,11 +118,12 @@ func (c *ToolsController) Upload() {
 		Code: 1,
 		Msg:  "上传失败",
 		File: struct {
-			Name string `json:"name"` // 保存文件名称
-			Ext  string `json:"ext"`  // 文件后缀
-			Size int64  `json:"size"` // 文件大小
-			Url1 string `json:"url1"` // 文件相对路径
-			Url2 string `json:"url2"` // 文件绝对路径
+			Name1 string `json:"name1"` // 原始文件名称
+			Name2 string `json:"name2"` // 保存文件名称
+			Ext   string `json:"ext"`   // 文件后缀
+			Size  int64  `json:"size"`  // 文件大小
+			Url1  string `json:"url1"`  // 文件相对路径
+			Url2  string `json:"url2"`  // 文件绝对路径
 		}{},
 	}
 	file, head, err := c.GetFile("file")
@@ -132,6 +136,7 @@ func (c *ToolsController) Upload() {
 	}
 	defer file.Close()
 
+	result.File.Name1 = head.Filename
 	result.File.Size = head.Size
 
 	ext := strings.ToLower(path.Ext(head.Filename))
@@ -171,7 +176,7 @@ func (c *ToolsController) Upload() {
 	result.Code = 0
 	result.Msg = "succcess"
 	result.File.Ext = ext
-	result.File.Name = filename
+	result.File.Name2 = filename
 	result.File.Url1 = "/" + uploadDir + filename
 	result.File.Url2 = lib.C_LOCAL_DOMAIN_Backslash() + uploadDir + filename
 	c.Data["json"] = result

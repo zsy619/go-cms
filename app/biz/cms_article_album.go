@@ -1,8 +1,10 @@
 package biz
 
 import (
+	"os"
 	"time"
 
+	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
 )
@@ -42,6 +44,16 @@ func (this *CmsArticle) AlbumSave(input *model.CmsArticleAlbum) error {
 // AlbumDestory 删除
 func (this *CmsArticle) AlbumDestory(albumId int64) error {
 	mdl, do := query.CmsArticleAlbumDo()
+	if finder, err := do.Where(mdl.AlbumID.Eq(albumId)).First(); err != nil {
+		return err
+	} else {
+		if finder != nil && finder.OriginalPath != "" {
+			err := os.Remove(finder.OriginalPath[1:])
+			if err != nil {
+				logs.Error("AlbumDestory", err.Error())
+			}
+		}
+	}
 	_, err := do.Where(mdl.AlbumID.Eq(albumId)).Delete()
 	return err
 }

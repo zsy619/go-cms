@@ -16,9 +16,10 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">附件</label>
                             <div class="layui-input-inline">
+                                <input type="hidden" value="" name="file_path" />
                                 <input type="hidden" value="" name="file_ext" />
                                 <input type="hidden" value="0" name="file_size" />
-                                <input type="text" name="file_path" lay-verify="required" lay-reqtext="请选择附件" value="" autocomplete="off" placeholder="" class="layui-input">
+                                <input type="text" name="original_path" lay-verify="required" lay-reqtext="请选择附件" value="" autocomplete="off" placeholder="" class="layui-input">
                             </div>
                             <button type="button" class="layui-btn layui-btn-primary" id="btnUploadIco">
                                 <i class="layui-icon">&#xe67c;</i>浏览...
@@ -70,12 +71,13 @@
             , accept: 'file' //普通文件
             , url: '/admin/tools/Upload?path=attach' //上传接口
             , done: function (res) {
-                console.log(res);
                 //上传完毕回调
                 if (res.code == 0) {
+                    $("input[name='title']").val(res.file.name1);
                     $("input[name='file_size']").val(res.file.size);
                     $("input[name='file_ext']").val(res.file.ext);
-                    $("input[name='file_path']").val(res.file.url1);
+                    $("input[name='original_path']").val(res.file.url1);
+                    $("input[name='file_path']").val(res.file.url2);
                 } else {
                     layer.msg(res.msg);
                 }
