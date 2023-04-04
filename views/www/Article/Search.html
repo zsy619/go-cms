@@ -57,6 +57,12 @@
             </a>
         </li>
     </script>
+    <script id="templateEmpty" type="text/template">
+        <div class="error-page">
+            <img src="{{.webroot}}images/state_img3.png" class="img"/>
+            <p class="tip">搜索结果不存在</p>
+        </div>
+    </script>
     <script type="text/javascript">
         var loadData = function (page, limit) {
             $.ajax({
@@ -84,11 +90,15 @@
                                     url = item.link_url == "" ? "/article/detail/" + item.article_id : item.link_url;
                                     break;
                             }
-                            var html = tmpl.replaceAll("${url}", url).replaceAll("${article_id}", item.article_id).replaceAll("${summary}", item.summary).replaceAll("${category_title}", item.category_title)
+                            var html = tmpl.replaceAll("${url}", url).replaceAll("${article_id}", item.article_id)
+                                .replaceAll("${summary}", item.summary).replaceAll("${category_title}", item.category_title)
                                 .replaceAll("${title}", item.title).replaceAll("%{publish_time}", moment(item.publish_time).format('YYYY-MM-DD'));
                             $(".list-ul").append(html);
                         }
                         $(".total").html("共" + res.count + "条");
+                        if (res.count == 0) {
+                            $(".list-ul").html($("#templateEmpty").html());
+                        }
                         if (page == 1 && len > 0) {
                             laypage.render({
                                 elem: 'pagination'

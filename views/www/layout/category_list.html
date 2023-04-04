@@ -23,6 +23,12 @@
         <span class="fr">%{publish_time}</span>
     </li>
 </script>
+<script id="templateEmpty" type="text/template">
+    <div class="error-page">
+        <img src="{{.webroot}}images/state_img3.png" class="img"/>
+        <p class="tip">暂无数据</p>
+    </div>
+</script>
 <script type="text/javascript">
     $(function () {
         $.ajax({
@@ -69,6 +75,9 @@
                         var html = tmpl.replaceAll("${url}", url).replaceAll("${article_id}", item.article_id).replaceAll("${title}", item.title).
                             replaceAll("%{publish_time}", moment(item.publish_time).format('YYYY-MM-DD'));
                         $(".list-ul").append(html);
+                    }
+                    if (len == 0) {
+                        $(".list-con").html($("#templateEmpty").html());
                     }
                     if (page == 1 && len > 0) {
                         laypage.render({
