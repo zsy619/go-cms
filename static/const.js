@@ -97,7 +97,7 @@ function PrintLayuiTable(tablelayid) {
     }
 }
 
-function ArtilceClick(articleId, callIndex) {
+function ArticleClick(articleId, callIndex) {
     var url = "/api/article/click?article_id=" + articleId;
     if (callIndex) {
         url += "&call_index=" + callIndex;

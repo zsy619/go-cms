@@ -44,8 +44,8 @@
                 <div class="list-other">
                     <div class="left">
                         <ul>
-                            <li><a href="">上一条：【教师风采】杜江——防疫备考勇担当，管理教学善作为</a></li>
-                            <li><a href="">下一条：【教师风采】杜江——防疫备考勇担当，管理教学善作为</a></li>
+                            <li id="liPrev"><a href="">上一条：【教师风采】杜江——防疫备考勇担当，管理教学善作为</a></li>
+                            <li id="liNext"><a href="">下一条：【教师风采】杜江——防疫备考勇担当，管理教学善作为</a></li>
                         </ul>
                     </div>
                     <div class="right">
@@ -56,6 +56,9 @@
         </div>
     </div>
     {{template "www/layout/footer.html" .}}
+    <script type="text/template" id="navTepl">
+        <a href="/article/teacher/${article_id}" onclick="ArticleClick(${article_id})">${type}：【教师风采】${title} -- ${sub_title}</a>
+    </script>
     <script type="text/javascript">
         $(function () {
             $.ajax({
@@ -110,6 +113,39 @@
                 },
                 complete: function () {
                     $(".nav-aside").busyLoad("hide", { animate: "fade" });
+                }
+            });
+            $.ajax({
+                url: "/api/article/prev_next?category_id={{.article.CategoryID}}&article_id={{.article.ArticleID}}&r=" + Math.random(),
+                dataType: "json",
+                type: "get",
+                beforeSend: function () {
+                },
+                success: function (res) {
+                    if (res.code == 0) {
+                        // console.log(res.data);
+                        if (res.data.prev.article_id != 0) {
+                            var prev = res.data.prev;
+                            var prevHtml = $("#navTepl").html().replace("${article_id}", prev.article_id)
+                                .replace("${type}", "上一条").replace("${title}", prev.title).replace("${sub_title}", prev.sub_title);
+                            $("#liPrev").html(prevHtml);
+                        } else {
+                            $("#liPrev").html("上一条：没有了");
+                        }
+                        if (res.data.next.article_id != 0) {
+                            var next = res.data.next;
+                            var nextHtml = $("#navTepl").html().replace("${article_id}", next.article_id)
+                                .replace("${type}", "下一条").replace("${title}", next.title).replace("${sub_title}", next.sub_title);
+                            $("#liNext").html(nextHtml);
+                        } else {
+                            $("#liNext").html("下一条：没有了");
+                        }
+                    }
+                },
+                error: function () {
+                    alert('failed!');
+                },
+                complete: function () {
                 }
             });
         });

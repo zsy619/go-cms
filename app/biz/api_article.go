@@ -296,6 +296,37 @@ func (this *ApiArticle) Get(call_index string, article_id int64) (*bmodel.ApiArt
 }
 
 /**
+ * @description: Get 根据article_id获取文章上一个、下一个
+ * @param {string} call_index 栏目调用别名
+ * @param {int64} category_id 栏目id
+ * @param {int64} article_id 文章id
+ * @return {*}
+ */
+func (this *ApiArticle) PrevNext(call_index string, category_id, article_id int64) (prev *bmodel.ApiArticleOneModel, next *bmodel.ApiArticleOneModel) {
+	_, do := query.CmsArticleDo()
+	field := `a.*,b.call_index as category_call_index,b.title as category_title,b.link_url as category_link_url,c.name as channel_name,c.title as channel_title`
+	sql := `SELECT ` + field + ` FROM cms_article a LEFT JOIN cms_article_category b ON a.category_id = b.category_id LEFT JOIN cms_site_channel c ON a.channel_id = c.channel_id`
+	sql += ` WHERE a.is_deleted=0 AND a.status=2 AND b.status=2` +
+		xgeneric.IFF(category_id <= 0, "", " AND b.category_id="+strconv.FormatInt(category_id, 10)) +
+		xgeneric.IFF(call_index == "", "", " AND b.call_index='"+call_index+"'") +
+		` AND a.article_id<? ORDER BY a.sort_id DESC LIMIT 1`
+	prev = &bmodel.ApiArticleOneModel{}
+	if err := do.Debug().UnderlyingDB().Raw(sql, article_id).Scan(&prev).Error; err != nil {
+		logs.Error("PrevNext", err.Error())
+	}
+	sql = `SELECT ` + field + ` FROM cms_article a LEFT JOIN cms_article_category b ON a.category_id = b.category_id LEFT JOIN cms_site_channel c ON a.channel_id = c.channel_id`
+	sql += ` WHERE a.is_deleted=0 AND a.status=2 AND b.status=2` +
+		xgeneric.IFF(category_id <= 0, "", " AND b.category_id="+strconv.FormatInt(category_id, 10)) +
+		xgeneric.IFF(call_index == "", "", " AND b.call_index='"+call_index+"'") +
+		` AND a.article_id>? ORDER BY a.sort_id ASC LIMIT 1`
+	next = &bmodel.ApiArticleOneModel{}
+	if err := do.Debug().UnderlyingDB().Raw(sql, article_id).Scan(&next).Error; err != nil {
+		logs.Error("PrevNext", err.Error())
+	}
+	return prev, next
+}
+
+/**
  * @description: Article 获取文章详情
  * @param {string} call_index 文章调用别名
  * @param {int64} article_id 文章id

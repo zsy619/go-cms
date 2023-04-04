@@ -26,6 +26,7 @@ func init() {
 	web.Router("/api/article/click", &ApiArticleController{}, "*:Click")
 	web.Router("/api/article/like", &ApiArticleController{}, "*:Like")
 	web.Router("/api/article/album/click", &ApiArticleController{}, "*:AlbumClick")
+	web.Router("/api/article/prev_next", &ApiArticleController{}, "*:PrevNext")
 
 	web.Router("/api/online/register", &ApiOnlineRegisterController{}, "*:Save")
 

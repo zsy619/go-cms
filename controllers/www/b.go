@@ -217,6 +217,17 @@ func (this *BaseController) ArticleGet(call_index string, article_id int64) (*bm
 }
 
 /**
+ * @description: Get 根据article_id获取文章上一个、下一个
+ * @param {string} call_index 栏目调用别名
+ * @param {int64} category_id 栏目id
+ * @param {int64} article_id 文章id
+ * @return {*}
+ */
+func (this *BaseController) ArticlePrevNext(call_index string, category_id, article_id int64) (*bmodel.ApiArticleOneModel, *bmodel.ApiArticleOneModel) {
+	return biz.NewApiArticle().PrevNext(call_index, category_id, article_id)
+}
+
+/**
  * @description: Article 获取文章详情
  * @param {string} call_index 调用别名
  * @param {int64} article_id 文章id

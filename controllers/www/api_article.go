@@ -167,6 +167,29 @@ func (this *ApiArticleController) One() {
 }
 
 /**
+ * @description: Get 根据article_id获取文章上一个、下一个
+ * @param {string} call_index 栏目调用别名
+ * @param {int64} category_id 栏目id
+ * @param {int64} article_id 文章id
+ * @return {*}
+ */
+// @router /api/article/prev_next [get]
+func (this *ApiArticleController) PrevNext() {
+	article_id, _ := this.GetInt64("article_id", 0)
+	category_id, _ := this.GetInt64("category_id", 0)
+	call_index := this.GetString("call_index")
+	prev, next := this.BaseController.ArticlePrevNext(call_index, category_id, article_id)
+	result := struct {
+		Prev *bmodel.ApiArticleOneModel `json:"prev"`
+		Next *bmodel.ApiArticleOneModel `json:"next"`
+	}{
+		Prev: prev,
+		Next: next,
+	}
+	this.JSONSuccess("", result)
+}
+
+/**
  * @description: Article 获取文章详情
  * @param {string} call_index 调用别名
  * @param {int64} article_id 文章id
