@@ -87,9 +87,11 @@
     {{template "www/layout/footer.html" .}}
     <script type="text/javascript">
         $(function () {
-            var viewer = new Viewer(document.getElementById('divImg'), {
-                url: 'data-original'
-            });
+            if (document.getElementById('divImg')) {
+                var viewer = new Viewer(document.getElementById('divImg'), {
+                    url: 'data-original'
+                });
+            }
 
             $.ajax({
                 url: "/api/category/nav?call_index={{.article.CategoryCallIndex}}&r=" + Math.random(),

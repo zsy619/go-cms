@@ -79,3 +79,7 @@ func (this *ApiSite) ChannelFind(site_id int64) ([]*bmodel.ApiChannelFindModel, 
 	}
 	return outChannel, int64(len(outChannel)), nil
 }
+
+func (this *ApiSite) NavFind(site_id int64, channel_id int64) ([]*bmodel.ApiNavFindModel, int64, error) {
+	return nil, 0, nil
+}

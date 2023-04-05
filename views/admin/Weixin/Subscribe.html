@@ -13,7 +13,7 @@
                 <div class="layui-tab-item layui-show">
                     <div class="layui-form-item">
                         <label class="layui-form-label required">
-                            <font color="red">*</font> 公众账户
+                            公众账户
                         </label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="hidden" name="request_type" value="6">
@@ -25,7 +25,7 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label required" style="width: 40px;">
+                        <label class="layui-form-label" style="width: 40px;">
                         </label>
                         <div class="layui-input-inline" style="width: 680px;">
                             <div class="layui-tab">
@@ -37,21 +37,21 @@
                                 <div class="layui-tab-content">
                                     <div class="layui-tab-item layui-show">
                                         <div class="layui-form-item">
-                                            <label class="layui-form-label required" style="width: 60px;margin-left: -10px;">
+                                            <label class="layui-form-label" style="width: 60px;margin-left: -10px;">
                                                 回复内容
                                             </label>
                                             <div class="layui-input-inline" style="width: 590px;">
-                                                <textarea name="remark" placeholder="" style="height: 282px;" class="layui-textarea"></textarea>
+                                                <textarea name="content" placeholder="" style="height: 282px;" class="layui-textarea"></textarea>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="layui-tab-item">
                                         <div class="layui-form-item">
-                                            <label class="layui-form-label required" style="width: 60px;margin-left: -10px;">
+                                            <label class="layui-form-label" style="width: 60px;margin-left: -10px;">
                                                 图文列表
                                             </label>
                                             <div class="layui-input-inline" style="width: 590px;">
-                                                <button type="button" class="layui-btn layui-btn-sm layui-btn-primary"><i class="layui-icon layui-icon-addition"></i> 添加</button>
+                                                <button type="button" id="btnSelect" class="layui-btn layui-btn-sm layui-btn-primary"><i class="layui-icon layui-icon-addition"></i> 添加</button>
                                             </div>
                                         </div>
                                         <div class="layui-form-item">
@@ -60,20 +60,20 @@
                                     </div>
                                     <div class="layui-tab-item">
                                         <div class="layui-form-item">
-                                            <label class="layui-form-label required" style="width: 60px;margin-left: -10px;">
+                                            <label class="layui-form-label" style="width: 60px;margin-left: -10px;">
                                                 语音标题
                                             </label>
                                             <div class="layui-input-inline" style="width: 590px;">
-                                                <input type="text" name="img_url" autocomplete="off" placeholder="" class="layui-input">
+                                                <input type="text" name="sound_title" autocomplete="off" placeholder="" class="layui-input">
                                             </div>
                                             <div class="layui-form-mid layui-word-aux" style="margin-left: 80px;">最多30个字符</div>
                                         </div>
                                         <div class="layui-form-item">
-                                            <label class="layui-form-label required" style="width: 60px;margin-left: -10px;">
+                                            <label class="layui-form-label" style="width: 60px;margin-left: -10px;">
                                                 文件地址
                                             </label>
                                             <div class="layui-input-inline" style="width: 480px;">
-                                                <input type="text" name="img_url" autocomplete="off" placeholder="" class="layui-input">
+                                                <input type="text" name="sound_url" autocomplete="off" placeholder="" class="layui-input">
                                             </div>
                                             <button type="button" class="layui-btn layui-btn-primary" id="btnUpload">
                                                 <i class="layui-icon">&#xe67c;</i>浏览...
@@ -81,11 +81,11 @@
                                             <div class="layui-form-mid layui-word-aux" style="margin-left: 80px;">MP3格式，填写链接或本地上传！</div>
                                         </div>
                                         <div class="layui-form-item">
-                                            <label class="layui-form-label required" style="width: 60px;margin-left: -10px;">
+                                            <label class="layui-form-label" style="width: 60px;margin-left: -10px;">
                                                 语音描述
                                             </label>
                                             <div class="layui-input-inline" style="width: 590px;">
-                                                <textarea name="remark" placeholder="" class="layui-textarea"></textarea>
+                                                <textarea name="sound_content" placeholder="" class="layui-textarea"></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -111,6 +111,57 @@
         </div>
     </script>
 </div>
+<div style="display: none" id="divSelect">
+    <form class="layui-form" lay-filter="form">
+        <div class="layui-form-item">
+            <p>&nbsp;</p>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 60px;margin-left: -10px;">
+                排序数字
+            </label>
+            <div class="layui-input-inline" style="width: 590px;">
+                <input type="number" value="99" name="sort_id" autocomplete="off" placeholder="" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 60px;margin-left: -10px;">
+                标题文字
+            </label>
+            <div class="layui-input-inline" style="width: 590px;">
+                <input type="text" name="title" lay-verify="required" lay-reqtext="标题文字不允许为空" autocomplete="off" placeholder="" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 60px;margin-left: -10px;">
+                上传图片
+            </label>
+            <div class="layui-input-inline" style="width: 480px;">
+                <input type="text" name="img_url" lay-verify="required" lay-reqtext="上传一个图片文件" autocomplete="off" placeholder="" class="layui-input">
+            </div>
+            <button type="button" class="layui-btn layui-btn-primary" id="btnImg">
+                <i class="layui-icon">&#xe67c;</i>浏览...
+            </button>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 60px;margin-left: -10px;">
+                链接地址
+            </label>
+            <div class="layui-input-inline" style="width: 590px;">
+                <input type="text" name="link_url" autocomplete="off" placeholder="" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 60px;margin-left: -10px;">
+                图片描述
+            </label>
+            <div class="layui-input-inline" style="width: 590px;">
+                <textarea name="content" placeholder="" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <button id="submit" style="display: none;" class="layui-btn" lay-submit lay-filter="submit">提交</button>
+    </form>
+</div>
 <script>
     layui.use(['form', 'layer', 'upload', 'laydate', 'table'], function () {
         var form = layui.form;
@@ -120,7 +171,7 @@
         var table = layui.table;
 
         form.on('select(account_id)', function (data) {
-            console.log(data);
+            // console.log(data);
             loadContent();
         });
 
@@ -167,8 +218,6 @@
 
         // 提交事件
         form.on('submit(*)', function (data) {
-            console.log(data)
-            // alert(JSON.stringify(data.field));
             return false;
         });
 
@@ -205,6 +254,32 @@
         }
 
         loadContent();
+
+        $("#btnSelect").on('click', function () {
+            layer.open({
+                type: 1,
+                title: '添加图片',
+                area: ['600', '620'],
+                content: $('#divSelect'), //可以使用$('#id,.class')这种方式来指定模板，可以将其理解为指定一个组件，当然也是可以自己去写的,像'<div>我是一个内容</div>'
+                btn: ['确认', '取消'],
+                yes: function (index, layero) {
+                    // 获取当前蒙版层的索引
+                    mengIndex = index
+                    $('#submit').click()
+                },
+                btn2: function (index, layero) {
+                    layer.close(index)
+                },
+                // 打开弹窗的回调函数，用于回显页面数据
+                success: function () {
+                    // 清除上一次的数据
+                    isSubOk = false
+                    $('#username').val('')
+                    $('#password').val('')
+                    console.log('我打开了弹窗')
+                },
+            })
+        })
 
         //方法提交
         $('#btnSubmit').on('click', function () {

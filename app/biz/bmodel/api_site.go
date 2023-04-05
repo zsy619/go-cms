@@ -12,3 +12,7 @@ type ApiChannelFindModel struct {
 	IsAttach   int32  `gorm:"column:is_attach;type:tinyint" json:"is_attach" form:"is_attach"`               // 是否附件
 	IsSpec     int32  `gorm:"column:is_spec;type:tinyint" json:"is_spec" form:"is_spec"`                     // 是否规格
 }
+
+type ApiNavFindModel struct {
+	NavID int64 `gorm:"column:nav_id;type:bigint;primaryKey;" json:"nav_id" form:"nav_id"` // 主键
+}
