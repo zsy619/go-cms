@@ -171,7 +171,7 @@
                                                             <h5>站点统计</h5>
                                                         </div>
                                                         <div class="panel-content">
-                                                            <h1 class="no-margins">1234</h1>
+                                                            <h1 class="no-margins" id="site_count">0</h1>
                                                             <small>当前站点总记录数</small>
                                                         </div>
                                                     </div>
@@ -185,7 +185,7 @@
                                                             <h5>频道统计</h5>
                                                         </div>
                                                         <div class="panel-content">
-                                                            <h1 class="no-margins">1234</h1>
+                                                            <h1 class="no-margins" id="channel_count">0</h1>
                                                             <small>当前频道总记录数</small>
                                                         </div>
                                                     </div>
@@ -199,7 +199,7 @@
                                                             <h5>栏目统计</h5>
                                                         </div>
                                                         <div class="panel-content">
-                                                            <h1 class="no-margins">1234</h1>
+                                                            <h1 class="no-margins" id="category_count">0</h1>
                                                             <small>当前栏目总记录数</small>
                                                         </div>
                                                     </div>
@@ -213,7 +213,7 @@
                                                             <h5>文章统计</h5>
                                                         </div>
                                                         <div class="panel-content">
-                                                            <h1 class="no-margins">1234</h1>
+                                                            <h1 class="no-margins" id="article_count">0</h1>
                                                             <small>当前文章总记录数</small>
                                                         </div>
                                                     </div>
@@ -429,7 +429,27 @@
     </div>
     <script src="/static/admin/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
     <script src="/static/admin/js/lay-config.js?v=1.0.4" charset="utf-8"></script>
-    <script>
+    <script type="text/javascript">
+        $.ajax({
+            url: "/admin/index/count?r=" + Math.random(),
+            dataType: "json",
+            type: "get",
+            beforeSend: function () {
+            },
+            success: function (res) {
+                if (res.code == 0) {
+                    $("#site_count").html(res.data.site_count);
+                    $("#channel_count").html(res.data.channel_count);
+                    $("#category_count").html(res.data.category_count);
+                    $("#article_count").html(res.data.article_count);
+                }
+            },
+            error: function () {
+            },
+            complete: function () {
+            }
+        });
+
         layui.use(['layer', 'miniTab', 'echarts'], function () {
             var $ = layui.jquery,
                 layer = layui.layer,

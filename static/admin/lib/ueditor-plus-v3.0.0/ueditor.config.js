@@ -18,7 +18,7 @@
      * 因此，UEditor提供了针对不同页面的编辑器可单独配置的根路径，具体来说，在需要实例化编辑器的页面最顶部写上如下代码即可。当然，需要令此处的URL等于对应的配置。
      * window.UEDITOR_HOME_URL = "/xxxx/xxxx/";
      */
-    window.UEDITOR_HOME_URL = "/static/admin/lib/ueditor-plus-v3.0.0/";
+    // window.UEDITOR_HOME_URL = "/static/admin/lib/ueditor-plus-v3.0.0/";
     var URL, CORS_URL;
     if (window.UEDITOR_HOME_URL) {
         URL = window.UEDITOR_HOME_URL;
@@ -45,7 +45,7 @@
         UEDITOR_CORS_URL: CORS_URL,
 
         // 服务器统一请求接口路径
-        serverUrl: "/ueditor-plus/_demo_server/handle.php",
+        serverUrl: "/admin/ueditor/upload",
         // 服务器统一请求头信息，会在加载配置、
         serverHeaders: {
             // 'Authorization': 'Bearer xxx'

@@ -174,7 +174,7 @@
                         <label class="layui-form-label required">
                             内容描述
                         </label>
-                        <div class="layui-input-inline" style="width: 100%;">
+                        <div class="layui-input-inline" style="width: 750px;">
                             <textarea id="content" name="content" lay-verify="required" lay-reqtext="内容描述不允许为空" style="width: 100%;height: 500px;" class="layui-textarea">{{.mdl.Content}}</textarea>
                         </div>
                     </div>
@@ -217,6 +217,7 @@
 </div>
 <script>
     // var ue = UE.getEditor('editor');
+
     KindEditor.ready(function (K) {
         editor = K.create('textarea[name="content"]', {
             themeType: 'simple',

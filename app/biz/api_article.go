@@ -391,17 +391,19 @@ func (this *ApiArticle) Attach(call_index string, article_id int64, type_id int3
  */
 func (this *ApiArticle) Click(call_index string, article_id int64) error {
 	mdl, do := query.CmsArticleDo()
+	var err error
 	if call_index != "" {
-		do.Where(mdl.CallIndex.Eq(call_index), mdl.Status.Eq(2)).Updates(map[string]interface{}{
+		_, err = do.Where(mdl.CallIndex.Eq(call_index), mdl.Status.Eq(2)).Updates(map[string]interface{}{
+			mdl.Click.ColumnName().String():      gorm.Expr("click + ?", 1),
+			mdl.UpdateTime.ColumnName().String(): time.Now(),
+		})
+	} else {
+		_, err = do.Where(mdl.ArticleID.Eq(article_id), mdl.Status.Eq(2)).Updates(map[string]interface{}{
 			mdl.Click.ColumnName().String():      gorm.Expr("click + ?", 1),
 			mdl.UpdateTime.ColumnName().String(): time.Now(),
 		})
 	}
-	do.Where(mdl.ArticleID.Eq(article_id), mdl.Status.Eq(2)).Updates(map[string]interface{}{
-		mdl.Click.ColumnName().String():      gorm.Expr("click + ?", 1),
-		mdl.UpdateTime.ColumnName().String(): time.Now(),
-	})
-	return nil
+	return err
 }
 
 /**
@@ -412,11 +414,11 @@ func (this *ApiArticle) Click(call_index string, article_id int64) error {
  */
 func (this *ApiArticle) Like(call_index string, article_id int64) error {
 	mdl, do := query.CmsArticleDo()
-	do.Where(mdl.ArticleID.Eq(article_id), mdl.Status.Eq(2)).Updates(map[string]interface{}{
+	_, err := do.Where(mdl.ArticleID.Eq(article_id), mdl.Status.Eq(2)).Updates(map[string]interface{}{
 		mdl.LikeCount.ColumnName().String():  gorm.Expr("like_count + ?", 1),
 		mdl.UpdateTime.ColumnName().String(): time.Now(),
 	})
-	return nil
+	return err
 }
 
 /**
@@ -427,9 +429,9 @@ func (this *ApiArticle) Like(call_index string, article_id int64) error {
  */
 func (this *ApiArticle) AlbumClick(article_id, ablum_id int64) error {
 	mdl, do := query.CmsAlbumDo()
-	do.Where(mdl.AlbumID.Eq(ablum_id), mdl.IsShow.Eq(1)).Updates(map[string]interface{}{
+	_, err := do.Where(mdl.AlbumID.Eq(ablum_id), mdl.IsShow.Eq(1)).Updates(map[string]interface{}{
 		mdl.Click.ColumnName().String():      gorm.Expr("click + ?", 1),
 		mdl.UpdateTime.ColumnName().String(): time.Now(),
 	})
-	return nil
+	return err
 }

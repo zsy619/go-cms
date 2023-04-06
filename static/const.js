@@ -99,7 +99,7 @@ function PrintLayuiTable(tablelayid) {
 
 function ArticleClick(articleId, callIndex) {
     var url = "/api/article/click?article_id=" + articleId;
-    if (callIndex) {
+    if (callIndex != undefined) {
         url += "&call_index=" + callIndex;
     }
     url += "&t=" + new Date().getTime();

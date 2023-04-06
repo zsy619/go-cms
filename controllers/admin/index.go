@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"haedu.gov.cn/cms/app/biz"
+	"haedu.gov.cn/cms/app/dal/query"
 )
 
 type IndexController struct {
@@ -17,6 +18,34 @@ func (c *IndexController) Index() {
 
 func (c *IndexController) Welcome() {
 	c.display()
+}
+
+func (c *IndexController) Count() {
+	result := struct {
+		SiteCount     int64 `json:"site_count"`
+		ChannelCount  int64 `json:"channel_count"`
+		CategoryCount int64 `json:"category_count"`
+		ArticleCount  int64 `json:"article_count"`
+	}{}
+
+	_, siteDo := query.CmsSiteDo()
+	siteCount, _ := siteDo.Count()
+
+	_, channelDo := query.CmsSiteChannelDo()
+	channelCount, _ := channelDo.Count()
+
+	categoryMdl, categoryDo := query.CmsArticleCategoryDo()
+	categoryCount, _ := categoryDo.Where(categoryMdl.Status.Eq(2)).Count()
+
+	articleMdl, articleDo := query.CmsArticleDo()
+	articleCount, _ := articleDo.Where(articleMdl.Status.Eq(2)).Count()
+
+	result.SiteCount = siteCount
+	result.ChannelCount = channelCount
+	result.CategoryCount = categoryCount
+	result.ArticleCount = articleCount
+
+	c.JSONSuccess("success", result)
 }
 
 func (c *IndexController) UserPassword() {

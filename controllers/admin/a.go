@@ -15,6 +15,7 @@ func init() {
 	web.Router("cms/admin/login/verify", &LoginController{}, "*:AdminLoginVerify")
 
 	web.AutoPrefix("admin", &ToolsController{})
+	web.AutoPrefix("admin", &UEditorController{})
 
 	web.Router("admin/index", &IndexController{}, "*:Index")
 

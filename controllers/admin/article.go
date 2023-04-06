@@ -156,8 +156,6 @@ func (c *ArticleController) ArticleChangeStatus() {
 			return
 		}
 	}
-	// biz.Cache_ApiArticleCategoryFind = make(map[string][]map[string]interface{})
-	// biz.Cache_ApiArticleFind = make(map[string][]map[string]interface{})
 	c.JSONSuccess("更改状态成功", nil)
 }
 
@@ -176,7 +174,6 @@ func (c *ArticleController) ArticleSaveSortId() {
 			return
 		}
 	}
-	// biz.Cache_ApiArticleFind = make(map[string][]map[string]interface{})
 	c.JSONSuccess("保存成功", nil)
 }
 
