@@ -34,7 +34,8 @@ func newCmsLinkCategory(db *gorm.DB, opts ...gen.DOOption) cmsLinkCategory {
 	_cmsLinkCategory.Title = field.NewString(tableName, "title")
 	_cmsLinkCategory.CallIndex = field.NewString(tableName, "call_index")
 	_cmsLinkCategory.LinkURL = field.NewString(tableName, "link_url")
-	_cmsLinkCategory.ImgURL = field.NewString(tableName, "img_url")
+	_cmsLinkCategory.ImgUrl1 = field.NewString(tableName, "img_url1")
+	_cmsLinkCategory.ImgUrl2 = field.NewString(tableName, "img_url2")
 	_cmsLinkCategory.SeoTitle = field.NewString(tableName, "seo_title")
 	_cmsLinkCategory.SeoKeyword = field.NewString(tableName, "seo_keyword")
 	_cmsLinkCategory.SeoDescription = field.NewString(tableName, "seo_description")
@@ -64,7 +65,8 @@ type cmsLinkCategory struct {
 	Title          field.String // 类别标题
 	CallIndex      field.String // 调用别名
 	LinkURL        field.String // 外部链接
-	ImgURL         field.String // 图片地址
+	ImgUrl1        field.String // 图片地址
+	ImgUrl2        field.String // 图片地址
 	SeoTitle       field.String // SEO标题
 	SeoKeyword     field.String // SEO关健字
 	SeoDescription field.String // SEO描述
@@ -100,7 +102,8 @@ func (c *cmsLinkCategory) updateTableName(table string) *cmsLinkCategory {
 	c.Title = field.NewString(table, "title")
 	c.CallIndex = field.NewString(table, "call_index")
 	c.LinkURL = field.NewString(table, "link_url")
-	c.ImgURL = field.NewString(table, "img_url")
+	c.ImgUrl1 = field.NewString(table, "img_url1")
+	c.ImgUrl2 = field.NewString(table, "img_url2")
 	c.SeoTitle = field.NewString(table, "seo_title")
 	c.SeoKeyword = field.NewString(table, "seo_keyword")
 	c.SeoDescription = field.NewString(table, "seo_description")
@@ -137,7 +140,7 @@ func (c *cmsLinkCategory) GetFieldByName(fieldName string) (field.OrderExpr, boo
 }
 
 func (c *cmsLinkCategory) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 20)
+	c.fieldMap = make(map[string]field.Expr, 21)
 	c.fieldMap["category_id"] = c.CategoryID
 	c.fieldMap["parent_id"] = c.ParentID
 	c.fieldMap["site_id"] = c.SiteID
@@ -145,7 +148,8 @@ func (c *cmsLinkCategory) fillFieldMap() {
 	c.fieldMap["title"] = c.Title
 	c.fieldMap["call_index"] = c.CallIndex
 	c.fieldMap["link_url"] = c.LinkURL
-	c.fieldMap["img_url"] = c.ImgURL
+	c.fieldMap["img_url1"] = c.ImgUrl1
+	c.fieldMap["img_url2"] = c.ImgUrl2
 	c.fieldMap["seo_title"] = c.SeoTitle
 	c.fieldMap["seo_keyword"] = c.SeoKeyword
 	c.fieldMap["seo_description"] = c.SeoDescription

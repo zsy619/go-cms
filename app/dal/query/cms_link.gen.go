@@ -35,7 +35,8 @@ func newCmsLink(db *gorm.DB, opts ...gen.DOOption) cmsLink {
 	_cmsLink.CallIndex = field.NewString(tableName, "call_index")
 	_cmsLink.LinkURL = field.NewString(tableName, "link_url")
 	_cmsLink.Target = field.NewString(tableName, "target")
-	_cmsLink.ImgURL = field.NewString(tableName, "img_url")
+	_cmsLink.ImgUrl1 = field.NewString(tableName, "img_url1")
+	_cmsLink.ImgUrl2 = field.NewString(tableName, "img_url2")
 	_cmsLink.Remark = field.NewString(tableName, "remark")
 	_cmsLink.SortID = field.NewInt32(tableName, "sort_id")
 	_cmsLink.Click = field.NewInt32(tableName, "click")
@@ -70,7 +71,8 @@ type cmsLink struct {
 	CallIndex  field.String // 调用别名
 	LinkURL    field.String // 外部链接
 	Target     field.String // 是否开启浏览器新窗口
-	ImgURL     field.String // 网站logo地址
+	ImgUrl1    field.String // 网站logo地址
+	ImgUrl2    field.String // 网站logo地址
 	Remark     field.String // 备注
 	SortID     field.Int32  // 排序
 	Click      field.Int32  // 浏览次数
@@ -111,7 +113,8 @@ func (c *cmsLink) updateTableName(table string) *cmsLink {
 	c.CallIndex = field.NewString(table, "call_index")
 	c.LinkURL = field.NewString(table, "link_url")
 	c.Target = field.NewString(table, "target")
-	c.ImgURL = field.NewString(table, "img_url")
+	c.ImgUrl1 = field.NewString(table, "img_url1")
+	c.ImgUrl2 = field.NewString(table, "img_url2")
 	c.Remark = field.NewString(table, "remark")
 	c.SortID = field.NewInt32(table, "sort_id")
 	c.Click = field.NewInt32(table, "click")
@@ -150,7 +153,7 @@ func (c *cmsLink) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *cmsLink) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 25)
+	c.fieldMap = make(map[string]field.Expr, 26)
 	c.fieldMap["link_id"] = c.LinkID
 	c.fieldMap["site_id"] = c.SiteID
 	c.fieldMap["channel_id"] = c.ChannelID
@@ -159,7 +162,8 @@ func (c *cmsLink) fillFieldMap() {
 	c.fieldMap["call_index"] = c.CallIndex
 	c.fieldMap["link_url"] = c.LinkURL
 	c.fieldMap["target"] = c.Target
-	c.fieldMap["img_url"] = c.ImgURL
+	c.fieldMap["img_url1"] = c.ImgUrl1
+	c.fieldMap["img_url2"] = c.ImgUrl2
 	c.fieldMap["remark"] = c.Remark
 	c.fieldMap["sort_id"] = c.SortID
 	c.fieldMap["click"] = c.Click

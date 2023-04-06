@@ -19,7 +19,8 @@ type CmsLinkCategory struct {
 	Title          string    `gorm:"column:title;type:varchar(128)" json:"title" form:"title"`                                           // 类别标题
 	CallIndex      string    `gorm:"column:call_index;type:varchar(64)" json:"call_index" form:"call_index"`                             // 调用别名
 	LinkURL        string    `gorm:"column:link_url;type:varchar(256)" json:"link_url" form:"link_url"`                                  // 外部链接
-	ImgURL         string    `gorm:"column:img_url;type:varchar(256)" json:"img_url" form:"img_url"`                                     // 图片地址
+	ImgUrl1        string    `gorm:"column:img_url1;type:varchar(256)" json:"img_url1" form:"img_url1"`                                  // 图片地址
+	ImgUrl2        string    `gorm:"column:img_url2;type:varchar(256)" json:"img_url2" form:"img_url2"`                                  // 图片地址
 	SeoTitle       string    `gorm:"column:seo_title;type:varchar(128)" json:"seo_title" form:"seo_title"`                               // SEO标题
 	SeoKeyword     string    `gorm:"column:seo_keyword;type:varchar(128)" json:"seo_keyword" form:"seo_keyword"`                         // SEO关健字
 	SeoDescription string    `gorm:"column:seo_description;type:varchar(128)" json:"seo_description" form:"seo_description"`             // SEO描述

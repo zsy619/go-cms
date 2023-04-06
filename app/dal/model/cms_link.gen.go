@@ -20,7 +20,8 @@ type CmsLink struct {
 	CallIndex  string    `gorm:"column:call_index;type:varchar(64)" json:"call_index" form:"call_index"`                    // 调用别名
 	LinkURL    string    `gorm:"column:link_url;type:varchar(256)" json:"link_url" form:"link_url"`                         // 外部链接
 	Target     string    `gorm:"column:target;type:varchar(16);default:_blank" json:"target" form:"target"`                 // 是否开启浏览器新窗口
-	ImgURL     string    `gorm:"column:img_url;type:varchar(256)" json:"img_url" form:"img_url"`                            // 网站logo地址
+	ImgUrl1    string    `gorm:"column:img_url1;type:varchar(256)" json:"img_url1" form:"img_url1"`                         // 网站logo地址
+	ImgUrl2    string    `gorm:"column:img_url2;type:varchar(256)" json:"img_url2" form:"img_url2"`                         // 网站logo地址
 	Remark     string    `gorm:"column:remark;type:varchar(256)" json:"remark" form:"remark"`                               // 备注
 	SortID     int32     `gorm:"column:sort_id;type:int" json:"sort_id" form:"sort_id"`                                     // 排序
 	Click      int32     `gorm:"column:click;type:int" json:"click" form:"click"`                                           // 浏览次数

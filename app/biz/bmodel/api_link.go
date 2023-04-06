@@ -8,7 +8,8 @@ type ApiLinkListModel struct {
 	Title      string `gorm:"column:title;type:varchar(128)" json:"title" form:"title"`                  // 标题
 	LinkURL    string `gorm:"column:link_url;type:varchar(256)" json:"link_url" form:"link_url"`         // 外部链接
 	Target     string `gorm:"column:target;type:varchar(16);default:_blank" json:"target" form:"target"` // 是否开启浏览器新窗口
-	ImgURL     string `gorm:"column:img_url;type:varchar(256)" json:"img_url" form:"img_url"`            // 网站logo地址
+	ImgUrl1    string `gorm:"column:img_url1;type:varchar(256)" json:"img_url1" form:"img_url1"`         // 网站logo地址
+	ImgUrl2    string `gorm:"column:img_url2;type:varchar(256)" json:"img_url2" form:"img_url2"`         // 网站logo地址
 	IsLock     int32  `gorm:"column:is_lock;type:tinyint" json:"is_lock" form:"is_lock"`                 // 是否锁定（不允许编辑）
 	IsTop      int32  `gorm:"column:is_top;type:tinyint" json:"is_top" form:"is_top"`                    // 是否置顶
 	IsRed      int32  `gorm:"column:is_red;type:tinyint" json:"is_red" form:"is_red"`                    // 是否推荐

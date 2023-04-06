@@ -35,7 +35,7 @@ func (this *ApiLink) Find(limit int, category_id int64, call_index string) ([]*b
 	outLink := []*bmodel.ApiLinkListModel{}
 
 	_, linkDo := query.CmsLinkDo()
-	sqlSelect := "a.link_id,a.site_id,a.channel_id,a.category_id,a.title,a.link_url,a.target,a.click,a.img_url,a.is_lock,a.is_red,a.is_hot,a.is_slide"
+	sqlSelect := "a.link_id,a.site_id,a.channel_id,a.category_id,a.title,a.link_url,a.target,a.click,a.img_url1,a.img_url2,a.is_lock,a.is_red,a.is_hot,a.is_slide"
 	sql := "SELECT " + sqlSelect + " FROM cms_link a LEFT JOIN cms_link_category b ON a.category_id = b.category_id WHERE a.`status`=2 " +
 		xgeneric.IFF(call_index == "", "", " AND b.call_index = '"+call_index+"'") +
 		xgeneric.IFF(category_id <= 0, "", " AND b.category_id = "+strconv.FormatInt(category_id, 10)) +
@@ -61,7 +61,7 @@ func (this *ApiLink) Find(limit int, category_id int64, call_index string) ([]*b
 func (this *ApiLink) Paginate(page, limit int, category_id int64, call_index string) ([]*bmodel.ApiLinkListModel, int64, error) {
 	outLink := []*bmodel.ApiLinkListModel{}
 	_, linkDo := query.CmsLinkDo()
-	sqlSelectRow := "a.link_id,a.site_id,a.channel_id,a.category_id,a.title,a.link_url,a.target,a.click,a.img_url,a.is_lock,a.is_red,a.is_hot,a.is_slide"
+	sqlSelectRow := "a.link_id,a.site_id,a.channel_id,a.category_id,a.title,a.link_url,a.target,a.click,a.img_url1,a.img_url2,a.is_lock,a.is_red,a.is_hot,a.is_slide"
 	sqlRow := "SELECT " + sqlSelectRow + " FROM cms_link a LEFT JOIN cms_link_category b ON a.category_id = b.category_id WHERE a.`status`=2" +
 		xgeneric.IFF(call_index == "", "", " AND b.call_index = '"+call_index+"'") +
 		xgeneric.IFF(category_id <= 0, "", " AND b.category_id = "+strconv.FormatInt(category_id, 10)) +

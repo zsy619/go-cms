@@ -50,6 +50,8 @@ func (this *CmsLink) CategorySave(input *model.CmsLinkCategory) error {
 			mdl.Title.ColumnName().String():          input.Title,
 			mdl.CallIndex.ColumnName().String():      input.CallIndex,
 			mdl.LinkURL.ColumnName().String():        input.LinkURL,
+			mdl.ImgUrl1.ColumnName().String():        input.ImgUrl1,
+			mdl.ImgUrl2.ColumnName().String():        input.ImgUrl2,
 			mdl.SeoTitle.ColumnName().String():       input.SeoTitle,
 			mdl.SeoKeyword.ColumnName().String():     input.SeoKeyword,
 			mdl.SeoDescription.ColumnName().String(): input.SeoDescription,
@@ -161,7 +163,8 @@ func (this *CmsLink) LinkSave(input *model.CmsLink) error {
 			mdl.CallIndex.ColumnName().String():  input.CallIndex,
 			mdl.LinkURL.ColumnName().String():    input.LinkURL,
 			mdl.Target.ColumnName().String():     input.Target,
-			mdl.ImgURL.ColumnName().String():     input.ImgURL,
+			mdl.ImgUrl1.ColumnName().String():    input.ImgUrl1,
+			mdl.ImgUrl2.ColumnName().String():    input.ImgUrl2,
 			mdl.Remark.ColumnName().String():     input.Remark,
 			mdl.SortID.ColumnName().String():     input.SortID,
 			mdl.Status.ColumnName().String():     input.Status,
@@ -172,9 +175,6 @@ func (this *CmsLink) LinkSave(input *model.CmsLink) error {
 			mdl.IsSlide.ColumnName().String():    input.IsSlide,
 			mdl.UpdateTime.ColumnName().String(): input.UpdateTime,
 		})
-		if err == nil {
-			// NewApiLink().InitCache()
-		}
 	}
 	return err
 }
@@ -185,7 +185,6 @@ func (this *CmsLink) LinkDestory(linkId int64) error {
 	if _, err := do.Where(mdl.LinkID.Eq(linkId)).Delete(); err != nil {
 		return err
 	}
-	// NewApiLink().InitCache()
 	return nil
 }
 

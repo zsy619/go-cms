@@ -71,15 +71,15 @@
                 { field: 'link_url', title: 'URL链接', minWidth: 150 },
                 { field: 'target', title: 'Target', width: 100 },
                 {
-                    field: 'img_url', title: '网站Logo', width: 150, templet: function (d) {
-                        if (d.img_url != "") {
-                            return '<img src="' + d.img_url + '" style="max-width: 100px;max-height: 100px;" />';
+                    field: 'img_url1', title: '网站Logo', width: 150, templet: function (d) {
+                        if (d.img_url1 != "") {
+                            return '<img src="' + d.img_url1 + '" style="max-width: 100px;max-height: 100px;" />';
                         }
                         return "";
                     }
                 },
                 {
-                    field: 'img_url', title: '属性', width: 220, templet: function (d) {
+                    field: 'status', title: '属性', width: 220, templet: function (d) {
                         var outText = d.status == 2 ? '<span class="layui-badge layui-bg-green">通过</span>' : (d.status == 3 ? '<span class="layui-badge">拒绝</span>' : '<span class="layui-badge layui-bg-gray">草稿</span>');
                         if (d.is_top == 1) {
                             outText += '<span class="layui-badge layui-bg-blue">置顶</span>';
