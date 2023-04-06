@@ -14,9 +14,9 @@ func (this *XxgkController) Xxjj() {
 // Xxry 学校荣誉
 // @router /xxgk/xxry [get]
 func (this *XxgkController) Xxry() {
-	album, err := this.ArticleAlbum(this.ActionName, 0)
+	album, err := this.ArticleAlbum(this.ActionName, 0, 0)
 	if err != nil {
-		album = []*model.CmsArticleAlbum{}
+		album = []*model.CmsAlbum{}
 	}
 	this.Data["album"] = album
 	this.displayCategory()

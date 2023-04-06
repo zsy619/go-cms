@@ -34,9 +34,9 @@ func (this *JgszController) Xwbgs() {
 
 // Rsc 人事处
 func (this *JgszController) Rsc() {
-	album, err := this.ArticleAlbum(this.ActionName, 0)
+	album, err := this.ArticleAlbum(this.ActionName, 0, 0)
 	if err != nil {
-		album = []*model.CmsArticleAlbum{}
+		album = []*model.CmsAlbum{}
 	}
 	this.Data["album"] = album
 	this.displayCategory()
@@ -44,9 +44,9 @@ func (this *JgszController) Rsc() {
 
 // Jwc 教务处
 func (this *JgszController) Jwc() {
-	album, err := this.ArticleAlbum(this.ActionName, 0)
+	album, err := this.ArticleAlbum(this.ActionName, 0, 0)
 	if err != nil {
-		album = []*model.CmsArticleAlbum{}
+		album = []*model.CmsAlbum{}
 	}
 	this.Data["album"] = album
 	this.displayCategory()
@@ -54,9 +54,9 @@ func (this *JgszController) Jwc() {
 
 // Xsc 学生处
 func (this *JgszController) Xsc() {
-	album, err := this.ArticleAlbum(this.ActionName, 0)
+	album, err := this.ArticleAlbum(this.ActionName, 0, 0)
 	if err != nil {
-		album = []*model.CmsArticleAlbum{}
+		album = []*model.CmsAlbum{}
 	}
 	this.Data["album"] = album
 	this.displayCategory()
@@ -64,9 +64,9 @@ func (this *JgszController) Xsc() {
 
 // Tw 团委
 func (this *JgszController) Tw() {
-	album, err := this.ArticleAlbum(this.ActionName, 0)
+	album, err := this.ArticleAlbum(this.ActionName, 0, 0)
 	if err != nil {
-		album = []*model.CmsArticleAlbum{}
+		album = []*model.CmsAlbum{}
 	}
 	this.Data["album"] = album
 	this.displayCategory()

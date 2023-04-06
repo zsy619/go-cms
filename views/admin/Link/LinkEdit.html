@@ -151,7 +151,7 @@
         });
 
         var editor = new wangEditor('#editor');
-        editor.customConfig.uploadImgServer = "/admin/tools/ImageUpload";
+        editor.customConfig.uploadImgServer = "/admin/tools/ImageUpload?path=link";
         editor.customConfig.uploadFileName = 'file';
         editor.customConfig.pasteFilterStyle = false;
         editor.customConfig.uploadImgMaxSize = 3 * 1024 * 1024; // 将图片大小限制为 3M

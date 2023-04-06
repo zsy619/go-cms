@@ -212,7 +212,7 @@ func (this *BaseController) ArticlePaginate(page, limit int, channel_id, categor
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *BaseController) ArticleGet(call_index string, article_id int64) (*bmodel.ApiArticleOneModel, []*model.CmsArticleAlbum, []*model.CmsArticleAttach, error) {
+func (this *BaseController) ArticleGet(call_index string, article_id int64) (*bmodel.ApiArticleOneModel, []*model.CmsAlbum, []*model.CmsAttach, error) {
 	return biz.NewApiArticle().Get(call_index, article_id)
 }
 
@@ -242,8 +242,8 @@ func (this *BaseController) ArticleArticle(call_index string, article_id int64) 
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *BaseController) ArticleAlbum(call_index string, article_id int64) ([]*model.CmsArticleAlbum, error) {
-	return biz.NewApiArticle().Album(call_index, article_id)
+func (this *BaseController) ArticleAlbum(call_index string, article_id int64, type_id int32) ([]*model.CmsAlbum, error) {
+	return biz.NewApiArticle().Album(call_index, article_id, type_id)
 }
 
 /**
@@ -251,8 +251,8 @@ func (this *BaseController) ArticleAlbum(call_index string, article_id int64) ([
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *BaseController) ArticleAttach(call_index string, article_id int64) ([]*model.CmsArticleAttach, error) {
-	return biz.NewApiArticle().Attach(call_index, article_id)
+func (this *BaseController) ArticleAttach(call_index string, article_id int64, type_id int32) ([]*model.CmsAttach, error) {
+	return biz.NewApiArticle().Attach(call_index, article_id, type_id)
 }
 
 /**

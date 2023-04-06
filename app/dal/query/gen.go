@@ -22,13 +22,13 @@ var (
 	CmsAdminNav                *cmsAdminNav
 	CmsAdminRole               *cmsAdminRole
 	CmsAdminRoleValue          *cmsAdminRoleValue
+	CmsAlbum                   *cmsAlbum
 	CmsArticle                 *cmsArticle
-	CmsArticleAlbum            *cmsArticleAlbum
-	CmsArticleAttach           *cmsArticleAttach
 	CmsArticleCategory         *cmsArticleCategory
 	CmsArticleCategoryRelation *cmsArticleCategoryRelation
 	CmsArticleLabel            *cmsArticleLabel
 	CmsArticleLabelRelation    *cmsArticleLabelRelation
+	CmsAttach                  *cmsAttach
 	CmsLink                    *cmsLink
 	CmsLinkCategory            *cmsLinkCategory
 	CmsLinkCategoryRelation    *cmsLinkCategoryRelation
@@ -51,13 +51,13 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	CmsAdminNav = &Q.CmsAdminNav
 	CmsAdminRole = &Q.CmsAdminRole
 	CmsAdminRoleValue = &Q.CmsAdminRoleValue
+	CmsAlbum = &Q.CmsAlbum
 	CmsArticle = &Q.CmsArticle
-	CmsArticleAlbum = &Q.CmsArticleAlbum
-	CmsArticleAttach = &Q.CmsArticleAttach
 	CmsArticleCategory = &Q.CmsArticleCategory
 	CmsArticleCategoryRelation = &Q.CmsArticleCategoryRelation
 	CmsArticleLabel = &Q.CmsArticleLabel
 	CmsArticleLabelRelation = &Q.CmsArticleLabelRelation
+	CmsAttach = &Q.CmsAttach
 	CmsLink = &Q.CmsLink
 	CmsLinkCategory = &Q.CmsLinkCategory
 	CmsLinkCategoryRelation = &Q.CmsLinkCategoryRelation
@@ -81,13 +81,13 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		CmsAdminNav:                newCmsAdminNav(db, opts...),
 		CmsAdminRole:               newCmsAdminRole(db, opts...),
 		CmsAdminRoleValue:          newCmsAdminRoleValue(db, opts...),
+		CmsAlbum:                   newCmsAlbum(db, opts...),
 		CmsArticle:                 newCmsArticle(db, opts...),
-		CmsArticleAlbum:            newCmsArticleAlbum(db, opts...),
-		CmsArticleAttach:           newCmsArticleAttach(db, opts...),
 		CmsArticleCategory:         newCmsArticleCategory(db, opts...),
 		CmsArticleCategoryRelation: newCmsArticleCategoryRelation(db, opts...),
 		CmsArticleLabel:            newCmsArticleLabel(db, opts...),
 		CmsArticleLabelRelation:    newCmsArticleLabelRelation(db, opts...),
+		CmsAttach:                  newCmsAttach(db, opts...),
 		CmsLink:                    newCmsLink(db, opts...),
 		CmsLinkCategory:            newCmsLinkCategory(db, opts...),
 		CmsLinkCategoryRelation:    newCmsLinkCategoryRelation(db, opts...),
@@ -112,13 +112,13 @@ type Query struct {
 	CmsAdminNav                cmsAdminNav
 	CmsAdminRole               cmsAdminRole
 	CmsAdminRoleValue          cmsAdminRoleValue
+	CmsAlbum                   cmsAlbum
 	CmsArticle                 cmsArticle
-	CmsArticleAlbum            cmsArticleAlbum
-	CmsArticleAttach           cmsArticleAttach
 	CmsArticleCategory         cmsArticleCategory
 	CmsArticleCategoryRelation cmsArticleCategoryRelation
 	CmsArticleLabel            cmsArticleLabel
 	CmsArticleLabelRelation    cmsArticleLabelRelation
+	CmsAttach                  cmsAttach
 	CmsLink                    cmsLink
 	CmsLinkCategory            cmsLinkCategory
 	CmsLinkCategoryRelation    cmsLinkCategoryRelation
@@ -144,13 +144,13 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		CmsAdminNav:                q.CmsAdminNav.clone(db),
 		CmsAdminRole:               q.CmsAdminRole.clone(db),
 		CmsAdminRoleValue:          q.CmsAdminRoleValue.clone(db),
+		CmsAlbum:                   q.CmsAlbum.clone(db),
 		CmsArticle:                 q.CmsArticle.clone(db),
-		CmsArticleAlbum:            q.CmsArticleAlbum.clone(db),
-		CmsArticleAttach:           q.CmsArticleAttach.clone(db),
 		CmsArticleCategory:         q.CmsArticleCategory.clone(db),
 		CmsArticleCategoryRelation: q.CmsArticleCategoryRelation.clone(db),
 		CmsArticleLabel:            q.CmsArticleLabel.clone(db),
 		CmsArticleLabelRelation:    q.CmsArticleLabelRelation.clone(db),
+		CmsAttach:                  q.CmsAttach.clone(db),
 		CmsLink:                    q.CmsLink.clone(db),
 		CmsLinkCategory:            q.CmsLinkCategory.clone(db),
 		CmsLinkCategoryRelation:    q.CmsLinkCategoryRelation.clone(db),
@@ -183,13 +183,13 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		CmsAdminNav:                q.CmsAdminNav.replaceDB(db),
 		CmsAdminRole:               q.CmsAdminRole.replaceDB(db),
 		CmsAdminRoleValue:          q.CmsAdminRoleValue.replaceDB(db),
+		CmsAlbum:                   q.CmsAlbum.replaceDB(db),
 		CmsArticle:                 q.CmsArticle.replaceDB(db),
-		CmsArticleAlbum:            q.CmsArticleAlbum.replaceDB(db),
-		CmsArticleAttach:           q.CmsArticleAttach.replaceDB(db),
 		CmsArticleCategory:         q.CmsArticleCategory.replaceDB(db),
 		CmsArticleCategoryRelation: q.CmsArticleCategoryRelation.replaceDB(db),
 		CmsArticleLabel:            q.CmsArticleLabel.replaceDB(db),
 		CmsArticleLabelRelation:    q.CmsArticleLabelRelation.replaceDB(db),
+		CmsAttach:                  q.CmsAttach.replaceDB(db),
 		CmsLink:                    q.CmsLink.replaceDB(db),
 		CmsLinkCategory:            q.CmsLinkCategory.replaceDB(db),
 		CmsLinkCategoryRelation:    q.CmsLinkCategoryRelation.replaceDB(db),
@@ -212,13 +212,13 @@ type queryCtx struct {
 	CmsAdminNav                *cmsAdminNavDo
 	CmsAdminRole               *cmsAdminRoleDo
 	CmsAdminRoleValue          *cmsAdminRoleValueDo
+	CmsAlbum                   *cmsAlbumDo
 	CmsArticle                 *cmsArticleDo
-	CmsArticleAlbum            *cmsArticleAlbumDo
-	CmsArticleAttach           *cmsArticleAttachDo
 	CmsArticleCategory         *cmsArticleCategoryDo
 	CmsArticleCategoryRelation *cmsArticleCategoryRelationDo
 	CmsArticleLabel            *cmsArticleLabelDo
 	CmsArticleLabelRelation    *cmsArticleLabelRelationDo
+	CmsAttach                  *cmsAttachDo
 	CmsLink                    *cmsLinkDo
 	CmsLinkCategory            *cmsLinkCategoryDo
 	CmsLinkCategoryRelation    *cmsLinkCategoryRelationDo
@@ -241,13 +241,13 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 		CmsAdminNav:                q.CmsAdminNav.WithContext(ctx),
 		CmsAdminRole:               q.CmsAdminRole.WithContext(ctx),
 		CmsAdminRoleValue:          q.CmsAdminRoleValue.WithContext(ctx),
+		CmsAlbum:                   q.CmsAlbum.WithContext(ctx),
 		CmsArticle:                 q.CmsArticle.WithContext(ctx),
-		CmsArticleAlbum:            q.CmsArticleAlbum.WithContext(ctx),
-		CmsArticleAttach:           q.CmsArticleAttach.WithContext(ctx),
 		CmsArticleCategory:         q.CmsArticleCategory.WithContext(ctx),
 		CmsArticleCategoryRelation: q.CmsArticleCategoryRelation.WithContext(ctx),
 		CmsArticleLabel:            q.CmsArticleLabel.WithContext(ctx),
 		CmsArticleLabelRelation:    q.CmsArticleLabelRelation.WithContext(ctx),
+		CmsAttach:                  q.CmsAttach.WithContext(ctx),
 		CmsLink:                    q.CmsLink.WithContext(ctx),
 		CmsLinkCategory:            q.CmsLinkCategory.WithContext(ctx),
 		CmsLinkCategoryRelation:    q.CmsLinkCategoryRelation.WithContext(ctx),

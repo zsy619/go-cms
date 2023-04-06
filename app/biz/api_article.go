@@ -264,7 +264,7 @@ func (this *ApiArticle) Paginate(page, limit int, channel_id, category_id int64,
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *ApiArticle) Get(call_index string, article_id int64) (*bmodel.ApiArticleOneModel, []*model.CmsArticleAlbum, []*model.CmsArticleAttach, error) {
+func (this *ApiArticle) Get(call_index string, article_id int64) (*bmodel.ApiArticleOneModel, []*model.CmsAlbum, []*model.CmsAttach, error) {
 	mdl, do := query.CmsArticleDo()
 	if call_index != "" {
 		if article_id <= 0 {
@@ -279,18 +279,18 @@ func (this *ApiArticle) Get(call_index string, article_id int64) (*bmodel.ApiArt
 	artilce := &bmodel.ApiArticleOneModel{}
 	if err := do.Debug().UnderlyingDB().Raw(sql, article_id).Scan(&artilce).Error; err != nil {
 		logs.Error("Get", err.Error())
-		return artilce, []*model.CmsArticleAlbum{}, []*model.CmsArticleAttach{}, err
+		return artilce, []*model.CmsAlbum{}, []*model.CmsAttach{}, err
 	}
 
-	albumMdl, alblumDo := query.CmsArticleAlbumDo()
-	articleAlbum, _ := alblumDo.Where(albumMdl.ArticleID.Eq(article_id), albumMdl.IsShow.Eq(1)).Order(albumMdl.SortID).Find()
+	albumMdl, alblumDo := query.CmsAlbumDo()
+	articleAlbum, _ := alblumDo.Where(albumMdl.TableName_.Eq("article"), albumMdl.RecordID.Eq(article_id), albumMdl.IsShow.Eq(1)).Order(albumMdl.SortID).Find()
 	if articleAlbum == nil {
-		articleAlbum = []*model.CmsArticleAlbum{}
+		articleAlbum = []*model.CmsAlbum{}
 	}
-	attachMdl, attachDo := query.CmsArticleAttachDo()
-	articleAttach, _ := attachDo.Where(attachMdl.ArticleID.Eq(article_id), attachMdl.IsShow.Eq(1)).Order(attachMdl.SortID).Find()
+	attachMdl, attachDo := query.CmsAttachDo()
+	articleAttach, _ := attachDo.Where(attachMdl.TableName_.Eq("article"), attachMdl.RecordID.Eq(article_id), attachMdl.IsShow.Eq(1)).Order(attachMdl.SortID).Find()
 	if articleAttach == nil {
-		articleAttach = []*model.CmsArticleAttach{}
+		articleAttach = []*model.CmsAttach{}
 	}
 	return artilce, articleAlbum, articleAttach, nil
 }
@@ -359,13 +359,13 @@ func (this *ApiArticle) Article(call_index string, article_id int64) (*bmodel.Ap
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *ApiArticle) Album(call_index string, article_id int64) ([]*model.CmsArticleAlbum, error) {
+func (this *ApiArticle) Album(call_index string, article_id int64, type_id int32) ([]*model.CmsAlbum, error) {
 	if call_index != "" {
 		article, articleDo := query.CmsArticleDo()
 		articleDo.Where(article.CallIndex.Eq(call_index), article.Status.Eq(2)).Pluck(article.ArticleID, &article_id)
 	}
-	albumMdl, alblumDo := query.CmsArticleAlbumDo()
-	return alblumDo.Where(albumMdl.ArticleID.Eq(article_id), albumMdl.IsShow.Eq(1)).Order(albumMdl.SortID).Find()
+	albumMdl, alblumDo := query.CmsAlbumDo()
+	return alblumDo.Where(albumMdl.TableName_.Eq("article"), albumMdl.RecordID.Eq(article_id), albumMdl.TypeID.Eq(type_id), albumMdl.IsShow.Eq(1)).Order(albumMdl.SortID).Find()
 }
 
 /**
@@ -374,13 +374,13 @@ func (this *ApiArticle) Album(call_index string, article_id int64) ([]*model.Cms
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *ApiArticle) Attach(call_index string, article_id int64) ([]*model.CmsArticleAttach, error) {
+func (this *ApiArticle) Attach(call_index string, article_id int64, type_id int32) ([]*model.CmsAttach, error) {
 	if call_index != "" {
 		article, articleDo := query.CmsArticleDo()
 		articleDo.Where(article.CallIndex.Eq(call_index), article.Status.Eq(2)).Pluck(article.ArticleID, &article_id)
 	}
-	attachMdl, attachDo := query.CmsArticleAttachDo()
-	return attachDo.Where(attachMdl.ArticleID.Eq(article_id)).Order(attachMdl.SortID, attachMdl.IsShow.Eq(1)).Find()
+	attachMdl, attachDo := query.CmsAttachDo()
+	return attachDo.Where(attachMdl.TableName_.Eq("article"), attachMdl.RecordID.Eq(article_id), attachMdl.TypeID.Eq(type_id), attachMdl.IsShow.Eq(1)).Order(attachMdl.SortID).Find()
 }
 
 /**
@@ -426,7 +426,7 @@ func (this *ApiArticle) Like(call_index string, article_id int64) error {
  * @return {*}
  */
 func (this *ApiArticle) AlbumClick(article_id, ablum_id int64) error {
-	mdl, do := query.CmsArticleAlbumDo()
+	mdl, do := query.CmsAlbumDo()
 	do.Where(mdl.AlbumID.Eq(ablum_id), mdl.IsShow.Eq(1)).Updates(map[string]interface{}{
 		mdl.Click.ColumnName().String():      gorm.Expr("click + ?", 1),
 		mdl.UpdateTime.ColumnName().String(): time.Now(),

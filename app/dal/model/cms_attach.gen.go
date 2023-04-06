@@ -8,12 +8,14 @@ import (
 	"time"
 )
 
-const TableNameCmsArticleAttach = "cms_article_attach"
+const TableNameCmsAttach = "cms_attach"
 
-// CmsArticleAttach mapped from table <cms_article_attach>
-type CmsArticleAttach struct {
+// CmsAttach mapped from table <cms_attach>
+type CmsAttach struct {
 	AttachID     int64     `gorm:"column:attach_id;type:bigint;primaryKey;autoIncrement:true" json:"attach_id" form:"attach_id"` // 主键
-	ArticleID    int64     `gorm:"column:article_id;type:bigint" json:"article_id" form:"article_id"`                            // 文章ID
+	TableName_   string    `gorm:"column:table_name;type:varchar(128)" json:"table_name" form:"table_name"`                      // 关联表名
+	RecordID     int64     `gorm:"column:record_id;type:bigint" json:"record_id" form:"record_id"`                               // 关联记录ID
+	TypeID       int32     `gorm:"column:type_id;type:int" json:"type_id" form:"type_id"`                                        // 分类
 	Title        string    `gorm:"column:title;type:varchar(128)" json:"title" form:"title"`                                     // 标题
 	OriginalPath string    `gorm:"column:original_path;type:varchar(512)" json:"original_path" form:"original_path"`             // 原始地址
 	FilePath     string    `gorm:"column:file_path;type:varchar(512)" json:"file_path" form:"file_path"`                         // 文件路径（带域名）
@@ -32,7 +34,7 @@ type CmsArticleAttach struct {
 	UpdateTime   time.Time `gorm:"column:update_time;type:int unsigned;autoUpdateTime" json:"update_time" form:"update_time"`    // 修改时间
 }
 
-// TableName CmsArticleAttach's table name
-func (*CmsArticleAttach) TableName() string {
-	return TableNameCmsArticleAttach
+// TableName CmsAttach's table name
+func (*CmsAttach) TableName() string {
+	return TableNameCmsAttach
 }

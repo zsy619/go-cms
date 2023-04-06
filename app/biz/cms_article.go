@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/beego/beego/v2/core/logs"
@@ -114,31 +115,37 @@ func (this *CmsArticle) ArticleSaveSortId(articleId int64, sortId int32) error {
 
 // ArticleDestory 删除
 func (this *CmsArticle) ArticleDestory(articleId int64) error {
-	attachMdl, attachDo := query.CmsArticleAttachDo()
-	if attachList, err := attachDo.Where(attachMdl.ArticleID.Eq(articleId)).Find(); err != nil {
-		logs.Error(err.Error())
-	} else {
-		for _, attach := range attachList {
-			if attach.OriginalPath != "" {
-				os.Remove(attach.OriginalPath[1:])
+	// 删除附件
+	{
+		attachMdl, attachDo := query.CmsAttachDo()
+		if attachList, err := attachDo.Where(attachMdl.TableName_.Eq("article"), attachMdl.RecordID.Eq(articleId)).Find(); err != nil {
+			logs.Error(err.Error())
+		} else {
+			for _, attach := range attachList {
+				if attach.OriginalPath != "" && strings.HasPrefix(attach.OriginalPath, "/Uploads/") {
+					os.Remove(attach.OriginalPath[1:])
+				}
 			}
 		}
-	}
-	if _, err := attachDo.Where(attachMdl.ArticleID.Eq(articleId)).Delete(); err != nil {
-		return err
-	}
-	albumMdl, albumDo := query.CmsArticleAlbumDo()
-	if albumList, err := albumDo.Where(albumMdl.ArticleID.Eq(articleId)).Find(); err != nil {
-		logs.Error(err.Error())
-	} else {
-		for _, album := range albumList {
-			if album.OriginalPath != "" {
-				os.Remove(album.OriginalPath[1:])
-			}
+		if _, err := attachDo.Where(attachMdl.TableName_.Eq("article"), attachMdl.RecordID.Eq(articleId)).Delete(); err != nil {
+			return err
 		}
 	}
-	if _, err := albumDo.Where(albumMdl.ArticleID.Eq(articleId)).Delete(); err != nil {
-		return err
+	// 删除相册
+	{
+		albumMdl, albumDo := query.CmsAlbumDo()
+		if albumList, err := albumDo.Where(albumMdl.TableName_.Eq("article"), albumMdl.RecordID.Eq(articleId)).Find(); err != nil {
+			logs.Error(err.Error())
+		} else {
+			for _, album := range albumList {
+				if album.OriginalPath != "" && strings.HasPrefix(album.OriginalPath, "/Uploads/") {
+					os.Remove(album.OriginalPath[1:])
+				}
+			}
+		}
+		if _, err := albumDo.Where(albumMdl.TableName_.Eq("article"), albumMdl.RecordID.Eq(articleId)).Delete(); err != nil {
+			return err
+		}
 	}
 	mdl, do := query.CmsArticleDo()
 	if _, err := do.Where(mdl.ArticleID.Eq(articleId)).Delete(); err != nil {

@@ -2,6 +2,7 @@ package biz
 
 import (
 	"os"
+	"strings"
 	"time"
 
 	"github.com/beego/beego/v2/core/logs"
@@ -9,15 +10,21 @@ import (
 	"haedu.gov.cn/cms/app/dal/query"
 )
 
+type CmsAttach struct{}
+
+func NewCmsAttach() *CmsAttach {
+	return &CmsAttach{}
+}
+
 // AttachPaginate 获取
-func (this *CmsArticle) AttachPaginate(page, limit int, articleId int64) ([]*model.CmsArticleAttach, int64, error) {
-	mdl, do := query.CmsArticleAttachDo()
-	return do.Where(mdl.ArticleID.Eq(articleId)).Order(mdl.SortID).FindByPage((page-1)*limit, limit)
+func (this *CmsAttach) AttachPaginate(page, limit int, tableName string, recordId int64, typeId int32) ([]*model.CmsAttach, int64, error) {
+	mdl, do := query.CmsAttachDo()
+	return do.Where(mdl.TableName_.Eq(tableName), mdl.RecordID.Eq(recordId), mdl.TypeID.Eq(typeId)).Order(mdl.SortID).FindByPage((page-1)*limit, limit)
 }
 
 // AttachSave 保存或更新
-func (this *CmsArticle) AttachSave(input *model.CmsArticleAttach) error {
-	mdl, do := query.CmsArticleAttachDo()
+func (this *CmsAttach) AttachSave(input *model.CmsAttach) error {
+	mdl, do := query.CmsAttachDo()
 	var err error
 	input.UpdateTime = time.Now()
 	if input.AttachID <= 0 {
@@ -25,6 +32,9 @@ func (this *CmsArticle) AttachSave(input *model.CmsArticleAttach) error {
 		err = do.Create(input)
 	} else {
 		_, err = do.Where(mdl.AttachID.Eq(input.AttachID)).Updates(map[string]interface{}{
+			mdl.TableName_.ColumnName().String(): input.TableName_,
+			mdl.RecordID.ColumnName().String():   input.RecordID,
+			mdl.TypeID.ColumnName().String():     input.TypeID,
 			mdl.IsShow.ColumnName().String():     input.IsShow,
 			mdl.Remark.ColumnName().String():     input.Remark,
 			mdl.SortID.ColumnName().String():     input.SortID,
@@ -35,12 +45,12 @@ func (this *CmsArticle) AttachSave(input *model.CmsArticleAttach) error {
 }
 
 // AttachDestory 删除
-func (this *CmsArticle) AttachDestory(attachId int64) error {
-	mdl, do := query.CmsArticleAttachDo()
+func (this *CmsAttach) AttachDestory(attachId int64) error {
+	mdl, do := query.CmsAttachDo()
 	if finder, err := do.Where(mdl.AttachID.Eq(attachId)).First(); err != nil {
 		return err
 	} else {
-		if finder != nil && finder.OriginalPath != "" {
+		if finder != nil && finder.OriginalPath != "" && strings.HasPrefix(finder.OriginalPath, "/Uploads/") {
 			err := os.Remove(finder.OriginalPath[1:])
 			if err != nil {
 				logs.Error("AttachDestory", err.Error())
@@ -52,8 +62,8 @@ func (this *CmsArticle) AttachDestory(attachId int64) error {
 }
 
 // AttachSaveShow 保存排序
-func (this *CmsArticle) AttachSaveShow(attachId int64, show int32) error {
-	mdl, do := query.CmsArticleAttachDo()
+func (this *CmsAttach) AttachSaveShow(attachId int64, show int32) error {
+	mdl, do := query.CmsAttachDo()
 	_, err := do.Where(mdl.AttachID.Eq(attachId)).UpdateColumns(
 		map[string]interface{}{
 			mdl.IsShow.ColumnName().String():     show,
@@ -64,8 +74,8 @@ func (this *CmsArticle) AttachSaveShow(attachId int64, show int32) error {
 }
 
 // AttachSaveInfo 保存
-func (this *CmsArticle) AttachSaveInfo(attachId int64, title string, point, click, sortId int32, remark string) error {
-	mdl, do := query.CmsArticleAttachDo()
+func (this *CmsAttach) AttachSaveInfo(attachId int64, title string, point, click, sortId int32, remark string) error {
+	mdl, do := query.CmsAttachDo()
 	_, err := do.Where(mdl.AttachID.Eq(attachId)).UpdateColumns(
 		map[string]interface{}{
 			mdl.Title.ColumnName().String():      title,

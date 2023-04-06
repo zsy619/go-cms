@@ -8,12 +8,12 @@ import (
 	"time"
 )
 
-const TableNameCmsArticleAlbum = "cms_article_album"
+const TableNameCmsSiteChannelAlbum = "cms_site_channel_album"
 
-// CmsArticleAlbum mapped from table <cms_article_album>
-type CmsArticleAlbum struct {
+// CmsSiteChannelAlbum mapped from table <cms_site_channel_album>
+type CmsSiteChannelAlbum struct {
 	AlbumID      int64     `gorm:"column:album_id;type:bigint;primaryKey;autoIncrement:true" json:"album_id" form:"album_id"` // 主键
-	ArticleID    int64     `gorm:"column:article_id;type:bigint" json:"article_id" form:"article_id"`                         // 文章ID
+	ChannelID    int64     `gorm:"column:channel_id;type:bigint" json:"channel_id" form:"channel_id"`                         // 频道ID
 	Title        string    `gorm:"column:title;type:varchar(128)" json:"title" form:"title"`                                  // 标题
 	ThumbPath    string    `gorm:"column:thumb_path;type:varchar(512)" json:"thumb_path" form:"thumb_path"`                   // 缩略图地址
 	OriginalPath string    `gorm:"column:original_path;type:varchar(512)" json:"original_path" form:"original_path"`          // 原图地址
@@ -33,7 +33,7 @@ type CmsArticleAlbum struct {
 	UpdateTime   time.Time `gorm:"column:update_time;type:int unsigned;autoUpdateTime" json:"update_time" form:"update_time"` // 修改时间
 }
 
-// TableName CmsArticleAlbum's table name
-func (*CmsArticleAlbum) TableName() string {
-	return TableNameCmsArticleAlbum
+// TableName CmsSiteChannelAlbum's table name
+func (*CmsSiteChannelAlbum) TableName() string {
+	return TableNameCmsSiteChannelAlbum
 }

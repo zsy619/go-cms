@@ -8,6 +8,18 @@ import (
 
 var defaultContext = context.Background()
 
+// AlbumDo
+func CmsAlbumDo() (cmsAlbum, *cmsAlbumDo) {
+	u := Use(dal.CmsDatabase.DB).CmsAlbum
+	return u, u.WithContext(defaultContext).Debug()
+}
+
+// AttachDo
+func CmsAttachDo() (cmsAttach, *cmsAttachDo) {
+	u := Use(dal.CmsDatabase.DB).CmsAttach
+	return u, u.WithContext(defaultContext).Debug()
+}
+
 // CmsAdminRoleDo
 func CmsAdminRoleDo() (cmsAdminRole, *cmsAdminRoleDo) {
 	u := Use(dal.CmsDatabase.DB).CmsAdminRole
@@ -71,18 +83,6 @@ func CmsArticleCategoryRelationDo() (cmsArticleCategoryRelation, *cmsArticleCate
 // CmsArticleDo
 func CmsArticleDo() (cmsArticle, *cmsArticleDo) {
 	u := Use(dal.CmsDatabase.DB).CmsArticle
-	return u, u.WithContext(defaultContext).Debug()
-}
-
-// CmsArticleAlbumDo
-func CmsArticleAlbumDo() (cmsArticleAlbum, *cmsArticleAlbumDo) {
-	u := Use(dal.CmsDatabase.DB).CmsArticleAlbum
-	return u, u.WithContext(defaultContext).Debug()
-}
-
-// CmsArticleAttachDo
-func CmsArticleAttachDo() (cmsArticleAttach, *cmsArticleAttachDo) {
-	u := Use(dal.CmsDatabase.DB).CmsArticleAttach
 	return u, u.WithContext(defaultContext).Debug()
 }
 

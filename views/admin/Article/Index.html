@@ -311,7 +311,7 @@
                     maxmin: true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: 'ArticleAlbum?articleId=' + data.article_id + '&channelId=' + channelId,
+                    content: '/admin/Common/Album?tableName=article&recordId=' + data.article_id + '&typeId=0&channelId=' + channelId,
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -325,7 +325,7 @@
                     maxmin: true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: 'ArticleAttach?articleId=' + data.article_id + '&channelId=' + channelId,
+                    content: '/admin/Common/Attach?tableName=article&recordId=' + data.article_id + '&typeId=0&channelId=' + channelId,
                 });
                 $(window).on("resize", function () {
                     layer.full(index);

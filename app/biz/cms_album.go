@@ -2,6 +2,7 @@ package biz
 
 import (
 	"os"
+	"strings"
 	"time"
 
 	"github.com/beego/beego/v2/core/logs"
@@ -9,15 +10,21 @@ import (
 	"haedu.gov.cn/cms/app/dal/query"
 )
 
+type CmsAlbum struct{}
+
+func NewCmsAlbum() *CmsAlbum {
+	return &CmsAlbum{}
+}
+
 // AlbumPaginate 获取
-func (this *CmsArticle) AlbumPaginate(page, limit int, articleId int64) ([]*model.CmsArticleAlbum, int64, error) {
-	mdl, do := query.CmsArticleAlbumDo()
-	return do.Where(mdl.ArticleID.Eq(articleId)).Order(mdl.SortID).FindByPage((page-1)*limit, limit)
+func (this *CmsAlbum) AlbumPaginate(page, limit int, tableName string, recordId int64, typeId int32) ([]*model.CmsAlbum, int64, error) {
+	mdl, do := query.CmsAlbumDo()
+	return do.Where(mdl.TableName_.Eq(tableName), mdl.RecordID.Eq(recordId), mdl.TypeID.Eq(typeId)).Order(mdl.SortID).FindByPage((page-1)*limit, limit)
 }
 
 // AlbumSave 保存或更新
-func (this *CmsArticle) AlbumSave(input *model.CmsArticleAlbum) error {
-	mdl, do := query.CmsArticleAlbumDo()
+func (this *CmsAlbum) AlbumSave(input *model.CmsAlbum) error {
+	mdl, do := query.CmsAlbumDo()
 	var err error
 	input.UpdateTime = time.Now()
 	if input.AlbumID <= 0 {
@@ -25,6 +32,9 @@ func (this *CmsArticle) AlbumSave(input *model.CmsArticleAlbum) error {
 		err = do.Create(input)
 	} else {
 		_, err = do.Where(mdl.AlbumID.Eq(input.AlbumID)).Updates(map[string]interface{}{
+			mdl.TableName_.ColumnName().String():   input.TableName_,
+			mdl.RecordID.ColumnName().String():     input.RecordID,
+			mdl.TypeID.ColumnName().String():       input.TypeID,
 			mdl.Title.ColumnName().String():        input.Title,
 			mdl.ThumbPath.ColumnName().String():    input.ThumbPath,
 			mdl.OriginalPath.ColumnName().String(): input.OriginalPath,
@@ -42,12 +52,12 @@ func (this *CmsArticle) AlbumSave(input *model.CmsArticleAlbum) error {
 }
 
 // AlbumDestory 删除
-func (this *CmsArticle) AlbumDestory(albumId int64) error {
-	mdl, do := query.CmsArticleAlbumDo()
+func (this *CmsAlbum) AlbumDestory(albumId int64) error {
+	mdl, do := query.CmsAlbumDo()
 	if finder, err := do.Where(mdl.AlbumID.Eq(albumId)).First(); err != nil {
 		return err
 	} else {
-		if finder != nil && finder.OriginalPath != "" {
+		if finder != nil && finder.OriginalPath != "" && strings.HasPrefix(finder.OriginalPath, "/Uploads/") {
 			err := os.Remove(finder.OriginalPath[1:])
 			if err != nil {
 				logs.Error("AlbumDestory", err.Error())
@@ -59,8 +69,8 @@ func (this *CmsArticle) AlbumDestory(albumId int64) error {
 }
 
 // AlbumSaveShow 保存排序
-func (this *CmsArticle) AlbumSaveShow(albumId int64, show int32) error {
-	mdl, do := query.CmsArticleAlbumDo()
+func (this *CmsAlbum) AlbumSaveShow(albumId int64, show int32) error {
+	mdl, do := query.CmsAlbumDo()
 	_, err := do.Where(mdl.AlbumID.Eq(albumId)).UpdateColumns(
 		map[string]interface{}{
 			mdl.IsShow.ColumnName().String():     show,
@@ -71,8 +81,8 @@ func (this *CmsArticle) AlbumSaveShow(albumId int64, show int32) error {
 }
 
 // AlbumSaveInfo 保存
-func (this *CmsArticle) AlbumSaveInfo(albumId int64, title, linkUrl string, click, sortId int32, remark string) error {
-	mdl, do := query.CmsArticleAlbumDo()
+func (this *CmsAlbum) AlbumSaveInfo(albumId int64, title, linkUrl string, click, sortId int32, remark string) error {
+	mdl, do := query.CmsAlbumDo()
 	_, err := do.Where(mdl.AlbumID.Eq(albumId)).UpdateColumns(
 		map[string]interface{}{
 			mdl.Title.ColumnName().String():      title,

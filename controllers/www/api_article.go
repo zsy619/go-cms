@@ -152,8 +152,8 @@ func (this *ApiArticleController) One() {
 	aritcle, album, attatch, err := this.BaseController.ArticleGet(call_index, article_id)
 	result := struct {
 		Article *bmodel.ApiArticleOneModel `json:"article"`
-		Album   []*model.CmsArticleAlbum   `json:"album"`
-		Attach  []*model.CmsArticleAttach  `json:"attatch"`
+		Album   []*model.CmsAlbum          `json:"album"`
+		Attach  []*model.CmsAttach         `json:"attatch"`
 	}{
 		Article: aritcle,
 		Album:   album,
@@ -217,7 +217,8 @@ func (this *ApiArticleController) Article() {
 func (this *ApiArticleController) Album() {
 	article_id, _ := this.GetInt64("article_id", 0)
 	call_index := this.GetString("call_index")
-	album, err := this.BaseController.ArticleAlbum(call_index, article_id)
+	type_id, _ := this.GetInt32("type_id", 0)
+	album, err := this.BaseController.ArticleAlbum(call_index, article_id, type_id)
 	if err != nil {
 		logs.Error("", err.Error())
 		this.JSONErrorOfData(err.Error(), album)
@@ -235,7 +236,8 @@ func (this *ApiArticleController) Album() {
 func (this *ApiArticleController) Attach() {
 	article_id, _ := this.GetInt64("article_id", 0)
 	call_index := this.GetString("call_index")
-	attach, err := this.BaseController.ArticleAttach(call_index, article_id)
+	type_id, _ := this.GetInt32("type_id", 0)
+	attach, err := this.BaseController.ArticleAttach(call_index, article_id, type_id)
 	if err != nil {
 		logs.Error("", err.Error())
 		this.JSONErrorOfData(err.Error(), attach)
