@@ -36,7 +36,8 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">图片地址</label>
                         <div class="layui-input-inline" style="width: 392px;">
-                            <input type="text" name="img_url" value="{{.mdl.ImgURL}}" autocomplete="off" placeholder="" class="layui-input">
+                            <input type="hidden" name="img_url2" value="{{.mdl.ImgUrl2}}">
+                            <input type="text" name="img_url1" value="{{.mdl.ImgUrl1}}" autocomplete="off" placeholder="" class="layui-input">
                         </div>
                         <button type="button" class="layui-btn layui-btn-primary" id="btnUpload">
                             <i class="layui-icon">&#xe67c;</i>浏览...
@@ -122,7 +123,8 @@
             , done: function (res) {
                 //上传完毕回调
                 if (res.code == 0) {
-                    $("input[name='img_url']").val(res.file.url2);
+                    $("input[name='img_url1']").val(res.file.url1);
+                    $("input[name='img_url2']").val(res.file.url2);
                 } else {
                     layer.msg(res.msg);
                 }

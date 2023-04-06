@@ -112,7 +112,7 @@
     </script>
 </div>
 <div style="display: none" id="divSelect">
-    <form class="layui-form" lay-filter="form">
+    <form class="layui-form" method="get" lay-filter="frmSelect" id="frmSelect">
         <div class="layui-form-item">
             <p>&nbsp;</p>
         </div>
@@ -159,7 +159,8 @@
                 <textarea name="content" placeholder="" class="layui-textarea"></textarea>
             </div>
         </div>
-        <button id="submit" style="display: none;" class="layui-btn" lay-submit lay-filter="submit">提交</button>
+        <button id="btnSelSubmit" style="display: none;">提交</button>
+        <button id="btnSelReset" type="reset" style="display: none;">重置</button>
     </form>
 </div>
 <script>
@@ -169,6 +170,41 @@
             layer = layui.layer;
         var upload = layui.upload;
         var table = layui.table;
+
+        //执行实例
+        var uploadInst = upload.render({
+            elem: '#btnUpload' //绑定元素
+            , url: '/admin/tools/Upload?path=weixin' //上传接口
+            , exts: 'mp3' //限制上传文件的后缀名，用|分隔
+            , done: function (res) {
+                //上传完毕回调
+                if (res.code == 0) {
+                    $("input[name='sound_url']").val(res.file.url1);
+                } else {
+                    layer.msg(res.msg);
+                }
+            }
+            , error: function () {
+                //请求异常回调
+            }
+        });
+
+        //执行实例
+        var uploadInstx = upload.render({
+            elem: '#btnImg' //绑定元素
+            , url: '/admin/tools/ImageUpload?path=weixin' //上传接口
+            , done: function (res) {
+                //上传完毕回调
+                if (res.code == 0) {
+                    $("input[name='img_url']").val(res.file.url1);
+                } else {
+                    layer.msg(res.msg);
+                }
+            }
+            , error: function () {
+                //请求异常回调
+            }
+        });
 
         form.on('select(account_id)', function (data) {
             // console.log(data);
@@ -256,6 +292,7 @@
         loadContent();
 
         $("#btnSelect").on('click', function () {
+            $("#btnSelReset").click();
             layer.open({
                 type: 1,
                 title: '添加图片',
@@ -263,23 +300,23 @@
                 content: $('#divSelect'), //可以使用$('#id,.class')这种方式来指定模板，可以将其理解为指定一个组件，当然也是可以自己去写的,像'<div>我是一个内容</div>'
                 btn: ['确认', '取消'],
                 yes: function (index, layero) {
-                    // 获取当前蒙版层的索引
-                    mengIndex = index
-                    $('#submit').click()
+                    $('#btnSelSubmit').click()
                 },
                 btn2: function (index, layero) {
                     layer.close(index)
                 },
-                // 打开弹窗的回调函数，用于回显页面数据
                 success: function () {
-                    // 清除上一次的数据
-                    isSubOk = false
-                    $('#username').val('')
-                    $('#password').val('')
-                    console.log('我打开了弹窗')
                 },
             })
         })
+
+        $("#btnSelSubmit").on('click', function () {
+            form.submit('frmSelect', function (data) {
+                console.log($('#frmSelect').serialize());
+                layer.closeAll();
+            });
+            return false;
+        });
 
         //方法提交
         $('#btnSubmit').on('click', function () {
@@ -295,7 +332,6 @@
                     error: function (request) {  //失败的话
                     },
                     success: function (data) {  //成功
-                        // console.log(data);
                         if (data.code == CodeSuccess) {
                             layer.msg("提交成功", { icon: 1, time: 1000 }, function () {
 

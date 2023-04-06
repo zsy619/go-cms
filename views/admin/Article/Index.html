@@ -100,7 +100,7 @@
                 { field: 'article_id', width: 80, title: 'ID', sort: true },
                 {
                     field: 'title', title: '内容标题', templet: function (d) {
-                        var outText = d.ico_url == "" ? "" : "<img src='" + d.ico_url + "' style='width:20px;height:20px;margin-right:5px;' />";
+                        var outText = d.ico_url1 == "" ? "" : "<img src='" + d.ico_url1 + "' style='width:20px;height:20px;margin-right:5px;' />";
                         outText += d.title;
                         if (d.sub_title != "") {
                             outText += "<br/><span style='color:#999'>" + d.sub_title + "</span>";
@@ -117,7 +117,7 @@
                     }
                 },
                 {
-                    field: 'img_url', title: '属性', width: 230, templet: function (d) {
+                    field: 'img_url1', title: '属性', width: 230, templet: function (d) {
                         var outText = d.status == 2 ? '<span class="layui-badge layui-bg-green">通过</span>' : (d.status == 3 ? '<span class="layui-badge">拒绝</span>' : '<span class="layui-badge layui-bg-gray">草稿</span>');
                         if (d.is_command == 1) {
                             outText += '<span class="layui-badge layui-bg-cyan">评论</span>';
@@ -138,9 +138,9 @@
                     }
                 },
                 {
-                    field: 'img_url', title: '封面', width: 150, templet: function (d) {
-                        if (d.img_url != "") {
-                            return '<img src="' + d.img_url + '" style="max-width: 100px;max-height: 100px;" />';
+                    field: 'img_url1', title: '封面', width: 150, templet: function (d) {
+                        if (d.img_url1 != "") {
+                            return '<img src="' + d.img_url1 + '" style="max-width: 100px;max-height: 100px;" />';
                         }
                         return "";
                     }

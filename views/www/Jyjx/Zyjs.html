@@ -32,7 +32,7 @@
 <script id="templateLi" type="text/template">
     <li>
         <div class="img-box">
-            <img data-original="${img_url}" src="${img_url}" class="img" />
+            <img data-original="${img_url1}" src="${img_url1}" class="img" />
         </div>
         <div class="info-box">
             <div class="title">${title}</div>
@@ -98,7 +98,7 @@
                         for (var i = 0; i < len; i++) {
                             var item = res.data[i];
                             var url = item.link_url == "" ? "/article/detail/" + item.article_id : item.link_url;
-                            var html = tmpl.replaceAll("${img_url}", item.img_url)
+                            var html = tmpl.replaceAll("${img_url1}", item.img_url1)
                                 .replaceAll("${title}", item.title)
                                 .replaceAll("${seo_title}", item.seo_title)
                                 .replaceAll("${seo_description}", item.seo_description);

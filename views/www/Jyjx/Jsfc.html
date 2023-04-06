@@ -29,7 +29,7 @@
     <li>
         <a href="${url}" onclick="ArticleClick(${article_id})" title="${title}" target="_blank">
             <div class="img-box">
-                <img src="${img_url}" class="img" />
+                <img src="${img_url1}" class="img" />
             </div>
             <div class="info-box">
                 <div class="title ellip">【教师风采】${title} ----- ${sub_title}</div>
@@ -87,7 +87,7 @@
                         for (var i = 0; i < len; i++) {
                             var item = res.data[i];
                             var url = item.link_url == "" ? "/article/teacher/" + item.article_id : item.link_url;
-                            var html = tmpl.replaceAll("${img_url}", item.img_url).replaceAll("${article_id}", item.article_id)
+                            var html = tmpl.replaceAll("${img_url1}", item.img_url1).replaceAll("${article_id}", item.article_id)
                                 .replaceAll("${url}", url).replaceAll("${title}", item.title)
                                 .replaceAll("${sub_title}", item.sub_title).replaceAll("${summary}", item.summary);
                             $(".imgTextlist-ul2").append(html);

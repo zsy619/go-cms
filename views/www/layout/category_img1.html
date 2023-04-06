@@ -23,7 +23,7 @@
     <li>
         <a href="${url}" onclick="ArticleClick(${article_id})" target="_blank" title="${title}">
             <div class="img-box">
-                <img data-original="${img_url}" src="${img_url}" class="img" />
+                <img data-original="${img_url1}" src="${img_url1}" class="img" />
             </div>
             <p class="title">${title}</p>
         </a>
@@ -81,7 +81,7 @@
                             var html = tmpl.replaceAll("${url}", url)
                                 .replaceAll("${article_id}", item.article_id)
                                 .replaceAll("${title}", item.title)
-                                .replaceAll("${img_url}", item.img_url);
+                                .replaceAll("${img_url1}", item.img_url1);
                             $(".imglist-ul").append(html);
                         }
                         var viewer = new Viewer(document.getElementById('divImg'), {

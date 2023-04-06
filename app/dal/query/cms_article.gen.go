@@ -33,12 +33,14 @@ func newCmsArticle(db *gorm.DB, opts ...gen.DOOption) cmsArticle {
 	_cmsArticle.CategoryID = field.NewInt64(tableName, "category_id")
 	_cmsArticle.Title = field.NewString(tableName, "title")
 	_cmsArticle.SubTitle = field.NewString(tableName, "sub_title")
-	_cmsArticle.IcoURL = field.NewString(tableName, "ico_url")
+	_cmsArticle.IcoUrl1 = field.NewString(tableName, "ico_url1")
+	_cmsArticle.IcoUrl2 = field.NewString(tableName, "ico_url2")
 	_cmsArticle.CallIndex = field.NewString(tableName, "call_index")
 	_cmsArticle.Source = field.NewString(tableName, "source")
 	_cmsArticle.Author = field.NewString(tableName, "author")
 	_cmsArticle.LinkURL = field.NewString(tableName, "link_url")
-	_cmsArticle.ImgURL = field.NewString(tableName, "img_url")
+	_cmsArticle.ImgUrl1 = field.NewString(tableName, "img_url1")
+	_cmsArticle.ImgUrl2 = field.NewString(tableName, "img_url2")
 	_cmsArticle.SeoTitle = field.NewString(tableName, "seo_title")
 	_cmsArticle.SeoKeyword = field.NewString(tableName, "seo_keyword")
 	_cmsArticle.SeoDescription = field.NewString(tableName, "seo_description")
@@ -82,12 +84,14 @@ type cmsArticle struct {
 	CategoryID     field.Int64  // 类别ID
 	Title          field.String // 内容标题
 	SubTitle       field.String // 副标题
-	IcoURL         field.String // 标题图标
+	IcoUrl1        field.String // 标题图标
+	IcoUrl2        field.String // 标题图标
 	CallIndex      field.String // 调用别名
 	Source         field.String // 来源
 	Author         field.String // 作者
 	LinkURL        field.String // 外部链接
-	ImgURL         field.String // 图片地址
+	ImgUrl1        field.String // 图片地址
+	ImgUrl2        field.String // 图片地址
 	SeoTitle       field.String // SEO标题
 	SeoKeyword     field.String // SEO关健字
 	SeoDescription field.String // SEO描述
@@ -137,12 +141,14 @@ func (c *cmsArticle) updateTableName(table string) *cmsArticle {
 	c.CategoryID = field.NewInt64(table, "category_id")
 	c.Title = field.NewString(table, "title")
 	c.SubTitle = field.NewString(table, "sub_title")
-	c.IcoURL = field.NewString(table, "ico_url")
+	c.IcoUrl1 = field.NewString(table, "ico_url1")
+	c.IcoUrl2 = field.NewString(table, "ico_url2")
 	c.CallIndex = field.NewString(table, "call_index")
 	c.Source = field.NewString(table, "source")
 	c.Author = field.NewString(table, "author")
 	c.LinkURL = field.NewString(table, "link_url")
-	c.ImgURL = field.NewString(table, "img_url")
+	c.ImgUrl1 = field.NewString(table, "img_url1")
+	c.ImgUrl2 = field.NewString(table, "img_url2")
 	c.SeoTitle = field.NewString(table, "seo_title")
 	c.SeoKeyword = field.NewString(table, "seo_keyword")
 	c.SeoDescription = field.NewString(table, "seo_description")
@@ -194,19 +200,21 @@ func (c *cmsArticle) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *cmsArticle) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 39)
+	c.fieldMap = make(map[string]field.Expr, 41)
 	c.fieldMap["article_id"] = c.ArticleID
 	c.fieldMap["site_id"] = c.SiteID
 	c.fieldMap["channel_id"] = c.ChannelID
 	c.fieldMap["category_id"] = c.CategoryID
 	c.fieldMap["title"] = c.Title
 	c.fieldMap["sub_title"] = c.SubTitle
-	c.fieldMap["ico_url"] = c.IcoURL
+	c.fieldMap["ico_url1"] = c.IcoUrl1
+	c.fieldMap["ico_url2"] = c.IcoUrl2
 	c.fieldMap["call_index"] = c.CallIndex
 	c.fieldMap["source"] = c.Source
 	c.fieldMap["author"] = c.Author
 	c.fieldMap["link_url"] = c.LinkURL
-	c.fieldMap["img_url"] = c.ImgURL
+	c.fieldMap["img_url1"] = c.ImgUrl1
+	c.fieldMap["img_url2"] = c.ImgUrl2
 	c.fieldMap["seo_title"] = c.SeoTitle
 	c.fieldMap["seo_keyword"] = c.SeoKeyword
 	c.fieldMap["seo_description"] = c.SeoDescription

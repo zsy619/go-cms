@@ -34,7 +34,8 @@ func newCmsSite(db *gorm.DB, opts ...gen.DOOption) cmsSite {
 	_cmsSite.DirPath = field.NewString(tableName, "dir_path")
 	_cmsSite.IsDefault = field.NewBool(tableName, "is_default")
 	_cmsSite.IsMobile = field.NewBool(tableName, "is_mobile")
-	_cmsSite.Logo = field.NewString(tableName, "logo")
+	_cmsSite.Logo1 = field.NewString(tableName, "logo1")
+	_cmsSite.Logo2 = field.NewString(tableName, "logo2")
 	_cmsSite.Company = field.NewString(tableName, "company")
 	_cmsSite.Address = field.NewString(tableName, "address")
 	_cmsSite.Telphone = field.NewString(tableName, "telphone")
@@ -74,7 +75,8 @@ type cmsSite struct {
 	DirPath         field.String // 模板目录名
 	IsDefault       field.Bool   // 是否默认站
 	IsMobile        field.Bool   // 是否移动端
-	Logo            field.String // 网站LOGO
+	Logo1           field.String // 网站LOGO
+	Logo2           field.String // 网站LOGO
 	Company         field.String // 公司名称
 	Address         field.String // 通讯地址
 	Telphone        field.String // 联系电话
@@ -120,7 +122,8 @@ func (c *cmsSite) updateTableName(table string) *cmsSite {
 	c.DirPath = field.NewString(table, "dir_path")
 	c.IsDefault = field.NewBool(table, "is_default")
 	c.IsMobile = field.NewBool(table, "is_mobile")
-	c.Logo = field.NewString(table, "logo")
+	c.Logo1 = field.NewString(table, "logo1")
+	c.Logo2 = field.NewString(table, "logo2")
 	c.Company = field.NewString(table, "company")
 	c.Address = field.NewString(table, "address")
 	c.Telphone = field.NewString(table, "telphone")
@@ -165,7 +168,7 @@ func (c *cmsSite) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *cmsSite) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 30)
+	c.fieldMap = make(map[string]field.Expr, 31)
 	c.fieldMap["site_id"] = c.SiteID
 	c.fieldMap["parent_id"] = c.ParentID
 	c.fieldMap["name"] = c.Name
@@ -173,7 +176,8 @@ func (c *cmsSite) fillFieldMap() {
 	c.fieldMap["dir_path"] = c.DirPath
 	c.fieldMap["is_default"] = c.IsDefault
 	c.fieldMap["is_mobile"] = c.IsMobile
-	c.fieldMap["logo"] = c.Logo
+	c.fieldMap["logo1"] = c.Logo1
+	c.fieldMap["logo2"] = c.Logo2
 	c.fieldMap["company"] = c.Company
 	c.fieldMap["address"] = c.Address
 	c.fieldMap["telphone"] = c.Telphone

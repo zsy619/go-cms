@@ -135,7 +135,7 @@
                     for (var i = 0; i < len; i++) {
                         var item = res.data[i];
                         var url = item.link_url == "" ? "/article/detail/" + item.article_id : item.link_url;
-                        var html = '<div class="carousel-item"><img src="' + item.img_url + '" /><div class="carousel-opc"></div><a target="_blank" href="' + url + '"><span class="title">' + item.title + '</span></a></div>';
+                        var html = '<div class="carousel-item"><img src="' + item.img_url1 + '" /><div class="carousel-opc"></div><a target="_blank" href="' + url + '"><span class="title">' + item.title + '</span></a></div>';
                         $("#divTpxw").append(html);
                     }
                     if (len > 0) {
@@ -212,8 +212,8 @@
                     for (var i = 0; i < len; i++) {
                         var item = res.data[i];
                         var url = item.link_url == "" ? "/article/detail/" + item.article_id : item.link_url;
-                        var icon = item.ico_url == "" ? "" : ('<img src="' + item.ico_url + '" class="icon" />');
-                        var html = '<a class="slow" target="_blank" href="' + url + '"><img src="' + item.img_url + '" class="img" /><div class="opc"></div><div class="title">' + icon + '<span>' + (item.source == "" ? "" : (item.source + "：")) + item.title + '</span></div></a>';
+                        var icon = item.ico_url1 == "" ? "" : ('<img src="' + item.ico_url1 + '" class="icon" />');
+                        var html = '<a class="slow" target="_blank" href="' + url + '"><img src="' + item.img_url1 + '" class="img" /><div class="opc"></div><div class="title">' + icon + '<span>' + (item.source == "" ? "" : (item.source + "：")) + item.title + '</span></div></a>';
                         $("#divQtmt").append(html);
                     }
                 }

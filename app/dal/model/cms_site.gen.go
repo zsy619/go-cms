@@ -19,7 +19,8 @@ type CmsSite struct {
 	DirPath         string    `gorm:"column:dir_path;type:varchar(128)" json:"dir_path" form:"dir_path"`                                    // 模板目录名
 	IsDefault       bool      `gorm:"column:is_default;type:tinyint(1)" json:"is_default" form:"is_default"`                                // 是否默认站
 	IsMobile        bool      `gorm:"column:is_mobile;type:tinyint(1)" json:"is_mobile" form:"is_mobile"`                                   // 是否移动端
-	Logo            string    `gorm:"column:logo;type:varchar(512)" json:"logo" form:"logo"`                                                // 网站LOGO
+	Logo1           string    `gorm:"column:logo1;type:varchar(512)" json:"logo1" form:"logo1"`                                             // 网站LOGO
+	Logo2           string    `gorm:"column:logo2;type:varchar(512)" json:"logo2" form:"logo2"`                                             // 网站LOGO
 	Company         string    `gorm:"column:company;type:varchar(512)" json:"company" form:"company"`                                       // 公司名称
 	Address         string    `gorm:"column:address;type:varchar(512)" json:"address" form:"address"`                                       // 通讯地址
 	Telphone        string    `gorm:"column:telphone;type:varchar(64)" json:"telphone" form:"telphone"`                                     // 联系电话
