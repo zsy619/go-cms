@@ -71,7 +71,7 @@ func (this *ApiSite) ChannelFind(site_id int64) ([]*bmodel.ApiChannelFindModel, 
 	}
 	outChannel := []*bmodel.ApiChannelFindModel{}
 	mdl, do := query.CmsSiteChannelDo()
-	err := do.Where(mdl.SiteID.Eq(site_id)).Select(mdl.ChannelID, mdl.ParentID, mdl.Title, mdl.Name, mdl.Kind, mdl.ClassLayer, mdl.SortID, mdl.IsAlbum, mdl.IsAttach, mdl.IsSpec).Order(mdl.SortID).Scan(&outChannel)
+	err := do.Where(mdl.SiteID.Eq(site_id)).Select(mdl.ChannelID, mdl.ParentID, mdl.Title, mdl.Name, mdl.Kind, mdl.ClassLayer, mdl.ImgUrl1, mdl.ImgUrl2, mdl.SortID, mdl.IsAlbum, mdl.IsAttach, mdl.IsSpec).Order(mdl.SortID).Scan(&outChannel)
 	if err != nil {
 		return nil, 0, err
 	} else {

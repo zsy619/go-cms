@@ -34,6 +34,8 @@ func newCmsSiteChannel(db *gorm.DB, opts ...gen.DOOption) cmsSiteChannel {
 	_cmsSiteChannel.Title = field.NewString(tableName, "title")
 	_cmsSiteChannel.Kind = field.NewInt32(tableName, "kind")
 	_cmsSiteChannel.ClassLayer = field.NewInt32(tableName, "class_layer")
+	_cmsSiteChannel.ImgUrl1 = field.NewString(tableName, "img_url1")
+	_cmsSiteChannel.ImgUrl2 = field.NewString(tableName, "img_url2")
 	_cmsSiteChannel.IsComment = field.NewInt32(tableName, "is_comment")
 	_cmsSiteChannel.IsAlbum = field.NewInt32(tableName, "is_album")
 	_cmsSiteChannel.IsAttach = field.NewInt32(tableName, "is_attach")
@@ -64,6 +66,8 @@ type cmsSiteChannel struct {
 	Title      field.String // 频道标题
 	Kind       field.Int32  // 频道类型0文章1链接
 	ClassLayer field.Int32  // 类别深度
+	ImgUrl1    field.String // 图片地址
+	ImgUrl2    field.String // 图片地址
 	IsComment  field.Int32  // 是否开启评论
 	IsAlbum    field.Int32  // 是否开启相册功能
 	IsAttach   field.Int32  // 是否开启附件功能
@@ -100,6 +104,8 @@ func (c *cmsSiteChannel) updateTableName(table string) *cmsSiteChannel {
 	c.Title = field.NewString(table, "title")
 	c.Kind = field.NewInt32(table, "kind")
 	c.ClassLayer = field.NewInt32(table, "class_layer")
+	c.ImgUrl1 = field.NewString(table, "img_url1")
+	c.ImgUrl2 = field.NewString(table, "img_url2")
 	c.IsComment = field.NewInt32(table, "is_comment")
 	c.IsAlbum = field.NewInt32(table, "is_album")
 	c.IsAttach = field.NewInt32(table, "is_attach")
@@ -137,7 +143,7 @@ func (c *cmsSiteChannel) GetFieldByName(fieldName string) (field.OrderExpr, bool
 }
 
 func (c *cmsSiteChannel) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 20)
+	c.fieldMap = make(map[string]field.Expr, 22)
 	c.fieldMap["channel_id"] = c.ChannelID
 	c.fieldMap["parent_id"] = c.ParentID
 	c.fieldMap["site_id"] = c.SiteID
@@ -145,6 +151,8 @@ func (c *cmsSiteChannel) fillFieldMap() {
 	c.fieldMap["title"] = c.Title
 	c.fieldMap["kind"] = c.Kind
 	c.fieldMap["class_layer"] = c.ClassLayer
+	c.fieldMap["img_url1"] = c.ImgUrl1
+	c.fieldMap["img_url2"] = c.ImgUrl2
 	c.fieldMap["is_comment"] = c.IsComment
 	c.fieldMap["is_album"] = c.IsAlbum
 	c.fieldMap["is_attach"] = c.IsAttach

@@ -35,6 +35,16 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
+                        <label class="layui-form-label">图片地址</label>
+                        <div class="layui-input-inline" style="width: 392px;">
+                            <input type="hidden" name="img_url2" value="{{.mdl.ImgUrl2}}">
+                            <input type="text" name="img_url1" value="{{.mdl.ImgUrl1}}" autocomplete="off" placeholder="" class="layui-input">
+                        </div>
+                        <button type="button" class="layui-btn layui-btn-primary" id="btnUpload">
+                            <i class="layui-icon">&#xe67c;</i>浏览...
+                        </button>
+                    </div>
+                    <div class="layui-form-item">
                         <label class="layui-form-label">开启评论</label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="radio" name="is_comment" value="0" title="否" {{if eq .mdl.IsComment 0}} checked="" {{end}}>
@@ -92,6 +102,24 @@
             wangEditor = layui.wangEditor;
         var upload = layui.upload;
 
+        //执行实例
+        var uploadInst = upload.render({
+            elem: '#btnUpload' //绑定元素
+            , url: '/admin/tools/ImageUpload?path=site' //上传接口
+            , done: function (res) {
+                //上传完毕回调
+                if (res.code == 0) {
+                    $("input[name='img_url1']").val(res.file.url1);
+                    $("input[name='img_url2']").val(res.file.url2);
+                } else {
+                    layer.msg(res.msg);
+                }
+            }
+            , error: function () {
+                //请求异常回调
+            }
+        });
+
         //自定义验证规则
         form.verify({
             name: [/^[a-zA-Z0-9\-\_]{2,50}$/, '请填写正确的频道名称']
@@ -104,8 +132,6 @@
 
         //方法提交
         $('#btnSubmit').on('click', function () {
-            // console.log($('#frmEdit').serialize());
-            // return false;
             form.submit('frmEdit', function (data) {
                 $.ajax({
                     type: "POST", //提交的方法

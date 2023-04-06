@@ -7,6 +7,8 @@ type ApiChannelFindModel struct {
 	Name       string `gorm:"column:name;type:varchar(128)" json:"name" form:"name"`                         // 频道名称
 	Kind       int32  `gorm:"column:kind;type:tinyint" json:"kind" form:"kind"`                              // 频道类型
 	ClassLayer int32  `gorm:"column:class_layer;type:tinyint" json:"class_layer" form:"class_layer"`         // 层级
+	ImgUrl1    string `gorm:"column:img_url1;type:varchar(256)" json:"img_url1" form:"img_url1"`             // 图片地址
+	ImgUrl2    string `gorm:"column:img_url2;type:varchar(256)" json:"img_url2" form:"img_url2"`             // 图片地址
 	SortID     int32  `gorm:"column:sort_id;type:tinyint" json:"sort_id" form:"sort_id"`                     // 排序
 	IsAlbum    int32  `gorm:"column:is_album;type:tinyint" json:"is_album" form:"is_album"`                  // 是否相册
 	IsAttach   int32  `gorm:"column:is_attach;type:tinyint" json:"is_attach" form:"is_attach"`               // 是否附件

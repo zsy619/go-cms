@@ -19,6 +19,8 @@ type CmsSiteChannel struct {
 	Title      string    `gorm:"column:title;type:varchar(128)" json:"title" form:"title"`                                        // 频道标题
 	Kind       int32     `gorm:"column:kind;type:tinyint" json:"kind" form:"kind"`                                                // 频道类型0文章1链接
 	ClassLayer int32     `gorm:"column:class_layer;type:int;default:1" json:"class_layer" form:"class_layer"`                     // 类别深度
+	ImgUrl1    string    `gorm:"column:img_url1;type:varchar(256)" json:"img_url1" form:"img_url1"`                               // 图片地址
+	ImgUrl2    string    `gorm:"column:img_url2;type:varchar(256)" json:"img_url2" form:"img_url2"`                               // 图片地址
 	IsComment  int32     `gorm:"column:is_comment;type:tinyint" json:"is_comment" form:"is_comment"`                              // 是否开启评论
 	IsAlbum    int32     `gorm:"column:is_album;type:tinyint" json:"is_album" form:"is_album"`                                    // 是否开启相册功能
 	IsAttach   int32     `gorm:"column:is_attach;type:tinyint" json:"is_attach" form:"is_attach"`                                 // 是否开启附件功能

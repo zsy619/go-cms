@@ -8,7 +8,7 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">标题</label>
                             <div class="layui-input-inline">
-                                <input type="hidden" value="{{.tableName}}" name="record_id" />
+                                <input type="hidden" value="{{.tableName}}" name="table_name" />
                                 <input type="hidden" value="{{.recordId}}" name="record_id" />
                                 <input type="hidden" value="{{.typeId}}" name="type_id" />
                                 <input type="hidden" value="1" name="is_show" />
@@ -81,7 +81,7 @@
             , done: function (res) {
                 //上传完毕回调
                 if (res.code == 0) {
-                    $("input[name='title']").val(res.file.name1);
+                    $("#frmEdit").find("input[name='title']").val(res.file.name1);
                     $("input[name='file_size']").val(res.file.size);
                     $("input[name='file_ext']").val(res.file.ext);
                     $("input[name='original_path']").val(res.file.url1);
