@@ -7,7 +7,7 @@ require (
 	github.com/kardianos/service v1.2.2
 	github.com/mojocn/base64Captcha v1.3.5
 	github.com/szmcdull/glinq v0.0.0-20230323232310-05acf528ac23
-	golang.org/x/net v0.8.0
+	golang.org/x/net v0.9.0
 	gorm.io/driver/mysql v1.4.7
 	gorm.io/gen v0.3.21
 	gorm.io/gorm v1.24.6
@@ -44,11 +44,11 @@ require (
 	github.com/shiena/ansicolor v0.0.0-20200904210342-c7312218db18 // indirect
 	golang.org/x/crypto v0.7.0 // indirect
 	golang.org/x/exp v0.0.0-20230321023759-10a507213a29 // indirect
-	golang.org/x/image v0.6.0 // indirect
+	golang.org/x/image v0.7.0 // indirect
 	golang.org/x/mod v0.10.0 // indirect
 	golang.org/x/sys v0.7.0 // indirect
-	golang.org/x/text v0.8.0 // indirect
-	golang.org/x/tools v0.7.0 // indirect
+	golang.org/x/text v0.9.0 // indirect
+	golang.org/x/tools v0.8.0 // indirect
 	google.golang.org/protobuf v1.30.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
