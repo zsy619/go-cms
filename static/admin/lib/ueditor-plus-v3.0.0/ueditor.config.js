@@ -119,6 +119,7 @@
                 "insertframe",         // 插入Iframe
                 "insertcode",          // 插入代码
                 "pagebreak",           // 分页
+                "map",                 // 地图
                 "template",            // 模板
                 "background",          // 背景
                 "formula",             // 公式
