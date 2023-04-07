@@ -45,7 +45,7 @@
         UEDITOR_CORS_URL: CORS_URL,
 
         // 服务器统一请求接口路径
-        serverUrl: "/admin/ueditor/upload",
+        serverUrl: "/admin/ueditor/handle",
         // 服务器统一请求头信息，会在加载配置、
         serverHeaders: {
             // 'Authorization': 'Bearer xxx'

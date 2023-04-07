@@ -1,11 +1,10 @@
 <div class="layuimini-main">
-    <form class="layui-form" method="get" lay-filter="frmEdit" id="frmEdit">
+    <form class="layui-form" method="get" lay-filter="frmEdit" id="frmEdit" enctype="multipart/form-data">
         <div class="layui-tab layui-tab-brief layui-tab-card">
             <ul class="layui-tab-title">
                 <li class="layui-this">基本信息</li>
                 <li>相关属性</li>
                 <li>详细描述</li>
-                <!-- <li>文章内容</li> -->
                 <li>SEO选项</li>
             </ul>
             <div class="layui-tab-content">
@@ -175,15 +174,11 @@
                             内容描述
                         </label>
                         <div class="layui-input-inline" style="width: 750px;">
-                            <textarea id="content" name="content" lay-verify="required" lay-reqtext="内容描述不允许为空" style="width: 100%;height: 500px;" class="layui-textarea">{{.mdl.Content}}</textarea>
+                            <textarea id="myEditor" name="content" type="text/plain" style="width: 100%;height: 500px;display: none;">{{.mdl.Content}}</textarea>
+                            <script id="editor" type="text/plain" style="height:500px;width: 100%;">{{str2html .mdl.Content}}</script>
                         </div>
                     </div>
                 </div>
-                <!-- <div class="layui-tab-item">
-                    <script id="editor" type="text/plain" style="height:600px;width: 100%;">
-                        {{str2html .mdl.Content}}
-                    </script>
-                </div> -->
                 <div class="layui-tab-item">
                     <div class="layui-form-item">
                         <label class="layui-form-label">SEO标题</label>
@@ -208,7 +203,6 @@
         </div>
         <div class="layui-form-item">
             <div class="layui-input-block" style="text-align: center;">
-                <!-- <button class="layui-btn" id="btnSubmit">立即提交</button> -->
                 <button type="button" class="layui-btn layui-btn-radius" id="btnSubmit">立即提交</button>
                 <button type="reset" class="layui-btn layui-btn-primary layui-btn-radius">重置</button>
             </div>
@@ -216,66 +210,64 @@
     </form>
 </div>
 <script>
-    // var ue = UE.getEditor('editor');
-
-    KindEditor.ready(function (K) {
-        editor = K.create('textarea[name="content"]', {
-            themeType: 'simple',
-            uploadJson: '/admin/tools/KindEditorUpload', //KindEditor上传图片的接口
-            allowImageUpload: true, //运行上传图片
-            allowFileManager: true, //浏览图片空间
-            allowImageRemote: false, //上传图片框网络图片的功能，false为隐藏，默认为true
-            filterMode: false,
-            formatUploadUrl: false,
-            items: ['source', '|', 'undo', 'redo', '|', 'preview', 'print', 'template', 'code', 'cut', 'copy', 'paste',
-                'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
-                'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
-                'superscript', 'clearhtml', 'quickformat', 'selectall', '|', 'fullscreen', '/',
-                'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
-                'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image', 'multiimage',
-                'flash', 'media', 'insertfile', 'table', 'hr', 'emoticons', 'baidumap', 'pagebreak',
-                'anchor', 'link', 'unlink', '|', 'about'],
-            htmlTags: {
-                font: ['color', 'size', 'face', '.background-color'],
-                span: [
-                    '.color', '.background-color', '.font-size', '.font-family', '.background',
-                    '.font-weight', '.font-style', '.text-decoration', '.vertical-align', '.line-height'
-                ],
-                div: [
-                    'align', '.border', '.margin', '.padding', '.text-align', '.color',
-                    '.background-color', '.font-size', '.font-family', '.font-weight', '.background',
-                    '.font-style', '.text-decoration', '.vertical-align', '.margin-left'
-                ],
-                table: [
-                    'border', 'cellspacing', 'cellpadding', 'width', 'height', 'align', 'bordercolor',
-                    '.padding', '.margin', '.border', 'bgcolor', '.text-align', '.color', '.background-color',
-                    '.font-size', '.font-family', '.font-weight', '.font-style', '.text-decoration', '.background',
-                    '.width', '.height', '.border-collapse'
-                ],
-                'td,th': [
-                    'align', 'valign', 'width', 'height', 'colspan', 'rowspan', 'bgcolor',
-                    '.text-align', '.color', '.background-color', '.font-size', '.font-family', '.font-weight',
-                    '.font-style', '.text-decoration', '.vertical-align', '.background', '.border'
-                ],
-                a: ['href', 'target', 'name'],
-                embed: ['src', 'width', 'height', 'type', 'loop', 'autostart', 'quality', '.width', '.height', 'align', 'allowscriptaccess'],
-                img: ['src', 'width', 'height', 'border', 'alt', 'title', 'align', '.width', '.height', '.border'],
-                'p,ol,ul,li,blockquote,h1,h2,h3,h4,h5,h6': [
-                    'align', '.text-align', '.color', '.background-color', '.font-size', '.font-family', '.background',
-                    '.font-weight', '.font-style', '.text-decoration', '.vertical-align', '.text-indent', '.margin-left'
-                ],
-                pre: ['class'],
-                hr: ['class', '.page-break-after'],
-                'br,tbody,tr,strong,b,sub,sup,em,i,u,strike,s,del': []
-            },
-            afterCreate: function () {
-                this.sync();
-            },
-            afterBlur: function () {
-                this.sync();
-            }
-        });
-    });
+    // KindEditor.ready(function (K) {
+    //     editor = K.create('textarea[id="myEditor"]', {
+    //         themeType: 'simple',
+    //         uploadJson: '/admin/tools/KindEditorUpload', //KindEditor上传图片的接口
+    //         allowImageUpload: true, //运行上传图片
+    //         allowFileManager: true, //浏览图片空间
+    //         allowImageRemote: false, //上传图片框网络图片的功能，false为隐藏，默认为true
+    //         filterMode: false,
+    //         formatUploadUrl: false,
+    //         items: ['source', '|', 'undo', 'redo', '|', 'preview', 'print', 'template', 'code', 'cut', 'copy', 'paste',
+    //             'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
+    //             'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
+    //             'superscript', 'clearhtml', 'quickformat', 'selectall', '|', 'fullscreen', '/',
+    //             'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
+    //             'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image', 'multiimage',
+    //             'flash', 'media', 'insertfile', 'table', 'hr', 'emoticons', 'baidumap', 'pagebreak',
+    //             'anchor', 'link', 'unlink', '|', 'about'],
+    //         htmlTags: {
+    //             font: ['color', 'size', 'face', '.background-color'],
+    //             span: [
+    //                 '.color', '.background-color', '.font-size', '.font-family', '.background',
+    //                 '.font-weight', '.font-style', '.text-decoration', '.vertical-align', '.line-height'
+    //             ],
+    //             div: [
+    //                 'align', '.border', '.margin', '.padding', '.text-align', '.color',
+    //                 '.background-color', '.font-size', '.font-family', '.font-weight', '.background',
+    //                 '.font-style', '.text-decoration', '.vertical-align', '.margin-left'
+    //             ],
+    //             table: [
+    //                 'border', 'cellspacing', 'cellpadding', 'width', 'height', 'align', 'bordercolor',
+    //                 '.padding', '.margin', '.border', 'bgcolor', '.text-align', '.color', '.background-color',
+    //                 '.font-size', '.font-family', '.font-weight', '.font-style', '.text-decoration', '.background',
+    //                 '.width', '.height', '.border-collapse'
+    //             ],
+    //             'td,th': [
+    //                 'align', 'valign', 'width', 'height', 'colspan', 'rowspan', 'bgcolor',
+    //                 '.text-align', '.color', '.background-color', '.font-size', '.font-family', '.font-weight',
+    //                 '.font-style', '.text-decoration', '.vertical-align', '.background', '.border'
+    //             ],
+    //             a: ['href', 'target', 'name'],
+    //             embed: ['src', 'width', 'height', 'type', 'loop', 'autostart', 'quality', '.width', '.height', 'align', 'allowscriptaccess'],
+    //             img: ['src', 'width', 'height', 'border', 'alt', 'title', 'align', '.width', '.height', '.border'],
+    //             'p,ol,ul,li,blockquote,h1,h2,h3,h4,h5,h6': [
+    //                 'align', '.text-align', '.color', '.background-color', '.font-size', '.font-family', '.background',
+    //                 '.font-weight', '.font-style', '.text-decoration', '.vertical-align', '.text-indent', '.margin-left'
+    //             ],
+    //             pre: ['class'],
+    //             hr: ['class', '.page-break-after'],
+    //             'br,tbody,tr,strong,b,sub,sup,em,i,u,strike,s,del': []
+    //         },
+    //         afterCreate: function () {
+    //             this.sync();
+    //         },
+    //         afterBlur: function () {
+    //             this.sync();
+    //         }
+    //     });
+    // });
 
     layui.use(['form', 'layer', 'wangEditor', 'upload', 'laydate', 'treeSelect'], function () {
         var form = layui.form;
@@ -285,6 +277,16 @@
         var upload = layui.upload;
         var laydate = layui.laydate;
         var treeSelect = layui.treeSelect;
+
+        var ue = UE.getEditor('editor', {
+            autoHeight: false
+        });
+        ue.ready(function () {
+            ue.setHeight(500);
+            ue.execCommand('fontfamily', '仿宋'); //字体
+            ue.execCommand('lineheight', 2); //行间距
+            ue.execCommand('fontsize', '16px'); //字号
+        });
 
         treeSelect.render({
             elem: '#tree',
@@ -361,7 +363,10 @@
 
         //方法提交
         $('#btnSubmit').on('click', function () {
+            ue.sync();
+            $("#myEditor").val(ue.getContent());
             form.submit('frmEdit', function (data) {
+                data.field.content = UE.getEditor('editor').getContent();
                 $.ajax({
                     type: "POST", //提交的方法
                     url: "/admin/article/ArticleSave", //提交的地址
