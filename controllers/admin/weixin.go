@@ -24,11 +24,15 @@ func (c *WeixinController) Menu() {
 func (c *WeixinController) Subscribe() {
 	list, _, _ := biz.NewWeixinAccount().AccountPaginate(1, 9999, "", -1)
 	c.Data["accountList"] = list
+	c.Data["request_type"] = 6
 	c.display()
 }
 
 // 默认回复
 func (c *WeixinController) Default() {
+	list, _, _ := biz.NewWeixinAccount().AccountPaginate(1, 9999, "", -1)
+	c.Data["accountList"] = list
+	c.Data["request_type"] = 0
 	c.display()
 }
 

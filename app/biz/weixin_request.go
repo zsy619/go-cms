@@ -16,11 +16,11 @@ func NewWeixinRequest() *WeixinRequest {
 }
 
 type ContentSubscribeOrDefault struct {
-	AccountID   int64                         `json:"account_id"`
-	RequestType int32                         `json:"request_type"`
-	TextReply   *model.WeixinRequestContent   `json:"text_reply"`
-	ImageReply  []*model.WeixinRequestContent `json:"image_reply"`
-	SoundReply  *model.WeixinRequestContent   `json:"sound_reply"`
+	AccountID   int64                         `json:"account_id" form:"account_id"`
+	RequestType int32                         `json:"request_type" form:"request_type"`
+	TextReply   *model.WeixinRequestContent   `json:"text_reply" form:"text_reply"`
+	ImageReply  []*model.WeixinRequestContent `json:"image_reply" form:"image_reply"`
+	SoundReply  *model.WeixinRequestContent   `json:"sound_reply" form:"sound_reply"`
 }
 
 // ContentFindSubscribeOrDefault 获取关注回复与默认回复
@@ -28,7 +28,7 @@ func (w *WeixinRequest) ContentFindSubscribeOrDefault(accountId int64, requestTy
 	_, ruleDo := query.WeixinRequestRuleDo()
 	// contentMdl, contentDo := query.WeixinRequestContentDo()
 	sql1 := fmt.Sprintf(`SELECT a.* FROM weixin_request_content a LEFT JOIN weixin_request_rule b ON a.rule_id=b.rule_id WHERE b.account_id=%d AND b.request_type=%d AND b.response_type=%d limit 1`, accountId, requestType, 1)
-	sql2 := fmt.Sprintf(`SELECT a.* FROM weixin_request_content a LEFT JOIN weixin_request_rule b ON a.rule_id=b.rule_id WHERE b.account_id=%d AND b.request_type=%d AND b.response_type=%d`, accountId, requestType, 2)
+	sql2 := fmt.Sprintf(`SELECT a.* FROM weixin_request_content a LEFT JOIN weixin_request_rule b ON a.rule_id=b.rule_id WHERE b.account_id=%d AND b.request_type=%d AND b.response_type=%d ORDER BY a.sort_id`, accountId, requestType, 2)
 	sql3 := fmt.Sprintf(`SELECT a.* FROM weixin_request_content a LEFT JOIN weixin_request_rule b ON a.rule_id=b.rule_id WHERE b.account_id=%d AND b.request_type=%d AND b.response_type=%d limit 1`, accountId, requestType, 3)
 	model := &ContentSubscribeOrDefault{
 		AccountID:   accountId,
@@ -50,82 +50,109 @@ func (w *WeixinRequest) ContentSaveSubscribeOrDefault(input *ContentSubscribeOrD
 	}
 	_, ruleDo := query.WeixinRequestRuleDo()
 	_, contentDo := query.WeixinRequestContentDo()
-	// 保存文本回复
-	if input.TextReply != nil {
-		input.TextReply.CreateTime = time.Now()
-		input.TextReply.UpdateTime = time.Now()
-		if input.TextReply.RuleID <= 0 {
-			ruleMdl := &model.WeixinRequestRule{
-				AccountID:    input.AccountID,
-				RequestType:  input.RequestType,
-				ResponseType: 1,
-			}
-			if err := ruleDo.Save(ruleMdl); err != nil {
-				return err
-			}
-			input.TextReply.RuleID = ruleMdl.RuleID
-		}
-		{
-			input.TextReply.LinkURL = ""
-			input.TextReply.ImgURL = ""
-			input.TextReply.MediaURL = ""
-			input.TextReply.MeidaHdURL = ""
-		}
-		if err := contentDo.Save(input.TextReply); err != nil {
-			return err
-		}
+
+	// 删除文本回复、图片回复、语音回复
+	{
+		sql := `DELETE FROM weixin_request_content WHERE rule_id IN (SELECT rule_id FROM weixin_request_rule WHERE account_id=? AND request_type=? AND response_type=?);`
+		ruleDo.Debug().UnderlyingDB().Exec(sql, input.AccountID, input.RequestType, 1)
+		ruleDo.Debug().UnderlyingDB().Exec(sql, input.AccountID, input.RequestType, 2)
+		ruleDo.Debug().UnderlyingDB().Exec(sql, input.AccountID, input.RequestType, 3)
 	}
-	// 保存图片回复
-	if input.ImageReply != nil {
-		var ruleID int64
-		for _, v := range input.ImageReply {
-			if v.RuleID > 0 {
-				ruleID = v.RuleID
-				break
-			}
-		}
-		for _, v := range input.ImageReply {
-			v.CreateTime = time.Now()
-			v.UpdateTime = time.Now()
-			v.RuleID = ruleID
-			if v.RuleID <= 0 {
+
+	{
+		if input.TextReply != nil && input.TextReply.Content != "" {
+			// 保存文本回复
+			input.TextReply.CreateTime = time.Now()
+			input.TextReply.UpdateTime = time.Now()
+			if input.TextReply.RuleID <= 0 {
 				ruleMdl := &model.WeixinRequestRule{
 					AccountID:    input.AccountID,
 					RequestType:  input.RequestType,
-					ResponseType: 2,
+					ResponseType: 1,
 				}
 				if err := ruleDo.Save(ruleMdl); err != nil {
 					return err
 				}
-				ruleID = ruleMdl.RuleID
+				input.TextReply.RuleID = ruleMdl.RuleID
+			}
+			{
+				input.TextReply.LinkURL = ""
+				input.TextReply.ImgURL = ""
+				input.TextReply.MediaURL = ""
+				input.TextReply.MeidaHdURL = ""
+			}
+			if err := contentDo.Save(input.TextReply); err != nil {
+				return err
+			}
+		} else {
+			// 删除文本回复
+			sql := `DELETE FROM weixin_request_rule WHERE account_id=? AND request_type=? AND response_type=?;`
+			ruleDo.Debug().UnderlyingDB().Exec(sql, input.AccountID, input.RequestType, 1)
+		}
+	}
+
+	{
+		if input.ImageReply != nil && len(input.ImageReply) > 0 {
+			// 保存图片回复
+			var ruleID int64
+			for _, v := range input.ImageReply {
+				if v.RuleID > 0 {
+					ruleID = v.RuleID
+					break
+				}
+			}
+			for _, v := range input.ImageReply {
+				v.CreateTime = time.Now()
+				v.UpdateTime = time.Now()
 				v.RuleID = ruleID
+				if v.RuleID <= 0 {
+					ruleMdl := &model.WeixinRequestRule{
+						AccountID:    input.AccountID,
+						RequestType:  input.RequestType,
+						ResponseType: 2,
+					}
+					if err := ruleDo.Save(ruleMdl); err != nil {
+						return err
+					}
+					ruleID = ruleMdl.RuleID
+					v.RuleID = ruleID
+				}
+				if err := contentDo.Save(v); err != nil {
+					return err
+				}
 			}
-			if err := contentDo.Save(v); err != nil {
-				return err
-			}
+		} else {
+			// 删除图片回复
+			sql := `DELETE FROM weixin_request_rule WHERE account_id=? AND request_type=? AND response_type=?;`
+			ruleDo.Debug().UnderlyingDB().Exec(sql, input.AccountID, input.RequestType, 2)
 		}
 	}
-	// 保存语音回复
-	if input.SoundReply != nil {
-		input.SoundReply.CreateTime = time.Now()
-		input.SoundReply.UpdateTime = time.Now()
-		if input.SoundReply.RuleID <= 0 {
-			ruleMdl := &model.WeixinRequestRule{
-				AccountID:    input.AccountID,
-				RequestType:  input.RequestType,
-				ResponseType: 3,
+
+	{
+		if input.SoundReply != nil && input.SoundReply.MediaURL != "" {
+			// 保存语音回复
+			input.SoundReply.CreateTime = time.Now()
+			input.SoundReply.UpdateTime = time.Now()
+			if input.SoundReply.RuleID <= 0 {
+				ruleMdl := &model.WeixinRequestRule{
+					AccountID:    input.AccountID,
+					RequestType:  input.RequestType,
+					ResponseType: 3,
+				}
+				if err := ruleDo.Save(ruleMdl); err != nil {
+					return err
+				}
+				input.SoundReply.RuleID = ruleMdl.RuleID
 			}
-			if err := ruleDo.Save(ruleMdl); err != nil {
+			if err := contentDo.Save(input.SoundReply); err != nil {
 				return err
 			}
-			input.SoundReply.RuleID = ruleMdl.RuleID
-		}
-		{
-			input.SoundReply.Content = ""
-		}
-		if err := contentDo.Save(input.SoundReply); err != nil {
-			return err
+		} else {
+			// 删除语音回复
+			sql := `DELETE FROM weixin_request_rule WHERE account_id=? AND request_type=? AND response_type=?;`
+			ruleDo.Debug().UnderlyingDB().Exec(sql, input.AccountID, input.RequestType, 3)
 		}
 	}
+
 	return nil
 }

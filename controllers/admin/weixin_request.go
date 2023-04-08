@@ -4,6 +4,8 @@ import (
 	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/cms/app/biz"
 	"haedu.gov.cn/cms/app/dal/model"
+	"haedu.gov.cn/tools/xgeneric"
+	"haedu.gov.cn/tools/xjson"
 )
 
 // ContentFindSubscribeOrDefault 获取关注回复与默认回复
@@ -30,10 +32,12 @@ func (c *WeixinController) ContentFindSubscribeOrDefault() {
 // @router /admin/weixin/ContentSaveSubscribeOrDefault [post]
 func (c *WeixinController) ContentSaveSubscribeOrDefault() {
 	mdl := biz.ContentSubscribeOrDefault{}
-	if err := c.ParseForm(&mdl); err != nil {
-		logs.Error("MenuSave", err.Error())
+	if err := xjson.Unmarshal(c.Ctx.Input.RequestBody, &mdl); err != nil {
+		logs.Error("ContentSubscribeOrDefault", err.Error())
 		c.JSONError(err.Error())
 	}
+	title := xgeneric.IFF(mdl.RequestType == 6, "关注回复", "默认回复")
+	mdl.TextReply.Title = title
 	if err := biz.NewWeixinRequest().ContentSaveSubscribeOrDefault(&mdl); err != nil {
 		logs.Error("ContentSaveSubscribeOrDefault", err.Error())
 		c.JSONError(err.Error())
