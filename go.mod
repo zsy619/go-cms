@@ -6,6 +6,7 @@ require (
 	github.com/beego/beego/v2 v2.0.7
 	github.com/kardianos/service v1.2.2
 	github.com/mojocn/base64Captcha v1.3.5
+	github.com/prometheus/client_golang v1.14.0
 	github.com/szmcdull/glinq v0.0.0-20230323232310-05acf528ac23
 	golang.org/x/net v0.9.0
 	gorm.io/driver/mysql v1.4.7
@@ -37,7 +38,6 @@ require (
 	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
 	github.com/peterbourgon/diskv v2.0.1+incompatible // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/prometheus/client_golang v1.14.0 // indirect
 	github.com/prometheus/client_model v0.3.0 // indirect
 	github.com/prometheus/common v0.42.0 // indirect
 	github.com/prometheus/procfs v0.9.0 // indirect

@@ -19,3 +19,8 @@ type Menu_ChangeStatusModel struct {
 	MenuIds []int64 `json:"menu_ids"`
 	Status  int32   `json:"status"`
 }
+
+type Rule_SaveSortIdModel struct {
+	RuleId int64 `json:"rule_id"`
+	SortId int32 `json:"sort_id"`
+}

@@ -178,7 +178,6 @@ func (c *SiteController) ChannelSave() {
 		logs.Error("ChannelSave", err.Error())
 		c.JSONError(err.Error())
 	}
-	// fmt.Println("site_id--------->", c.GetString("site_id"), mdl.SiteID)
 	if err := biz.NewCmsSite().ChannelSave(&mdl); err != nil {
 		logs.Error("ChannelSave", err.Error())
 		c.JSONError(err.Error())
@@ -202,7 +201,6 @@ func (c *SiteController) ChannelSaveSortId() {
 			return
 		}
 	}
-	// biz.Cache_ApiSiteChannelFind = make(map[int64][]map[string]interface{})
 	c.JSONSuccess("保存成功", nil)
 }
 

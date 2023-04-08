@@ -19,7 +19,7 @@ type WeixinRequestContent struct {
 	LinkURL    string    `gorm:"column:link_url;type:varchar(512)" json:"link_url" form:"link_url"`                               // 详情链接地址
 	ImgURL     string    `gorm:"column:img_url;type:varchar(512)" json:"img_url" form:"img_url"`                                  // 图片地址
 	MediaURL   string    `gorm:"column:media_url;type:varchar(512)" json:"media_url" form:"media_url"`                            // 语音或视频地址
-	MeidaHdURL string    `gorm:"column:meida_hd_url;type:varchar(512)" json:"meida_hd_url" form:"meida_hd_url"`                   // 高清语音或者视频地址
+	MediaHdURL string    `gorm:"column:media_hd_url;type:varchar(512)" json:"media_hd_url" form:"media_hd_url"`                   // 高清语音或者视频地址
 	SortID     int32     `gorm:"column:sort_id;type:int" json:"sort_id" form:"sort_id"`                                           // 排序
 	CreateID   int32     `gorm:"column:create_id;type:int" json:"create_id" form:"create_id"`                                     // 创建人ID
 	CreateName string    `gorm:"column:create_name;type:varchar(64)" json:"create_name" form:"create_name"`                       // 创建人姓名

@@ -69,7 +69,8 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">网站LOGO</label>
                         <div class="layui-input-inline" style="width: 392px;">
-                            <input type="text" id="logo" name="logo" value="{{.site.Logo}}" autocomplete="off" placeholder="" class="layui-input">
+                            <input type="hidden" id="logo2" name="logo2" value="{{.site.Logo2}}">
+                            <input type="text" id="logo1" name="logo1" value="{{.site.Logo1}}" autocomplete="off" placeholder="" class="layui-input">
                         </div>
                         <button type="button" class="layui-btn layui-btn-primary" id="btnUpload">
                             <i class="layui-icon">&#xe67c;</i>浏览...
@@ -215,8 +216,9 @@
             , done: function (res) {
                 //上传完毕回调
                 if (res.code == 0) {
-                    $("input[name='logo']").val(res.file.url2);
-                    $("img").attr("src", res.file.url2);
+                    $("input[name='logo1']").val(res.file.url1);
+                    $("input[name='logo2']").val(res.file.url2);
+                    $("img").attr("src", res.file.url1);
                 } else {
                     layer.msg(res.msg);
                 }

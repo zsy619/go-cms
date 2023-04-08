@@ -34,7 +34,7 @@ func newWeixinRequestContent(db *gorm.DB, opts ...gen.DOOption) weixinRequestCon
 	_weixinRequestContent.LinkURL = field.NewString(tableName, "link_url")
 	_weixinRequestContent.ImgURL = field.NewString(tableName, "img_url")
 	_weixinRequestContent.MediaURL = field.NewString(tableName, "media_url")
-	_weixinRequestContent.MeidaHdURL = field.NewString(tableName, "meida_hd_url")
+	_weixinRequestContent.MediaHdURL = field.NewString(tableName, "media_hd_url")
 	_weixinRequestContent.SortID = field.NewInt32(tableName, "sort_id")
 	_weixinRequestContent.CreateID = field.NewInt32(tableName, "create_id")
 	_weixinRequestContent.CreateName = field.NewString(tableName, "create_name")
@@ -59,7 +59,7 @@ type weixinRequestContent struct {
 	LinkURL    field.String // 详情链接地址
 	ImgURL     field.String // 图片地址
 	MediaURL   field.String // 语音或视频地址
-	MeidaHdURL field.String // 高清语音或者视频地址
+	MediaHdURL field.String // 高清语音或者视频地址
 	SortID     field.Int32  // 排序
 	CreateID   field.Int32  // 创建人ID
 	CreateName field.String // 创建人姓名
@@ -90,7 +90,7 @@ func (w *weixinRequestContent) updateTableName(table string) *weixinRequestConte
 	w.LinkURL = field.NewString(table, "link_url")
 	w.ImgURL = field.NewString(table, "img_url")
 	w.MediaURL = field.NewString(table, "media_url")
-	w.MeidaHdURL = field.NewString(table, "meida_hd_url")
+	w.MediaHdURL = field.NewString(table, "media_hd_url")
 	w.SortID = field.NewInt32(table, "sort_id")
 	w.CreateID = field.NewInt32(table, "create_id")
 	w.CreateName = field.NewString(table, "create_name")
@@ -130,7 +130,7 @@ func (w *weixinRequestContent) fillFieldMap() {
 	w.fieldMap["link_url"] = w.LinkURL
 	w.fieldMap["img_url"] = w.ImgURL
 	w.fieldMap["media_url"] = w.MediaURL
-	w.fieldMap["meida_hd_url"] = w.MeidaHdURL
+	w.fieldMap["media_hd_url"] = w.MediaHdURL
 	w.fieldMap["sort_id"] = w.SortID
 	w.fieldMap["create_id"] = w.CreateID
 	w.fieldMap["create_name"] = w.CreateName

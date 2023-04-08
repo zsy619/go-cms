@@ -4,4 +4,4 @@ logs
 Uploads
 Downloads
 app/lib/Uploads
-main.exe
+*.exe
