@@ -151,3 +151,9 @@ func (c *BaseController) SetSessionBool(sName string, value bool) {
 		c.SetSession(sName, "false")
 	}
 }
+
+func (c *BaseController) SetDatas(datas map[string]interface{}) {
+	for k, v := range datas {
+		c.Data[k] = v
+	}
+}

@@ -1,7 +1,9 @@
 package admin
 
 import (
+	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/cms/app/biz"
+	"haedu.gov.cn/cms/app/biz/bmodel"
 	"haedu.gov.cn/cms/app/lib"
 )
 
@@ -55,21 +57,15 @@ func (c *WeixinController) TextEdit() {
 		ruleId, _ := c.GetInt64("rule_id")
 		c.Data["rule_id"] = ruleId
 		finder, err := biz.NewWeixinRequest().RuleFind(ruleId)
-		if err != nil {
-			finder = &biz.RuleFindModel{
+		if finder == nil || err != nil {
+			finder = &bmodel.Weixin_RuleModel{
 				RequestType: 1,
+				SortID:      99,
+				Name:        "文本回复",
 			}
 		}
 		c.Data["mdl"] = finder
 	}
-	c.display()
-}
-
-// 图文回复
-func (c *WeixinController) Picture() {
-	list, _, _ := biz.NewWeixinAccount().AccountPaginate(1, 9999, "", -1)
-	c.Data["accountList"] = list
-	c.Data["request_type"] = 2
 	c.display()
 }
 
@@ -78,7 +74,44 @@ func (c *WeixinController) Sound() {
 	list, _, _ := biz.NewWeixinAccount().AccountPaginate(1, 9999, "", -1)
 	c.Data["accountList"] = list
 	c.Data["request_type"] = 3
+
 	c.display()
+}
+
+func (c *WeixinController) SoundEdit() {
+	{
+		list, _, _ := biz.NewWeixinAccount().AccountPaginate(1, 9999, "", -1)
+		c.Data["accountList"] = list
+		c.Data["request_type"] = 3
+	}
+	{
+		ruleId, _ := c.GetInt64("rule_id")
+		c.Data["rule_id"] = ruleId
+		finder, err := biz.NewWeixinRequest().RuleFind(ruleId)
+		if finder == nil || err != nil {
+			finder = &bmodel.Weixin_RuleModel{
+				RequestType: 3,
+				SortID:      99,
+				Name:        "语音回复",
+			}
+		}
+		c.Data["mdl"] = finder
+	}
+	c.display()
+}
+
+func (c *WeixinController) RuleSave() {
+	mdl := bmodel.Weixin_RuleModel{}
+	if err := c.ParseForm(&mdl); err != nil {
+		logs.Error("RuleSave", err.Error())
+		c.JSONError(err.Error())
+	}
+	err := biz.NewWeixinRequest().RuleSave(&mdl)
+	if err != nil {
+		logs.Error("RuleSave", err.Error())
+		c.JSONError(err.Error())
+	}
+	c.JSONSuccess("保存成功", nil)
 }
 
 // 消息记录

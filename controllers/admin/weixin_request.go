@@ -5,6 +5,7 @@ import (
 
 	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/cms/app/biz"
+	"haedu.gov.cn/cms/app/biz/bmodel"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
 	"haedu.gov.cn/tools/xgeneric"
@@ -20,7 +21,7 @@ func (c *WeixinController) ContentFindSubscribeOrDefault() {
 	outModel, err := biz.NewWeixinRequest().ContentFindSubscribeOrDefault(accountId, requestType)
 	if err != nil {
 		logs.Error("ContentFindSubscribeOrDefault", err.Error())
-		outModel = &biz.ContentSubscribeOrDefaultModel{
+		outModel = &bmodel.Weixin_ContentSubscribeOrDefaultModel{
 			AccountID:   accountId,
 			RequestType: requestType,
 			TextReply:   &model.WeixinRequestContent{},
@@ -34,7 +35,7 @@ func (c *WeixinController) ContentFindSubscribeOrDefault() {
 // ContentSaveSubscribeOrDefault 保存关注回复与默认回复
 // @router /admin/weixin/ContentSaveSubscribeOrDefault [post]
 func (c *WeixinController) ContentSaveSubscribeOrDefault() {
-	mdl := biz.ContentSubscribeOrDefaultModel{}
+	mdl := bmodel.Weixin_ContentSubscribeOrDefaultModel{}
 	if err := xjson.Unmarshal(c.Ctx.Input.RequestBody, &mdl); err != nil {
 		logs.Error("ContentSubscribeOrDefault", err.Error())
 		c.JSONError(err.Error())
@@ -61,6 +62,28 @@ func (c *WeixinController) RulePaginate() {
 	list, total, err := biz.NewWeixinRequest().RulePaginate(page, limit, accountId, requestType)
 	if err != nil {
 		logs.Error("ContentPaginate", err.Error())
+		c.JSONPageError(err.Error(), list, total)
+	}
+	c.JSONPageSuccess(list, total)
+}
+
+func (c *WeixinController) RulePictureFind() {
+	ruleId, _ := c.GetInt64("rule_id")
+	list, err := biz.NewWeixinRequest().RulePictureFind(ruleId)
+	if err != nil {
+		logs.Error("RulePictureFind", err.Error())
+		c.JSONError(err.Error())
+	}
+	c.JSONSuccess("获取数据", list)
+}
+
+func (c *WeixinController) RulePaginateCount() {
+	page, limit := c.GetPagingParameters()
+	accountId, _ := c.GetInt64("account_id")
+	requestType, _ := c.GetInt32("request_type")
+	list, total, err := biz.NewWeixinRequest().RulePaginateCount(page, limit, accountId, requestType)
+	if err != nil {
+		logs.Error("RulePaginateCount", err.Error())
 		c.JSONPageError(err.Error(), list, total)
 	}
 	c.JSONPageSuccess(list, total)

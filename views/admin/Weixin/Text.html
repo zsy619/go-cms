@@ -16,7 +16,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="layui-inline">
+                        <div class="layui-inline" style="display: none;">
                             <button type="submit" class="layui-btn layui-btn-primary" lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                         </div>
                     </div>
@@ -36,7 +36,7 @@
 
         table.render({
             elem: '#currentTableId',
-            url: '/admin/weixin/RulePaginate?request_type={{.request_type}}&&account_id=' + $("select[name='account_id']").val(),
+            url: '/admin/weixin/RulePaginate',
             toolbar: '#toolbarDemo',
             height: "full-170",
             defaultToolbar: ['filter', 'exports', 'print', {
@@ -57,6 +57,11 @@
                         return '<input type="number" name="sort_id" rule_id="' + d.rule_id + '" value="' + d.sort_id + '" class="layui-input" style="" />';
                     }
                 },
+                {
+                    field: 'create_time', width: 120, title: '添加时间', align: "center", sort: true, templet: function (d) {
+                        return layui.util.toDateString(d.create_time, 'yyyy-MM-dd');
+                    }
+                },
                 { title: '操作', width: 150, toolbar: '#currentTableBar', align: "center" }
             ]],
             limits: [10, 15, 20],
@@ -68,8 +73,19 @@
         });
 
         // 监听搜索操作
-        form.on('submit(data-search-btn)', function (data) {
+        form.on('button(data-search-btn)', function (data) {
             //执行搜索重载
+            tableReload();
+            return false;
+        });
+
+        form.on('select(account_id)', function (data) {
+            //执行搜索重载
+            tableReload();
+            return false;
+        });
+
+        function tableReload() {
             table.reload('currentTableId', {
                 page: {
                     curr: 1
@@ -79,9 +95,9 @@
                     , "account_id": parseInt($("select[name=account_id]").val())
                 }
             }, 'data');
+        }
 
-            return false;
-        });
+        tableReload();
 
         /**
          * toolbar监听事件
