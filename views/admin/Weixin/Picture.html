@@ -46,7 +46,7 @@
             }],
             cols: [[
                 { field: 'keywords', title: '关键词' },
-                { field: 'count', width: 120, title: '图片数量' },
+                { field: 'count', width: 120, align: "center", title: '图片数量' },
                 {
                     field: 'is_like_query', width: 120, title: '模糊匹配', align: "center", sort: true, templet: function (d) {
                         return d.is_like_query == false ? "×" : "√";

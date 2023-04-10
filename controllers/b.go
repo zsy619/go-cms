@@ -17,6 +17,17 @@ type BaseController struct {
 	ActionName     string
 }
 
+// 重定向
+func (c *BaseController) redirect(url string) {
+	c.Redirect(url, 302)
+	c.StopRun()
+}
+
+// 是否POST提交
+func (c *BaseController) IsPost() bool {
+	return c.Ctx.Request.Method == "POST"
+}
+
 // GetPagingParameters 获取分页参数
 func (c *BaseController) GetPagingParameters() (page int, limit int) {
 	page, _ = c.GetInt("page", 1)
