@@ -38,6 +38,7 @@ func (c *WeixinController) Default() {
 	c.display()
 }
 
+// RuleSave 保存规则
 func (c *WeixinController) RuleSave() {
 	mdl := bmodel.Weixin_RuleModel{}
 	if err := c.ParseForm(&mdl); err != nil {
@@ -50,9 +51,4 @@ func (c *WeixinController) RuleSave() {
 		c.JSONError(err.Error())
 	}
 	c.JSONSuccess("保存成功", nil)
-}
-
-// 消息记录
-func (c *WeixinController) Response() {
-	c.display()
 }

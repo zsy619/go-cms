@@ -14,6 +14,7 @@ func NewWeixinAccount() *WeixinAccount {
 	return &WeixinAccount{}
 }
 
+// AccountPaginate 分页
 func (this *WeixinAccount) AccountPaginate(page, limit int, name string, status int32) ([]*model.WeixinAccount, int64, error) {
 	mdl, do := query.WeixinAccountDo()
 	if name != "" {
@@ -71,6 +72,7 @@ func (this *WeixinAccount) AccountSave(input *model.WeixinAccount) error {
 	return err
 }
 
+// AccountSaveSortId 修改排序
 func (this *WeixinAccount) AccountSaveSortId(accountId int64, sortId int32) error {
 	mdl, do := query.WeixinAccountDo()
 	_, err := do.Where(mdl.AccountID.Eq(accountId)).UpdateColumns(

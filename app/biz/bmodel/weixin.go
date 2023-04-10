@@ -64,3 +64,18 @@ type Weixin_RuleCountModel struct {
 	UpdateTime   time.Time `gorm:"column:update_time;type:int unsigned;autoUpdateTime" json:"update_time" form:"update_time"` // 修改时间
 	Count        int32     `gorm:"column:count;type:int" json:"count" form:"count"`                                           // 汇总数量
 }
+
+type Weixin_ContentModel struct {
+	ContentID      int64     `gorm:"column:content_id;type:bigint" json:"content_id" form:"content_id"`                         // 主键
+	AccountID      int64     `gorm:"column:account_id;type:bigint;not null" json:"account_id" form:"account_id"`                // 归属公众号
+	OpenID         string    `gorm:"column:open_id;type:varchar(128)" json:"open_id" form:"open_id"`                            // 用户微信ID
+	RequestType    string    `gorm:"column:request_type;type:varchar(32)" json:"request_type" form:"request_type"`              // 数据类型 文本消息：text 图片消息:image 地理位置消息:location 链接消息:link 事件:event
+	RequestContent string    `gorm:"column:request_content;type:varchar(2048)" json:"request_content" form:"request_content"`   // 数据内容
+	ResponseType   string    `gorm:"column:response_type;type:varchar(32)" json:"response_type" form:"response_type"`           // 回复的类型 文本消息：text 图片消息:image 地理位置消息:location 链接消息:link
+	ReponseContent string    `gorm:"column:reponse_content;type:varchar(2048)" json:"reponse_content" form:"reponse_content"`   // 系统回复的内容
+	MeidaHdURL     string    `gorm:"column:meida_hd_url;type:varchar(512)" json:"meida_hd_url" form:"meida_hd_url"`             // 高清语音或者视频地址
+	CreateTime     time.Time `gorm:"column:create_time;type:int unsigned;autoCreateTime" json:"create_time" form:"create_time"` // 创建时间
+	XMLContent     string    `gorm:"column:xml_content;type:varchar(2048)" json:"xml_content" form:"xml_content"`               // xml原始内容
+	AddTime        time.Time `gorm:"column:add_time;type:datetime;default:CURRENT_TIMESTAMP" json:"add_time" form:"add_time"`   // 录入系统的时间
+	AccountName    string    `gorm:"column:account_name;type:varchar(256)" json:"account_name" form:"account_name"`             // 公众号名称
+}

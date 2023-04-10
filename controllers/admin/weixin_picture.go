@@ -15,6 +15,7 @@ func (c *WeixinController) Picture() {
 	c.display()
 }
 
+// PictureEdit 编辑图文回复
 func (c *WeixinController) PictureEdit() {
 	{
 		list, _, _ := biz.NewWeixinAccount().AccountPaginate(1, 9999, "", -1)

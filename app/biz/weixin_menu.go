@@ -14,6 +14,7 @@ func NewWeixinMenu() *WeixinMenu {
 	return &WeixinMenu{}
 }
 
+// MenuPaginate 分页
 func (this *WeixinMenu) MenuPaginate(page, limit int, accountId int64) ([]*model.WeixinMenu, int64, error) {
 	mdl, do := query.WeixinMenuDo()
 	if accountId > 0 {
@@ -63,6 +64,7 @@ func (this *WeixinMenu) MenuSave(input *model.WeixinMenu) error {
 	return err
 }
 
+// MenuSaveSortId 保存排序
 func (this *WeixinMenu) MenuSaveSortId(menuId int64, sortId int32) error {
 	mdl, do := query.WeixinMenuDo()
 	_, err := do.Where(mdl.MenuID.Eq(menuId)).UpdateColumns(

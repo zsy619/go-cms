@@ -153,11 +153,13 @@ func (w *WeixinRequest) ContentSaveSubscribeOrDefault(input *bmodel.Weixin_Conte
 	return nil
 }
 
+// RulePictureFind 规则文本回复查询
 func (w *WeixinRequest) RulePictureFind(ruleId int64) ([]*model.WeixinRequestContent, error) {
 	contentMdl, contentDo := query.WeixinRequestContentDo()
 	return contentDo.Where(contentMdl.RuleID.Eq(ruleId)).Order(contentMdl.SortID).Find()
 }
 
+// RulePaginate 规则分页查询
 func (w *WeixinRequest) RulePaginate(page, limit int, accountId int64, requestType int32) ([]*bmodel.Weixin_RuleModel, int64, error) {
 	_, ruleDo := query.WeixinRequestRuleDo()
 	field := `a.rule_id,a.account_id,a.name,a.keywords,a.request_type,a.is_like_query,a.is_default,a.sort_id,a.create_time,a.update_time,b.content_id,b.title,b.content,b.link_url,b.img_url,b.media_url,b.media_hd_url`
@@ -176,6 +178,7 @@ func (w *WeixinRequest) RulePaginate(page, limit int, accountId int64, requestTy
 	return list, count, nil
 }
 
+// RulePaginateCount 规则汇总分页
 func (w *WeixinRequest) RulePaginateCount(page, limit int, accountId int64, requestType int32) ([]*bmodel.Weixin_RuleCountModel, int64, error) {
 	_, ruleDo := query.WeixinRequestRuleDo()
 	field := `a.rule_id,a.account_id,a.name,a.keywords,a.request_type,a.is_like_query,a.is_default,a.sort_id,a.create_time,a.update_time,(SELECT COUNT(1) AS count FROM weixin_request_content b WHERE b.rule_id=a.rule_id) AS count`
@@ -194,6 +197,7 @@ func (w *WeixinRequest) RulePaginateCount(page, limit int, accountId int64, requ
 	return list, count, nil
 }
 
+// RuleFind 规则查询
 func (w *WeixinRequest) RuleFind(ruleId int64) (*bmodel.Weixin_RuleModel, error) {
 	field := `a.rule_id,a.account_id,a.name,a.keywords,a.request_type,a.is_like_query,a.is_default,a.sort_id,a.create_time,a.update_time,b.content_id,b.title,b.content,b.link_url,b.img_url,b.media_url,b.media_hd_url`
 	sqlSearch := fmt.Sprintf(`SELECT %s FROM weixin_request_rule a LEFT JOIN weixin_request_content b ON a.rule_id=b.rule_id WHERE a.rule_id=?`, field)
@@ -205,6 +209,7 @@ func (w *WeixinRequest) RuleFind(ruleId int64) (*bmodel.Weixin_RuleModel, error)
 	return ruleFind, nil
 }
 
+// RuleSaveSortId 规则排序
 func (w *WeixinRequest) RuleSaveSortId(ruleId int64, sortId int32) error {
 	ruleMdl, ruleDo := query.WeixinRequestRuleDo()
 	_, err := ruleDo.Where(ruleMdl.RuleID.Eq(ruleId)).UpdateColumns(
@@ -216,6 +221,7 @@ func (w *WeixinRequest) RuleSaveSortId(ruleId int64, sortId int32) error {
 	return err
 }
 
+// RuleDestory 规则删除
 func (w *WeixinRequest) RuleDestory(ruleId int64) error {
 	ruleMdl, ruleDo := query.WeixinRequestRuleDo()
 	contentMdl, contentDo := query.WeixinRequestContentDo()
@@ -224,6 +230,7 @@ func (w *WeixinRequest) RuleDestory(ruleId int64) error {
 	return nil
 }
 
+// RuleSave 规则保存
 func (w *WeixinRequest) RuleSave(mdl *bmodel.Weixin_RuleModel) error {
 	ruleMdl, ruleDo := query.WeixinRequestRuleDo()
 	contentMdl, contentDo := query.WeixinRequestContentDo()
@@ -290,6 +297,7 @@ func (w *WeixinRequest) RuleSave(mdl *bmodel.Weixin_RuleModel) error {
 	return nil
 }
 
+// PictureSave 图片保存
 func (w *WeixinRequest) PictureSave(mdl *bmodel.Weixin_PictureModel) error {
 	ruleMdl, ruleDo := query.WeixinRequestRuleDo()
 	if mdl.RuleID > 0 {

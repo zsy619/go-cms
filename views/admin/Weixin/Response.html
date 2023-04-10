@@ -1,0 +1,89 @@
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <fieldset class="table-search-fieldset">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">公众账户</label>
+                            <div class="layui-input-inline">
+                                <select name="account_id" lay-filter="account_id" lay-verify="required" lay-reqtext="微信公账号必选项">
+                                    <option value="">请选择公众账户</option>
+                                    {{range $index,$item := .accountList}}
+                                    <option value="{{$item.AccountID}}">{{$item.Name}}</option>
+                                    {{end}}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline" style="display: none;">
+                            <button type="submit" class="layui-btn layui-btn-primary" lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+    </div>
+</div>
+<script>
+    layui.use(['form', 'table'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table;
+
+        table.render({
+            elem: '#currentTableId',
+            url: '/admin/weixin/ContentPaginate',
+            height: "full-170",
+            defaultToolbar: ['filter', 'exports', 'print', {
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips'
+            }],
+            cols: [[
+                { field: 'account_name', width: 280, title: '	公众账户' },
+                { field: 'open_id', title: '用户OpenId' },
+                { field: 'request_type', width: 180, title: '请求类型' },
+                { field: 'request_content', title: '请求内容' },
+                { field: 'response_type', width: 180, title: '回复类型' },
+                { field: 'reponse_content', title: '回复内容' },
+                {
+                    field: 'in_time', width: 120, title: '发生时间', align: "center", sort: true, templet: function (d) {
+                        return layui.util.toDateString(d.in_time, 'yyyy-MM-dd');
+                    }
+                },
+            ]],
+            limits: [10, 15, 20],
+            limit: 20,
+            page: true,
+            // skin: 'line',
+            even: true,
+            size: 'lg',
+        });
+
+        // 监听搜索操作
+        form.on('button(data-search-btn)', function (data) {
+            //执行搜索重载
+            tableReload();
+            return false;
+        });
+
+        form.on('select(account_id)', function (data) {
+            //执行搜索重载
+            tableReload();
+            return false;
+        });
+
+        function tableReload() {
+            table.reload('currentTableId', {
+                page: {
+                    curr: 1
+                },
+                where: {
+                    "account_id": parseInt($("select[name=account_id]").val())
+                }
+            }, 'data');
+        }
+    });
+</script>
