@@ -46,33 +46,29 @@
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">开启评论</label>
-                        <div class="layui-input-inline" style="width: 500px;">
-                            <input type="radio" name="is_comment" value="0" title="否" {{if eq .mdl.IsComment 0}} checked="" {{end}}>
-                            <input type="radio" name="is_comment" value="1" title="是" {{if eq .mdl.IsComment 1}} checked="" {{end}}>
+                        <div class="layui-input-inline" style="width: 100px;">
+                            <input name="is_comment" type="checkbox" value="1" title="是" {{if eq .mdl.IsComment 1}} checked="" {{end}}>
                         </div>
                         <div class="layui-form-mid layui-word-aux">开启评论功能后可允许对内容进行评论</div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">开启相册</label>
-                        <div class="layui-input-inline" style="width: 500px;">
-                            <input type="radio" name="is_album" value="0" title="否" {{if eq .mdl.IsAlbum 0}} checked="" {{end}}>
-                            <input type="radio" name="is_album" value="1" title="是" {{if eq .mdl.IsAlbum 1}} checked="" {{end}}>
+                        <div class="layui-input-inline" style="width: 100px;">
+                            <input name="is_album" type="checkbox" value="1" title="是" {{if eq .mdl.IsAlbum 1}} checked="" {{end}}>
                         </div>
                         <div class="layui-form-mid layui-word-aux">开启相册功能后可上传多张图片</div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">开启附件</label>
-                        <div class="layui-input-inline" style="width: 500px;">
-                            <input type="radio" name="is_attach" value="0" title="否" {{if eq .mdl.IsAttach 0}} checked="" {{end}}>
-                            <input type="radio" name="is_attach" value="1" title="是" {{if eq .mdl.IsAttach 1}} checked="" {{end}}>
+                        <div class="layui-input-inline" style="width: 100px;">
+                            <input name="is_attach" type="checkbox" value="1" title="是" {{if eq .mdl.IsAttach 1}} checked="" {{end}}>
                         </div>
                         <div class="layui-form-mid layui-word-aux">开启附件功能后可上传多个附件</div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">开启规格</label>
-                        <div class="layui-input-inline" style="width: 500px;">
-                            <input type="radio" name="is_spec" value="0" title="否" {{if eq .mdl.IsSpec 0}} checked="" {{end}}>
-                            <input type="radio" name="is_spec" value="1" title="是" {{if eq .mdl.IsSpec 1}} checked="" {{end}}>
+                        <div class="layui-input-inline" style="width: 100px;">
+                            <input name="is_spec" type="checkbox" value="1" title="是" {{if eq .mdl.IsSpec 1}} checked="" {{end}}>
                         </div>
                         <div class="layui-form-mid layui-word-aux">开启规格需选中市场价、销售价、库存三个扩展字段</div>
                     </div>

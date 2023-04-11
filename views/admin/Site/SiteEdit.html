@@ -35,16 +35,14 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">是否默认</label>
                         <div class="layui-input-inline" style="width: 500px;">
-                            <input type="radio" name="is_default" value="0" title="否" {{if eq .site.IsDefault false}} checked="" {{end}}>
-                            <input type="radio" name="is_default" value="1" title="是" {{if eq .site.IsDefault true}} checked="" {{end}}>
+                            <input name="is_default" type="checkbox" value="1" title="是" {{if eq .site.IsDefault true}} checked="" {{end}}>
                         </div>
                         <div class="layui-form-mid layui-word-aux">只允许一个默认站点</div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">移动站点</label>
                         <div class="layui-input-inline" style="width: 500px;">
-                            <input type="radio" name="is_mobile" value="0" title="否" {{if eq .site.IsMobile false}} checked="" {{end}}>
-                            <input type="radio" name="is_mobile" value="1" title="是" {{if eq .site.IsMobile true}} checked="" {{end}}>
+                            <input name="is_mobile" type="checkbox" value="1" title="是" {{if eq .site.IsMobile true}} checked="" {{end}}>
                         </div>
                         <div class="layui-form-mid layui-word-aux">移动站点仅适用于移动设备访问</div>
                     </div>

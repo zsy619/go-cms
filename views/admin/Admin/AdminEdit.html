@@ -90,8 +90,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">是否可用</label>
                         <div class="layui-input-inline" style="width: 500px;">
-                            <input type="radio" name="enabled" value="1" title="可用" {{if .mdl.Enabled}}checked="checked" {{end}}>
-                            <input type="radio" name="enabled" value="0" title="禁用" {{if eq .mdl.Enabled false}}checked="checked" {{end}}>
+                            <input name="enabled" type="checkbox" value="1" title="可用" {{if eq .mdl.Enabled true}} checked="" {{end}}>
                         </div>
                     </div>
                 </div>
@@ -119,8 +118,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">发布审核</label>
                         <div class="layui-input-inline" style="width: 500px;">
-                            <input type="radio" name="is_audit" value="1" title="启用" {{if .mdl.Enabled}}checked="checked" {{end}}>
-                            <input type="radio" name="is_audit" value="0" title="禁用" {{if eq .mdl.Enabled false}}checked="checked" {{end}}>
+                            <input name="is_audit" type="checkbox" value="1" title="启用" {{if eq .mdl.IsAudit 1}} checked="" {{end}}>
                         </div>
                     </div>
                     <div class="layui-form-item">
