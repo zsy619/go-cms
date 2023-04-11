@@ -3,7 +3,6 @@
         <div class="layui-tab layui-tab-brief layui-tab-card">
             <ul class="layui-tab-title">
                 <li class="layui-this">基本信息</li>
-                <li>相关属性</li>
                 <li>详细描述</li>
                 <li>SEO选项</li>
             </ul>
@@ -54,6 +53,24 @@
                         <div class="layui-form-mid layui-word-aux">多个可用英文逗号分隔开，如：a,b</div>
                     </div>
                     <div class="layui-form-item">
+                        <label class="layui-form-label">选项</label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <input name="is_comment" type="checkbox" value="1" title="评论" {{if eq .mdl.IsComment 1}} checked="" {{end}}>
+                            <input name="is_top" type="checkbox" value="1" title="置顶" {{if eq .mdl.IsTop 1}} checked="" {{end}}>
+                            <input name="is_red" type="checkbox" value="1" title="推荐" {{if eq .mdl.IsRed 1}} checked="" {{end}}>
+                            <input name="is_hot" type="checkbox" value="1" title="热门" {{if eq .mdl.IsHot 1}} checked="" {{end}}>
+                            <input name="is_slide" type="checkbox" value="1" title="幻灯片" {{if eq .mdl.IsSlide 1}} checked="" {{end}}>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">状&nbsp;&nbsp;态</label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <input type="radio" name="status" value="0" title="草稿" {{if eq .mdl.Status 0}}checked="checked" {{end}}>
+                            <input type="radio" name="status" value="2" title="通过" {{if eq .mdl.Status 2}}checked="checked" {{end}}>
+                            <input type="radio" name="status" value="3" title="拒绝" {{if eq .mdl.Status 3}}checked="checked" {{end}}>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
                         <label class="layui-form-label">来&nbsp;&nbsp;源</label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="text" name="source" value="{{.mdl.Source}}" autocomplete="off" placeholder="" class="layui-input">
@@ -99,51 +116,6 @@
                         <label class="layui-form-label">发布时间</label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="text" id="publish_time" name="publish_time" lay-verify="datetime" value='{{dateformat .mdl.PublishTime "2006-01-02 15:04:05"}}' class="layui-input">
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-tab-item">
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">状&nbsp;&nbsp;态</label>
-                        <div class="layui-input-inline" style="width: 500px;">
-                            <input type="radio" name="status" value="0" title="草稿" {{if eq .mdl.Status 0}}checked="checked" {{end}}>
-                            <input type="radio" name="status" value="2" title="通过" {{if eq .mdl.Status 2}}checked="checked" {{end}}>
-                            <input type="radio" name="status" value="3" title="拒绝" {{if eq .mdl.Status 3}}checked="checked" {{end}}>
-                        </div>
-                    </div>
-                    <div class="layui-form-item" style="display: none;">
-                        <label class="layui-form-label">评&nbsp;&nbsp;论</label>
-                        <div class="layui-input-inline" style="width: 500px;">
-                            <input type="radio" name="is_comment" value="0" title="否" {{if eq .mdl.IsComment 0}} checked="" {{end}}>
-                            <input type="radio" name="is_comment" value="1" title="是" {{if eq .mdl.IsComment 1}} checked="" {{end}}>
-                        </div>
-                    </div>
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">置&nbsp;&nbsp;顶</label>
-                        <div class="layui-input-inline" style="width: 500px;">
-                            <input type="radio" name="is_top" value="0" title="否" {{if eq .mdl.IsTop 0}} checked="" {{end}}>
-                            <input type="radio" name="is_top" value="1" title="是" {{if eq .mdl.IsTop 1}} checked="" {{end}}>
-                        </div>
-                    </div>
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">推&nbsp;&nbsp;荐</label>
-                        <div class="layui-input-inline" style="width: 500px;">
-                            <input type="radio" name="is_red" value="0" title="否" {{if eq .mdl.IsRed 0}} checked="" {{end}}>
-                            <input type="radio" name="is_red" value="1" title="是" {{if eq .mdl.IsRed 1}} checked="" {{end}}>
-                        </div>
-                    </div>
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">热&nbsp;&nbsp;门</label>
-                        <div class="layui-input-inline" style="width: 500px;">
-                            <input type="radio" name="is_hot" value="0" title="否" {{if eq .mdl.IsHot 0}} checked="" {{end}}>
-                            <input type="radio" name="is_hot" value="1" title="是" {{if eq .mdl.IsHot 1}} checked="" {{end}}>
-                        </div>
-                    </div>
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">幻灯片</label>
-                        <div class="layui-input-inline" style="width: 500px;">
-                            <input type="radio" name="is_slide" value="0" title="否" {{if eq .mdl.IsSlide 0}} checked="" {{end}}>
-                            <input type="radio" name="is_slide" value="1" title="是" {{if eq .mdl.IsSlide 1}} checked="" {{end}}>
                         </div>
                     </div>
                 </div>
