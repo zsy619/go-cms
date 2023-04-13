@@ -16,9 +16,10 @@ type WeixinAccount struct {
 	Name       string    `gorm:"column:name;type:varchar(64)" json:"name" form:"name"`                                            // 公众号名称
 	OriginalID string    `gorm:"column:original_id;type:varchar(64)" json:"original_id" form:"original_id"`                       // 公众号原始ID
 	WxCode     string    `gorm:"column:wx_code;type:varchar(64)" json:"wx_code" form:"wx_code"`                                   // 公众平台微信号
-	Token      string    `gorm:"column:token;type:varchar(512)" json:"token" form:"token"`                                        // ToKen
-	AppID      string    `gorm:"column:app_id;type:varchar(128)" json:"app_id" form:"app_id"`                                     // AppId
-	AppSecret  string    `gorm:"column:app_secret;type:varchar(128)" json:"app_secret" form:"app_secret"`                         // AppSecret
+	Token      string    `gorm:"column:token;type:varchar(512)" json:"token" form:"token"`                                        // 令牌ToKen
+	AppID      string    `gorm:"column:app_id;type:varchar(128)" json:"app_id" form:"app_id"`                                     // 开发者IDAppId
+	AppSecret  string    `gorm:"column:app_secret;type:varchar(128)" json:"app_secret" form:"app_secret"`                         // 开发者密码AppSecret
+	AppAesKey  string    `gorm:"column:app_aes_key;type:varchar(128)" json:"app_aes_key" form:"app_aes_key"`                      // 消息加解密密钥
 	IsPush     bool      `gorm:"column:is_push;type:tinyint(1)" json:"is_push" form:"is_push"`                                    // 内容推送
 	SortID     int32     `gorm:"column:sort_id;type:int" json:"sort_id" form:"sort_id"`                                           // 排序
 	Status     int32     `gorm:"column:status;type:tinyint" json:"status" form:"status"`                                          // 状态0草稿1提交2审核通过3审核未通过4驳回

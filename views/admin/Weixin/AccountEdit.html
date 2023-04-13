@@ -41,30 +41,47 @@
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label required">
-                            <font color="red">*</font> Token
+                            <font color="red">*</font> 令牌（Token）
                         </label>
-                        <div class="layui-input-inline" style="width: 500px;">
-                            <input type="text" name="token" value="{{.mdl.Token}}" autocomplete="off" lay-verify="required" lay-reqtext="Token为必填项" placeholder="" class="layui-input">
+                        <div class="layui-input-inline" style="width: 377px;">
+                            <input type="text" name="token" value="{{.mdl.Token}}" autocomplete="off" lay-verify="required" lay-reqtext="令牌（Token）为必填项" placeholder="" class="layui-input">
                         </div>
-                        <div class="layui-form-mid layui-word-aux">ToKen值必须与公众平台对应</div>
+                        <button type="button" class="layui-btn layui-btn-primary" onclick="rand()">
+                            <i class="layui-icon">&#xe6b1;</i>随机生成
+                        </button>
+                        <br>
+                        <div class="layui-form-mid layui-word-aux" style="margin-left:150px;">复制此Token到微信公众号后台开发者中心</div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label required">
-                            AppId
+                            <font color="red">*</font> 消息加解密密钥
+                        </label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <input type="text" name="app_aes_key" value="{{.mdl.AppAesKey}}" autocomplete="off" lay-verify="required" lay-reqtext="消息加解密密钥为必填项" placeholder="" class="layui-input">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">在开发模式中点随机生成，然后复制到这边</div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">
+                            开发者ID(AppID)
                         </label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="text" name="app_id" value="{{.mdl.AppID}}" autocomplete="off" placeholder="" class="layui-input">
                         </div>
-                        <div class="layui-form-mid layui-word-aux">非必填，仅用于高级接口</div>
+                        <div class="layui-form-mid layui-word-aux">可由微信公众号后台获取，然后复制到这边</div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label required">
-                            AppSecret
+                            开发者密码(AppSecret)
                         </label>
-                        <div class="layui-input-inline" style="width: 500px;">
-                            <input type="text" name="app_secret" value="{{.mdl.AppSecret}}" autocomplete="off" placeholder="" class="layui-input">
+                        <div class="layui-input-inline" style="width: 377px;">
+                            <input type="text" id="app_secret" name="app_secret" value="{{.mdl.AppSecret}}" autocomplete="off" placeholder="" class="layui-input">
                         </div>
-                        <div class="layui-form-mid layui-word-aux">非必填，仅用于高级接口</div>
+                        <button type="button" id="wechat-appsecret-text" class="layui-btn layui-btn-primary" onclick="show()">
+                            <i class="layui-icon">&#xe673;</i>显示密码
+                        </button>
+                        <br>
+                        <div class="layui-form-mid layui-word-aux">由微信后台生成，然后复制到这边</div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">
@@ -104,6 +121,22 @@
     </form>
 </div>
 <script>
+    function rand() {
+        var str = Math.random().toString(36).substr(2);
+        $("input[name='token']").val(str);
+    }
+
+    function show() {
+        var wx_secret = document.getElementById("app_secret");
+        if (wx_secret.type == "password") {
+            wx_secret.type = "text";
+            $("#wechat-appsecret-text").html('<i class="layui-icon">&#xe673;</i>隐藏密码');
+        } else {
+            wx_secret.type = "password";
+            $("#wechat-appsecret-text").html('<i class="layui-icon">&#xe673;</i>显示密码');
+        }
+    }
+
     layui.use(['form', 'layer', 'wangEditor', 'upload', 'laydate', 'treeSelect'], function () {
         var form = layui.form;
         var $ = layui.jquery,

@@ -4,7 +4,14 @@ import "github.com/beego/beego/v2/server/web"
 
 func init() {
 	web.AutoPrefix("/", &IndexController{})
-	web.AutoPrefix("/", &WeixinController{})
+
+	{
+		// 微信公众号
+		web.Router("/weixin/mp/index ", &WechatMpController{}, "GET:Signature")
+		web.Router("/weixin/mp/index ", &WechatMpController{}, "POST:Message")
+		web.Router("/wechat/mp/tooauth2 ", &MpWebAuthController{}, "*:ToOauth2")
+		web.Router("/wechat/mp/redirect_uri ", &MpWebAuthController{}, "*:RedirectUri")
+	}
 
 	web.Router("/api/link/find", &ApiLinkController{}, "*:Find")
 	web.Router("/api/link/paginate", &ApiLinkController{}, "*:Paginate")

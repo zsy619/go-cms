@@ -34,6 +34,7 @@ func newWeixinAccount(db *gorm.DB, opts ...gen.DOOption) weixinAccount {
 	_weixinAccount.Token = field.NewString(tableName, "token")
 	_weixinAccount.AppID = field.NewString(tableName, "app_id")
 	_weixinAccount.AppSecret = field.NewString(tableName, "app_secret")
+	_weixinAccount.AppAesKey = field.NewString(tableName, "app_aes_key")
 	_weixinAccount.IsPush = field.NewBool(tableName, "is_push")
 	_weixinAccount.SortID = field.NewInt32(tableName, "sort_id")
 	_weixinAccount.Status = field.NewInt32(tableName, "status")
@@ -59,9 +60,10 @@ type weixinAccount struct {
 	Name       field.String // 公众号名称
 	OriginalID field.String // 公众号原始ID
 	WxCode     field.String // 公众平台微信号
-	Token      field.String // ToKen
-	AppID      field.String // AppId
-	AppSecret  field.String // AppSecret
+	Token      field.String // 令牌ToKen
+	AppID      field.String // 开发者IDAppId
+	AppSecret  field.String // 开发者密码AppSecret
+	AppAesKey  field.String // 消息加解密密钥
 	IsPush     field.Bool   // 内容推送
 	SortID     field.Int32  // 排序
 	Status     field.Int32  // 状态0草稿1提交2审核通过3审核未通过4驳回
@@ -96,6 +98,7 @@ func (w *weixinAccount) updateTableName(table string) *weixinAccount {
 	w.Token = field.NewString(table, "token")
 	w.AppID = field.NewString(table, "app_id")
 	w.AppSecret = field.NewString(table, "app_secret")
+	w.AppAesKey = field.NewString(table, "app_aes_key")
 	w.IsPush = field.NewBool(table, "is_push")
 	w.SortID = field.NewInt32(table, "sort_id")
 	w.Status = field.NewInt32(table, "status")
@@ -131,7 +134,7 @@ func (w *weixinAccount) GetFieldByName(fieldName string) (field.OrderExpr, bool)
 }
 
 func (w *weixinAccount) fillFieldMap() {
-	w.fieldMap = make(map[string]field.Expr, 18)
+	w.fieldMap = make(map[string]field.Expr, 19)
 	w.fieldMap["account_id"] = w.AccountID
 	w.fieldMap["name"] = w.Name
 	w.fieldMap["original_id"] = w.OriginalID
@@ -139,6 +142,7 @@ func (w *weixinAccount) fillFieldMap() {
 	w.fieldMap["token"] = w.Token
 	w.fieldMap["app_id"] = w.AppID
 	w.fieldMap["app_secret"] = w.AppSecret
+	w.fieldMap["app_aes_key"] = w.AppAesKey
 	w.fieldMap["is_push"] = w.IsPush
 	w.fieldMap["sort_id"] = w.SortID
 	w.fieldMap["status"] = w.Status

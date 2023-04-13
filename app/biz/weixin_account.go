@@ -2,6 +2,7 @@ package biz
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"haedu.gov.cn/cms/app/dal/model"
@@ -27,9 +28,23 @@ func (this *WeixinAccount) AccountPaginate(page, limit int, name string, status 
 }
 
 // AccountFind 获取
-func (this *WeixinAccount) AccountFind(AccountId int64) (*model.WeixinAccount, error) {
+func (this *WeixinAccount) AccountFind(accountId int64) (*model.WeixinAccount, error) {
 	mdl, do := query.WeixinAccountDo()
-	return do.Where(mdl.AccountID.Eq(AccountId)).First()
+	return do.Where(mdl.AccountID.Eq(accountId)).First()
+}
+
+func (this *WeixinAccount) AccountFindCache(accountId int64) (*model.WeixinAccount, error) {
+	cacheKey := fmt.Sprintf("AccountFindCache_%d", accountId)
+	if ok, v := WeiXinCache.Get(cacheKey); ok {
+		return v.(*model.WeixinAccount), nil
+	}
+	mdl, do := query.WeixinAccountDo()
+	find, err := do.Where(mdl.AccountID.Eq(accountId)).First()
+	if err == nil {
+		WeiXinCache.Set(cacheKey, find, 7100)
+		return find, nil
+	}
+	return nil, err
 }
 
 // AccountSave 保存或更新
@@ -61,6 +76,7 @@ func (this *WeixinAccount) AccountSave(input *model.WeixinAccount) error {
 			mdl.OriginalID.ColumnName().String(): input.OriginalID,
 			mdl.WxCode.ColumnName().String():     input.WxCode,
 			mdl.Token.ColumnName().String():      input.Token,
+			mdl.AppAesKey.ColumnName().String():  input.AppAesKey,
 			mdl.AppID.ColumnName().String():      input.AppID,
 			mdl.AppSecret.ColumnName().String():  input.AppSecret,
 			mdl.IsPush.ColumnName().String():     input.IsPush,
