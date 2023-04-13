@@ -7,6 +7,7 @@ import (
 	"haedu.gov.cn/cms/app/biz"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/lib"
+	"haedu.gov.cn/cms/app/wechat/mp"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
 	"haedu.gov.cn/tools/xjson"
 )
@@ -83,4 +84,53 @@ func (c *WeixinController) MenuDestory() {
 		return
 	}
 	c.JSONSuccess("删除成功", nil)
+}
+
+// MenuSync 同步菜单
+// @router /admin/weixin/menusync [post]
+func (c *WeixinController) MenuSync() {
+	accountId, _ := c.GetInt64("accountId")
+	finder, err := biz.NewWeixinAccount().AccountFind(accountId)
+	if err != nil {
+		logs.Error("MenuSync", err.Error())
+		c.JSONError(err.Error())
+		return
+	}
+	fmt.Println("MenuSync", finder)
+	message := mp.NewMessage(finder.AppID, finder.AppSecret, true)
+	pbuttons := []mp.Button{}
+	service := biz.NewWeixinMenu()
+	parents, err := service.MenuFindByParentId(accountId, 0)
+	if err == nil {
+		for _, p := range parents {
+			pbutton := mp.Button{
+				Name:      p.Name,
+				Key:       p.Key,
+				Url:       p.URL,
+				Type:      p.Type,
+				SubButton: []mp.Button{},
+			}
+			children, err := service.MenuFindByParentId(accountId, p.MenuID)
+			if err == nil && len(children) > 0 {
+				for _, c := range children {
+					cbutton := mp.Button{
+						Name: c.Name,
+						Key:  c.Key,
+						Type: c.Type,
+						Url:  c.URL,
+					}
+					pbutton.SubButton = append(pbutton.SubButton, cbutton)
+				}
+			}
+			pbuttons = append(pbuttons, pbutton)
+		}
+	}
+
+	err = message.CreateCustomMenu(&pbuttons)
+	if err != nil {
+		logs.Error("MenuSync", err.Error())
+		c.JSONError(err.Error())
+		return
+	}
+	c.JSONSuccess("同步成功", nil)
 }

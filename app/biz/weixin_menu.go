@@ -23,6 +23,12 @@ func (this *WeixinMenu) MenuPaginate(page, limit int, accountId int64) ([]*model
 	return do.Order(mdl.SortID).FindByPage((page-1)*limit, limit)
 }
 
+// MenuFindByParentId 根据父级ID获取
+func (this *WeixinMenu) MenuFindByParentId(accountId, parentId int64) ([]*model.WeixinMenu, error) {
+	mdl, do := query.WeixinMenuDo()
+	return do.Where(mdl.AccountID.Eq(accountId), mdl.ParentID.Eq(parentId)).Order(mdl.SortID).Find()
+}
+
 // MenuFind 获取
 func (this *WeixinMenu) MenuFind(menuId int64) (*model.WeixinMenu, error) {
 	mdl, do := query.WeixinMenuDo()

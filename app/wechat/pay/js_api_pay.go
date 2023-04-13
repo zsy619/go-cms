@@ -6,23 +6,23 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"smart_sso/controllers/wechat/models"
-	"smart_sso/controllers/wechat/utils"
 	"time"
 
 	"github.com/beego/beego/v2/core/logs"
+	"haedu.gov.cn/cms/app/wechat/models"
+	"haedu.gov.cn/cms/app/wechat/utils"
 )
 
 type JsApiPay struct {
 	TotalFee           int                 // 商品金额，用于统一下单
 	OpenId             string              // 用于调用统一下单接口
-	AccessToken        string              //用于获取收货地址js函数入口参数
+	AccessToken        string              // 用于获取收货地址js函数入口参数
 	AppId              string              //
-	Key                string              //支付appkey
+	Key                string              // 支付appkey
 	AppSecret          string              //
 	UnifiedOrderResult models.WxPayData    //
 	w                  http.ResponseWriter //
-	r                  *http.Request       //页面请求
+	r                  *http.Request       // 页面请求
 }
 
 func NewJsApiPay(totalFee int, appId, appSecret string, w http.ResponseWriter, r *http.Request) *JsApiPay {
@@ -32,7 +32,7 @@ func NewJsApiPay(totalFee int, appId, appSecret string, w http.ResponseWriter, r
 	jsApiPay.AppSecret = appSecret
 	jsApiPay.w = w
 	jsApiPay.r = r
-	jsApiPay.UnifiedOrderResult = models.NewWxPayData() //初始化
+	jsApiPay.UnifiedOrderResult = models.NewWxPayData() // 初始化
 	return jsApiPay
 }
 
@@ -48,7 +48,7 @@ func (this *JsApiPay) GetOpenidAndAccessToken() {
 	if len(code) > 0 {
 		this.GetOpenidAndAccessTokenFromCode(code)
 	} else {
-		//构造网页授权获取code的URL
+		// 构造网页授权获取code的URL
 		host := this.r.URL.Host
 		path := this.r.URL.Path
 		redirect_uri := url.QueryEscape("http://" + host + path)
@@ -87,7 +87,7 @@ func (this *JsApiPay) GetOpenidAndAccessToken() {
 // <param name="code"></param>
 // <exception cref="WxPayException"></exception>
 func (this *JsApiPay) GetOpenidAndAccessTokenFromCode(code string) error {
-	//构造获取openid及access_token的url
+	// 构造获取openid及access_token的url
 	data := models.NewWxPayData()
 	data.SetValue("appid", this.AppId)
 	data.SetValue("secret", this.AppSecret)
@@ -126,13 +126,13 @@ func (this *JsApiPay) GetOpenidAndAccessTokenFromCode(code string) error {
 // <returns></returns>
 // <exception cref="WxPayException"></exception>
 func (this *JsApiPay) GetUnifiedOrderResult(orderNo string) (models.WxPayData, error) {
-	//统一下单
+	// 统一下单
 	data := models.NewWxPayData()
 	data.SetValue("body", orderNo)                                   // 商品描述 商品简单描述，该字段请按照规范传递
 	data.SetValue("attach", orderNo)                                 // 附加数据 附加数据，在查询API和支付通知中原样返回，可作为自定义参数使用。
 	data.SetValue("out_trade_no", orderNo)                           // 商户订单号 商户系统内部订单号，要求32个字符内，只能是数字、大小写字母_-|* 且在同一个商户号下唯一。详见商户订单号
 	data.SetValue("total_fee", this.TotalFee)                        // 标价金额 订单总金额，单位为分
-	data.SetValue("time_start", time.Now().Format("20060102150405")) //交易起始时间 订单生成时间，格式为yyyyMMddHHmmss，如2009年12月25日9点10分10秒表示为20091225091010。
+	data.SetValue("time_start", time.Now().Format("20060102150405")) // 交易起始时间 订单生成时间，格式为yyyyMMddHHmmss，如2009年12月25日9点10分10秒表示为20091225091010。
 	// 	订单失效时间，格式为yyyyMMddHHmmss，如2009年12月27日9点10分10秒表示为20091227091010。订单失效时间是针对订单号而言的，由于在请求支付的时候有一个必传参数prepay_id只有两小时的有效期，所以在重入时间超过2小时的时候需要重新请求下单接口获取新的prepay_id。
 	// 	time_expire只能第一次下单传值，不允许二次修改，二次修改系统将报错。如用户支付失败后，需再次支付，需更换原订单号重新下单。
 	// 	建议：最短失效时间间隔大于1分钟

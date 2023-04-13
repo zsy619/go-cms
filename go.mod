@@ -16,6 +16,8 @@ require (
 	haedu.gov.cn/tools v0.0.0-00010101000000-000000000000
 )
 
+require github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869 // indirect
+
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bitly/go-simplejson v0.5.0
@@ -44,7 +46,7 @@ require (
 	github.com/prometheus/procfs v0.9.0 // indirect
 	github.com/satori/go.uuid v1.2.0
 	github.com/shiena/ansicolor v0.0.0-20200904210342-c7312218db18 // indirect
-	golang.org/x/crypto v0.8.0 // indirect
+	golang.org/x/crypto v0.8.0
 	golang.org/x/exp v0.0.0-20230321023759-10a507213a29 // indirect
 	golang.org/x/image v0.7.0 // indirect
 	golang.org/x/mod v0.10.0 // indirect

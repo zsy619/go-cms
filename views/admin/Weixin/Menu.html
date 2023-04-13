@@ -16,10 +16,10 @@
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <button type="submit" class="layui-btn layui-btn-danger layui-btn-radius" lay-submit lay-filter="data-sync-btn"><i class="layui-icon layui-icon-ok"></i> 同步到公众号</button>
+                            <button type="button" class="layui-btn layui-btn-primary layui-btn-radius" lay-filter="menu-sync-btn"><i class="layui-icon layui-icon-login-wechat"></i> 同步至微信</button>
                         </div>
                         <div class="layui-inline" style="display: none;">
-                            <button type="submit" class="layui-btn layui-btn-primary layui-btn-radius" lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                            <button type="button" class="layui-btn layui-btn-primary layui-btn-radius" lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                         </div>
                     </div>
                 </form>
@@ -40,8 +40,41 @@
         var treetable = layui.treetable;
         var table = layui.table;
 
+        $('button[lay-filter="menu-sync-btn"]').on("click", function () {
+            var accountId = $("select[name=accountId]").val() ? parseInt($("select[name=accountId]").val()) : 0;
+            if (accountId == 0) {
+                layer.msg("请选择公众账号");
+                return false;
+            }
+            layer.confirm('确定要同步到微信吗?', function (index) {
+                $.ajax({
+                    url: "/admin/weixin/MenuSync",
+                    type: "post",
+                    data: { accountId: accountId },
+                    dataType: "json",
+                    beforeSend: function () {
+                        this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+                    },
+                    success: function (data) {
+                        if (data.code == 0) {
+                            layer.msg(data.msg, { icon: 1, time: 1000 }, function () {
+                                // window.location.reload();
+                            });
+                        } else {
+                            layer.msg(data.msg, { icon: 2, time: 5000 });
+                        }
+                    },
+                    error: function (data) {
+                        layer.msg("同步失败", { icon: 2, time: 1000 });
+                    },
+                    complete: function () {
+                        layer.close(this.layerIndex);
+                    }
+                });
+            });
+        });
+
         form.on('select(accountId)', function (data) {
-            // console.log(data);
             $('button[lay-filter="data-search-btn"]').click();
         });
 
@@ -94,7 +127,7 @@
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
             var result = JSON.stringify(data.field);
-            console.log(result);
+            // console.log(result);
             //执行搜索重载
             treetable.render({
                 treeColIndex: 1,
@@ -174,7 +207,7 @@
                     };
                     sorts.push(sort);
                 });
-                console.log(sorts);
+                // console.log(sorts);
                 $.ajax({
                     type: "POST",
                     url: "/admin/weixin/MenuSaveSortId", //提交的地址
@@ -203,14 +236,14 @@
 
         //监听表格复选框选择
         table.on('checkbox(currentTableFilter)', function (obj) {
-            console.log(obj)
+            // console.log(obj)
         });
 
         table.on('tool(currentTableFilter)', function (obj) {
             var accountId = $("select[name=accountId]").val() ? parseInt($("select[name=accountId]").val()) : 0;
             var data = obj.data;
             if (obj.event === 'edit') {
-                console.log(data);
+                // console.log(data);
                 var index = layer.open({
                     title: '编辑',
                     type: 2,
