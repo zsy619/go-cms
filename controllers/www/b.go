@@ -290,3 +290,35 @@ func (this *CategoryBaseController) Prepare() {
 	category, _ := this.CategoryOne(0, this.ActionName)
 	this.Data["category"] = category
 }
+
+/**
+* @description: Find 获取广告列表
+* @param {int} limit 获取数量
+* @param {int64} category_id 广告分类ID
+* @param {string} call_index 广告分类标识
+* @return {*}
+ */
+func (this *BaseController) AdFind(limit int, category_id int64, call_index string) ([]*bmodel.ApiAdListModel, int64, error) {
+	return biz.NewApiAd().Find(limit, category_id, call_index)
+}
+
+/**
+ * @description: Paginate 获取广告列表
+ * @param {*} page 页码
+ * @param {int} limit 获取数量
+ * @param {int64} category_id 广告分类ID
+ * @param {string} call_index 广告分类标识
+ * @return {*}
+ */
+func (this *BaseController) AdPaginate(page, limit int, category_id int64, call_index string) ([]*bmodel.ApiAdListModel, int64, error) {
+	return biz.NewApiAd().Paginate(page, limit, category_id, call_index)
+}
+
+/**
+ * @description: Click 点击数+1
+ * @param {int64} ad_id 广告ID
+ * @return {*}
+ */
+func (this *BaseController) AdClick(ad_id int64) error {
+	return biz.NewApiAd().Click(ad_id)
+}
