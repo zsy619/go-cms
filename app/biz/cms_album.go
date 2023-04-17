@@ -22,6 +22,20 @@ func (this *CmsAlbum) AlbumPaginate(page, limit int, tableName string, recordId 
 	return do.Where(mdl.TableName_.Eq(tableName), mdl.RecordID.Eq(recordId), mdl.TypeID.Eq(typeId)).Order(mdl.SortID).FindByPage((page-1)*limit, limit)
 }
 
+func (this *CmsAlbum) AlbumSearch(page, limit int, tableName, title, ext string) ([]*model.CmsAlbum, int64, error) {
+	mdl, do := query.CmsAlbumDo()
+	if tableName != "" {
+		do = do.Where(mdl.TableName_.Eq(tableName))
+	}
+	if title != "" {
+		do = do.Where(mdl.Title.Like("%" + title + "%"))
+	}
+	if ext != "" {
+		do = do.Where(mdl.FileExt.Like("%" + ext + "%"))
+	}
+	return do.Order(mdl.SortID).FindByPage((page-1)*limit, limit)
+}
+
 // AlbumSave 保存或更新
 func (this *CmsAlbum) AlbumSave(input *model.CmsAlbum) error {
 	mdl, do := query.CmsAlbumDo()

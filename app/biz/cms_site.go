@@ -98,6 +98,8 @@ func (this *CmsSite) SiteSave(mdl *model.CmsSite, domains []string, remarks []st
 			site.DirPath.ColumnName().String():         mdl.DirPath,
 			site.IsDefault.ColumnName().String():       mdl.IsDefault,
 			site.IsMobile.ColumnName().String():        mdl.IsMobile,
+			site.Logo1.ColumnName().String():           mdl.Logo1,
+			site.Logo2.ColumnName().String():           mdl.Logo2,
 			site.Company.ColumnName().String():         mdl.Company,
 			site.Address.ColumnName().String():         mdl.Address,
 			site.Telphone.ColumnName().String():        mdl.Telphone,

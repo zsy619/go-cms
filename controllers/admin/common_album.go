@@ -25,6 +25,18 @@ func (c *CommonController) Album() {
 	c.display()
 }
 
+func (c *CommonController) AlbumSearch() {
+	page, limit := c.GetPagingParameters()
+	tableName := c.GetString("tableName")
+	title := c.GetString("title")
+	ext := c.GetString("ext")
+	list, count, err := biz.NewCmsAlbum().AlbumSearch(page, limit, tableName, title, ext)
+	if err != nil {
+		logs.Error("AlbumSearch", err.Error())
+	}
+	c.JSONPageSuccess(list, count)
+}
+
 func (c *CommonController) AlbumPaginate() {
 	tableName := c.GetString("tableName")
 	recordId, _ := c.GetInt64("recordId")

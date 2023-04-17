@@ -52,12 +52,15 @@
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">广告图片</label>
-                        <div class="layui-input-inline" style="width: 392px;">
+                        <div class="layui-input-inline" style="width: 325px;">
                             <input type="hidden" name="img_url2" value="{{.mdl.ImgUrl2}}">
                             <input type="text" name="img_url1" value="{{.mdl.ImgUrl1}}" autocomplete="off" placeholder="" class="layui-input">
                         </div>
-                        <button type="button" class="layui-btn layui-btn-primary" id="btnUpload">
-                            <i class="layui-icon">&#xe67c;</i>浏览...
+                        <button type="button" class="layui-btn layui-btn-primary" style="margin-left: -10px;" id="btnUpload">
+                            <i class="layui-icon layui-icon-upload"></i>上传
+                        </button>
+                        <button type="button" class="layui-btn layui-btn-normal" id="btnSelect">
+                            <i class="layui-icon layui-icon-list"></i>选择
                         </button>
                     </div>
                     <div class="layui-form-item">
@@ -118,10 +121,11 @@
     </form>
 </div>
 <script>
-    layui.use(['form', 'layer', 'wangEditor', 'laydate', 'upload'], function () {
+    layui.use(['form', 'layer', 'wangEditor', 'laydate', 'tableSelect', 'upload'], function () {
         var form = layui.form;
         var $ = layui.jquery,
             layer = layui.layer,
+            tableSelect = layui.tableSelect,
             wangEditor = layui.wangEditor;
         var upload = layui.upload;
         var laydate = layui.laydate;
@@ -133,6 +137,44 @@
         laydate.render({
             elem: '#end_time', type: 'datetime'
         });
+
+        tableSelect.render({
+            elem: '#btnSelect',
+            checkedKey: 'id',
+            height: '340',
+            width: '800',
+            searchType: 'more',
+            searchList: [
+                { searchKey: 'title', searchPlaceholder: '文件' },
+                { searchKey: 'ext', searchPlaceholder: '后缀' },
+            ],
+            table: {
+                url: '/admin/common/AlbumSearch',
+                response: {
+                    statusCode: 0,
+                },
+                cols: [[
+                    { type: 'radio' },
+                    { field: 'album_id', width: 80, title: 'ID', sort: true },
+                    {
+                        field: 'original_path', title: '图片信息', templet: function (d) {
+                            return '<img src=' + d.original_path + '>';
+                        }
+                    },
+                    { field: 'title', title: '名称' },
+                    { field: 'file_ext', title: '文件后缀' },
+                    { field: 'file_size', title: '文件大小' },
+                    { field: 'table_name', title: '来源', width: 80 },
+                    { field: 'remark', title: '描述', },
+                ]]
+            },
+            done: function (elem, data) {
+                layui.each(data.data, function (index, item) {
+                    $("input[name='img_url1']").val(item.original_path);
+                    $("input[name='img_url2']").val(item.file_path);
+                })
+            }
+        })
 
         //执行实例
         var uploadInst = upload.render({

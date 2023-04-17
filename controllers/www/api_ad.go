@@ -56,7 +56,7 @@ func (this *ApiAdController) Paginate() {
  * @param {int64} ad_id 广告ID
  * @return {*}
  */
-// @router /api/link/click [get]
+// @router /api/ad/click [get]
 func (this *ApiAdController) Click() {
 	ad_id, _ := this.GetInt64("ad_id", 0)
 	err := this.BaseController.AdClick(ad_id)
