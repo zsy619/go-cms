@@ -117,3 +117,251 @@ function ArticleClick(articleId, callIndex) {
         }
     });
 }
+
+
+function layopenB(title, content, table) {
+    var heigth_screen = window.screen.height;
+    var width_screen = window.screen.width;
+
+    if (heigth_screen > 800) {
+        heigth_screen = "600px";
+    } else {
+        heigth_screen = "400px";
+    }
+
+    if (width_screen > 1200) {
+        width_screen = "1100px";
+    } else {
+        width_screen = "600px";
+    }
+
+
+    layer.open({
+        title: [title, "color:#fff;background-color:#1E9FFF ;"],
+        type: 2,
+        shade: 0.2,
+        maxmin: true,
+        shadeClose: true,
+        area: [width_screen, heigth_screen],
+        content: content,
+        end: function () {
+            if (table) {
+                table.reload('currentTableId');
+            }
+        }
+    });
+}
+
+function layopen(title, content, table) {
+    layer.open({
+        title: [title, "color:#fff;background-color:#1E9FFF ;"],
+        type: 2,
+        shade: 0.2,
+        maxmin: true,
+        shadeClose: true,
+        area: ['100%', '100%'],
+        content: content,
+        end: function () {
+            if (table) {
+                table.reload('currentTableId');
+            }
+        }
+    });
+}
+
+function laydel(url, data, obj) {
+    layer.confirm('确认要删除吗？', function (index) {
+        $.ajax({
+            url: url,
+            headers: { "X-CSRF-Token": csrf, },
+            type: "DELETE",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (data) {
+                if (data.code == 200) {
+                    obj.del();
+                    layer.msg('删除成功!', { icon: 1, time: 1000 });
+                } else {
+                    layer.msg(data.msg, { icon: 2 })
+                    return false;
+                }
+            },
+            beforeSend: function () {
+                layer.load();
+            },
+            complete: function () {
+                layer.closeAll('loading');
+            }
+        });
+    });
+}
+
+function laybatch_del(url, data, obj) {
+    $.ajax({
+        url: url,
+        headers: { "X-CSRF-Token": csrf, },
+        type: "DELETE",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify(data)
+    });
+
+}
+
+function laybatch_recove(url, type, data) {
+    $.ajax({
+        url: url,
+        type: type,
+        contentType: "application/json; charset=utf-8",
+        headers: {
+            "X-CSRF-Token": csrf,
+        },
+        dataType: "json",
+        data: JSON.stringify(data),
+
+    });
+}
+
+function layajax(url, type, data) {
+    $.ajax({
+        url: url,
+        type: type,
+        contentType: "application/json; charset=utf-8",
+        headers: {
+            "X-CSRF-Token": csrf,
+        },
+        dataType: "json",
+        data: JSON.stringify(data),
+        success: function (data) {
+            if (data.code == 200) {
+                layer.msg(data.msg, { icon: 6 });
+            } else {
+                layer.msg(data.msg, { icon: 5 })
+                return
+            }
+        },
+        beforeSend: function () {
+            layer.load();
+        },
+        complete: function () {
+            layer.closeAll('loading');
+        }
+    });
+}
+
+function layopen_ajax(url, type, data) {
+    delete data.type;
+    $.ajax({
+        url: url,
+        type: type,
+        contentType: "application/json; charset=utf-8",
+        headers: {
+            "X-CSRF-Token": csrf,
+        },
+        dataType: "json",
+        data: JSON.stringify(data),
+        success: function (data) {
+            if (data.code == 200) {
+                var msg = layer.alert(data.msg, { icon: 6 },
+                    function () {
+                        layer.close(msg);
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                    });
+            } else {
+                layer.alert(data.msg, { icon: 5 })
+                return
+            }
+        },
+        beforeSend: function () {
+            layer.load();
+        },
+        complete: function () {
+            layer.closeAll('loading');
+        }
+    });
+}
+
+function laydraft_ajax(url, type, data) {
+    delete data.type;
+    data.is_show = 2;
+    $.ajax({
+        url: url,
+        type: type,
+        contentType: "application/json; charset=utf-8",
+        headers: {
+            "X-CSRF-Token": csrf,
+        },
+        dataType: "json",
+        data: JSON.stringify(data),
+        success: function (data) {
+            if (data.code == 200) {
+                layer.msg("保存成功", { icon: 1 })
+                $("#id").val(data.msg);
+                $("#type").val("PUT");
+                // 更改返回的ID，和属性
+            } else {
+                layer.msg(data.msg, { icon: 5 })
+                return
+            }
+        },
+        beforeSend: function () {
+            layer.load();
+        },
+        complete: function () {
+            layer.closeAll('loading');
+        }
+    });
+}
+
+function now_date() {
+    var d = new Date(),
+        str = '';
+    str += d.getFullYear() + '年'; //获取当前年份 
+    str += d.getMonth() + 1 + '月'; //获取当前月份（0——11） 
+    str += d.getDate() + '日';
+
+    return str;
+}
+
+function time_parse(date) {
+    var d = new Date(date),
+        str = '';
+    str += d.getFullYear() + '年'; //获取当前年份 
+    str += d.getMonth() + 1 + '月'; //获取当前月份（0——11） 
+    str += d.getDate() + '日';
+
+    return str;
+}
+
+function time_parse_hms(date) {
+    var d = new Date(date),
+        str = '';
+    str += d.getFullYear() + '年'; //获取当前年份 
+    str += d.getMonth() + 1 + '月'; //获取当前月份（0——11） 
+    str += d.getDate() + '日';
+    str += " ";
+    str += d.getHours() + '时';
+    str += d.getMinutes() + '分';
+    str += d.getSeconds() + '秒';
+
+    return str;
+}
+
+function show_search() {
+    var search = $('#show_search');
+    if (search.is(':hidden')) {
+        search.show();
+    } else {
+        search.hide();
+    }
+}
+
+function refresh(table) {
+    if (table) {
+        table.reload('currentTableId');
+        return
+    }
+    location.reload()
+}

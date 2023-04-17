@@ -65,7 +65,8 @@ func (this *WechatMpController) Signature() {
 		}
 		break
 	case "POST":
-
+		this.Message()
+		break
 	}
 	this.StopRun()
 }
@@ -85,4 +86,16 @@ func (this *WechatMpController) Message() {
 		return
 	}
 	fmt.Println(account)
+
+	method := this.Ctx.Request.Method
+	switch method {
+	case "GET":
+		this.Signature()
+		break
+	case "POST":
+		{
+		}
+		break
+	}
+	this.StopRun()
 }

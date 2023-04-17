@@ -8,6 +8,11 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
+
+	"github.com/beego/beego/v2/core/logs"
+	"haedu.gov.cn/cms/app/biz"
+	"haedu.gov.cn/cms/app/dal/model"
+	"haedu.gov.cn/cms/app/lib"
 )
 
 var UEditorConfig = map[string]interface{}{
@@ -134,14 +139,14 @@ func (ue *UEditorController) Handle() {
 	// 	}
 	// 	fmt.Fprint(ue.Ctx.ResponseWriter, string(tt))
 	case "image":
-		ue.UploadFileX(UEditorConfig["imageFieldName"].(string), UEditorConfig["imageAllowFiles"].([]string), "不支持的图片格式", UEditorConfig["imagePathFormat"].(string)[1:])
+		ue.UploadFileX(op, UEditorConfig["imageFieldName"].(string), UEditorConfig["imageAllowFiles"].([]string), "不支持的图片格式", UEditorConfig["imagePathFormat"].(string)[1:])
 	case "listImage":
 		// 列出图片
 		ue.ListFileX("."+UEditorConfig["imagePathFormat"].(string), UEditorConfig["imageAllowFiles"].([]string))
 	case "video":
-		ue.UploadFileX(UEditorConfig["videoFieldName"].(string), UEditorConfig["videoAllowFiles"].([]string), "不支持的视频格式", UEditorConfig["videoPathFormat"].(string)[1:])
+		ue.UploadFileX(op, UEditorConfig["videoFieldName"].(string), UEditorConfig["videoAllowFiles"].([]string), "不支持的视频格式", UEditorConfig["videoPathFormat"].(string)[1:])
 	case "file":
-		ue.UploadFileX(UEditorConfig["fileFieldName"].(string), UEditorConfig["fileAllowFiles"].([]string), "不支持的文件格式", UEditorConfig["filePathFormat"].(string)[1:])
+		ue.UploadFileX(op, UEditorConfig["fileFieldName"].(string), UEditorConfig["fileAllowFiles"].([]string), "不支持的文件格式", UEditorConfig["filePathFormat"].(string)[1:])
 	case "listFile":
 		// 列出文件
 		ue.ListFileX("."+UEditorConfig["filePathFormat"].(string), UEditorConfig["fileAllowFiles"].([]string))
@@ -155,7 +160,7 @@ func (ue *UEditorController) Handle() {
 	}
 }
 
-func (ue *UEditorController) UploadFileX(fieldName string, exts []string, extsMsg, filePath string) {
+func (ue *UEditorController) UploadFileX(op string, fieldName string, exts []string, extsMsg, filePath string) {
 	file, h, err := ue.Ctx.Request.FormFile("file")
 	if err != nil {
 		fmt.Println(err.Error())
@@ -186,6 +191,48 @@ func (ue *UEditorController) UploadFileX(fieldName string, exts []string, extsMs
 		"original": h.Filename,
 		"type":     h.Header.Get("Content-Type"),
 	}
+
+	// 保存到数据库
+	{
+		if op == "images" {
+			mdl := model.CmsAlbum{
+				TableName_:   op,
+				RecordID:     0,
+				TypeID:       0,
+				Title:        h.Filename,
+				ThumbPath:    lib.C_LOCAL_DOMAIN_Backslash() + fileName,
+				OriginalPath: "/" + fileName,
+				FilePath:     lib.C_LOCAL_DOMAIN_Backslash() + fileName,
+				FileSize:     h.Size,
+				FileExt:      ext,
+				LinkURL:      "",
+				Click:        0,
+				IsShow:       1,
+				CreateID:     int32(GlobalAdminId),
+			}
+			if err := biz.NewCmsAlbum().AlbumSave(&mdl); err != nil {
+				logs.Error("UploadFileX AlbumSave", err.Error())
+			}
+		} else {
+			mdl := model.CmsAttach{
+				TableName_:   op,
+				RecordID:     0,
+				TypeID:       0,
+				Title:        filename,
+				FilePath:     lib.C_LOCAL_DOMAIN_Backslash() + fileName,
+				OriginalPath: "/" + fileName,
+				FileSize:     h.Size,
+				FileExt:      ext,
+				Click:        0,
+				IsShow:       1,
+				CreateID:     int32(GlobalAdminId),
+			}
+			if err := biz.NewCmsAttach().AttachSave(&mdl); err != nil {
+				logs.Error("UploadFileX AttachSave", err.Error())
+			}
+		}
+	}
+
 	json, _ := json.Marshal(ret_json)
 	fmt.Fprintf(ue.Ctx.ResponseWriter, string(json))
 }

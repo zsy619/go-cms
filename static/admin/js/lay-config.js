@@ -29,4 +29,5 @@ layui.config({
     layarea: 'layarea/layarea', //  省市县区三级联动下拉选择器
     treeSelect: 'treeSelect/treeSelect', // 树选择器
     treeSelect2: 'treeSelect2/treeSelect2', // 树选择器
+    fileManager: 'fileManager/fileManager', // 文件管理器
 });

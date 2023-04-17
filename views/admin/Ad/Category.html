@@ -1,0 +1,210 @@
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <fieldset class="table-search-fieldset">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">
+                                类别标题
+                            </label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="title" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">
+                                调用别名
+                            </label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="callIndex" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="submit" class="layui-btn layui-btn-primary layui-btn-radius" lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+    </div>
+</div>
+{{template "admin/Public/Button.html" }}
+<script>
+    layui.use(['form', 'table'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table;
+
+        table.render({
+            elem: '#currentTableId',
+            url: '/admin/ad/categorypaginate',
+            toolbar: '#toolbarDemo',
+            height: "full-170",
+            defaultToolbar: ['filter', 'exports', 'print'],
+            cols: [[
+                // { type: "checkbox", width: 50 },
+                { field: 'category_id', width: 80, title: 'ID', sort: true },
+                { field: 'title', title: '类别标题' },
+                { field: 'call_index', minWidth: 150, title: '调用别名', sort: true },
+                {
+                    field: 'remark', title: '描述'
+                },
+                {
+                    field: 'sort_id', width: 100, align: "center", title: '排序', templet: function (d) {
+                        return '<input type="number" name="sort_id" category_id="' + d.category_id + '" value="' + d.sort_id + '" class="layui-input" style="" />';
+                    }
+                },
+                { title: '操作', width: 150, toolbar: '#currentTableBar', align: "center", fixed: "right" }
+            ]],
+            limits: [10, 15, 20, 25, 50, 100],
+            limit: 20,
+            page: true,
+            // skin: 'line',
+            even: true,
+            size: 'lg',
+            done: function () {
+                $(".layui-table-main tr").each(function (index, val) {
+                    $(".layui-table-fixed").each(function () {
+                        $($(this).find(".layui-table-body tbody tr")[index]).height($(val).height());
+                    });
+                });
+                $(".layui-table-header tr").each(function (index, val) {
+                    $(".layui-table-fixed").each(function () {
+                        $($(this).find(".layui-table-header thead tr")[index]).height($(val).height());
+                    });
+                });
+            }
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            var result = JSON.stringify(data.field);
+            console.log(result);
+            //执行搜索重载
+            table.reload('currentTableId', {
+                page: {
+                    curr: 1
+                }
+                , where: {
+                    title: $("input[name='title']").val(),
+                    callIndex: $("input[name='callIndex']").val(),
+                }
+            }, 'data');
+
+            return false;
+        });
+
+        /**
+         * toolbar监听事件
+         */
+        table.on('toolbar(currentTableFilter)', function (obj) {
+            if (obj.event === 'add') {  // 监听添加操作
+                var index = layer.open({
+                    title: '添加',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin: true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: 'CategoryEdit',
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+            } else if (obj.event === 'save') {  // 监听保存操作
+                var sorts = [];
+                $("input[name='sort_id']").each(function () {
+                    var sort = {
+                        category_id: parseInt($(this).attr("category_id")),
+                        sort_id: parseInt($(this).val())
+                    };
+                    sorts.push(sort);
+                });
+                console.log(sorts);
+                $.ajax({
+                    type: "POST",
+                    url: "/admin/ad/CategorySaveSortId", //提交的地址
+                    data: JSON.stringify(sorts),
+                    async: false,
+                    beforeSend: function () { //当一个Ajax请求开始时触发
+                        this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+                    },
+                    error: function (request) {  //失败的话
+                    },
+                    success: function (data) {  //成功
+                        if (data.code == CodeSuccess) {
+                            layer.msg("提交成功", { icon: 1, time: 1000 }, function () {
+                                $('button[lay-filter="data-search-btn"]').click();
+                            });
+                        } else {
+                            layer.msg(data.msg, { icon: 2, time: 1000 });
+                        }
+                    },
+                    complete: function () {
+                        layer.close(this.layerIndex);
+                    },
+                });
+            }
+        });
+
+        //监听表格复选框选择
+        table.on('checkbox(currentTableFilter)', function (obj) {
+            console.log(obj)
+        });
+
+        table.on('tool(currentTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'edit') {
+                console.log(data);
+                var index = layer.open({
+                    title: '编辑',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin: true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: 'CategoryEdit?categoryId=' + data.category_id,
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            } else if (obj.event === 'delete') {
+                layer.confirm('真的删除行么', function (index) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/admin/ad/CategoryDestory", //提交的地址
+                        data: {
+                            "categoryId": data.category_id
+                        },
+                        async: false,
+                        beforeSend: function () { //当一个Ajax请求开始时触发
+                            this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+                        },
+                        error: function (request) {  //失败的话
+                        },
+                        success: function (data) {  //成功
+                            if (data.code == CodeSuccess) {
+                                layer.msg("提交成功", { icon: 1, time: 1000 }, function () {
+                                    $('button[lay-filter="data-search-btn"]').click();
+                                });
+                            } else {
+                                layer.msg(data.msg, { icon: 2, time: 1000 });
+                            }
+                        },
+                        complete: function () {
+                            layer.closeAll();
+                            layer.close(this.layerIndex);
+                        },
+                    });
+                    // obj.del();
+                    // layer.close(index);
+                });
+            }
+        });
+
+    });
+</script>

@@ -151,3 +151,21 @@ func PlgOnlineRegisterDo() (plgOnlineRegister, *plgOnlineRegisterDo) {
 	u := Use(dal.CmsDatabase.DB).PlgOnlineRegister
 	return u, u.WithContext(defaultContext).Debug()
 }
+
+// CmsAdCategoryDo
+func CmsAdCategoryDo() (cmsAdCategory, *cmsAdCategoryDo) {
+	u := Use(dal.CmsDatabase.DB).CmsAdCategory
+	return u, u.WithContext(defaultContext).Debug()
+}
+
+// CmsAdCategoryRelationDo
+func CmsAdCategoryRelationDo() (cmsAdCategoryRelation, *cmsAdCategoryRelationDo) {
+	u := Use(dal.CmsDatabase.DB).CmsAdCategoryRelation
+	return u, u.WithContext(defaultContext).Debug()
+}
+
+// CmsAdDo
+func CmsAdDo() (cmsAd, *cmsAdDo) {
+	u := Use(dal.CmsDatabase.DB).CmsAd
+	return u, u.WithContext(defaultContext).Debug()
+}

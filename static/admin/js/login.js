@@ -5,12 +5,30 @@ layui.use(['form'], function () {
     // 登录过期的时候，跳出ifram框架
     if (top.location != self.location) top.location = self.location;
 
+    $('.bind-password').on('click', function () {
+        if ($(this).hasClass('icon-5')) {
+            $(this).removeClass('icon-5');
+            $("input[name='password']").attr('type', 'password');
+        } else {
+            $(this).addClass('icon-5');
+            $("input[name='password']").attr('type', 'text');
+        }
+    });
+
+    $('.icon-nocheck').on('click', function () {
+        if ($(this).hasClass('icon-check')) {
+            $(this).removeClass('icon-check');
+        } else {
+            $(this).addClass('icon-check');
+        }
+    });
+
     // 粒子线条背景
     $(document).ready(function () {
-        $('.layui-container').particleground({
-            dotColor: '#7ec7fd',
-            lineColor: '#7ec7fd'
-        });
+        // $('.layui-container').particleground({
+        //     dotColor: '#7ec7fd',
+        //     lineColor: '#7ec7fd'
+        // });
     });
 
     // 进行登录操作
@@ -37,7 +55,7 @@ layui.use(['form'], function () {
                 this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
             },
             success: function (data) {
-                console.log(data);
+                // console.log(data);
                 switch (data.code) {
                     case 1:
                         layer.msg(data.msg, { icon: 5 });//失败的表情

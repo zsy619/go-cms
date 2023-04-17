@@ -17,6 +17,9 @@ import (
 
 var (
 	Q                          = new(Query)
+	CmsAd                      *cmsAd
+	CmsAdCategory              *cmsAdCategory
+	CmsAdCategoryRelation      *cmsAdCategoryRelation
 	CmsAdmin                   *cmsAdmin
 	CmsAdminLog                *cmsAdminLog
 	CmsAdminNav                *cmsAdminNav
@@ -46,6 +49,9 @@ var (
 
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	*Q = *Use(db, opts...)
+	CmsAd = &Q.CmsAd
+	CmsAdCategory = &Q.CmsAdCategory
+	CmsAdCategoryRelation = &Q.CmsAdCategoryRelation
 	CmsAdmin = &Q.CmsAdmin
 	CmsAdminLog = &Q.CmsAdminLog
 	CmsAdminNav = &Q.CmsAdminNav
@@ -76,6 +82,9 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
 		db:                         db,
+		CmsAd:                      newCmsAd(db, opts...),
+		CmsAdCategory:              newCmsAdCategory(db, opts...),
+		CmsAdCategoryRelation:      newCmsAdCategoryRelation(db, opts...),
 		CmsAdmin:                   newCmsAdmin(db, opts...),
 		CmsAdminLog:                newCmsAdminLog(db, opts...),
 		CmsAdminNav:                newCmsAdminNav(db, opts...),
@@ -107,6 +116,9 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 type Query struct {
 	db *gorm.DB
 
+	CmsAd                      cmsAd
+	CmsAdCategory              cmsAdCategory
+	CmsAdCategoryRelation      cmsAdCategoryRelation
 	CmsAdmin                   cmsAdmin
 	CmsAdminLog                cmsAdminLog
 	CmsAdminNav                cmsAdminNav
@@ -139,6 +151,9 @@ func (q *Query) Available() bool { return q.db != nil }
 func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
 		db:                         db,
+		CmsAd:                      q.CmsAd.clone(db),
+		CmsAdCategory:              q.CmsAdCategory.clone(db),
+		CmsAdCategoryRelation:      q.CmsAdCategoryRelation.clone(db),
 		CmsAdmin:                   q.CmsAdmin.clone(db),
 		CmsAdminLog:                q.CmsAdminLog.clone(db),
 		CmsAdminNav:                q.CmsAdminNav.clone(db),
@@ -178,6 +193,9 @@ func (q *Query) WriteDB() *Query {
 func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 	return &Query{
 		db:                         db,
+		CmsAd:                      q.CmsAd.replaceDB(db),
+		CmsAdCategory:              q.CmsAdCategory.replaceDB(db),
+		CmsAdCategoryRelation:      q.CmsAdCategoryRelation.replaceDB(db),
 		CmsAdmin:                   q.CmsAdmin.replaceDB(db),
 		CmsAdminLog:                q.CmsAdminLog.replaceDB(db),
 		CmsAdminNav:                q.CmsAdminNav.replaceDB(db),
@@ -207,6 +225,9 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 }
 
 type queryCtx struct {
+	CmsAd                      *cmsAdDo
+	CmsAdCategory              *cmsAdCategoryDo
+	CmsAdCategoryRelation      *cmsAdCategoryRelationDo
 	CmsAdmin                   *cmsAdminDo
 	CmsAdminLog                *cmsAdminLogDo
 	CmsAdminNav                *cmsAdminNavDo
@@ -236,6 +257,9 @@ type queryCtx struct {
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
+		CmsAd:                      q.CmsAd.WithContext(ctx),
+		CmsAdCategory:              q.CmsAdCategory.WithContext(ctx),
+		CmsAdCategoryRelation:      q.CmsAdCategoryRelation.WithContext(ctx),
 		CmsAdmin:                   q.CmsAdmin.WithContext(ctx),
 		CmsAdminLog:                q.CmsAdminLog.WithContext(ctx),
 		CmsAdminNav:                q.CmsAdminNav.WithContext(ctx),

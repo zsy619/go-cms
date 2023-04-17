@@ -41,6 +41,11 @@ func init() {
 
 	web.Router("/", &IndexController{}, "*:Index")
 
+	web.Router("/channel/:name", &ChannelController{}, "*:Index")              // 频道首页
+	web.Router("/:name", &ChannelController{}, "*:Index")                      // 频道首页
+	web.Router("/channel/:name/:category", &ChannelController{}, "*:Category") // 频道分类
+	web.Router("/:name/:category", &ChannelController{}, "*:Category")         // 频道分类
+
 	// web.Include(&ArticleController{})
 
 	web.Router("/article/detail/:article_id", &ArticleController{}, "*:Detail")   // 文章详情

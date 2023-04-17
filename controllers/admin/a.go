@@ -15,6 +15,7 @@ func init() {
 	web.Router("cms/admin/login/verify", &LoginController{}, "*:AdminLoginVerify")
 
 	web.AutoPrefix("admin", &ToolsController{})
+	web.AutoPrefix("admin", &FileController{})
 	web.AutoPrefix("admin", &UEditorController{})
 
 	web.Router("admin/index", &IndexController{}, "*:Index")
@@ -28,6 +29,7 @@ func init() {
 	web.AutoPrefix("admin", &SiteController{})
 	web.AutoPrefix("admin", &IndexController{})
 	web.AutoPrefix("admin", &LinkController{})
+	web.AutoPrefix("admin", &AdController{})
 	web.AutoPrefix("admin", &AdminController{})
 	web.AutoPrefix("admin", &ArticleController{})
 	web.AutoPrefix("admin", &MenuController{})

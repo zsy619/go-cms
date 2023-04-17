@@ -10,6 +10,17 @@ import (
 // ArticleController 文章控制器
 type ArticleController struct{ BaseController }
 
+// Index 文章首页
+// @router /article/:name:string/:call_index:string/:article_id:int64 [get]
+func (c *ArticleController) Index() {
+	name := c.Ctx.Input.Param(":name")             // 频道名称
+	call_index := c.Ctx.Input.Param(":call_index") // 栏目别名
+	article_id := c.Ctx.Input.Param(":article_id") // 文章ID
+	fmt.Println("name:", name)
+	fmt.Println("call_index:", call_index)
+	fmt.Println("article_id:", article_id)
+}
+
 // Detail 文章详情
 // @router /article/detail/:article_id:int64 [get]
 func (c *ArticleController) Detail() {

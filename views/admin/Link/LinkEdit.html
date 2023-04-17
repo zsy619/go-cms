@@ -29,7 +29,7 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label required">调用别名</label>
+                        <label class="layui-form-label">调用别名</label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="text" name="call_index" value="{{.mdl.CallIndex}}" lay-verify="call_index" autocomplete="off" placeholder="" class="layui-input">
                         </div>
@@ -113,7 +113,7 @@
         //执行实例
         var uploadInst = upload.render({
             elem: '#btnUpload' //绑定元素
-            , url: '/admin/tools/ImageUpload' //上传接口
+            , url: '/admin/tools/ImageUpload?path=link' //上传接口
             , done: function (res) {
                 //上传完毕回调
                 if (res.code == 0) {
@@ -164,12 +164,16 @@
 
         //自定义验证规则
         form.verify({
-            call_index: [/^[a-zA-Z0-9\-\_]{2,50}$/, '请填写正确的调用别名']
+            call_index: function (value, item) {
+                var exp = /^[a-zA-Z0-9\-\_]{2,50}$/;
+                if (value && !exp.test(value)) {
+                    return '请填写正确的调用别名';
+                }
+            },
         });
 
         // 提交事件
         form.on('submit(*)', function (data) {
-            console.log(data)
             // alert(JSON.stringify(data.field));
             return false;
         });

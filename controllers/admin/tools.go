@@ -13,6 +13,8 @@ import (
 	"time"
 
 	"github.com/beego/beego/v2/core/logs"
+	"haedu.gov.cn/cms/app/biz"
+	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/lib"
 )
 
@@ -80,8 +82,12 @@ func (c *ToolsController) ImageUpload() {
 	// 生成唯一的文件名
 	filename := generateFilename(ext)
 	pth := c.GetString("path")
+	table := c.GetString("table")
 	if pth == "" {
 		pth = "images"
+	}
+	if table == "" {
+		table = pth
 	}
 	// 保存上传的文件到指定目录
 	uploadDir := "Uploads/" + pth + "/" + time.Now().Format("2006/01/")
@@ -108,6 +114,29 @@ func (c *ToolsController) ImageUpload() {
 	result.File.Name2 = filename
 	result.File.Url1 = "/" + uploadDir + filename
 	result.File.Url2 = lib.C_LOCAL_DOMAIN_Backslash() + uploadDir + filename
+
+	// 保存到数据库
+	{
+		mdl := model.CmsAlbum{
+			TableName_:   table,
+			RecordID:     0,
+			TypeID:       0,
+			Title:        filename,
+			ThumbPath:    result.File.Url2,
+			OriginalPath: result.File.Url1,
+			FilePath:     result.File.Url2,
+			FileSize:     result.File.Size,
+			FileExt:      result.File.Ext,
+			LinkURL:      "",
+			Click:        0,
+			IsShow:       1,
+			CreateID:     int32(GlobalAdminId),
+		}
+		if err := biz.NewCmsAlbum().AlbumSave(&mdl); err != nil {
+			logs.Error("ImageUpload AlbumSave", err.Error())
+		}
+	}
+
 	c.Data["json"] = result
 	c.ServeJSON()
 }
@@ -151,8 +180,12 @@ func (c *ToolsController) Upload() {
 	// 生成唯一的文件名
 	filename := generateFilename(ext)
 	pth := c.GetString("path")
+	table := c.GetString("table")
 	if pth == "" {
 		pth = "files"
+	}
+	if table == "" {
+		table = pth
 	}
 	// 保存上传的文件到指定目录
 	uploadDir := "Uploads/" + pth + "/" + time.Now().Format("2006/01/")
@@ -179,6 +212,27 @@ func (c *ToolsController) Upload() {
 	result.File.Name2 = filename
 	result.File.Url1 = "/" + uploadDir + filename
 	result.File.Url2 = lib.C_LOCAL_DOMAIN_Backslash() + uploadDir + filename
+
+	// 保存到数据库
+	{
+		mdl := model.CmsAttach{
+			TableName_:   table,
+			RecordID:     0,
+			TypeID:       0,
+			Title:        filename,
+			FilePath:     result.File.Url2,
+			OriginalPath: result.File.Url1,
+			FileSize:     result.File.Size,
+			FileExt:      result.File.Ext,
+			Click:        0,
+			IsShow:       1,
+			CreateID:     int32(GlobalAdminId),
+		}
+		if err := biz.NewCmsAttach().AttachSave(&mdl); err != nil {
+			logs.Error("Upload AttachSave", err.Error())
+		}
+	}
+
 	c.Data["json"] = result
 	c.ServeJSON()
 }
@@ -222,6 +276,31 @@ func (c *ToolsController) KindEditorUpload() {
 		return
 	}
 	outPath := lib.C_LOCAL_DOMAIN_Backslash() + strings.ReplaceAll(targetPath, "\\", "/")
+	table := c.GetString("table")
+	if table == "" {
+		table = "images"
+	}
+	// 保存到数据库
+	{
+		mdl := model.CmsAlbum{
+			TableName_:   table,
+			RecordID:     0,
+			TypeID:       0,
+			Title:        filename,
+			ThumbPath:    outPath,
+			OriginalPath: targetPath,
+			FilePath:     outPath,
+			FileSize:     header.Size,
+			FileExt:      ext,
+			LinkURL:      "",
+			Click:        0,
+			IsShow:       1,
+			CreateID:     int32(GlobalAdminId),
+		}
+		if err := biz.NewCmsAlbum().AlbumSave(&mdl); err != nil {
+			logs.Error("KindEditorUpload AlbumSave", err.Error())
+		}
+	}
 	// 返回上传结果
 	result := "{\"error\": 0, \"url\": \"" + outPath + "\"}"
 	fmt.Fprintln(c.Ctx.ResponseWriter, result)
