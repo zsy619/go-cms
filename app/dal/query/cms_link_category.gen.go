@@ -41,6 +41,7 @@ func newCmsLinkCategory(db *gorm.DB, opts ...gen.DOOption) cmsLinkCategory {
 	_cmsLinkCategory.SeoDescription = field.NewString(tableName, "seo_description")
 	_cmsLinkCategory.Content = field.NewString(tableName, "content")
 	_cmsLinkCategory.SortID = field.NewInt32(tableName, "sort_id")
+	_cmsLinkCategory.Template = field.NewString(tableName, "template")
 	_cmsLinkCategory.BelongTo = field.NewString(tableName, "belong_to")
 	_cmsLinkCategory.CreateID = field.NewInt32(tableName, "create_id")
 	_cmsLinkCategory.CreateName = field.NewString(tableName, "create_name")
@@ -72,6 +73,7 @@ type cmsLinkCategory struct {
 	SeoDescription field.String // SEO描述
 	Content        field.String // 详细内容
 	SortID         field.Int32  // 排序
+	Template       field.String // 模板路径
 	BelongTo       field.String // 归属
 	CreateID       field.Int32  // 创建人ID
 	CreateName     field.String // 创建人姓名
@@ -109,6 +111,7 @@ func (c *cmsLinkCategory) updateTableName(table string) *cmsLinkCategory {
 	c.SeoDescription = field.NewString(table, "seo_description")
 	c.Content = field.NewString(table, "content")
 	c.SortID = field.NewInt32(table, "sort_id")
+	c.Template = field.NewString(table, "template")
 	c.BelongTo = field.NewString(table, "belong_to")
 	c.CreateID = field.NewInt32(table, "create_id")
 	c.CreateName = field.NewString(table, "create_name")
@@ -140,7 +143,7 @@ func (c *cmsLinkCategory) GetFieldByName(fieldName string) (field.OrderExpr, boo
 }
 
 func (c *cmsLinkCategory) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 21)
+	c.fieldMap = make(map[string]field.Expr, 22)
 	c.fieldMap["category_id"] = c.CategoryID
 	c.fieldMap["parent_id"] = c.ParentID
 	c.fieldMap["site_id"] = c.SiteID
@@ -155,6 +158,7 @@ func (c *cmsLinkCategory) fillFieldMap() {
 	c.fieldMap["seo_description"] = c.SeoDescription
 	c.fieldMap["content"] = c.Content
 	c.fieldMap["sort_id"] = c.SortID
+	c.fieldMap["template"] = c.Template
 	c.fieldMap["belong_to"] = c.BelongTo
 	c.fieldMap["create_id"] = c.CreateID
 	c.fieldMap["create_name"] = c.CreateName

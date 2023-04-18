@@ -17,14 +17,14 @@ import (
 
 var (
 	Q                          = new(Query)
-	CmsAd                      *cmsAd
-	CmsAdCategory              *cmsAdCategory
-	CmsAdCategoryRelation      *cmsAdCategoryRelation
 	CmsAdmin                   *cmsAdmin
 	CmsAdminLog                *cmsAdminLog
 	CmsAdminNav                *cmsAdminNav
 	CmsAdminRole               *cmsAdminRole
 	CmsAdminRoleValue          *cmsAdminRoleValue
+	CmsAds                     *cmsAds
+	CmsAdsCategory             *cmsAdsCategory
+	CmsAdsCategoryRelation     *cmsAdsCategoryRelation
 	CmsAlbum                   *cmsAlbum
 	CmsArticle                 *cmsArticle
 	CmsArticleCategory         *cmsArticleCategory
@@ -39,6 +39,8 @@ var (
 	CmsSiteChannel             *cmsSiteChannel
 	CmsSiteChannelField        *cmsSiteChannelField
 	CmsSiteDomain              *cmsSiteDomain
+	CmsTag                     *cmsTag
+	CmsTopic                   *cmsTopic
 	PlgOnlineRegister          *plgOnlineRegister
 	WeixinAccount              *weixinAccount
 	WeixinMenu                 *weixinMenu
@@ -49,14 +51,14 @@ var (
 
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	*Q = *Use(db, opts...)
-	CmsAd = &Q.CmsAd
-	CmsAdCategory = &Q.CmsAdCategory
-	CmsAdCategoryRelation = &Q.CmsAdCategoryRelation
 	CmsAdmin = &Q.CmsAdmin
 	CmsAdminLog = &Q.CmsAdminLog
 	CmsAdminNav = &Q.CmsAdminNav
 	CmsAdminRole = &Q.CmsAdminRole
 	CmsAdminRoleValue = &Q.CmsAdminRoleValue
+	CmsAds = &Q.CmsAds
+	CmsAdsCategory = &Q.CmsAdsCategory
+	CmsAdsCategoryRelation = &Q.CmsAdsCategoryRelation
 	CmsAlbum = &Q.CmsAlbum
 	CmsArticle = &Q.CmsArticle
 	CmsArticleCategory = &Q.CmsArticleCategory
@@ -71,6 +73,8 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	CmsSiteChannel = &Q.CmsSiteChannel
 	CmsSiteChannelField = &Q.CmsSiteChannelField
 	CmsSiteDomain = &Q.CmsSiteDomain
+	CmsTag = &Q.CmsTag
+	CmsTopic = &Q.CmsTopic
 	PlgOnlineRegister = &Q.PlgOnlineRegister
 	WeixinAccount = &Q.WeixinAccount
 	WeixinMenu = &Q.WeixinMenu
@@ -82,14 +86,14 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
 		db:                         db,
-		CmsAd:                      newCmsAd(db, opts...),
-		CmsAdCategory:              newCmsAdCategory(db, opts...),
-		CmsAdCategoryRelation:      newCmsAdCategoryRelation(db, opts...),
 		CmsAdmin:                   newCmsAdmin(db, opts...),
 		CmsAdminLog:                newCmsAdminLog(db, opts...),
 		CmsAdminNav:                newCmsAdminNav(db, opts...),
 		CmsAdminRole:               newCmsAdminRole(db, opts...),
 		CmsAdminRoleValue:          newCmsAdminRoleValue(db, opts...),
+		CmsAds:                     newCmsAds(db, opts...),
+		CmsAdsCategory:             newCmsAdsCategory(db, opts...),
+		CmsAdsCategoryRelation:     newCmsAdsCategoryRelation(db, opts...),
 		CmsAlbum:                   newCmsAlbum(db, opts...),
 		CmsArticle:                 newCmsArticle(db, opts...),
 		CmsArticleCategory:         newCmsArticleCategory(db, opts...),
@@ -104,6 +108,8 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		CmsSiteChannel:             newCmsSiteChannel(db, opts...),
 		CmsSiteChannelField:        newCmsSiteChannelField(db, opts...),
 		CmsSiteDomain:              newCmsSiteDomain(db, opts...),
+		CmsTag:                     newCmsTag(db, opts...),
+		CmsTopic:                   newCmsTopic(db, opts...),
 		PlgOnlineRegister:          newPlgOnlineRegister(db, opts...),
 		WeixinAccount:              newWeixinAccount(db, opts...),
 		WeixinMenu:                 newWeixinMenu(db, opts...),
@@ -116,14 +122,14 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 type Query struct {
 	db *gorm.DB
 
-	CmsAd                      cmsAd
-	CmsAdCategory              cmsAdCategory
-	CmsAdCategoryRelation      cmsAdCategoryRelation
 	CmsAdmin                   cmsAdmin
 	CmsAdminLog                cmsAdminLog
 	CmsAdminNav                cmsAdminNav
 	CmsAdminRole               cmsAdminRole
 	CmsAdminRoleValue          cmsAdminRoleValue
+	CmsAds                     cmsAds
+	CmsAdsCategory             cmsAdsCategory
+	CmsAdsCategoryRelation     cmsAdsCategoryRelation
 	CmsAlbum                   cmsAlbum
 	CmsArticle                 cmsArticle
 	CmsArticleCategory         cmsArticleCategory
@@ -138,6 +144,8 @@ type Query struct {
 	CmsSiteChannel             cmsSiteChannel
 	CmsSiteChannelField        cmsSiteChannelField
 	CmsSiteDomain              cmsSiteDomain
+	CmsTag                     cmsTag
+	CmsTopic                   cmsTopic
 	PlgOnlineRegister          plgOnlineRegister
 	WeixinAccount              weixinAccount
 	WeixinMenu                 weixinMenu
@@ -151,14 +159,14 @@ func (q *Query) Available() bool { return q.db != nil }
 func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
 		db:                         db,
-		CmsAd:                      q.CmsAd.clone(db),
-		CmsAdCategory:              q.CmsAdCategory.clone(db),
-		CmsAdCategoryRelation:      q.CmsAdCategoryRelation.clone(db),
 		CmsAdmin:                   q.CmsAdmin.clone(db),
 		CmsAdminLog:                q.CmsAdminLog.clone(db),
 		CmsAdminNav:                q.CmsAdminNav.clone(db),
 		CmsAdminRole:               q.CmsAdminRole.clone(db),
 		CmsAdminRoleValue:          q.CmsAdminRoleValue.clone(db),
+		CmsAds:                     q.CmsAds.clone(db),
+		CmsAdsCategory:             q.CmsAdsCategory.clone(db),
+		CmsAdsCategoryRelation:     q.CmsAdsCategoryRelation.clone(db),
 		CmsAlbum:                   q.CmsAlbum.clone(db),
 		CmsArticle:                 q.CmsArticle.clone(db),
 		CmsArticleCategory:         q.CmsArticleCategory.clone(db),
@@ -173,6 +181,8 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		CmsSiteChannel:             q.CmsSiteChannel.clone(db),
 		CmsSiteChannelField:        q.CmsSiteChannelField.clone(db),
 		CmsSiteDomain:              q.CmsSiteDomain.clone(db),
+		CmsTag:                     q.CmsTag.clone(db),
+		CmsTopic:                   q.CmsTopic.clone(db),
 		PlgOnlineRegister:          q.PlgOnlineRegister.clone(db),
 		WeixinAccount:              q.WeixinAccount.clone(db),
 		WeixinMenu:                 q.WeixinMenu.clone(db),
@@ -193,14 +203,14 @@ func (q *Query) WriteDB() *Query {
 func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 	return &Query{
 		db:                         db,
-		CmsAd:                      q.CmsAd.replaceDB(db),
-		CmsAdCategory:              q.CmsAdCategory.replaceDB(db),
-		CmsAdCategoryRelation:      q.CmsAdCategoryRelation.replaceDB(db),
 		CmsAdmin:                   q.CmsAdmin.replaceDB(db),
 		CmsAdminLog:                q.CmsAdminLog.replaceDB(db),
 		CmsAdminNav:                q.CmsAdminNav.replaceDB(db),
 		CmsAdminRole:               q.CmsAdminRole.replaceDB(db),
 		CmsAdminRoleValue:          q.CmsAdminRoleValue.replaceDB(db),
+		CmsAds:                     q.CmsAds.replaceDB(db),
+		CmsAdsCategory:             q.CmsAdsCategory.replaceDB(db),
+		CmsAdsCategoryRelation:     q.CmsAdsCategoryRelation.replaceDB(db),
 		CmsAlbum:                   q.CmsAlbum.replaceDB(db),
 		CmsArticle:                 q.CmsArticle.replaceDB(db),
 		CmsArticleCategory:         q.CmsArticleCategory.replaceDB(db),
@@ -215,6 +225,8 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		CmsSiteChannel:             q.CmsSiteChannel.replaceDB(db),
 		CmsSiteChannelField:        q.CmsSiteChannelField.replaceDB(db),
 		CmsSiteDomain:              q.CmsSiteDomain.replaceDB(db),
+		CmsTag:                     q.CmsTag.replaceDB(db),
+		CmsTopic:                   q.CmsTopic.replaceDB(db),
 		PlgOnlineRegister:          q.PlgOnlineRegister.replaceDB(db),
 		WeixinAccount:              q.WeixinAccount.replaceDB(db),
 		WeixinMenu:                 q.WeixinMenu.replaceDB(db),
@@ -225,14 +237,14 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 }
 
 type queryCtx struct {
-	CmsAd                      *cmsAdDo
-	CmsAdCategory              *cmsAdCategoryDo
-	CmsAdCategoryRelation      *cmsAdCategoryRelationDo
 	CmsAdmin                   *cmsAdminDo
 	CmsAdminLog                *cmsAdminLogDo
 	CmsAdminNav                *cmsAdminNavDo
 	CmsAdminRole               *cmsAdminRoleDo
 	CmsAdminRoleValue          *cmsAdminRoleValueDo
+	CmsAds                     *cmsAdsDo
+	CmsAdsCategory             *cmsAdsCategoryDo
+	CmsAdsCategoryRelation     *cmsAdsCategoryRelationDo
 	CmsAlbum                   *cmsAlbumDo
 	CmsArticle                 *cmsArticleDo
 	CmsArticleCategory         *cmsArticleCategoryDo
@@ -247,6 +259,8 @@ type queryCtx struct {
 	CmsSiteChannel             *cmsSiteChannelDo
 	CmsSiteChannelField        *cmsSiteChannelFieldDo
 	CmsSiteDomain              *cmsSiteDomainDo
+	CmsTag                     *cmsTagDo
+	CmsTopic                   *cmsTopicDo
 	PlgOnlineRegister          *plgOnlineRegisterDo
 	WeixinAccount              *weixinAccountDo
 	WeixinMenu                 *weixinMenuDo
@@ -257,14 +271,14 @@ type queryCtx struct {
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
-		CmsAd:                      q.CmsAd.WithContext(ctx),
-		CmsAdCategory:              q.CmsAdCategory.WithContext(ctx),
-		CmsAdCategoryRelation:      q.CmsAdCategoryRelation.WithContext(ctx),
 		CmsAdmin:                   q.CmsAdmin.WithContext(ctx),
 		CmsAdminLog:                q.CmsAdminLog.WithContext(ctx),
 		CmsAdminNav:                q.CmsAdminNav.WithContext(ctx),
 		CmsAdminRole:               q.CmsAdminRole.WithContext(ctx),
 		CmsAdminRoleValue:          q.CmsAdminRoleValue.WithContext(ctx),
+		CmsAds:                     q.CmsAds.WithContext(ctx),
+		CmsAdsCategory:             q.CmsAdsCategory.WithContext(ctx),
+		CmsAdsCategoryRelation:     q.CmsAdsCategoryRelation.WithContext(ctx),
 		CmsAlbum:                   q.CmsAlbum.WithContext(ctx),
 		CmsArticle:                 q.CmsArticle.WithContext(ctx),
 		CmsArticleCategory:         q.CmsArticleCategory.WithContext(ctx),
@@ -279,6 +293,8 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 		CmsSiteChannel:             q.CmsSiteChannel.WithContext(ctx),
 		CmsSiteChannelField:        q.CmsSiteChannelField.WithContext(ctx),
 		CmsSiteDomain:              q.CmsSiteDomain.WithContext(ctx),
+		CmsTag:                     q.CmsTag.WithContext(ctx),
+		CmsTopic:                   q.CmsTopic.WithContext(ctx),
 		PlgOnlineRegister:          q.PlgOnlineRegister.WithContext(ctx),
 		WeixinAccount:              q.WeixinAccount.WithContext(ctx),
 		WeixinMenu:                 q.WeixinMenu.WithContext(ctx),

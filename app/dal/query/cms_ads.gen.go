@@ -19,53 +19,53 @@ import (
 	"haedu.gov.cn/cms/app/dal/model"
 )
 
-func newCmsAd(db *gorm.DB, opts ...gen.DOOption) cmsAd {
-	_cmsAd := cmsAd{}
+func newCmsAds(db *gorm.DB, opts ...gen.DOOption) cmsAds {
+	_cmsAds := cmsAds{}
 
-	_cmsAd.cmsAdDo.UseDB(db, opts...)
-	_cmsAd.cmsAdDo.UseModel(&model.CmsAd{})
+	_cmsAds.cmsAdsDo.UseDB(db, opts...)
+	_cmsAds.cmsAdsDo.UseModel(&model.CmsAds{})
 
-	tableName := _cmsAd.cmsAdDo.TableName()
-	_cmsAd.ALL = field.NewAsterisk(tableName)
-	_cmsAd.AdID = field.NewInt64(tableName, "ad_id")
-	_cmsAd.SiteID = field.NewInt64(tableName, "site_id")
-	_cmsAd.ChannelID = field.NewInt64(tableName, "channel_id")
-	_cmsAd.CategoryID = field.NewInt64(tableName, "category_id")
-	_cmsAd.Title = field.NewString(tableName, "title")
-	_cmsAd.CallIndex = field.NewString(tableName, "call_index")
-	_cmsAd.LinkURL = field.NewString(tableName, "link_url")
-	_cmsAd.Target = field.NewString(tableName, "target")
-	_cmsAd.ImgUrl1 = field.NewString(tableName, "img_url1")
-	_cmsAd.ImgUrl2 = field.NewString(tableName, "img_url2")
-	_cmsAd.Remark = field.NewString(tableName, "remark")
-	_cmsAd.SortID = field.NewInt32(tableName, "sort_id")
-	_cmsAd.Click = field.NewInt32(tableName, "click")
-	_cmsAd.Status = field.NewInt32(tableName, "status")
-	_cmsAd.IsLock = field.NewInt32(tableName, "is_lock")
-	_cmsAd.IsTop = field.NewInt32(tableName, "is_top")
-	_cmsAd.IsRed = field.NewInt32(tableName, "is_red")
-	_cmsAd.IsHot = field.NewInt32(tableName, "is_hot")
-	_cmsAd.IsSlide = field.NewInt32(tableName, "is_slide")
-	_cmsAd.BeginTime = field.NewTime(tableName, "begin_time")
-	_cmsAd.EndTime = field.NewTime(tableName, "end_time")
-	_cmsAd.BelongTo = field.NewString(tableName, "belong_to")
-	_cmsAd.CreateID = field.NewInt32(tableName, "create_id")
-	_cmsAd.CreateName = field.NewString(tableName, "create_name")
-	_cmsAd.CreateTime = field.NewTime(tableName, "create_time")
-	_cmsAd.UpdateID = field.NewInt32(tableName, "update_id")
-	_cmsAd.UpdateName = field.NewString(tableName, "update_name")
-	_cmsAd.UpdateTime = field.NewTime(tableName, "update_time")
+	tableName := _cmsAds.cmsAdsDo.TableName()
+	_cmsAds.ALL = field.NewAsterisk(tableName)
+	_cmsAds.AdsID = field.NewInt64(tableName, "ads_id")
+	_cmsAds.SiteID = field.NewInt64(tableName, "site_id")
+	_cmsAds.ChannelID = field.NewInt64(tableName, "channel_id")
+	_cmsAds.CategoryID = field.NewInt64(tableName, "category_id")
+	_cmsAds.Title = field.NewString(tableName, "title")
+	_cmsAds.CallIndex = field.NewString(tableName, "call_index")
+	_cmsAds.LinkURL = field.NewString(tableName, "link_url")
+	_cmsAds.Target = field.NewString(tableName, "target")
+	_cmsAds.ImgUrl1 = field.NewString(tableName, "img_url1")
+	_cmsAds.ImgUrl2 = field.NewString(tableName, "img_url2")
+	_cmsAds.Remark = field.NewString(tableName, "remark")
+	_cmsAds.SortID = field.NewInt32(tableName, "sort_id")
+	_cmsAds.Click = field.NewInt32(tableName, "click")
+	_cmsAds.Status = field.NewInt32(tableName, "status")
+	_cmsAds.IsLock = field.NewInt32(tableName, "is_lock")
+	_cmsAds.IsTop = field.NewInt32(tableName, "is_top")
+	_cmsAds.IsRed = field.NewInt32(tableName, "is_red")
+	_cmsAds.IsHot = field.NewInt32(tableName, "is_hot")
+	_cmsAds.IsSlide = field.NewInt32(tableName, "is_slide")
+	_cmsAds.BeginTime = field.NewTime(tableName, "begin_time")
+	_cmsAds.EndTime = field.NewTime(tableName, "end_time")
+	_cmsAds.BelongTo = field.NewString(tableName, "belong_to")
+	_cmsAds.CreateID = field.NewInt32(tableName, "create_id")
+	_cmsAds.CreateName = field.NewString(tableName, "create_name")
+	_cmsAds.CreateTime = field.NewTime(tableName, "create_time")
+	_cmsAds.UpdateID = field.NewInt32(tableName, "update_id")
+	_cmsAds.UpdateName = field.NewString(tableName, "update_name")
+	_cmsAds.UpdateTime = field.NewTime(tableName, "update_time")
 
-	_cmsAd.fillFieldMap()
+	_cmsAds.fillFieldMap()
 
-	return _cmsAd
+	return _cmsAds
 }
 
-type cmsAd struct {
-	cmsAdDo cmsAdDo
+type cmsAds struct {
+	cmsAdsDo cmsAdsDo
 
 	ALL        field.Asterisk
-	AdID       field.Int64  // 主键
+	AdsID      field.Int64  // 主键
 	SiteID     field.Int64  // 所属站点
 	ChannelID  field.Int64  // 所属频道
 	CategoryID field.Int64  // 类别ID
@@ -84,8 +84,8 @@ type cmsAd struct {
 	IsRed      field.Int32  // 是否推荐
 	IsHot      field.Int32  // 是否热门
 	IsSlide    field.Int32  // 是否幻灯片
-	BeginTime  field.Time   // 创建时间
-	EndTime    field.Time   // 创建时间
+	BeginTime  field.Time   // 开始时间
+	EndTime    field.Time   // 结束时间
 	BelongTo   field.String // 归属
 	CreateID   field.Int32  // 创建人ID
 	CreateName field.String // 创建人姓名
@@ -97,19 +97,19 @@ type cmsAd struct {
 	fieldMap map[string]field.Expr
 }
 
-func (c cmsAd) Table(newTableName string) *cmsAd {
-	c.cmsAdDo.UseTable(newTableName)
+func (c cmsAds) Table(newTableName string) *cmsAds {
+	c.cmsAdsDo.UseTable(newTableName)
 	return c.updateTableName(newTableName)
 }
 
-func (c cmsAd) As(alias string) *cmsAd {
-	c.cmsAdDo.DO = *(c.cmsAdDo.As(alias).(*gen.DO))
+func (c cmsAds) As(alias string) *cmsAds {
+	c.cmsAdsDo.DO = *(c.cmsAdsDo.As(alias).(*gen.DO))
 	return c.updateTableName(alias)
 }
 
-func (c *cmsAd) updateTableName(table string) *cmsAd {
+func (c *cmsAds) updateTableName(table string) *cmsAds {
 	c.ALL = field.NewAsterisk(table)
-	c.AdID = field.NewInt64(table, "ad_id")
+	c.AdsID = field.NewInt64(table, "ads_id")
 	c.SiteID = field.NewInt64(table, "site_id")
 	c.ChannelID = field.NewInt64(table, "channel_id")
 	c.CategoryID = field.NewInt64(table, "category_id")
@@ -143,13 +143,13 @@ func (c *cmsAd) updateTableName(table string) *cmsAd {
 	return c
 }
 
-func (c *cmsAd) WithContext(ctx context.Context) *cmsAdDo { return c.cmsAdDo.WithContext(ctx) }
+func (c *cmsAds) WithContext(ctx context.Context) *cmsAdsDo { return c.cmsAdsDo.WithContext(ctx) }
 
-func (c cmsAd) TableName() string { return c.cmsAdDo.TableName() }
+func (c cmsAds) TableName() string { return c.cmsAdsDo.TableName() }
 
-func (c cmsAd) Alias() string { return c.cmsAdDo.Alias() }
+func (c cmsAds) Alias() string { return c.cmsAdsDo.Alias() }
 
-func (c *cmsAd) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
+func (c *cmsAds) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := c.fieldMap[fieldName]
 	if !ok || _f == nil {
 		return nil, false
@@ -158,9 +158,9 @@ func (c *cmsAd) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	return _oe, ok
 }
 
-func (c *cmsAd) fillFieldMap() {
+func (c *cmsAds) fillFieldMap() {
 	c.fieldMap = make(map[string]field.Expr, 28)
-	c.fieldMap["ad_id"] = c.AdID
+	c.fieldMap["ads_id"] = c.AdsID
 	c.fieldMap["site_id"] = c.SiteID
 	c.fieldMap["channel_id"] = c.ChannelID
 	c.fieldMap["category_id"] = c.CategoryID
@@ -190,165 +190,165 @@ func (c *cmsAd) fillFieldMap() {
 	c.fieldMap["update_time"] = c.UpdateTime
 }
 
-func (c cmsAd) clone(db *gorm.DB) cmsAd {
-	c.cmsAdDo.ReplaceConnPool(db.Statement.ConnPool)
+func (c cmsAds) clone(db *gorm.DB) cmsAds {
+	c.cmsAdsDo.ReplaceConnPool(db.Statement.ConnPool)
 	return c
 }
 
-func (c cmsAd) replaceDB(db *gorm.DB) cmsAd {
-	c.cmsAdDo.ReplaceDB(db)
+func (c cmsAds) replaceDB(db *gorm.DB) cmsAds {
+	c.cmsAdsDo.ReplaceDB(db)
 	return c
 }
 
-type cmsAdDo struct{ gen.DO }
+type cmsAdsDo struct{ gen.DO }
 
-func (c cmsAdDo) Debug() *cmsAdDo {
+func (c cmsAdsDo) Debug() *cmsAdsDo {
 	return c.withDO(c.DO.Debug())
 }
 
-func (c cmsAdDo) WithContext(ctx context.Context) *cmsAdDo {
+func (c cmsAdsDo) WithContext(ctx context.Context) *cmsAdsDo {
 	return c.withDO(c.DO.WithContext(ctx))
 }
 
-func (c cmsAdDo) ReadDB() *cmsAdDo {
+func (c cmsAdsDo) ReadDB() *cmsAdsDo {
 	return c.Clauses(dbresolver.Read)
 }
 
-func (c cmsAdDo) WriteDB() *cmsAdDo {
+func (c cmsAdsDo) WriteDB() *cmsAdsDo {
 	return c.Clauses(dbresolver.Write)
 }
 
-func (c cmsAdDo) Session(config *gorm.Session) *cmsAdDo {
+func (c cmsAdsDo) Session(config *gorm.Session) *cmsAdsDo {
 	return c.withDO(c.DO.Session(config))
 }
 
-func (c cmsAdDo) Clauses(conds ...clause.Expression) *cmsAdDo {
+func (c cmsAdsDo) Clauses(conds ...clause.Expression) *cmsAdsDo {
 	return c.withDO(c.DO.Clauses(conds...))
 }
 
-func (c cmsAdDo) Returning(value interface{}, columns ...string) *cmsAdDo {
+func (c cmsAdsDo) Returning(value interface{}, columns ...string) *cmsAdsDo {
 	return c.withDO(c.DO.Returning(value, columns...))
 }
 
-func (c cmsAdDo) Not(conds ...gen.Condition) *cmsAdDo {
+func (c cmsAdsDo) Not(conds ...gen.Condition) *cmsAdsDo {
 	return c.withDO(c.DO.Not(conds...))
 }
 
-func (c cmsAdDo) Or(conds ...gen.Condition) *cmsAdDo {
+func (c cmsAdsDo) Or(conds ...gen.Condition) *cmsAdsDo {
 	return c.withDO(c.DO.Or(conds...))
 }
 
-func (c cmsAdDo) Select(conds ...field.Expr) *cmsAdDo {
+func (c cmsAdsDo) Select(conds ...field.Expr) *cmsAdsDo {
 	return c.withDO(c.DO.Select(conds...))
 }
 
-func (c cmsAdDo) Where(conds ...gen.Condition) *cmsAdDo {
+func (c cmsAdsDo) Where(conds ...gen.Condition) *cmsAdsDo {
 	return c.withDO(c.DO.Where(conds...))
 }
 
-func (c cmsAdDo) Exists(subquery interface{ UnderlyingDB() *gorm.DB }) *cmsAdDo {
+func (c cmsAdsDo) Exists(subquery interface{ UnderlyingDB() *gorm.DB }) *cmsAdsDo {
 	return c.Where(field.CompareSubQuery(field.ExistsOp, nil, subquery.UnderlyingDB()))
 }
 
-func (c cmsAdDo) Order(conds ...field.Expr) *cmsAdDo {
+func (c cmsAdsDo) Order(conds ...field.Expr) *cmsAdsDo {
 	return c.withDO(c.DO.Order(conds...))
 }
 
-func (c cmsAdDo) Distinct(cols ...field.Expr) *cmsAdDo {
+func (c cmsAdsDo) Distinct(cols ...field.Expr) *cmsAdsDo {
 	return c.withDO(c.DO.Distinct(cols...))
 }
 
-func (c cmsAdDo) Omit(cols ...field.Expr) *cmsAdDo {
+func (c cmsAdsDo) Omit(cols ...field.Expr) *cmsAdsDo {
 	return c.withDO(c.DO.Omit(cols...))
 }
 
-func (c cmsAdDo) Join(table schema.Tabler, on ...field.Expr) *cmsAdDo {
+func (c cmsAdsDo) Join(table schema.Tabler, on ...field.Expr) *cmsAdsDo {
 	return c.withDO(c.DO.Join(table, on...))
 }
 
-func (c cmsAdDo) LeftJoin(table schema.Tabler, on ...field.Expr) *cmsAdDo {
+func (c cmsAdsDo) LeftJoin(table schema.Tabler, on ...field.Expr) *cmsAdsDo {
 	return c.withDO(c.DO.LeftJoin(table, on...))
 }
 
-func (c cmsAdDo) RightJoin(table schema.Tabler, on ...field.Expr) *cmsAdDo {
+func (c cmsAdsDo) RightJoin(table schema.Tabler, on ...field.Expr) *cmsAdsDo {
 	return c.withDO(c.DO.RightJoin(table, on...))
 }
 
-func (c cmsAdDo) Group(cols ...field.Expr) *cmsAdDo {
+func (c cmsAdsDo) Group(cols ...field.Expr) *cmsAdsDo {
 	return c.withDO(c.DO.Group(cols...))
 }
 
-func (c cmsAdDo) Having(conds ...gen.Condition) *cmsAdDo {
+func (c cmsAdsDo) Having(conds ...gen.Condition) *cmsAdsDo {
 	return c.withDO(c.DO.Having(conds...))
 }
 
-func (c cmsAdDo) Limit(limit int) *cmsAdDo {
+func (c cmsAdsDo) Limit(limit int) *cmsAdsDo {
 	return c.withDO(c.DO.Limit(limit))
 }
 
-func (c cmsAdDo) Offset(offset int) *cmsAdDo {
+func (c cmsAdsDo) Offset(offset int) *cmsAdsDo {
 	return c.withDO(c.DO.Offset(offset))
 }
 
-func (c cmsAdDo) Scopes(funcs ...func(gen.Dao) gen.Dao) *cmsAdDo {
+func (c cmsAdsDo) Scopes(funcs ...func(gen.Dao) gen.Dao) *cmsAdsDo {
 	return c.withDO(c.DO.Scopes(funcs...))
 }
 
-func (c cmsAdDo) Unscoped() *cmsAdDo {
+func (c cmsAdsDo) Unscoped() *cmsAdsDo {
 	return c.withDO(c.DO.Unscoped())
 }
 
-func (c cmsAdDo) Create(values ...*model.CmsAd) error {
+func (c cmsAdsDo) Create(values ...*model.CmsAds) error {
 	if len(values) == 0 {
 		return nil
 	}
 	return c.DO.Create(values)
 }
 
-func (c cmsAdDo) CreateInBatches(values []*model.CmsAd, batchSize int) error {
+func (c cmsAdsDo) CreateInBatches(values []*model.CmsAds, batchSize int) error {
 	return c.DO.CreateInBatches(values, batchSize)
 }
 
 // Save : !!! underlying implementation is different with GORM
 // The method is equivalent to executing the statement: db.Clauses(clause.OnConflict{UpdateAll: true}).Create(values)
-func (c cmsAdDo) Save(values ...*model.CmsAd) error {
+func (c cmsAdsDo) Save(values ...*model.CmsAds) error {
 	if len(values) == 0 {
 		return nil
 	}
 	return c.DO.Save(values)
 }
 
-func (c cmsAdDo) First() (*model.CmsAd, error) {
+func (c cmsAdsDo) First() (*model.CmsAds, error) {
 	if result, err := c.DO.First(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.CmsAd), nil
+		return result.(*model.CmsAds), nil
 	}
 }
 
-func (c cmsAdDo) Take() (*model.CmsAd, error) {
+func (c cmsAdsDo) Take() (*model.CmsAds, error) {
 	if result, err := c.DO.Take(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.CmsAd), nil
+		return result.(*model.CmsAds), nil
 	}
 }
 
-func (c cmsAdDo) Last() (*model.CmsAd, error) {
+func (c cmsAdsDo) Last() (*model.CmsAds, error) {
 	if result, err := c.DO.Last(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.CmsAd), nil
+		return result.(*model.CmsAds), nil
 	}
 }
 
-func (c cmsAdDo) Find() ([]*model.CmsAd, error) {
+func (c cmsAdsDo) Find() ([]*model.CmsAds, error) {
 	result, err := c.DO.Find()
-	return result.([]*model.CmsAd), err
+	return result.([]*model.CmsAds), err
 }
 
-func (c cmsAdDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*model.CmsAd, err error) {
-	buf := make([]*model.CmsAd, 0, batchSize)
+func (c cmsAdsDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*model.CmsAds, err error) {
+	buf := make([]*model.CmsAds, 0, batchSize)
 	err = c.DO.FindInBatches(&buf, batchSize, func(tx gen.Dao, batch int) error {
 		defer func() { results = append(results, buf...) }()
 		return fc(tx, batch)
@@ -356,49 +356,49 @@ func (c cmsAdDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error
 	return results, err
 }
 
-func (c cmsAdDo) FindInBatches(result *[]*model.CmsAd, batchSize int, fc func(tx gen.Dao, batch int) error) error {
+func (c cmsAdsDo) FindInBatches(result *[]*model.CmsAds, batchSize int, fc func(tx gen.Dao, batch int) error) error {
 	return c.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (c cmsAdDo) Attrs(attrs ...field.AssignExpr) *cmsAdDo {
+func (c cmsAdsDo) Attrs(attrs ...field.AssignExpr) *cmsAdsDo {
 	return c.withDO(c.DO.Attrs(attrs...))
 }
 
-func (c cmsAdDo) Assign(attrs ...field.AssignExpr) *cmsAdDo {
+func (c cmsAdsDo) Assign(attrs ...field.AssignExpr) *cmsAdsDo {
 	return c.withDO(c.DO.Assign(attrs...))
 }
 
-func (c cmsAdDo) Joins(fields ...field.RelationField) *cmsAdDo {
+func (c cmsAdsDo) Joins(fields ...field.RelationField) *cmsAdsDo {
 	for _, _f := range fields {
 		c = *c.withDO(c.DO.Joins(_f))
 	}
 	return &c
 }
 
-func (c cmsAdDo) Preload(fields ...field.RelationField) *cmsAdDo {
+func (c cmsAdsDo) Preload(fields ...field.RelationField) *cmsAdsDo {
 	for _, _f := range fields {
 		c = *c.withDO(c.DO.Preload(_f))
 	}
 	return &c
 }
 
-func (c cmsAdDo) FirstOrInit() (*model.CmsAd, error) {
+func (c cmsAdsDo) FirstOrInit() (*model.CmsAds, error) {
 	if result, err := c.DO.FirstOrInit(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.CmsAd), nil
+		return result.(*model.CmsAds), nil
 	}
 }
 
-func (c cmsAdDo) FirstOrCreate() (*model.CmsAd, error) {
+func (c cmsAdsDo) FirstOrCreate() (*model.CmsAds, error) {
 	if result, err := c.DO.FirstOrCreate(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.CmsAd), nil
+		return result.(*model.CmsAds), nil
 	}
 }
 
-func (c cmsAdDo) FindByPage(offset int, limit int) (result []*model.CmsAd, count int64, err error) {
+func (c cmsAdsDo) FindByPage(offset int, limit int) (result []*model.CmsAds, count int64, err error) {
 	result, err = c.Offset(offset).Limit(limit).Find()
 	if err != nil {
 		return
@@ -413,7 +413,7 @@ func (c cmsAdDo) FindByPage(offset int, limit int) (result []*model.CmsAd, count
 	return
 }
 
-func (c cmsAdDo) ScanByPage(result interface{}, offset int, limit int) (count int64, err error) {
+func (c cmsAdsDo) ScanByPage(result interface{}, offset int, limit int) (count int64, err error) {
 	count, err = c.Count()
 	if err != nil {
 		return
@@ -423,15 +423,15 @@ func (c cmsAdDo) ScanByPage(result interface{}, offset int, limit int) (count in
 	return
 }
 
-func (c cmsAdDo) Scan(result interface{}) (err error) {
+func (c cmsAdsDo) Scan(result interface{}) (err error) {
 	return c.DO.Scan(result)
 }
 
-func (c cmsAdDo) Delete(models ...*model.CmsAd) (result gen.ResultInfo, err error) {
+func (c cmsAdsDo) Delete(models ...*model.CmsAds) (result gen.ResultInfo, err error) {
 	return c.DO.Delete(models)
 }
 
-func (c *cmsAdDo) withDO(do gen.Dao) *cmsAdDo {
+func (c *cmsAdsDo) withDO(do gen.Dao) *cmsAdsDo {
 	c.DO = *do.(*gen.DO)
 	return c
 }

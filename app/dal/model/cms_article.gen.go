@@ -46,6 +46,8 @@ type CmsArticle struct {
 	IsDeleted      bool      `gorm:"column:is_deleted;type:tinyint(1)" json:"is_deleted" form:"is_deleted"`                               // 删除标识
 	Status         int32     `gorm:"column:status;type:tinyint" json:"status" form:"status"`                                              // 状态0草稿1提交2审核通过3审核未通过4驳回
 	PublishTime    time.Time `gorm:"column:publish_time;type:datetime;default:CURRENT_TIMESTAMP" json:"publish_time" form:"publish_time"` // 发布时间
+	Topic          string    `gorm:"column:topic;type:varchar(256)" json:"topic" form:"topic"`                                            // 文章专题
+	Template       string    `gorm:"column:template;type:varchar(256)" json:"template" form:"template"`                                   // 模板路径
 	BelongTo       string    `gorm:"column:belong_to;type:varchar(64)" json:"belong_to" form:"belong_to"`                                 // 归属
 	CreateID       int32     `gorm:"column:create_id;type:int" json:"create_id" form:"create_id"`                                         // 创建人ID
 	CreateName     string    `gorm:"column:create_name;type:varchar(64)" json:"create_name" form:"create_name"`                           // 创建人姓名

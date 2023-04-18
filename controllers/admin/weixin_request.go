@@ -5,7 +5,7 @@ import (
 
 	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/biz/bmodel"
+	"haedu.gov.cn/cms/app/biz/bizmodel"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
 	"haedu.gov.cn/tools/xgeneric"
@@ -21,7 +21,7 @@ func (c *WeixinController) ContentFindSubscribeOrDefault() {
 	outModel, err := biz.NewWeixinRequest().ContentFindSubscribeOrDefault(accountId, requestType)
 	if err != nil {
 		logs.Error("ContentFindSubscribeOrDefault", err.Error())
-		outModel = &bmodel.Weixin_ContentSubscribeOrDefaultModel{
+		outModel = &bizmodel.Weixin_ContentSubscribeOrDefaultModel{
 			AccountID:   accountId,
 			RequestType: requestType,
 			TextReply:   &model.WeixinRequestContent{},
@@ -35,7 +35,7 @@ func (c *WeixinController) ContentFindSubscribeOrDefault() {
 // ContentSaveSubscribeOrDefault 保存关注回复与默认回复
 // @router /admin/weixin/ContentSaveSubscribeOrDefault [post]
 func (c *WeixinController) ContentSaveSubscribeOrDefault() {
-	mdl := bmodel.Weixin_ContentSubscribeOrDefaultModel{}
+	mdl := bizmodel.Weixin_ContentSubscribeOrDefaultModel{}
 	if err := xjson.Unmarshal(c.Ctx.Input.RequestBody, &mdl); err != nil {
 		logs.Error("ContentSubscribeOrDefault", err.Error())
 		c.JSONError(err.Error())

@@ -137,7 +137,6 @@
                             };
                             sorts.push(sort);
                         });
-                        // console.log(sorts);
                         $.ajax({
                             type: "POST",
                             url: "/admin/site/ChannelSaveSortId", //提交的地址
@@ -167,13 +166,11 @@
 
                 //监听表格复选框选择
                 table.on('checkbox(currentTableFilter)', function (obj) {
-                    console.log(obj)
                 });
 
                 table.on('tool(currentTableFilter)', function (obj) {
                     var data = obj.data;
                     if (obj.event === 'edit') {
-                        console.log(data);
                         var index = layer.open({
                             title: '编辑',
                             type: 2,
@@ -188,7 +185,6 @@
                         });
                         return false;
                     } else if (obj.event === 'add') {
-                        console.log(data);
                         var index = layer.open({
                             title: '添加',
                             type: 2,

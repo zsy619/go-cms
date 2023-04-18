@@ -1,4 +1,4 @@
-package bmodel
+package bizmodel
 
 import "time"
 

@@ -3,21 +3,40 @@ package biz
 import (
 	"errors"
 	"fmt"
-	"os"
-	"strings"
 	"time"
 
 	"github.com/beego/beego/v2/core/logs"
+	"haedu.gov.cn/cms/app/biz/bizmodel"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
+	"haedu.gov.cn/tools/xgeneric"
 )
 
+/**
+ * @description: CmsArticle 文章
+ * @return {*}
+ */
 type CmsArticle struct{}
 
+/**
+ * @description: NewCmsArticle 新建文章
+ * @return {*}
+ */
 func NewCmsArticle() *CmsArticle {
 	return &CmsArticle{}
 }
 
+/**
+ * @description: ArticlePaginate 文章分页
+ * @param {*} page 页码
+ * @param {int} limit 每页数量
+ * @param {*} channelId 频道ID
+ * @param {int64} categoryId 分类ID
+ * @param {*} title 标题
+ * @param {string} callIndex 别名
+ * @param {int32} status 状态
+ * @return {*}
+ */
 func (this *CmsArticle) ArticlePaginate(page, limit int, channelId, categoryId int64, title, callIndex string, status int32) ([]*model.CmsArticle, int64, error) {
 	mdl, do := query.CmsArticleDo()
 	if channelId > 0 {
@@ -38,13 +57,21 @@ func (this *CmsArticle) ArticlePaginate(page, limit int, channelId, categoryId i
 	return do.Order(mdl.IsTop.Desc()).Order(mdl.SortID).FindByPage((page-1)*limit, limit)
 }
 
-// ArticleFind 获取
+/**
+ * @description: ArticleFind 获取
+ * @param {int64} articleId 文章ID
+ * @return {*}
+ */
 func (this *CmsArticle) ArticleFind(articleId int64) (*model.CmsArticle, error) {
 	mdl, do := query.CmsArticleDo()
 	return do.Where(mdl.ArticleID.Eq(articleId)).First()
 }
 
-// ArticleSave 保存或更新
+/**
+ * @description: ArticleSave 保存或更新
+ * @param {*model.CmsArticle} input 文章
+ * @return {*}
+ */
 func (this *CmsArticle) ArticleSave(input *model.CmsArticle) error {
 	mdl, do := query.CmsArticleDo()
 	if input.CallIndex != "" {
@@ -60,6 +87,8 @@ func (this *CmsArticle) ArticleSave(input *model.CmsArticle) error {
 	}
 	var err error
 	input.UpdateTime = time.Now()
+	input.IcoUrl2 = xgeneric.IFF(input.IcoUrl1 == "", "", input.IcoUrl2)
+	input.ImgUrl2 = xgeneric.IFF(input.ImgUrl1 == "", "", input.ImgUrl2)
 	if input.ArticleID <= 0 {
 		input.CreateTime = time.Now()
 		err = do.Create(input)
@@ -93,15 +122,23 @@ func (this *CmsArticle) ArticleSave(input *model.CmsArticle) error {
 			mdl.IsSlide.ColumnName().String():        input.IsSlide,
 			mdl.Status.ColumnName().String():         input.Status,
 			mdl.PublishTime.ColumnName().String():    input.PublishTime,
+			mdl.Topic.ColumnName().String():          input.Topic,
+			mdl.Template.ColumnName().String():       input.Template,
 			mdl.UpdateTime.ColumnName().String():     input.UpdateTime,
 		})
-		if err == nil {
-			// Cache_ApiArticleFind = make(map[string][]map[string]interface{})
+		if err != nil {
+			logs.Error(err.Error())
 		}
 	}
 	return err
 }
 
+/**
+ * @description: ArticleSaveStatus 更新状态
+ * @param {int64} articleId 文章ID
+ * @param {int32} sortId 排序ID
+ * @return {*}
+ */
 func (this *CmsArticle) ArticleSaveSortId(articleId int64, sortId int32) error {
 	mdl, do := query.CmsArticleDo()
 	_, err := do.Where(mdl.ArticleID.Eq(articleId)).UpdateColumns(
@@ -113,40 +150,44 @@ func (this *CmsArticle) ArticleSaveSortId(articleId int64, sortId int32) error {
 	return err
 }
 
-// ArticleDestory 删除
+/**
+ * @description: ArticleDestory 删除
+ * @param {int64} articleId 文章ID
+ * @return {*}
+ */
 func (this *CmsArticle) ArticleDestory(articleId int64) error {
-	// 删除附件
-	{
-		attachMdl, attachDo := query.CmsAttachDo()
-		if attachList, err := attachDo.Where(attachMdl.TableName_.Eq("article"), attachMdl.RecordID.Eq(articleId)).Find(); err != nil {
-			logs.Error(err.Error())
-		} else {
-			for _, attach := range attachList {
-				if attach.OriginalPath != "" && strings.HasPrefix(attach.OriginalPath, "/Uploads/") {
-					os.Remove(attach.OriginalPath[1:])
-				}
-			}
-		}
-		if _, err := attachDo.Where(attachMdl.TableName_.Eq("article"), attachMdl.RecordID.Eq(articleId)).Delete(); err != nil {
-			return err
-		}
-	}
-	// 删除相册
-	{
-		albumMdl, albumDo := query.CmsAlbumDo()
-		if albumList, err := albumDo.Where(albumMdl.TableName_.Eq("article"), albumMdl.RecordID.Eq(articleId)).Find(); err != nil {
-			logs.Error(err.Error())
-		} else {
-			for _, album := range albumList {
-				if album.OriginalPath != "" && strings.HasPrefix(album.OriginalPath, "/Uploads/") {
-					os.Remove(album.OriginalPath[1:])
-				}
-			}
-		}
-		if _, err := albumDo.Where(albumMdl.TableName_.Eq("article"), albumMdl.RecordID.Eq(articleId)).Delete(); err != nil {
-			return err
-		}
-	}
+	// // 删除附件
+	// {
+	// 	attachMdl, attachDo := query.CmsAttachDo()
+	// 	if attachList, err := attachDo.Where(attachMdl.TableName_.Eq("article"), attachMdl.RecordID.Eq(articleId)).Find(); err != nil {
+	// 		logs.Error(err.Error())
+	// 	} else {
+	// 		for _, attach := range attachList {
+	// 			if attach.OriginalPath != "" && strings.HasPrefix(attach.OriginalPath, "/Uploads/") {
+	// 				os.Remove(attach.OriginalPath[1:])
+	// 			}
+	// 		}
+	// 	}
+	// 	if _, err := attachDo.Where(attachMdl.TableName_.Eq("article"), attachMdl.RecordID.Eq(articleId)).Delete(); err != nil {
+	// 		return err
+	// 	}
+	// }
+	// // 删除相册
+	// {
+	// 	albumMdl, albumDo := query.CmsAlbumDo()
+	// 	if albumList, err := albumDo.Where(albumMdl.TableName_.Eq("article"), albumMdl.RecordID.Eq(articleId)).Find(); err != nil {
+	// 		logs.Error(err.Error())
+	// 	} else {
+	// 		for _, album := range albumList {
+	// 			if album.OriginalPath != "" && strings.HasPrefix(album.OriginalPath, "/Uploads/") {
+	// 				os.Remove(album.OriginalPath[1:])
+	// 			}
+	// 		}
+	// 	}
+	// 	if _, err := albumDo.Where(albumMdl.TableName_.Eq("article"), albumMdl.RecordID.Eq(articleId)).Delete(); err != nil {
+	// 		return err
+	// 	}
+	// }
 	mdl, do := query.CmsArticleDo()
 	if _, err := do.Where(mdl.ArticleID.Eq(articleId)).Delete(); err != nil {
 		return err
@@ -154,6 +195,15 @@ func (this *CmsArticle) ArticleDestory(articleId int64) error {
 	return nil
 }
 
+/**
+ * @description: CategoryPaginate 分页
+ * @param {*} page 页码
+ * @param {int} limit 每页数量
+ * @param {int64} channelId 频道ID
+ * @param {*} title 标题
+ * @param {string} callIndex 别名
+ * @return {*}
+ */
 func (this *CmsArticle) CategoryPaginate(page, limit int, channelId int64, title, callIndex string) ([]*model.CmsArticleCategory, int64, error) {
 	mdl, do := query.CmsArticleCategoryDo()
 	if channelId > 0 {
@@ -168,13 +218,21 @@ func (this *CmsArticle) CategoryPaginate(page, limit int, channelId int64, title
 	return do.Order(mdl.SortID).FindByPage((page-1)*limit, limit)
 }
 
-// CategoryFind 获取
+/**
+ * @description: CategoryFind 获取
+ * @param {int64} categoryId 分类ID
+ * @return {*}
+ */
 func (this *CmsArticle) CategoryFind(categoryId int64) (*model.CmsArticleCategory, error) {
 	mdl, do := query.CmsArticleCategoryDo()
 	return do.Where(mdl.CategoryID.Eq(categoryId)).First()
 }
 
-// CategorySave 保存或更新
+/**
+ * @description: CategorySave 保存或更新
+ * @param {*model.CmsArticleCategory} input 分类
+ * @return {*}
+ */
 func (this *CmsArticle) CategorySave(input *model.CmsArticleCategory) error {
 	mdl, do := query.CmsArticleCategoryDo()
 	if input.CallIndex != "" {
@@ -194,6 +252,7 @@ func (this *CmsArticle) CategorySave(input *model.CmsArticleCategory) error {
 	}
 	var err error
 	input.UpdateTime = time.Now()
+	input.ImgUrl2 = xgeneric.IFF(input.ImgUrl1 == "", "", input.ImgUrl2)
 	if input.CategoryID <= 0 {
 		input.CreateTime = time.Now()
 		err = do.Create(input)
@@ -215,13 +274,18 @@ func (this *CmsArticle) CategorySave(input *model.CmsArticleCategory) error {
 			mdl.IsSearch.ColumnName().String():       input.IsSearch,
 			mdl.IsShow.ColumnName().String():         input.IsShow,
 			mdl.Status.ColumnName().String():         input.Status,
+			mdl.Template.ColumnName().String():       input.Template,
 			mdl.UpdateTime.ColumnName().String():     input.UpdateTime,
 		})
 	}
 	return err
 }
 
-// CategoryAutoUrl 自动生成Url
+/**
+ * @description: CategoryAutoUrl 自动生成Url
+ * @param {int64} channelId 频道ID
+ * @return {*}
+ */
 func (this *CmsArticle) CategoryAutoUrl(channelId int64) error {
 	mdl, do := query.CmsArticleCategoryDo()
 	categories, err := do.Where(mdl.ChannelID.Eq(channelId), mdl.LinkURL.Eq("")).Find()
@@ -247,7 +311,12 @@ func (this *CmsArticle) CategoryAutoUrl(channelId int64) error {
 	return nil
 }
 
-// CategorySaveSortId 保存排序
+/**
+ * @description: CategorySaveSortId 保存排序
+ * @param {int64} categoryId 分类ID
+ * @param {int32} sortId 排序
+ * @return {*}
+ */
 func (this *CmsArticle) CategorySaveSortId(categoryId int64, sortId int32) error {
 	mdl, do := query.CmsArticleCategoryDo()
 	_, err := do.Where(mdl.CategoryID.Eq(categoryId)).UpdateColumns(
@@ -259,7 +328,11 @@ func (this *CmsArticle) CategorySaveSortId(categoryId int64, sortId int32) error
 	return err
 }
 
-// CategoryDestory 删除
+/**
+ * @description: CategoryDestory 删除
+ * @param {int64} categoryId 分类ID
+ * @return {*}
+ */
 func (this *CmsArticle) CategoryDestory(categoryId int64) error {
 	mdl, do := query.CmsArticleCategoryDo()
 	if count, _ := do.Where(mdl.ParentID.Eq(categoryId)).Count(); count > 0 {
@@ -275,7 +348,11 @@ func (this *CmsArticle) CategoryDestory(categoryId int64) error {
 	return nil
 }
 
-// ArticleClone 克隆
+/**
+ * @description: ArticleClone 克隆
+ * @param {int64} articleId 文章ID
+ * @return {*}
+ */
 func (this *CmsArticle) ArticleClone(articleId int64) (int64, error) {
 	mdl, do := query.CmsArticleDo()
 	art, err := do.Where(mdl.ArticleID.Eq(articleId)).First()
@@ -290,7 +367,12 @@ func (this *CmsArticle) ArticleClone(articleId int64) (int64, error) {
 	return art.ArticleID, err
 }
 
-// ArticleChangeStatus 修改状态
+/**
+ * @description: ArticleChangeStatus 修改状态
+ * @param {int64} articleId 文章ID
+ * @param {int32} status 状态
+ * @return {*}
+ */
 func (this *CmsArticle) ArticleChangeStatus(articleId int64, status int32) error {
 	mdl, do := query.CmsArticleDo()
 	_, err := do.Where(mdl.ArticleID.Eq(articleId)).UpdateColumns(
@@ -302,15 +384,21 @@ func (this *CmsArticle) ArticleChangeStatus(articleId int64, status int32) error
 	return err
 }
 
-func (this *CmsArticle) CategoryTree(channelId, categoryId int64) ([]*TreeNode, error) {
-	out := make([]*TreeNode, 0)
+/**
+ * @description: CategoryTree 分类树
+ * @param {*} channelId 频道ID
+ * @param {int64} categoryId 分类ID
+ * @return {*}
+ */
+func (this *CmsArticle) CategoryTree(channelId, categoryId int64) ([]*bizmodel.TreeNode, error) {
+	out := make([]*bizmodel.TreeNode, 0)
 	mdl, do := query.CmsArticleCategoryDo()
 	list, err := do.Where(mdl.ChannelID.Eq(channelId), mdl.ParentID.Eq(0)).Order(mdl.SortID).Find()
 	if err != nil {
 		return out, err
 	}
 	for _, item := range list {
-		child := &TreeNode{
+		child := &bizmodel.TreeNode{
 			Id:       item.CategoryID,
 			Name:     item.Title,
 			Open:     true,
@@ -327,15 +415,21 @@ func (this *CmsArticle) CategoryTree(channelId, categoryId int64) ([]*TreeNode, 
 	return out, nil
 }
 
-func (this *CmsArticle) CategoryTreeByParentId(parentId, categoryId int64) ([]*TreeNode, error) {
-	out := make([]*TreeNode, 0)
+/**
+ * @description: CategoryTreeByParentId 根据父ID获取分类树
+ * @param {*} parentId 父ID
+ * @param {int64} categoryId 分类ID
+ * @return {*}
+ */
+func (this *CmsArticle) CategoryTreeByParentId(parentId, categoryId int64) ([]*bizmodel.TreeNode, error) {
+	out := make([]*bizmodel.TreeNode, 0)
 	mdl, do := query.CmsArticleCategoryDo()
 	list, err := do.Where(mdl.ParentID.Eq(parentId)).Order(mdl.SortID).Find()
 	if err != nil {
 		return out, err
 	}
 	for _, item := range list {
-		child := &TreeNode{
+		child := &bizmodel.TreeNode{
 			Id:       item.CategoryID,
 			Name:     item.Title,
 			Checked:  item.CategoryID == categoryId,

@@ -35,6 +35,7 @@ func newCmsAttach(db *gorm.DB, opts ...gen.DOOption) cmsAttach {
 	_cmsAttach.OriginalPath = field.NewString(tableName, "original_path")
 	_cmsAttach.FilePath = field.NewString(tableName, "file_path")
 	_cmsAttach.FileSize = field.NewInt64(tableName, "file_size")
+	_cmsAttach.FileMime = field.NewString(tableName, "file_mime")
 	_cmsAttach.FileExt = field.NewString(tableName, "file_ext")
 	_cmsAttach.Point = field.NewInt32(tableName, "point")
 	_cmsAttach.Click = field.NewInt32(tableName, "click")
@@ -65,6 +66,7 @@ type cmsAttach struct {
 	OriginalPath field.String // 原始地址
 	FilePath     field.String // 文件路径（带域名）
 	FileSize     field.Int64  // 文件大小(字节)
+	FileMime     field.String // Mime类型
 	FileExt      field.String // 文件扩展名
 	Point        field.Int32  // 下载所需积分
 	Click        field.Int32  // 下载次数
@@ -101,6 +103,7 @@ func (c *cmsAttach) updateTableName(table string) *cmsAttach {
 	c.OriginalPath = field.NewString(table, "original_path")
 	c.FilePath = field.NewString(table, "file_path")
 	c.FileSize = field.NewInt64(table, "file_size")
+	c.FileMime = field.NewString(table, "file_mime")
 	c.FileExt = field.NewString(table, "file_ext")
 	c.Point = field.NewInt32(table, "point")
 	c.Click = field.NewInt32(table, "click")
@@ -137,7 +140,7 @@ func (c *cmsAttach) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *cmsAttach) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 20)
+	c.fieldMap = make(map[string]field.Expr, 21)
 	c.fieldMap["attach_id"] = c.AttachID
 	c.fieldMap["table_name"] = c.TableName_
 	c.fieldMap["record_id"] = c.RecordID
@@ -146,6 +149,7 @@ func (c *cmsAttach) fillFieldMap() {
 	c.fieldMap["original_path"] = c.OriginalPath
 	c.fieldMap["file_path"] = c.FilePath
 	c.fieldMap["file_size"] = c.FileSize
+	c.fieldMap["file_mime"] = c.FileMime
 	c.fieldMap["file_ext"] = c.FileExt
 	c.fieldMap["point"] = c.Point
 	c.fieldMap["click"] = c.Click

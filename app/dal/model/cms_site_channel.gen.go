@@ -28,6 +28,7 @@ type CmsSiteChannel struct {
 	SortID     int32     `gorm:"column:sort_id;type:int" json:"sort_id" form:"sort_id"`                                           // 排序
 	Status     int32     `gorm:"column:status;type:tinyint" json:"status" form:"status"`                                          // 状态0草稿1提交2审核通过3审核未通过4驳回
 	IsDeleted  bool      `gorm:"column:is_deleted;type:tinyint(1)" json:"is_deleted" form:"is_deleted"`                           // 删除标识
+	Template   string    `gorm:"column:template;type:varchar(256)" json:"template" form:"template"`                               // 模板路径
 	CreateID   int32     `gorm:"column:create_id;type:int" json:"create_id" form:"create_id"`                                     // 创建人ID
 	CreateName string    `gorm:"column:create_name;type:varchar(64)" json:"create_name" form:"create_name"`                       // 创建人姓名
 	CreateTime time.Time `gorm:"column:create_time;type:int unsigned;autoCreateTime" json:"create_time" form:"create_time"`       // 创建时间

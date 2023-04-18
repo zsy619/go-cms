@@ -59,13 +59,13 @@
 
         table.render({
             elem: '#tableContainer',
-            url: '/admin/ad/adpaginate?status=-1',
+            url: '/admin/ads/adspaginate?status=-1',
             toolbar: '#toolbarDemo',
             height: "full-170",
             defaultToolbar: ['filter', 'exports', 'print'],
             cols: [[
                 { type: "checkbox", width: 50 },
-                { field: 'ad_id', width: 80, title: 'ID', sort: true },
+                { field: 'ads_id', width: 80, title: 'ID', sort: true },
                 { field: 'title', title: '广告标题' },
                 { field: 'call_index', minWidth: 150, title: '调用别名', sort: true },
                 { field: 'link_url', title: '广告链接', minWidth: 150 },
@@ -103,7 +103,7 @@
                 },
                 {
                     field: 'sort_id', width: 100, align: "center", title: '排序', templet: function (d) {
-                        return '<input type="number" name="sort_id" ad_id="' + d.ad_id + '" value="' + d.sort_id + '" class="layui-input" style="" />';
+                        return '<input type="number" name="sort_id" ads_id="' + d.ads_id + '" value="' + d.sort_id + '" class="layui-input" style="" />';
                     }
                 },
                 { title: '操作', width: 210, toolbar: '#currentTableBar', align: "center", fixed: "right" }
@@ -131,7 +131,6 @@
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
             var result = JSON.stringify(data.field);
-            console.log(result);
             //执行搜索重载
             table.reload('tableContainer', {
                 page: {
@@ -160,7 +159,7 @@
                     maxmin: true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: 'AdEdit',
+                    content: 'AdsEdit',
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -169,15 +168,14 @@
                 var sorts = [];
                 $("input[name='sort_id']").each(function () {
                     var sort = {
-                        ad_id: parseInt($(this).attr("ad_id")),
+                        ads_id: parseInt($(this).attr("ads_id")),
                         sort_id: parseInt($(this).val())
                     };
                     sorts.push(sort);
                 });
-                // console.log(sorts);
                 $.ajax({
                     type: "POST",
-                    url: "/admin/ad/AdSaveSortId", //提交的地址
+                    url: "/admin/ads/AdsSaveSortId", //提交的地址
                     data: JSON.stringify(sorts),
                     async: false,
                     beforeSend: function () { //当一个Ajax请求开始时触发
@@ -207,7 +205,7 @@
                 }
                 var ids = [];
                 for (var i = 0; i < data.length; i++) {
-                    ids.push(data[i].ad_id);
+                    ids.push(data[i].ads_id);
                 }
                 changeStatus(ids, 2);
             } else if (obj.event === 'reject') {
@@ -219,7 +217,7 @@
                 }
                 var ids = [];
                 for (var i = 0; i < data.length; i++) {
-                    ids.push(data[i].ad_id);
+                    ids.push(data[i].ads_id);
                 }
                 changeStatus(ids, 3);
             }
@@ -228,9 +226,9 @@
         function changeStatus(ids, status) {
             $.ajax({
                 type: "POST",
-                url: "/admin/ad/AdChangeStatus", //提交的地址
+                url: "/admin/ads/AdsChangeStatus", //提交的地址
                 data: JSON.stringify({
-                    "ad_ids": ids,
+                    "ads_ids": ids,
                     "status": status,
                 }),
                 async: false,
@@ -257,14 +255,12 @@
 
         //监听表格复选框选择
         table.on('checkbox(currentTableFilter)', function (obj) {
-            console.log(obj)
         });
 
         table.on('tool(currentTableFilter)', function (obj) {
             var data = obj.data;
             var data = obj.data;
             if (obj.event === 'clone') {
-                console.log(data);
                 var index = layer.open({
                     title: '克隆广告',
                     type: 2,
@@ -272,14 +268,13 @@
                     maxmin: true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: 'AdEdit?clone=1&adId=' + data.ad_id,
+                    content: 'AdsEdit?clone=1&adsId=' + data.ads_id,
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
                 });
                 return false;
             } else if (obj.event === 'edit') {
-                console.log(data);
                 var index = layer.open({
                     title: '编辑广告',
                     type: 2,
@@ -287,7 +282,7 @@
                     maxmin: true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: 'AdEdit?adId=' + data.ad_id,
+                    content: 'AdsEdit?adsId=' + data.ads_id,
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -297,9 +292,9 @@
                 layer.confirm('真的删除行么', function (index) {
                     $.ajax({
                         type: "POST",
-                        url: "/admin/ad/AdDestory", //提交的地址
+                        url: "/admin/ads/AdsDestory", //提交的地址
                         data: {
-                            "adId": data.ad_id
+                            "adsId": data.ads_id
                         },
                         async: false,
                         beforeSend: function () { //当一个Ajax请求开始时触发

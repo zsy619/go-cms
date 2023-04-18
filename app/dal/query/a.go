@@ -152,20 +152,32 @@ func PlgOnlineRegisterDo() (plgOnlineRegister, *plgOnlineRegisterDo) {
 	return u, u.WithContext(defaultContext).Debug()
 }
 
-// CmsAdCategoryDo
-func CmsAdCategoryDo() (cmsAdCategory, *cmsAdCategoryDo) {
-	u := Use(dal.CmsDatabase.DB).CmsAdCategory
+// CmsAdsCategoryDo
+func CmsAdsCategoryDo() (cmsAdsCategory, *cmsAdsCategoryDo) {
+	u := Use(dal.CmsDatabase.DB).CmsAdsCategory
 	return u, u.WithContext(defaultContext).Debug()
 }
 
-// CmsAdCategoryRelationDo
-func CmsAdCategoryRelationDo() (cmsAdCategoryRelation, *cmsAdCategoryRelationDo) {
-	u := Use(dal.CmsDatabase.DB).CmsAdCategoryRelation
+// CmsAdsCategoryRelationDo
+func CmsAdsCategoryRelationDo() (cmsAdsCategoryRelation, *cmsAdsCategoryRelationDo) {
+	u := Use(dal.CmsDatabase.DB).CmsAdsCategoryRelation
 	return u, u.WithContext(defaultContext).Debug()
 }
 
-// CmsAdDo
-func CmsAdDo() (cmsAd, *cmsAdDo) {
-	u := Use(dal.CmsDatabase.DB).CmsAd
+// CmsAdsDo
+func CmsAdsDo() (cmsAds, *cmsAdsDo) {
+	u := Use(dal.CmsDatabase.DB).CmsAds
+	return u, u.WithContext(defaultContext).Debug()
+}
+
+// CmsTagDo
+func CmsTagDo() (cmsTag, *cmsTagDo) {
+	u := Use(dal.CmsDatabase.DB).CmsTag
+	return u, u.WithContext(defaultContext).Debug()
+}
+
+// CmsTopicDo
+func CmsTopicDo() (cmsTopic, *cmsTopicDo) {
+	u := Use(dal.CmsDatabase.DB).CmsTopic
 	return u, u.WithContext(defaultContext).Debug()
 }

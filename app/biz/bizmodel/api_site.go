@@ -1,4 +1,4 @@
-package bmodel
+package bizmodel
 
 type ApiChannelFindModel struct {
 	ChannelID  int64  `gorm:"column:channel_id;type:bigint;primaryKey;" json:"channel_id" form:"channel_id"` // 主键

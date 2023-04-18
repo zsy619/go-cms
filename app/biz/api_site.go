@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/beego/beego/v2/core/logs"
-	"haedu.gov.cn/cms/app/biz/bmodel"
+	"haedu.gov.cn/cms/app/biz/bizmodel"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
 )
@@ -62,14 +62,14 @@ func (this *ApiSite) Get(site_id int64) (*model.CmsSite, error) {
  * @param {int64} site_id 站点ID
  * @return {*}
  */
-func (this *ApiSite) ChannelFind(site_id int64) ([]*bmodel.ApiChannelFindModel, int64, error) {
+func (this *ApiSite) ChannelFind(site_id int64) ([]*bizmodel.ApiChannelFindModel, int64, error) {
 	cacheKey := "ApiSiteChannelFind_" + fmt.Sprintf("%d", site_id)
 	if found, item := ApiCache.Get(cacheKey); found {
 		logs.Debug("ApiCache")
-		find := item.([]*bmodel.ApiChannelFindModel)
+		find := item.([]*bizmodel.ApiChannelFindModel)
 		return find, int64(len(find)), nil
 	}
-	outChannel := []*bmodel.ApiChannelFindModel{}
+	outChannel := []*bizmodel.ApiChannelFindModel{}
 	mdl, do := query.CmsSiteChannelDo()
 	err := do.Where(mdl.SiteID.Eq(site_id)).Select(mdl.ChannelID, mdl.ParentID, mdl.Title, mdl.Name, mdl.Kind, mdl.ClassLayer, mdl.ImgUrl1, mdl.ImgUrl2, mdl.SortID, mdl.IsAlbum, mdl.IsAttach, mdl.IsSpec).Order(mdl.SortID).Scan(&outChannel)
 	if err != nil {
@@ -80,6 +80,6 @@ func (this *ApiSite) ChannelFind(site_id int64) ([]*bmodel.ApiChannelFindModel, 
 	return outChannel, int64(len(outChannel)), nil
 }
 
-func (this *ApiSite) NavFind(site_id int64, channel_id int64) ([]*bmodel.ApiNavFindModel, int64, error) {
+func (this *ApiSite) NavFind(site_id int64, channel_id int64) ([]*bizmodel.ApiNavFindModel, int64, error) {
 	return nil, 0, nil
 }

@@ -3,7 +3,7 @@ package admin
 import (
 	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/biz/bmodel"
+	"haedu.gov.cn/cms/app/biz/bizmodel"
 	"haedu.gov.cn/tools/xjson"
 )
 
@@ -27,7 +27,7 @@ func (c *WeixinController) PictureEdit() {
 		c.Data["rule_id"] = ruleId
 		finder, err := biz.NewWeixinRequest().RuleFind(ruleId)
 		if finder == nil || err != nil {
-			finder = &bmodel.Weixin_RuleModel{
+			finder = &bizmodel.Weixin_RuleModel{
 				RequestType: 2,
 				SortID:      99,
 				Name:        "图文回复",
@@ -40,7 +40,7 @@ func (c *WeixinController) PictureEdit() {
 
 // PictureSave 保存图文回复
 func (c *WeixinController) PictureSave() {
-	mdl := bmodel.Weixin_PictureModel{}
+	mdl := bizmodel.Weixin_PictureModel{}
 	if err := xjson.Unmarshal(c.Ctx.Input.RequestBody, &mdl); err != nil {
 		logs.Error("PictureSave", err.Error())
 		c.JSONError(err.Error())

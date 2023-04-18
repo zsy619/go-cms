@@ -8,10 +8,10 @@ import (
 	"time"
 )
 
-const TableNameCmsAdCategory = "cms_ad_category"
+const TableNameCmsAdsCategory = "cms_ads_category"
 
-// CmsAdCategory mapped from table <cms_ad_category>
-type CmsAdCategory struct {
+// CmsAdsCategory mapped from table <cms_ads_category>
+type CmsAdsCategory struct {
 	CategoryID int64     `gorm:"column:category_id;type:bigint;primaryKey;autoIncrement:true" json:"category_id" form:"category_id"` // 主键
 	ParentID   int64     `gorm:"column:parent_id;type:bigint" json:"parent_id" form:"parent_id"`                                     // 父节点
 	SiteID     int64     `gorm:"column:site_id;type:bigint" json:"site_id" form:"site_id"`                                           // 所属站点
@@ -20,6 +20,7 @@ type CmsAdCategory struct {
 	CallIndex  string    `gorm:"column:call_index;type:varchar(64)" json:"call_index" form:"call_index"`                             // 调用别名
 	Remark     string    `gorm:"column:remark;type:varchar(256)" json:"remark" form:"remark"`                                        // 描述
 	SortID     int32     `gorm:"column:sort_id;type:int" json:"sort_id" form:"sort_id"`                                              // 排序
+	Template   string    `gorm:"column:template;type:varchar(256)" json:"template" form:"template"`                                  // 模板路径
 	BelongTo   string    `gorm:"column:belong_to;type:varchar(64)" json:"belong_to" form:"belong_to"`                                // 归属
 	CreateID   int32     `gorm:"column:create_id;type:int" json:"create_id" form:"create_id"`                                        // 创建人ID
 	CreateName string    `gorm:"column:create_name;type:varchar(64)" json:"create_name" form:"create_name"`                          // 创建人姓名
@@ -29,7 +30,7 @@ type CmsAdCategory struct {
 	UpdateTime time.Time `gorm:"column:update_time;type:int unsigned;autoUpdateTime" json:"update_time" form:"update_time"`          // 修改时间
 }
 
-// TableName CmsAdCategory's table name
-func (*CmsAdCategory) TableName() string {
-	return TableNameCmsAdCategory
+// TableName CmsAdsCategory's table name
+func (*CmsAdsCategory) TableName() string {
+	return TableNameCmsAdsCategory
 }

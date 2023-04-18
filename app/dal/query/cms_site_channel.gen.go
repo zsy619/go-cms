@@ -43,6 +43,7 @@ func newCmsSiteChannel(db *gorm.DB, opts ...gen.DOOption) cmsSiteChannel {
 	_cmsSiteChannel.SortID = field.NewInt32(tableName, "sort_id")
 	_cmsSiteChannel.Status = field.NewInt32(tableName, "status")
 	_cmsSiteChannel.IsDeleted = field.NewBool(tableName, "is_deleted")
+	_cmsSiteChannel.Template = field.NewString(tableName, "template")
 	_cmsSiteChannel.CreateID = field.NewInt32(tableName, "create_id")
 	_cmsSiteChannel.CreateName = field.NewString(tableName, "create_name")
 	_cmsSiteChannel.CreateTime = field.NewTime(tableName, "create_time")
@@ -75,6 +76,7 @@ type cmsSiteChannel struct {
 	SortID     field.Int32  // 排序
 	Status     field.Int32  // 状态0草稿1提交2审核通过3审核未通过4驳回
 	IsDeleted  field.Bool   // 删除标识
+	Template   field.String // 模板路径
 	CreateID   field.Int32  // 创建人ID
 	CreateName field.String // 创建人姓名
 	CreateTime field.Time   // 创建时间
@@ -113,6 +115,7 @@ func (c *cmsSiteChannel) updateTableName(table string) *cmsSiteChannel {
 	c.SortID = field.NewInt32(table, "sort_id")
 	c.Status = field.NewInt32(table, "status")
 	c.IsDeleted = field.NewBool(table, "is_deleted")
+	c.Template = field.NewString(table, "template")
 	c.CreateID = field.NewInt32(table, "create_id")
 	c.CreateName = field.NewString(table, "create_name")
 	c.CreateTime = field.NewTime(table, "create_time")
@@ -143,7 +146,7 @@ func (c *cmsSiteChannel) GetFieldByName(fieldName string) (field.OrderExpr, bool
 }
 
 func (c *cmsSiteChannel) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 22)
+	c.fieldMap = make(map[string]field.Expr, 23)
 	c.fieldMap["channel_id"] = c.ChannelID
 	c.fieldMap["parent_id"] = c.ParentID
 	c.fieldMap["site_id"] = c.SiteID
@@ -160,6 +163,7 @@ func (c *cmsSiteChannel) fillFieldMap() {
 	c.fieldMap["sort_id"] = c.SortID
 	c.fieldMap["status"] = c.Status
 	c.fieldMap["is_deleted"] = c.IsDeleted
+	c.fieldMap["template"] = c.Template
 	c.fieldMap["create_id"] = c.CreateID
 	c.fieldMap["create_name"] = c.CreateName
 	c.fieldMap["create_time"] = c.CreateTime

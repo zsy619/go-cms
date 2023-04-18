@@ -7,7 +7,7 @@ import (
 
 	"github.com/beego/beego/v2/core/logs"
 	"gorm.io/gorm"
-	"haedu.gov.cn/cms/app/biz/bmodel"
+	"haedu.gov.cn/cms/app/biz/bizmodel"
 	"haedu.gov.cn/cms/app/dal/query"
 	"haedu.gov.cn/tools/xgeneric"
 )
@@ -25,14 +25,14 @@ func NewApiLink() *ApiLink {
 * @param {string} call_index 链接分类标识
 * @return {*}
  */
-func (this *ApiLink) Find(limit int, category_id int64, call_index string) ([]*bmodel.ApiLinkListModel, int64, error) {
+func (this *ApiLink) Find(limit int, category_id int64, call_index string) ([]*bizmodel.ApiLinkListModel, int64, error) {
 	cacheKey := fmt.Sprintf("LinkFind::%d::%d::%s", limit, category_id, call_index)
 	if found, item := ApiCache.Get(cacheKey); found {
-		links := item.([]*bmodel.ApiLinkListModel)
+		links := item.([]*bizmodel.ApiLinkListModel)
 		logs.Debug("LinkFindByCategory[Cache]::", "cacheKey", cacheKey, "links", links)
 		return links, int64(len(links)), nil
 	}
-	outLink := []*bmodel.ApiLinkListModel{}
+	outLink := []*bizmodel.ApiLinkListModel{}
 
 	_, linkDo := query.CmsLinkDo()
 	sqlSelect := "a.link_id,a.site_id,a.channel_id,a.category_id,a.title,a.link_url,a.target,a.click,a.img_url1,a.img_url2,a.is_lock,a.is_red,a.is_hot,a.is_slide"
@@ -58,8 +58,8 @@ func (this *ApiLink) Find(limit int, category_id int64, call_index string) ([]*b
  * @param {string} call_index 链接分类标识
  * @return {*}
  */
-func (this *ApiLink) Paginate(page, limit int, category_id int64, call_index string) ([]*bmodel.ApiLinkListModel, int64, error) {
-	outLink := []*bmodel.ApiLinkListModel{}
+func (this *ApiLink) Paginate(page, limit int, category_id int64, call_index string) ([]*bizmodel.ApiLinkListModel, int64, error) {
+	outLink := []*bizmodel.ApiLinkListModel{}
 	_, linkDo := query.CmsLinkDo()
 	sqlSelectRow := "a.link_id,a.site_id,a.channel_id,a.category_id,a.title,a.link_url,a.target,a.click,a.img_url1,a.img_url2,a.is_lock,a.is_red,a.is_hot,a.is_slide"
 	sqlRow := "SELECT " + sqlSelectRow + " FROM cms_link a LEFT JOIN cms_link_category b ON a.category_id = b.category_id WHERE a.`status`=2" +

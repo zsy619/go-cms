@@ -283,8 +283,6 @@
         });
         // 提交事件
         form.on('submit(*)', function (data) {
-            console.log(data)
-            // alert(JSON.stringify(data.field));
             return false;
         });
 
@@ -307,7 +305,6 @@
                     error: function (request) {  //失败的话
                     },
                     success: function (data) {  //成功
-                        console.log(data);
                         layer.closeAll();
                         if (data.code == CodeSuccess) {
                             layer.msg("提交成功", { icon: 1, time: 2000 }, function () {

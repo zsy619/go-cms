@@ -1,0 +1,310 @@
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <fieldset class="table-search-fieldset">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">
+                                所属站点
+                            </label>
+                            <div class="layui-input-inline">
+                                <select name="site_id" lay-search="">
+                                    <option value="">请选择</option>
+                                    {{range $index,$item := .site}}
+                                    <option value="{{$item.SiteID}}">{{$item.Name}}</option>
+                                    {{end}}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="name" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">标题</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="title" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">审核状态</label>
+                            <div class="layui-input-inline">
+                                <select name="status">
+                                    <option value="-1">状态</option>
+                                    <option value="0">草稿</option>
+                                    <option value="2">通过</option>
+                                    <option value="3">拒绝</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="submit" class="layui-btn layui-btn-primary layui-btn-radius" lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+        <table class="layui-hide" id="tableContainer" lay-filter="currentTableFilter"></table>
+    </div>
+</div>
+{{template "admin/Public/Button_AddAuditSave.html" }}
+{{template "admin/Public/Button_EditCopyDelete.html" }}
+<script>
+    layui.use(['form', 'table'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table;
+
+        table.render({
+            elem: '#tableContainer',
+            url: '/admin/tag/tagpaginate?status=-1',
+            toolbar: '#toolbarDemo',
+            height: "full-170",
+            defaultToolbar: ['filter', 'exports', 'print'],
+            cols: [[
+                { type: "checkbox", width: 50 },
+                { field: 'tag_id', width: 80, title: 'ID', sort: true },
+                { field: 'name', title: '名称', sort: true },
+                { field: 'title', title: '标题' },
+                {
+                    field: 'img_url1', title: '图片', width: 150, templet: function (d) {
+                        if (d.img_url1 != "") {
+                            return '<img src="' + d.img_url1 + '" style="max-width: 100px;max-height: 100px;" />';
+                        }
+                        return "";
+                    }
+                },
+                { field: 'remark', title: '描述', },
+                {
+                    field: 'template', title: '模板路径'
+                },
+                {
+                    field: 'status', title: '状态', width: 80, templet: function (d) {
+                        var outText = d.status == 2 ? '<span class="layui-badge layui-bg-green">通过</span>' : (d.status == 3 ? '<span class="layui-badge">拒绝</span>' : '<span class="layui-badge layui-bg-gray">草稿</span>');
+                        return outText;
+                    }
+                },
+                {
+                    field: 'sort_id', width: 100, align: "center", title: '排序', templet: function (d) {
+                        return '<input type="number" name="sort_id" tag_id="' + d.tag_id + '" value="' + d.sort_id + '" class="layui-input" style="" />';
+                    }
+                },
+                { title: '操作', width: 210, toolbar: '#currentTableBar', align: "center", fixed: "right" }
+            ]],
+            limits: [10, 15, 20, 25, 50, 100],
+            limit: 20,
+            page: true,
+            // skin: 'line',
+            even: true,
+            size: 'lg',
+            done: function () {
+                $(".layui-table-main tr").each(function (index, val) {
+                    $(".layui-table-fixed").each(function () {
+                        $($(this).find(".layui-table-body tbody tr")[index]).height($(val).height());
+                    });
+                });
+                $(".layui-table-header tr").each(function (index, val) {
+                    $(".layui-table-fixed").each(function () {
+                        $($(this).find(".layui-table-header thead tr")[index]).height($(val).height());
+                    });
+                });
+            }
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            var result = JSON.stringify(data.field);
+            //执行搜索重载
+            table.reload('tableContainer', {
+                page: {
+                    curr: 1
+                }
+                , where: {
+                    siteId: parseInt($("select[name='site_id']").val()),
+                    status: parseInt($("select[name='status']").val()),
+                    title: $("input[name='title']").val(),
+                    name: $("input[name='name']").val(),
+                }
+            }, 'data');
+
+            return false;
+        });
+
+        /**
+         * toolbar监听事件
+         */
+        table.on('toolbar(currentTableFilter)', function (obj) {
+            if (obj.event === 'add') {  // 监听添加操作
+                var index = layer.open({
+                    title: '添加',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin: true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: 'TagEdit',
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+            } else if (obj.event === 'save') {  // 监听保存操作
+                var sorts = [];
+                $("input[name='sort_id']").each(function () {
+                    var sort = {
+                        tag_id: parseInt($(this).attr("tag_id")),
+                        sort_id: parseInt($(this).val())
+                    };
+                    sorts.push(sort);
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "/admin/tag/tagSaveSortId", //提交的地址
+                    data: JSON.stringify(sorts),
+                    async: false,
+                    beforeSend: function () { //当一个Ajax请求开始时触发
+                        this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+                    },
+                    error: function (request) {  //失败的话
+                    },
+                    success: function (data) {  //成功
+                        if (data.code == CodeSuccess) {
+                            layer.msg("提交成功", { icon: 1, time: 1000 }, function () {
+                                $('button[lay-filter="data-search-btn"]').click();
+                            });
+                        } else {
+                            layer.msg(data.msg, { icon: 2, time: 5000 });
+                        }
+                    },
+                    complete: function () {
+                        layer.close(this.layerIndex);
+                    },
+                });
+            } else if (obj.event === 'audit') {
+                var checkStatus = table.checkStatus('tableContainer');
+                var data = checkStatus.data;
+                if (data.length == 0) {
+                    layer.msg("请选择要审核的数据", { icon: 2, time: 1000 });
+                    return false;
+                }
+                var ids = [];
+                for (var i = 0; i < data.length; i++) {
+                    ids.push(data[i].tag_id);
+                }
+                changeStatus(ids, 2);
+            } else if (obj.event === 'reject') {
+                var checkStatus = table.checkStatus('tableContainer');
+                var data = checkStatus.data;
+                if (data.length == 0) {
+                    layer.msg("请选择要审核的数据", { icon: 2, time: 1000 });
+                    return false;
+                }
+                var ids = [];
+                for (var i = 0; i < data.length; i++) {
+                    ids.push(data[i].tag_id);
+                }
+                changeStatus(ids, 3);
+            }
+        });
+
+        function changeStatus(ids, status) {
+            $.ajax({
+                type: "POST",
+                url: "/admin/tag/tagChangeStatus", //提交的地址
+                data: JSON.stringify({
+                    "tag_ids": ids,
+                    "status": status,
+                }),
+                async: false,
+                beforeSend: function () { //当一个Ajax请求开始时触发
+                    this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+                },
+                error: function (request) {  //失败的话
+                },
+                success: function (data) {  //成功
+                    if (data.code == CodeSuccess) {
+                        layer.msg("审核成功", { icon: 1, time: 1000 }, function () {
+                            $('button[lay-filter="data-search-btn"]').click();
+                        });
+                    } else {
+                        layer.msg(data.msg, { icon: 2, time: 1000 });
+                    }
+                },
+                complete: function () {
+                    layer.closeAll();
+                    layer.close(this.layerIndex);
+                },
+            });
+        }
+
+        //监听表格复选框选择
+        table.on('checkbox(currentTableFilter)', function (obj) {
+        });
+
+        table.on('tool(currentTableFilter)', function (obj) {
+            var data = obj.data;
+            var data = obj.data;
+            if (obj.event === 'clone') {
+                var index = layer.open({
+                    title: '克隆',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin: true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: 'TagEdit?clone=1&tagId=' + data.tag_id,
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            } else if (obj.event === 'edit') {
+                var index = layer.open({
+                    title: '编辑',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin: true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: 'TagEdit?tagId=' + data.tag_id,
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            } else if (obj.event === 'delete') {
+                layer.confirm('真的删除行么', function (index) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/admin/tag/tagDestory", //提交的地址
+                        data: {
+                            "tagId": data.tag_id
+                        },
+                        async: false,
+                        beforeSend: function () { //当一个Ajax请求开始时触发
+                            this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+                        },
+                        error: function (request) {  //失败的话
+                        },
+                        success: function (data) {  //成功
+                            if (data.code == CodeSuccess) {
+                                layer.msg("提交成功", { icon: 1, time: 1000 }, function () {
+                                    $('button[lay-filter="data-search-btn"]').click();
+                                });
+                            } else {
+                                layer.msg(data.msg, { icon: 2, time: 1000 });
+                            }
+                        },
+                        complete: function () {
+                            layer.closeAll();
+                            layer.close(this.layerIndex);
+                        },
+                    });
+                });
+            }
+        });
+    });
+</script>

@@ -2,7 +2,7 @@ package admin
 
 import (
 	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/biz/bmodel"
+	"haedu.gov.cn/cms/app/biz/bizmodel"
 )
 
 // 文本回复
@@ -25,7 +25,7 @@ func (c *WeixinController) TextEdit() {
 		c.Data["rule_id"] = ruleId
 		finder, err := biz.NewWeixinRequest().RuleFind(ruleId)
 		if finder == nil || err != nil {
-			finder = &bmodel.Weixin_RuleModel{
+			finder = &bizmodel.Weixin_RuleModel{
 				RequestType: 1,
 				SortID:      99,
 				Name:        "文本回复",

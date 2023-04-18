@@ -36,6 +36,7 @@ func newCmsAlbum(db *gorm.DB, opts ...gen.DOOption) cmsAlbum {
 	_cmsAlbum.OriginalPath = field.NewString(tableName, "original_path")
 	_cmsAlbum.FilePath = field.NewString(tableName, "file_path")
 	_cmsAlbum.FileSize = field.NewInt64(tableName, "file_size")
+	_cmsAlbum.FileMime = field.NewString(tableName, "file_mime")
 	_cmsAlbum.FileExt = field.NewString(tableName, "file_ext")
 	_cmsAlbum.LinkURL = field.NewString(tableName, "link_url")
 	_cmsAlbum.Click = field.NewInt32(tableName, "click")
@@ -67,6 +68,7 @@ type cmsAlbum struct {
 	OriginalPath field.String // 原图地址
 	FilePath     field.String // 文件路径（带域名）
 	FileSize     field.Int64  // 文件大小(字节)
+	FileMime     field.String // Mime类型
 	FileExt      field.String // 文件扩展名
 	LinkURL      field.String // 外部链接
 	Click        field.Int32  // 点击次数
@@ -104,6 +106,7 @@ func (c *cmsAlbum) updateTableName(table string) *cmsAlbum {
 	c.OriginalPath = field.NewString(table, "original_path")
 	c.FilePath = field.NewString(table, "file_path")
 	c.FileSize = field.NewInt64(table, "file_size")
+	c.FileMime = field.NewString(table, "file_mime")
 	c.FileExt = field.NewString(table, "file_ext")
 	c.LinkURL = field.NewString(table, "link_url")
 	c.Click = field.NewInt32(table, "click")
@@ -138,7 +141,7 @@ func (c *cmsAlbum) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *cmsAlbum) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 21)
+	c.fieldMap = make(map[string]field.Expr, 22)
 	c.fieldMap["album_id"] = c.AlbumID
 	c.fieldMap["table_name"] = c.TableName_
 	c.fieldMap["record_id"] = c.RecordID
@@ -148,6 +151,7 @@ func (c *cmsAlbum) fillFieldMap() {
 	c.fieldMap["original_path"] = c.OriginalPath
 	c.fieldMap["file_path"] = c.FilePath
 	c.fieldMap["file_size"] = c.FileSize
+	c.fieldMap["file_mime"] = c.FileMime
 	c.fieldMap["file_ext"] = c.FileExt
 	c.fieldMap["link_url"] = c.LinkURL
 	c.fieldMap["click"] = c.Click

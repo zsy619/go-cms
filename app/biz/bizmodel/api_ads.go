@@ -1,8 +1,8 @@
-package bmodel
+package bizmodel
 
 import "time"
 
-type ApiAdListModel struct {
+type ApiAdsListModel struct {
 	AdID          int64     `gorm:"column:ad_id;type:bigint;" json:"ad_id" form:"ad_id"`                                           // 主键
 	SiteID        int64     `gorm:"column:site_id;type:bigint" json:"site_id" form:"site_id"`                                      // 所属站点
 	ChannelID     int64     `gorm:"column:channel_id;type:bigint" json:"channel_id" form:"channel_id"`                             // 所属频道

@@ -1,4 +1,4 @@
-package biz
+package bizmodel
 
 type TreeNode struct {
 	Id       int64       `json:"id"`

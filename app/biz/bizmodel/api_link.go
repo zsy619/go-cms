@@ -1,4 +1,4 @@
-package bmodel
+package bizmodel
 
 type ApiLinkListModel struct {
 	LinkID     int64  `gorm:"column:link_id;type:bigint;primaryKey;" json:"link_id" form:"link_id"`      // 主键

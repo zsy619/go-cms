@@ -2,7 +2,7 @@ package admin
 
 import (
 	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/biz/bmodel"
+	"haedu.gov.cn/cms/app/biz/bizmodel"
 )
 
 // 语音回复
@@ -25,7 +25,7 @@ func (c *WeixinController) SoundEdit() {
 		c.Data["rule_id"] = ruleId
 		finder, err := biz.NewWeixinRequest().RuleFind(ruleId)
 		if finder == nil || err != nil {
-			finder = &bmodel.Weixin_RuleModel{
+			finder = &bizmodel.Weixin_RuleModel{
 				RequestType: 3,
 				SortID:      99,
 				Name:        "语音回复",

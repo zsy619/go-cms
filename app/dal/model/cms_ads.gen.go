@@ -8,11 +8,11 @@ import (
 	"time"
 )
 
-const TableNameCmsAd = "cms_ad"
+const TableNameCmsAds = "cms_ads"
 
-// CmsAd mapped from table <cms_ad>
-type CmsAd struct {
-	AdID       int64     `gorm:"column:ad_id;type:bigint;primaryKey;autoIncrement:true" json:"ad_id" form:"ad_id"`              // 主键
+// CmsAds mapped from table <cms_ads>
+type CmsAds struct {
+	AdsID      int64     `gorm:"column:ads_id;type:bigint;primaryKey;autoIncrement:true" json:"ads_id" form:"ads_id"`           // 主键
 	SiteID     int64     `gorm:"column:site_id;type:bigint" json:"site_id" form:"site_id"`                                      // 所属站点
 	ChannelID  int64     `gorm:"column:channel_id;type:bigint" json:"channel_id" form:"channel_id"`                             // 所属频道
 	CategoryID int64     `gorm:"column:category_id;type:bigint" json:"category_id" form:"category_id"`                          // 类别ID
@@ -31,8 +31,8 @@ type CmsAd struct {
 	IsRed      int32     `gorm:"column:is_red;type:tinyint" json:"is_red" form:"is_red"`                                        // 是否推荐
 	IsHot      int32     `gorm:"column:is_hot;type:tinyint" json:"is_hot" form:"is_hot"`                                        // 是否热门
 	IsSlide    int32     `gorm:"column:is_slide;type:tinyint" json:"is_slide" form:"is_slide"`                                  // 是否幻灯片
-	BeginTime  time.Time `gorm:"column:begin_time;type:datetime;default:CURRENT_TIMESTAMP" json:"begin_time" form:"begin_time"` // 创建时间
-	EndTime    time.Time `gorm:"column:end_time;type:datetime;default:CURRENT_TIMESTAMP" json:"end_time" form:"end_time"`       // 创建时间
+	BeginTime  time.Time `gorm:"column:begin_time;type:datetime;default:CURRENT_TIMESTAMP" json:"begin_time" form:"begin_time"` // 开始时间
+	EndTime    time.Time `gorm:"column:end_time;type:datetime;default:CURRENT_TIMESTAMP" json:"end_time" form:"end_time"`       // 结束时间
 	BelongTo   string    `gorm:"column:belong_to;type:varchar(64)" json:"belong_to" form:"belong_to"`                           // 归属
 	CreateID   int32     `gorm:"column:create_id;type:int" json:"create_id" form:"create_id"`                                   // 创建人ID
 	CreateName string    `gorm:"column:create_name;type:varchar(64)" json:"create_name" form:"create_name"`                     // 创建人姓名
@@ -42,7 +42,7 @@ type CmsAd struct {
 	UpdateTime time.Time `gorm:"column:update_time;type:int unsigned;autoUpdateTime" json:"update_time" form:"update_time"`     // 修改时间
 }
 
-// TableName CmsAd's table name
-func (*CmsAd) TableName() string {
-	return TableNameCmsAd
+// TableName CmsAds's table name
+func (*CmsAds) TableName() string {
+	return TableNameCmsAds
 }

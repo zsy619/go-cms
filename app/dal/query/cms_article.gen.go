@@ -61,6 +61,8 @@ func newCmsArticle(db *gorm.DB, opts ...gen.DOOption) cmsArticle {
 	_cmsArticle.IsDeleted = field.NewBool(tableName, "is_deleted")
 	_cmsArticle.Status = field.NewInt32(tableName, "status")
 	_cmsArticle.PublishTime = field.NewTime(tableName, "publish_time")
+	_cmsArticle.Topic = field.NewString(tableName, "topic")
+	_cmsArticle.Template = field.NewString(tableName, "template")
 	_cmsArticle.BelongTo = field.NewString(tableName, "belong_to")
 	_cmsArticle.CreateID = field.NewInt32(tableName, "create_id")
 	_cmsArticle.CreateName = field.NewString(tableName, "create_name")
@@ -112,6 +114,8 @@ type cmsArticle struct {
 	IsDeleted      field.Bool   // 删除标识
 	Status         field.Int32  // 状态0草稿1提交2审核通过3审核未通过4驳回
 	PublishTime    field.Time   // 发布时间
+	Topic          field.String // 文章专题
+	Template       field.String // 模板路径
 	BelongTo       field.String // 归属
 	CreateID       field.Int32  // 创建人ID
 	CreateName     field.String // 创建人姓名
@@ -169,6 +173,8 @@ func (c *cmsArticle) updateTableName(table string) *cmsArticle {
 	c.IsDeleted = field.NewBool(table, "is_deleted")
 	c.Status = field.NewInt32(table, "status")
 	c.PublishTime = field.NewTime(table, "publish_time")
+	c.Topic = field.NewString(table, "topic")
+	c.Template = field.NewString(table, "template")
 	c.BelongTo = field.NewString(table, "belong_to")
 	c.CreateID = field.NewInt32(table, "create_id")
 	c.CreateName = field.NewString(table, "create_name")
@@ -200,7 +206,7 @@ func (c *cmsArticle) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *cmsArticle) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 41)
+	c.fieldMap = make(map[string]field.Expr, 43)
 	c.fieldMap["article_id"] = c.ArticleID
 	c.fieldMap["site_id"] = c.SiteID
 	c.fieldMap["channel_id"] = c.ChannelID
@@ -235,6 +241,8 @@ func (c *cmsArticle) fillFieldMap() {
 	c.fieldMap["is_deleted"] = c.IsDeleted
 	c.fieldMap["status"] = c.Status
 	c.fieldMap["publish_time"] = c.PublishTime
+	c.fieldMap["topic"] = c.Topic
+	c.fieldMap["template"] = c.Template
 	c.fieldMap["belong_to"] = c.BelongTo
 	c.fieldMap["create_id"] = c.CreateID
 	c.fieldMap["create_name"] = c.CreateName

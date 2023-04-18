@@ -77,7 +77,6 @@
                 success: function (res) {
                     if (res.code == 0) {
                         var len = res.data.length;
-                        console.log(res.data);
                         var tmpl = $("#templateLi").html();
                         for (var i = 0; i < len; i++) {
                             var item = res.data[i];
@@ -109,7 +108,7 @@
                                 , count: res.count //数据总数，从服务端得到
                                 , jump: function (obj, first) {
                                     if (!first) {
-                                        loadData(obj.curr, obj.limit, call_index);
+                                        loadData(obj.curr, obj.limit);
                                     }
                                 }
                             });

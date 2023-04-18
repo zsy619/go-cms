@@ -3,7 +3,7 @@ package biz
 import (
 	"fmt"
 
-	. "github.com/szmcdull/glinq/unsafe"
+	linq "github.com/ahmetb/go-linq/v3"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
 )
@@ -39,6 +39,11 @@ func NewMenu() *Menu {
 	return &Menu{}
 }
 
+/**
+ * @description: MenuList 获取菜单列表
+ * @param {int64} adminId 管理员ID
+ * @return {*}
+ */
 func (this *Menu) MenuList(adminId int64) *MenuOuter {
 	outerMenu := &MenuOuter{
 		HomeInfo: HomeInfo{
@@ -76,14 +81,13 @@ ORDER BY a.sort_id`, role.RoleID)
 	if err := adminNavDo.UnderlyingDB().Exec(sqlNav).Find(&navs).Error; err != nil {
 		return outerMenu
 	}
-	parentNavs := ToSlice(Where(FromSlice(navs), func(s *model.CmsAdminNav) bool {
+
+	parentNavs := []*model.CmsAdminNav{}
+	linq.From(navs).WhereT(func(s *model.CmsAdminNav) bool {
 		return s.ParentID == 0 && s.IsHide == 0
-	}))
-	// linq.From(navs).WhereT(func(s *model.CmsAdminNav) bool {
-	// 	return s.ParentID == 0 && s.IsHide == 0
-	// }).OrderByT(func(s *model.CmsAdminNav) int32 {
-	// 	return s.SortID
-	// }).ToSlice(&parentNavs)
+	}).OrderByT(func(s *model.CmsAdminNav) int32 {
+		return s.SortID
+	}).ToSlice(&parentNavs)
 
 	for _, parentNav := range parentNavs {
 		parentMenuInfo := &MenuInfo{
@@ -108,13 +112,16 @@ func (this *Menu) ChildMenu(navs []*model.CmsAdminNav, parentId int64) ([]*MenuI
 		return nil, nil
 	}
 	outMenu := []*MenuInfo{}
-	childNavs := ToSlice(Where(FromSlice(navs), func(s *model.CmsAdminNav) bool {
+
+	childNavs := []*model.CmsAdminNav{}
+	linq.From(navs).WhereT(func(s *model.CmsAdminNav) bool {
 		return s.ParentID == parentId && s.IsHide == 0
-	}))
-	// linq.From(navs).WhereT(func(s *model.CmsAdminNav) bool {
-	// 	return s.ParentID == parentId && s.IsHide == 0
-	// }).ToSlice(&childNavs)
+	}).OrderByT(func(s *model.CmsAdminNav) int32 {
+		return s.SortID
+	}).ToSlice(&childNavs)
+
 	for _, childNav := range childNavs {
+		fmt.Println(childNav.ParentID, childNav.Title, "-------->", childNav.SortID)
 		childMenuInfo := &MenuInfo{
 			Title:  childNav.Title,
 			Icon:   childNav.IconURL,

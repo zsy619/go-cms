@@ -12,22 +12,24 @@ import (
 	"haedu.gov.cn/tools/xjson"
 )
 
-type AdController struct{ BaseController }
+type AdsController struct{ BaseController }
 
 // Index 广告管理
-// @router /admin/ad/index [get]
-func (c *AdController) Index() {
-	list, _, _ := biz.NewCmsAd().CategoryPaginate(1, 99999, -1, -1, "", "")
+// @router /admin/ads/index [get]
+func (c *AdsController) Index() {
+	list, _, _ := biz.NewCmsAds().CategoryPaginate(1, 99999, -1, -1, "", "")
 	c.Data["categoryList"] = list
 	c.display()
 }
 
-func (c *AdController) AdEdit() {
-	adId, _ := c.GetInt64("adId")
+// AdsEdit 广告编辑
+// @router /admin/ads/adsEdit [get]
+func (c *AdsController) AdsEdit() {
+	adsId, _ := c.GetInt64("adsId")
 	clone, _ := c.GetInt("clone")
-	mdl, err := biz.NewCmsAd().AdFind(adId)
+	mdl, err := biz.NewCmsAds().AdsFind(adsId)
 	if err != nil {
-		mdl = &model.CmsAd{
+		mdl = &model.CmsAds{
 			SortID:    99,
 			BeginTime: time.Now(),
 			EndTime:   time.Now().AddDate(0, 0, 7),
@@ -36,69 +38,75 @@ func (c *AdController) AdEdit() {
 	}
 	// 是否克隆
 	if clone == 1 {
-		mdl.AdID = 0
+		mdl.AdsID = 0
 	}
 	c.Data["mdl"] = mdl
-	list, _, _ := biz.NewCmsAd().CategoryPaginate(1, 99999, -1, -1, "", "")
+	list, _, _ := biz.NewCmsAds().CategoryPaginate(1, 99999, -1, -1, "", "")
 	c.Data["categoryList"] = list
 	c.display()
 }
 
-func (c *AdController) AdSave() {
-	mdl := model.CmsAd{}
+// AdsSave 广告保存
+// @router /admin/ads/adsSave [post]
+func (c *AdsController) AdsSave() {
+	mdl := model.CmsAds{}
 	if err := c.ParseForm(&mdl); err != nil {
-		logs.Error("AdSave", err.Error())
+		logs.Error("AdsSave", err.Error())
 		c.JSONError(err.Error())
 	}
-	if err := biz.NewCmsAd().AdSave(&mdl); err != nil {
-		logs.Error("AdSave", err.Error())
+	if err := biz.NewCmsAds().AdsSave(&mdl); err != nil {
+		logs.Error("AdsSave", err.Error())
 		c.JSONError(err.Error())
 		return
 	}
 	c.JSONSuccess("保存成功", nil)
 }
 
-// AdPaginate 保存排序
-func (c *AdController) AdSaveSortId() {
-	mdls := []vmodel.Ad_SaveSortIdModel{}
+// AdsSaveSortId 保存排序
+// @router /admin/ad/AdsSaveSortId [post]
+func (c *AdsController) AdsSaveSortId() {
+	mdls := []vmodel.Ads_SaveSortIdModel{}
 	data := c.Ctx.Input.RequestBody
-	fmt.Println("AdSaveSortId", string(data))
+	fmt.Println("AdsSaveSortId", string(data))
 	if err := xjson.Unmarshal(c.Ctx.Input.RequestBody, &mdls); err != nil {
-		logs.Error("AdSaveSortId", err.Error())
+		logs.Error("AdsSaveSortId", err.Error())
 		c.JSONError(err.Error())
 	}
-	service := biz.NewCmsAd()
+	service := biz.NewCmsAds()
 	for _, mdl := range mdls {
-		if err := service.AdSaveSortId(mdl.AdId, int32(mdl.SortId)); err != nil {
-			logs.Error("AdSaveSortId", err.Error())
+		if err := service.AdsSaveSortId(mdl.AdsId, int32(mdl.SortId)); err != nil {
+			logs.Error("AdsSaveSortId", err.Error())
 			c.JSONError(err.Error())
 			return
 		}
 	}
-	// biz.NewApiAd().InitCache()
 	c.JSONSuccess("保存成功", nil)
 }
 
-func (c *AdController) AdDestory() {
-	adId, _ := c.GetInt64("adId")
-	if err := biz.NewCmsAd().AdDestory(adId); err != nil {
-		logs.Error("AdDestory", err.Error())
+// AdsDestory 删除
+// @router /admin/ads/AdsDestory [post]
+func (c *AdsController) AdsDestory() {
+	adsId, _ := c.GetInt64("adsId")
+	if err := biz.NewCmsAds().AdsDestory(adsId); err != nil {
+		logs.Error("AdsDestory", err.Error())
 		c.JSONError(err.Error())
 		return
 	}
 	c.JSONSuccess("删除成功", nil)
 }
 
-func (c *AdController) AdChangeStatus() {
-	var mdl vmodel.Ad_ChangeStatusModel
+// AdsChangeStatus 更改状态
+// @router /admin/ads/AdsChangeStatus [post]
+func (c *AdsController) AdsChangeStatus() {
+	var mdl vmodel.Ads_ChangeStatusModel
 	if err := xjson.Unmarshal(c.Ctx.Input.RequestBody, &mdl); err != nil {
-		logs.Error("AdChangeStatus", err.Error())
+		logs.Error("AdsChangeStatus", err.Error())
 		c.JSONError(err.Error())
 		return
 	}
-	for _, Adid := range mdl.AdIds {
-		if err := biz.NewCmsAd().AdChangeStatus(Adid, mdl.Status); err != nil {
-			logs.Error("AdChangeStatus", err.Error())
+	for _, adsId := range mdl.AdsIds {
+		if err := biz.NewCmsAds().AdsChangeStatus(adsId, mdl.Status); err != nil {
+			logs.Error("AdsChangeStatus", err.Error())
 			c.JSONError(err.Error())
 			return
 		}
@@ -106,29 +114,29 @@ func (c *AdController) AdChangeStatus() {
 	c.JSONSuccess("更改状态成功", nil)
 }
 
-// AdPaginate 列表
-// @router /admin/ad/Adpaginate [get]
-func (c *AdController) AdPaginate() {
+// AdsPaginate 列表
+// @router /admin/ads/AdsPaginate [get]
+func (c *AdsController) AdsPaginate() {
 	page, limit := c.GetPagingParameters()
 	categoryId, _ := c.GetInt64("categoryId")
 	status, _ := c.GetInt32("status")
 	title := c.GetString("title")
 	callIndex := c.GetString("callIndex")
-	list, count, _ := biz.NewCmsAd().AdPaginate(page, limit, -1, -1, categoryId, title, callIndex, status)
+	list, count, _ := biz.NewCmsAds().AdsPaginate(page, limit, -1, -1, categoryId, title, callIndex, status)
 	c.JSONPage(lib.CodeSuccess, "", list, count)
 }
 
 // Category 链接分类
-// @router /admin/Ad/category [get]
-func (c *AdController) Category() {
+// @router /admin/ads/category [get]
+func (c *AdsController) Category() {
 	c.display()
 }
 
-func (c *AdController) CategoryEdit() {
+func (c *AdsController) CategoryEdit() {
 	categoryId, _ := c.GetInt64("categoryId")
-	mdl, err := biz.NewCmsAd().CategoryFind(categoryId)
+	mdl, err := biz.NewCmsAds().CategoryFind(categoryId)
 	if err != nil {
-		mdl = &model.CmsAdCategory{
+		mdl = &model.CmsAdsCategory{
 			SortID: 99,
 		}
 	}
@@ -136,13 +144,13 @@ func (c *AdController) CategoryEdit() {
 	c.display()
 }
 
-func (c *AdController) CategorySave() {
-	mdl := model.CmsAdCategory{}
+func (c *AdsController) CategorySave() {
+	mdl := model.CmsAdsCategory{}
 	if err := c.ParseForm(&mdl); err != nil {
 		logs.Error("CategorySave", err.Error())
 		c.JSONError(err.Error())
 	}
-	if err := biz.NewCmsAd().CategorySave(&mdl); err != nil {
+	if err := biz.NewCmsAds().CategorySave(&mdl); err != nil {
 		logs.Error("CategorySave", err.Error())
 		c.JSONError(err.Error())
 		return
@@ -150,7 +158,7 @@ func (c *AdController) CategorySave() {
 	c.JSONSuccess("保存成功", nil)
 }
 
-func (c *AdController) CategorySaveSortId() {
+func (c *AdsController) CategorySaveSortId() {
 	mdls := []vmodel.Category_SaveSortIdModel{}
 	data := c.Ctx.Input.RequestBody
 	fmt.Println("CategorySaveSortId", string(data))
@@ -159,7 +167,7 @@ func (c *AdController) CategorySaveSortId() {
 		c.JSONError(err.Error())
 	}
 	for _, mdl := range mdls {
-		if err := biz.NewCmsAd().CategorySaveSortId(mdl.CategoryId, int32(mdl.SortId)); err != nil {
+		if err := biz.NewCmsAds().CategorySaveSortId(mdl.CategoryId, int32(mdl.SortId)); err != nil {
 			logs.Error("CategorySaveSortId", err.Error())
 			c.JSONError(err.Error())
 			return
@@ -168,9 +176,9 @@ func (c *AdController) CategorySaveSortId() {
 	c.JSONSuccess("保存成功", nil)
 }
 
-func (c *AdController) CategoryDestory() {
+func (c *AdsController) CategoryDestory() {
 	categoryId, _ := c.GetInt64("categoryId")
-	if err := biz.NewCmsAd().CategoryDestory(categoryId); err != nil {
+	if err := biz.NewCmsAds().CategoryDestory(categoryId); err != nil {
 		logs.Error("CategoryDestory", err.Error())
 		c.JSONError(err.Error())
 		return
@@ -179,11 +187,11 @@ func (c *AdController) CategoryDestory() {
 }
 
 // CategoryPaginate 列表
-// @router /admin/Ad/categorypaginate [get]
-func (c *AdController) CategoryPaginate() {
+// @router /admin/ads/categorypaginate [get]
+func (c *AdsController) CategoryPaginate() {
 	page, limit := c.GetPagingParameters()
 	title := c.GetString("title")
 	callIndex := c.GetString("callIndex")
-	list, count, _ := biz.NewCmsAd().CategoryPaginate(page, limit, -1, -1, title, callIndex)
+	list, count, _ := biz.NewCmsAds().CategoryPaginate(page, limit, -1, -1, title, callIndex)
 	c.JSONPage(lib.CodeSuccess, "", list, count)
 }

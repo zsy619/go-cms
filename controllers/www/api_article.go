@@ -4,7 +4,7 @@ import (
 	"strconv"
 
 	"github.com/beego/beego/v2/core/logs"
-	"haedu.gov.cn/cms/app/biz/bmodel"
+	"haedu.gov.cn/cms/app/biz/bizmodel"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/lib"
 )
@@ -151,9 +151,9 @@ func (this *ApiArticleController) One() {
 	call_index := this.GetString("call_index")
 	aritcle, album, attatch, err := this.BaseController.ArticleGet(call_index, article_id)
 	result := struct {
-		Article *bmodel.ApiArticleOneModel `json:"article"`
-		Album   []*model.CmsAlbum          `json:"album"`
-		Attach  []*model.CmsAttach         `json:"attatch"`
+		Article *bizmodel.ApiArticleOneModel `json:"article"`
+		Album   []*model.CmsAlbum            `json:"album"`
+		Attach  []*model.CmsAttach           `json:"attatch"`
 	}{
 		Article: aritcle,
 		Album:   album,
@@ -180,8 +180,8 @@ func (this *ApiArticleController) PrevNext() {
 	call_index := this.GetString("call_index")
 	prev, next := this.BaseController.ArticlePrevNext(call_index, category_id, article_id)
 	result := struct {
-		Prev *bmodel.ApiArticleOneModel `json:"prev"`
-		Next *bmodel.ApiArticleOneModel `json:"next"`
+		Prev *bizmodel.ApiArticleOneModel `json:"prev"`
+		Next *bizmodel.ApiArticleOneModel `json:"next"`
 	}{
 		Prev: prev,
 		Next: next,

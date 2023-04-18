@@ -1,7 +1,7 @@
 package www
 
 import (
-	"haedu.gov.cn/cms/app/biz/bmodel"
+	"haedu.gov.cn/cms/app/biz/bizmodel"
 	"haedu.gov.cn/cms/app/dal/model"
 )
 
@@ -12,7 +12,7 @@ func (this *JgszController) Prepare() {
 	this.CategoryBaseController.Prepare()
 	article, err := this.ArticleArticle(this.ActionName, 0)
 	if err != nil {
-		article = &bmodel.ApiArticleOneModel{}
+		article = &bizmodel.ApiArticleOneModel{}
 	}
 	this.Data["article"] = article
 }

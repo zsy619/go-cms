@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/beego/beego/v2/core/logs"
-	"haedu.gov.cn/cms/app/biz/bmodel"
+	"haedu.gov.cn/cms/app/biz/bizmodel"
 	"haedu.gov.cn/cms/app/dal/query"
 )
 
@@ -21,18 +21,18 @@ func NewApiChannel() *ApiChannel {
  * @param {int64} channel_id 频道ID
  * @return {*}
  */
-func (this *ApiChannel) ChannelFind(name string, channel_id int64) (*bmodel.ApiChannelFindModel, error) {
+func (this *ApiChannel) ChannelFind(name string, channel_id int64) (*bizmodel.ApiChannelFindModel, error) {
 	if name == "" && channel_id <= 0 {
 		return nil, errors.New("参数错误")
 	}
 	cacheKey := fmt.Sprintf("ApiChannelChannelFind_%s_%d", name, channel_id)
 	if found, item := ApiCache.Get(cacheKey); found {
 		logs.Debug("ApiCache")
-		return item.(*bmodel.ApiChannelFindModel), nil
+		return item.(*bizmodel.ApiChannelFindModel), nil
 	}
 	mdl, do := query.CmsSiteChannelDo()
 	if name != "" {
-		find := &bmodel.ApiChannelFindModel{}
+		find := &bizmodel.ApiChannelFindModel{}
 		err := do.Where(mdl.Name.Eq(name)).Select(mdl.ChannelID, mdl.ParentID, mdl.Title, mdl.Name, mdl.Kind, mdl.ClassLayer, mdl.ImgUrl1, mdl.ImgUrl2, mdl.SortID, mdl.IsAlbum, mdl.IsAttach, mdl.IsSpec).Order(mdl.SortID).Scan(&find)
 		if err != nil {
 			return nil, err
@@ -44,7 +44,7 @@ func (this *ApiChannel) ChannelFind(name string, channel_id int64) (*bmodel.ApiC
 		return find, nil
 	}
 	if channel_id > 0 {
-		find := &bmodel.ApiChannelFindModel{}
+		find := &bizmodel.ApiChannelFindModel{}
 		err := do.Where(mdl.ChannelID.Eq(channel_id)).Select(mdl.ChannelID, mdl.ParentID, mdl.Title, mdl.Name, mdl.Kind, mdl.ClassLayer, mdl.ImgUrl1, mdl.ImgUrl2, mdl.SortID, mdl.IsAlbum, mdl.IsAttach, mdl.IsSpec).Order(mdl.SortID).Scan(&find)
 		if err != nil {
 			return nil, err

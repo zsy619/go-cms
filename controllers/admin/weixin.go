@@ -3,7 +3,7 @@ package admin
 import (
 	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/biz/bmodel"
+	"haedu.gov.cn/cms/app/biz/bizmodel"
 	"haedu.gov.cn/cms/app/lib"
 )
 
@@ -40,7 +40,7 @@ func (c *WeixinController) Default() {
 
 // RuleSave 保存规则
 func (c *WeixinController) RuleSave() {
-	mdl := bmodel.Weixin_RuleModel{}
+	mdl := bizmodel.Weixin_RuleModel{}
 	if err := c.ParseForm(&mdl); err != nil {
 		logs.Error("RuleSave", err.Error())
 		c.JSONError(err.Error())

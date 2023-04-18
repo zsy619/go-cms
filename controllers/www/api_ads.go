@@ -7,7 +7,7 @@ import (
 	"haedu.gov.cn/cms/app/lib"
 )
 
-type ApiAdController struct{ BaseController }
+type ApiAdsController struct{ BaseController }
 
 /**
 * @description: Find 获取广告列表
@@ -16,12 +16,12 @@ type ApiAdController struct{ BaseController }
 * @param {string} call_index 广告分类标识
 * @return {*}
  */
-// @router /api/ad/find [get]
-func (this *ApiAdController) Find() {
+// @router /api/ads/find [get]
+func (this *ApiAdsController) Find() {
 	category_id, _ := this.GetInt64("category_id")
 	call_index := this.GetString("call_index")
 	limit, _ := this.GetInt("limit", 6)
-	out, len, err := this.BaseController.AdFind(limit, category_id, call_index)
+	out, len, err := this.BaseController.AdsFind(limit, category_id, call_index)
 	if err != nil {
 		logs.Error("Find::", "callIndex", call_index, "err", err)
 		this.JSONErrorOfData(err.Error(), out)
@@ -38,12 +38,12 @@ func (this *ApiAdController) Find() {
  * @return {*}
  */
 // @router /api/ad/paginate [get]
-func (this *ApiAdController) Paginate() {
+func (this *ApiAdsController) Paginate() {
 	category_id, _ := this.GetInt64("category_id")
 	call_index := this.GetString("call_index")
 	limit, _ := this.GetInt("limit", 12)
 	page, _ := this.GetInt("page", 1)
-	out, len, err := this.BaseController.AdPaginate(page, limit, category_id, call_index)
+	out, len, err := this.BaseController.AdsPaginate(page, limit, category_id, call_index)
 	if err != nil {
 		logs.Error("Paginate::", "callIndex", call_index, "err", err)
 		this.JSONPage(lib.CodeError, err.Error(), out, len)
@@ -57,9 +57,9 @@ func (this *ApiAdController) Paginate() {
  * @return {*}
  */
 // @router /api/ad/click [get]
-func (this *ApiAdController) Click() {
-	ad_id, _ := this.GetInt64("ad_id", 0)
-	err := this.BaseController.AdClick(ad_id)
+func (this *ApiAdsController) Click() {
+	ads_id, _ := this.GetInt64("ads_id", 0)
+	err := this.BaseController.AdsClick(ads_id)
 	if err != nil {
 		logs.Error("Click", err.Error())
 		this.JSONError(err.Error())

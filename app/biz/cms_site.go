@@ -7,8 +7,10 @@ import (
 	"strings"
 	"time"
 
+	"haedu.gov.cn/cms/app/biz/bizmodel"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
+	"haedu.gov.cn/tools/xgeneric"
 )
 
 type CmsSite struct{}
@@ -80,6 +82,7 @@ func (this *CmsSite) SiteSave(mdl *model.CmsSite, domains []string, remarks []st
 	if count, _ := siteDo.Where(site.DirPath.Eq(mdl.DirPath), site.IsDeleted.Is(false), site.SiteID.Neq(mdl.SiteID)).Count(); count > 0 {
 		return errors.New("生成目录名已存在，请修改后重试")
 	}
+	mdl.Logo2 = xgeneric.IFF(mdl.Logo1 == "", "", mdl.Logo2)
 	if mdl.SiteID <= 0 {
 		if err := siteDo.Save(mdl); err != nil {
 			return err
@@ -129,10 +132,18 @@ func (this *CmsSite) SiteSave(mdl *model.CmsSite, domains []string, remarks []st
 			domainDo.Save(domain)
 		}
 	}
-	// Cache_ApiSiteDefault = nil
 	return nil
 }
 
+/**
+ * @description: 频道分页查询
+ * @param {*} page 页码
+ * @param {int} limit 每页条数
+ * @param {int64} siteId 站点ID
+ * @param {*} name 频道名称
+ * @param {string} title 频道标题
+ * @return {*}
+ */
 func (this *CmsSite) ChannelPaginate(page, limit int, siteId int64, name, title string) ([]*model.CmsSiteChannel, int64, error) {
 	mdl, do := query.CmsSiteChannelDo()
 	if siteId > 0 {
@@ -169,6 +180,7 @@ func (this *CmsSite) ChannelSave(input *model.CmsSiteChannel) error {
 	}
 	var err error
 	input.UpdateTime = time.Now()
+	input.ImgUrl2 = xgeneric.IFF(input.ImgUrl1 == "", "", input.ImgUrl2)
 	if input.ChannelID <= 0 {
 		input.CreateTime = time.Now()
 		err = do.Create(input)
@@ -197,6 +209,11 @@ func (this *CmsSite) ChannelSave(input *model.CmsSiteChannel) error {
 	return err
 }
 
+/**
+ * @description: ChannelNav 导航
+ * @param {*model.CmsSiteChannel} input 频道
+ * @return {*}
+ */
 func (this *CmsSite) ChannelNav(input *model.CmsSiteChannel) error {
 	dt, _ := time.Parse("2006-01-02 15:04:05", "2023-03-20 00:00:00")
 	// cms_admin_nav
@@ -330,7 +347,12 @@ func (this *CmsSite) ChannelSaveSortId(channelId int64, sortId int32) error {
 	return err
 }
 
-// ChannelDestory 删除
+/**
+ * @description: ChannelDestory 删除
+ * @param {int64} siteId 站点ID
+ * @param {int64} channelId 频道ID
+ * @return {*}
+ */
 func (this *CmsSite) ChannelDestory(siteId, channelId int64) error {
 	mdl, do := query.CmsSiteChannelDo()
 	if count, _ := do.Where(mdl.ParentID.Eq(channelId)).Count(); count > 0 {
@@ -343,15 +365,21 @@ func (this *CmsSite) ChannelDestory(siteId, channelId int64) error {
 	return nil
 }
 
-func (this *CmsSite) ChannelTree(siteId, channelId int64) ([]*TreeNode, error) {
-	out := make([]*TreeNode, 0)
+/**
+ * @description: ChannelTree 获取频道树
+ * @param {*} siteId 站点ID
+ * @param {int64} channelId 频道ID
+ * @return {*}
+ */
+func (this *CmsSite) ChannelTree(siteId, channelId int64) ([]*bizmodel.TreeNode, error) {
+	out := make([]*bizmodel.TreeNode, 0)
 	mdl, do := query.CmsSiteChannelDo()
 	list, err := do.Where(mdl.SiteID.Eq(siteId), mdl.ParentID.Eq(0)).Order(mdl.SortID).Find()
 	if err != nil {
 		return out, err
 	}
 	for _, item := range list {
-		child := &TreeNode{
+		child := &bizmodel.TreeNode{
 			Id:       item.ChannelID,
 			Name:     item.Title,
 			Open:     true,
@@ -368,15 +396,21 @@ func (this *CmsSite) ChannelTree(siteId, channelId int64) ([]*TreeNode, error) {
 	return out, nil
 }
 
-func (this *CmsSite) ChannelTreeByParentId(parentId, channelId int64) ([]*TreeNode, error) {
-	out := make([]*TreeNode, 0)
+/**
+ * @description: ChannelTreeByParentId 获取子分类
+ * @param {*} parentId 父级ID
+ * @param {int64} channelId 频道ID
+ * @return {*}
+ */
+func (this *CmsSite) ChannelTreeByParentId(parentId, channelId int64) ([]*bizmodel.TreeNode, error) {
+	out := make([]*bizmodel.TreeNode, 0)
 	mdl, do := query.CmsSiteChannelDo()
 	list, err := do.Where(mdl.ParentID.Eq(parentId)).Order(mdl.SortID).Find()
 	if err != nil {
 		return out, err
 	}
 	for _, item := range list {
-		child := &TreeNode{
+		child := &bizmodel.TreeNode{
 			Id:       item.ChannelID,
 			Name:     item.Title,
 			Checked:  item.ChannelID == channelId,

@@ -37,20 +37,38 @@
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">标题图标</label>
-                        <div class="layui-input-inline" style="width: 392px;">
+                        <div class="layui-input-inline" style="width: 325px;">
                             <input type="hidden" name="ico_url2" value="{{.mdl.IcoUrl2}}">
                             <input type="text" name="ico_url1" value="{{.mdl.IcoUrl1}}" autocomplete="off" placeholder="" class="layui-input">
                         </div>
-                        <button type="button" class="layui-btn layui-btn-primary" id="btnUploadIco">
-                            <i class="layui-icon">&#xe67c;</i>浏览...
+                        <button type="button" class="layui-btn layui-btn-primary" style="margin-left: -10px;" id="btnUploadIco">
+                            <i class="layui-icon layui-icon-upload"></i>上传
+                        </button>
+                        <button type="button" class="layui-btn layui-btn-primary" id="btnSelectIco">
+                            <i class="layui-icon layui-icon-list"></i>选择
                         </button>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">Tags标签</label>
-                        <div class="layui-input-inline" style="width: 500px;">
+                        <div class="layui-input-inline" style="width: 415px;">
                             <input type="text" name="tags" value="{{.mdl.Tags}}" autocomplete="off" placeholder="" class="layui-input">
                         </div>
-                        <div class="layui-form-mid layui-word-aux">多个可用英文逗号分隔开，如：a,b</div>
+                        <button type="button" class="layui-btn layui-btn-primary" style="margin-left: -10px;" id="btnSelectTag">
+                            <i class="layui-icon layui-icon-list"></i>选择
+                        </button>
+                        <br>
+                        <div style="margin-left: 120px;" class="layui-form-mid layui-word-aux">多个可用英文逗号分隔开，如：a,b</div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">专题</label>
+                        <div class="layui-input-inline" style="width: 415px;">
+                            <input type="text" name="topic" value="{{.mdl.Topic}}" autocomplete="off" placeholder="" class="layui-input">
+                        </div>
+                        <button type="button" class="layui-btn layui-btn-primary" style="margin-left: -10px;" id="btnSelectTopic">
+                            <i class="layui-icon layui-icon-list"></i>选择
+                        </button>
+                        <br>
+                        <div style="margin-left: 120px;" class="layui-form-mid layui-word-aux">多个可用英文逗号分隔开，如：a,b</div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">选项</label>
@@ -84,12 +102,15 @@
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">封面图片</label>
-                        <div class="layui-input-inline" style="width: 392px;">
+                        <div class="layui-input-inline" style="width: 325px;">
                             <input type="hidden" name="img_url2" value="{{.mdl.ImgUrl2}}">
                             <input type="text" name="img_url1" value="{{.mdl.ImgUrl1}}" autocomplete="off" placeholder="" class="layui-input">
                         </div>
-                        <button type="button" class="layui-btn layui-btn-primary" id="btnUpload">
-                            <i class="layui-icon">&#xe67c;</i>浏览...
+                        <button type="button" class="layui-btn layui-btn-primary" style="margin-left: -10px;" id="btnUpload">
+                            <i class="layui-icon layui-icon-upload"></i>上传
+                        </button>
+                        <button type="button" class="layui-btn layui-btn-primary" id="btnSelect">
+                            <i class="layui-icon layui-icon-list"></i>选择
                         </button>
                     </div>
                     <div class="layui-form-item">
@@ -242,14 +263,182 @@
     //     });
     // });
 
-    layui.use(['form', 'layer', 'wangEditor', 'upload', 'laydate', 'treeSelect'], function () {
+    layui.use(['form', 'layer', 'wangEditor', 'upload', 'laydate', 'tableSelect', 'treeSelect'], function () {
         var form = layui.form;
         var $ = layui.jquery,
             layer = layui.layer,
+            tableSelect = layui.tableSelect,
             wangEditor = layui.wangEditor;
         var upload = layui.upload;
         var laydate = layui.laydate;
         var treeSelect = layui.treeSelect;
+
+        tableSelect.render({
+            elem: '#btnSelectTopic',
+            checkedKey: 'id',
+            height: '340',
+            width: '800',
+            searchType: 'more',
+            searchList: [
+                { searchKey: 'name', searchPlaceholder: '名称' },
+                { searchKey: 'title', searchPlaceholder: '标题' },
+            ],
+            table: {
+                url: '/admin/topic/topicpaginate?status=2',
+                response: {
+                    statusCode: 0,
+                },
+                cols: [[
+                    { type: "checkbox", width: 50 },
+                    { field: 'topic_id', width: 80, title: 'ID', sort: true },
+                    { field: 'name', title: '名称', sort: true },
+                    { field: 'title', title: '标题' },
+                    {
+                        field: 'template', title: '模板路径'
+                    },
+                    {
+                        field: 'img_url1', title: '图片', width: 150, templet: function (d) {
+                            if (d.img_url1 != "") {
+                                return '<img src="' + d.img_url1 + '" style="max-width: 100px;max-height: 100px;" />';
+                            }
+                            return "";
+                        }
+                    },
+                    { field: 'remark', title: '描述', },
+                ]]
+            },
+            done: function (elem, data) {
+                layui.each(data.data, function (index, item) {
+                    var tag = $("input[name='topic']").val();
+                    if (tag == "") {
+                        tag = item.name;
+                    } else {
+                        tag = tag + "," + item.name;
+                    }
+                    $("input[name='topic']").val(tag);
+                })
+            }
+        })
+
+        tableSelect.render({
+            elem: '#btnSelectTag',
+            checkedKey: 'id',
+            height: '340',
+            width: '800',
+            searchType: 'more',
+            searchList: [
+                { searchKey: 'name', searchPlaceholder: '名称' },
+                { searchKey: 'title', searchPlaceholder: '标题' },
+            ],
+            table: {
+                url: '/admin/tag/tagpaginate?status=2',
+                response: {
+                    statusCode: 0,
+                },
+                cols: [[
+                    { type: "checkbox", width: 50 },
+                    { field: 'tag_id', width: 80, title: 'ID', sort: true },
+                    { field: 'name', title: '名称', sort: true },
+                    { field: 'title', title: '标题' },
+                    {
+                        field: 'img_url1', title: '图片', width: 150, templet: function (d) {
+                            if (d.img_url1 != "") {
+                                return '<img src="' + d.img_url1 + '" style="max-width: 100px;max-height: 100px;" />';
+                            }
+                            return "";
+                        }
+                    },
+                    { field: 'remark', title: '描述', },
+                ]]
+            },
+            done: function (elem, data) {
+                layui.each(data.data, function (index, item) {
+                    var tag = $("input[name='tags']").val();
+                    if (tag == "") {
+                        tag = item.name;
+                    } else {
+                        tag = tag + "," + item.name;
+                    }
+                    $("input[name='tags']").val(tag);
+                })
+            }
+        })
+
+        tableSelect.render({
+            elem: '#btnSelectIco',
+            checkedKey: 'id',
+            height: '340',
+            width: '800',
+            searchType: 'more',
+            searchList: [
+                { searchKey: 'title', searchPlaceholder: '文件' },
+                { searchKey: 'ext', searchPlaceholder: '后缀' },
+            ],
+            table: {
+                url: '/admin/common/AlbumSearch',
+                response: {
+                    statusCode: 0,
+                },
+                cols: [[
+                    { type: 'radio' },
+                    { field: 'album_id', width: 80, title: 'ID', sort: true },
+                    {
+                        field: 'original_path', title: '图片信息', templet: function (d) {
+                            return '<img src=' + d.original_path + '>';
+                        }
+                    },
+                    { field: 'title', title: '名称' },
+                    { field: 'file_ext', title: '文件后缀' },
+                    { field: 'file_size', title: '文件大小' },
+                    { field: 'table_name', title: '来源', width: 80 },
+                    { field: 'remark', title: '描述', },
+                ]]
+            },
+            done: function (elem, data) {
+                layui.each(data.data, function (index, item) {
+                    $("input[name='ico_url1']").val(item.original_path);
+                    $("input[name='ico_url2']").val(item.file_path);
+                })
+            }
+        })
+
+        tableSelect.render({
+            elem: '#btnSelect',
+            checkedKey: 'id',
+            height: '340',
+            width: '800',
+            searchType: 'more',
+            searchList: [
+                { searchKey: 'title', searchPlaceholder: '文件' },
+                { searchKey: 'ext', searchPlaceholder: '后缀' },
+            ],
+            table: {
+                url: '/admin/common/AlbumSearch',
+                response: {
+                    statusCode: 0,
+                },
+                cols: [[
+                    { type: 'radio' },
+                    { field: 'album_id', width: 80, title: 'ID', sort: true },
+                    {
+                        field: 'original_path', title: '图片信息', templet: function (d) {
+                            return '<img src=' + d.original_path + '>';
+                        }
+                    },
+                    { field: 'title', title: '名称' },
+                    { field: 'file_ext', title: '文件后缀' },
+                    { field: 'file_size', title: '文件大小' },
+                    { field: 'table_name', title: '来源', width: 80 },
+                    { field: 'remark', title: '描述', },
+                ]]
+            },
+            done: function (elem, data) {
+                layui.each(data.data, function (index, item) {
+                    $("input[name='img_url1']").val(item.original_path);
+                    $("input[name='img_url2']").val(item.file_path);
+                })
+            }
+        })
 
         var ue = UE.getEditor('editor', {
             autoHeight: false

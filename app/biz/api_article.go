@@ -7,7 +7,7 @@ import (
 
 	"github.com/beego/beego/v2/core/logs"
 	"gorm.io/gorm"
-	"haedu.gov.cn/cms/app/biz/bmodel"
+	"haedu.gov.cn/cms/app/biz/bizmodel"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
 	"haedu.gov.cn/tools/xgeneric"
@@ -31,7 +31,7 @@ func NewApiArticle() *ApiArticle {
  * @param {int64} article_id 文章ID
  * @return {*}
  */
-func (this *ApiArticle) CategoryNav(channel_name string, channel_id int64, call_index string, category_id int64, article_id int64) ([]*bmodel.ApiCategoryNav, error) {
+func (this *ApiArticle) CategoryNav(channel_name string, channel_id int64, call_index string, category_id int64, article_id int64) ([]*bizmodel.ApiCategoryNav, error) {
 	if article_id > 0 && category_id <= 0 {
 		cacheKey := fmt.Sprintf("ApiArticleCategoryNav_%d", article_id)
 		if found, item := ApiCache.Get(cacheKey); found {
@@ -69,9 +69,9 @@ func (this *ApiArticle) CategoryNav(channel_name string, channel_id int64, call_
 	}
 	cacheKey := fmt.Sprintf("ApiArticleCategoryNav_%s_%d_%s_%d_%d", channel_name, channel_id, call_index, category_id, article_id)
 	if found, item := ApiCache.Get(cacheKey); found {
-		return item.([]*bmodel.ApiCategoryNav), nil
+		return item.([]*bizmodel.ApiCategoryNav), nil
 	}
-	outResult := []*bmodel.ApiCategoryNav{}
+	outResult := []*bizmodel.ApiCategoryNav{}
 	// 获取 频道信息
 	{
 		mdl, do := query.CmsSiteChannelDo()
@@ -82,7 +82,7 @@ func (this *ApiArticle) CategoryNav(channel_name string, channel_id int64, call_
 			channel, _ = do.Or(mdl.ChannelID.Eq(channel_id)).Select(mdl.ChannelID, mdl.Name, mdl.Title).First()
 		}
 		if channel != nil {
-			channelItem := &bmodel.ApiCategoryNav{
+			channelItem := &bizmodel.ApiCategoryNav{
 				Title:     channel.Title,
 				CallIndex: channel.Name,
 				LinkURL:   "",
@@ -101,7 +101,7 @@ func (this *ApiArticle) CategoryNav(channel_name string, channel_id int64, call_
 			category, _ = do.Where(mdl.CategoryID.Eq(category_id)).First()
 		}
 		if category != nil {
-			categoryItem := &bmodel.ApiCategoryNav{
+			categoryItem := &bizmodel.ApiCategoryNav{
 				Title:     category.Title,
 				CallIndex: category.CallIndex,
 				LinkURL:   category.LinkURL,
@@ -121,13 +121,13 @@ func (this *ApiArticle) CategoryNav(channel_name string, channel_id int64, call_
  * @param {string} channel_name 频道名称
  * @return {*}
  */
-func (this *ApiArticle) CategoryFind(channel_name string) ([]*bmodel.ApiCategoryFindModel, int64, error) {
+func (this *ApiArticle) CategoryFind(channel_name string) ([]*bizmodel.ApiCategoryFindModel, int64, error) {
 	cacheKey := fmt.Sprintf("ApiArticleCategoryFind_%s", channel_name)
 	if found, item := ApiCache.Get(cacheKey); found {
-		find := item.([]*bmodel.ApiCategoryFindModel)
+		find := item.([]*bizmodel.ApiCategoryFindModel)
 		return find, int64(len(find)), nil
 	}
-	outChannel := make([]*bmodel.ApiCategoryFindModel, 0)
+	outChannel := make([]*bizmodel.ApiCategoryFindModel, 0)
 	_, do := query.CmsArticleCategoryDo()
 	sqlSelect := "b.`name` as channel_name,b.title as channel_title,a.category_id,a.parent_id,a.site_id,a.channel_id,a.title,a.call_index,a.class_layer,a.link_url,a.img_url1,a.img_url2,a.sort_id,a.is_show,a.is_search,a.is_deleted"
 	sql := "SELECT " + sqlSelect + " FROM cms_article_category a LEFT JOIN cms_site_channel b ON a.channel_id=b.channel_id WHERE a.is_deleted=0 AND a.`status`=2 AND a.`is_show`=1 AND b.`name`=? ORDER BY a.sort_id"
@@ -145,12 +145,12 @@ func (this *ApiArticle) CategoryFind(channel_name string) ([]*bmodel.ApiCategory
  * @param {string} call_index 栏目别名
  * @return {*}
  */
-func (this *ApiArticle) CategoryOne(category_id int64, call_index string) (*bmodel.ApiCategoryOneModel, error) {
+func (this *ApiArticle) CategoryOne(category_id int64, call_index string) (*bizmodel.ApiCategoryOneModel, error) {
 	cacheKey := fmt.Sprintf("ApiArticleCategoryOne_%d_%s", category_id, call_index)
 	if found, item := ApiCache.Get(cacheKey); found {
-		return item.(*bmodel.ApiCategoryOneModel), nil
+		return item.(*bizmodel.ApiCategoryOneModel), nil
 	}
-	outChannel := &bmodel.ApiCategoryOneModel{}
+	outChannel := &bizmodel.ApiCategoryOneModel{}
 	_, do := query.CmsArticleCategoryDo()
 	sqlSelect := "b.`name` as channel_name,b.title as channel_title,a.category_id,a.parent_id,a.site_id,a.channel_id,a.title,a.call_index,a.class_layer,a.link_url,a.img_url1,a.img_url2,a.sort_id,a.is_show,a.is_search,a.is_deleted,a.seo_title,a.seo_keyword,a.seo_description,a.content"
 	sql := "SELECT " + sqlSelect + " FROM cms_article_category a LEFT JOIN cms_site_channel b ON a.channel_id=b.channel_id WHERE a.is_deleted=0 AND a.`status`=2 AND a.`is_show`=1" +
@@ -178,14 +178,14 @@ func (this *ApiArticle) CategoryOne(category_id int64, call_index string) (*bmod
  * @param {bool} is_cache 是否使用缓存
  * @return {*}
  */
-func (this *ApiArticle) Find(limit int, channel_id, category_id int64, call_index string, is_top, is_red, is_hot, is_slide int, order_by string) ([]*bmodel.ApiArticleListModel, int64, error) {
+func (this *ApiArticle) Find(limit int, channel_id, category_id int64, call_index string, is_top, is_red, is_hot, is_slide int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
 	order_by = xgeneric.IFF(order_by == "", "sort_id", order_by)
 	cacheKey := fmt.Sprintf("ApiArticleFind_%s_%d_%d_%d_%d_%d_%d_%s", call_index, channel_id, is_top, is_red, is_hot, is_slide, limit, order_by)
 	if found, item := ApiCache.Get(cacheKey); found {
-		find := item.([]*bmodel.ApiArticleListModel)
+		find := item.([]*bizmodel.ApiArticleListModel)
 		return find, int64(len(find)), nil
 	}
-	outArticle := make([]*bmodel.ApiArticleListModel, 0)
+	outArticle := make([]*bizmodel.ApiArticleListModel, 0)
 	_, do := query.CmsArticleDo()
 	sqlSelect := "a.article_id,a.site_id,a.channel_id,a.category_id,a.title,a.sub_title,a.ico_url1,a.ico_url2,a.call_index,a.source,a.author,a.link_url,a.img_url1,a.img_url2,a.seo_title,a.seo_keyword,a.seo_description,a.tags,a.summary,a.click,a.is_lock,a.is_comment,a.like_count,a.is_top,a.is_hot,a.is_slide,a.static_url,a.publish_time"
 	sql := "SELECT " + sqlSelect + " FROM cms_article a LEFT JOIN cms_article_category b ON a.category_id=b.category_id WHERE a.`status`=2 AND b.`status`=2" +
@@ -221,7 +221,7 @@ func (this *ApiArticle) Find(limit int, channel_id, category_id int64, call_inde
  * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
  * @return {*}
  */
-func (this *ApiArticle) Paginate(page, limit int, channel_id, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide, is_search int, order_by string) ([]*bmodel.ApiArticleListModel, int64, error) {
+func (this *ApiArticle) Paginate(page, limit int, channel_id, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide, is_search int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
 	order_by = xgeneric.IFF(order_by == "", "sort_id", order_by)
 	_, do := query.CmsArticleDo()
 	sqlSelectCount := "COUNT(1) as count"
@@ -253,7 +253,7 @@ func (this *ApiArticle) Paginate(page, limit int, channel_id, category_id int64,
 		xgeneric.IFF(keyword == "", "", " And (a.title LIKE '%"+keyword+"%' OR a.summary LIKE '%"+keyword+"%')") +
 		" ORDER BY a.is_top DESC,a." + order_by +
 		" LIMIT ? OFFSET ?"
-	outArticle := make([]*bmodel.ApiArticleListModel, 0)
+	outArticle := make([]*bizmodel.ApiArticleListModel, 0)
 	err := do.UnderlyingDB().Raw(sql, limit, (page-1)*limit).Scan(&outArticle).Error
 	return outArticle, count, err
 }
@@ -264,7 +264,7 @@ func (this *ApiArticle) Paginate(page, limit int, channel_id, category_id int64,
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *ApiArticle) Get(call_index string, article_id int64) (*bmodel.ApiArticleOneModel, []*model.CmsAlbum, []*model.CmsAttach, error) {
+func (this *ApiArticle) Get(call_index string, article_id int64) (*bizmodel.ApiArticleOneModel, []*model.CmsAlbum, []*model.CmsAttach, error) {
 	mdl, do := query.CmsArticleDo()
 	if call_index != "" {
 		if article_id <= 0 {
@@ -276,7 +276,7 @@ func (this *ApiArticle) Get(call_index string, article_id int64) (*bmodel.ApiArt
 	field := `a.*,b.call_index as category_call_index,b.title as category_title,b.link_url as category_link_url,c.name as channel_name,c.title as channel_title`
 	sql := `SELECT ` + field + ` FROM cms_article a LEFT JOIN cms_article_category b ON a.category_id = b.category_id LEFT JOIN cms_site_channel c ON a.channel_id = c.channel_id`
 	sql += ` WHERE a.article_id=? AND a.is_deleted=0 AND a.status=2 AND b.status=2`
-	artilce := &bmodel.ApiArticleOneModel{}
+	artilce := &bizmodel.ApiArticleOneModel{}
 	if err := do.Debug().UnderlyingDB().Raw(sql, article_id).Scan(&artilce).Error; err != nil {
 		logs.Error("Get", err.Error())
 		return artilce, []*model.CmsAlbum{}, []*model.CmsAttach{}, err
@@ -302,7 +302,7 @@ func (this *ApiArticle) Get(call_index string, article_id int64) (*bmodel.ApiArt
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *ApiArticle) PrevNext(call_index string, category_id, article_id int64) (prev *bmodel.ApiArticleOneModel, next *bmodel.ApiArticleOneModel) {
+func (this *ApiArticle) PrevNext(call_index string, category_id, article_id int64) (prev *bizmodel.ApiArticleOneModel, next *bizmodel.ApiArticleOneModel) {
 	_, do := query.CmsArticleDo()
 	field := `a.*,b.call_index as category_call_index,b.title as category_title,b.link_url as category_link_url,c.name as channel_name,c.title as channel_title`
 	sql := `SELECT ` + field + ` FROM cms_article a LEFT JOIN cms_article_category b ON a.category_id = b.category_id LEFT JOIN cms_site_channel c ON a.channel_id = c.channel_id`
@@ -310,7 +310,7 @@ func (this *ApiArticle) PrevNext(call_index string, category_id, article_id int6
 		xgeneric.IFF(category_id <= 0, "", " AND b.category_id="+strconv.FormatInt(category_id, 10)) +
 		xgeneric.IFF(call_index == "", "", " AND b.call_index='"+call_index+"'") +
 		` AND a.article_id<? ORDER BY a.sort_id DESC LIMIT 1`
-	prev = &bmodel.ApiArticleOneModel{}
+	prev = &bizmodel.ApiArticleOneModel{}
 	if err := do.Debug().UnderlyingDB().Raw(sql, article_id).Scan(&prev).Error; err != nil {
 		logs.Error("PrevNext", err.Error())
 	}
@@ -319,7 +319,7 @@ func (this *ApiArticle) PrevNext(call_index string, category_id, article_id int6
 		xgeneric.IFF(category_id <= 0, "", " AND b.category_id="+strconv.FormatInt(category_id, 10)) +
 		xgeneric.IFF(call_index == "", "", " AND b.call_index='"+call_index+"'") +
 		` AND a.article_id>? ORDER BY a.sort_id ASC LIMIT 1`
-	next = &bmodel.ApiArticleOneModel{}
+	next = &bizmodel.ApiArticleOneModel{}
 	if err := do.Debug().UnderlyingDB().Raw(sql, article_id).Scan(&next).Error; err != nil {
 		logs.Error("PrevNext", err.Error())
 	}
@@ -332,11 +332,11 @@ func (this *ApiArticle) PrevNext(call_index string, category_id, article_id int6
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *ApiArticle) Article(call_index string, article_id int64) (*bmodel.ApiArticleOneModel, error) {
+func (this *ApiArticle) Article(call_index string, article_id int64) (*bizmodel.ApiArticleOneModel, error) {
 	_, do := query.CmsArticleDo()
 	field := `a.*,b.call_index as category_call_index,b.title as category_title,b.link_url as category_link_url,c.name as channel_name,c.title as channel_title`
 	sql := `SELECT ` + field + ` FROM cms_article a LEFT JOIN cms_article_category b ON a.category_id = b.category_id LEFT JOIN cms_site_channel c ON a.channel_id = c.channel_id`
-	artilce := &bmodel.ApiArticleOneModel{}
+	artilce := &bizmodel.ApiArticleOneModel{}
 	if call_index != "" {
 		sql += ` WHERE a.call_index=? AND a.is_deleted=0 AND a.status=2 AND b.status=2`
 		if err := do.Debug().UnderlyingDB().Raw(sql, call_index).Scan(&artilce).Error; err != nil {

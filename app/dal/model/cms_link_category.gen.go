@@ -26,6 +26,7 @@ type CmsLinkCategory struct {
 	SeoDescription string    `gorm:"column:seo_description;type:varchar(128)" json:"seo_description" form:"seo_description"`             // SEO描述
 	Content        string    `gorm:"column:content;type:text" json:"content" form:"content"`                                             // 详细内容
 	SortID         int32     `gorm:"column:sort_id;type:int" json:"sort_id" form:"sort_id"`                                              // 排序
+	Template       string    `gorm:"column:template;type:varchar(256)" json:"template" form:"template"`                                  // 模板路径
 	BelongTo       string    `gorm:"column:belong_to;type:varchar(64)" json:"belong_to" form:"belong_to"`                                // 归属
 	CreateID       int32     `gorm:"column:create_id;type:int" json:"create_id" form:"create_id"`                                        // 创建人ID
 	CreateName     string    `gorm:"column:create_name;type:varchar(64)" json:"create_name" form:"create_name"`                          // 创建人姓名

@@ -6,6 +6,7 @@ import (
 
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
+	"haedu.gov.cn/tools/xgeneric"
 )
 
 type CmsLink struct{}
@@ -42,6 +43,7 @@ func (this *CmsLink) CategorySave(input *model.CmsLinkCategory) error {
 	}
 	var err error
 	input.UpdateTime = time.Now()
+	input.ImgUrl2 = xgeneric.IFF(input.ImgUrl1 == "", "", input.ImgUrl2)
 	if input.CategoryID <= 0 {
 		input.CreateTime = time.Now()
 		err = do.Create(input)
@@ -57,6 +59,7 @@ func (this *CmsLink) CategorySave(input *model.CmsLinkCategory) error {
 			mdl.SeoDescription.ColumnName().String(): input.SeoDescription,
 			mdl.Content.ColumnName().String():        input.Content,
 			mdl.SortID.ColumnName().String():         input.SortID,
+			mdl.Template.ColumnName().String():       input.Template,
 			mdl.UpdateTime.ColumnName().String():     input.UpdateTime,
 		})
 	}
@@ -153,6 +156,7 @@ func (this *CmsLink) LinkSave(input *model.CmsLink) error {
 	}
 	var err error
 	input.UpdateTime = time.Now()
+	input.ImgUrl2 = xgeneric.IFF(input.ImgUrl1 == "", "", input.ImgUrl2)
 	if input.LinkID <= 0 {
 		input.CreateTime = time.Now()
 		err = do.Create(input)
