@@ -1,5 +1,7 @@
 package funcs
 
+import "strings"
+
 /**
  * @description: 字符串拼接
  * @param {...string} input 输入字符串
@@ -41,4 +43,14 @@ func SubStr(s string, start, length int) string {
 		ss = string(append(bt[start:end], bt1[0:3]...))
 	}
 	return ss
+}
+
+/**
+ * @description: 字符串比较
+ * @param {string} x
+ * @param {string} y
+ * @return {*}
+ */
+func StrCheck(x, y string) bool {
+	return strings.Compare(x, y) == 0
 }

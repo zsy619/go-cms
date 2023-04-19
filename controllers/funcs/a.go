@@ -7,6 +7,8 @@ func init() {
 	web.AddFuncMap("concatstr", ConcatStr)
 	web.AddFuncMap("SubStr", SubStr)
 	web.AddFuncMap("substr", SubStr)
+	web.AddFuncMap("StrCheck", StrCheck)
+	web.AddFuncMap("strcheck", StrCheck)
 
 	web.AddFuncMap("Time2Str", Time2Str)
 	web.AddFuncMap("time2str", Time2Str)
