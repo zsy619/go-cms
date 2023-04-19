@@ -7,4 +7,18 @@ func init() {
 	web.AddFuncMap("concatstr", ConcatStr)
 	web.AddFuncMap("SubStr", SubStr)
 	web.AddFuncMap("substr", SubStr)
+
+	web.AddFuncMap("Time2Str", Time2Str)
+	web.AddFuncMap("time2str", Time2Str)
+
+	web.AddFuncMap("ArticleNew", ArticleNew)
+	web.AddFuncMap("articlenew", ArticleNew)
+	web.AddFuncMap("ArticleTop", ArticleTop)
+	web.AddFuncMap("articletop", ArticleTop)
+
+	web.AddFuncMap("TagNew", TagNew)
+	web.AddFuncMap("tagnew", TagNew)
+
+	web.AddFuncMap("TopicNew", TopicNew)
+	web.AddFuncMap("topicnew", TopicNew)
 }
