@@ -8,20 +8,20 @@ const TableNameCmsSiteChannelField = "cms_site_channel_field"
 
 // CmsSiteChannelField mapped from table <cms_site_channel_field>
 type CmsSiteChannelField struct {
-	FieldID       int64  `gorm:"column:field_id;type:bigint;primaryKey;autoIncrement:true" json:"field_id" form:"field_id"` // 主键
-	ChannelID     int64  `gorm:"column:channel_id;type:bigint" json:"channel_id" form:"channel_id"`                         // 所属频道
-	Name          string `gorm:"column:name;type:varchar(128)" json:"name" form:"name"`                                     // 字段名
-	Title         string `gorm:"column:title;type:varchar(128)" json:"title" form:"title"`                                  // 标题
-	ControlType   int32  `gorm:"column:control_type;type:int" json:"control_type" form:"control_type"`                      // 控件类型
-	ItemOption    string `gorm:"column:item_option;type:varchar(512)" json:"item_option" form:"item_option"`                // 选项列表
-	DefaultValue  string `gorm:"column:default_value;type:varchar(512)" json:"default_value" form:"default_value"`          // 默认值
-	IsPassword    int32  `gorm:"column:is_password;type:tinyint" json:"is_password" form:"is_password"`                     // 是否密码框
-	IsRequired    int32  `gorm:"column:is_required;type:tinyint" json:"is_required" form:"is_required"`                     // 是否必填0非必填1必填
-	EditorType    int32  `gorm:"column:editor_type;type:tinyint" json:"editor_type" form:"editor_type"`                     // 编辑器0标准型1简洁型
-	ValidTipMsg   string `gorm:"column:valid_tip_msg;type:varchar(128)" json:"valid_tip_msg" form:"valid_tip_msg"`          // 验证提示信息
-	ValidErrorMsg string `gorm:"column:valid_error_msg;type:varchar(128)" json:"valid_error_msg" form:"valid_error_msg"`    // 验证失败提示信息
-	ValidPattern  string `gorm:"column:valid_pattern;type:varchar(128)" json:"valid_pattern" form:"valid_pattern"`          // 验证正则表达式
-	SortID        int32  `gorm:"column:sort_id;type:int" json:"sort_id" form:"sort_id"`                                     // 排序
+	FieldID       int64  `gorm:"column:field_id;type:bigint;primaryKey;autoIncrement:true;comment:主键" json:"field_id" form:"field_id"`
+	ChannelID     int64  `gorm:"column:channel_id;type:bigint;comment:所属频道" json:"channel_id" form:"channel_id"`
+	Name          string `gorm:"column:name;type:varchar(128);comment:字段名" json:"name" form:"name"`
+	Title         string `gorm:"column:title;type:varchar(128);comment:标题" json:"title" form:"title"`
+	ControlType   int32  `gorm:"column:control_type;type:int;comment:控件类型" json:"control_type" form:"control_type"`
+	ItemOption    string `gorm:"column:item_option;type:varchar(512);comment:选项列表" json:"item_option" form:"item_option"`
+	DefaultValue  string `gorm:"column:default_value;type:varchar(512);comment:默认值" json:"default_value" form:"default_value"`
+	IsPassword    int32  `gorm:"column:is_password;type:tinyint;comment:是否密码框" json:"is_password" form:"is_password"`
+	IsRequired    int32  `gorm:"column:is_required;type:tinyint;comment:是否必填0非必填1必填" json:"is_required" form:"is_required"`
+	EditorType    int32  `gorm:"column:editor_type;type:tinyint;comment:编辑器0标准型1简洁型" json:"editor_type" form:"editor_type"`
+	ValidTipMsg   string `gorm:"column:valid_tip_msg;type:varchar(128);comment:验证提示信息" json:"valid_tip_msg" form:"valid_tip_msg"`
+	ValidErrorMsg string `gorm:"column:valid_error_msg;type:varchar(128);comment:验证失败提示信息" json:"valid_error_msg" form:"valid_error_msg"`
+	ValidPattern  string `gorm:"column:valid_pattern;type:varchar(128);comment:验证正则表达式" json:"valid_pattern" form:"valid_pattern"`
+	SortID        int32  `gorm:"column:sort_id;type:int;comment:排序" json:"sort_id" form:"sort_id"`
 }
 
 // TableName CmsSiteChannelField's table name

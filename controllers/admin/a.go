@@ -26,6 +26,7 @@ func init() {
 	web.Router("admin/site/save", &SiteController{}, "*:Save")
 
 	web.AutoPrefix("admin", &CommonController{})
+	web.AutoPrefix("admin", &ThemeController{})
 	web.AutoPrefix("admin", &SiteController{})
 	web.AutoPrefix("admin", &IndexController{})
 	web.AutoPrefix("admin", &TagController{})

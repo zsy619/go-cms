@@ -12,18 +12,18 @@ const TableNameCmsAdminRole = "cms_admin_role"
 
 // CmsAdminRole mapped from table <cms_admin_role>
 type CmsAdminRole struct {
-	RoleID     int64     `gorm:"column:role_id;type:bigint;primaryKey;autoIncrement:true" json:"role_id" form:"role_id"`    // 主键
-	Name       string    `gorm:"column:name;type:varchar(128)" json:"name" form:"name"`                                     // 角色名称
-	Type       string    `gorm:"column:type;type:varchar(128);default:supper" json:"type" form:"type"`                      // 角色类型:supper超级用户,system系统用户
-	IsSys      int32     `gorm:"column:is_sys;type:tinyint" json:"is_sys" form:"is_sys"`                                    // 是否系统默认0否1是
-	Remark     string    `gorm:"column:remark;type:varchar(256)" json:"remark" form:"remark"`                               // 备注
-	SortID     int32     `gorm:"column:sort_id;type:int" json:"sort_id" form:"sort_id"`                                     // 排序
-	CreateID   int32     `gorm:"column:create_id;type:int" json:"create_id" form:"create_id"`                               // 创建人ID
-	CreateName string    `gorm:"column:create_name;type:varchar(64)" json:"create_name" form:"create_name"`                 // 创建人姓名
-	CreateTime time.Time `gorm:"column:create_time;type:int unsigned;autoCreateTime" json:"create_time" form:"create_time"` // 创建时间
-	UpdateID   int32     `gorm:"column:update_id;type:int" json:"update_id" form:"update_id"`                               // 更新人ID
-	UpdateName string    `gorm:"column:update_name;type:varchar(64)" json:"update_name" form:"update_name"`                 // 更新人姓名
-	UpdateTime time.Time `gorm:"column:update_time;type:int unsigned;autoUpdateTime" json:"update_time" form:"update_time"` // 修改时间
+	RoleID     int64     `gorm:"column:role_id;type:bigint;primaryKey;autoIncrement:true;comment:主键" json:"role_id" form:"role_id"`
+	Name       string    `gorm:"column:name;type:varchar(128);comment:角色名称" json:"name" form:"name"`
+	Type       string    `gorm:"column:type;type:varchar(128);default:supper;comment:角色类型:supper超级用户,system系统用户" json:"type" form:"type"`
+	IsSys      int32     `gorm:"column:is_sys;type:tinyint;comment:是否系统默认0否1是" json:"is_sys" form:"is_sys"`
+	Remark     string    `gorm:"column:remark;type:varchar(256);comment:备注" json:"remark" form:"remark"`
+	SortID     int32     `gorm:"column:sort_id;type:int;comment:排序" json:"sort_id" form:"sort_id"`
+	CreateID   int32     `gorm:"column:create_id;type:int;comment:创建人ID" json:"create_id" form:"create_id"`
+	CreateName string    `gorm:"column:create_name;type:varchar(64);comment:创建人姓名" json:"create_name" form:"create_name"`
+	CreateTime time.Time `gorm:"column:create_time;type:int unsigned;autoUpdateTime" json:"create_time" form:"create_time"`
+	UpdateID   int32     `gorm:"column:update_id;type:int;comment:更新人ID" json:"update_id" form:"update_id"`
+	UpdateName string    `gorm:"column:update_name;type:varchar(64);comment:更新人姓名" json:"update_name" form:"update_name"`
+	UpdateTime time.Time `gorm:"column:update_time;type:int unsigned;autoUpdateTime" json:"update_time" form:"update_time"`
 }
 
 // TableName CmsAdminRole's table name

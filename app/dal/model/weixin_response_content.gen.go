@@ -12,17 +12,17 @@ const TableNameWeixinResponseContent = "weixin_response_content"
 
 // WeixinResponseContent mapped from table <weixin_response_content>
 type WeixinResponseContent struct {
-	ContentID      int64     `gorm:"column:content_id;type:bigint;primaryKey;autoIncrement:true" json:"content_id" form:"content_id"` // 主键
-	AccountID      int64     `gorm:"column:account_id;type:bigint;not null" json:"account_id" form:"account_id"`                      // 归属公众号
-	OpenID         string    `gorm:"column:open_id;type:varchar(128)" json:"open_id" form:"open_id"`                                  // 用户微信ID
-	RequestType    string    `gorm:"column:request_type;type:varchar(32)" json:"request_type" form:"request_type"`                    // 数据类型 文本消息：text 图片消息:image 地理位置消息:location 链接消息:link 事件:event
-	RequestContent string    `gorm:"column:request_content;type:varchar(2048)" json:"request_content" form:"request_content"`         // 数据内容
-	ResponseType   string    `gorm:"column:response_type;type:varchar(32)" json:"response_type" form:"response_type"`                 // 回复的类型 文本消息：text 图片消息:image 地理位置消息:location 链接消息:link
-	ReponseContent string    `gorm:"column:reponse_content;type:varchar(2048)" json:"reponse_content" form:"reponse_content"`         // 系统回复的内容
-	MeidaHdURL     string    `gorm:"column:meida_hd_url;type:varchar(512)" json:"meida_hd_url" form:"meida_hd_url"`                   // 高清语音或者视频地址
-	CreateTime     time.Time `gorm:"column:create_time;type:int unsigned;autoCreateTime" json:"create_time" form:"create_time"`       // 创建时间
-	XMLContent     string    `gorm:"column:xml_content;type:varchar(2048)" json:"xml_content" form:"xml_content"`                     // xml原始内容
-	AddTime        time.Time `gorm:"column:add_time;type:datetime;default:CURRENT_TIMESTAMP" json:"add_time" form:"add_time"`         // 录入系统的时间
+	ContentID      int64     `gorm:"column:content_id;type:bigint;primaryKey;autoIncrement:true;comment:主键" json:"content_id" form:"content_id"`
+	AccountID      int64     `gorm:"column:account_id;type:bigint;not null;comment:归属公众号" json:"account_id" form:"account_id"`
+	OpenID         string    `gorm:"column:open_id;type:varchar(128);comment:用户微信ID" json:"open_id" form:"open_id"`
+	RequestType    string    `gorm:"column:request_type;type:varchar(32);comment:数据类型 文本消息：text 图片消息:image 地理位置消息:location 链接消息:link 事件:event" json:"request_type" form:"request_type"`
+	RequestContent string    `gorm:"column:request_content;type:varchar(2048);comment:数据内容" json:"request_content" form:"request_content"`
+	ResponseType   string    `gorm:"column:response_type;type:varchar(32);comment:回复的类型 文本消息：text 图片消息:image 地理位置消息:location 链接消息:link" json:"response_type" form:"response_type"`
+	ReponseContent string    `gorm:"column:reponse_content;type:varchar(2048);comment:系统回复的内容" json:"reponse_content" form:"reponse_content"`
+	MeidaHdURL     string    `gorm:"column:meida_hd_url;type:varchar(512);comment:高清语音或者视频地址" json:"meida_hd_url" form:"meida_hd_url"`
+	CreateTime     time.Time `gorm:"column:create_time;type:int unsigned;autoUpdateTime" json:"create_time" form:"create_time"`
+	XMLContent     string    `gorm:"column:xml_content;type:varchar(2048);comment:xml原始内容" json:"xml_content" form:"xml_content"`
+	AddTime        time.Time `gorm:"column:add_time;type:datetime;default:CURRENT_TIMESTAMP;comment:录入系统的时间" json:"add_time" form:"add_time"`
 }
 
 // TableName WeixinResponseContent's table name

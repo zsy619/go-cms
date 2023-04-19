@@ -12,15 +12,15 @@ const TableNameCmsAdminLog = "cms_admin_log"
 
 // CmsAdminLog mapped from table <cms_admin_log>
 type CmsAdminLog struct {
-	LogID      int64     `gorm:"column:log_id;type:bigint;primaryKey;autoIncrement:true" json:"log_id" form:"log_id"`       // 主键
-	UserID     int64     `gorm:"column:user_id;type:bigint" json:"user_id" form:"user_id"`                                  // 用户id
-	UserName   string    `gorm:"column:user_name;type:varchar(128)" json:"user_name" form:"user_name"`                      // 账号
-	Method     string    `gorm:"column:method;type:varchar(32)" json:"method" form:"method"`                                // 请求方法
-	Path       string    `gorm:"column:path;type:varchar(128)" json:"path" form:"path"`                                     // 请求路径
-	Query      string    `gorm:"column:query;type:varchar(128)" json:"query" form:"query"`                                  // 请求参数
-	StatusCode string    `gorm:"column:status_code;type:varchar(64)" json:"status_code" form:"status_code"`                 // 响应状态码
-	IP         string    `gorm:"column:ip;type:varchar(64)" json:"ip" form:"ip"`                                            // IP地址
-	CreateTime time.Time `gorm:"column:create_time;type:int unsigned;autoCreateTime" json:"create_time" form:"create_time"` // 记录时间
+	LogID      int64     `gorm:"column:log_id;type:bigint;primaryKey;autoIncrement:true;comment:主键" json:"log_id" form:"log_id"`
+	UserID     int64     `gorm:"column:user_id;type:bigint;comment:用户id" json:"user_id" form:"user_id"`
+	UserName   string    `gorm:"column:user_name;type:varchar(128);comment:账号" json:"user_name" form:"user_name"`
+	Method     string    `gorm:"column:method;type:varchar(32);comment:请求方法" json:"method" form:"method"`
+	Path       string    `gorm:"column:path;type:varchar(128);comment:请求路径" json:"path" form:"path"`
+	Query      string    `gorm:"column:query;type:varchar(128);comment:请求参数" json:"query" form:"query"`
+	StatusCode string    `gorm:"column:status_code;type:varchar(64);comment:响应状态码" json:"status_code" form:"status_code"`
+	IP         string    `gorm:"column:ip;type:varchar(64);comment:IP地址" json:"ip" form:"ip"`
+	CreateTime time.Time `gorm:"column:create_time;type:int unsigned;autoUpdateTime" json:"create_time" form:"create_time"`
 }
 
 // TableName CmsAdminLog's table name

@@ -8,10 +8,9 @@ require (
 	github.com/kardianos/service v1.2.2
 	github.com/mojocn/base64Captcha v1.3.5
 	github.com/prometheus/client_golang v1.15.0
-	github.com/szmcdull/glinq v0.0.0-20230323232310-05acf528ac23
 	golang.org/x/net v0.9.0
 	gorm.io/driver/mysql v1.5.0
-	gorm.io/gen v0.3.21
+	gorm.io/gen v0.3.22
 	gorm.io/gorm v1.25.0
 	gorm.io/plugin/dbresolver v1.4.1
 	haedu.gov.cn/tools v0.0.0-00010101000000-000000000000
@@ -48,7 +47,6 @@ require (
 	github.com/satori/go.uuid v1.2.0
 	github.com/shiena/ansicolor v0.0.0-20200904210342-c7312218db18 // indirect
 	golang.org/x/crypto v0.8.0
-	golang.org/x/exp v0.0.0-20230321023759-10a507213a29 // indirect
 	golang.org/x/image v0.7.0 // indirect
 	golang.org/x/mod v0.10.0 // indirect
 	golang.org/x/sys v0.7.0 // indirect

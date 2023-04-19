@@ -2,6 +2,7 @@ package admin
 
 import (
 	"fmt"
+	"html/template"
 
 	"haedu.gov.cn/cms/app/dal/model"
 
@@ -15,6 +16,10 @@ type BaseController struct {
 func (c *BaseController) Prepare() {
 	fmt.Println("Admin BaseController Prepare")
 	c.BaseController.Prepare()
+	c.EnableXSRF = true
+	c.XSRFExpire = 3600
+	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
+	c.Data["xsrf_token"] = c.XSRFToken()
 
 	if GlobalAdminId == 0 {
 		user := c.GetSession("user").(*model.CmsAdmin)

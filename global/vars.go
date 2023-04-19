@@ -12,6 +12,8 @@ var (
 	WebSite    string
 	PayKey     string
 	WxOfPayUrl string
+
+	ThemePath = "/static/themes/"
 )
 
 func init() {

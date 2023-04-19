@@ -50,6 +50,12 @@ func CmsAdminLogDo() (cmsAdminLog, *cmsAdminLogDo) {
 	return u, u.WithContext(defaultContext).Debug()
 }
 
+// CmsThemeDo
+func CmsThemeDo() (cmsTheme, *cmsThemeDo) {
+	u := Use(dal.CmsDatabase.DB).CmsTheme
+	return u, u.WithContext(defaultContext).Debug()
+}
+
 // CmsSiteDo
 func CmsSiteDo() (cmsSite, *cmsSiteDo) {
 	u := Use(dal.CmsDatabase.DB).CmsSite

@@ -25,12 +25,16 @@
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label required">
-                            生成目录名
+                            模板文件
                         </label>
-                        <div class="layui-input-inline" style="width: 500px;">
-                            <input type="text" maxlength="50" id="dir_path" name="dir_path" value="{{.site.DirPath}}" lay-verify="required|dir_path" lay-reqtext="生成目录名为必填项" autocomplete="off" placeholder="请输入生成目录名" class="layui-input">
+                        <div class="layui-input-inline" style="width: 415px;">
+                            <input type="text" maxlength="50" id="dir_path" name="dir_path" value="{{.site.DirPath}}" lay-verify="required|dir_path" lay-reqtext="使用模板为必填项" autocomplete="off" placeholder="请输入模板路径" class="layui-input">
                         </div>
-                        <div class="layui-form-mid layui-word-aux">目录，只允许使用英文、下划线</div>
+                        <button type="button" class="layui-btn layui-btn-primary" style="margin-left: -10px;" id="btnSelectTheme">
+                            <i class="layui-icon layui-icon-list"></i>选择
+                        </button>
+                        <br>
+                        <div style="margin-left: 150px;" class="layui-form-mid layui-word-aux">目录，只允许使用英文、下划线</div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">是否默认</label>
@@ -210,6 +214,43 @@
             tableSelect = layui.tableSelect,
             wangEditor = layui.wangEditor;
         var upload = layui.upload;
+
+        tableSelect.render({
+            elem: '#btnSelectTheme',
+            checkedKey: 'id',
+            height: '340',
+            width: '800',
+            searchType: 'more',
+            searchList: [
+                { searchKey: 'name', searchPlaceholder: '名称' },
+                { searchKey: 'title', searchPlaceholder: '模板' },
+            ],
+            table: {
+                url: '/admin/theme/ThemePaginate',
+                response: {
+                    statusCode: 0,
+                },
+                cols: [[
+                    { type: 'radio' },
+                    { field: 'theme_id', width: 80, title: 'ID', sort: true },
+                    {
+                        field: 'thumb', title: '缩略图', templet: function (d) {
+                            return '<img src="/static/themes/' + d.name + "/" + d.thumb + '"">';
+                        }
+                    },
+                    { field: 'title', title: '主题' },
+                    { field: 'name', title: '名称' },
+                    { field: 'version', title: '版本' },
+                    { field: 'author', title: '作者' },
+                    { field: 'remark', title: '描述', },
+                ]]
+            },
+            done: function (elem, data) {
+                layui.each(data.data, function (index, item) {
+                    $("input[name='dir_path']").val(item.name);
+                })
+            }
+        })
 
         tableSelect.render({
             elem: '#btnSelect',

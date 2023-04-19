@@ -40,6 +40,7 @@ var (
 	CmsSiteChannelField        *cmsSiteChannelField
 	CmsSiteDomain              *cmsSiteDomain
 	CmsTag                     *cmsTag
+	CmsTheme                   *cmsTheme
 	CmsTopic                   *cmsTopic
 	PlgOnlineRegister          *plgOnlineRegister
 	WeixinAccount              *weixinAccount
@@ -74,6 +75,7 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	CmsSiteChannelField = &Q.CmsSiteChannelField
 	CmsSiteDomain = &Q.CmsSiteDomain
 	CmsTag = &Q.CmsTag
+	CmsTheme = &Q.CmsTheme
 	CmsTopic = &Q.CmsTopic
 	PlgOnlineRegister = &Q.PlgOnlineRegister
 	WeixinAccount = &Q.WeixinAccount
@@ -109,6 +111,7 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		CmsSiteChannelField:        newCmsSiteChannelField(db, opts...),
 		CmsSiteDomain:              newCmsSiteDomain(db, opts...),
 		CmsTag:                     newCmsTag(db, opts...),
+		CmsTheme:                   newCmsTheme(db, opts...),
 		CmsTopic:                   newCmsTopic(db, opts...),
 		PlgOnlineRegister:          newPlgOnlineRegister(db, opts...),
 		WeixinAccount:              newWeixinAccount(db, opts...),
@@ -145,6 +148,7 @@ type Query struct {
 	CmsSiteChannelField        cmsSiteChannelField
 	CmsSiteDomain              cmsSiteDomain
 	CmsTag                     cmsTag
+	CmsTheme                   cmsTheme
 	CmsTopic                   cmsTopic
 	PlgOnlineRegister          plgOnlineRegister
 	WeixinAccount              weixinAccount
@@ -182,6 +186,7 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		CmsSiteChannelField:        q.CmsSiteChannelField.clone(db),
 		CmsSiteDomain:              q.CmsSiteDomain.clone(db),
 		CmsTag:                     q.CmsTag.clone(db),
+		CmsTheme:                   q.CmsTheme.clone(db),
 		CmsTopic:                   q.CmsTopic.clone(db),
 		PlgOnlineRegister:          q.PlgOnlineRegister.clone(db),
 		WeixinAccount:              q.WeixinAccount.clone(db),
@@ -226,6 +231,7 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		CmsSiteChannelField:        q.CmsSiteChannelField.replaceDB(db),
 		CmsSiteDomain:              q.CmsSiteDomain.replaceDB(db),
 		CmsTag:                     q.CmsTag.replaceDB(db),
+		CmsTheme:                   q.CmsTheme.replaceDB(db),
 		CmsTopic:                   q.CmsTopic.replaceDB(db),
 		PlgOnlineRegister:          q.PlgOnlineRegister.replaceDB(db),
 		WeixinAccount:              q.WeixinAccount.replaceDB(db),
@@ -260,6 +266,7 @@ type queryCtx struct {
 	CmsSiteChannelField        *cmsSiteChannelFieldDo
 	CmsSiteDomain              *cmsSiteDomainDo
 	CmsTag                     *cmsTagDo
+	CmsTheme                   *cmsThemeDo
 	CmsTopic                   *cmsTopicDo
 	PlgOnlineRegister          *plgOnlineRegisterDo
 	WeixinAccount              *weixinAccountDo
@@ -294,6 +301,7 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 		CmsSiteChannelField:        q.CmsSiteChannelField.WithContext(ctx),
 		CmsSiteDomain:              q.CmsSiteDomain.WithContext(ctx),
 		CmsTag:                     q.CmsTag.WithContext(ctx),
+		CmsTheme:                   q.CmsTheme.WithContext(ctx),
 		CmsTopic:                   q.CmsTopic.WithContext(ctx),
 		PlgOnlineRegister:          q.PlgOnlineRegister.WithContext(ctx),
 		WeixinAccount:              q.WeixinAccount.WithContext(ctx),
@@ -309,10 +317,14 @@ func (q *Query) Transaction(fc func(tx *Query) error, opts ...*sql.TxOptions) er
 }
 
 func (q *Query) Begin(opts ...*sql.TxOptions) *QueryTx {
-	return &QueryTx{q.clone(q.db.Begin(opts...))}
+	tx := q.db.Begin(opts...)
+	return &QueryTx{Query: q.clone(tx), Error: tx.Error}
 }
 
-type QueryTx struct{ *Query }
+type QueryTx struct {
+	*Query
+	Error error
+}
 
 func (q *QueryTx) Commit() error {
 	return q.db.Commit().Error

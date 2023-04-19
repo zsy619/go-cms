@@ -30,6 +30,11 @@ var Shzt_Approval = "APPROVAL"; // 审核通过
 var Shzt_Reject = "REJECT";   // 审核拒绝
 var Shzt_Recall = "RECALL";   // 撤回
 
+function getXsrfToken() {
+    var xsrftoken = $('meta[name=_xsrf]').attr('content');
+    return xsrftoken;
+}
+
 var v_email = function (value, item) {
     var exp = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
     if (value && !exp.test(value)) {

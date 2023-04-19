@@ -12,22 +12,22 @@ const TableNameCmsAdsCategory = "cms_ads_category"
 
 // CmsAdsCategory mapped from table <cms_ads_category>
 type CmsAdsCategory struct {
-	CategoryID int64     `gorm:"column:category_id;type:bigint;primaryKey;autoIncrement:true" json:"category_id" form:"category_id"` // 主键
-	ParentID   int64     `gorm:"column:parent_id;type:bigint" json:"parent_id" form:"parent_id"`                                     // 父节点
-	SiteID     int64     `gorm:"column:site_id;type:bigint" json:"site_id" form:"site_id"`                                           // 所属站点
-	ChannelID  int64     `gorm:"column:channel_id;type:bigint" json:"channel_id" form:"channel_id"`                                  // 所属频道
-	Title      string    `gorm:"column:title;type:varchar(128)" json:"title" form:"title"`                                           // 类别标题
-	CallIndex  string    `gorm:"column:call_index;type:varchar(64)" json:"call_index" form:"call_index"`                             // 调用别名
-	Remark     string    `gorm:"column:remark;type:varchar(256)" json:"remark" form:"remark"`                                        // 描述
-	SortID     int32     `gorm:"column:sort_id;type:int" json:"sort_id" form:"sort_id"`                                              // 排序
-	Template   string    `gorm:"column:template;type:varchar(256)" json:"template" form:"template"`                                  // 模板路径
-	BelongTo   string    `gorm:"column:belong_to;type:varchar(64)" json:"belong_to" form:"belong_to"`                                // 归属
-	CreateID   int32     `gorm:"column:create_id;type:int" json:"create_id" form:"create_id"`                                        // 创建人ID
-	CreateName string    `gorm:"column:create_name;type:varchar(64)" json:"create_name" form:"create_name"`                          // 创建人姓名
-	CreateTime time.Time `gorm:"column:create_time;type:int unsigned;autoCreateTime" json:"create_time" form:"create_time"`          // 创建时间
-	UpdateID   int32     `gorm:"column:update_id;type:int" json:"update_id" form:"update_id"`                                        // 更新人ID
-	UpdateName string    `gorm:"column:update_name;type:varchar(64)" json:"update_name" form:"update_name"`                          // 更新人姓名
-	UpdateTime time.Time `gorm:"column:update_time;type:int unsigned;autoUpdateTime" json:"update_time" form:"update_time"`          // 修改时间
+	CategoryID int64     `gorm:"column:category_id;type:bigint;primaryKey;autoIncrement:true;comment:主键" json:"category_id" form:"category_id"`
+	ParentID   int64     `gorm:"column:parent_id;type:bigint;comment:父节点" json:"parent_id" form:"parent_id"`
+	SiteID     int64     `gorm:"column:site_id;type:bigint;comment:所属站点" json:"site_id" form:"site_id"`
+	ChannelID  int64     `gorm:"column:channel_id;type:bigint;comment:所属频道" json:"channel_id" form:"channel_id"`
+	Title      string    `gorm:"column:title;type:varchar(128);comment:类别标题" json:"title" form:"title"`
+	CallIndex  string    `gorm:"column:call_index;type:varchar(64);comment:调用别名" json:"call_index" form:"call_index"`
+	Remark     string    `gorm:"column:remark;type:varchar(256);comment:描述" json:"remark" form:"remark"`
+	SortID     int32     `gorm:"column:sort_id;type:int;comment:排序" json:"sort_id" form:"sort_id"`
+	Template   string    `gorm:"column:template;type:varchar(256);comment:模板路径" json:"template" form:"template"`
+	BelongTo   string    `gorm:"column:belong_to;type:varchar(64);comment:归属" json:"belong_to" form:"belong_to"`
+	CreateID   int32     `gorm:"column:create_id;type:int;comment:创建人ID" json:"create_id" form:"create_id"`
+	CreateName string    `gorm:"column:create_name;type:varchar(64);comment:创建人姓名" json:"create_name" form:"create_name"`
+	CreateTime time.Time `gorm:"column:create_time;type:int unsigned;autoUpdateTime" json:"create_time" form:"create_time"`
+	UpdateID   int32     `gorm:"column:update_id;type:int;comment:更新人ID" json:"update_id" form:"update_id"`
+	UpdateName string    `gorm:"column:update_name;type:varchar(64);comment:更新人姓名" json:"update_name" form:"update_name"`
+	UpdateTime time.Time `gorm:"column:update_time;type:int unsigned;autoUpdateTime" json:"update_time" form:"update_time"`
 }
 
 // TableName CmsAdsCategory's table name

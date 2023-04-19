@@ -24,9 +24,9 @@ func (c *TopicController) Index() {
 // TopicEdit 编辑
 // @router /admin/Topic/TopicEdit [get]
 func (c *TopicController) TopicEdit() {
-	TopicId, _ := c.GetInt64("TopicId")
+	topicId, _ := c.GetInt64("topicId")
 	clone, _ := c.GetInt("clone")
-	mdl, err := biz.NewCmsTopic().TopicFind(TopicId)
+	mdl, err := biz.NewCmsTopic().TopicFind(topicId)
 	if err != nil {
 		mdl = &model.CmsTopic{
 			SortID: 99,

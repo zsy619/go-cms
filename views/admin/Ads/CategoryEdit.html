@@ -27,6 +27,13 @@
                         <div class="layui-form-mid layui-word-aux">数字，越小越向前</div>
                     </div>
                     <div class="layui-form-item">
+                        <label class="layui-form-label">模板路径</label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <input type="text" name="template" value="{{.mdl.Template}}" lay-verify="template" lay-reqtext="模板路径不正确" autocomplete="off" placeholder="请输入模板路径" class="layui-input">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">利用独立模板控制显示</div>
+                    </div>
+                    <div class="layui-form-item">
                         <label class="layui-form-label">描述</label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <textarea name="remark" placeholder="" class="layui-textarea">{{.mdl.Remark}}</textarea>
@@ -54,7 +61,13 @@
 
         //自定义验证规则
         form.verify({
-            call_index: [/^[a-zA-Z0-9\-\_]{2,50}$/, '请填写正确的调用别名']
+            call_index: [/^[a-zA-Z0-9\-\_]{2,50}$/, '请填写正确的调用别名'],
+            template: function (value, item) {
+                var exp = /(.+?)?.html/;
+                if (value && !exp.test(value)) {
+                    return '模板路径不正确';
+                }
+            }
         });
 
         // 提交事件

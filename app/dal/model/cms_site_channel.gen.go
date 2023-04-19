@@ -12,29 +12,29 @@ const TableNameCmsSiteChannel = "cms_site_channel"
 
 // CmsSiteChannel mapped from table <cms_site_channel>
 type CmsSiteChannel struct {
-	ChannelID  int64     `gorm:"column:channel_id;type:bigint;primaryKey;autoIncrement:true" json:"channel_id" form:"channel_id"` // 主键
-	ParentID   int64     `gorm:"column:parent_id;type:bigint;not null" json:"parent_id" form:"parent_id"`                         // 父级ID
-	SiteID     int64     `gorm:"column:site_id;type:bigint" json:"site_id" form:"site_id"`                                        // 站点ID
-	Name       string    `gorm:"column:name;type:varchar(128)" json:"name" form:"name"`                                           // 频道名称
-	Title      string    `gorm:"column:title;type:varchar(128)" json:"title" form:"title"`                                        // 频道标题
-	Kind       int32     `gorm:"column:kind;type:tinyint" json:"kind" form:"kind"`                                                // 频道类型0文章1链接
-	ClassLayer int32     `gorm:"column:class_layer;type:int;default:1" json:"class_layer" form:"class_layer"`                     // 类别深度
-	ImgUrl1    string    `gorm:"column:img_url1;type:varchar(256)" json:"img_url1" form:"img_url1"`                               // 图片地址
-	ImgUrl2    string    `gorm:"column:img_url2;type:varchar(256)" json:"img_url2" form:"img_url2"`                               // 图片地址
-	IsComment  int32     `gorm:"column:is_comment;type:tinyint" json:"is_comment" form:"is_comment"`                              // 是否开启评论
-	IsAlbum    int32     `gorm:"column:is_album;type:tinyint" json:"is_album" form:"is_album"`                                    // 是否开启相册功能
-	IsAttach   int32     `gorm:"column:is_attach;type:tinyint" json:"is_attach" form:"is_attach"`                                 // 是否开启附件功能
-	IsSpec     int32     `gorm:"column:is_spec;type:tinyint" json:"is_spec" form:"is_spec"`                                       // 是否开启规格
-	SortID     int32     `gorm:"column:sort_id;type:int" json:"sort_id" form:"sort_id"`                                           // 排序
-	Status     int32     `gorm:"column:status;type:tinyint" json:"status" form:"status"`                                          // 状态0草稿1提交2审核通过3审核未通过4驳回
-	IsDeleted  bool      `gorm:"column:is_deleted;type:tinyint(1)" json:"is_deleted" form:"is_deleted"`                           // 删除标识
-	Template   string    `gorm:"column:template;type:varchar(256)" json:"template" form:"template"`                               // 模板路径
-	CreateID   int32     `gorm:"column:create_id;type:int" json:"create_id" form:"create_id"`                                     // 创建人ID
-	CreateName string    `gorm:"column:create_name;type:varchar(64)" json:"create_name" form:"create_name"`                       // 创建人姓名
-	CreateTime time.Time `gorm:"column:create_time;type:int unsigned;autoCreateTime" json:"create_time" form:"create_time"`       // 创建时间
-	UpdateID   int32     `gorm:"column:update_id;type:int" json:"update_id" form:"update_id"`                                     // 更新人ID
-	UpdateName string    `gorm:"column:update_name;type:varchar(64)" json:"update_name" form:"update_name"`                       // 更新人姓名
-	UpdateTime time.Time `gorm:"column:update_time;type:int unsigned;autoUpdateTime" json:"update_time" form:"update_time"`       // 修改时间
+	ChannelID  int64     `gorm:"column:channel_id;type:bigint;primaryKey;autoIncrement:true;comment:主键" json:"channel_id" form:"channel_id"`
+	ParentID   int64     `gorm:"column:parent_id;type:bigint;not null;comment:父级ID" json:"parent_id" form:"parent_id"`
+	SiteID     int64     `gorm:"column:site_id;type:bigint;comment:站点ID" json:"site_id" form:"site_id"`
+	Name       string    `gorm:"column:name;type:varchar(128);comment:频道名称" json:"name" form:"name"`
+	Title      string    `gorm:"column:title;type:varchar(128);comment:频道标题" json:"title" form:"title"`
+	Kind       int32     `gorm:"column:kind;type:tinyint;comment:频道类型0文章1链接" json:"kind" form:"kind"`
+	ClassLayer int32     `gorm:"column:class_layer;type:int;default:1;comment:类别深度" json:"class_layer" form:"class_layer"`
+	ImgUrl1    string    `gorm:"column:img_url1;type:varchar(256);comment:图片地址" json:"img_url1" form:"img_url1"`
+	ImgUrl2    string    `gorm:"column:img_url2;type:varchar(256);comment:图片地址" json:"img_url2" form:"img_url2"`
+	IsComment  int32     `gorm:"column:is_comment;type:tinyint;comment:是否开启评论" json:"is_comment" form:"is_comment"`
+	IsAlbum    int32     `gorm:"column:is_album;type:tinyint;comment:是否开启相册功能" json:"is_album" form:"is_album"`
+	IsAttach   int32     `gorm:"column:is_attach;type:tinyint;comment:是否开启附件功能" json:"is_attach" form:"is_attach"`
+	IsSpec     int32     `gorm:"column:is_spec;type:tinyint;comment:是否开启规格" json:"is_spec" form:"is_spec"`
+	SortID     int32     `gorm:"column:sort_id;type:int;comment:排序" json:"sort_id" form:"sort_id"`
+	Status     int32     `gorm:"column:status;type:tinyint;comment:状态0草稿1提交2审核通过3审核未通过4驳回" json:"status" form:"status"`
+	IsDeleted  bool      `gorm:"column:is_deleted;type:tinyint(1);comment:删除标识" json:"is_deleted" form:"is_deleted"`
+	Template   string    `gorm:"column:template;type:varchar(256);comment:模板路径" json:"template" form:"template"`
+	CreateID   int32     `gorm:"column:create_id;type:int;comment:创建人ID" json:"create_id" form:"create_id"`
+	CreateName string    `gorm:"column:create_name;type:varchar(64);comment:创建人姓名" json:"create_name" form:"create_name"`
+	CreateTime time.Time `gorm:"column:create_time;type:int unsigned;autoUpdateTime" json:"create_time" form:"create_time"`
+	UpdateID   int32     `gorm:"column:update_id;type:int;comment:更新人ID" json:"update_id" form:"update_id"`
+	UpdateName string    `gorm:"column:update_name;type:varchar(64);comment:更新人姓名" json:"update_name" form:"update_name"`
+	UpdateTime time.Time `gorm:"column:update_time;type:int unsigned;autoUpdateTime" json:"update_time" form:"update_time"`
 }
 
 // TableName CmsSiteChannel's table name
