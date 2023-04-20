@@ -37,13 +37,14 @@ func init() {
 		web.Router("/api/article/prev_next", &ApiArticleController{}, "*:PrevNext")
 
 		web.Router("/api/ads/find", &ApiAdsController{}, "*:Find")
-		web.Router("/api/ads/findnew", &ApiAdsController{}, "*:FindNew")
+		web.Router("/api/ads/find/new", &ApiAdsController{}, "*:FindNew")
 		web.Router("/api/ads/paginate", &ApiAdsController{}, "*:Paginate")
 		web.Router("/api/ads/click", &ApiAdsController{}, "*:Click")
 
 		web.Router("/api/tag/find", &ApiTagController{}, "*:Find")
-		web.Router("/api/tag/findnew", &ApiTagController{}, "*:FindNew")
+		web.Router("/api/tag/find/new", &ApiTagController{}, "*:FindNew")
 		web.Router("/api/tag/click", &ApiTagController{}, "*:Click")
+		web.Router("/api/tag/article/paginate", &ApiTagController{}, "*:ArticlePaginate")
 	}
 
 	web.Router("/api/online/register", &ApiOnlineRegisterController{}, "*:Save")

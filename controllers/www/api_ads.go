@@ -36,7 +36,7 @@ func (this *ApiAdsController) Find() {
 * @param {string} call_index 广告分类标识
 * @return {*}
  */
-// @router /api/ads/findnew [get]
+// @router /api/ads/find/new [get]
 func (this *ApiAdsController) FindNew() {
 	category_id, _ := this.GetInt64("category_id")
 	call_index := this.GetString("call_index")

@@ -12,25 +12,25 @@ import (
 	"haedu.gov.cn/tools/xgeneric"
 )
 
-type ApiTag struct{}
+type ApiTopic struct{}
 
-func NewApiTag() *ApiTag {
-	return &ApiTag{}
+func NewApiTopic() *ApiTopic {
+	return &ApiTopic{}
 }
 
-func (this *ApiTag) find(cackeKeyPrefix string, limit int, siteId, channelId int64) ([]*bizmodel.ApiTagListModel, int64, error) {
+func (this *ApiTopic) find(cackeKeyPrefix string, limit int, siteId, channelId int64) ([]*bizmodel.ApiTopicListModel, int64, error) {
 	if limit <= 0 {
 		limit = 10
 	}
 	cacheKey := fmt.Sprintf("%s_%d_%d_%d", cackeKeyPrefix, limit, siteId, channelId)
 	if found, item := ApiCache.Get(cacheKey); found {
-		tags := item.([]*bizmodel.ApiTagListModel)
-		logs.Debug("TagFind[Cache]::", "cacheKey", cacheKey, "Ads", tags)
-		return tags, int64(len(tags)), nil
+		list := item.([]*bizmodel.ApiTopicListModel)
+		logs.Debug("TopicFind[Cache]::", "cacheKey", cacheKey, "Topic", list)
+		return list, int64(len(list)), nil
 	}
 
-	outTags := make([]*bizmodel.ApiTagListModel, 0)
-	mdl, do := query.CmsTagDo()
+	list := make([]*bizmodel.ApiTopicListModel, 0)
+	mdl, do := query.CmsTopicDo()
 	if siteId > 0 {
 		do = do.Where(mdl.SiteID.Eq(siteId))
 	}
@@ -38,48 +38,48 @@ func (this *ApiTag) find(cackeKeyPrefix string, limit int, siteId, channelId int
 		do = do.Where(mdl.ChannelID.Eq(channelId))
 	}
 	do = do.Where(mdl.Status.Eq(int32(StatusPass)))
-	do = do.Select(mdl.TagID, mdl.SiteID, mdl.ChannelID, mdl.Name, mdl.Title, mdl.ImgUrl1, mdl.ImgUrl2,
-		mdl.SeoTitle, mdl.SeoKeyword, mdl.SeoDescription, mdl.SortID)
-	if cackeKeyPrefix == "ApiTag_Find" {
-		do = do.Order(mdl.SortID, mdl.TagID)
+	do = do.Select(mdl.TopicID, mdl.SiteID, mdl.ChannelID, mdl.Name, mdl.Title, mdl.ImgUrl1, mdl.ImgUrl2,
+		mdl.SeoTitle, mdl.SeoKeyword, mdl.SeoDescription, mdl.SortID, mdl.Click, mdl.Template)
+	if cackeKeyPrefix == "ApiTopic_Find" {
+		do = do.Order(mdl.SortID, mdl.TopicID)
 	} else {
-		do = do.Order(mdl.TagID.Desc(), mdl.SortID)
+		do = do.Order(mdl.TopicID.Desc(), mdl.SortID)
 	}
-	err := do.Scan(&outTags)
+	err := do.Scan(&list)
 	if err == nil {
-		ApiCache.Set(cacheKey, outTags, 1800)
+		ApiCache.Set(cacheKey, list, 1800)
 	}
-	return outTags, int64(len(outTags)), err
+	return list, int64(len(list)), err
 }
 
 /**
- * @description: 获取标签列表
+ * @description: 获取专题列表
  * @param {int} limit 限制数量
  * @param {*} siteId 站点ID
  * @param {int64} channelId 栏目ID
  * @return {*}
  */
-func (this *ApiTag) Find(limit int, siteId, channelId int64) ([]*bizmodel.ApiTagListModel, int64, error) {
-	return this.find("ApiTag_Find", limit, siteId, channelId)
+func (this *ApiTopic) Find(limit int, siteId, channelId int64) ([]*bizmodel.ApiTopicListModel, int64, error) {
+	return this.find("ApiTopic_Find", limit, siteId, channelId)
 }
 
 /**
- * @description: 获取最新标签列表
+ * @description: 获取最新专题列表
  * @param {int} limit 限制数量
  * @param {*} siteId 站点ID
  * @param {int64} channelId 栏目ID
  * @return {*}
  */
-func (this *ApiTag) FindNew(limit int, siteId, channelId int64) ([]*bizmodel.ApiTagListModel, int64, error) {
-	return this.find("ApiTag_FindNew", limit, siteId, channelId)
+func (this *ApiTopic) FindNew(limit int, siteId, channelId int64) ([]*bizmodel.ApiTopicListModel, int64, error) {
+	return this.find("ApiTopic_FindNew", limit, siteId, channelId)
 }
 
 /**
  * @description: Click 点击数+1
- * @param {int64} tag_id 标签ID
+ * @param {int64} tag_id 专题ID
  * @return {*}
  */
-func (this *ApiTag) Click(tag_id int64) error {
+func (this *ApiTopic) Click(tag_id int64) error {
 	mdl, do := query.CmsTagDo()
 	do.Where(mdl.TagID.Eq(tag_id), mdl.Status.Eq(int32(StatusPass))).Updates(map[string]interface{}{
 		mdl.Click.ColumnName().String():      gorm.Expr("click + ?", 1),
@@ -92,7 +92,7 @@ func (this *ApiTag) Click(tag_id int64) error {
  * @description: ArticlePaginate 获取文章分页列表
  * @param {*} page 页码
  * @param {int} limit 每页数量
- * @param {string} tag_name 标签名称
+ * @param {string} topic_name 专题名称
  * @param {int64} channel_id 频道ID
  * @param {string} channel_name 频道名称
  * @param {int64} category_id 栏目ID
@@ -106,11 +106,11 @@ func (this *ApiTag) Click(tag_id int64) error {
  * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
  * @return {*}
  */
-func (this *ApiTag) ArticlePaginate(page, limit int, tag_name string, channel_id int64, channel_name string, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide, is_search int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
+func (this *ApiTopic) ArticlePaginate(page, limit int, topic_name string, channel_id int64, channel_name string, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide, is_search int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
 	order_by = xgeneric.IFF(order_by == "", "sort_id", order_by)
 	where := xgeneric.IFF(channel_id <= 0, "", " And b.channel_id="+strconv.FormatInt(channel_id, 10)) +
 		xgeneric.IFF(channel_name == "", "", " And c.name='"+channel_name+"'") +
-		xgeneric.IFF(tag_name == "", "", " And locate(',"+tag_name+",',concat(',',a.tags,','))") +
+		xgeneric.IFF(topic_name == "", "", " And locate(',"+topic_name+",',concat(',',a.topic,','))") +
 		xgeneric.IFF(category_id <= 0, "", " And b.category_id="+strconv.FormatInt(category_id, 10)) +
 		xgeneric.IFF(call_index == "", "", " And b.call_index='"+call_index+"'") +
 		xgeneric.IFF(is_top < 0, "", " And a.is_top="+strconv.Itoa(is_hot)) +
@@ -144,17 +144,17 @@ func (this *ApiTag) ArticlePaginate(page, limit int, tag_name string, channel_id
 	return list, count, err
 }
 
-func (this *ApiTag) ArtilceTop(limit int, tag_name string) ([]*bizmodel.ApiArticleListModel, int64, error) {
+func (this *ApiTopic) ArtilceTop(limit int, topic_name string) ([]*bizmodel.ApiArticleListModel, int64, error) {
 	if limit <= 0 {
 		limit = 10
 	}
-	cacheKey := fmt.Sprintf("%s_%d_%s", "TagArtilceTop", limit, tag_name)
+	cacheKey := fmt.Sprintf("%s_%d_%s", "TopicArtilceTop", limit, topic_name)
 	if found, item := ApiCache.Get(cacheKey); found {
 		list := item.([]*bizmodel.ApiArticleListModel)
-		logs.Debug("TopicFind[Cache]::", "cacheKey", cacheKey, "Tag", list)
+		logs.Debug("TopicFind[Cache]::", "cacheKey", cacheKey, "Topic", list)
 		return list, int64(len(list)), nil
 	}
-	list, _, err := this.ArticlePaginate(1, limit, tag_name, 0, "", 0, "", "", 0, 0, 0, 0, 0, "")
+	list, _, err := NewApiTopic().ArticlePaginate(1, limit, topic_name, 0, "", 0, "", "", 0, 0, 0, 0, 0, "")
 	if err != nil {
 		return []*bizmodel.ApiArticleListModel{}, 0, err
 	}

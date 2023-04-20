@@ -42,3 +42,11 @@ func TagTopExt(limit int, siteId, channelId int64) []*bizmodel.ApiTagListModel {
 func TagTop(limit int) []*bizmodel.ApiTagListModel {
 	return TagTopExt(limit, 0, 0)
 }
+
+func TagArtilceTop(limit int, tag_name string) []*bizmodel.ApiArticleListModel {
+	list, _, err := biz.NewApiTag().ArtilceTop(limit, tag_name)
+	if err != nil {
+		return []*bizmodel.ApiArticleListModel{}
+	}
+	return list
+}
