@@ -16,16 +16,16 @@ func NewApiChannel() *ApiChannel {
 }
 
 /**
- * @description: ChannelFind 频道获取
+ * @description: Find 频道获取
  * @param {string} name 频道名称
  * @param {int64} channel_id 频道ID
  * @return {*}
  */
-func (this *ApiChannel) ChannelFind(name string, channel_id int64) (*bizmodel.ApiChannelFindModel, error) {
+func (this *ApiChannel) Find(name string, channel_id int64) (*bizmodel.ApiChannelFindModel, error) {
 	if name == "" && channel_id <= 0 {
 		return nil, errors.New("参数错误")
 	}
-	cacheKey := fmt.Sprintf("ApiChannelChannelFind_%s_%d", name, channel_id)
+	cacheKey := fmt.Sprintf("ApiChannel_Find_%s_%d", name, channel_id)
 	if found, item := ApiCache.Get(cacheKey); found {
 		logs.Debug("ApiCache")
 		return item.(*bizmodel.ApiChannelFindModel), nil

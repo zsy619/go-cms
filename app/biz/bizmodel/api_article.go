@@ -2,6 +2,15 @@ package bizmodel
 
 import "time"
 
+const ApiArticleListModel_Field = `a.article_id,a.site_id,a.channel_id,a.category_id,a.title,a.sub_title,a.ico_url1,a.ico_url2,a.call_index,a.source,a.author,a.link_url,a.img_url1,a.img_url2,a.seo_title,a.seo_keyword,a.seo_description,a.tags,a.summary,a.click,a.is_lock,a.is_comment,a.like_count,a.is_top,a.is_hot,a.is_slide,a.static_url,a.publish_time` +
+	`,b.call_index as category_call_index,b.title as category_title,b.link_url as category_link_url` +
+	`,c.name as channel_name,c.title as channel_title`
+
+const ApiArticleListModel_Table = `SELECT ` + ApiArticleListModel_Field + ` FROM cms_article a` +
+	` LEFT JOIN cms_article_category b ON a.category_id=b.category_id` +
+	` LEFT JOIN cms_site_channel c ON a.channel_id = c.channel_id` +
+	` WHERE a.status=2 AND b.status=2`
+
 // ApiArticleModel 文章模型
 type ApiCategoryFindModel struct {
 	ChannelName  string `gorm:"column:channel_name;type:varchar(128)" json:"channel_name" form:"channel_name"`    // 频道名称

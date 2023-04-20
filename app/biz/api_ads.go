@@ -18,6 +18,35 @@ func NewApiAds() *ApiAds {
 	return &ApiAds{}
 }
 
+func (this *ApiAds) find(cackeKeyPrefix string, limit int, category_id int64, call_index string) ([]*bizmodel.ApiAdsListModel, int64, error) {
+	cacheKey := fmt.Sprintf("%s_%d_%d_%s", cackeKeyPrefix, limit, category_id, call_index)
+	if found, item := ApiCache.Get(cacheKey); found {
+		list := item.([]*bizmodel.ApiAdsListModel)
+		logs.Debug("AdsFind[Cache]::", "cacheKey", cacheKey, "Ads", list)
+		return list, int64(len(list)), nil
+	}
+	list := []*bizmodel.ApiAdsListModel{}
+
+	_, do := query.CmsAdsDo()
+	sqlSelect := "a.ad_id,a.site_id,a.channel_id,a.category_id,b.title as category_title,a.title,a.link_url,a.target,a.click,a.img_url1,a.img_url2,a.is_lock,a.is_red,a.is_hot,a.is_slide,a.begin_time,a.end_time"
+	sql := "SELECT " + sqlSelect + " FROM cms_ads a LEFT JOIN cms_ads_category b ON a.category_id = b.category_id WHERE a.`status`=2 and NOW() between a.begin_time and a.end_time " +
+		xgeneric.IFF(call_index == "", "", " AND b.call_index = '"+call_index+"'") +
+		xgeneric.IFF(category_id <= 0, "", " AND b.category_id = "+strconv.FormatInt(category_id, 10))
+	if cackeKeyPrefix == "ApiAds_FindNew" {
+		sql += " ORDER BY a.begin_time DESC,a.sort_id ASC"
+	} else {
+		sql += " ORDER BY a.is_top DESC,a.sort_id ASC"
+	}
+	if limit > 0 {
+		sql += fmt.Sprintf(" LIMIT %d", limit)
+	}
+	err := do.UnderlyingDB().Raw(sql).Scan(&list).Error
+	if err == nil {
+		ApiCache.Set(cacheKey, list, 2400)
+	}
+	return list, int64(len(list)), err
+}
+
 /**
 * @description: Find 获取广告列表
 * @param {int} limit 获取数量
@@ -26,28 +55,18 @@ func NewApiAds() *ApiAds {
 * @return {*}
  */
 func (this *ApiAds) Find(limit int, category_id int64, call_index string) ([]*bizmodel.ApiAdsListModel, int64, error) {
-	cacheKey := fmt.Sprintf("AdFind::%d::%d::%s", limit, category_id, call_index)
-	if found, item := ApiCache.Get(cacheKey); found {
-		Ads := item.([]*bizmodel.ApiAdsListModel)
-		logs.Debug("AdFindByCategory[Cache]::", "cacheKey", cacheKey, "Ads", Ads)
-		return Ads, int64(len(Ads)), nil
-	}
-	outAd := []*bizmodel.ApiAdsListModel{}
+	return this.find("ApiAds_Find", limit, category_id, call_index)
+}
 
-	_, AdDo := query.CmsAdsDo()
-	sqlSelect := "a.ad_id,a.site_id,a.channel_id,a.category_id,b.title as category_title,a.title,a.link_url,a.target,a.click,a.img_url1,a.img_url2,a.is_lock,a.is_red,a.is_hot,a.is_slide,a.begin_time,a.end_time"
-	sql := "SELECT " + sqlSelect + " FROM cms_ads a LEFT JOIN cms_ads_category b ON a.category_id = b.category_id WHERE a.`status`=2 and NOW() between a.begin_time and a.end_time " +
-		xgeneric.IFF(call_index == "", "", " AND b.call_index = '"+call_index+"'") +
-		xgeneric.IFF(category_id <= 0, "", " AND b.category_id = "+strconv.FormatInt(category_id, 10)) +
-		" ORDER BY a.is_top desc,a.sort_id ASC"
-	if limit > 0 {
-		sql += fmt.Sprintf(" LIMIT %d", limit)
-	}
-	err := AdDo.UnderlyingDB().Raw(sql).Scan(&outAd).Error
-	if err == nil {
-		ApiCache.Set(cacheKey, outAd, 1800)
-	}
-	return outAd, int64(len(outAd)), err
+/**
+* @description: FindNew 获取最新广告列表
+* @param {int} limit 获取数量
+* @param {int64} category_id 广告分类ID
+* @param {string} call_index 广告分类标识
+* @return {*}
+ */
+func (this *ApiAds) FindNew(limit int, category_id int64, call_index string) ([]*bizmodel.ApiAdsListModel, int64, error) {
+	return this.find("ApiAds_FindNew", limit, category_id, call_index)
 }
 
 /**
@@ -59,25 +78,25 @@ func (this *ApiAds) Find(limit int, category_id int64, call_index string) ([]*bi
  * @return {*}
  */
 func (this *ApiAds) Paginate(page, limit int, category_id int64, call_index string) ([]*bizmodel.ApiAdsListModel, int64, error) {
-	outAd := []*bizmodel.ApiAdsListModel{}
-	_, AdDo := query.CmsAdsDo()
+	list := []*bizmodel.ApiAdsListModel{}
+	_, do := query.CmsAdsDo()
 	sqlSelectRow := "a.ad_id,a.site_id,a.channel_id,a.category_id,b.title as category_title,a.title,a.link_url,a.target,a.click,a.img_url1,a.img_url2,a.is_lock,a.is_red,a.is_hot,a.is_slide,a.begin_time,a.end_time"
-	sqlRow := "SELECT " + sqlSelectRow + " FROM cms_ads a LEFT JOIN cms_ads_category b ON a.category_id = b.category_id WHERE a.`status`=2" +
+	sqlRow := "SELECT " + sqlSelectRow + " FROM cms_ads a LEFT JOIN cms_ads_category b ON a.category_id = b.category_id WHERE a.`status`=2 and NOW() between a.begin_time and a.end_time" +
 		xgeneric.IFF(call_index == "", "", " AND b.call_index = '"+call_index+"'") +
 		xgeneric.IFF(category_id <= 0, "", " AND b.category_id = "+strconv.FormatInt(category_id, 10)) +
-		" ORDER BY a.is_top desc,a.sort_id ASC"
+		" ORDER BY a.is_top DESC,a.sort_id ASC"
 
 	sqlSelectCount := "count(1) as count"
-	sqlCount := "SELECT " + sqlSelectCount + " FROM cms_ads a LEFT JOIN cms_ads_category b ON a.category_id = b.category_id WHERE a.`status`=2 and NOW() between a.begin_time and a.end_time " +
+	sqlCount := "SELECT " + sqlSelectCount + " FROM cms_ads a LEFT JOIN cms_ads_category b ON a.category_id = b.category_id WHERE a.`status`=2 and NOW() between a.begin_time and a.end_time" +
 		xgeneric.IFF(call_index == "", "", " AND b.call_index = '"+call_index+"'") +
 		xgeneric.IFF(category_id <= 0, "", " AND b.category_id = "+strconv.FormatInt(category_id, 10))
 
 	var count int64
-	AdDo.UnderlyingDB().Raw(sqlCount).Pluck("count", &count)
+	do.UnderlyingDB().Raw(sqlCount).Pluck("count", &count)
 
 	sqlRow += fmt.Sprintf(" LIMIT %d,%d", (page-1)*limit, limit)
-	err := AdDo.UnderlyingDB().Raw(sqlRow).Scan(&outAd).Error
-	return outAd, count, err
+	err := do.UnderlyingDB().Raw(sqlRow).Scan(&list).Error
+	return list, count, err
 }
 
 /**
@@ -87,7 +106,7 @@ func (this *ApiAds) Paginate(page, limit int, category_id int64, call_index stri
  */
 func (this *ApiAds) Click(ads_id int64) error {
 	mdl, do := query.CmsAdsDo()
-	do.Where(mdl.AdsID.Eq(ads_id), mdl.Status.Eq(2)).Updates(map[string]interface{}{
+	do.Where(mdl.AdsID.Eq(ads_id), mdl.Status.Eq(int32(StatusPass))).Updates(map[string]interface{}{
 		mdl.Click.ColumnName().String():      gorm.Expr("click + ?", 1),
 		mdl.UpdateTime.ColumnName().String(): time.Now(),
 	})

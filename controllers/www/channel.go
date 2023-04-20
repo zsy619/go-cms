@@ -13,7 +13,7 @@ func (this *ChannelController) Index() {
 	if name == "" {
 		this.Abort("404")
 	}
-	channelModel, err := biz.NewApiChannel().ChannelFind(name, 0)
+	channelModel, err := biz.NewApiChannel().Find(name, 0)
 	if err != nil {
 		this.Ctx.WriteString(err.Error())
 		this.StopRun()
@@ -31,7 +31,7 @@ func (this *ChannelController) Category() {
 	if name == "" || category == "" {
 		this.Abort("404")
 	}
-	channelModel, channelErr := biz.NewApiChannel().ChannelFind(name, 0)
+	channelModel, channelErr := biz.NewApiChannel().Find(name, 0)
 	if channelErr != nil {
 		this.Ctx.WriteString(channelErr.Error())
 		this.StopRun()

@@ -33,7 +33,7 @@ func NewApiArticle() *ApiArticle {
  */
 func (this *ApiArticle) CategoryNav(channel_name string, channel_id int64, call_index string, category_id int64, article_id int64) ([]*bizmodel.ApiCategoryNav, error) {
 	if article_id > 0 && category_id <= 0 {
-		cacheKey := fmt.Sprintf("ApiArticleCategoryNav_%d", article_id)
+		cacheKey := fmt.Sprintf("ApiArticle_CategoryNav_%d", article_id)
 		if found, item := ApiCache.Get(cacheKey); found {
 			if oks, ok := xstring.ToInt64Array(item.(string), "#"); ok && len(oks) == 2 {
 				channel_id = oks[0]
@@ -50,7 +50,7 @@ func (this *ApiArticle) CategoryNav(channel_name string, channel_id int64, call_
 		}
 	}
 	if (channel_name == "" && channel_id <= 0) && (call_index != "" || category_id > 0) {
-		cacheKey := fmt.Sprintf("ApiArticleCategoryNav_%s_%d", call_index, category_id)
+		cacheKey := fmt.Sprintf("ApiArticle_CategoryNav_%s_%d", call_index, category_id)
 		if found, item := ApiCache.Get(cacheKey); found {
 			channel_name = item.(string)
 		} else {
@@ -122,21 +122,21 @@ func (this *ApiArticle) CategoryNav(channel_name string, channel_id int64, call_
  * @return {*}
  */
 func (this *ApiArticle) CategoryFind(channel_name string) ([]*bizmodel.ApiCategoryFindModel, int64, error) {
-	cacheKey := fmt.Sprintf("ApiArticleCategoryFind_%s", channel_name)
+	cacheKey := fmt.Sprintf("ApiArticle_CategoryFind_%s", channel_name)
 	if found, item := ApiCache.Get(cacheKey); found {
-		find := item.([]*bizmodel.ApiCategoryFindModel)
-		return find, int64(len(find)), nil
+		list := item.([]*bizmodel.ApiCategoryFindModel)
+		return list, int64(len(list)), nil
 	}
-	outChannel := make([]*bizmodel.ApiCategoryFindModel, 0)
+	list := make([]*bizmodel.ApiCategoryFindModel, 0)
 	_, do := query.CmsArticleCategoryDo()
 	sqlSelect := "b.`name` as channel_name,b.title as channel_title,a.category_id,a.parent_id,a.site_id,a.channel_id,a.title,a.call_index,a.class_layer,a.link_url,a.img_url1,a.img_url2,a.sort_id,a.is_show,a.is_search,a.is_deleted"
 	sql := "SELECT " + sqlSelect + " FROM cms_article_category a LEFT JOIN cms_site_channel b ON a.channel_id=b.channel_id WHERE a.is_deleted=0 AND a.`status`=2 AND a.`is_show`=1 AND b.`name`=? ORDER BY a.sort_id"
-	err := do.UnderlyingDB().Raw(sql, channel_name).Scan(&outChannel).Error
+	err := do.UnderlyingDB().Raw(sql, channel_name).Scan(&list).Error
 	if err != nil {
 		return nil, 0, err
 	}
-	ApiCache.Set(cacheKey, outChannel, 1800)
-	return outChannel, int64(len(outChannel)), nil
+	ApiCache.Set(cacheKey, list, 1800)
+	return list, int64(len(list)), nil
 }
 
 /**
@@ -146,28 +146,29 @@ func (this *ApiArticle) CategoryFind(channel_name string) ([]*bizmodel.ApiCatego
  * @return {*}
  */
 func (this *ApiArticle) CategoryOne(category_id int64, call_index string) (*bizmodel.ApiCategoryOneModel, error) {
-	cacheKey := fmt.Sprintf("ApiArticleCategoryOne_%d_%s", category_id, call_index)
+	cacheKey := fmt.Sprintf("ApiArticle_CategoryOne_%d_%s", category_id, call_index)
 	if found, item := ApiCache.Get(cacheKey); found {
 		return item.(*bizmodel.ApiCategoryOneModel), nil
 	}
-	outChannel := &bizmodel.ApiCategoryOneModel{}
+	list := &bizmodel.ApiCategoryOneModel{}
 	_, do := query.CmsArticleCategoryDo()
 	sqlSelect := "b.`name` as channel_name,b.title as channel_title,a.category_id,a.parent_id,a.site_id,a.channel_id,a.title,a.call_index,a.class_layer,a.link_url,a.img_url1,a.img_url2,a.sort_id,a.is_show,a.is_search,a.is_deleted,a.seo_title,a.seo_keyword,a.seo_description,a.content"
 	sql := "SELECT " + sqlSelect + " FROM cms_article_category a LEFT JOIN cms_site_channel b ON a.channel_id=b.channel_id WHERE a.is_deleted=0 AND a.`status`=2 AND a.`is_show`=1" +
 		xgeneric.IFF(category_id > 0, " AND a.category_id="+strconv.FormatInt(category_id, 10), "") +
 		xgeneric.IFF(call_index != "", " AND a.call_index='"+call_index+"'", "")
-	err := do.UnderlyingDB().Raw(sql).Scan(&outChannel).Error
+	err := do.UnderlyingDB().Raw(sql).Scan(&list).Error
 	if err != nil {
 		return nil, err
 	}
-	ApiCache.Set(cacheKey, outChannel, 1800)
-	return outChannel, nil
+	ApiCache.Set(cacheKey, list, 1800)
+	return list, nil
 }
 
 /**
  * @description: Find 获取文章列表
  * @param {int} limit 获取数量
  * @param {int64} channel_id 频道ID
+ * @param {string} channel_name 频道名称
  * @param {int64} category_id 栏目ID
  * @param {string} call_index 栏目别名
  * @param {int} is_top 是否置顶
@@ -175,28 +176,75 @@ func (this *ApiArticle) CategoryOne(category_id int64, call_index string) (*bizm
  * @param {int} is_hot 是否热门
  * @param {int} is_slide 是否幻灯片
  * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
- * @param {bool} is_cache 是否使用缓存
  * @return {*}
  */
-func (this *ApiArticle) Find(limit int, channel_id, category_id int64, call_index string, is_top, is_red, is_hot, is_slide int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
-	order_by = xgeneric.IFF(order_by == "", "sort_id", order_by)
-	cacheKey := fmt.Sprintf("ApiArticleFind_%s_%d_%d_%d_%d_%d_%d_%s", call_index, channel_id, is_top, is_red, is_hot, is_slide, limit, order_by)
-	if found, item := ApiCache.Get(cacheKey); found {
-		find := item.([]*bizmodel.ApiArticleListModel)
-		return find, int64(len(find)), nil
+func (this *ApiArticle) Find(limit int, channel_id int64, channel_name string, category_id int64, call_index string, is_top, is_red, is_hot, is_slide int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
+	order_by = xgeneric.IFF(order_by == "", "a.sort_id", order_by)
+	if limit <= 0 {
+		limit = 10
 	}
-	outArticle := make([]*bizmodel.ApiArticleListModel, 0)
+	cacheKey := fmt.Sprintf("ApiArticle_Find_%d_%d_%s_%d_%s_%d_%d_%d_%d_%s", limit, channel_id, channel_name, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
+	if found, item := ApiCache.Get(cacheKey); found {
+		list := item.([]*bizmodel.ApiArticleListModel)
+		return list, int64(len(list)), nil
+	}
+	list := make([]*bizmodel.ApiArticleListModel, 0)
 	_, do := query.CmsArticleDo()
-	sqlSelect := "a.article_id,a.site_id,a.channel_id,a.category_id,a.title,a.sub_title,a.ico_url1,a.ico_url2,a.call_index,a.source,a.author,a.link_url,a.img_url1,a.img_url2,a.seo_title,a.seo_keyword,a.seo_description,a.tags,a.summary,a.click,a.is_lock,a.is_comment,a.like_count,a.is_top,a.is_hot,a.is_slide,a.static_url,a.publish_time"
-	sql := "SELECT " + sqlSelect + " FROM cms_article a LEFT JOIN cms_article_category b ON a.category_id=b.category_id WHERE a.`status`=2 AND b.`status`=2" +
+
+	sql := bizmodel.ApiArticleListModel_Table +
 		xgeneric.IFF(channel_id <= 0, "", " And b.channel_id="+strconv.FormatInt(channel_id, 10)) +
+		xgeneric.IFF(channel_name == "", "", " And c.name='"+channel_name+"'") +
 		xgeneric.IFF(category_id <= 0, "", " And b.category_id="+strconv.FormatInt(category_id, 10)) +
 		xgeneric.IFF(call_index == "", "", " And b.call_index='"+call_index+"'") +
 		xgeneric.IFF(is_top <= 0, "", " And a.is_top="+strconv.Itoa(is_hot)) +
 		xgeneric.IFF(is_red <= 0, "", " And a.is_red="+strconv.Itoa(is_hot)) +
 		xgeneric.IFF(is_hot <= 0, "", " And a.is_hot="+strconv.Itoa(is_hot)) +
 		xgeneric.IFF(is_slide <= 0, "", " And a.is_slide="+strconv.Itoa(is_slide)) +
-		" ORDER BY a.is_top DESC,a." + order_by +
+		" ORDER BY a.is_top DESC," + order_by +
+		" LIMIT ?"
+	err := do.UnderlyingDB().Raw(sql, limit).Scan(&list).Error
+	if err == nil {
+		ApiCache.Set(cacheKey, list, 1800)
+	}
+	return list, int64(len(list)), err
+}
+
+/**
+ * @description: FindNew 获取最新文章列表
+ * @param {int} limit 获取数量
+ * @param {int64} channel_id 频道ID
+ * @param {string} channel_name 频道名称
+ * @param {int64} category_id 栏目ID
+ * @param {string} call_index 栏目别名
+ * @param {int} is_top 是否置顶
+ * @param {int} is_red 是否推荐
+ * @param {int} is_hot 是否热门
+ * @param {int} is_slide 是否幻灯片
+ * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
+ * @return {*}
+ */
+func (this *ApiArticle) FindNew(limit int, channel_id int64, channel_name string, category_id int64, call_index string, is_top, is_red, is_hot, is_slide int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
+	order_by = xgeneric.IFF(order_by == "", "a.sort_id", order_by)
+	if limit <= 0 {
+		limit = 10
+	}
+	cacheKey := fmt.Sprintf("ApiArticle_FindNew_%d_%d_%s_%d_%s_%d_%d_%d_%d_%s", limit, channel_id, channel_name, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
+	if found, item := ApiCache.Get(cacheKey); found {
+		find := item.([]*bizmodel.ApiArticleListModel)
+		return find, int64(len(find)), nil
+	}
+	outArticle := make([]*bizmodel.ApiArticleListModel, 0)
+	_, do := query.CmsArticleDo()
+	sql := bizmodel.ApiArticleListModel_Table +
+		xgeneric.IFF(channel_id <= 0, "", " And b.channel_id="+strconv.FormatInt(channel_id, 10)) +
+		xgeneric.IFF(channel_name == "", "", " And c.name='"+channel_name+"'") +
+		xgeneric.IFF(category_id <= 0, "", " And b.category_id="+strconv.FormatInt(category_id, 10)) +
+		xgeneric.IFF(call_index == "", "", " And b.call_index='"+call_index+"'") +
+		xgeneric.IFF(is_top <= 0, "", " And a.is_top="+strconv.Itoa(is_hot)) +
+		xgeneric.IFF(is_red <= 0, "", " And a.is_red="+strconv.Itoa(is_hot)) +
+		xgeneric.IFF(is_hot <= 0, "", " And a.is_hot="+strconv.Itoa(is_hot)) +
+		xgeneric.IFF(is_slide <= 0, "", " And a.is_slide="+strconv.Itoa(is_slide)) +
+		" ORDER BY a.publish_time DESC," + order_by +
 		" LIMIT ?"
 	err := do.UnderlyingDB().Raw(sql, limit).Scan(&outArticle).Error
 	if err == nil {
@@ -210,6 +258,7 @@ func (this *ApiArticle) Find(limit int, channel_id, category_id int64, call_inde
  * @param {*} page 页码
  * @param {int} limit 每页数量
  * @param {int64} channel_id 频道ID
+ * @param {string} channel_name 频道名称
  * @param {int64} category_id 栏目ID
  * @param {string} call_index 栏目别名
  * @param {string} keyword 关键词：按标题、摘要进行搜索
@@ -221,12 +270,10 @@ func (this *ApiArticle) Find(limit int, channel_id, category_id int64, call_inde
  * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
  * @return {*}
  */
-func (this *ApiArticle) Paginate(page, limit int, channel_id, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide, is_search int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
+func (this *ApiArticle) Paginate(page, limit int, channel_id int64, channel_name string, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide, is_search int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
 	order_by = xgeneric.IFF(order_by == "", "sort_id", order_by)
-	_, do := query.CmsArticleDo()
-	sqlSelectCount := "COUNT(1) as count"
-	sqlCount := "SELECT " + sqlSelectCount + " FROM cms_article a LEFT JOIN cms_article_category b ON a.category_id=b.category_id LEFT JOIN cms_site_channel c ON a.channel_id = c.channel_id WHERE a.`status`=2 AND b.`status`=2" +
-		xgeneric.IFF(channel_id <= 0, "", " And b.channel_id="+strconv.FormatInt(channel_id, 10)) +
+	where := xgeneric.IFF(channel_id <= 0, "", " And b.channel_id="+strconv.FormatInt(channel_id, 10)) +
+		xgeneric.IFF(channel_name == "", "", " And c.name='"+channel_name+"'") +
 		xgeneric.IFF(category_id <= 0, "", " And b.category_id="+strconv.FormatInt(category_id, 10)) +
 		xgeneric.IFF(call_index == "", "", " And b.call_index='"+call_index+"'") +
 		xgeneric.IFF(is_top < 0, "", " And a.is_top="+strconv.Itoa(is_hot)) +
@@ -235,27 +282,29 @@ func (this *ApiArticle) Paginate(page, limit int, channel_id, category_id int64,
 		xgeneric.IFF(is_slide < 0, "", " And a.is_slide="+strconv.Itoa(is_slide)) +
 		xgeneric.IFF(is_search < 0, "", " And b.is_search="+strconv.Itoa(is_search)) +
 		xgeneric.IFF(keyword == "", "", " And (a.title LIKE '%"+keyword+"%' OR a.summary LIKE '%"+keyword+"%')")
+
+	sqlSelectCount := "COUNT(1) as count"
+	sqlCount := "SELECT " + sqlSelectCount + " FROM cms_article a" +
+		" LEFT JOIN cms_article_category b ON a.category_id=b.category_id" +
+		" LEFT JOIN cms_site_channel c ON a.channel_id = c.channel_id" +
+		" WHERE a.`status`=2 AND b.`status`=2" +
+		where
+
 	var count int64
+
+	_, do := query.CmsArticleDo()
 	if err := do.UnderlyingDB().Raw(sqlCount).Pluck("count", &count).Error; err != nil {
 		return nil, 0, err
 	}
 
-	sqlSelect := `a.article_id,a.site_id,a.channel_id,a.category_id,a.title,a.sub_title,a.call_index,a.ico_url1,a.ico_url2,a.source,a.author,a.link_url,a.img_url1,a.img_url2,a.seo_title,a.seo_keyword,a.seo_description,a.tags,a.summary,a.click,a.is_lock,a.is_comment,a.like_count,a.is_top,a.is_hot,a.is_slide,a.static_url,a.publish_time`
-	sqlSelect += `,b.call_index as category_call_index,b.title as category_title,b.link_url as category_link_url,c.name as channel_name,c.title as channel_title`
-	sql := "SELECT " + sqlSelect + " FROM cms_article a LEFT JOIN cms_article_category b ON a.category_id=b.category_id LEFT JOIN cms_site_channel c ON a.channel_id = c.channel_id WHERE a.`status`=2 AND b.`status`=2" +
-		xgeneric.IFF(channel_id <= 0, "", " And b.channel_id="+strconv.FormatInt(channel_id, 10)) +
-		xgeneric.IFF(call_index == "", "", " And b.call_index='"+call_index+"'") +
-		xgeneric.IFF(is_top < 0, "", " And a.is_top="+strconv.Itoa(is_hot)) +
-		xgeneric.IFF(is_red < 0, "", " And a.is_red="+strconv.Itoa(is_hot)) +
-		xgeneric.IFF(is_hot < 0, "", " And a.is_hot="+strconv.Itoa(is_hot)) +
-		xgeneric.IFF(is_slide < 0, "", " And a.is_slide="+strconv.Itoa(is_slide)) +
-		xgeneric.IFF(is_search < 0, "", " And b.is_search="+strconv.Itoa(is_search)) +
-		xgeneric.IFF(keyword == "", "", " And (a.title LIKE '%"+keyword+"%' OR a.summary LIKE '%"+keyword+"%')") +
+	sql := bizmodel.ApiArticleListModel_Table +
+		where +
 		" ORDER BY a.is_top DESC,a." + order_by +
 		" LIMIT ? OFFSET ?"
-	outArticle := make([]*bizmodel.ApiArticleListModel, 0)
-	err := do.UnderlyingDB().Raw(sql, limit, (page-1)*limit).Scan(&outArticle).Error
-	return outArticle, count, err
+	list := make([]*bizmodel.ApiArticleListModel, 0)
+	err := do.UnderlyingDB().Raw(sql, limit, (page-1)*limit).Scan(&list).Error
+
+	return list, count, err
 }
 
 /**
@@ -276,23 +325,23 @@ func (this *ApiArticle) Get(call_index string, article_id int64) (*bizmodel.ApiA
 	field := `a.*,b.call_index as category_call_index,b.title as category_title,b.link_url as category_link_url,c.name as channel_name,c.title as channel_title`
 	sql := `SELECT ` + field + ` FROM cms_article a LEFT JOIN cms_article_category b ON a.category_id = b.category_id LEFT JOIN cms_site_channel c ON a.channel_id = c.channel_id`
 	sql += ` WHERE a.article_id=? AND a.is_deleted=0 AND a.status=2 AND b.status=2`
-	artilce := &bizmodel.ApiArticleOneModel{}
-	if err := do.Debug().UnderlyingDB().Raw(sql, article_id).Scan(&artilce).Error; err != nil {
+	list := &bizmodel.ApiArticleOneModel{}
+	if err := do.Debug().UnderlyingDB().Raw(sql, article_id).Scan(&list).Error; err != nil {
 		logs.Error("Get", err.Error())
-		return artilce, []*model.CmsAlbum{}, []*model.CmsAttach{}, err
+		return list, []*model.CmsAlbum{}, []*model.CmsAttach{}, err
 	}
 
 	albumMdl, alblumDo := query.CmsAlbumDo()
-	articleAlbum, _ := alblumDo.Where(albumMdl.TableName_.Eq("article"), albumMdl.RecordID.Eq(article_id), albumMdl.IsShow.Eq(1)).Order(albumMdl.SortID).Find()
-	if articleAlbum == nil {
-		articleAlbum = []*model.CmsAlbum{}
+	album, _ := alblumDo.Where(albumMdl.TableName_.Eq("article"), albumMdl.RecordID.Eq(article_id), albumMdl.IsShow.Eq(1)).Order(albumMdl.SortID).Find()
+	if album == nil {
+		album = []*model.CmsAlbum{}
 	}
 	attachMdl, attachDo := query.CmsAttachDo()
-	articleAttach, _ := attachDo.Where(attachMdl.TableName_.Eq("article"), attachMdl.RecordID.Eq(article_id), attachMdl.IsShow.Eq(1)).Order(attachMdl.SortID).Find()
-	if articleAttach == nil {
-		articleAttach = []*model.CmsAttach{}
+	attach, _ := attachDo.Where(attachMdl.TableName_.Eq("article"), attachMdl.RecordID.Eq(article_id), attachMdl.IsShow.Eq(1)).Order(attachMdl.SortID).Find()
+	if attach == nil {
+		attach = []*model.CmsAttach{}
 	}
-	return artilce, articleAlbum, articleAttach, nil
+	return list, album, attach, nil
 }
 
 /**
@@ -336,21 +385,21 @@ func (this *ApiArticle) Article(call_index string, article_id int64) (*bizmodel.
 	_, do := query.CmsArticleDo()
 	field := `a.*,b.call_index as category_call_index,b.title as category_title,b.link_url as category_link_url,c.name as channel_name,c.title as channel_title`
 	sql := `SELECT ` + field + ` FROM cms_article a LEFT JOIN cms_article_category b ON a.category_id = b.category_id LEFT JOIN cms_site_channel c ON a.channel_id = c.channel_id`
-	artilce := &bizmodel.ApiArticleOneModel{}
+	list := &bizmodel.ApiArticleOneModel{}
 	if call_index != "" {
 		sql += ` WHERE a.call_index=? AND a.is_deleted=0 AND a.status=2 AND b.status=2`
-		if err := do.Debug().UnderlyingDB().Raw(sql, call_index).Scan(&artilce).Error; err != nil {
+		if err := do.Debug().UnderlyingDB().Raw(sql, call_index).Scan(&list).Error; err != nil {
 			logs.Error("Get", err.Error())
-			return artilce, err
+			return list, err
 		}
-		return artilce, nil
+		return list, nil
 	}
 	sql += ` WHERE a.article_id=? AND a.is_deleted=0 AND a.status=2 AND b.status=2`
-	if err := do.Debug().UnderlyingDB().Raw(sql, article_id).Scan(&artilce).Error; err != nil {
+	if err := do.Debug().UnderlyingDB().Raw(sql, article_id).Scan(&list).Error; err != nil {
 		logs.Error("Get", err.Error())
-		return artilce, err
+		return list, err
 	}
-	return artilce, nil
+	return list, nil
 }
 
 /**
@@ -393,7 +442,7 @@ func (this *ApiArticle) Click(call_index string, article_id int64) error {
 	mdl, do := query.CmsArticleDo()
 	var err error
 	if call_index != "" {
-		_, err = do.Where(mdl.CallIndex.Eq(call_index), mdl.Status.Eq(2)).Updates(map[string]interface{}{
+		_, err = do.Where(mdl.CallIndex.Eq(call_index), mdl.Status.Eq(int32(StatusPass))).Updates(map[string]interface{}{
 			mdl.Click.ColumnName().String():      gorm.Expr("click + ?", 1),
 			mdl.UpdateTime.ColumnName().String(): time.Now(),
 		})
@@ -414,7 +463,7 @@ func (this *ApiArticle) Click(call_index string, article_id int64) error {
  */
 func (this *ApiArticle) Like(call_index string, article_id int64) error {
 	mdl, do := query.CmsArticleDo()
-	_, err := do.Where(mdl.ArticleID.Eq(article_id), mdl.Status.Eq(2)).Updates(map[string]interface{}{
+	_, err := do.Where(mdl.ArticleID.Eq(article_id), mdl.Status.Eq(int32(StatusPass))).Updates(map[string]interface{}{
 		mdl.LikeCount.ColumnName().String():  gorm.Expr("like_count + ?", 1),
 		mdl.UpdateTime.ColumnName().String(): time.Now(),
 	})

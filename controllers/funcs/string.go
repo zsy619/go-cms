@@ -57,3 +57,11 @@ func SubStr(s string, start, length int) string {
 func StrCheck(x, y string) bool {
 	return strings.Compare(x, y) == 0
 }
+
+func UcWords(str string) string {
+	return strings.Title(str)
+}
+
+func ToUpper(s string) string {
+	return strings.ToUpper(s)
+}

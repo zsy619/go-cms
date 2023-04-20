@@ -88,6 +88,7 @@ func (this *ApiArticleController) CategoryOne() {
 func (this *ApiArticleController) Find() {
 	limit, _ := this.GetInt("limit", 6)
 	call_index := this.GetString("call_index")
+	channel_name := this.GetString("channel_name")
 	order_by := this.GetString("order_by", "sort_id")
 	channel_id, _ := this.GetInt64("channel_id", 0)
 	category_id, _ := this.GetInt64("category_id", 0)
@@ -95,7 +96,40 @@ func (this *ApiArticleController) Find() {
 	is_red, _ := this.GetInt("is_red", 0)
 	is_hot, _ := this.GetInt("is_hot", 0)
 	is_slide, _ := this.GetInt("is_slide", 0)
-	outArticle, count, err := this.BaseController.ArticleFind(limit, channel_id, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
+	outArticle, count, err := this.BaseController.ArticleFind(limit, channel_id, channel_name, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
+	if err != nil {
+		this.JSONErrorOfData(err.Error(), outArticle)
+	}
+	this.JSONSuccess(strconv.FormatInt(count, 10), outArticle)
+}
+
+/**
+ * @description: FindNew 获取文章列表
+ * @param {int} limit 获取数量
+ * @param {int64} channel_id 频道ID
+ * @param {string} channel_name 频道名称
+ * @param {int64} category_id 栏目ID
+ * @param {string} call_index 栏目别名
+ * @param {int} is_top 是否置顶
+ * @param {int} is_red 是否推荐
+ * @param {int} is_hot 是否热门
+ * @param {int} is_slide 是否幻灯片
+ * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
+ * @return {*}
+ */
+// @router /api/article/findnew [get]
+func (this *ApiArticleController) FindNew() {
+	limit, _ := this.GetInt("limit", 6)
+	call_index := this.GetString("call_index")
+	channel_name := this.GetString("channel_name")
+	order_by := this.GetString("order_by", "sort_id")
+	channel_id, _ := this.GetInt64("channel_id", 0)
+	category_id, _ := this.GetInt64("category_id", 0)
+	is_top, _ := this.GetInt("is_top", 0)
+	is_red, _ := this.GetInt("is_red", 0)
+	is_hot, _ := this.GetInt("is_hot", 0)
+	is_slide, _ := this.GetInt("is_slide", 0)
+	outArticle, count, err := this.BaseController.ArticleFindNew(limit, channel_id, channel_name, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
 	if err != nil {
 		this.JSONErrorOfData(err.Error(), outArticle)
 	}
@@ -107,6 +141,7 @@ func (this *ApiArticleController) Find() {
  * @param {*} page 页码
  * @param {int} limit 每页数量
  * @param {int64} channel_id 频道ID
+ * @param {string} channel_name 频道名称
  * @param {int64} category_id 栏目ID
  * @param {string} call_index 栏目别名
  * @param {string} keyword 关键词：按标题、摘要进行搜索
@@ -124,6 +159,7 @@ func (this *ApiArticleController) Paginate() {
 	page, _ := this.GetInt("page", 1)
 	order_by := this.GetString("order_by", "sort_id")
 	call_index := this.GetString("call_index")
+	channel_name := this.GetString("channel_name")
 	keyword := this.GetString("keyword")
 	channel_id, _ := this.GetInt64("channel_id", -1)
 	category_id, _ := this.GetInt64("category_id", -1)
@@ -132,7 +168,7 @@ func (this *ApiArticleController) Paginate() {
 	is_hot, _ := this.GetInt("is_hot", -1)
 	is_slide, _ := this.GetInt("is_slide", -1)
 	is_search, _ := this.GetInt("is_search", -1)
-	outArticle, count, err := this.BaseController.ArticlePaginate(page, limit, channel_id, category_id, call_index, keyword, is_top, is_red, is_hot, is_slide, is_search, order_by)
+	outArticle, count, err := this.BaseController.ArticlePaginate(page, limit, channel_id, channel_name, category_id, call_index, keyword, is_top, is_red, is_hot, is_slide, is_search, order_by)
 	if err != nil {
 		this.JSONPage(lib.CodeError, err.Error(), outArticle, count)
 	}

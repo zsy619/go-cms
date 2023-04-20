@@ -172,6 +172,7 @@ func (this *BaseController) CategoryOne(category_id int64, call_index string) (*
  * @description: Find 获取文章列表
  * @param {int} limit 获取数量
  * @param {int64} channel_id 频道ID
+ * @param {string} channel_name 频道名称
  * @param {int64} category_id 栏目ID
  * @param {string} call_index 栏目别名
  * @param {int} is_top 是否置顶
@@ -179,11 +180,28 @@ func (this *BaseController) CategoryOne(category_id int64, call_index string) (*
  * @param {int} is_hot 是否热门
  * @param {int} is_slide 是否幻灯片
  * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
- * @param {bool} is_cache 是否使用缓存
  * @return {*}
  */
-func (this *BaseController) ArticleFind(limit int, channel_id, category_id int64, call_index string, is_top, is_red, is_hot, is_slide int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
-	return biz.NewApiArticle().Find(limit, channel_id, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
+func (this *BaseController) ArticleFind(limit int, channel_id int64, channel_name string, category_id int64, call_index string, is_top, is_red, is_hot, is_slide int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
+	return biz.NewApiArticle().Find(limit, channel_id, channel_name, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
+}
+
+/**
+ * @description: FindNew 获取最新文章列表
+ * @param {int} limit 获取数量
+ * @param {int64} channel_id 频道ID
+ * @param {string} channel_name 频道名称
+ * @param {int64} category_id 栏目ID
+ * @param {string} call_index 栏目别名
+ * @param {int} is_top 是否置顶
+ * @param {int} is_red 是否推荐
+ * @param {int} is_hot 是否热门
+ * @param {int} is_slide 是否幻灯片
+ * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
+ * @return {*}
+ */
+func (this *BaseController) ArticleFindNew(limit int, channel_id int64, channel_name string, category_id int64, call_index string, is_top, is_red, is_hot, is_slide int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
+	return biz.NewApiArticle().FindNew(limit, channel_id, channel_name, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
 }
 
 /**
@@ -191,6 +209,7 @@ func (this *BaseController) ArticleFind(limit int, channel_id, category_id int64
  * @param {*} page 页码
  * @param {int} limit 每页数量
  * @param {int64} channel_id 频道ID
+ * @param {string} channel_name 频道名称
  * @param {int64} category_id 栏目ID
  * @param {string} call_index 栏目别名
  * @param {string} keyword 关键词：按标题、摘要进行搜索
@@ -202,8 +221,8 @@ func (this *BaseController) ArticleFind(limit int, channel_id, category_id int64
  * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
  * @return {*}
  */
-func (this *BaseController) ArticlePaginate(page, limit int, channel_id, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide, is_search int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
-	return biz.NewApiArticle().Paginate(page, limit, channel_id, category_id, call_index, keyword, is_top, is_red, is_hot, is_slide, is_search, order_by)
+func (this *BaseController) ArticlePaginate(page, limit int, channel_id int64, channel_name string, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide, is_search int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
+	return biz.NewApiArticle().Paginate(page, limit, channel_id, channel_name, category_id, call_index, keyword, is_top, is_red, is_hot, is_slide, is_search, order_by)
 }
 
 /**
@@ -303,6 +322,17 @@ func (this *BaseController) AdsFind(limit int, category_id int64, call_index str
 }
 
 /**
+* @description: AdsFindNew 获取最新广告列表
+* @param {int} limit 获取数量
+* @param {int64} category_id 广告分类ID
+* @param {string} call_index 广告分类标识
+* @return {*}
+ */
+func (this *BaseController) AdsFindNew(limit int, category_id int64, call_index string) ([]*bizmodel.ApiAdsListModel, int64, error) {
+	return biz.NewApiAds().FindNew(limit, category_id, call_index)
+}
+
+/**
  * @description: AdsPaginate 获取广告列表
  * @param {*} page 页码
  * @param {int} limit 获取数量
@@ -321,4 +351,35 @@ func (this *BaseController) AdsPaginate(page, limit int, category_id int64, call
  */
 func (this *BaseController) AdsClick(ads_id int64) error {
 	return biz.NewApiAds().Click(ads_id)
+}
+
+/**
+ * @description: 获取标签列表
+ * @param {int} limit 限制数量
+ * @param {*} siteId 站点ID
+ * @param {int64} channelId 栏目ID
+ * @return {*}
+ */
+func (this *BaseController) TagFind(limit int, siteId, channelId int64) ([]*bizmodel.ApiTagListModel, int64, error) {
+	return biz.NewApiTag().Find(limit, siteId, channelId)
+}
+
+/**
+ * @description: 获取最新标签列表
+ * @param {int} limit 限制数量
+ * @param {*} siteId 站点ID
+ * @param {int64} channelId 栏目ID
+ * @return {*}
+ */
+func (this *BaseController) TagFindNew(limit int, siteId, channelId int64) ([]*bizmodel.ApiTagListModel, int64, error) {
+	return biz.NewApiTag().FindNew(limit, siteId, channelId)
+}
+
+/**
+ * @description: TagClick 点击数+1
+ * @param {int64} tag_id 标签ID
+ * @return {*}
+ */
+func (this *BaseController) TagClick(tag_id int64) error {
+	return biz.NewApiTag().Click(tag_id)
 }
