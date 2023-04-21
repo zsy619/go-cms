@@ -3,12 +3,21 @@ package funcs
 import (
 	"fmt"
 	"html/template"
+	"sync"
 
 	"github.com/beego/beego/v2/server/web"
 )
 
-var funcs map[string]any
+// funcs 模板函数
+var (
+	funcs map[string]any
+	mutex sync.Mutex
+)
 
+/**
+ * @description: 初始化
+ * @return {*}
+ */
 func init() {
 	fmt.Println("初始化模板函数-------->开始")
 
@@ -87,6 +96,7 @@ func init() {
 		funcs["sitemenu"] = SiteMenu
 	}
 
+	// 注册模板函数
 	for k, v := range funcs {
 		web.AddFuncMap(k, v)
 	}
@@ -94,7 +104,14 @@ func init() {
 	fmt.Println("初始化模板函数-------->结束")
 }
 
-func InitFuncType(tmpl *template.Template) {
+/**
+ * @description: 注册模板函数
+ * @param {*template.Template} tmpl 模板对象
+ * @return {*}
+ */
+func InitFuncs(tmpl *template.Template) {
+	mutex.Lock()
+	defer mutex.Unlock()
 	for k, v := range funcs {
 		tmpl = tmpl.Funcs(template.FuncMap{k: v})
 	}

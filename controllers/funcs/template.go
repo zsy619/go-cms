@@ -21,7 +21,7 @@ func TemplateTheme(theme, file string, b map[interface{}]interface{}) template.H
 	url := path.Join("./views/themes", theme, "views", file)
 	fmt.Println("TemplateTheme url ---->", url)
 	tmpl := template.New(file)
-	InitFuncType(tmpl)
+	InitFuncs(tmpl)
 	tmplResult, err := tmpl.ParseFiles(url)
 	if err != nil {
 		fmt.Println("TemplateTheme---1>", err.Error())
@@ -50,7 +50,7 @@ func TemplateView(views, file string, b map[interface{}]interface{}) template.HT
 	url := path.Join(views, "views", file)
 	fmt.Println("TemplateView url ---->", url)
 	tmpl := template.New(file)
-	InitFuncType(tmpl)
+	InitFuncs(tmpl)
 	tmplResult, err := tmpl.ParseFiles(url)
 	if err != nil {
 		fmt.Println("TemplateView---1>", err.Error())
