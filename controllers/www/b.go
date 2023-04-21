@@ -13,9 +13,9 @@ import (
 )
 
 var (
-	DefatulSite *bizmodel.ApiSiteModel
-	SiteStatic  string
-	SiteTheme   string
+	DefatulSite *bizmodel.ApiSiteModel // 默认站点
+	SiteStatic  string                 // 站点静态文件
+	SiteTheme   string                 // 站点模板
 )
 
 type BaseController struct {

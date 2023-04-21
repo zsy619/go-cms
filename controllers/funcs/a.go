@@ -94,6 +94,9 @@ func init() {
 		funcs["sitedefault"] = SiteDefault
 		funcs["SiteMenu"] = SiteMenu
 		funcs["sitemenu"] = SiteMenu
+
+		funcs["IIF"] = IIF
+		funcs["iif"] = IIF
 	}
 
 	// 注册模板函数
