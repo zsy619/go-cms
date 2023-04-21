@@ -62,4 +62,12 @@ func init() {
 
 	web.AddFuncMap("SizeFormat", SizeFormat)
 	web.AddFuncMap("sizeformat", SizeFormat)
+
+	web.AddFuncMap("SiteDefault", SiteDefault)
+	web.AddFuncMap("sitedefault", SiteDefault)
+
+	web.AddFuncMap("TemplateTheme", TemplateTheme)
+	web.AddFuncMap("templatetheme", TemplateTheme)
+	web.AddFuncMap("TemplateView", TemplateView)
+	web.AddFuncMap("templateview", TemplateView)
 }

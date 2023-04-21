@@ -66,9 +66,9 @@ func (this *CmsSite) SiteSave(mdl *model.CmsSite, domains []string, remarks []st
 	if mdl.Title == "" {
 		return errors.New("站点名称不能为空")
 	}
-	if mdl.DirPath == "" {
-		return errors.New("生成目录名不能为空")
-	}
+	// if mdl.DirPath == "" {
+	// 	return errors.New("生成目录名不能为空")
+	// }
 
 	site, siteDo := query.CmsSiteDo()
 	if mdl.IsDefault {

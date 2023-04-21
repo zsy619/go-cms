@@ -1,0 +1,16 @@
+<div id="ad-move">
+    <a target="_blank" href="/zsjy/xsbm"><img src="{{.siteStatic}}images/hot_line.png" alt="" /></a>
+    <div class="cha">
+        <img src="{{.siteStatic}}images/close.png" />
+    </div>
+</div>
+<script src="{{.siteStatic}}js/adMove.js?r={{.time}}"></script>
+<script>
+    $(function () {
+        var adMove = new AdMove('ad-move');
+        adMove.Run();
+        $('.cha').click(function () {
+            $(this).parent().remove()
+        })
+    });
+</script>

@@ -202,6 +202,7 @@ func (this *ApiArticle) Find(limit int, channel_id int64, channel_name string, c
 		xgeneric.IFF(is_slide <= 0, "", " And a.is_slide="+strconv.Itoa(is_slide)) +
 		" ORDER BY a.is_top DESC," + order_by +
 		" LIMIT ?"
+	fmt.Println(order_by)
 	err := do.UnderlyingDB().Raw(sql, limit).Scan(&list).Error
 	if err == nil {
 		ApiCache.Set(cacheKey, list, 1800)
@@ -271,7 +272,7 @@ func (this *ApiArticle) FindNew(limit int, channel_id int64, channel_name string
  * @return {*}
  */
 func (this *ApiArticle) Paginate(page, limit int, channel_id int64, channel_name string, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide, is_search int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
-	order_by = xgeneric.IFF(order_by == "", "sort_id", order_by)
+	order_by = xgeneric.IFF(order_by == "", "a.sort_id", order_by)
 	where := xgeneric.IFF(channel_id <= 0, "", " And b.channel_id="+strconv.FormatInt(channel_id, 10)) +
 		xgeneric.IFF(channel_name == "", "", " And c.name='"+channel_name+"'") +
 		xgeneric.IFF(category_id <= 0, "", " And b.category_id="+strconv.FormatInt(category_id, 10)) +
@@ -299,7 +300,7 @@ func (this *ApiArticle) Paginate(page, limit int, channel_id int64, channel_name
 
 	sql := bizmodel.ApiArticleListModel_Table +
 		where +
-		" ORDER BY a.is_top DESC,a." + order_by +
+		" ORDER BY a.is_top DESC," + order_by +
 		" LIMIT ? OFFSET ?"
 	list := make([]*bizmodel.ApiArticleListModel, 0)
 	err := do.UnderlyingDB().Raw(sql, limit, (page-1)*limit).Scan(&list).Error

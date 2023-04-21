@@ -2,6 +2,7 @@ package www
 
 import (
 	"fmt"
+	"path"
 	"strings"
 	"time"
 
@@ -11,16 +12,41 @@ import (
 	"haedu.gov.cn/cms/controllers"
 )
 
+var (
+	DefatulSite *bizmodel.ApiSiteModel
+	SiteStatic  string
+	SiteTheme   string
+)
+
 type BaseController struct {
 	controllers.BaseController
 }
 
+func (c *BaseController) getView(themeName, viewName string) string {
+	return "themes/" + themeName + "/views/" + viewName
+}
+
 func (c *BaseController) Prepare() {
-	fmt.Println("www BaseController Prepare")
 	c.BaseController.Prepare()
-	defaultSite, _ := c.SiteDefault()
-	c.Data["site"] = defaultSite
-	c.Data["time"] = time.Now().Unix()
+	fmt.Println("www BaseController Prepare")
+
+	if DefatulSite == nil {
+		DefatulSite, _ = c.SiteDefault()
+		if DefatulSite.DirPath == "" {
+			c.Ctx.WriteString("请设置默认模板")
+			c.StopRun()
+		}
+	}
+	SiteTheme = DefatulSite.DirPath
+	SiteStatic = "/views/themes/" + SiteTheme + "/static/"
+	c.Data["siteTheme"] = SiteTheme
+	c.Data["siteStatic"] = SiteStatic
+	c.Data["siteImages"] = path.Join(SiteStatic, "images")
+	c.Data["siteJs"] = path.Join(SiteStatic, "js")
+	c.Data["siteCss"] = path.Join(SiteStatic, "css")
+	c.Data["siteViews"] = "themes/" + SiteTheme + "/views/"
+
+	c.Data["site"] = DefatulSite
 	c.Data["webroot"] = "/static/www/"
 	c.Data["year"] = time.Now().Year()
 	c.Data["controllerName"] = strings.ToLower(c.ControllerName)
@@ -82,7 +108,7 @@ func (this *BaseController) displayNoLayout(tpl ...string) {
  * @description: SiteDefault 获取站点信息
  * @return {*}
  */
-func (this *BaseController) SiteDefault() (*model.CmsSite, error) {
+func (this *BaseController) SiteDefault() (*bizmodel.ApiSiteModel, error) {
 	return biz.NewApiSite().Default()
 }
 

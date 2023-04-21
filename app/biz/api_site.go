@@ -21,18 +21,27 @@ func NewApiSite() *ApiSite {
  * @description: Default 获取站点信息
  * @return {*}
  */
-func (this *ApiSite) Default() (*model.CmsSite, error) {
-	cacheKey := "ApiSiteDefault"
+func (this *ApiSite) Default() (*bizmodel.ApiSiteModel, error) {
+	cacheKey := "ApiSite_Default"
 	if found, item := ApiCache.Get(cacheKey); found {
-		logs.Debug("ApiCache")
-		return item.(*model.CmsSite), nil
+		return item.(*bizmodel.ApiSiteModel), nil
 	}
 	site, siteDo := query.CmsSiteDo()
-	find, err := siteDo.Where(site.IsDefault.Is(true), site.IsDeleted.Is(false)).First()
+	find := &bizmodel.ApiSiteModel{}
+	err := siteDo.Where(site.IsDefault.Is(true), site.IsDeleted.Is(false)).Scan(&find)
 	if err == nil {
+		// 获取默认模板
+		if find.DirPath == "" {
+			mdl, do := query.CmsThemeDo()
+			theme, err := do.Where(mdl.IsDefault.Is(true)).First()
+			if err != nil {
+			} else {
+				find.DirPath = theme.Name
+			}
+		}
 		ApiCache.Set(cacheKey, find, 1800)
 	} else {
-		find = &model.CmsSite{}
+		find = &bizmodel.ApiSiteModel{}
 	}
 	return find, nil
 }
@@ -43,7 +52,7 @@ func (this *ApiSite) Default() (*model.CmsSite, error) {
  * @return {*}
  */
 func (this *ApiSite) Get(site_id int64) (*model.CmsSite, error) {
-	cacheKey := "ApiSiteGet_" + fmt.Sprintf("%d", site_id)
+	cacheKey := "ApiSite_Get_" + fmt.Sprintf("%d", site_id)
 	if found, item := ApiCache.Get(cacheKey); found {
 		logs.Debug("ApiCache")
 		return item.(*model.CmsSite), nil
@@ -63,7 +72,7 @@ func (this *ApiSite) Get(site_id int64) (*model.CmsSite, error) {
  * @return {*}
  */
 func (this *ApiSite) ChannelFind(site_id int64) ([]*bizmodel.ApiChannelFindModel, int64, error) {
-	cacheKey := "ApiSiteChannelFind_" + fmt.Sprintf("%d", site_id)
+	cacheKey := "ApiSite_ChannelFind_" + fmt.Sprintf("%d", site_id)
 	if found, item := ApiCache.Get(cacheKey); found {
 		logs.Debug("ApiCache")
 		find := item.([]*bizmodel.ApiChannelFindModel)

@@ -5,5 +5,6 @@ type IndexController struct {
 }
 
 func (c *IndexController) Index() {
-	c.display()
+	c.TplName = c.getView(DefatulSite.DirPath, "index.html")
+	// c.display()
 }
