@@ -65,6 +65,7 @@ func main() {
 		// }
 		return columnName
 	})
+
 	// 模型自定义选项组
 	fieldOpts := []gen.ModelOpt{formField, jsonField, autoCreateTimeField, autoUpdateTimeField, softDeleteField}
 

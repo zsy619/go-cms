@@ -1,73 +1,101 @@
 package funcs
 
-import "github.com/beego/beego/v2/server/web"
+import (
+	"fmt"
+	"html/template"
+
+	"github.com/beego/beego/v2/server/web"
+)
+
+var funcs map[string]any
 
 func init() {
-	web.AddFuncMap("ConcatStr", ConcatStr)
-	web.AddFuncMap("concatstr", ConcatStr)
-	web.AddFuncMap("SubStr", SubStr)
-	web.AddFuncMap("substr", SubStr)
-	web.AddFuncMap("StrCheck", StrCheck)
-	web.AddFuncMap("strcheck", StrCheck)
-	web.AddFuncMap("UcWords", UcWords)
-	web.AddFuncMap("ucwords", UcWords)
-	web.AddFuncMap("ToUpper", ToUpper)
-	web.AddFuncMap("toupper", ToUpper)
+	fmt.Println("初始化模板函数-------->开始")
 
-	web.AddFuncMap("Time2Str", Time2Str)
-	web.AddFuncMap("time2str", Time2Str)
+	funcs = make(map[string]any)
+	{
+		funcs["ConcatStr"] = ConcatStr
+		funcs["concatstr"] = ConcatStr
+		funcs["SubStr"] = SubStr
+		funcs["substr"] = SubStr
+		funcs["StrCheck"] = StrCheck
+		funcs["strcheck"] = StrCheck
+		funcs["UcWords"] = UcWords
+		funcs["ucwords"] = UcWords
+		funcs["ToUpper"] = ToUpper
+		funcs["toupper"] = ToUpper
 
-	web.AddFuncMap("ArticleNew", ArticleNew)
-	web.AddFuncMap("ArticleNew", ArticleNew)
-	web.AddFuncMap("ArticleNewExt", ArticleNewExt)
-	web.AddFuncMap("articlenewext", ArticleNewExt)
-	web.AddFuncMap("ArticleTop", ArticleTop)
-	web.AddFuncMap("articletop", ArticleTop)
-	web.AddFuncMap("ArticleTopExt", ArticleTopExt)
-	web.AddFuncMap("articletopext", ArticleTopExt)
+		funcs["Time2Str"] = Time2Str
+		funcs["time2str"] = Time2Str
 
-	web.AddFuncMap("AdsNewExt", AdsNewExt)
-	web.AddFuncMap("adsnewext", AdsNewExt)
-	web.AddFuncMap("AdsNew", AdsNew)
-	web.AddFuncMap("adsnew", AdsNew)
-	web.AddFuncMap("AdsTopExt", AdsTopExt)
-	web.AddFuncMap("adstopext", AdsTopExt)
-	web.AddFuncMap("AdsTop", AdsTop)
-	web.AddFuncMap("adstop", AdsTop)
+		funcs["ArticleNew"] = ArticleNew
+		funcs["ArticleNew"] = ArticleNew
+		funcs["ArticleNewExt"] = ArticleNewExt
+		funcs["articlenewext"] = ArticleNewExt
+		funcs["ArticleTop"] = ArticleTop
+		funcs["articletop"] = ArticleTop
+		funcs["ArticleTopExt"] = ArticleTopExt
+		funcs["articletopext"] = ArticleTopExt
 
-	web.AddFuncMap("TagNew", TagNew)
-	web.AddFuncMap("tagnew", TagNew)
-	web.AddFuncMap("TagNewExt", TagNewExt)
-	web.AddFuncMap("tagnewext", TagNewExt)
-	web.AddFuncMap("TagTop", TagTop)
-	web.AddFuncMap("tagtop", TagTop)
-	web.AddFuncMap("TagTopExt", TagTopExt)
-	web.AddFuncMap("tagtopext", TagTopExt)
-	web.AddFuncMap("TagArtilceTop", TagArtilceTop)
-	web.AddFuncMap("tagartilcetop", TagArtilceTop)
+		funcs["AdsNewExt"] = AdsNewExt
+		funcs["adsnewext"] = AdsNewExt
+		funcs["AdsNew"] = AdsNew
+		funcs["adsnew"] = AdsNew
+		funcs["AdsTopExt"] = AdsTopExt
+		funcs["adstopext"] = AdsTopExt
+		funcs["AdsTop"] = AdsTop
+		funcs["adstop"] = AdsTop
 
-	web.AddFuncMap("TopicNewExt", TopicNewExt)
-	web.AddFuncMap("topicnewext", TopicNewExt)
-	web.AddFuncMap("TopicNew", TopicNew)
-	web.AddFuncMap("topicnew", TopicNew)
-	web.AddFuncMap("TopicTopExt", TopicTopExt)
-	web.AddFuncMap("topictopext", TopicTopExt)
-	web.AddFuncMap("TopicTop", TopicTop)
-	web.AddFuncMap("topictop", TopicTop)
-	web.AddFuncMap("TopicArtilceTop", TopicArtilceTop)
-	web.AddFuncMap("topicartilcetop", TopicArtilceTop)
+		funcs["TagNew"] = TagNew
+		funcs["tagnew"] = TagNew
+		funcs["TagNewExt"] = TagNewExt
+		funcs["tagnewext"] = TagNewExt
+		funcs["TagTop"] = TagTop
+		funcs["tagtop"] = TagTop
+		funcs["TagTopExt"] = TagTopExt
+		funcs["tagtopext"] = TagTopExt
+		funcs["TagArtilceTop"] = TagArtilceTop
+		funcs["tagartilcetop"] = TagArtilceTop
 
-	web.AddFuncMap("UnixTimeFormat", UnixTimeFormat)
-	web.AddFuncMap("unixtimeformat", UnixTimeFormat)
+		funcs["TopicNewExt"] = TopicNewExt
+		funcs["topicnewext"] = TopicNewExt
+		funcs["TopicNew"] = TopicNew
+		funcs["topicnew"] = TopicNew
+		funcs["TopicTopExt"] = TopicTopExt
+		funcs["topictopext"] = TopicTopExt
+		funcs["TopicTop"] = TopicTop
+		funcs["topictop"] = TopicTop
+		funcs["TopicArtilceTop"] = TopicArtilceTop
+		funcs["topicartilcetop"] = TopicArtilceTop
 
-	web.AddFuncMap("SizeFormat", SizeFormat)
-	web.AddFuncMap("sizeformat", SizeFormat)
+		funcs["UnixTimeFormat"] = UnixTimeFormat
+		funcs["unixtimeformat"] = UnixTimeFormat
 
-	web.AddFuncMap("SiteDefault", SiteDefault)
-	web.AddFuncMap("sitedefault", SiteDefault)
+		funcs["SizeFormat"] = SizeFormat
+		funcs["sizeformat"] = SizeFormat
 
-	web.AddFuncMap("TemplateTheme", TemplateTheme)
-	web.AddFuncMap("templatetheme", TemplateTheme)
-	web.AddFuncMap("TemplateView", TemplateView)
-	web.AddFuncMap("templateview", TemplateView)
+		funcs["TemplateTheme"] = TemplateTheme
+		funcs["templatetheme"] = TemplateTheme
+		funcs["TemplateView"] = TemplateView
+		funcs["templateview"] = TemplateView
+		funcs["UrlForView"] = UrlForView
+		funcs["urlforview"] = UrlForView
+
+		funcs["SiteDefault"] = SiteDefault
+		funcs["sitedefault"] = SiteDefault
+		funcs["SiteMenu"] = SiteMenu
+		funcs["sitemenu"] = SiteMenu
+	}
+
+	for k, v := range funcs {
+		web.AddFuncMap(k, v)
+	}
+
+	fmt.Println("初始化模板函数-------->结束")
+}
+
+func InitFuncType(tmpl *template.Template) {
+	for k, v := range funcs {
+		tmpl = tmpl.Funcs(template.FuncMap{k: v})
+	}
 }

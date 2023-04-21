@@ -52,3 +52,19 @@ func (this *ApiSiteController) ChannelFind() {
 	}
 	this.JSONSuccess(strconv.FormatInt(len, 10), out)
 }
+
+/**
+ * @description: Menu 获取站点菜单
+ * @return {*}
+ */
+// @router /api/site/menu [get]
+func (this *ApiSiteController) Menu() {
+	site_id, _ := this.GetInt64("site_id")
+	channel_id, _ := this.GetInt64("channel_id")
+	out, _, err := this.BaseController.SiteMenu(site_id, channel_id)
+	if err != nil {
+		logs.Error("Site Menu::", "siteId", site_id, "err", err)
+		this.JSONErrorOfData(err.Error(), out)
+	}
+	this.JSONSuccess("", out)
+}

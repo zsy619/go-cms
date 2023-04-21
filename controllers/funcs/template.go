@@ -20,7 +20,9 @@ import (
 func TemplateTheme(theme, file string, b map[interface{}]interface{}) template.HTML {
 	url := path.Join("./views/themes", theme, "views", file)
 	fmt.Println("TemplateTheme url ---->", url)
-	tmpl, err := template.ParseFiles(url)
+	tmpl := template.New(file)
+	InitFuncType(tmpl)
+	tmplResult, err := tmpl.ParseFiles(url)
 	if err != nil {
 		fmt.Println("TemplateTheme---1>", err.Error())
 		logs.Error(err)
@@ -28,7 +30,7 @@ func TemplateTheme(theme, file string, b map[interface{}]interface{}) template.H
 	}
 	// tmpl.Execute(os.Stdout, b)
 	buf := &bytes.Buffer{}
-	err = tmpl.Execute(buf, b)
+	err = tmplResult.Execute(buf, b)
 	if err != nil {
 		fmt.Println("TemplateTheme---2>", err.Error())
 		logs.Error(err)
@@ -47,7 +49,9 @@ func TemplateTheme(theme, file string, b map[interface{}]interface{}) template.H
 func TemplateView(views, file string, b map[interface{}]interface{}) template.HTML {
 	url := path.Join(views, "views", file)
 	fmt.Println("TemplateView url ---->", url)
-	tmpl, err := template.ParseFiles(url)
+	tmpl := template.New(file)
+	InitFuncType(tmpl)
+	tmplResult, err := tmpl.ParseFiles(url)
 	if err != nil {
 		fmt.Println("TemplateView---1>", err.Error())
 		logs.Error(err)
@@ -55,11 +59,15 @@ func TemplateView(views, file string, b map[interface{}]interface{}) template.HT
 	}
 	// tmpl.Execute(os.Stdout, b)
 	buf := &bytes.Buffer{}
-	err = tmpl.Execute(buf, b)
+	err = tmplResult.Execute(buf, b)
 	if err != nil {
 		fmt.Println("TemplateView---2>", err.Error())
 		logs.Error(err)
 		return ""
 	}
 	return web.Str2html(buf.String())
+}
+
+func UrlForView(theme, file string) string {
+	return path.Join("themes", theme, "views", file)
 }

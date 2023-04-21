@@ -34,6 +34,7 @@ func newCmsSiteChannel(db *gorm.DB, opts ...gen.DOOption) cmsSiteChannel {
 	_cmsSiteChannel.Title = field.NewString(tableName, "title")
 	_cmsSiteChannel.Kind = field.NewInt32(tableName, "kind")
 	_cmsSiteChannel.ClassLayer = field.NewInt32(tableName, "class_layer")
+	_cmsSiteChannel.LinkURL = field.NewString(tableName, "link_url")
 	_cmsSiteChannel.ImgUrl1 = field.NewString(tableName, "img_url1")
 	_cmsSiteChannel.ImgUrl2 = field.NewString(tableName, "img_url2")
 	_cmsSiteChannel.IsComment = field.NewInt32(tableName, "is_comment")
@@ -67,6 +68,7 @@ type cmsSiteChannel struct {
 	Title      field.String // 频道标题
 	Kind       field.Int32  // 频道类型0文章1链接
 	ClassLayer field.Int32  // 类别深度
+	LinkURL    field.String // 外部链接
 	ImgUrl1    field.String // 图片地址
 	ImgUrl2    field.String // 图片地址
 	IsComment  field.Int32  // 是否开启评论
@@ -106,6 +108,7 @@ func (c *cmsSiteChannel) updateTableName(table string) *cmsSiteChannel {
 	c.Title = field.NewString(table, "title")
 	c.Kind = field.NewInt32(table, "kind")
 	c.ClassLayer = field.NewInt32(table, "class_layer")
+	c.LinkURL = field.NewString(table, "link_url")
 	c.ImgUrl1 = field.NewString(table, "img_url1")
 	c.ImgUrl2 = field.NewString(table, "img_url2")
 	c.IsComment = field.NewInt32(table, "is_comment")
@@ -146,7 +149,7 @@ func (c *cmsSiteChannel) GetFieldByName(fieldName string) (field.OrderExpr, bool
 }
 
 func (c *cmsSiteChannel) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 23)
+	c.fieldMap = make(map[string]field.Expr, 24)
 	c.fieldMap["channel_id"] = c.ChannelID
 	c.fieldMap["parent_id"] = c.ParentID
 	c.fieldMap["site_id"] = c.SiteID
@@ -154,6 +157,7 @@ func (c *cmsSiteChannel) fillFieldMap() {
 	c.fieldMap["title"] = c.Title
 	c.fieldMap["kind"] = c.Kind
 	c.fieldMap["class_layer"] = c.ClassLayer
+	c.fieldMap["link_url"] = c.LinkURL
 	c.fieldMap["img_url1"] = c.ImgUrl1
 	c.fieldMap["img_url2"] = c.ImgUrl2
 	c.fieldMap["is_comment"] = c.IsComment

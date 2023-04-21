@@ -16,7 +16,15 @@ type ApiChannelFindModel struct {
 }
 
 type ApiNavFindModel struct {
-	NavID int64 `gorm:"column:nav_id;type:bigint;primaryKey;" json:"nav_id" form:"nav_id"` // 主键
+	NavID    int64              `gorm:"column:nav_id;type:bigint;" json:"nav_id" form:"nav_id"`             // 主键
+	Title    string             `gorm:"column:title;type:varchar(128)" json:"title" form:"title"`           // 标题
+	Name     string             `gorm:"column:name;type:varchar(128)" json:"name" form:"name"`              // 名称
+	LinkURL  string             `gorm:"column:link_url;type:varchar(256);" json:"link_url" form:"link_url"` // 外部链接
+	ImgUrl1  string             `gorm:"column:img_url1;type:varchar(256)" json:"img_url1" form:"img_url1"`  // 图片地址
+	ImgUrl2  string             `gorm:"column:img_url2;type:varchar(256)" json:"img_url2" form:"img_url2"`  // 图片地址
+	SortID   int32              `gorm:"column:sort_id;type:tinyint" json:"sort_id" form:"sort_id"`          // 排序
+	Type     string             `gorm:"-" json:"type" form:"type"`                                          // 类型 channel:频道 category:分类
+	Children []*ApiNavFindModel `gorm:"-" json:"children"`                                                  // 子级
 }
 
 type ApiSiteModel struct {

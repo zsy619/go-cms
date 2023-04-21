@@ -19,6 +19,7 @@ type CmsSiteChannel struct {
 	Title      string    `gorm:"column:title;type:varchar(128);comment:频道标题" json:"title" form:"title"`
 	Kind       int32     `gorm:"column:kind;type:tinyint;comment:频道类型0文章1链接" json:"kind" form:"kind"`
 	ClassLayer int32     `gorm:"column:class_layer;type:int;default:1;comment:类别深度" json:"class_layer" form:"class_layer"`
+	LinkURL    string    `gorm:"column:link_url;type:varchar(256);comment:外部链接" json:"link_url" form:"link_url"`
 	ImgUrl1    string    `gorm:"column:img_url1;type:varchar(256);comment:图片地址" json:"img_url1" form:"img_url1"`
 	ImgUrl2    string    `gorm:"column:img_url2;type:varchar(256);comment:图片地址" json:"img_url2" form:"img_url2"`
 	IsComment  int32     `gorm:"column:is_comment;type:tinyint;comment:是否开启评论" json:"is_comment" form:"is_comment"`

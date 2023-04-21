@@ -47,6 +47,9 @@ func (c *BaseController) Prepare() {
 	c.Data["siteViews"] = "themes/" + SiteTheme + "/views/"
 
 	c.Data["site"] = DefatulSite
+	channel, _, _ := c.ChannelFind(DefatulSite.SiteID)
+	c.Data["channel"] = channel
+
 	c.Data["webroot"] = "/static/www/"
 	c.Data["year"] = time.Now().Year()
 	c.Data["controllerName"] = strings.ToLower(c.ControllerName)
@@ -128,6 +131,16 @@ func (this *BaseController) SiteGet(site_id int64) (*model.CmsSite, error) {
  */
 func (this *BaseController) ChannelFind(site_id int64) ([]*bizmodel.ApiChannelFindModel, int64, error) {
 	return biz.NewApiSite().ChannelFind(site_id)
+}
+
+/**
+ * @description: NavFind 获取站点导航
+ * @param {int64} site_id 站点ID
+ * @param {int64} channel_id 频道ID
+ * @return {*}
+ */
+func (this *BaseController) SiteMenu(site_id, channel_id int64) ([]*bizmodel.ApiNavFindModel, int64, error) {
+	return biz.NewApiSite().NavFind(site_id, channel_id)
 }
 
 /**

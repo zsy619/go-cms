@@ -21,6 +21,7 @@ func init() {
 		web.Router("/api/site/default", &ApiSiteController{}, "*:Default")
 		web.Router("/api/site/get", &ApiSiteController{}, "*:Get")
 		web.Router("/api/channel/find", &ApiSiteController{}, "*:ChannelFind")
+		web.Router("/api/site/menu", &ApiSiteController{}, "*:Menu")
 
 		web.Router("/api/category/nav", &ApiArticleController{}, "*:CategoryNav")
 		web.Router("/api/category/find", &ApiArticleController{}, "*:CategoryFind")

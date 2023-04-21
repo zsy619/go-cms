@@ -192,6 +192,7 @@ func (this *CmsSite) ChannelSave(input *model.CmsSiteChannel) error {
 			mdl.Title.ColumnName().String():      input.Title,
 			mdl.Kind.ColumnName().String():       input.Kind,
 			mdl.ClassLayer.ColumnName().String(): input.ClassLayer,
+			mdl.LinkURL.ColumnName().String():    input.LinkURL,
 			mdl.ImgUrl1.ColumnName().String():    input.ImgUrl1,
 			mdl.ImgUrl2.ColumnName().String():    input.ImgUrl2,
 			mdl.IsComment.ColumnName().String():  input.IsComment,
