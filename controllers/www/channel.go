@@ -5,19 +5,21 @@ import "haedu.gov.cn/cms/app/biz"
 // ChannelController 频道控制器
 type ChannelController struct{ BaseController }
 
-// Index 频道首页
+// Channel 频道首页
 // @router /channel/:name:string [get]
 // @router /:name:string [get]
-func (this *ChannelController) Index() {
-	name := this.Ctx.Input.Param(":name")
-	if name == "" {
+func (this *ChannelController) Channel() {
+	siteFlag := this.Ctx.Input.Param(":flag")
+	chanelName := this.Ctx.Input.Param(":name")
+	if siteFlag == "" || chanelName == "" {
 		this.Abort("404")
 	}
-	channelModel, err := biz.NewApiChannel().Find(name, 0)
+	channelModel, err := biz.NewApiChannel().Find(chanelName, 0)
 	if err != nil {
 		this.Ctx.WriteString(err.Error())
 		this.StopRun()
 	}
+	this.Data["channel"] = channelModel
 	this.Ctx.WriteString(channelModel.Name)
 	this.Ctx.WriteString("ChannelController.Index")
 }
@@ -26,17 +28,18 @@ func (this *ChannelController) Index() {
 // @router /channel/:name:string/:category:string [get]
 // @router /:name:string/:category:string [get]
 func (this *ChannelController) Category() {
-	name := this.Ctx.Input.Param(":name")
-	category := this.Ctx.Input.Param(":category")
-	if name == "" || category == "" {
+	siteFlag := this.Ctx.Input.Param(":flag")
+	chanelName := this.Ctx.Input.Param(":name")
+	categoryName := this.Ctx.Input.Param(":category")
+	if siteFlag == "" || chanelName == "" || categoryName == "" {
 		this.Abort("404")
 	}
-	channelModel, channelErr := biz.NewApiChannel().Find(name, 0)
+	channelModel, channelErr := biz.NewApiChannel().Find(chanelName, 0)
 	if channelErr != nil {
 		this.Ctx.WriteString(channelErr.Error())
 		this.StopRun()
 	}
-	categoryModel, categoryErr := biz.NewApiArticle().CategoryOne(0, category)
+	categoryModel, categoryErr := biz.NewApiArticle().CategoryOne(0, categoryName)
 	if categoryErr != nil {
 		this.Ctx.WriteString(categoryErr.Error())
 		this.StopRun()
@@ -49,7 +52,14 @@ func (this *ChannelController) Category() {
 		this.Ctx.WriteString("分类与频道不匹配")
 		this.StopRun()
 	}
-	this.Ctx.WriteString(categoryModel.Title)
-	// this.Data["channel"] = channel
-	// this.Data["category"] = catModel
+	this.Data["channel"] = channelModel
+	this.Data["category"] = categoryModel
+	this.Data["chanelName"] = chanelName
+	this.Data["categoryName"] = categoryName
+
+	if categoryModel.Template == "" {
+		this.TplName = this.getView(DefatulSite.Template, "category.html")
+	} else {
+		this.TplName = this.getView(DefatulSite.Template, categoryModel.Template)
+	}
 }

@@ -55,9 +55,10 @@ func init() {
 	web.Router("/", &IndexController{}, "*:Index")
 
 	{
-		web.Router("/channel/:name", &ChannelController{}, "*:Index") // 频道首页
+		web.Router("/:flag/:name", &ChannelController{}, "*:Channel")            // 频道首页
+		web.Router("/:flag/:name/:category", &ChannelController{}, "*:Category") // 频道分类
+
 		// web.Router("/:name", &ChannelController{}, "*:Index")                      // 频道首页
-		web.Router("/channel/:name/:category", &ChannelController{}, "*:Category") // 频道分类
 		// web.Router("/:name/:category", &ChannelController{}, "*:Category")         // 频道分类
 	}
 

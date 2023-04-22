@@ -19,16 +19,25 @@
                         </label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="hidden" name="site_id" value="{{.site.SiteID}}">
-                            <input type="text" maxlength="50" id="title" name="title" value="{{.site.Title}}" lay-verify="required" lay-reqtext="站点名称为必填项" autocomplete="off" placeholder="请输入站点名称" class="layui-input">
+                            <input type="text" maxlength="128" id="title" name="title" value="{{.site.Title}}" lay-verify="required" lay-reqtext="站点名称为必填项" autocomplete="off" placeholder="请输入站点名称" class="layui-input">
                         </div>
                         <div class="layui-form-mid layui-word-aux">标题备注，允许中文</div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">
+                            站点标识
+                        </label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <input type="text" maxlength="50" id="flag" name="flag" value="{{.site.Flag}}" lay-verify="required|flag" lay-reqtext="站点标识为必填项" autocomplete="off" placeholder="请输入站点名称" class="layui-input">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">站点标识为必填项，确保系统唯一，只允许字母</div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">
                             模板文件
                         </label>
                         <div class="layui-input-inline" style="width: 415px;">
-                            <input type="text" maxlength="50" id="dir_path" name="dir_path" value="{{.site.DirPath}}" autocomplete="off" placeholder="请输入或选择模板文件" class="layui-input">
+                            <input type="text" maxlength="50" id="template" name="template" value="{{.site.Template}}" autocomplete="off" placeholder="请输入或选择模板文件" class="layui-input">
                         </div>
                         <button type="button" class="layui-btn layui-btn-primary" style="margin-left: -10px;" id="btnSelectTheme">
                             <i class="layui-icon layui-icon-list"></i>选择
@@ -140,9 +149,23 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label">底部版权信息</label>
+                        <label class="layui-form-label">版权信息</label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <textarea id="copyright" name="copyright" class="layui-textarea">{{.site.Copyright}}</textarea>
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">支持HTML</div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">统计代码</label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <textarea id="statcode" name="statcode" class="layui-textarea">{{.site.Statcode}}</textarea>
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">支持HTML</div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">爬虫规则</label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <textarea id="robots" name="robots" class="layui-textarea">{{.site.Robots}}</textarea>
                         </div>
                         <div class="layui-form-mid layui-word-aux">支持HTML</div>
                     </div>
@@ -315,6 +338,7 @@
             //         return '标题也太短了吧';
             //     }
             // }
+            flag: [/^[a-zA-Z0-9\-\_]{2,50}$/, '请填写正确的网站标识'],
             dir_path: [/^[a-zA-Z0-9\-\_]{2,50}$/, "目录只能为字母、数字、下划线、中划线"]
             , domain: [/^\s*$|^([a-zA-Z0-9\-\u4e00-\u9fa5]+\.)+[a-zA-Z\u4e00-\u9fa5]+$/, "域名是去除“http(s)://”部分"]
             // , money: [

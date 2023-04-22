@@ -32,12 +32,12 @@ func (c *BaseController) Prepare() {
 
 	if DefatulSite == nil {
 		DefatulSite, _ = c.SiteDefault()
-		if DefatulSite.DirPath == "" {
+		if DefatulSite.Template == "" {
 			c.Ctx.WriteString("请设置默认模板")
 			c.StopRun()
 		}
 	}
-	SiteTheme = DefatulSite.DirPath
+	SiteTheme = DefatulSite.Template
 	SiteStatic = "/views/themes/" + SiteTheme + "/static/"
 	c.Data["siteTheme"] = SiteTheme
 	c.Data["siteStatic"] = SiteStatic

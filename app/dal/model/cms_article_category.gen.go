@@ -20,6 +20,7 @@ type CmsArticleCategory struct {
 	CallIndex      string    `gorm:"column:call_index;type:varchar(64);comment:调用别名" json:"call_index" form:"call_index"`
 	ClassLayer     int32     `gorm:"column:class_layer;type:int;default:1;comment:类别深度" json:"class_layer" form:"class_layer"`
 	LinkURL        string    `gorm:"column:link_url;type:varchar(256);comment:外部链接" json:"link_url" form:"link_url"`
+	Target         string    `gorm:"column:target;type:varchar(16);default:_blank;comment:是否开启浏览器新窗口" json:"target" form:"target"`
 	ImgUrl1        string    `gorm:"column:img_url1;type:varchar(256);comment:图片地址" json:"img_url1" form:"img_url1"`
 	ImgUrl2        string    `gorm:"column:img_url2;type:varchar(256);comment:图片地址" json:"img_url2" form:"img_url2"`
 	SeoTitle       string    `gorm:"column:seo_title;type:varchar(128);comment:SEO标题" json:"seo_title" form:"seo_title"`

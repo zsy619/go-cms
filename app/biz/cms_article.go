@@ -293,13 +293,19 @@ func (this *CmsArticle) CategoryAutoUrl(channelId int64) error {
 		return err
 	}
 	channelMdl, channelDo := query.CmsSiteChannelDo()
-	var name string
-	if err := channelDo.Where(channelMdl.ChannelID.Eq(channelId)).Pluck(channelMdl.Name, &name); err != nil {
+
+	find, err := channelDo.Where(channelMdl.ChannelID.Eq(channelId)).Select(channelMdl.SiteID, channelMdl.Name).First()
+	if err != nil {
+		return err
+	}
+	siteFlag := ""
+	siteMdl, siteDo := query.CmsSiteDo()
+	if err := siteDo.Where(siteMdl.SiteID.Eq(find.SiteID)).Pluck(siteMdl.Flag, &siteFlag); err != nil {
 		return err
 	}
 	var errOut error
 	for _, category := range categories {
-		linkUrl := fmt.Sprintf("/%s/%s", name, category.CallIndex)
+		linkUrl := fmt.Sprintf("/%s/%s/%s", siteFlag, find.Name, category.CallIndex)
 		_, errOut = do.Where(mdl.CategoryID.Eq(category.CategoryID)).UpdateColumns(map[string]interface{}{
 			mdl.LinkURL.ColumnName().String():    linkUrl,
 			mdl.UpdateTime.ColumnName().String(): time.Now(),

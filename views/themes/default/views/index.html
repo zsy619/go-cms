@@ -5,8 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>{{.site.Title}}</title>
-    <meta name="Keywords" content="{{.site.MetaKeyword}}" />
+    <title>{{if eq .site.HomeTitle ""}}{{.site.Title}}{{else}}{{.site.HomeTitle}}{{end}}</title>
+    <meta name="keywords" content="{{.site.MetaKeyword}}" />
+    <meta name="description" content="{{.site.MetaDescription}}" />
     {{TemplateTheme $.siteTheme "header.html" .}}
 </head>
 

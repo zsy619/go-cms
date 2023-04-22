@@ -152,7 +152,7 @@ func (this *ApiArticle) CategoryOne(category_id int64, call_index string) (*bizm
 	}
 	list := &bizmodel.ApiCategoryOneModel{}
 	_, do := query.CmsArticleCategoryDo()
-	sqlSelect := "b.`name` as channel_name,b.title as channel_title,a.category_id,a.parent_id,a.site_id,a.channel_id,a.title,a.call_index,a.class_layer,a.link_url,a.img_url1,a.img_url2,a.sort_id,a.is_show,a.is_search,a.is_deleted,a.seo_title,a.seo_keyword,a.seo_description,a.content"
+	sqlSelect := "b.`name` as channel_name,b.title as channel_title,a.category_id,a.parent_id,a.site_id,a.channel_id,a.title,a.call_index,a.class_layer,a.link_url,a.target,a.img_url1,a.img_url2,a.sort_id,a.is_show,a.is_search,a.is_deleted,a.seo_title,a.seo_keyword,a.seo_description,a.content,a.template"
 	sql := "SELECT " + sqlSelect + " FROM cms_article_category a LEFT JOIN cms_site_channel b ON a.channel_id=b.channel_id WHERE a.is_deleted=0 AND a.`status`=2 AND a.`is_show`=1" +
 		xgeneric.IFF(category_id > 0, " AND a.category_id="+strconv.FormatInt(category_id, 10), "") +
 		xgeneric.IFF(call_index != "", " AND a.call_index='"+call_index+"'", "")

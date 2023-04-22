@@ -79,10 +79,11 @@ func (this *CmsSite) SiteSave(mdl *model.CmsSite, domains []string, remarks []st
 	if count, _ := siteDo.Where(site.Name.Eq(mdl.Name), site.IsDeleted.Is(false), site.SiteID.Neq(mdl.SiteID)).Count(); count > 0 {
 		return errors.New("网站名称已存在，请修改后重试")
 	}
-	if count, _ := siteDo.Where(site.DirPath.Eq(mdl.DirPath), site.IsDeleted.Is(false), site.SiteID.Neq(mdl.SiteID)).Count(); count > 0 {
-		return errors.New("生成目录名已存在，请修改后重试")
+	if count, _ := siteDo.Where(site.Flag.Eq(mdl.Flag), site.IsDeleted.Is(false), site.SiteID.Neq(mdl.SiteID)).Count(); count > 0 {
+		return errors.New("网站标识已存在，请修改后重试")
 	}
 	mdl.Logo2 = xgeneric.IFF(mdl.Logo1 == "", "", mdl.Logo2)
+	mdl.Icon2 = xgeneric.IFF(mdl.Icon1 == "", "", mdl.Icon2)
 	if mdl.SiteID <= 0 {
 		if err := siteDo.Save(mdl); err != nil {
 			return err
@@ -97,12 +98,15 @@ func (this *CmsSite) SiteSave(mdl *model.CmsSite, domains []string, remarks []st
 		})
 		if _, err := siteDo.Where(site.SiteID.Eq(mdl.SiteID)).UpdateColumns(map[string]interface{}{
 			site.Name.ColumnName().String():            mdl.Name,
+			site.Flag.ColumnName().String():            mdl.Flag,
 			site.Title.ColumnName().String():           mdl.Title,
-			site.DirPath.ColumnName().String():         mdl.DirPath,
+			site.Template.ColumnName().String():        mdl.Template,
 			site.IsDefault.ColumnName().String():       mdl.IsDefault,
 			site.IsMobile.ColumnName().String():        mdl.IsMobile,
 			site.Logo1.ColumnName().String():           mdl.Logo1,
 			site.Logo2.ColumnName().String():           mdl.Logo2,
+			site.Icon1.ColumnName().String():           mdl.Icon1,
+			site.Icon2.ColumnName().String():           mdl.Icon2,
 			site.Company.ColumnName().String():         mdl.Company,
 			site.Address.ColumnName().String():         mdl.Address,
 			site.Telphone.ColumnName().String():        mdl.Telphone,
@@ -111,6 +115,8 @@ func (this *CmsSite) SiteSave(mdl *model.CmsSite, domains []string, remarks []st
 			site.Crod.ColumnName().String():            mdl.Crod,
 			site.HomeTitle.ColumnName().String():       mdl.HomeTitle,
 			site.Copyright.ColumnName().String():       mdl.Copyright,
+			site.Statcode.ColumnName().String():        mdl.Statcode,
+			site.Robots.ColumnName().String():          mdl.Robots,
 			site.MetaKeyword.ColumnName().String():     mdl.MetaKeyword,
 			site.MetaDescription.ColumnName().String(): mdl.MetaDescription,
 		}); err != nil {

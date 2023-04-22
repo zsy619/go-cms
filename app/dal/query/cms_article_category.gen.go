@@ -35,6 +35,7 @@ func newCmsArticleCategory(db *gorm.DB, opts ...gen.DOOption) cmsArticleCategory
 	_cmsArticleCategory.CallIndex = field.NewString(tableName, "call_index")
 	_cmsArticleCategory.ClassLayer = field.NewInt32(tableName, "class_layer")
 	_cmsArticleCategory.LinkURL = field.NewString(tableName, "link_url")
+	_cmsArticleCategory.Target = field.NewString(tableName, "target")
 	_cmsArticleCategory.ImgUrl1 = field.NewString(tableName, "img_url1")
 	_cmsArticleCategory.ImgUrl2 = field.NewString(tableName, "img_url2")
 	_cmsArticleCategory.SeoTitle = field.NewString(tableName, "seo_title")
@@ -72,6 +73,7 @@ type cmsArticleCategory struct {
 	CallIndex      field.String // 调用别名
 	ClassLayer     field.Int32  // 类别深度
 	LinkURL        field.String // 外部链接
+	Target         field.String // 是否开启浏览器新窗口
 	ImgUrl1        field.String // 图片地址
 	ImgUrl2        field.String // 图片地址
 	SeoTitle       field.String // SEO标题
@@ -115,6 +117,7 @@ func (c *cmsArticleCategory) updateTableName(table string) *cmsArticleCategory {
 	c.CallIndex = field.NewString(table, "call_index")
 	c.ClassLayer = field.NewInt32(table, "class_layer")
 	c.LinkURL = field.NewString(table, "link_url")
+	c.Target = field.NewString(table, "target")
 	c.ImgUrl1 = field.NewString(table, "img_url1")
 	c.ImgUrl2 = field.NewString(table, "img_url2")
 	c.SeoTitle = field.NewString(table, "seo_title")
@@ -158,7 +161,7 @@ func (c *cmsArticleCategory) GetFieldByName(fieldName string) (field.OrderExpr, 
 }
 
 func (c *cmsArticleCategory) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 27)
+	c.fieldMap = make(map[string]field.Expr, 28)
 	c.fieldMap["category_id"] = c.CategoryID
 	c.fieldMap["parent_id"] = c.ParentID
 	c.fieldMap["site_id"] = c.SiteID
@@ -167,6 +170,7 @@ func (c *cmsArticleCategory) fillFieldMap() {
 	c.fieldMap["call_index"] = c.CallIndex
 	c.fieldMap["class_layer"] = c.ClassLayer
 	c.fieldMap["link_url"] = c.LinkURL
+	c.fieldMap["target"] = c.Target
 	c.fieldMap["img_url1"] = c.ImgUrl1
 	c.fieldMap["img_url2"] = c.ImgUrl2
 	c.fieldMap["seo_title"] = c.SeoTitle

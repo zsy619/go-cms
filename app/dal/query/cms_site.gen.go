@@ -30,12 +30,15 @@ func newCmsSite(db *gorm.DB, opts ...gen.DOOption) cmsSite {
 	_cmsSite.SiteID = field.NewInt64(tableName, "site_id")
 	_cmsSite.ParentID = field.NewInt64(tableName, "parent_id")
 	_cmsSite.Name = field.NewString(tableName, "name")
+	_cmsSite.Flag = field.NewString(tableName, "flag")
 	_cmsSite.Title = field.NewString(tableName, "title")
-	_cmsSite.DirPath = field.NewString(tableName, "dir_path")
+	_cmsSite.Template = field.NewString(tableName, "template")
 	_cmsSite.IsDefault = field.NewBool(tableName, "is_default")
 	_cmsSite.IsMobile = field.NewBool(tableName, "is_mobile")
 	_cmsSite.Logo1 = field.NewString(tableName, "logo1")
 	_cmsSite.Logo2 = field.NewString(tableName, "logo2")
+	_cmsSite.Icon1 = field.NewString(tableName, "icon1")
+	_cmsSite.Icon2 = field.NewString(tableName, "icon2")
 	_cmsSite.Company = field.NewString(tableName, "company")
 	_cmsSite.Address = field.NewString(tableName, "address")
 	_cmsSite.Telphone = field.NewString(tableName, "telphone")
@@ -47,6 +50,8 @@ func newCmsSite(db *gorm.DB, opts ...gen.DOOption) cmsSite {
 	_cmsSite.FileType = field.NewString(tableName, "file_type")
 	_cmsSite.HomeTitle = field.NewString(tableName, "home_title")
 	_cmsSite.Copyright = field.NewString(tableName, "copyright")
+	_cmsSite.Statcode = field.NewString(tableName, "statcode")
+	_cmsSite.Robots = field.NewString(tableName, "robots")
 	_cmsSite.MetaKeyword = field.NewString(tableName, "meta_keyword")
 	_cmsSite.MetaDescription = field.NewString(tableName, "meta_description")
 	_cmsSite.SortID = field.NewInt32(tableName, "sort_id")
@@ -71,12 +76,15 @@ type cmsSite struct {
 	SiteID          field.Int64  // 主键
 	ParentID        field.Int64  // 父级ID
 	Name            field.String // 站点名称
+	Flag            field.String // 站点标识
 	Title           field.String // 标题
-	DirPath         field.String // 模板目录名
+	Template        field.String // 模板名称
 	IsDefault       field.Bool   // 是否默认站
 	IsMobile        field.Bool   // 是否移动端
 	Logo1           field.String // 网站LOGO
 	Logo2           field.String // 网站LOGO
+	Icon1           field.String // 网站icon
+	Icon2           field.String // 网站icon
 	Company         field.String // 公司名称
 	Address         field.String // 通讯地址
 	Telphone        field.String // 联系电话
@@ -88,6 +96,8 @@ type cmsSite struct {
 	FileType        field.String // 上传文件类型
 	HomeTitle       field.String // 首页标题
 	Copyright       field.String // 版权信息
+	Statcode        field.String // 统计代码
+	Robots          field.String // 爬虫规则
 	MetaKeyword     field.String // META关键词
 	MetaDescription field.String // META描述
 	SortID          field.Int32  // 排序
@@ -118,12 +128,15 @@ func (c *cmsSite) updateTableName(table string) *cmsSite {
 	c.SiteID = field.NewInt64(table, "site_id")
 	c.ParentID = field.NewInt64(table, "parent_id")
 	c.Name = field.NewString(table, "name")
+	c.Flag = field.NewString(table, "flag")
 	c.Title = field.NewString(table, "title")
-	c.DirPath = field.NewString(table, "dir_path")
+	c.Template = field.NewString(table, "template")
 	c.IsDefault = field.NewBool(table, "is_default")
 	c.IsMobile = field.NewBool(table, "is_mobile")
 	c.Logo1 = field.NewString(table, "logo1")
 	c.Logo2 = field.NewString(table, "logo2")
+	c.Icon1 = field.NewString(table, "icon1")
+	c.Icon2 = field.NewString(table, "icon2")
 	c.Company = field.NewString(table, "company")
 	c.Address = field.NewString(table, "address")
 	c.Telphone = field.NewString(table, "telphone")
@@ -135,6 +148,8 @@ func (c *cmsSite) updateTableName(table string) *cmsSite {
 	c.FileType = field.NewString(table, "file_type")
 	c.HomeTitle = field.NewString(table, "home_title")
 	c.Copyright = field.NewString(table, "copyright")
+	c.Statcode = field.NewString(table, "statcode")
+	c.Robots = field.NewString(table, "robots")
 	c.MetaKeyword = field.NewString(table, "meta_keyword")
 	c.MetaDescription = field.NewString(table, "meta_description")
 	c.SortID = field.NewInt32(table, "sort_id")
@@ -168,16 +183,19 @@ func (c *cmsSite) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *cmsSite) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 31)
+	c.fieldMap = make(map[string]field.Expr, 36)
 	c.fieldMap["site_id"] = c.SiteID
 	c.fieldMap["parent_id"] = c.ParentID
 	c.fieldMap["name"] = c.Name
+	c.fieldMap["flag"] = c.Flag
 	c.fieldMap["title"] = c.Title
-	c.fieldMap["dir_path"] = c.DirPath
+	c.fieldMap["template"] = c.Template
 	c.fieldMap["is_default"] = c.IsDefault
 	c.fieldMap["is_mobile"] = c.IsMobile
 	c.fieldMap["logo1"] = c.Logo1
 	c.fieldMap["logo2"] = c.Logo2
+	c.fieldMap["icon1"] = c.Icon1
+	c.fieldMap["icon2"] = c.Icon2
 	c.fieldMap["company"] = c.Company
 	c.fieldMap["address"] = c.Address
 	c.fieldMap["telphone"] = c.Telphone
@@ -189,6 +207,8 @@ func (c *cmsSite) fillFieldMap() {
 	c.fieldMap["file_type"] = c.FileType
 	c.fieldMap["home_title"] = c.HomeTitle
 	c.fieldMap["copyright"] = c.Copyright
+	c.fieldMap["statcode"] = c.Statcode
+	c.fieldMap["robots"] = c.Robots
 	c.fieldMap["meta_keyword"] = c.MetaKeyword
 	c.fieldMap["meta_description"] = c.MetaDescription
 	c.fieldMap["sort_id"] = c.SortID

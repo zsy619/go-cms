@@ -34,10 +34,12 @@ type ApiCategoryFindModel struct {
 // ApiArticleModel 文章模型
 type ApiCategoryOneModel struct {
 	ApiCategoryFindModel
+	Target         string `gorm:"column:target;type:varchar(16);default:_blank;comment:是否开启浏览器新窗口" json:"target" form:"target"`
 	SeoTitle       string `gorm:"column:seo_title;type:varchar(128)" json:"seo_title" form:"seo_title"`                   // SEO标题
 	SeoKeyword     string `gorm:"column:seo_keyword;type:varchar(128)" json:"seo_keyword" form:"seo_keyword"`             // SEO关健字
 	SeoDescription string `gorm:"column:seo_description;type:varchar(128)" json:"seo_description" form:"seo_description"` // SEO描述
 	Content        string `gorm:"column:content;type:text" json:"content" form:"content"`                                 // 内容介绍
+	Template       string `gorm:"column:template;type:varchar(256);comment:模板路径" json:"template" form:"template"`
 }
 
 // ApiArticleListModel 文章查询模型

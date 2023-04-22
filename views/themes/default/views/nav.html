@@ -31,11 +31,11 @@
                 {{range $index,$item := $menus}}
                 <li>
                     {{$url := eq $item.LinkURL ""}}
-                    <a href='{{IIF $url "" $item.LinkURL}}'>{{$item.Title}}</a>
+                    <a href='{{IIF $url "" $item.LinkURL}}' {{if ne $item.Target "" }}targent='{{$item.Target}}' {{end}}>{{$item.Title}}</a>
                     {{if $item.Children}}
                     <div class="level-two">
                         {{range $item.Children}}
-                        <a href="{{.LinkURL}}">{{.Title}}</a>
+                        <a href="{{.LinkURL}}" {{if ne $item.Target "" }}targent='{{$item.Target}}' {{end}}>{{.Title}}</a>
                         {{end}}
                     </div>
                     {{end}}

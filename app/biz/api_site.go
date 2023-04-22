@@ -31,12 +31,12 @@ func (this *ApiSite) Default() (*bizmodel.ApiSiteModel, error) {
 	err := siteDo.Where(site.IsDefault.Is(true), site.IsDeleted.Is(false)).Scan(&find)
 	if err == nil {
 		// 获取默认模板
-		if find.DirPath == "" {
+		if find.Template == "" {
 			mdl, do := query.CmsThemeDo()
 			theme, err := do.Where(mdl.IsDefault.Is(true)).First()
 			if err != nil {
 			} else {
-				find.DirPath = theme.Name
+				find.Template = theme.Name
 			}
 		}
 		ApiCache.Set(cacheKey, find, 1800)
@@ -104,7 +104,7 @@ func (this *ApiSite) NavFind(site_id int64, channel_id int64) ([]*bizmodel.ApiNa
 	outNav := []*bizmodel.ApiNavFindModel{}
 	mdl, do := query.CmsSiteChannelDo()
 	err := do.Where(mdl.SiteID.Eq(site_id), mdl.ParentID.Eq(channel_id)).Select(
-		mdl.ChannelID.As("nav_id"), mdl.Title, mdl.Name, mdl.LinkURL,
+		mdl.ChannelID.As("nav_id"), mdl.Title, mdl.Name, mdl.LinkURL, mdl.Target,
 		mdl.ImgUrl1, mdl.ImgUrl2, mdl.SortID).Order(mdl.SortID).Scan(&outNav)
 	if err != nil {
 		return []*bizmodel.ApiNavFindModel{}, 0, err
@@ -135,7 +135,7 @@ func (this *ApiSite) NavCategoryFind(channel_id int64, parent_id int64) []*bizmo
 	outNav := []*bizmodel.ApiNavFindModel{}
 	mdl, do := query.CmsArticleCategoryDo()
 	err := do.Where(mdl.ChannelID.Eq(channel_id), mdl.ParentID.Eq(parent_id), mdl.IsShow.Is(true)).Select(
-		mdl.CategoryID.As("nav_id"), mdl.Title, mdl.CallIndex.As("name"), mdl.LinkURL,
+		mdl.CategoryID.As("nav_id"), mdl.Title, mdl.CallIndex.As("name"), mdl.LinkURL, mdl.Target,
 		mdl.ImgUrl1, mdl.ImgUrl2, mdl.SortID).Order(mdl.SortID).Scan(&outNav)
 	if err != nil {
 		return []*bizmodel.ApiNavFindModel{}
