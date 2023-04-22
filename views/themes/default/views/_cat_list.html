@@ -1,12 +1,5 @@
 <div class="cont-right">
-    <div class="breadcrumb">
-        <img src="{{.siteStatic}}images/position.png" alt="" class="position" /> 您所在的位置：
-        <a href="/">首页</a>
-        &gt;
-        <a href="javascript:void(0)">学校概况</a>
-        &gt;
-        <a href="javascript:void(0)" class="active">列表</a>
-    </div>
+    {{TemplateTheme $.siteTheme "_cat_nav_top.html" .}}
     <div class="list-con">
         <ul class="list-ul">
             <li>
@@ -30,31 +23,6 @@
     </div>
 </script>
 <script type="text/javascript">
-    $(function () {
-        $.ajax({
-            url: "/api/category/nav?call_index=" + categoryName + "&r=" + Math.random(),
-            dataType: "json",
-            type: "get",
-            beforeSend: function () {
-                $(".breadcrumb").html("");
-            },
-            success: function (res) {
-                $(".breadcrumb").append('<img src="{{.siteStatic}}images/position.png" alt="" class="position" /> 您所在的位置：');
-                $(".breadcrumb").append('<a href="/">首页</a>&nbsp;&gt;');
-                if (res.code == 0) {
-                    var len = res.data.length;
-                    for (var i = 0; i < len; i++) {
-                        $(".breadcrumb").append('&nbsp;<a href="javascript:void(0)">' + res.data[i].title + '</a>&nbsp;&gt;');
-                    }
-                }
-                $(".breadcrumb").append('&nbsp;<a href="javascript:void(0)" class="active">列表</a>');
-            },
-            error: function () {
-            },
-            complete: function () {
-            }
-        });
-    })
 
     var loadData = function (page, limit, call_index) {
         $.ajax({

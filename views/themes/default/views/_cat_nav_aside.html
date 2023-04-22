@@ -1,0 +1,41 @@
+<div class="nav-aside">
+    <div class="top" id="channelName">&nbsp;</div>
+    <ul id="urlNav">
+    </ul>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $.ajax({
+            url: "/api/category/find?channel_name=" + chanelName + "&r=" + Math.random(),
+            dataType: "json",
+            type: "get",
+            beforeSend: function () {
+                $("#channelName").html("");
+                $("#urlNav").html("");
+                $(".nav-aside").busyLoad("show", { spinner: "circle-line" });
+            },
+            success: function (res) {
+                // console.log(res);
+                if (res.code == 0) {
+                    var len = res.data.length;
+                    for (var i = 0; i < len; i++) {
+                        var item = res.data[i];
+                        if (i == 0) {
+                            $("#channelName").html(item.channel_title);
+                        }
+                        var url = item.link_url;
+                        var title = item.title;
+                        var liItem = item.call_index == categoryName ? ('<li class="active"><a href="' + url + '">' + title + '</a></li>') : ('<li><a href="' + url + '">' + title + '</a></li>');
+                        $("#urlNav").append(liItem);
+                    }
+                }
+            },
+            error: function () {
+                alert('failed!');
+            },
+            complete: function () {
+                $(".nav-aside").busyLoad("hide", { animate: "fade" });
+            }
+        });
+    })
+</script>

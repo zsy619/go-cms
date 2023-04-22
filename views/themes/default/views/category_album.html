@@ -10,6 +10,28 @@
     <meta name="Keywords" content="{{.category.SeoKeyword}}" />
     <meta name="description" content="{{.category.SeoKeyword}}" />
     {{TemplateTheme $.siteTheme "header.html" .}}
+    <script src="/static/www/js/slick.js?r={{.time}}"></script>
+    <script type="text/javascript" src="/static/plugins/jquery-viewer/viewer.js"></script>
+    <link rel="stylesheet" href="/static/plugins/jquery-viewer/viewer.css">
+    <script type="text/javascript" src="/static/plugins/jquery-viewer/jquery-viewer.js"></script>
+    <style>
+        .single-item2 {
+            width: 28.125rem;
+            margin: 0 auto;
+        }
+
+        .slick-prev {
+            left: -80px;
+        }
+
+        .slick-next {
+            right: -80px;
+        }
+
+        .slick-slide img {
+            width: 450px;
+        }
+    </style>
     <script>
         var siteStatic = "{{.siteStatic}}";
         var chanelName = "{{.chanelName}}";
@@ -26,7 +48,7 @@
     <div class="main">
         <div class="w1200 clearfix">
             {{TemplateTheme $.siteTheme "_cat_nav_aside.html" .}}
-            {{TemplateTheme $.siteTheme "_cat_list.html" .}}
+            {{TemplateTheme $.siteTheme "_cat_album.html" .}}
         </div>
         {{TemplateTheme $.siteTheme "footer.html" .}}
         <script type="text/javascript">
@@ -39,7 +61,6 @@
                 form.render(); //刷新所有渲染效果，也可以单独熟悉某个效果	
                 form.render('select'); //刷新select选择框渲染
             })
-
         </script>
 </body>
 
