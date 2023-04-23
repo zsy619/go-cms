@@ -48,8 +48,6 @@ func init() {
 		web.Router("/api/tag/article/paginate", &ApiTagController{}, "*:ArticlePaginate")
 	}
 
-	web.Router("/api/online/register", &ApiOnlineRegisterController{}, "*:Save")
-
 	web.Router("/api/cache/clear", &ApiCacheController{}, "*:Clear")
 
 	web.Router("/", &IndexController{}, "*:Index")
@@ -74,10 +72,10 @@ func init() {
 	web.Router("/article/search/:keyword", &ArticleController{}, "*:Search") // 搜索页面
 	web.Router("/article/search", &ArticleController{}, "*:Search")          // 搜索页面
 
-	web.AutoPrefix("/", &XxgkController{}) // 学校概况
-	web.AutoPrefix("/", &ZsjyController{}) // 招生就业
-	web.AutoPrefix("/", &XyzxController{}) // 校园资讯
-	web.AutoPrefix("/", &JyjxController{}) // 教育教学
-	web.AutoPrefix("/", &LxwmController{}) // 联系我们
-	web.AutoPrefix("/", &JgszController{}) // 机构设置
+	// web.AutoPrefix("/", &XxgkController{}) // 学校概况
+	// web.AutoPrefix("/", &ZsjyController{}) // 招生就业
+	// web.AutoPrefix("/", &XyzxController{}) // 校园资讯
+	// web.AutoPrefix("/", &JyjxController{}) // 教育教学
+	// web.AutoPrefix("/", &LxwmController{}) // 联系我们
+	// web.AutoPrefix("/", &JgszController{}) // 机构设置
 }

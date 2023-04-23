@@ -9,7 +9,7 @@
     <link href="/static/favicon.ico" rel="icon">
     <meta name="Keywords" content="{{.category.SeoKeyword}}" />
     <meta name="description" content="{{.category.SeoKeyword}}" />
-    {{TemplateTheme $.siteTheme "header.html" .}}
+    {{TemplateTheme $.siteTheme "_header.html" .}}
     <script>
         var siteStatic = "{{.siteStatic}}";
         var channelName = "{{.channelName}}";
@@ -18,7 +18,7 @@
 </head>
 
 <body>
-    {{TemplateTheme $.siteTheme "nav.html" .}}
+    {{TemplateTheme $.siteTheme "_nav.html" .}}
     <div class="other-banner">
         <img {{if ne .channel.ImgUrl1 "" }} src="{{.channel.ImgUrl1}}" {{end}} class="img" />
     </div>
@@ -71,7 +71,7 @@
             </div>
         </div>
     </div>
-    {{template "www/layout/footer.html" .}}
+    {{TemplateTheme $.siteTheme "_footer.html" .}}
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=Cy9sPCrjZ2AAGwMhN1nuoW04FD80hDzc"></script>
     <input type="hidden" name="" id="map_title" value='河南省工业学校（文南教学部）' />
     <input type="hidden" name="" id="map_info" value='电话：0371-63388979<br/>

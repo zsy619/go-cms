@@ -9,7 +9,7 @@
     <link href="/static/favicon.ico" rel="icon">
     <meta name="Keywords" content="{{.category.SeoKeyword}}" />
     <meta name="description" content="{{.category.SeoKeyword}}" />
-    {{TemplateTheme $.siteTheme "header.html" .}}
+    {{TemplateTheme $.siteTheme "_header.html" .}}
     <script>
         var siteStatic = "{{.siteStatic}}";
         var channelName = "{{.channelName}}";
@@ -19,7 +19,7 @@
 </head>
 
 <body>
-    {{TemplateTheme $.siteTheme "nav.html" .}}
+    {{TemplateTheme $.siteTheme "_nav.html" .}}
     <div class="other-banner">
         <img {{if ne .channel.ImgUrl1 "" }} src="{{.channel.ImgUrl1}}" {{end}} class="img" />
     </div>
@@ -207,7 +207,7 @@
                     form.on('submit(searchBtnFilter)', function (data) {
                         $.ajax({
                             type: "POST", //提交的方法
-                            url: "/api/online/register?r=" + Math.random(), //提交的地址
+                            url: "/plugin/xsbm/save?r=" + Math.random(), //提交的地址
                             data: $('#frmEdit').serialize(), // 序列化表单值
                             async: false,
                             beforeSend: function () { //当一个Ajax请求开始时触发
@@ -245,7 +245,7 @@
                 })
             </script>
         </div>
-        {{TemplateTheme $.siteTheme "footer.html" .}}
+        {{TemplateTheme $.siteTheme "_footer.html" .}}
     </div>
 </body>
 

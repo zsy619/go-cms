@@ -9,7 +9,7 @@
     <link href="/static/favicon.ico" rel="icon">
     <meta name="Keywords" content="{{.article.SeoKeyword}}" />
     <meta name="description" content="{{.article.SeoDescription}}" />
-    {{TemplateTheme $.siteTheme "header.html" .}}
+    {{TemplateTheme $.siteTheme "_header.html" .}}
     <script type="text/javascript" src="/static/plugins/jquery-viewer/viewer.js"></script>
     <link rel="stylesheet" href="/static/plugins/jquery-viewer/viewer.css">
     <script type="text/javascript" src="/static/plugins/jquery-viewer/jquery-viewer.js"></script>
@@ -19,7 +19,7 @@
 </head>
 
 <body>
-    {{template "www/layout/header.html" .}}
+    {{TemplateTheme $.siteTheme "_nav.html" .}}
     <div class="main">
         <div class="w1200 clearfix">
             <div class="breadcrumb">
@@ -78,7 +78,7 @@
             </div>
         </div>
     </div>
-    {{template "www/layout/footer.html" .}}
+    {{TemplateTheme $.siteTheme "_footer.html" .}}
     <script type="text/template" id="navTepl">
         <a href="/article/teacher/${article_id}" onclick="ArticleClick(${article_id})">${type}：【教师风采】${title} -- ${sub_title}</a>
     </script>

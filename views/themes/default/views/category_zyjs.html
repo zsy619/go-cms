@@ -9,7 +9,7 @@
     <link href="/static/favicon.ico" rel="icon">
     <meta name="Keywords" content="{{.category.SeoKeyword}}" />
     <meta name="description" content="{{.category.SeoKeyword}}" />
-    {{TemplateTheme $.siteTheme "header.html" .}}
+    {{TemplateTheme $.siteTheme "_header.html" .}}
     <script type="text/javascript" src="/static/plugins/jquery-viewer/viewer.js"></script>
     <link rel="stylesheet" href="/static/plugins/jquery-viewer/viewer.css">
     <script type="text/javascript" src="/static/plugins/jquery-viewer/jquery-viewer.js"></script>
@@ -22,7 +22,7 @@
 </head>
 
 <body>
-    {{TemplateTheme $.siteTheme "nav.html" .}}
+    {{TemplateTheme $.siteTheme "_nav.html" .}}
     <div class="other-banner">
         <img {{if ne .channel.ImgUrl1 "" }} src="{{.channel.ImgUrl1}}" {{end}} class="img" />
     </div>
@@ -76,8 +76,8 @@
                 </li>
             </script>
         </div>
-        {{TemplateTheme $.siteTheme "footer.html" .}}
     </div>
+    {{TemplateTheme $.siteTheme "_footer.html" .}}
     <script type="text/javascript">
         layui.use(['form', 'element', 'laypage', 'layer'], function () {
             var form = layui.form,

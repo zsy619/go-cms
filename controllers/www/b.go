@@ -62,50 +62,50 @@ func (c *BaseController) Finish() {
 	fmt.Println("www BaseController Finish")
 }
 
-// 渲染模版
-func (this *BaseController) display(tpl ...string) {
-	var tplname string
-	if len(tpl) > 0 {
-		tplname = tpl[0] + ".html"
-	} else {
-		tplname = "www/" + this.ControllerName + "/" + this.ActionName + ".html"
-	}
-	this.Layout = "www/layout/layout.html"
-	this.TplName = tplname
-}
+// // 渲染模版
+// func (this *BaseController) display(tpl ...string) {
+// 	var tplname string
+// 	if len(tpl) > 0 {
+// 		tplname = tpl[0] + ".html"
+// 	} else {
+// 		tplname = "www/" + this.ControllerName + "/" + this.ActionName + ".html"
+// 	}
+// 	this.Layout = "www/layout/layout.html"
+// 	this.TplName = tplname
+// }
 
-func (this *BaseController) displayArticle(tpl ...string) {
-	var tplname string
-	if len(tpl) > 0 {
-		tplname = tpl[0] + ".html"
-	} else {
-		tplname = "www/" + this.ControllerName + "/" + this.ActionName + ".html"
-	}
-	this.Layout = "www/layout/article.html"
-	this.TplName = tplname
-}
+// func (this *BaseController) displayArticle(tpl ...string) {
+// 	var tplname string
+// 	if len(tpl) > 0 {
+// 		tplname = tpl[0] + ".html"
+// 	} else {
+// 		tplname = "www/" + this.ControllerName + "/" + this.ActionName + ".html"
+// 	}
+// 	this.Layout = "www/layout/article.html"
+// 	this.TplName = tplname
+// }
 
-func (this *BaseController) displayCategory(tpl ...string) {
-	var tplname string
-	if len(tpl) > 0 {
-		tplname = tpl[0] + ".html"
-	} else {
-		tplname = "www/" + this.ControllerName + "/" + this.ActionName + ".html"
-	}
-	this.Layout = "www/layout/category.html"
-	this.TplName = tplname
-}
+// func (this *BaseController) displayCategory(tpl ...string) {
+// 	var tplname string
+// 	if len(tpl) > 0 {
+// 		tplname = tpl[0] + ".html"
+// 	} else {
+// 		tplname = "www/" + this.ControllerName + "/" + this.ActionName + ".html"
+// 	}
+// 	this.Layout = "www/layout/category.html"
+// 	this.TplName = tplname
+// }
 
-// 渲染模版
-func (this *BaseController) displayNoLayout(tpl ...string) {
-	var tplname string
-	if len(tpl) > 0 {
-		tplname = tpl[0] + ".html"
-	} else {
-		tplname = "www/" + this.ControllerName + "/" + this.ActionName + ".html"
-	}
-	this.TplName = tplname
-}
+// // 渲染模版
+// func (this *BaseController) displayNoLayout(tpl ...string) {
+// 	var tplname string
+// 	if len(tpl) > 0 {
+// 		tplname = tpl[0] + ".html"
+// 	} else {
+// 		tplname = "www/" + this.ControllerName + "/" + this.ActionName + ".html"
+// 	}
+// 	this.TplName = tplname
+// }
 
 /**
  * @description: SiteDefault 获取站点信息

@@ -9,7 +9,7 @@
     <link href="/static/favicon.ico" rel="icon">
     <meta name="Keywords" content="{{.site.MetaKeyword}}" />
     <meta name="description" content="{{.site.MetaDescription}}" />
-    {{TemplateTheme $.siteTheme "header.html" .}}
+    {{TemplateTheme $.siteTheme "_header.html" .}}
     <script>
         var siteStatic = "{{.siteStatic}}";
         var keyword = "{{.keyword}}";
@@ -17,7 +17,7 @@
 </head>
 
 <body>
-    {{template "www/layout/header.html" .}}
+    {{TemplateTheme $.siteTheme "_nav.html" .}}
     <div class="main bg-gray">
         <div class="w1200 clearfix">
             <div class="search-list">
@@ -40,7 +40,7 @@
             </div>
         </div>
     </div>
-    {{template "www/layout/footer.html" .}}
+    {{TemplateTheme $.siteTheme "_footer.html" .}}
     <script id="templateLi" type="text/template">
         <li>
             <a href="${url}" title="${title}" target="_blank" onclick="ArticleClick(${article_id})" >

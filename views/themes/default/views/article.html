@@ -9,7 +9,7 @@
     <link href="/static/favicon.ico" rel="icon">
     <meta name="Keywords" content="{{.article.SeoKeyword}}" />
     <meta name="description" content="{{.article.SeoDescription}}" />
-    {{TemplateTheme $.siteTheme "header.html" .}}
+    {{TemplateTheme $.siteTheme "_header.html" .}}
     <script type="text/javascript" src="/static/plugins/jquery-viewer/viewer.js"></script>
     <link rel="stylesheet" href="/static/plugins/jquery-viewer/viewer.css">
     <script type="text/javascript" src="/static/plugins/jquery-viewer/jquery-viewer.js"></script>
@@ -19,7 +19,7 @@
 </head>
 
 <body>
-    {{template "www/layout/header.html" .}}
+    {{TemplateTheme $.siteTheme "_nav.html" .}}
     <div class="other-banner">
         <img src="{{.siteStatic}}images/other_banner.png" class="img" />
     </div>
@@ -79,7 +79,7 @@
             </div>
         </div>
     </div>
-    {{template "www/layout/footer.html" .}}
+    {{TemplateTheme $.siteTheme "_footer.html" .}}
     <script type="text/javascript">
         $(function () {
             if (document.getElementById('divImg')) {
