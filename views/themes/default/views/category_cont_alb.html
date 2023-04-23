@@ -10,6 +10,9 @@
     <meta name="Keywords" content="{{.category.SeoKeyword}}" />
     <meta name="description" content="{{.category.SeoKeyword}}" />
     {{TemplateTheme $.siteTheme "header.html" .}}
+    <script type="text/javascript" src="/static/plugins/jquery-viewer/viewer.js"></script>
+    <link rel="stylesheet" href="/static/plugins/jquery-viewer/viewer.css">
+    <script type="text/javascript" src="/static/plugins/jquery-viewer/jquery-viewer.js"></script>
     <script>
         var siteStatic = "{{.siteStatic}}";
         var chanelName = "{{.chanelName}}";
@@ -26,7 +29,7 @@
     <div class="main">
         <div class="w1200 clearfix">
             {{TemplateTheme $.siteTheme "_cat_nav_aside.html" .}}
-            {{TemplateTheme $.siteTheme "_cat_img.html" .}}
+            {{TemplateTheme $.siteTheme "_cat_cont_alb.html" .}}
         </div>
         {{TemplateTheme $.siteTheme "footer.html" .}}
     </div>

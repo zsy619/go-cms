@@ -32,28 +32,18 @@ func (this *ApiChannel) Find(name string, channel_id int64) (*bizmodel.ApiChanne
 	}
 	mdl, do := query.CmsSiteChannelDo()
 	if name != "" {
-		find := &bizmodel.ApiChannelFindModel{}
-		err := do.Where(mdl.Name.Eq(name)).Select(mdl.ChannelID, mdl.ParentID, mdl.Title, mdl.Name, mdl.Kind, mdl.ClassLayer, mdl.ImgUrl1, mdl.ImgUrl2, mdl.SortID, mdl.IsAlbum, mdl.IsAttach, mdl.IsSpec).Order(mdl.SortID).Scan(&find)
-		if err != nil {
-			return nil, err
-		}
-		if find == nil || find.Name == "" {
-			return nil, errors.New("频道不存在")
-		}
-		ApiCache.Set(cacheKey, find, 3600)
-		return find, nil
+		do = do.Where(mdl.Name.Eq(name))
+	} else if channel_id > 0 {
+		do = do.Where(mdl.ChannelID.Eq(channel_id))
 	}
-	if channel_id > 0 {
-		find := &bizmodel.ApiChannelFindModel{}
-		err := do.Where(mdl.ChannelID.Eq(channel_id)).Select(mdl.ChannelID, mdl.ParentID, mdl.Title, mdl.Name, mdl.Kind, mdl.ClassLayer, mdl.ImgUrl1, mdl.ImgUrl2, mdl.SortID, mdl.IsAlbum, mdl.IsAttach, mdl.IsSpec).Order(mdl.SortID).Scan(&find)
-		if err != nil {
-			return nil, err
-		}
-		if find == nil || find.Name == "" {
-			return nil, errors.New("频道不存在")
-		}
-		ApiCache.Set(cacheKey, find, 3600)
-		return find, nil
+	find := &bizmodel.ApiChannelFindModel{}
+	err := do.Select(mdl.ChannelID, mdl.ParentID, mdl.Title, mdl.Name, mdl.Kind, mdl.ClassLayer, mdl.ImgUrl1, mdl.ImgUrl2, mdl.SortID, mdl.IsAlbum, mdl.IsAttach, mdl.IsSpec, mdl.Template).Order(mdl.SortID).Scan(&find)
+	if err != nil {
+		return nil, err
 	}
-	return nil, nil
+	if find == nil || find.Name == "" {
+		return nil, errors.New("频道不存在")
+	}
+	ApiCache.Set(cacheKey, find, 3600)
+	return find, nil
 }

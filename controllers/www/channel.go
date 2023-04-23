@@ -1,13 +1,15 @@
 package www
 
-import "haedu.gov.cn/cms/app/biz"
+import (
+	"haedu.gov.cn/cms/app/biz"
+	"haedu.gov.cn/tools/xstring"
+)
 
 // ChannelController 频道控制器
 type ChannelController struct{ BaseController }
 
 // Channel 频道首页
-// @router /channel/:name:string [get]
-// @router /:name:string [get]
+// @router /:flag/:name:string [get]
 func (this *ChannelController) Channel() {
 	siteFlag := this.Ctx.Input.Param(":flag")
 	chanelName := this.Ctx.Input.Param(":name")
@@ -20,13 +22,19 @@ func (this *ChannelController) Channel() {
 		this.StopRun()
 	}
 	this.Data["channel"] = channelModel
-	this.Ctx.WriteString(channelModel.Name)
-	this.Ctx.WriteString("ChannelController.Index")
+	this.Data["chanelName"] = chanelName
+	if channelModel.Template == "" {
+		this.TplName = this.getView(DefatulSite.Template, "channel.html")
+	} else {
+		if xstring.HasSuffix(channelModel.Template, ".html", ".htm", ".tpl") == false {
+			channelModel.Template += ".html"
+		}
+		this.TplName = this.getView(DefatulSite.Template, channelModel.Template)
+	}
 }
 
 // Category 频道分类
-// @router /channel/:name:string/:category:string [get]
-// @router /:name:string/:category:string [get]
+// @router /:flag/:name:string/:category:string [get]
 func (this *ChannelController) Category() {
 	siteFlag := this.Ctx.Input.Param(":flag")
 	chanelName := this.Ctx.Input.Param(":name")
@@ -60,6 +68,9 @@ func (this *ChannelController) Category() {
 	if categoryModel.Template == "" {
 		this.TplName = this.getView(DefatulSite.Template, "category.html")
 	} else {
+		if xstring.HasSuffix(categoryModel.Template, ".html", ".htm", ".tpl") == false {
+			categoryModel.Template += ".html"
+		}
 		this.TplName = this.getView(DefatulSite.Template, categoryModel.Template)
 	}
 }

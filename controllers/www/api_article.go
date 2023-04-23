@@ -7,6 +7,7 @@ import (
 	"haedu.gov.cn/cms/app/biz/bizmodel"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/lib"
+	"haedu.gov.cn/tools/xinterface"
 )
 
 type ApiArticleController struct{ BaseController }
@@ -259,7 +260,7 @@ func (this *ApiArticleController) Album() {
 		logs.Error("", err.Error())
 		this.JSONErrorOfData(err.Error(), album)
 	}
-	this.JSONSuccess("", album)
+	this.JSONSuccess(xinterface.ToString(len(album)), album)
 }
 
 /**
@@ -278,7 +279,7 @@ func (this *ApiArticleController) Attach() {
 		logs.Error("", err.Error())
 		this.JSONErrorOfData(err.Error(), attach)
 	}
-	this.JSONSuccess("", attach)
+	this.JSONSuccess(xinterface.ToString(len(attach)), attach)
 }
 
 /**

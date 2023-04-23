@@ -1,0 +1,71 @@
+<div class="cont-right">
+    {{TemplateTheme $.siteTheme "_cat_nav_top.html" .}}
+    <div class="cont-detail" id="divImg">
+        <div class="sliderList">
+            <div class="slider single-item2" id="lunbo">
+                {{range $index,$item := .album}}
+                <div class="carousel-item">
+                    <img data-original="{{$item.OriginalPath}}" title="{{$item.Title}}" src="{{$item.OriginalPath}}" />
+                </div>
+                {{end}}
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/template" id="tmplAlbum">
+    <div class="carousel-item">
+        <img data-original="${originalPath}" title="${title}" src="${originalPath}" />
+    </div>
+</script>
+<script type="text/template" id="templateEmpty">
+    <div class="error-page">
+        <img src="{{.siteStatic}}images/state_img3.png" class="img"/>
+        <p class="tip">暂无数据</p>
+    </div>
+</script>
+<script type="text/javascript">
+    $(function () {
+        $.ajax({
+            url: "/api/article/album?call_index=" + categoryName + "&r=" + Math.random(),
+            dataType: "json",
+            type: "get",
+            beforeSend: function () {
+                $("#lunbo").html("");
+                $(".sliderList").busyLoad("show", { spinner: "circle-line" });
+            },
+            success: function (res) {
+                if (res.code == CodeSuccess) {
+                    var len = parseInt(res.msg);
+                    var tmpl = $("#tmplAlbum").html();
+                    for (var i = 0; i < len; i++) {
+                        var item = res.data[i];
+                        var html = tmpl.replaceAll("${originalPath}", item.original_path).replaceAll("${title}", item.title);
+                        $("#lunbo").append(html);
+                    }
+                    if (len == 0) {
+                        $("#lunbo").html($("#templateEmpty").html());
+                    }
+
+                    var viewer = new Viewer(document.getElementById('divImg'), {
+                        url: 'data-original'
+                    });
+
+                    $('.single-item2').slick({
+                        dots: true,
+                        speed: 300,
+                        autoplay: true,
+                        slidesToShow: 1,
+                        slidesToScroll: 1,
+                        arrow: true
+                    });
+                }
+            },
+            error: function () {
+                alert('failed!');
+            },
+            complete: function () {
+                $(".sliderList").busyLoad("hide", { animate: "fade" });
+            }
+        });
+    })
+</script>

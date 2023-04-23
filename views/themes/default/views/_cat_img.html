@@ -41,7 +41,7 @@
                 $(".list-con").busyLoad("show", { spinner: "circle-line" });
             },
             success: function (res) {
-                if (res.code == 0) {
+                if (res.code == CodeSuccess) {
                     if (debug != "debug") {
                         var len = res.data.length;
                         var tmpl = $('#templateLi').html();

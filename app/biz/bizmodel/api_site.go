@@ -13,6 +13,7 @@ type ApiChannelFindModel struct {
 	IsAlbum    int32  `gorm:"column:is_album;type:tinyint" json:"is_album" form:"is_album"`                  // 是否相册
 	IsAttach   int32  `gorm:"column:is_attach;type:tinyint" json:"is_attach" form:"is_attach"`               // 是否附件
 	IsSpec     int32  `gorm:"column:is_spec;type:tinyint" json:"is_spec" form:"is_spec"`                     // 是否规格
+	Template   string `gorm:"column:template;type:varchar(256)" json:"template" form:"template"`             // 模板路径
 }
 
 type ApiNavFindModel struct {

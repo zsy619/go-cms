@@ -48,20 +48,10 @@
     <div class="main">
         <div class="w1200 clearfix">
             {{TemplateTheme $.siteTheme "_cat_nav_aside.html" .}}
-            {{TemplateTheme $.siteTheme "_cat_album.html" .}}
+            {{TemplateTheme $.siteTheme "_cat_alb.html" .}}
         </div>
         {{TemplateTheme $.siteTheme "footer.html" .}}
-        <script type="text/javascript">
-            layui.use(['form', 'element', 'laypage', 'layer'], function () {
-                var form = layui.form,
-                    element = layui.element
-                laypage = layui.laypage,
-                    layer = layui.layer;
-
-                form.render(); //刷新所有渲染效果，也可以单独熟悉某个效果	
-                form.render('select'); //刷新select选择框渲染
-            })
-        </script>
+    </div>
 </body>
 
 </html>
