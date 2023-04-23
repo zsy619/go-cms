@@ -20,9 +20,7 @@
 
 <body>
     {{TemplateTheme $.siteTheme "_nav.html" .}}
-    <div class="other-banner">
-        <img {{if ne .channel.ImgUrl1 "" }} src="{{.channel.ImgUrl1}}" {{end}} class="img" />
-    </div>
+    {{TemplateTheme $.siteTheme "_banner.html" .}}
     <div class="main">
         <div class="w1200 clearfix">
             {{TemplateTheme $.siteTheme "_cat_nav_aside.html" .}}

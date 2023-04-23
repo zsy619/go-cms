@@ -10,7 +10,7 @@
     <meta name="Keywords" content="{{.category.SeoKeyword}}" />
     <meta name="description" content="{{.category.SeoKeyword}}" />
     {{TemplateTheme $.siteTheme "_header.html" .}}
-    <script src="/static/www/js/slick.js?r={{.time}}"></script>
+    <script src="{{.siteStatic}}js/slick.js?r={{.time}}"></script>
     <script type="text/javascript" src="/static/plugins/jquery-viewer/viewer.js"></script>
     <link rel="stylesheet" href="/static/plugins/jquery-viewer/viewer.css">
     <script type="text/javascript" src="/static/plugins/jquery-viewer/jquery-viewer.js"></script>
@@ -42,9 +42,7 @@
 
 <body>
     {{TemplateTheme $.siteTheme "_nav.html" .}}
-    <div class="other-banner">
-        <img {{if ne .channel.ImgUrl1 "" }} src="{{.channel.ImgUrl1}}" {{end}} class="img" />
-    </div>
+    {{TemplateTheme $.siteTheme "_banner.html" .}}
     <div class="main">
         <div class="w1200 clearfix">
             {{TemplateTheme $.siteTheme "_cat_nav_aside.html" .}}
