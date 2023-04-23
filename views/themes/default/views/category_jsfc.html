@@ -15,7 +15,7 @@
     <script type="text/javascript" src="/static/plugins/jquery-viewer/jquery-viewer.js"></script>
     <script>
         var siteStatic = "{{.siteStatic}}";
-        var chanelName = "{{.chanelName}}";
+        var channelName = "{{.channelName}}";
         var categoryName = "{{.categoryName}}";
         var debug = "{{.debug}}";
     </script>
@@ -95,7 +95,7 @@
                                 var tmpl = $('#liTmpl').html();
                                 for (var i = 0; i < len; i++) {
                                     var item = res.data[i];
-                                    var url = item.link_url == "" ? "/article/teacher/" + item.article_id : item.link_url;
+                                    var url = item.link_url == "" ? "/article/detail/" + item.article_id : item.link_url;
                                     var html = tmpl.replaceAll("${img_url1}", item.img_url1).replaceAll("${article_id}", item.article_id)
                                         .replaceAll("${url}", url).replaceAll("${title}", item.title)
                                         .replaceAll("${sub_title}", item.sub_title).replaceAll("${summary}", item.summary);

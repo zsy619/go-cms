@@ -13,7 +13,10 @@ type ApiChannelFindModel struct {
 	IsAlbum    int32  `gorm:"column:is_album;type:tinyint" json:"is_album" form:"is_album"`                  // 是否相册
 	IsAttach   int32  `gorm:"column:is_attach;type:tinyint" json:"is_attach" form:"is_attach"`               // 是否附件
 	IsSpec     int32  `gorm:"column:is_spec;type:tinyint" json:"is_spec" form:"is_spec"`                     // 是否规格
-	Template   string `gorm:"column:template;type:varchar(256)" json:"template" form:"template"`             // 模板路径
+	TmplChnl   string `gorm:"column:tmpl_chnl;type:varchar(256)" json:"tmpl_chnl" form:"tmpl_chnl"`          // 频道模板路径
+	TmplCat    string `gorm:"column:tmpl_cat;type:varchar(256)" json:"tmpl_cat" form:"tmpl_cat"`             // 栏目模板路径
+	TmplLst    string `gorm:"column:tmpl_lst;type:varchar(256)" json:"tmpl_lst" form:"tmpl_lst"`             // 列表模板路径
+	TmplDtl    string `gorm:"column:tmpl_dtl;type:varchar(256)" json:"tmpl_dtl" form:"tmpl_dtl"`             // 明细模板路径
 }
 
 type ApiNavFindModel struct {

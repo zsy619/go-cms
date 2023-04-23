@@ -274,7 +274,9 @@ func (this *CmsArticle) CategorySave(input *model.CmsArticleCategory) error {
 			mdl.IsSearch.ColumnName().String():       input.IsSearch,
 			mdl.IsShow.ColumnName().String():         input.IsShow,
 			mdl.Status.ColumnName().String():         input.Status,
-			mdl.Template.ColumnName().String():       input.Template,
+			mdl.TmplCat.ColumnName().String():        input.TmplCat,
+			mdl.TmplLst.ColumnName().String():        input.TmplLst,
+			mdl.TmplDtl.ColumnName().String():        input.TmplDtl,
 			mdl.UpdateTime.ColumnName().String():     input.UpdateTime,
 		})
 	}

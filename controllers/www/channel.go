@@ -12,24 +12,24 @@ type ChannelController struct{ BaseController }
 // @router /:flag/:name:string [get]
 func (this *ChannelController) Channel() {
 	siteFlag := this.Ctx.Input.Param(":flag")
-	chanelName := this.Ctx.Input.Param(":name")
-	if siteFlag == "" || chanelName == "" {
+	channelName := this.Ctx.Input.Param(":name")
+	if siteFlag == "" || channelName == "" {
 		this.Abort("404")
 	}
-	channelModel, err := biz.NewApiChannel().Find(chanelName, 0)
+	channelModel, err := biz.NewApiChannel().Find(channelName, 0)
 	if err != nil {
 		this.Ctx.WriteString(err.Error())
 		this.StopRun()
 	}
 	this.Data["channel"] = channelModel
-	this.Data["chanelName"] = chanelName
-	if channelModel.Template == "" {
-		this.TplName = this.getView(DefatulSite.Template, "channel.html")
+	this.Data["channelName"] = channelName
+	if channelModel.TmplChnl == "" {
+		this.TplName = this.GetView(DefatulSite.Template, "channel.html")
 	} else {
-		if xstring.HasSuffix(channelModel.Template, ".html", ".htm", ".tpl") == false {
-			channelModel.Template += ".html"
+		if xstring.HasSuffix(channelModel.TmplChnl, ".html", ".htm", ".tpl") == false {
+			channelModel.TmplChnl += ".html"
 		}
-		this.TplName = this.getView(DefatulSite.Template, channelModel.Template)
+		this.TplName = this.GetView(DefatulSite.Template, channelModel.TmplChnl)
 	}
 }
 
@@ -37,12 +37,12 @@ func (this *ChannelController) Channel() {
 // @router /:flag/:name:string/:category:string [get]
 func (this *ChannelController) Category() {
 	siteFlag := this.Ctx.Input.Param(":flag")
-	chanelName := this.Ctx.Input.Param(":name")
+	channelName := this.Ctx.Input.Param(":name")
 	categoryName := this.Ctx.Input.Param(":category")
-	if siteFlag == "" || chanelName == "" || categoryName == "" {
+	if siteFlag == "" || channelName == "" || categoryName == "" {
 		this.Abort("404")
 	}
-	channelModel, channelErr := biz.NewApiChannel().Find(chanelName, 0)
+	channelModel, channelErr := biz.NewApiChannel().Find(channelName, 0)
 	if channelErr != nil {
 		this.Ctx.WriteString(channelErr.Error())
 		this.StopRun()
@@ -62,15 +62,15 @@ func (this *ChannelController) Category() {
 	}
 	this.Data["channel"] = channelModel
 	this.Data["category"] = categoryModel
-	this.Data["chanelName"] = chanelName
+	this.Data["channelName"] = channelName
 	this.Data["categoryName"] = categoryName
 
-	if categoryModel.Template == "" {
-		this.TplName = this.getView(DefatulSite.Template, "category.html")
+	if categoryModel.TmplCat == "" {
+		this.TplName = this.GetView(DefatulSite.Template, "category.html")
 	} else {
-		if xstring.HasSuffix(categoryModel.Template, ".html", ".htm", ".tpl") == false {
-			categoryModel.Template += ".html"
+		if xstring.HasSuffix(categoryModel.TmplCat, ".html", ".htm", ".tpl") == false {
+			categoryModel.TmplCat += ".html"
 		}
-		this.TplName = this.getView(DefatulSite.Template, categoryModel.Template)
+		this.TplName = this.GetView(DefatulSite.Template, categoryModel.TmplCat)
 	}
 }

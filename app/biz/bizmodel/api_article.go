@@ -39,7 +39,9 @@ type ApiCategoryOneModel struct {
 	SeoKeyword     string `gorm:"column:seo_keyword;type:varchar(128)" json:"seo_keyword" form:"seo_keyword"`             // SEO关健字
 	SeoDescription string `gorm:"column:seo_description;type:varchar(128)" json:"seo_description" form:"seo_description"` // SEO描述
 	Content        string `gorm:"column:content;type:text" json:"content" form:"content"`                                 // 内容介绍
-	Template       string `gorm:"column:template;type:varchar(256);comment:模板路径" json:"template" form:"template"`
+	TmplCat        string `gorm:"column:tmpl_cat;type:varchar(256)" json:"tmpl_cat" form:"tmpl_cat"`                      // 栏目模板路径
+	TmplLst        string `gorm:"column:tmpl_lst;type:varchar(256)" json:"tmpl_lst" form:"tmpl_lst"`                      // 列表模板路径
+	TmplDtl        string `gorm:"column:tmpl_dtl;type:varchar(256)" json:"tmpl_dtl" form:"tmpl_dtl"`                      // 明细模板路径
 }
 
 // ApiArticleListModel 文章查询模型
@@ -121,9 +123,11 @@ type ApiArticleOneModel struct {
 	IsSlide           int32     `gorm:"column:is_slide;type:tinyint" json:"is_slide" form:"is_slide"`                                        // 是否幻灯片
 	StaticURL         string    `gorm:"column:static_url;type:varchar(256)" json:"static_url" form:"static_url"`                             // 静态链接
 	PublishTime       time.Time `gorm:"column:publish_time;type:datetime;default:CURRENT_TIMESTAMP" json:"publish_time" form:"publish_time"` // 发布时间
+	Template          string    `gorm:"column:template;type:varchar(256)" json:"template" form:"template"`                                   // 模板路径
 	CategoryTitle     string    `gorm:"column:category_title;type:varchar(128)" json:"category_title" form:"category_title"`                 // category_类别标题
 	CategoryCallIndex string    `gorm:"column:category_call_index;type:varchar(64)" json:"category_call_index" form:"category_call_index"`   // category_调用别名
 	CategoryLinkURL   string    `gorm:"column:category_link_url;type:varchar(256)" json:"category_link_url" form:"link_url"`                 // category_外部链接
 	ChannelName       string    `gorm:"column:channel_name;type:varchar(128)" json:"channel_name" form:"channel_name"`                       // channel_字段名
 	ChannelTitle      string    `gorm:"column:channel_title;type:varchar(128)" json:"channel_title" form:"channel_title"`                    // channel_标题
+	TmplDtl           string    `gorm:"column:tmpl_dtl;type:varchar(256)" json:"tmpl_dtl" form:"tmpl_dtl"`                                   // 明细模板路径
 }

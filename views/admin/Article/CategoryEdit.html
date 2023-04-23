@@ -3,6 +3,7 @@
         <div class="layui-tab layui-tab-brief layui-tab-card">
             <ul class="layui-tab-title">
                 <li class="layui-this">基本信息</li>
+                <li>模板路径</li>
                 <li>SEO配置</li>
                 <li>详细内容</li>
             </ul>
@@ -79,10 +80,26 @@
                         </div>
                         <div class="layui-form-mid layui-word-aux">数字，越小越向前</div>
                     </div>
+                </div>
+                <div class="layui-tab-item">
                     <div class="layui-form-item">
-                        <label class="layui-form-label">模板路径</label>
+                        <label class="layui-form-label">栏目模板</label>
                         <div class="layui-input-inline" style="width: 500px;">
-                            <input type="text" name="template" value="{{.mdl.Template}}" lay-verify="template" lay-reqtext="模板路径不正确" autocomplete="off" placeholder="请输入模板路径" class="layui-input">
+                            <input type="text" name="tmpl_cat" value="{{.mdl.TmplCat}}" lay-verify="template" lay-reqtext="模板路径不正确" autocomplete="off" placeholder="请输入模板路径" class="layui-input">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">利用独立模板控制显示</div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">列表模板</label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <input type="text" name="tmpl_lst" value="{{.mdl.TmplLst}}" lay-verify="template" lay-reqtext="模板路径不正确" autocomplete="off" placeholder="请输入模板路径" class="layui-input">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">利用独立模板控制显示</div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">明细模板</label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <input type="text" name="tmpl_dtl" value="{{.mdl.TmplDtl}}" lay-verify="template" lay-reqtext="模板路径不正确" autocomplete="off" placeholder="请输入模板路径" class="layui-input">
                         </div>
                         <div class="layui-form-mid layui-word-aux">利用独立模板控制显示</div>
                     </div>

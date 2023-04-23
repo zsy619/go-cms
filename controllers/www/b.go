@@ -22,7 +22,7 @@ type BaseController struct {
 	controllers.BaseController
 }
 
-func (c *BaseController) getView(themeName, viewName string) string {
+func (c *BaseController) GetView(themeName, viewName string) string {
 	return "themes/" + themeName + "/views/" + viewName
 }
 

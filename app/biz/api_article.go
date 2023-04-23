@@ -152,10 +152,12 @@ func (this *ApiArticle) CategoryOne(category_id int64, call_index string) (*bizm
 	}
 	list := &bizmodel.ApiCategoryOneModel{}
 	_, do := query.CmsArticleCategoryDo()
-	sqlSelect := "b.`name` as channel_name,b.title as channel_title,a.category_id,a.parent_id,a.site_id,a.channel_id,a.title,a.call_index,a.class_layer,a.link_url,a.target,a.img_url1,a.img_url2,a.sort_id,a.is_show,a.is_search,a.is_deleted,a.seo_title,a.seo_keyword,a.seo_description,a.content,a.template"
-	sql := "SELECT " + sqlSelect + " FROM cms_article_category a LEFT JOIN cms_site_channel b ON a.channel_id=b.channel_id WHERE a.is_deleted=0 AND a.`status`=2 AND a.`is_show`=1" +
-		xgeneric.IFF(category_id > 0, " AND a.category_id="+strconv.FormatInt(category_id, 10), "") +
-		xgeneric.IFF(call_index != "", " AND a.call_index='"+call_index+"'", "")
+	sqlSelect := `b.name as channel_name,b.title as channel_title` +
+		`,a.category_id,a.parent_id,a.site_id,a.channel_id,a.title,a.call_index,a.class_layer,a.link_url,a.target,a.img_url1,a.img_url2,a.sort_id,a.is_show,a.is_search,a.is_deleted,a.seo_title,a.seo_keyword,a.seo_description,a.content` +
+		`,case when a.tmpl_cat='' then b.tmpl_cat else a.tmpl_cat end tmpl_cat,case when a.tmpl_lst='' then b.tmpl_lst else a.tmpl_lst end tmpl_lst,case when a.tmpl_dtl='' then b.tmpl_dtl else a.tmpl_dtl end tmpl_dtl`
+	sql := `SELECT ` + sqlSelect + ` FROM cms_article_category a LEFT JOIN cms_site_channel b ON a.channel_id=b.channel_id WHERE a.is_deleted=0 AND a.status=2 AND a.is_show=1` +
+		xgeneric.IFF(category_id > 0, ` AND a.category_id=`+strconv.FormatInt(category_id, 10), ``) +
+		xgeneric.IFF(call_index != "", ` AND a.call_index='`+call_index+`'`, ``)
 	err := do.UnderlyingDB().Raw(sql).Scan(&list).Error
 	if err != nil {
 		return nil, err
@@ -323,7 +325,7 @@ func (this *ApiArticle) Get(call_index string, article_id int64) (*bizmodel.ApiA
 			}
 		}
 	}
-	field := `a.*,b.call_index as category_call_index,b.title as category_title,b.link_url as category_link_url,c.name as channel_name,c.title as channel_title`
+	field := `a.*,b.call_index as category_call_index,b.title as category_title,b.link_url as category_link_url,c.name as channel_name,c.title as channel_title,case when b.tmpl_dtl='' then c.tmpl_dtl else b.tmpl_dtl end tmpl_dtl`
 	sql := `SELECT ` + field + ` FROM cms_article a LEFT JOIN cms_article_category b ON a.category_id = b.category_id LEFT JOIN cms_site_channel c ON a.channel_id = c.channel_id`
 	sql += ` WHERE a.article_id=? AND a.is_deleted=0 AND a.status=2 AND b.status=2`
 	list := &bizmodel.ApiArticleOneModel{}
@@ -354,7 +356,7 @@ func (this *ApiArticle) Get(call_index string, article_id int64) (*bizmodel.ApiA
  */
 func (this *ApiArticle) PrevNext(call_index string, category_id, article_id int64) (prev *bizmodel.ApiArticleOneModel, next *bizmodel.ApiArticleOneModel) {
 	_, do := query.CmsArticleDo()
-	field := `a.*,b.call_index as category_call_index,b.title as category_title,b.link_url as category_link_url,c.name as channel_name,c.title as channel_title`
+	field := `a.*,b.call_index as category_call_index,b.title as category_title,b.link_url as category_link_url,c.name as channel_name,c.title as channel_title,case when b.tmpl_dtl='' then c.tmpl_dtl else b.tmpl_dtl end tmpl_dtl`
 	sql := `SELECT ` + field + ` FROM cms_article a LEFT JOIN cms_article_category b ON a.category_id = b.category_id LEFT JOIN cms_site_channel c ON a.channel_id = c.channel_id`
 	sql += ` WHERE a.is_deleted=0 AND a.status=2 AND b.status=2` +
 		xgeneric.IFF(category_id <= 0, "", " AND b.category_id="+strconv.FormatInt(category_id, 10)) +
@@ -384,7 +386,7 @@ func (this *ApiArticle) PrevNext(call_index string, category_id, article_id int6
  */
 func (this *ApiArticle) Article(call_index string, article_id int64) (*bizmodel.ApiArticleOneModel, error) {
 	_, do := query.CmsArticleDo()
-	field := `a.*,b.call_index as category_call_index,b.title as category_title,b.link_url as category_link_url,c.name as channel_name,c.title as channel_title`
+	field := `a.*,b.call_index as category_call_index,b.title as category_title,b.link_url as category_link_url,c.name as channel_name,c.title as channel_title,case when b.tmpl_dtl='' then c.tmpl_dtl else b.tmpl_dtl end tmpl_dtl`
 	sql := `SELECT ` + field + ` FROM cms_article a LEFT JOIN cms_article_category b ON a.category_id = b.category_id LEFT JOIN cms_site_channel c ON a.channel_id = c.channel_id`
 	list := &bizmodel.ApiArticleOneModel{}
 	if call_index != "" {

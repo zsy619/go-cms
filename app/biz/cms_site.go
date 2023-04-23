@@ -207,6 +207,10 @@ func (this *CmsSite) ChannelSave(input *model.CmsSiteChannel) error {
 			mdl.IsSpec.ColumnName().String():     input.IsSpec,
 			mdl.SortID.ColumnName().String():     input.SortID,
 			mdl.Status.ColumnName().String():     input.Status,
+			mdl.TmplChnl.ColumnName().String():   input.TmplChnl,
+			mdl.TmplCat.ColumnName().String():    input.TmplCat,
+			mdl.TmplLst.ColumnName().String():    input.TmplLst,
+			mdl.TmplDtl.ColumnName().String():    input.TmplDtl,
 			mdl.UpdateTime.ColumnName().String(): input.UpdateTime,
 		})
 	}

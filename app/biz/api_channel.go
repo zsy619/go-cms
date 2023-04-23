@@ -37,7 +37,8 @@ func (this *ApiChannel) Find(name string, channel_id int64) (*bizmodel.ApiChanne
 		do = do.Where(mdl.ChannelID.Eq(channel_id))
 	}
 	find := &bizmodel.ApiChannelFindModel{}
-	err := do.Select(mdl.ChannelID, mdl.ParentID, mdl.Title, mdl.Name, mdl.Kind, mdl.ClassLayer, mdl.ImgUrl1, mdl.ImgUrl2, mdl.SortID, mdl.IsAlbum, mdl.IsAttach, mdl.IsSpec, mdl.Template).Order(mdl.SortID).Scan(&find)
+	err := do.Select(mdl.ChannelID, mdl.ParentID, mdl.Title, mdl.Name, mdl.Kind, mdl.ClassLayer, mdl.ImgUrl1, mdl.ImgUrl2, mdl.SortID, mdl.IsAlbum, mdl.IsAttach,
+		mdl.IsSpec, mdl.TmplChnl, mdl.TmplCat, mdl.TmplLst, mdl.TmplDtl).Order(mdl.SortID).Scan(&find)
 	if err != nil {
 		return nil, err
 	}

@@ -45,7 +45,10 @@ func newCmsSiteChannel(db *gorm.DB, opts ...gen.DOOption) cmsSiteChannel {
 	_cmsSiteChannel.SortID = field.NewInt32(tableName, "sort_id")
 	_cmsSiteChannel.Status = field.NewInt32(tableName, "status")
 	_cmsSiteChannel.IsDeleted = field.NewBool(tableName, "is_deleted")
-	_cmsSiteChannel.Template = field.NewString(tableName, "template")
+	_cmsSiteChannel.TmplChnl = field.NewString(tableName, "tmpl_chnl")
+	_cmsSiteChannel.TmplCat = field.NewString(tableName, "tmpl_cat")
+	_cmsSiteChannel.TmplLst = field.NewString(tableName, "tmpl_lst")
+	_cmsSiteChannel.TmplDtl = field.NewString(tableName, "tmpl_dtl")
 	_cmsSiteChannel.CreateID = field.NewInt32(tableName, "create_id")
 	_cmsSiteChannel.CreateName = field.NewString(tableName, "create_name")
 	_cmsSiteChannel.CreateTime = field.NewTime(tableName, "create_time")
@@ -80,7 +83,10 @@ type cmsSiteChannel struct {
 	SortID     field.Int32  // 排序
 	Status     field.Int32  // 状态0草稿1提交2审核通过3审核未通过4驳回
 	IsDeleted  field.Bool   // 删除标识
-	Template   field.String // 模板路径
+	TmplChnl   field.String // 频道模板路径
+	TmplCat    field.String // 栏目模板路径
+	TmplLst    field.String // 列表模板路径
+	TmplDtl    field.String // 明细模板路径
 	CreateID   field.Int32  // 创建人ID
 	CreateName field.String // 创建人姓名
 	CreateTime field.Time   // 创建时间
@@ -121,7 +127,10 @@ func (c *cmsSiteChannel) updateTableName(table string) *cmsSiteChannel {
 	c.SortID = field.NewInt32(table, "sort_id")
 	c.Status = field.NewInt32(table, "status")
 	c.IsDeleted = field.NewBool(table, "is_deleted")
-	c.Template = field.NewString(table, "template")
+	c.TmplChnl = field.NewString(table, "tmpl_chnl")
+	c.TmplCat = field.NewString(table, "tmpl_cat")
+	c.TmplLst = field.NewString(table, "tmpl_lst")
+	c.TmplDtl = field.NewString(table, "tmpl_dtl")
 	c.CreateID = field.NewInt32(table, "create_id")
 	c.CreateName = field.NewString(table, "create_name")
 	c.CreateTime = field.NewTime(table, "create_time")
@@ -152,7 +161,7 @@ func (c *cmsSiteChannel) GetFieldByName(fieldName string) (field.OrderExpr, bool
 }
 
 func (c *cmsSiteChannel) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 25)
+	c.fieldMap = make(map[string]field.Expr, 28)
 	c.fieldMap["channel_id"] = c.ChannelID
 	c.fieldMap["parent_id"] = c.ParentID
 	c.fieldMap["site_id"] = c.SiteID
@@ -171,7 +180,10 @@ func (c *cmsSiteChannel) fillFieldMap() {
 	c.fieldMap["sort_id"] = c.SortID
 	c.fieldMap["status"] = c.Status
 	c.fieldMap["is_deleted"] = c.IsDeleted
-	c.fieldMap["template"] = c.Template
+	c.fieldMap["tmpl_chnl"] = c.TmplChnl
+	c.fieldMap["tmpl_cat"] = c.TmplCat
+	c.fieldMap["tmpl_lst"] = c.TmplLst
+	c.fieldMap["tmpl_dtl"] = c.TmplDtl
 	c.fieldMap["create_id"] = c.CreateID
 	c.fieldMap["create_name"] = c.CreateName
 	c.fieldMap["create_time"] = c.CreateTime

@@ -47,7 +47,9 @@ func newCmsArticleCategory(db *gorm.DB, opts ...gen.DOOption) cmsArticleCategory
 	_cmsArticleCategory.IsSearch = field.NewBool(tableName, "is_search")
 	_cmsArticleCategory.IsDeleted = field.NewBool(tableName, "is_deleted")
 	_cmsArticleCategory.Status = field.NewInt32(tableName, "status")
-	_cmsArticleCategory.Template = field.NewString(tableName, "template")
+	_cmsArticleCategory.TmplCat = field.NewString(tableName, "tmpl_cat")
+	_cmsArticleCategory.TmplLst = field.NewString(tableName, "tmpl_lst")
+	_cmsArticleCategory.TmplDtl = field.NewString(tableName, "tmpl_dtl")
 	_cmsArticleCategory.BelongTo = field.NewString(tableName, "belong_to")
 	_cmsArticleCategory.CreateID = field.NewInt32(tableName, "create_id")
 	_cmsArticleCategory.CreateName = field.NewString(tableName, "create_name")
@@ -85,7 +87,9 @@ type cmsArticleCategory struct {
 	IsSearch       field.Bool   // 允许检索:1允许，0禁止
 	IsDeleted      field.Bool   // 删除标识
 	Status         field.Int32  // 状态0草稿1提交2审核通过3审核未通过4驳回
-	Template       field.String // 模板路径
+	TmplCat        field.String // 栏目模板路径
+	TmplLst        field.String // 列表模板路径
+	TmplDtl        field.String // 明细模板路径
 	BelongTo       field.String // 归属
 	CreateID       field.Int32  // 创建人ID
 	CreateName     field.String // 创建人姓名
@@ -129,7 +133,9 @@ func (c *cmsArticleCategory) updateTableName(table string) *cmsArticleCategory {
 	c.IsSearch = field.NewBool(table, "is_search")
 	c.IsDeleted = field.NewBool(table, "is_deleted")
 	c.Status = field.NewInt32(table, "status")
-	c.Template = field.NewString(table, "template")
+	c.TmplCat = field.NewString(table, "tmpl_cat")
+	c.TmplLst = field.NewString(table, "tmpl_lst")
+	c.TmplDtl = field.NewString(table, "tmpl_dtl")
 	c.BelongTo = field.NewString(table, "belong_to")
 	c.CreateID = field.NewInt32(table, "create_id")
 	c.CreateName = field.NewString(table, "create_name")
@@ -161,7 +167,7 @@ func (c *cmsArticleCategory) GetFieldByName(fieldName string) (field.OrderExpr, 
 }
 
 func (c *cmsArticleCategory) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 28)
+	c.fieldMap = make(map[string]field.Expr, 30)
 	c.fieldMap["category_id"] = c.CategoryID
 	c.fieldMap["parent_id"] = c.ParentID
 	c.fieldMap["site_id"] = c.SiteID
@@ -182,7 +188,9 @@ func (c *cmsArticleCategory) fillFieldMap() {
 	c.fieldMap["is_search"] = c.IsSearch
 	c.fieldMap["is_deleted"] = c.IsDeleted
 	c.fieldMap["status"] = c.Status
-	c.fieldMap["template"] = c.Template
+	c.fieldMap["tmpl_cat"] = c.TmplCat
+	c.fieldMap["tmpl_lst"] = c.TmplLst
+	c.fieldMap["tmpl_dtl"] = c.TmplDtl
 	c.fieldMap["belong_to"] = c.BelongTo
 	c.fieldMap["create_id"] = c.CreateID
 	c.fieldMap["create_name"] = c.CreateName

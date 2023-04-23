@@ -32,7 +32,9 @@ type CmsArticleCategory struct {
 	IsSearch       bool      `gorm:"column:is_search;type:tinyint(1);default:1;comment:允许检索:1允许，0禁止" json:"is_search" form:"is_search"`
 	IsDeleted      bool      `gorm:"column:is_deleted;type:tinyint(1);comment:删除标识" json:"is_deleted" form:"is_deleted"`
 	Status         int32     `gorm:"column:status;type:tinyint;comment:状态0草稿1提交2审核通过3审核未通过4驳回" json:"status" form:"status"`
-	Template       string    `gorm:"column:template;type:varchar(256);comment:模板路径" json:"template" form:"template"`
+	TmplCat        string    `gorm:"column:tmpl_cat;type:varchar(256);comment:栏目模板路径" json:"tmpl_cat" form:"tmpl_cat"`
+	TmplLst        string    `gorm:"column:tmpl_lst;type:varchar(256);comment:列表模板路径" json:"tmpl_lst" form:"tmpl_lst"`
+	TmplDtl        string    `gorm:"column:tmpl_dtl;type:varchar(256);comment:明细模板路径" json:"tmpl_dtl" form:"tmpl_dtl"`
 	BelongTo       string    `gorm:"column:belong_to;type:varchar(64);comment:归属" json:"belong_to" form:"belong_to"`
 	CreateID       int32     `gorm:"column:create_id;type:int;comment:创建人ID" json:"create_id" form:"create_id"`
 	CreateName     string    `gorm:"column:create_name;type:varchar(64);comment:创建人姓名" json:"create_name" form:"create_name"`
