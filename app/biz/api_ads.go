@@ -18,7 +18,7 @@ func NewApiAds() *ApiAds {
 	return &ApiAds{}
 }
 
-func (this *ApiAds) find(cackeKeyPrefix string, limit int, category_id int64, call_index string) ([]*bizmodel.ApiAdsListModel, int64, error) {
+func (this *ApiAds) get(cackeKeyPrefix string, limit int, category_id int64, call_index string) ([]*bizmodel.ApiAdsListModel, int64, error) {
 	cacheKey := fmt.Sprintf("%s_%d_%d_%s", cackeKeyPrefix, limit, category_id, call_index)
 	if found, item := ApiCache.Get(cacheKey); found {
 		list := item.([]*bizmodel.ApiAdsListModel)
@@ -32,7 +32,7 @@ func (this *ApiAds) find(cackeKeyPrefix string, limit int, category_id int64, ca
 	sql := "SELECT " + sqlSelect + " FROM cms_ads a LEFT JOIN cms_ads_category b ON a.category_id = b.category_id WHERE a.`status`=2 and NOW() between a.begin_time and a.end_time " +
 		xgeneric.IFF(call_index == "", "", " AND b.call_index = '"+call_index+"'") +
 		xgeneric.IFF(category_id <= 0, "", " AND b.category_id = "+strconv.FormatInt(category_id, 10))
-	if cackeKeyPrefix == "ApiAds_FindNew" {
+	if cackeKeyPrefix == "ApiAds_GetNew" {
 		sql += " ORDER BY a.begin_time DESC,a.sort_id ASC"
 	} else {
 		sql += " ORDER BY a.is_top DESC,a.sort_id ASC"
@@ -48,25 +48,25 @@ func (this *ApiAds) find(cackeKeyPrefix string, limit int, category_id int64, ca
 }
 
 /**
-* @description: Find 获取广告列表
+* @description: Get 获取广告列表
 * @param {int} limit 获取数量
 * @param {int64} category_id 广告分类ID
 * @param {string} call_index 广告分类标识
 * @return {*}
  */
-func (this *ApiAds) Find(limit int, category_id int64, call_index string) ([]*bizmodel.ApiAdsListModel, int64, error) {
-	return this.find("ApiAds_Find", limit, category_id, call_index)
+func (this *ApiAds) Get(limit int, category_id int64, call_index string) ([]*bizmodel.ApiAdsListModel, int64, error) {
+	return this.get("ApiAds_Get", limit, category_id, call_index)
 }
 
 /**
-* @description: FindNew 获取最新广告列表
+* @description: GetNew 获取最新广告列表
 * @param {int} limit 获取数量
 * @param {int64} category_id 广告分类ID
 * @param {string} call_index 广告分类标识
 * @return {*}
  */
-func (this *ApiAds) FindNew(limit int, category_id int64, call_index string) ([]*bizmodel.ApiAdsListModel, int64, error) {
-	return this.find("ApiAds_FindNew", limit, category_id, call_index)
+func (this *ApiAds) GetNew(limit int, category_id int64, call_index string) ([]*bizmodel.ApiAdsListModel, int64, error) {
+	return this.get("ApiAds_GetNew", limit, category_id, call_index)
 }
 
 /**

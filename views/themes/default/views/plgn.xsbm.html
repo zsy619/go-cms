@@ -26,7 +26,7 @@
             {{TemplateTheme $.siteTheme "_cat_nav_aside.html" .}}
             <div class="cont-right">
                 <div class="breadcrumb">
-                    <img src="{{.webroot}}images/position.png" alt="" class="position" /> 您所在的位置：
+                    <img src="{{.siteStatic}}images/position.png" alt="" class="position" /> 您所在的位置：
                     <a href="/">首页</a>&gt;
                     <a href="javascript:void(0)">招生就业</a>&gt;
                     <a href="javascript:void(0)" class="active">线上报名</a>
@@ -166,7 +166,7 @@
                             $(".breadcrumb").html("");
                         },
                         success: function (res) {
-                            $(".breadcrumb").append('<img src="{{.webroot}}images/position.png" alt="" class="position" /> 您所在的位置：');
+                            $(".breadcrumb").append('<img src="{{.siteStatic}}images/position.png" alt="" class="position" /> 您所在的位置：');
                             $(".breadcrumb").append('<a href="/">首页</a>&nbsp;&gt;');
                             if (res.code == 0) {
                                 var len = res.data.length;

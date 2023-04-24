@@ -75,7 +75,7 @@
                         var tmpl = $("#templateLi").html();
                         for (var i = 0; i < len; i++) {
                             var item = res.data[i];
-                            var url = item.link_url == "" ? "/article/detail/" + item.article_id : item.link_url;
+                            var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
                             var html = tmpl.replaceAll("${url}", url).replaceAll("${article_id}", item.article_id)
                                 .replaceAll("${summary}", item.summary).replaceAll("${category_title}", item.category_title)
                                 .replaceAll("${title}", item.title).replaceAll("%{publish_time}", moment(item.publish_time).format('YYYY-MM-DD'));

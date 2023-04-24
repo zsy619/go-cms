@@ -37,17 +37,21 @@ func (this *ApiArticleController) CategoryNav() {
 }
 
 /**
- * @description: CategoryFind 获取栏目列表
+ * @description: CategoryGet 获取栏目列表
  * @param {string} channel_name 频道名称
  * @return {*}
  */
-// @router /api/category/find [get]
-func (this *ApiArticleController) CategoryFind() {
+// @router /api/category/get [get]
+// @router /api/category/get/:channel_name:string [get]
+func (this *ApiArticleController) CategoryGet() {
 	channel_name := this.GetString("channel_name")
+	if channel_name == "" {
+		channel_name = this.Ctx.Input.Param(":channel_name")
+	}
 	if channel_name == "" {
 		this.JSONErrorOfData("频道名称不能为空", nil)
 	}
-	outChannel, count, err := this.BaseController.CategoryFind(channel_name)
+	outChannel, count, err := this.BaseController.CategoryGet(channel_name)
 	if err != nil {
 		this.JSONErrorOfData(err.Error(), outChannel)
 	}
@@ -55,16 +59,16 @@ func (this *ApiArticleController) CategoryFind() {
 }
 
 /**
- * @description: CategoryOne 获取栏目详情
+ * @description: CategoryFind 获取栏目详情
  * @param {int64} category_id 栏目ID
  * @param {string} call_index 栏目别名
  * @return {*}
  */
-// @router /api/category/one [get]
-func (this *ApiArticleController) CategoryOne() {
+// @router /api/category/find [get]
+func (this *ApiArticleController) CategoryFind() {
 	category_id, _ := this.GetInt64("category_id")
 	call_index := this.GetString("call_index")
-	outChannel, err := this.BaseController.CategoryOne(category_id, call_index)
+	outChannel, err := this.BaseController.CategoryFind(category_id, call_index)
 	if err != nil {
 		this.JSONErrorOfData(err.Error(), outChannel)
 	}
@@ -85,8 +89,8 @@ func (this *ApiArticleController) CategoryOne() {
  * @param {bool} is_cache 是否使用缓存
  * @return {*}
  */
-// @router /api/article/find [get]
-func (this *ApiArticleController) Find() {
+// @router /api/article/get [get]
+func (this *ApiArticleController) Get() {
 	limit, _ := this.GetInt("limit", 6)
 	call_index := this.GetString("call_index")
 	channel_name := this.GetString("channel_name")
@@ -97,7 +101,7 @@ func (this *ApiArticleController) Find() {
 	is_red, _ := this.GetInt("is_red", 0)
 	is_hot, _ := this.GetInt("is_hot", 0)
 	is_slide, _ := this.GetInt("is_slide", 0)
-	outArticle, count, err := this.BaseController.ArticleFind(limit, channel_id, channel_name, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
+	outArticle, count, err := this.BaseController.ArticleGet(limit, channel_id, channel_name, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
 	if err != nil {
 		this.JSONErrorOfData(err.Error(), outArticle)
 	}
@@ -105,7 +109,7 @@ func (this *ApiArticleController) Find() {
 }
 
 /**
- * @description: FindNew 获取文章列表
+ * @description: GetNew 获取文章列表
  * @param {int} limit 获取数量
  * @param {int64} channel_id 频道ID
  * @param {string} channel_name 频道名称
@@ -118,8 +122,8 @@ func (this *ApiArticleController) Find() {
  * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
  * @return {*}
  */
-// @router /api/article/findnew [get]
-func (this *ApiArticleController) FindNew() {
+// @router /api/article/get/new [get]
+func (this *ApiArticleController) GetNew() {
 	limit, _ := this.GetInt("limit", 6)
 	call_index := this.GetString("call_index")
 	channel_name := this.GetString("channel_name")
@@ -130,7 +134,7 @@ func (this *ApiArticleController) FindNew() {
 	is_red, _ := this.GetInt("is_red", 0)
 	is_hot, _ := this.GetInt("is_hot", 0)
 	is_slide, _ := this.GetInt("is_slide", 0)
-	outArticle, count, err := this.BaseController.ArticleFindNew(limit, channel_id, channel_name, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
+	outArticle, count, err := this.BaseController.ArticleGetNew(limit, channel_id, channel_name, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
 	if err != nil {
 		this.JSONErrorOfData(err.Error(), outArticle)
 	}
@@ -182,11 +186,11 @@ func (this *ApiArticleController) Paginate() {
  * @param {int64} article_id 文章id
  * @return {*}
  */
-// @router /api/article/one [get]
-func (this *ApiArticleController) One() {
+// @router /api/article/find [get]
+func (this *ApiArticleController) Find() {
 	article_id, _ := this.GetInt64("article_id", 0)
 	call_index := this.GetString("call_index")
-	aritcle, album, attatch, err := this.BaseController.ArticleGet(call_index, article_id)
+	aritcle, album, attatch, err := this.BaseController.ArticleFind(call_index, article_id)
 	result := struct {
 		Article *bizmodel.ApiArticleOneModel `json:"article"`
 		Album   []*model.CmsAlbum            `json:"album"`

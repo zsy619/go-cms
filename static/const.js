@@ -123,6 +123,19 @@ function ArticleClick(articleId, callIndex) {
     });
 }
 
+/**
+ * @description: 文章链接
+ * @param {string} call_index 栏目别名
+ * @param {int64} article_id 文章ID
+ * @param {string} url 自定义链接
+ * @return {*}
+ */
+function UrlForArticle(callIndex, articleId, url) {
+    if (url != "") {
+        return url;
+    }
+    return "/article/" + callIndex + "/" + articleId;
+}
 
 function layopenB(title, content, table) {
     var heigth_screen = window.screen.height;

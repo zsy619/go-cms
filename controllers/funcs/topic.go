@@ -13,7 +13,7 @@ import (
  * @return {*}
  */
 func TopicNewExt(limit int, siteId, channelId int64) []*bizmodel.ApiTopicListModel {
-	find, _, _ := biz.NewApiTopic().FindNew(limit, siteId, channelId)
+	find, _, _ := biz.NewApiTopic().GetNew(limit, siteId, channelId)
 	if find == nil {
 		return []*bizmodel.ApiTopicListModel{}
 	}
@@ -32,7 +32,7 @@ func TopicNew(limit int) []*bizmodel.ApiTopicListModel {
  * @return {*}
  */
 func TopicTopExt(limit int, siteId, channelId int64) []*bizmodel.ApiTopicListModel {
-	find, _, _ := biz.NewApiTopic().Find(limit, siteId, channelId)
+	find, _, _ := biz.NewApiTopic().Get(limit, siteId, channelId)
 	if find == nil {
 		return []*bizmodel.ApiTopicListModel{}
 	}

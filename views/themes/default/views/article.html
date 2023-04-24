@@ -112,7 +112,7 @@
                 }
             });
             $.ajax({
-                url: "/api/category/find?channel_name={{.article.ChannelName}}&r=" + Math.random(),
+                url: "/api/category/get?channel_name={{.article.ChannelName}}&r=" + Math.random(),
                 dataType: "json",
                 type: "get",
                 beforeSend: function () {

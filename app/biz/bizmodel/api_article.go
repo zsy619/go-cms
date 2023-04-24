@@ -11,8 +11,8 @@ const ApiArticleListModel_Table = `SELECT ` + ApiArticleListModel_Field + ` FROM
 	` LEFT JOIN cms_site_channel c ON a.channel_id = c.channel_id` +
 	` WHERE a.status=2 AND b.status=2`
 
-// ApiArticleModel 文章模型
-type ApiCategoryFindModel struct {
+// ApiCategoryGetModel 文章模型
+type ApiCategoryGetModel struct {
 	ChannelName  string `gorm:"column:channel_name;type:varchar(128)" json:"channel_name" form:"channel_name"`    // 频道名称
 	ChannelTitle string `gorm:"column:channel_title;type:varchar(128)" json:"channel_title" form:"channel_title"` // 频道标题
 	CategoryID   int64  `gorm:"column:category_id;type:bigint;" json:"category_id" form:"category_id"`            // 主键
@@ -31,9 +31,9 @@ type ApiCategoryFindModel struct {
 	IsDeleted    bool   `gorm:"column:is_deleted;type:tinyint(1)" json:"is_deleted" form:"is_deleted"`            // 删除标识
 }
 
-// ApiArticleModel 文章模型
-type ApiCategoryOneModel struct {
-	ApiCategoryFindModel
+// ApiCategoryFindModel 文章模型
+type ApiCategoryFindModel struct {
+	ApiCategoryGetModel
 	Target         string `gorm:"column:target;type:varchar(16);default:_blank;comment:是否开启浏览器新窗口" json:"target" form:"target"`
 	SeoTitle       string `gorm:"column:seo_title;type:varchar(128)" json:"seo_title" form:"seo_title"`                   // SEO标题
 	SeoKeyword     string `gorm:"column:seo_keyword;type:varchar(128)" json:"seo_keyword" form:"seo_keyword"`             // SEO关健字
@@ -42,6 +42,7 @@ type ApiCategoryOneModel struct {
 	TmplCat        string `gorm:"column:tmpl_cat;type:varchar(256)" json:"tmpl_cat" form:"tmpl_cat"`                      // 栏目模板路径
 	TmplLst        string `gorm:"column:tmpl_lst;type:varchar(256)" json:"tmpl_lst" form:"tmpl_lst"`                      // 列表模板路径
 	TmplDtl        string `gorm:"column:tmpl_dtl;type:varchar(256)" json:"tmpl_dtl" form:"tmpl_dtl"`                      // 明细模板路径
+	SiteFlag       string `gorm:"column:site_flag;type:varchar(64)" json:"site_flag" form:"site_flag"`                    // 站点标识
 }
 
 // ApiArticleListModel 文章查询模型

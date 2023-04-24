@@ -47,12 +47,12 @@ func (this *ApiSite) Default() (*bizmodel.ApiSiteModel, error) {
 }
 
 /**
- * @description: Get 获取站点信息
+ * @description: Find 获取站点信息
  * @param {int64} site_id 站点ID
  * @return {*}
  */
-func (this *ApiSite) Get(site_id int64) (*model.CmsSite, error) {
-	cacheKey := "ApiSite_Get_" + fmt.Sprintf("%d", site_id)
+func (this *ApiSite) Find(site_id int64) (*model.CmsSite, error) {
+	cacheKey := "ApiSite_Find_" + fmt.Sprintf("%d", site_id)
 	if found, item := ApiCache.Get(cacheKey); found {
 		logs.Debug("ApiCache")
 		return item.(*model.CmsSite), nil
@@ -67,12 +67,12 @@ func (this *ApiSite) Get(site_id int64) (*model.CmsSite, error) {
 }
 
 /**
- * @description: ChannelFind 获取站点频道
+ * @description: ChannelGet 获取站点频道
  * @param {int64} site_id 站点ID
  * @return {*}
  */
-func (this *ApiSite) ChannelFind(site_id int64) ([]*bizmodel.ApiChannelFindModel, int64, error) {
-	cacheKey := "ApiSite_ChannelFind_" + fmt.Sprintf("%d", site_id)
+func (this *ApiSite) ChannelGet(site_id int64) ([]*bizmodel.ApiChannelFindModel, int64, error) {
+	cacheKey := "ApiSite_ChannelGet_" + fmt.Sprintf("%d", site_id)
 	if found, item := ApiCache.Get(cacheKey); found {
 		logs.Debug("ApiCache")
 		find := item.([]*bizmodel.ApiChannelFindModel)
@@ -90,13 +90,13 @@ func (this *ApiSite) ChannelFind(site_id int64) ([]*bizmodel.ApiChannelFindModel
 }
 
 /**
- * @description: NavFind 获取站点导航
+ * @description: NavGet 获取站点导航
  * @param {int64} site_id 站点ID
  * @param {int64} channel_id 频道ID
  * @return {*}
  */
-func (this *ApiSite) NavFind(site_id int64, channel_id int64) ([]*bizmodel.ApiNavFindModel, int64, error) {
-	cacheKey := "ApiSite_NavFind_" + fmt.Sprintf("%d", site_id) + "_" + fmt.Sprintf("%d", channel_id)
+func (this *ApiSite) NavGet(site_id int64, channel_id int64) ([]*bizmodel.ApiNavFindModel, int64, error) {
+	cacheKey := "ApiSite_NavGet_" + fmt.Sprintf("%d", site_id) + "_" + fmt.Sprintf("%d", channel_id)
 	if found, item := ApiCache.Get(cacheKey); found {
 		find := item.([]*bizmodel.ApiNavFindModel)
 		return find, int64(len(find)), nil
@@ -112,12 +112,12 @@ func (this *ApiSite) NavFind(site_id int64, channel_id int64) ([]*bizmodel.ApiNa
 	for _, v := range outNav {
 		v.Type = "channel"
 		v.Children = []*bizmodel.ApiNavFindModel{}
-		children, _, _ := this.NavFind(site_id, v.NavID)
+		children, _, _ := this.NavGet(site_id, v.NavID)
 		if len(children) > 0 {
 			v.Children = append(v.Children, children...)
 		}
 		// 获取频道下的栏目
-		categorys := this.NavCategoryFind(v.NavID, 0)
+		categorys := this.NavCategoryGet(v.NavID, 0)
 		if len(categorys) > 0 {
 			v.Children = append(v.Children, categorys...)
 		}
@@ -126,8 +126,8 @@ func (this *ApiSite) NavFind(site_id int64, channel_id int64) ([]*bizmodel.ApiNa
 	return outNav, int64(len(outNav)), nil
 }
 
-func (this *ApiSite) NavCategoryFind(channel_id int64, parent_id int64) []*bizmodel.ApiNavFindModel {
-	cacheKey := "ApiSite_NavCategoryFind_" + fmt.Sprintf("%d", channel_id) + "_" + fmt.Sprintf("%d", parent_id)
+func (this *ApiSite) NavCategoryGet(channel_id int64, parent_id int64) []*bizmodel.ApiNavFindModel {
+	cacheKey := "ApiSite_NavCategoryGet_" + fmt.Sprintf("%d", channel_id) + "_" + fmt.Sprintf("%d", parent_id)
 	if found, item := ApiCache.Get(cacheKey); found {
 		find := item.([]*bizmodel.ApiNavFindModel)
 		return find
@@ -143,7 +143,7 @@ func (this *ApiSite) NavCategoryFind(channel_id int64, parent_id int64) []*bizmo
 	for _, v := range outNav {
 		v.Type = "category"
 		v.Children = []*bizmodel.ApiNavFindModel{}
-		children := this.NavCategoryFind(channel_id, v.NavID)
+		children := this.NavCategoryGet(channel_id, v.NavID)
 		v.Children = append(v.Children, children...)
 	}
 	ApiCache.Set(cacheKey, outNav, 1800)

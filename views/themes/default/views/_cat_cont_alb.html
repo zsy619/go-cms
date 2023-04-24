@@ -30,7 +30,7 @@
 <script type="text/javascript">
     var loadData = function () {
         $.ajax({
-            url: "/api/article/one?call_index=" + categoryName + "&r=" + Math.random(),
+            url: "/api/article/find?call_index=" + categoryName + "&r=" + Math.random(),
             dataType: "json",
             type: "get",
             beforeSend: function () {

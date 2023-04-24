@@ -47,7 +47,7 @@ func (this *ChannelController) Category() {
 		this.Ctx.WriteString(channelErr.Error())
 		this.StopRun()
 	}
-	categoryModel, categoryErr := biz.NewApiArticle().CategoryOne(0, categoryName)
+	categoryModel, categoryErr := biz.NewApiArticle().CategoryFind(0, categoryName)
 	if categoryErr != nil {
 		this.Ctx.WriteString(categoryErr.Error())
 		this.StopRun()

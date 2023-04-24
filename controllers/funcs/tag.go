@@ -13,7 +13,7 @@ import (
  * @return {*}
  */
 func TagNewExt(limit int, siteId, channelId int64) []*bizmodel.ApiTagListModel {
-	find, _, _ := biz.NewApiTag().FindNew(limit, siteId, channelId)
+	find, _, _ := biz.NewApiTag().GetNew(limit, siteId, channelId)
 	if find == nil {
 		return []*bizmodel.ApiTagListModel{}
 	}
@@ -32,7 +32,7 @@ func TagNew(limit int) []*bizmodel.ApiTagListModel {
  * @return {*}
  */
 func TagTopExt(limit int, siteId, channelId int64) []*bizmodel.ApiTagListModel {
-	find, _, _ := biz.NewApiTag().Find(limit, siteId, channelId)
+	find, _, _ := biz.NewApiTag().Get(limit, siteId, channelId)
 	if find == nil {
 		return []*bizmodel.ApiTagListModel{}
 	}

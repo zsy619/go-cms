@@ -10,20 +10,20 @@ import (
 type ApiLinkController struct{ BaseController }
 
 /**
- * @description: Find 获取链接列表
+ * @description: Get 获取链接列表
  * @param {int} limit 获取数量
  * @param {int64} category_id 链接分类ID
  * @param {string} call_index 链接分类标识
  * @return {*}
  */
-// @router /api/link/find [get]
-func (this *ApiLinkController) Find() {
+// @router /api/link/get [get]
+func (this *ApiLinkController) Get() {
 	category_id, _ := this.GetInt64("category_id")
 	call_index := this.GetString("call_index")
 	limit, _ := this.GetInt("limit", 6)
-	out, len, err := this.BaseController.LinkFind(limit, category_id, call_index)
+	out, len, err := this.BaseController.LinkGet(limit, category_id, call_index)
 	if err != nil {
-		logs.Error("Find::", "callIndex", call_index, "err", err)
+		logs.Error("Get::", "callIndex", call_index, "err", err)
 		this.JSONErrorOfData(err.Error(), out)
 	}
 	this.JSONSuccess(strconv.FormatInt(len, 10), out)

@@ -22,32 +22,37 @@ func (this *ApiSiteController) Default() {
 }
 
 /*
- * @description: Get 获取站点信息
+ * @description: Find 获取站点信息
  * @param {int64} site_id 站点ID
  * @return {*}
  */
 // @router /api/site/get [get]
-func (this *ApiSiteController) Get() {
+// @router /api/site/get/:site_id:int64 [get]
+func (this *ApiSiteController) Find() {
 	site_id, _ := this.GetInt64("site_id")
-	out, err := this.BaseController.SiteGet(site_id)
+	if site_id == 0 {
+		site_idx := this.Ctx.Input.Param(":site_id")
+		site_id, _ = strconv.ParseInt(site_idx, 10, 64)
+	}
+	out, err := this.BaseController.SiteFind(site_id)
 	if err != nil {
-		logs.Error("Site Get::", "siteId", site_id, "err", err)
+		logs.Error("Site Find::", "siteId", site_id, "err", err)
 		this.JSONErrorOfData(err.Error(), out)
 	}
 	this.JSONSuccess("", out)
 }
 
 /*
- * @description: ChannelFind 获取站点频道
+ * @description: ChannelGet 获取站点频道
  * @param {int64} site_id 站点ID
  * @return {*}
  */
-// @router /api/channel/find [get]
-func (this *ApiSiteController) ChannelFind() {
+// @router /api/channel/get [get]
+func (this *ApiSiteController) ChannelGet() {
 	site_id, _ := this.GetInt64("site_id")
-	out, len, err := this.BaseController.ChannelFind(site_id)
+	out, len, err := this.BaseController.ChannelGet(site_id)
 	if err != nil {
-		logs.Error("Channel Find::", "siteId", site_id, "err", err)
+		logs.Error("Channel Get::", "siteId", site_id, "err", err)
 		this.JSONErrorOfData(err.Error(), out)
 	}
 	this.JSONSuccess(strconv.FormatInt(len, 10), out)
@@ -58,8 +63,13 @@ func (this *ApiSiteController) ChannelFind() {
  * @return {*}
  */
 // @router /api/site/menu [get]
+// @router /api/site/menu/:site_id:int64 [get]
 func (this *ApiSiteController) Menu() {
 	site_id, _ := this.GetInt64("site_id")
+	if site_id == 0 {
+		site_idx := this.Ctx.Input.Param(":site_id")
+		site_id, _ = strconv.ParseInt(site_idx, 10, 64)
+	}
 	channel_id, _ := this.GetInt64("channel_id")
 	out, _, err := this.BaseController.SiteMenu(site_id, channel_id)
 	if err != nil {

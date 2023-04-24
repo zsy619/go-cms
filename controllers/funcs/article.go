@@ -24,7 +24,7 @@ func ArticleNewExt(limit int, channel_id int64, channel_name string, category_id
 	if limit <= 0 {
 		limit = 5
 	}
-	find, _, err := biz.NewApiArticle().FindNew(limit, channel_id, channel_name, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
+	find, _, err := biz.NewApiArticle().ArticleGetNew(limit, channel_id, channel_name, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
 	if err != nil {
 		find = []*bizmodel.ApiArticleListModel{}
 	}
@@ -54,7 +54,7 @@ func ArticleTopExt(limit int, channel_id int64, channel_name string, category_id
 	if limit <= 0 {
 		limit = 5
 	}
-	find, _, err := biz.NewApiArticle().Find(limit, channel_id, channel_name, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
+	find, _, err := biz.NewApiArticle().ArticleGet(limit, channel_id, channel_name, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
 	if err != nil {
 		find = []*bizmodel.ApiArticleListModel{}
 	}

@@ -19,13 +19,13 @@ func NewApiLink() *ApiLink {
 }
 
 /**
-* @description: Find 获取链接列表
+* @description: Get 获取链接列表
 * @param {int} limit 获取数量
 * @param {int64} category_id 链接分类ID
 * @param {string} call_index 链接分类标识
 * @return {*}
  */
-func (this *ApiLink) Find(limit int, category_id int64, call_index string) ([]*bizmodel.ApiLinkListModel, int64, error) {
+func (this *ApiLink) Get(limit int, category_id int64, call_index string) ([]*bizmodel.ApiLinkListModel, int64, error) {
 	cacheKey := fmt.Sprintf("LinkFind::%d::%d::%s", limit, category_id, call_index)
 	if found, item := ApiCache.Get(cacheKey); found {
 		links := item.([]*bizmodel.ApiLinkListModel)

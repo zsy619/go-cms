@@ -34,7 +34,7 @@
                         <li>
                             <a onclick="javascript:void(0);">
                                 <div class="img-box">
-                                    <img src="{{.webroot}}images/jsfc_img1.png" class="img" />
+                                    <img src="{{.siteStatic}}images/jsfc_img1.png" class="img" />
                                 </div>
                                 <div class="info-box">
                                     <div class="title ellip">【教师风采】从 内容标题 取值 ----- 从 副标题 取值</div>
@@ -93,7 +93,7 @@
                                 var tmpl = $('#liTmpl').html();
                                 for (var i = 0; i < len; i++) {
                                     var item = res.data[i];
-                                    var url = item.link_url == "" ? "/article/detail/" + item.article_id : item.link_url;
+                                    var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
                                     var html = tmpl.replaceAll("${img_url1}", item.img_url1).replaceAll("${article_id}", item.article_id)
                                         .replaceAll("${url}", url).replaceAll("${title}", item.title)
                                         .replaceAll("${sub_title}", item.sub_title).replaceAll("${summary}", item.summary);

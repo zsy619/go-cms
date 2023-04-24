@@ -1,5 +1,5 @@
 <div class="breadcrumb">
-    <img src="{{.webroot}}images/position.png" alt="" class="position" /> 您所在的位置：
+    <img src="{{.siteStatic}}images/position.png" alt="" class="position" /> 您所在的位置：
     <a href="/">首页</a>&gt;
     <a href="javascript:void(0)">学校概况</a>&gt;
     <a href="javascript:void(0)" class="active">学校荣誉</a>
@@ -14,7 +14,7 @@
                 $(".breadcrumb").html("");
             },
             success: function (res) {
-                $(".breadcrumb").append('<img src="{{.webroot}}images/position.png" alt="" class="position" /> 您所在的位置：');
+                $(".breadcrumb").append('<img src="{{.siteStatic}}images/position.png" alt="" class="position" /> 您所在的位置：');
                 $(".breadcrumb").append('<a href="/">首页</a>&nbsp;&gt;');
                 if (res.code == 0) {
                     var len = res.data.length;

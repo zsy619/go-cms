@@ -18,7 +18,7 @@ func NewApiTopic() *ApiTopic {
 	return &ApiTopic{}
 }
 
-func (this *ApiTopic) find(cackeKeyPrefix string, limit int, siteId, channelId int64) ([]*bizmodel.ApiTopicListModel, int64, error) {
+func (this *ApiTopic) get(cackeKeyPrefix string, limit int, siteId, channelId int64) ([]*bizmodel.ApiTopicListModel, int64, error) {
 	if limit <= 0 {
 		limit = 10
 	}
@@ -40,7 +40,7 @@ func (this *ApiTopic) find(cackeKeyPrefix string, limit int, siteId, channelId i
 	do = do.Where(mdl.Status.Eq(int32(StatusPass)))
 	do = do.Select(mdl.TopicID, mdl.SiteID, mdl.ChannelID, mdl.Name, mdl.Title, mdl.ImgUrl1, mdl.ImgUrl2,
 		mdl.SeoTitle, mdl.SeoKeyword, mdl.SeoDescription, mdl.SortID, mdl.Click, mdl.Template)
-	if cackeKeyPrefix == "ApiTopic_Find" {
+	if cackeKeyPrefix == "ApiTopic_Get" {
 		do = do.Order(mdl.SortID, mdl.TopicID)
 	} else {
 		do = do.Order(mdl.TopicID.Desc(), mdl.SortID)
@@ -59,8 +59,8 @@ func (this *ApiTopic) find(cackeKeyPrefix string, limit int, siteId, channelId i
  * @param {int64} channelId 栏目ID
  * @return {*}
  */
-func (this *ApiTopic) Find(limit int, siteId, channelId int64) ([]*bizmodel.ApiTopicListModel, int64, error) {
-	return this.find("ApiTopic_Find", limit, siteId, channelId)
+func (this *ApiTopic) Get(limit int, siteId, channelId int64) ([]*bizmodel.ApiTopicListModel, int64, error) {
+	return this.get("ApiTopic_Get", limit, siteId, channelId)
 }
 
 /**
@@ -70,8 +70,8 @@ func (this *ApiTopic) Find(limit int, siteId, channelId int64) ([]*bizmodel.ApiT
  * @param {int64} channelId 栏目ID
  * @return {*}
  */
-func (this *ApiTopic) FindNew(limit int, siteId, channelId int64) ([]*bizmodel.ApiTopicListModel, int64, error) {
-	return this.find("ApiTopic_FindNew", limit, siteId, channelId)
+func (this *ApiTopic) GetNew(limit int, siteId, channelId int64) ([]*bizmodel.ApiTopicListModel, int64, error) {
+	return this.get("ApiTopic_GetNew", limit, siteId, channelId)
 }
 
 /**

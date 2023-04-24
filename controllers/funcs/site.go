@@ -23,7 +23,7 @@ func SiteDefault() *bizmodel.ApiSiteModel {
  * @return {*}
  */
 func SiteMenu(site_id int64) []*bizmodel.ApiNavFindModel {
-	find, _, err := biz.NewApiSite().NavFind(site_id, 0)
+	find, _, err := biz.NewApiSite().NavGet(site_id, 0)
 	if err != nil {
 		return []*bizmodel.ApiNavFindModel{}
 	}

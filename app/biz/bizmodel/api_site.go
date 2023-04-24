@@ -7,6 +7,7 @@ type ApiChannelFindModel struct {
 	Name       string `gorm:"column:name;type:varchar(128)" json:"name" form:"name"`                         // 频道名称
 	Kind       int32  `gorm:"column:kind;type:tinyint" json:"kind" form:"kind"`                              // 频道类型
 	ClassLayer int32  `gorm:"column:class_layer;type:tinyint" json:"class_layer" form:"class_layer"`         // 层级
+	LinkURL    string `gorm:"column:link_url;type:varchar(256)" json:"link_url" form:"link_url"`             // 外部链接
 	ImgUrl1    string `gorm:"column:img_url1;type:varchar(256)" json:"img_url1" form:"img_url1"`             // 图片地址
 	ImgUrl2    string `gorm:"column:img_url2;type:varchar(256)" json:"img_url2" form:"img_url2"`             // 图片地址
 	SortID     int32  `gorm:"column:sort_id;type:tinyint" json:"sort_id" form:"sort_id"`                     // 排序
@@ -17,6 +18,7 @@ type ApiChannelFindModel struct {
 	TmplCat    string `gorm:"column:tmpl_cat;type:varchar(256)" json:"tmpl_cat" form:"tmpl_cat"`             // 栏目模板路径
 	TmplLst    string `gorm:"column:tmpl_lst;type:varchar(256)" json:"tmpl_lst" form:"tmpl_lst"`             // 列表模板路径
 	TmplDtl    string `gorm:"column:tmpl_dtl;type:varchar(256)" json:"tmpl_dtl" form:"tmpl_dtl"`             // 明细模板路径
+	SiteFlag   string `gorm:"column:site_flag;type:varchar(64)" json:"site_flag" form:"site_flag"`           // 站点标识
 }
 
 type ApiNavFindModel struct {

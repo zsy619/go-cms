@@ -18,7 +18,7 @@ func NewApiTag() *ApiTag {
 	return &ApiTag{}
 }
 
-func (this *ApiTag) find(cackeKeyPrefix string, limit int, siteId, channelId int64) ([]*bizmodel.ApiTagListModel, int64, error) {
+func (this *ApiTag) get(cackeKeyPrefix string, limit int, siteId, channelId int64) ([]*bizmodel.ApiTagListModel, int64, error) {
 	if limit <= 0 {
 		limit = 10
 	}
@@ -40,7 +40,7 @@ func (this *ApiTag) find(cackeKeyPrefix string, limit int, siteId, channelId int
 	do = do.Where(mdl.Status.Eq(int32(StatusPass)))
 	do = do.Select(mdl.TagID, mdl.SiteID, mdl.ChannelID, mdl.Name, mdl.Title, mdl.ImgUrl1, mdl.ImgUrl2,
 		mdl.SeoTitle, mdl.SeoKeyword, mdl.SeoDescription, mdl.SortID)
-	if cackeKeyPrefix == "ApiTag_Find" {
+	if cackeKeyPrefix == "ApiTag_Get" {
 		do = do.Order(mdl.SortID, mdl.TagID)
 	} else {
 		do = do.Order(mdl.TagID.Desc(), mdl.SortID)
@@ -59,8 +59,8 @@ func (this *ApiTag) find(cackeKeyPrefix string, limit int, siteId, channelId int
  * @param {int64} channelId 栏目ID
  * @return {*}
  */
-func (this *ApiTag) Find(limit int, siteId, channelId int64) ([]*bizmodel.ApiTagListModel, int64, error) {
-	return this.find("ApiTag_Find", limit, siteId, channelId)
+func (this *ApiTag) Get(limit int, siteId, channelId int64) ([]*bizmodel.ApiTagListModel, int64, error) {
+	return this.get("ApiTag_Get", limit, siteId, channelId)
 }
 
 /**
@@ -70,8 +70,8 @@ func (this *ApiTag) Find(limit int, siteId, channelId int64) ([]*bizmodel.ApiTag
  * @param {int64} channelId 栏目ID
  * @return {*}
  */
-func (this *ApiTag) FindNew(limit int, siteId, channelId int64) ([]*bizmodel.ApiTagListModel, int64, error) {
-	return this.find("ApiTag_FindNew", limit, siteId, channelId)
+func (this *ApiTag) GetNew(limit int, siteId, channelId int64) ([]*bizmodel.ApiTagListModel, int64, error) {
+	return this.get("ApiTag_GetNew", limit, siteId, channelId)
 }
 
 /**

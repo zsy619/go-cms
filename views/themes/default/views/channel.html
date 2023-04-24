@@ -30,7 +30,7 @@
             </div>
             <div class="cont-right">
                 <div class="breadcrumb">
-                    <img src="{{.webroot}}images/position.png" alt="" class="position" /> 您所在的位置：
+                    <img src="{{.siteStatic}}images/position.png" alt="" class="position" /> 您所在的位置：
                     <a href="/">首页</a>&nbsp;&gt;&nbsp;
                     <a href="javascript:void(0)" class="active">联系我们</a>
                 </div>
@@ -127,7 +127,7 @@
             for (var i = 0; i < markers.length; i++) {
                 var point = new BMap.Point(markers[i].position.lng, markers[i].position.lat);
                 var marker = new BMap.Marker(point, {
-                    icon: new BMap.Icon('{{.webroot}}images/map_icon.png', new BMap.Size(20, 25), {
+                    icon: new BMap.Icon('{{.siteStatic}}images/map_icon.png', new BMap.Size(20, 25), {
                         imageOffset: new BMap.Size(markers[i].imageOffset.width, markers[i].imageOffset.height)
                     })
                 })

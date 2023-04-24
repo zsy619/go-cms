@@ -13,7 +13,7 @@ import (
 * @return {*}
  */
 func AdsNewExt(limit int, category_id int64, call_index string) []*bizmodel.ApiAdsListModel {
-	find, _, err := biz.NewApiAds().FindNew(limit, category_id, call_index)
+	find, _, err := biz.NewApiAds().GetNew(limit, category_id, call_index)
 	if err != nil {
 		find = []*bizmodel.ApiAdsListModel{}
 	}
@@ -32,7 +32,7 @@ func AdsNew(limit int) []*bizmodel.ApiAdsListModel {
 * @return {*}
  */
 func AdsTopExt(limit int, category_id int64, call_index string) []*bizmodel.ApiAdsListModel {
-	find, _, err := biz.NewApiAds().Find(limit, category_id, call_index)
+	find, _, err := biz.NewApiAds().Get(limit, category_id, call_index)
 	if err != nil {
 		find = []*bizmodel.ApiAdsListModel{}
 	}

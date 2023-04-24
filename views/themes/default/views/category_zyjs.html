@@ -101,7 +101,7 @@
                                 var tmpl = $('#templateLi').html();
                                 for (var i = 0; i < len; i++) {
                                     var item = res.data[i];
-                                    var url = item.link_url == "" ? "/article/detail/" + item.article_id : item.link_url;
+                                    var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
                                     var html = tmpl.replaceAll("${img_url1}", item.img_url1)
                                         .replaceAll("${title}", item.title)
                                         .replaceAll("${seo_title}", item.seo_title)

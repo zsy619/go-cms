@@ -3,10 +3,12 @@ package biz
 import (
 	"errors"
 	"fmt"
+	"strconv"
 
 	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/cms/app/biz/bizmodel"
 	"haedu.gov.cn/cms/app/dal/query"
+	"haedu.gov.cn/tools/xgeneric"
 )
 
 type ApiChannel struct{}
@@ -30,15 +32,16 @@ func (this *ApiChannel) Find(name string, channel_id int64) (*bizmodel.ApiChanne
 		logs.Debug("ApiCache")
 		return item.(*bizmodel.ApiChannelFindModel), nil
 	}
-	mdl, do := query.CmsSiteChannelDo()
-	if name != "" {
-		do = do.Where(mdl.Name.Eq(name))
-	} else if channel_id > 0 {
-		do = do.Where(mdl.ChannelID.Eq(channel_id))
-	}
+	_, do := query.CmsSiteChannelDo()
 	find := &bizmodel.ApiChannelFindModel{}
-	err := do.Select(mdl.ChannelID, mdl.ParentID, mdl.Title, mdl.Name, mdl.Kind, mdl.ClassLayer, mdl.ImgUrl1, mdl.ImgUrl2, mdl.SortID, mdl.IsAlbum, mdl.IsAttach,
-		mdl.IsSpec, mdl.TmplChnl, mdl.TmplCat, mdl.TmplLst, mdl.TmplDtl).Order(mdl.SortID).Scan(&find)
+	field := `a.channel_id,a.parent_id,a.title,a.name,a.kind,a.class_layer,a.link_url,a.img_url1,a.img_url2,a.sort_id,a.is_album,a.is_attach,a.is_spec,a.tmpl_chnl,a.tmpl_cat,a.tmpl_lst,a.tmpl_dtl` +
+		`,b.flag as site_flag`
+	sql := `SELECT ` + field + ` FROM cms_site_channel a` +
+		` LEFT JOIN cms_site b ON b.site_id=a.site_id` +
+		` WHERE 1=1 ` +
+		xgeneric.IFF(channel_id > 0, ` AND a.channel_id=`+strconv.FormatInt(channel_id, 10), ``) +
+		xgeneric.IFF(name != "", ` AND a.name='`+name+`'`, ``)
+	err := do.Debug().UnderlyingDB().Raw(sql).Scan(&find).Error
 	if err != nil {
 		return nil, err
 	}

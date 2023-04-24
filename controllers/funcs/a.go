@@ -97,6 +97,19 @@ func init() {
 
 		funcs["IIF"] = IIF
 		funcs["iif"] = IIF
+
+		funcs["UrlForArticle"] = UrlForArticle
+		funcs["urlforarticle"] = UrlForArticle
+		funcs["UrlForArticleExt"] = UrlForArticleExt
+		funcs["urlforarticleext"] = UrlForArticleExt
+
+		funcs["UrlForCategory"] = UrlForCategory
+		funcs["urlforcategory"] = UrlForCategory
+		funcs["UrlForCategoryExt"] = UrlForCategoryExt
+		funcs["urlforcategoryext"] = UrlForCategoryExt
+
+		funcs["UrlForChannel"] = UrlForChannel
+		funcs["urlforchannel"] = UrlForChannel
 	}
 
 	// 注册模板函数

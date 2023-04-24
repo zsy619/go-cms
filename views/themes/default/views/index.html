@@ -30,7 +30,7 @@
             <div class="left">
                 <div class="tabTop">
                     <span class="title">图片新闻</span>
-                    <a href="/web/xyzx/xyxw" class="fr">更多></a>
+                    <a href='{{UrlForCategory "xyxw"}}' class="fr">更多></a>
                 </div>
                 <div class="sliderList">
                     <div class="slider single-item2" id="divTpxw">
@@ -40,7 +40,7 @@
             <div class="right">
                 <div class="tabTop">
                     <span class="title">通知公告</span>
-                    <a href="/web/xyzx/tzgg" class="fr">更多></a>
+                    <a href='{{UrlForCategory "tzgg"}}' class="fr">更多></a>
                 </div>
                 <div class="newlist-ul">
                     <ul id="artTzgg" style="height: 404px;">
@@ -144,7 +144,7 @@
         // 图片新闻
         function TuPianXinWen() {
             $.ajax({
-                url: "/api/article/find?call_index=xyxw&limit=6&is_slide=1",
+                url: "/api/article/get?call_index=xyxw&limit=6&is_slide=1",
                 dataType: "json",
                 type: "get",
                 beforeSend: function () {
@@ -153,11 +153,12 @@
                 },
                 success: function (res) {
                     $("#divTpxw").busyLoad("hide", { animate: "fade" });
+                    // console.log(res);
                     if (res.code == 0) {
                         var len = res.data.length;
                         for (var i = 0; i < len; i++) {
                             var item = res.data[i];
-                            var url = item.link_url == "" ? "/article/detail/" + item.article_id : item.link_url;
+                            var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
                             var html = '<div class="carousel-item"><img src="' + item.img_url1 + '" /><div class="carousel-opc"></div><a target="_blank" href="' + url + '"><span class="title">' + item.title + '</span></a></div>';
                             $("#divTpxw").append(html);
                         }
@@ -188,7 +189,7 @@
         // 通知公告
         function TongZhiGongGao() {
             $.ajax({
-                url: "/api/article/find?call_index=tzgg&limit=8",
+                url: "/api/article/get?call_index=tzgg&limit=8",
                 dataType: "json",
                 type: "get",
                 beforeSend: function () {
@@ -201,7 +202,7 @@
                         var len = res.data.length;
                         for (var i = 0; i < len; i++) {
                             var item = res.data[i];
-                            var url = item.link_url == "" ? "/article/detail/" + item.article_id : item.link_url;
+                            var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
                             var html = '<li><a target="_blank" href="' + url + '"><span class="txt">' + item.title + '</span><span class="fr">' + moment(item.publish_time).format('YYYY-MM-DD') + '</span></a></li>';
                             $("#artTzgg").append(html);
                         }
@@ -219,7 +220,7 @@
         // 其他媒体
         function QiTeMeiTi() {
             $.ajax({
-                url: "/api/article/find?call_index=qtmt&limit=4",
+                url: "/api/article/get?call_index=qtmt&limit=4",
                 dataType: "json",
                 type: "get",
                 beforeSend: function () {
@@ -232,7 +233,7 @@
                         var len = res.data.length;
                         for (var i = 0; i < len; i++) {
                             var item = res.data[i];
-                            var url = item.link_url == "" ? "/article/detail/" + item.article_id : item.link_url;
+                            var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
                             var icon = item.ico_url1 == "" ? "" : ('<img src="' + item.ico_url1 + '" class="icon" />');
                             var html = '<a class="slow" target="_blank" href="' + url + '"><img src="' + item.img_url1 + '" class="img" /><div class="opc"></div><div class="title">' + icon + '<span>' + (item.source == "" ? "" : (item.source + "：")) + item.title + '</span></div></a>';
                             $("#divQtmt").append(html);

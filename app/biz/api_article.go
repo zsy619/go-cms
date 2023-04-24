@@ -67,7 +67,7 @@ func (this *ApiArticle) CategoryNav(channel_name string, channel_id int64, call_
 			}
 		}
 	}
-	cacheKey := fmt.Sprintf("ApiArticleCategoryNav_%s_%d_%s_%d_%d", channel_name, channel_id, call_index, category_id, article_id)
+	cacheKey := fmt.Sprintf("ApiArticle_CategoryNav_%s_%d_%s_%d_%d", channel_name, channel_id, call_index, category_id, article_id)
 	if found, item := ApiCache.Get(cacheKey); found {
 		return item.([]*bizmodel.ApiCategoryNav), nil
 	}
@@ -117,17 +117,17 @@ func (this *ApiArticle) CategoryNav(channel_name string, channel_id int64, call_
 }
 
 /**
- * @description: CategoryFind 获取栏目列表
+ * @description: CategoryGet 获取栏目列表
  * @param {string} channel_name 频道名称
  * @return {*}
  */
-func (this *ApiArticle) CategoryFind(channel_name string) ([]*bizmodel.ApiCategoryFindModel, int64, error) {
-	cacheKey := fmt.Sprintf("ApiArticle_CategoryFind_%s", channel_name)
+func (this *ApiArticle) CategoryGet(channel_name string) ([]*bizmodel.ApiCategoryGetModel, int64, error) {
+	cacheKey := fmt.Sprintf("ApiArticle_CategoryGet_%s", channel_name)
 	if found, item := ApiCache.Get(cacheKey); found {
-		list := item.([]*bizmodel.ApiCategoryFindModel)
+		list := item.([]*bizmodel.ApiCategoryGetModel)
 		return list, int64(len(list)), nil
 	}
-	list := make([]*bizmodel.ApiCategoryFindModel, 0)
+	list := make([]*bizmodel.ApiCategoryGetModel, 0)
 	_, do := query.CmsArticleCategoryDo()
 	sqlSelect := "b.`name` as channel_name,b.title as channel_title,a.category_id,a.parent_id,a.site_id,a.channel_id,a.title,a.call_index,a.class_layer,a.link_url,a.img_url1,a.img_url2,a.sort_id,a.is_show,a.is_search,a.is_deleted"
 	sql := "SELECT " + sqlSelect + " FROM cms_article_category a LEFT JOIN cms_site_channel b ON a.channel_id=b.channel_id WHERE a.is_deleted=0 AND a.`status`=2 AND a.`is_show`=1 AND b.`name`=? ORDER BY a.sort_id"
@@ -140,22 +140,27 @@ func (this *ApiArticle) CategoryFind(channel_name string) ([]*bizmodel.ApiCatego
 }
 
 /**
- * @description: CategoryOne 获取栏目详情
+ * @description: CategoryFind 获取栏目详情
  * @param {int64} category_id 栏目ID
  * @param {string} call_index 栏目别名
  * @return {*}
  */
-func (this *ApiArticle) CategoryOne(category_id int64, call_index string) (*bizmodel.ApiCategoryOneModel, error) {
-	cacheKey := fmt.Sprintf("ApiArticle_CategoryOne_%d_%s", category_id, call_index)
+func (this *ApiArticle) CategoryFind(category_id int64, call_index string) (*bizmodel.ApiCategoryFindModel, error) {
+	cacheKey := fmt.Sprintf("ApiArticle_CategoryFind_%d_%s", category_id, call_index)
 	if found, item := ApiCache.Get(cacheKey); found {
-		return item.(*bizmodel.ApiCategoryOneModel), nil
+		return item.(*bizmodel.ApiCategoryFindModel), nil
 	}
-	list := &bizmodel.ApiCategoryOneModel{}
+	list := &bizmodel.ApiCategoryFindModel{}
 	_, do := query.CmsArticleCategoryDo()
 	sqlSelect := `b.name as channel_name,b.title as channel_title` +
 		`,a.category_id,a.parent_id,a.site_id,a.channel_id,a.title,a.call_index,a.class_layer,a.link_url,a.target,a.img_url1,a.img_url2,a.sort_id,a.is_show,a.is_search,a.is_deleted,a.seo_title,a.seo_keyword,a.seo_description,a.content` +
-		`,case when a.tmpl_cat='' then b.tmpl_cat else a.tmpl_cat end tmpl_cat,case when a.tmpl_lst='' then b.tmpl_lst else a.tmpl_lst end tmpl_lst,case when a.tmpl_dtl='' then b.tmpl_dtl else a.tmpl_dtl end tmpl_dtl`
-	sql := `SELECT ` + sqlSelect + ` FROM cms_article_category a LEFT JOIN cms_site_channel b ON a.channel_id=b.channel_id WHERE a.is_deleted=0 AND a.status=2 AND a.is_show=1` +
+		`,case when a.tmpl_cat='' then b.tmpl_cat else a.tmpl_cat end tmpl_cat,case when a.tmpl_lst='' then b.tmpl_lst else a.tmpl_lst end tmpl_lst,case when a.tmpl_dtl='' then b.tmpl_dtl else a.tmpl_dtl end tmpl_dtl` +
+		`,c.flag as site_flag`
+
+	sql := `SELECT ` + sqlSelect + ` FROM cms_article_category a` +
+		` LEFT JOIN cms_site_channel b ON a.channel_id=b.channel_id` +
+		` LEFT JOIN cms_site c ON b.site_id=a.site_id` +
+		` WHERE a.is_deleted=0 AND a.status=2 AND a.is_show=1` +
 		xgeneric.IFF(category_id > 0, ` AND a.category_id=`+strconv.FormatInt(category_id, 10), ``) +
 		xgeneric.IFF(call_index != "", ` AND a.call_index='`+call_index+`'`, ``)
 	err := do.UnderlyingDB().Raw(sql).Scan(&list).Error
@@ -167,7 +172,7 @@ func (this *ApiArticle) CategoryOne(category_id int64, call_index string) (*bizm
 }
 
 /**
- * @description: Find 获取文章列表
+ * @description: ArticleGet 获取文章列表
  * @param {int} limit 获取数量
  * @param {int64} channel_id 频道ID
  * @param {string} channel_name 频道名称
@@ -180,12 +185,12 @@ func (this *ApiArticle) CategoryOne(category_id int64, call_index string) (*bizm
  * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
  * @return {*}
  */
-func (this *ApiArticle) Find(limit int, channel_id int64, channel_name string, category_id int64, call_index string, is_top, is_red, is_hot, is_slide int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
+func (this *ApiArticle) ArticleGet(limit int, channel_id int64, channel_name string, category_id int64, call_index string, is_top, is_red, is_hot, is_slide int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
 	order_by = xgeneric.IFF(order_by == "", "a.sort_id", order_by)
 	if limit <= 0 {
 		limit = 10
 	}
-	cacheKey := fmt.Sprintf("ApiArticle_Find_%d_%d_%s_%d_%s_%d_%d_%d_%d_%s", limit, channel_id, channel_name, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
+	cacheKey := fmt.Sprintf("ApiArticle_ArticleGet_%d_%d_%s_%d_%s_%d_%d_%d_%d_%s", limit, channel_id, channel_name, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
 	if found, item := ApiCache.Get(cacheKey); found {
 		list := item.([]*bizmodel.ApiArticleListModel)
 		return list, int64(len(list)), nil
@@ -213,7 +218,7 @@ func (this *ApiArticle) Find(limit int, channel_id int64, channel_name string, c
 }
 
 /**
- * @description: FindNew 获取最新文章列表
+ * @description: ArticleGetNew 获取最新文章列表
  * @param {int} limit 获取数量
  * @param {int64} channel_id 频道ID
  * @param {string} channel_name 频道名称
@@ -226,12 +231,12 @@ func (this *ApiArticle) Find(limit int, channel_id int64, channel_name string, c
  * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
  * @return {*}
  */
-func (this *ApiArticle) FindNew(limit int, channel_id int64, channel_name string, category_id int64, call_index string, is_top, is_red, is_hot, is_slide int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
+func (this *ApiArticle) ArticleGetNew(limit int, channel_id int64, channel_name string, category_id int64, call_index string, is_top, is_red, is_hot, is_slide int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
 	order_by = xgeneric.IFF(order_by == "", "a.sort_id", order_by)
 	if limit <= 0 {
 		limit = 10
 	}
-	cacheKey := fmt.Sprintf("ApiArticle_FindNew_%d_%d_%s_%d_%s_%d_%d_%d_%d_%s", limit, channel_id, channel_name, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
+	cacheKey := fmt.Sprintf("ApiArticle_ArticleGetNew_%d_%d_%s_%d_%s_%d_%d_%d_%d_%s", limit, channel_id, channel_name, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
 	if found, item := ApiCache.Get(cacheKey); found {
 		find := item.([]*bizmodel.ApiArticleListModel)
 		return find, int64(len(find)), nil
@@ -257,7 +262,7 @@ func (this *ApiArticle) FindNew(limit int, channel_id int64, channel_name string
 }
 
 /**
- * @description: Paginate 获取文章分页列表
+ * @description: ArticlePaginate 获取文章分页列表
  * @param {*} page 页码
  * @param {int} limit 每页数量
  * @param {int64} channel_id 频道ID
@@ -273,7 +278,7 @@ func (this *ApiArticle) FindNew(limit int, channel_id int64, channel_name string
  * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
  * @return {*}
  */
-func (this *ApiArticle) Paginate(page, limit int, channel_id int64, channel_name string, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide, is_search int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
+func (this *ApiArticle) ArticlePaginate(page, limit int, channel_id int64, channel_name string, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide, is_search int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
 	order_by = xgeneric.IFF(order_by == "", "a.sort_id", order_by)
 	where := xgeneric.IFF(channel_id <= 0, "", " And b.channel_id="+strconv.FormatInt(channel_id, 10)) +
 		xgeneric.IFF(channel_name == "", "", " And c.name='"+channel_name+"'") +
@@ -311,12 +316,12 @@ func (this *ApiArticle) Paginate(page, limit int, channel_id int64, channel_name
 }
 
 /**
- * @description: Get 根据article_id获取文章详情、相册、附件
+ * @description: ArticleFind 根据article_id获取文章详情、相册、附件
  * @param {string} call_index 文章调用别名
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *ApiArticle) Get(call_index string, article_id int64) (*bizmodel.ApiArticleOneModel, []*model.CmsAlbum, []*model.CmsAttach, error) {
+func (this *ApiArticle) ArticleFind(call_index string, article_id int64) (*bizmodel.ApiArticleOneModel, []*model.CmsAlbum, []*model.CmsAttach, error) {
 	mdl, do := query.CmsArticleDo()
 	if call_index != "" {
 		if article_id <= 0 {

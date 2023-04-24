@@ -24,8 +24,10 @@ func (c *ArticleController) Index() {
 }
 
 // Detail 文章详情
-// @router /article/detail/:article_id:int64 [get]
+// @router /article/:call_index:string/:article_id:int64 [get]
 func (c *ArticleController) Detail() {
+	call_index := c.Ctx.Input.Param(":call_index") // 栏目别名
+	fmt.Println("call_index:", call_index)
 	particle_id := c.Ctx.Input.Param(":article_id") // 获取路由参数
 	fmt.Println("particle_id:", particle_id)
 	article_id := xstring.ToInt64(particle_id)
@@ -33,7 +35,7 @@ func (c *ArticleController) Detail() {
 		c.Abort("404")
 	}
 	// 获取文章详情
-	articleModel, albumModel, attachModel, err := c.ArticleGet("", article_id)
+	articleModel, albumModel, attachModel, err := c.ArticleFind("", article_id)
 	if err != nil {
 		logs.Error("Detail:", err.Error())
 	}
@@ -56,31 +58,7 @@ func (c *ArticleController) Detail() {
 		}
 		c.TplName = c.GetView(DefatulSite.Template, articleModel.Template)
 	}
-
-	// c.displayNoLayout()
 }
-
-// // Teacher 教师风采
-// // @router /article/teacher/:article_id:int64 [get]
-// func (c *ArticleController) Teacher() {
-// 	particle_id := c.Ctx.Input.Param(":article_id") // 获取路由参数
-// 	fmt.Println("particle_id:", particle_id)
-// 	article_id := xstring.ToInt64(particle_id)
-// 	if article_id <= 0 {
-// 		c.Abort("404")
-// 	}
-// 	// 获取文章详情
-// 	article, album, attach, err := c.ArticleGet("", article_id)
-// 	if err != nil {
-// 		logs.Error("Teacher:", err.Error())
-// 	}
-// 	c.Data["article_id"] = article_id
-// 	c.Data["title"] = article.Title
-// 	c.Data["article"] = article
-// 	c.Data["album"] = album
-// 	c.Data["attach"] = attach
-// 	c.displayNoLayout()
-// }
 
 // Search 文章搜索
 // @router /article/search/:keyword [get]
@@ -88,5 +66,4 @@ func (c *ArticleController) Search() {
 	keyword := c.Ctx.Input.Param(":keyword") // 获取路由参数
 	c.Data["keyword"] = keyword
 	c.TplName = c.GetView(DefatulSite.Template, "search.html")
-	// c.displayNoLayout()
 }

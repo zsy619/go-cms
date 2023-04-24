@@ -6,7 +6,7 @@
 <script type="text/javascript">
     $(function () {
         $.ajax({
-            url: "/api/category/find?channel_name=" + channelName + "&r=" + Math.random(),
+            url: "/api/category/get?channel_name=" + channelName + "&r=" + Math.random(),
             dataType: "json",
             type: "get",
             beforeSend: function () {
