@@ -34,7 +34,7 @@ type ApiCategoryGetModel struct {
 // ApiCategoryFindModel 文章模型
 type ApiCategoryFindModel struct {
 	ApiCategoryGetModel
-	Target         string `gorm:"column:target;type:varchar(16);default:_blank;comment:是否开启浏览器新窗口" json:"target" form:"target"`
+	Target         string `gorm:"column:target;type:varchar(16);default:_blank" json:"target" form:"target"`              // 是否开启浏览器新窗口
 	SeoTitle       string `gorm:"column:seo_title;type:varchar(128)" json:"seo_title" form:"seo_title"`                   // SEO标题
 	SeoKeyword     string `gorm:"column:seo_keyword;type:varchar(128)" json:"seo_keyword" form:"seo_keyword"`             // SEO关健字
 	SeoDescription string `gorm:"column:seo_description;type:varchar(128)" json:"seo_description" form:"seo_description"` // SEO描述

@@ -78,3 +78,23 @@ func (this *ApiSiteController) Menu() {
 	}
 	this.JSONSuccess("", out)
 }
+
+/**
+ * @description: MenuFlag 获取站点菜单
+ * @return {*}
+ */
+// @router /api/site/menuflag [get]
+// @router /api/site/menuflag/:site_flag:string [get]
+func (this *ApiSiteController) MenuFlag() {
+	site_flag := this.GetString("site_flag")
+	if site_flag == "" {
+		site_flag = this.Ctx.Input.Param(":site_flag")
+	}
+	channel_id, _ := this.GetInt64("channel_id")
+	out, _, err := this.BaseController.SiteMenuFlag(site_flag, channel_id)
+	if err != nil {
+		logs.Error("Site MenuFlag::", "site_flag", site_flag, "err", err)
+		this.JSONErrorOfData(err.Error(), out)
+	}
+	this.JSONSuccess("", out)
+}

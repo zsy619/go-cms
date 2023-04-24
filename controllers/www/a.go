@@ -6,6 +6,22 @@ func init() {
 	web.AutoPrefix("/", &IndexController{})
 
 	{
+		web.Router("/:flag/:name", &ChannelController{}, "*:Channel")            // 频道首页
+		web.Router("/:flag/:name/:category", &ChannelController{}, "*:Category") // 频道分类
+
+		// web.Router("/:name", &ChannelController{}, "*:Index")                      // 频道首页
+		// web.Router("/:name/:category", &ChannelController{}, "*:Category")         // 频道分类
+	}
+
+	{
+		web.Router("/topic/:name", &TopicController{}, "*:Index") // 专题
+	}
+
+	web.Router("/:flag/:name/:category/:article_id", &ArticleController{}, "*:Index") // 文章详情
+	web.Router("/article/:call_index/:article_id", &ArticleController{}, "*:Detail")  // 文章详情
+	web.Router("/article/search/:keyword", &ArticleController{}, "*:Search")          // 搜索页面
+	web.Router("/article/search", &ArticleController{}, "*:Search")                   // 搜索页面
+	{
 		// 微信公众号
 		web.Router("/weixin/mp/index ", &WechatMpController{}, "GET:Signature")
 		web.Router("/weixin/mp/index ", &WechatMpController{}, "POST:Message")
@@ -24,6 +40,8 @@ func init() {
 		web.Router("/api/channel/get", &ApiSiteController{}, "*:ChannelGet")
 		web.Router("/api/site/menu", &ApiSiteController{}, "*:Menu")
 		web.Router("/api/site/menu/:site_id", &ApiSiteController{}, "*:Menu")
+		web.Router("/api/site/menuflag", &ApiSiteController{}, "*:MenuFlag")
+		web.Router("/api/site/menuflag/:site_flag", &ApiSiteController{}, "*:MenuFlag")
 
 		web.Router("/api/category/nav", &ApiArticleController{}, "*:CategoryNav")
 		web.Router("/api/category/get", &ApiArticleController{}, "*:CategoryGet")
@@ -55,21 +73,4 @@ func init() {
 	web.Router("/api/cache/clear", &ApiCacheController{}, "*:Clear")
 
 	web.Router("/", &IndexController{}, "*:Index")
-
-	{
-		web.Router("/:flag/:name", &ChannelController{}, "*:Channel")            // 频道首页
-		web.Router("/:flag/:name/:category", &ChannelController{}, "*:Category") // 频道分类
-
-		// web.Router("/:name", &ChannelController{}, "*:Index")                      // 频道首页
-		// web.Router("/:name/:category", &ChannelController{}, "*:Category")         // 频道分类
-	}
-
-	{
-		web.Router("/topic/:name", &TopicController{}, "*:Index") // 专题
-	}
-
-	web.Router("/:flag/:name/:category/:article_id", &ArticleController{}, "*:Index") // 文章详情
-	web.Router("/article/:call_index/:article_id", &ArticleController{}, "*:Detail")  // 文章详情
-	web.Router("/article/search/:keyword", &ArticleController{}, "*:Search")          // 搜索页面
-	web.Router("/article/search", &ArticleController{}, "*:Search")                   // 搜索页面
 }

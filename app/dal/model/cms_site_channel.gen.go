@@ -30,6 +30,7 @@ type CmsSiteChannel struct {
 	SortID     int32     `gorm:"column:sort_id;type:int;comment:排序" json:"sort_id" form:"sort_id"`
 	Status     int32     `gorm:"column:status;type:tinyint;comment:状态0草稿1提交2审核通过3审核未通过4驳回" json:"status" form:"status"`
 	IsDeleted  bool      `gorm:"column:is_deleted;type:tinyint(1);comment:删除标识" json:"is_deleted" form:"is_deleted"`
+	IsShow     bool      `gorm:"column:is_show;type:tinyint(1);default:1;comment:是否显示:1显示，0隐藏" json:"is_show" form:"is_show"`
 	TmplChnl   string    `gorm:"column:tmpl_chnl;type:varchar(256);comment:频道模板路径" json:"tmpl_chnl" form:"tmpl_chnl"`
 	TmplCat    string    `gorm:"column:tmpl_cat;type:varchar(256);comment:栏目模板路径" json:"tmpl_cat" form:"tmpl_cat"`
 	TmplLst    string    `gorm:"column:tmpl_lst;type:varchar(256);comment:列表模板路径" json:"tmpl_lst" form:"tmpl_lst"`

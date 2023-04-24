@@ -29,3 +29,16 @@ func SiteMenu(site_id int64) []*bizmodel.ApiNavFindModel {
 	}
 	return find
 }
+
+/**
+ * @description: 站点菜单
+ * @param {string} site_flag 站点标识
+ * @return {*}
+ */
+func SiteMenuFlag(site_flag string) []*bizmodel.ApiNavFindModel {
+	find, _, err := biz.NewApiSite().NavGetByFlag(site_flag, 0)
+	if err != nil {
+		return []*bizmodel.ApiNavFindModel{}
+	}
+	return find
+}

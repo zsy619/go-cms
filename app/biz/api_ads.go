@@ -28,7 +28,7 @@ func (this *ApiAds) get(cackeKeyPrefix string, limit int, category_id int64, cal
 	list := []*bizmodel.ApiAdsListModel{}
 
 	_, do := query.CmsAdsDo()
-	sqlSelect := "a.ad_id,a.site_id,a.channel_id,a.category_id,b.title as category_title,a.title,a.link_url,a.target,a.click,a.img_url1,a.img_url2,a.is_lock,a.is_red,a.is_hot,a.is_slide,a.begin_time,a.end_time"
+	sqlSelect := "a.ads_id,a.site_id,a.channel_id,a.category_id,b.title as category_title,a.title,a.link_url,a.target,a.click,a.img_url1,a.img_url2,a.is_lock,a.is_red,a.is_hot,a.is_slide,a.begin_time,a.end_time"
 	sql := "SELECT " + sqlSelect + " FROM cms_ads a LEFT JOIN cms_ads_category b ON a.category_id = b.category_id WHERE a.`status`=2 and NOW() between a.begin_time and a.end_time " +
 		xgeneric.IFF(call_index == "", "", " AND b.call_index = '"+call_index+"'") +
 		xgeneric.IFF(category_id <= 0, "", " AND b.category_id = "+strconv.FormatInt(category_id, 10))

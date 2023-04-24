@@ -211,6 +211,7 @@ func (this *CmsSite) ChannelSave(input *model.CmsSiteChannel) error {
 			mdl.TmplCat.ColumnName().String():    input.TmplCat,
 			mdl.TmplLst.ColumnName().String():    input.TmplLst,
 			mdl.TmplDtl.ColumnName().String():    input.TmplDtl,
+			mdl.IsShow.ColumnName().String():     input.IsShow,
 			mdl.UpdateTime.ColumnName().String(): input.UpdateTime,
 		})
 	}

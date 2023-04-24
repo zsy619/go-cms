@@ -89,6 +89,26 @@ func (this *ApiSite) ChannelGet(site_id int64) ([]*bizmodel.ApiChannelFindModel,
 	return outChannel, int64(len(outChannel)), nil
 }
 
+func (this *ApiSite) NavGetByFlag(site_flag string, channel_id int64) ([]*bizmodel.ApiNavFindModel, int64, error) {
+	cacheKey := fmt.Sprintf("ApiSite_NavGetByFlag_%s_%d", site_flag, channel_id)
+	if found, item := ApiCache.Get(cacheKey); found {
+		find := item.([]*bizmodel.ApiNavFindModel)
+		return find, int64(len(find)), nil
+	}
+	site_id := int64(0)
+	siteMdl, siteDo := query.CmsSiteDo()
+	siteErr := siteDo.Where(siteMdl.Flag.Eq(site_flag)).Pluck(siteMdl.SiteID, &site_id)
+	if siteErr != nil {
+		return nil, 0, siteErr
+	}
+	find, count, err := this.NavGet(site_id, channel_id)
+	if err != nil {
+		return nil, 0, err
+	}
+	ApiCache.Set(cacheKey, find, 1800)
+	return find, count, nil
+}
+
 /**
  * @description: NavGet 获取站点导航
  * @param {int64} site_id 站点ID
@@ -96,14 +116,20 @@ func (this *ApiSite) ChannelGet(site_id int64) ([]*bizmodel.ApiChannelFindModel,
  * @return {*}
  */
 func (this *ApiSite) NavGet(site_id int64, channel_id int64) ([]*bizmodel.ApiNavFindModel, int64, error) {
-	cacheKey := "ApiSite_NavGet_" + fmt.Sprintf("%d", site_id) + "_" + fmt.Sprintf("%d", channel_id)
+	cacheKey := fmt.Sprintf("ApiSite_NavGet_%d_%d", site_id, channel_id)
 	if found, item := ApiCache.Get(cacheKey); found {
 		find := item.([]*bizmodel.ApiNavFindModel)
 		return find, int64(len(find)), nil
 	}
+	flag := ""
+	siteMdl, siteDo := query.CmsSiteDo()
+	siteErr := siteDo.Where(siteMdl.SiteID.Eq(site_id)).Pluck(siteMdl.Flag, &flag)
+	if siteErr != nil {
+		return nil, 0, siteErr
+	}
 	outNav := []*bizmodel.ApiNavFindModel{}
 	mdl, do := query.CmsSiteChannelDo()
-	err := do.Where(mdl.SiteID.Eq(site_id), mdl.ParentID.Eq(channel_id)).Select(
+	err := do.Where(mdl.SiteID.Eq(site_id), mdl.ParentID.Eq(channel_id), mdl.Status.Eq(int32(StatusPass)), mdl.IsShow.Is(true)).Select(
 		mdl.ChannelID.As("nav_id"), mdl.Title, mdl.Name, mdl.LinkURL, mdl.Target,
 		mdl.ImgUrl1, mdl.ImgUrl2, mdl.SortID).Order(mdl.SortID).Scan(&outNav)
 	if err != nil {
@@ -117,7 +143,7 @@ func (this *ApiSite) NavGet(site_id int64, channel_id int64) ([]*bizmodel.ApiNav
 			v.Children = append(v.Children, children...)
 		}
 		// 获取频道下的栏目
-		categorys := this.NavCategoryGet(v.NavID, 0)
+		categorys := this.NavCategoryGet(v.NavID, 0, flag, v.Name)
 		if len(categorys) > 0 {
 			v.Children = append(v.Children, categorys...)
 		}
@@ -126,15 +152,15 @@ func (this *ApiSite) NavGet(site_id int64, channel_id int64) ([]*bizmodel.ApiNav
 	return outNav, int64(len(outNav)), nil
 }
 
-func (this *ApiSite) NavCategoryGet(channel_id int64, parent_id int64) []*bizmodel.ApiNavFindModel {
-	cacheKey := "ApiSite_NavCategoryGet_" + fmt.Sprintf("%d", channel_id) + "_" + fmt.Sprintf("%d", parent_id)
+func (this *ApiSite) NavCategoryGet(channel_id int64, parent_id int64, flag, name string) []*bizmodel.ApiNavFindModel {
+	cacheKey := fmt.Sprintf("ApiSite_NavCategoryGet_%d_%d", channel_id, parent_id)
 	if found, item := ApiCache.Get(cacheKey); found {
 		find := item.([]*bizmodel.ApiNavFindModel)
 		return find
 	}
 	outNav := []*bizmodel.ApiNavFindModel{}
 	mdl, do := query.CmsArticleCategoryDo()
-	err := do.Where(mdl.ChannelID.Eq(channel_id), mdl.ParentID.Eq(parent_id), mdl.IsShow.Is(true)).Select(
+	err := do.Where(mdl.ChannelID.Eq(channel_id), mdl.ParentID.Eq(parent_id), mdl.Status.Eq(int32(StatusPass)), mdl.IsShow.Is(true)).Select(
 		mdl.CategoryID.As("nav_id"), mdl.Title, mdl.CallIndex.As("name"), mdl.LinkURL, mdl.Target,
 		mdl.ImgUrl1, mdl.ImgUrl2, mdl.SortID).Order(mdl.SortID).Scan(&outNav)
 	if err != nil {
@@ -142,8 +168,13 @@ func (this *ApiSite) NavCategoryGet(channel_id int64, parent_id int64) []*bizmod
 	}
 	for _, v := range outNav {
 		v.Type = "category"
+		// 如果链接为空，则自动拼接，否则使用自定义链接
+		// 自动path：/站点标识/频道名称/栏目调用名
+		if v.LinkURL == "" {
+			v.LinkURL = "/" + flag + "/" + name + "/" + v.Name
+		}
 		v.Children = []*bizmodel.ApiNavFindModel{}
-		children := this.NavCategoryGet(channel_id, v.NavID)
+		children := this.NavCategoryGet(channel_id, v.NavID, flag, name)
 		v.Children = append(v.Children, children...)
 	}
 	ApiCache.Set(cacheKey, outNav, 1800)

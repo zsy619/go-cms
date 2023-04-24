@@ -94,6 +94,8 @@ func init() {
 		funcs["sitedefault"] = SiteDefault
 		funcs["SiteMenu"] = SiteMenu
 		funcs["sitemenu"] = SiteMenu
+		funcs["SiteMenuFlag"] = SiteMenuFlag
+		funcs["sitemenuflag"] = SiteMenuFlag
 
 		funcs["IIF"] = IIF
 		funcs["iif"] = IIF

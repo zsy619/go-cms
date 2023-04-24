@@ -103,13 +103,23 @@ func (this *BaseController) ChannelGet(site_id int64) ([]*bizmodel.ApiChannelFin
 }
 
 /**
- * @description: NavFind 获取站点导航
+ * @description: SiteMenu 获取站点导航
  * @param {int64} site_id 站点ID
  * @param {int64} channel_id 频道ID
  * @return {*}
  */
 func (this *BaseController) SiteMenu(site_id, channel_id int64) ([]*bizmodel.ApiNavFindModel, int64, error) {
 	return biz.NewApiSite().NavGet(site_id, channel_id)
+}
+
+/**
+ * @description: SiteMenuFlag 获取站点导航
+ * @param {string} site_flag 站点标识
+ * @param {int64} channel_id 频道ID
+ * @return {*}
+ */
+func (this *BaseController) SiteMenuFlag(site_flag string, channel_id int64) ([]*bizmodel.ApiNavFindModel, int64, error) {
+	return biz.NewApiSite().NavGetByFlag(site_flag, channel_id)
 }
 
 /**
