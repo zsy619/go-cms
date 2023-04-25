@@ -6,6 +6,16 @@
                 <form class="layui-form layui-form-pane" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
+                            <label class="layui-form-label">站点列表</label>
+                            <div class="layui-input-inline">
+                                <select id="siteId" name="siteId" lay-filter="siteId">
+                                    {{range $index,$item := .siteList}}
+                                    <option value="{{$item.SiteID}}">{{$item.Title}}</option>
+                                    {{end}}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
                             <label class="layui-form-label">
                                 类别标题
                             </label>
@@ -41,6 +51,7 @@
         table.render({
             elem: '#currentTableId',
             url: '/admin/ads/categorypaginate',
+            where: { siteId: parseInt($("#siteId").val()), },//搜索条件
             toolbar: '#toolbarDemo',
             height: "full-170",
             defaultToolbar: ['filter', 'exports', 'print'],
@@ -88,6 +99,7 @@
                     curr: 1
                 }
                 , where: {
+                    siteId: parseInt($("#siteId").val()), //搜索条件
                     title: $("input[name='title']").val(),
                     callIndex: $("input[name='callIndex']").val(),
                 }
@@ -108,7 +120,7 @@
                     maxmin: true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: 'CategoryEdit',
+                    content: 'CategoryEdit?siteId=' + parseInt($("#siteId").val()),
                 });
                 $(window).on("resize", function () {
                     layer.full(index);

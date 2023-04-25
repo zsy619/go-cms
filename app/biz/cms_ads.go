@@ -18,6 +18,12 @@ func NewCmsAds() *CmsAds {
 // CategoryPaginate 分页查询
 func (this *CmsAds) CategoryPaginate(page, limit int, siteId, channelId int64, title, callIndex string) ([]*model.CmsAdsCategory, int64, error) {
 	mdl, do := query.CmsAdsCategoryDo()
+	if siteId > 0 {
+		do = do.Where(mdl.SiteID.Eq(siteId))
+	}
+	if channelId > 0 {
+		do = do.Where(mdl.ChannelID.Eq(channelId))
+	}
 	if title != "" {
 		do = do.Where(mdl.Title.Like("%" + title + "%"))
 	}
@@ -48,12 +54,19 @@ func (this *CmsAds) CategorySave(input *model.CmsAdsCategory) error {
 		err = do.Create(input)
 	} else {
 		_, err = do.Where(mdl.CategoryID.Eq(input.CategoryID)).Updates(map[string]interface{}{
+			mdl.SiteID.ColumnName().String():     input.SiteID,
+			mdl.ChannelID.ColumnName().String():  input.ChannelID,
 			mdl.Title.ColumnName().String():      input.Title,
 			mdl.CallIndex.ColumnName().String():  input.CallIndex,
 			mdl.Remark.ColumnName().String():     input.Remark,
 			mdl.SortID.ColumnName().String():     input.SortID,
 			mdl.Template.ColumnName().String():   input.Template,
 			mdl.UpdateTime.ColumnName().String(): input.UpdateTime,
+		})
+		adsMdl, adsDo := query.CmsAdsDo()
+		adsDo.Where(adsMdl.CategoryID.Eq(input.CategoryID)).UpdateColumns(map[string]interface{}{
+			adsMdl.SiteID.ColumnName().String():     input.SiteID,
+			adsMdl.UpdateTime.ColumnName().String(): input.UpdateTime,
 		})
 	}
 	return err
@@ -118,6 +131,12 @@ func (this *CmsAds) AdsDestroyByCategoryId(categoryId int64) error {
 // AdsPaginate 分页查询
 func (this *CmsAds) AdsPaginate(page, limit int, siteId, channelId, categoryId int64, title, callIndex string, status int32) ([]*model.CmsAds, int64, error) {
 	mdl, do := query.CmsAdsDo()
+	if siteId > 0 {
+		do = do.Where(mdl.SiteID.Eq(siteId))
+	}
+	if channelId > 0 {
+		do = do.Where(mdl.ChannelID.Eq(channelId))
+	}
 	if categoryId > 0 {
 		do = do.Where(mdl.CategoryID.Eq(categoryId))
 	}
@@ -154,7 +173,12 @@ func (this *CmsAds) AdsSave(input *model.CmsAds) error {
 		input.CreateTime = time.Now()
 		err = do.Create(input)
 	} else {
+		siteId := int64(0)
+		catMdl, catDo := query.CmsLinkCategoryDo()
+		if err := catDo.Where(catMdl.CategoryID.Eq(input.CategoryID)).Pluck(catMdl.SiteID, &siteId); err != nil {
+		}
 		_, err = do.Where(mdl.AdsID.Eq(input.AdsID)).Updates(map[string]interface{}{
+			mdl.SiteID.ColumnName().String():     siteId,
 			mdl.CategoryID.ColumnName().String(): input.CategoryID,
 			mdl.Title.ColumnName().String():      input.Title,
 			mdl.CallIndex.ColumnName().String():  input.CallIndex,

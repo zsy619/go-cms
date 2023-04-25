@@ -6,6 +6,16 @@
                 <form class="layui-form layui-form-pane" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
+                            <label class="layui-form-label">站点列表</label>
+                            <div class="layui-input-inline">
+                                <select id="siteId" name="siteId" lay-filter="siteId">
+                                    {{range $index,$item := .siteList}}
+                                    <option value="{{$item.SiteID}}">{{$item.Title}}</option>
+                                    {{end}}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
                             <label class="layui-form-label">
                                 类别标题
                             </label>
@@ -41,6 +51,7 @@
         table.render({
             elem: '#currentTableId',
             url: '/admin/link/categorypaginate',
+            where: { siteId: parseInt($("#siteId").val()), },//搜索条件
             toolbar: '#toolbarDemo',
             height: "full-170",
             defaultToolbar: ['filter', 'exports', 'print'],
@@ -88,13 +99,13 @@
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
             var result = JSON.stringify(data.field);
-            console.log(result);
             //执行搜索重载
             table.reload('currentTableId', {
                 page: {
                     curr: 1
                 }
                 , where: {
+                    siteId: parseInt($("#siteId").val()),
                     title: $("input[name='title']").val(),
                     callIndex: $("input[name='callIndex']").val(),
                 }
@@ -115,7 +126,7 @@
                     maxmin: true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: 'CategoryEdit',
+                    content: 'CategoryEdit?siteId=' + $("#siteId").val(),
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -129,7 +140,6 @@
                     };
                     sorts.push(sort);
                 });
-                console.log(sorts);
                 $.ajax({
                     type: "POST",
                     url: "/admin/link/CategorySaveSortId", //提交的地址
@@ -158,13 +168,11 @@
 
         //监听表格复选框选择
         table.on('checkbox(currentTableFilter)', function (obj) {
-            console.log(obj)
         });
 
         table.on('tool(currentTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event === 'edit') {
-                console.log(data);
                 var index = layer.open({
                     title: '编辑',
                     type: 2,
@@ -206,8 +214,6 @@
                             layer.close(this.layerIndex);
                         },
                     });
-                    // obj.del();
-                    // layer.close(index);
                 });
             }
         });

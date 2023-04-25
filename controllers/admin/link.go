@@ -18,10 +18,13 @@ type LinkController struct{ BaseController }
 func (c *LinkController) Index() {
 	list, _, _ := biz.NewCmsLink().CategoryPaginate(1, 99999, -1, -1, "", "")
 	c.Data["categoryList"] = list
+	sitelist, _, _ := biz.NewCmsSite().SitePaginate(1, 999999, "", "")
+	c.Data["siteList"] = sitelist
 	c.display()
 }
 
 func (c *LinkController) LinkEdit() {
+	siteId, _ := c.GetInt64("siteId")
 	linkId, _ := c.GetInt64("linkId")
 	clone, _ := c.GetInt("clone")
 	mdl, err := biz.NewCmsLink().LinkFind(linkId)
@@ -29,6 +32,7 @@ func (c *LinkController) LinkEdit() {
 		mdl = &model.CmsLink{
 			SortID: 99,
 			Target: "_blank",
+			SiteID: siteId,
 		}
 	}
 	// 是否克隆
@@ -107,29 +111,36 @@ func (c *LinkController) LinkChangeStatus() {
 // @router /admin/link/linkpaginate [get]
 func (c *LinkController) LinkPaginate() {
 	page, limit := c.GetPagingParameters()
+	siteId, _ := c.GetInt64("siteId")
 	categoryId, _ := c.GetInt64("categoryId")
 	status, _ := c.GetInt32("status")
 	title := c.GetString("title")
 	callIndex := c.GetString("callIndex")
-	list, count, _ := biz.NewCmsLink().LinkPaginate(page, limit, -1, -1, categoryId, title, callIndex, status)
+	list, count, _ := biz.NewCmsLink().LinkPaginate(page, limit, siteId, -1, categoryId, title, callIndex, status)
 	c.JSONPage(lib.CodeSuccess, "", list, count)
 }
 
 // Category 链接分类
 // @router /admin/link/category [get]
 func (c *LinkController) Category() {
+	sitelist, _, _ := biz.NewCmsSite().SitePaginate(1, 999999, "", "")
+	c.Data["siteList"] = sitelist
 	c.display()
 }
 
 func (c *LinkController) CategoryEdit() {
+	siteId, _ := c.GetInt64("siteId")
 	categoryId, _ := c.GetInt64("categoryId")
 	mdl, err := biz.NewCmsLink().CategoryFind(categoryId)
 	if err != nil {
 		mdl = &model.CmsLinkCategory{
 			SortID: 99,
+			SiteID: siteId,
 		}
 	}
 	c.Data["mdl"] = mdl
+	sitelist, _, _ := biz.NewCmsSite().SitePaginate(1, 999999, "", "")
+	c.Data["siteList"] = sitelist
 	c.display()
 }
 
@@ -179,8 +190,9 @@ func (c *LinkController) CategoryDestory() {
 // @router /admin/link/categorypaginate [get]
 func (c *LinkController) CategoryPaginate() {
 	page, limit := c.GetPagingParameters()
+	siteId, _ := c.GetInt64("siteId")
 	title := c.GetString("title")
 	callIndex := c.GetString("callIndex")
-	list, count, _ := biz.NewCmsLink().CategoryPaginate(page, limit, -1, -1, title, callIndex)
+	list, count, _ := biz.NewCmsLink().CategoryPaginate(page, limit, siteId, -1, title, callIndex)
 	c.JSONPage(lib.CodeSuccess, "", list, count)
 }

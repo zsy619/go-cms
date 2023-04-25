@@ -46,7 +46,10 @@
                     treeIdName: 'channel_id',
                     treePidName: 'parent_id',
                     elem: '#tableContainer',
-                    url: '/admin/site/channelfind?siteId=' + $("#siteId").val(),
+                    url: '/admin/site/channelfind',
+                    where: {
+                        siteId: parseInt($("#siteId").val()),
+                    },
                     toolbar: '#toolbarDemo',
                     height: "full-170",
                     defaultToolbar: ['filter', 'exports', 'print'],
@@ -261,7 +264,7 @@
                     curr: 1
                 }
                 , where: {
-                    siteId: $("#siteId").val(),
+                    siteId: parseInt($("#siteId").val()),
                 }
             }, 'data');
             return false;

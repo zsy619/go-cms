@@ -6,6 +6,17 @@
                 <form class="layui-form layui-form-pane" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
+                            <label class="layui-form-label">站点列表</label>
+                            <div class="layui-input-inline">
+                                <select id="siteId" name="siteId" lay-filter="siteId">
+                                    <option value="0">请选择</option>
+                                    {{range $index,$item := .siteList}}
+                                    <option value="{{$item.SiteID}}">{{$item.Title}}</option>
+                                    {{end}}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
                             <label class="layui-form-label">广告类别</label>
                             <div class="layui-input-inline">
                                 <select name="category_id">
@@ -59,7 +70,8 @@
 
         table.render({
             elem: '#tableContainer',
-            url: '/admin/ads/adspaginate?status=-1',
+            url: '/admin/ads/adspaginate',
+            where: { status: -1 },
             toolbar: '#toolbarDemo',
             height: "full-170",
             defaultToolbar: ['filter', 'exports', 'print'],
@@ -153,6 +165,7 @@
                     curr: 1
                 }
                 , where: {
+                    siteId: parseInt($("select[name='siteId']").val()),
                     categoryId: parseInt($("select[name='category_id']").val()),
                     status: parseInt($("select[name='status']").val()),
                     title: $("input[name='title']").val(),

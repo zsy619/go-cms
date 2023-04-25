@@ -12,6 +12,7 @@
                         </label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="hidden" name="link_id" value="{{.mdl.LinkID}}">
+                            <input type="hidden" name="site_id" value="{{.mdl.SiteID}}">
                             <select name="category_id" lay-verify="required" lay-search="" lay-reqtext="类别标题为必填项">
                                 <option value="">请选择</option>
                                 {{range $index,$item := .categoryList}}

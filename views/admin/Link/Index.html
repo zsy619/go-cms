@@ -6,6 +6,17 @@
                 <form class="layui-form layui-form-pane" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
+                            <label class="layui-form-label">站点列表</label>
+                            <div class="layui-input-inline">
+                                <select id="siteId" name="siteId" lay-filter="siteId">
+                                    <option value="0">请选择</option>
+                                    {{range $index,$item := .siteList}}
+                                    <option value="{{$item.SiteID}}">{{$item.Title}}</option>
+                                    {{end}}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
                             <label class="layui-form-label">链接类别</label>
                             <div class="layui-input-inline">
                                 <select name="category_id">
@@ -59,7 +70,10 @@
 
         table.render({
             elem: '#tableContainer',
-            url: '/admin/link/linkpaginate?status=-1',
+            url: '/admin/link/linkpaginate',
+            where: {
+                status: -1,
+            },
             toolbar: '#toolbarDemo',
             height: "full-170",
             defaultToolbar: ['filter', 'exports', 'print'],
@@ -142,13 +156,13 @@
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
             var result = JSON.stringify(data.field);
-            console.log(result);
             //执行搜索重载
             table.reload('tableContainer', {
                 page: {
                     curr: 1
                 }
                 , where: {
+                    siteId: parseInt($("select[name='siteId']").val()),
                     categoryId: parseInt($("select[name='category_id']").val()),
                     status: parseInt($("select[name='status']").val()),
                     title: $("input[name='title']").val(),
@@ -185,7 +199,6 @@
                     };
                     sorts.push(sort);
                 });
-                // console.log(sorts);
                 $.ajax({
                     type: "POST",
                     url: "/admin/link/LinkSaveSortId", //提交的地址
@@ -268,14 +281,12 @@
 
         //监听表格复选框选择
         table.on('checkbox(currentTableFilter)', function (obj) {
-            console.log(obj)
         });
 
         table.on('tool(currentTableFilter)', function (obj) {
             var data = obj.data;
             var data = obj.data;
             if (obj.event === 'clone') {
-                console.log(data);
                 var index = layer.open({
                     title: '克隆链接',
                     type: 2,
@@ -290,7 +301,6 @@
                 });
                 return false;
             } else if (obj.event === 'edit') {
-                console.log(data);
                 var index = layer.open({
                     title: '编辑链接',
                     type: 2,
@@ -332,8 +342,6 @@
                             layer.close(this.layerIndex);
                         },
                     });
-                    // obj.del();
-                    // layer.close(index);
                 });
             }
         });

@@ -19,6 +19,8 @@ type AdsController struct{ BaseController }
 func (c *AdsController) Index() {
 	list, _, _ := biz.NewCmsAds().CategoryPaginate(1, 99999, -1, -1, "", "")
 	c.Data["categoryList"] = list
+	sitelist, _, _ := biz.NewCmsSite().SitePaginate(1, 999999, "", "")
+	c.Data["siteList"] = sitelist
 	c.display()
 }
 
@@ -118,17 +120,20 @@ func (c *AdsController) AdsChangeStatus() {
 // @router /admin/ads/AdsPaginate [get]
 func (c *AdsController) AdsPaginate() {
 	page, limit := c.GetPagingParameters()
+	siteId, _ := c.GetInt64("siteId")
 	categoryId, _ := c.GetInt64("categoryId")
 	status, _ := c.GetInt32("status")
 	title := c.GetString("title")
 	callIndex := c.GetString("callIndex")
-	list, count, _ := biz.NewCmsAds().AdsPaginate(page, limit, -1, -1, categoryId, title, callIndex, status)
+	list, count, _ := biz.NewCmsAds().AdsPaginate(page, limit, siteId, -1, categoryId, title, callIndex, status)
 	c.JSONPage(lib.CodeSuccess, "", list, count)
 }
 
 // Category 链接分类
 // @router /admin/ads/category [get]
 func (c *AdsController) Category() {
+	sitelist, _, _ := biz.NewCmsSite().SitePaginate(1, 999999, "", "")
+	c.Data["siteList"] = sitelist
 	c.display()
 }
 
@@ -141,6 +146,8 @@ func (c *AdsController) CategoryEdit() {
 		}
 	}
 	c.Data["mdl"] = mdl
+	sitelist, _, _ := biz.NewCmsSite().SitePaginate(1, 999999, "", "")
+	c.Data["siteList"] = sitelist
 	c.display()
 }
 
@@ -190,8 +197,9 @@ func (c *AdsController) CategoryDestory() {
 // @router /admin/ads/categorypaginate [get]
 func (c *AdsController) CategoryPaginate() {
 	page, limit := c.GetPagingParameters()
+	siteId, _ := c.GetInt64("siteId")
 	title := c.GetString("title")
 	callIndex := c.GetString("callIndex")
-	list, count, _ := biz.NewCmsAds().CategoryPaginate(page, limit, -1, -1, title, callIndex)
+	list, count, _ := biz.NewCmsAds().CategoryPaginate(page, limit, siteId, -1, title, callIndex)
 	c.JSONPage(lib.CodeSuccess, "", list, count)
 }

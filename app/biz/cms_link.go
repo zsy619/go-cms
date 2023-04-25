@@ -18,6 +18,12 @@ func NewCmsLink() *CmsLink {
 // CategoryPaginate 分页查询
 func (this *CmsLink) CategoryPaginate(page, limit int, siteId, channelId int64, title, callIndex string) ([]*model.CmsLinkCategory, int64, error) {
 	mdl, do := query.CmsLinkCategoryDo()
+	if siteId > 0 {
+		do = do.Where(mdl.SiteID.Eq(siteId))
+	}
+	if channelId > 0 {
+		do = do.Where(mdl.ChannelID.Eq(channelId))
+	}
 	if title != "" {
 		do = do.Where(mdl.Title.Like("%" + title + "%"))
 	}
@@ -49,6 +55,8 @@ func (this *CmsLink) CategorySave(input *model.CmsLinkCategory) error {
 		err = do.Create(input)
 	} else {
 		_, err = do.Where(mdl.CategoryID.Eq(input.CategoryID)).Updates(map[string]interface{}{
+			mdl.SiteID.ColumnName().String():         input.SiteID,
+			mdl.ChannelID.ColumnName().String():      input.ChannelID,
 			mdl.Title.ColumnName().String():          input.Title,
 			mdl.CallIndex.ColumnName().String():      input.CallIndex,
 			mdl.LinkURL.ColumnName().String():        input.LinkURL,
@@ -61,6 +69,11 @@ func (this *CmsLink) CategorySave(input *model.CmsLinkCategory) error {
 			mdl.SortID.ColumnName().String():         input.SortID,
 			mdl.Template.ColumnName().String():       input.Template,
 			mdl.UpdateTime.ColumnName().String():     input.UpdateTime,
+		})
+		linkMdl, linkDo := query.CmsLinkDo()
+		linkDo.Where(linkMdl.CategoryID.Eq(input.CategoryID)).UpdateColumns(map[string]interface{}{
+			linkMdl.SiteID.ColumnName().String():     input.SiteID,
+			linkMdl.UpdateTime.ColumnName().String(): input.UpdateTime,
 		})
 	}
 	return err
@@ -125,6 +138,12 @@ func (this *CmsLink) LinkDestroyByCategoryId(categoryId int64) error {
 // LinkPaginate 分页查询
 func (this *CmsLink) LinkPaginate(page, limit int, siteId, channelId, categoryId int64, title, callIndex string, status int32) ([]*model.CmsLink, int64, error) {
 	mdl, do := query.CmsLinkDo()
+	if siteId > 0 {
+		do = do.Where(mdl.SiteID.Eq(siteId))
+	}
+	if channelId > 0 {
+		do = do.Where(mdl.ChannelID.Eq(channelId))
+	}
 	if categoryId > 0 {
 		do = do.Where(mdl.CategoryID.Eq(categoryId))
 	}
@@ -161,7 +180,12 @@ func (this *CmsLink) LinkSave(input *model.CmsLink) error {
 		input.CreateTime = time.Now()
 		err = do.Create(input)
 	} else {
+		siteId := int64(0)
+		catMdl, catDo := query.CmsLinkCategoryDo()
+		if err := catDo.Where(catMdl.CategoryID.Eq(input.CategoryID)).Pluck(catMdl.SiteID, &siteId); err != nil {
+		}
 		_, err = do.Where(mdl.LinkID.Eq(input.LinkID)).Updates(map[string]interface{}{
+			mdl.SiteID.ColumnName().String():     siteId,
 			mdl.CategoryID.ColumnName().String(): input.CategoryID,
 			mdl.Title.ColumnName().String():      input.Title,
 			mdl.CallIndex.ColumnName().String():  input.CallIndex,
