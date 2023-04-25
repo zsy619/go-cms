@@ -83,8 +83,8 @@ func (this *ApiSiteController) Menu() {
  * @description: MenuFlag 获取站点菜单
  * @return {*}
  */
-// @router /api/site/menuflag [get]
-// @router /api/site/menuflag/:site_flag:string [get]
+// @router /api/site/menu/flag [get]
+// @router /api/site/menu/flag/:site_flag:string [get]
 func (this *ApiSiteController) MenuFlag() {
 	site_flag := this.GetString("site_flag")
 	if site_flag == "" {

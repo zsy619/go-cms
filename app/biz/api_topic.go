@@ -18,11 +18,11 @@ func NewApiTopic() *ApiTopic {
 	return &ApiTopic{}
 }
 
-func (this *ApiTopic) get(cackeKeyPrefix string, limit int, siteId, channelId int64) ([]*bizmodel.ApiTopicListModel, int64, error) {
+func (this *ApiTopic) get(cackeKeyPrefix string, limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTopicListModel, int64, error) {
 	if limit <= 0 {
 		limit = 10
 	}
-	cacheKey := fmt.Sprintf("%s_%d_%d_%d", cackeKeyPrefix, limit, siteId, channelId)
+	cacheKey := fmt.Sprintf("%s_%d_%d_%s_%d", cackeKeyPrefix, limit, site_id, site_flag, channel_id)
 	if found, item := ApiCache.Get(cacheKey); found {
 		list := item.([]*bizmodel.ApiTopicListModel)
 		logs.Debug("TopicFind[Cache]::", "cacheKey", cacheKey, "Topic", list)
@@ -30,22 +30,20 @@ func (this *ApiTopic) get(cackeKeyPrefix string, limit int, siteId, channelId in
 	}
 
 	list := make([]*bizmodel.ApiTopicListModel, 0)
-	mdl, do := query.CmsTopicDo()
-	if siteId > 0 {
-		do = do.Where(mdl.SiteID.Eq(siteId))
-	}
-	if channelId > 0 {
-		do = do.Where(mdl.ChannelID.Eq(channelId))
-	}
-	do = do.Where(mdl.Status.Eq(int32(StatusPass)))
-	do = do.Select(mdl.TopicID, mdl.SiteID, mdl.ChannelID, mdl.Name, mdl.Title, mdl.ImgUrl1, mdl.ImgUrl2,
-		mdl.SeoTitle, mdl.SeoKeyword, mdl.SeoDescription, mdl.SortID, mdl.Click, mdl.Template)
+	_, do := query.CmsTopicDo()
+	field := `a.topic_id,a.site_id,a.channel_id,a.name,a.title,a.img_url1,a.img_url2,a.seo_title,a.seo_keyword,a.seo_description,a.sort_id,a.click,a.template`
+	sql := `SELECT ` + field + ` FROM cms_topic a` +
+		` LEFT JOIN cms_site b ON a.site_id=b.site_id` +
+		` WHERE a.status=2` +
+		xgeneric.IFF(site_flag == "", "", " AND b.flag = '"+site_flag+"'") +
+		xgeneric.IFF(site_id <= 0, "", " AND b.site_id = "+strconv.FormatInt(site_id, 10)) +
+		xgeneric.IFF(channel_id <= 0, "", " AND a.channel_id = "+strconv.FormatInt(channel_id, 10))
 	if cackeKeyPrefix == "ApiTopic_Get" {
-		do = do.Order(mdl.SortID, mdl.TopicID)
+		sql += ` ORDER BY a.sort_id,a.topic_id`
 	} else {
-		do = do.Order(mdl.TopicID.Desc(), mdl.SortID)
+		sql += ` ORDER BY a.topic_id desc,a.sort_id`
 	}
-	err := do.Scan(&list)
+	err := do.UnderlyingDB().Debug().Raw(sql).Scan(&list).Error
 	if err == nil {
 		ApiCache.Set(cacheKey, list, 1800)
 	}
@@ -55,33 +53,34 @@ func (this *ApiTopic) get(cackeKeyPrefix string, limit int, siteId, channelId in
 /**
  * @description: 获取专题列表
  * @param {int} limit 限制数量
- * @param {*} siteId 站点ID
- * @param {int64} channelId 栏目ID
+ * @param {int64} site_id 站点ID
+ * @param {string} site_flag 站点标识
+ * @param {int64} channel_id 栏目ID
  * @return {*}
  */
-func (this *ApiTopic) Get(limit int, siteId, channelId int64) ([]*bizmodel.ApiTopicListModel, int64, error) {
-	return this.get("ApiTopic_Get", limit, siteId, channelId)
+func (this *ApiTopic) Get(limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTopicListModel, int64, error) {
+	return this.get("ApiTopic_Get", limit, site_id, site_flag, channel_id)
 }
 
 /**
  * @description: 获取最新专题列表
- * @param {int} limit 限制数量
- * @param {*} siteId 站点ID
- * @param {int64} channelId 栏目ID
+ * @param {int64} site_id 站点ID
+ * @param {string} site_flag 站点标识
+ * @param {int64} channel_id 栏目ID
  * @return {*}
  */
-func (this *ApiTopic) GetNew(limit int, siteId, channelId int64) ([]*bizmodel.ApiTopicListModel, int64, error) {
-	return this.get("ApiTopic_GetNew", limit, siteId, channelId)
+func (this *ApiTopic) GetNew(limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTopicListModel, int64, error) {
+	return this.get("ApiTopic_GetNew", limit, site_id, site_flag, channel_id)
 }
 
 /**
  * @description: Click 点击数+1
- * @param {int64} tag_id 专题ID
+ * @param {int64} topic_id 专题ID
  * @return {*}
  */
-func (this *ApiTopic) Click(tag_id int64) error {
-	mdl, do := query.CmsTagDo()
-	do.Where(mdl.TagID.Eq(tag_id), mdl.Status.Eq(int32(StatusPass))).Updates(map[string]interface{}{
+func (this *ApiTopic) Click(topic_id int64) error {
+	mdl, do := query.CmsTopicDo()
+	do.Where(mdl.TopicID.Eq(topic_id), mdl.Status.Eq(int32(StatusPass))).Updates(map[string]interface{}{
 		mdl.Click.ColumnName().String():      gorm.Expr("click + ?", 1),
 		mdl.UpdateTime.ColumnName().String(): time.Now(),
 	})
@@ -124,6 +123,7 @@ func (this *ApiTopic) ArticlePaginate(page, limit int, topic_name string, channe
 	sqlCount := "SELECT " + sqlSelectCount + " FROM cms_article a" +
 		" LEFT JOIN cms_article_category b ON a.category_id=b.category_id" +
 		" LEFT JOIN cms_site_channel c ON a.channel_id = c.channel_id" +
+		" LEFT JOIN cms_site d ON a.site_id = d.site_id" +
 		" WHERE a.`status`=2 AND b.`status`=2" +
 		where
 
@@ -151,7 +151,7 @@ func (this *ApiTopic) ArtilceTop(limit int, topic_name string) ([]*bizmodel.ApiA
 	cacheKey := fmt.Sprintf("%s_%d_%s", "TopicArtilceTop", limit, topic_name)
 	if found, item := ApiCache.Get(cacheKey); found {
 		list := item.([]*bizmodel.ApiArticleListModel)
-		logs.Debug("TopicFind[Cache]::", "cacheKey", cacheKey, "Topic", list)
+		logs.Debug("ArtilceTop[Cache]::", "cacheKey", cacheKey, "Topic", list)
 		return list, int64(len(list)), nil
 	}
 	list, _, err := NewApiTopic().ArticlePaginate(1, limit, topic_name, 0, "", 0, "", "", 0, 0, 0, 0, 0, "")

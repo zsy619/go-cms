@@ -80,25 +80,34 @@ func (this *ApiAds) GetNew(limit int, site_id int64, site_flag string, category_
 
 /**
  * @description: Paginate 获取广告列表
- * @param {*} page 页码
+ * @param {int} page 页码
  * @param {int} limit 获取数量
+ * @param {int64} site_id 站点ID
+ * @param {string} site_flag 站点标识
  * @param {int64} category_id 广告分类ID
  * @param {string} call_index 广告分类标识
  * @return {*}
  */
-func (this *ApiAds) Paginate(page, limit int, category_id int64, call_index string) ([]*bizmodel.ApiAdsListModel, int64, error) {
+func (this *ApiAds) Paginate(page, limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiAdsListModel, int64, error) {
 	list := []*bizmodel.ApiAdsListModel{}
+	where := " WHERE a.`status`=2 and NOW() between a.begin_time and a.end_time" +
+		xgeneric.IFF(site_flag == "", "", " AND c.flag = '"+site_flag+"'") +
+		xgeneric.IFF(site_id <= 0, "", " AND a.site_id = "+strconv.FormatInt(site_id, 10)) +
+		xgeneric.IFF(call_index == "", "", " AND b.call_index = '"+call_index+"'") +
+		xgeneric.IFF(category_id <= 0, "", " AND b.category_id = "+strconv.FormatInt(category_id, 10))
 	_, do := query.CmsAdsDo()
 	sqlSelectRow := "a.ad_id,a.site_id,a.channel_id,a.category_id,b.title as category_title,a.title,a.link_url,a.target,a.click,a.img_url1,a.img_url2,a.is_lock,a.is_red,a.is_hot,a.is_slide,a.begin_time,a.end_time"
-	sqlRow := "SELECT " + sqlSelectRow + " FROM cms_ads a LEFT JOIN cms_ads_category b ON a.category_id = b.category_id WHERE a.`status`=2 and NOW() between a.begin_time and a.end_time" +
-		xgeneric.IFF(call_index == "", "", " AND b.call_index = '"+call_index+"'") +
-		xgeneric.IFF(category_id <= 0, "", " AND b.category_id = "+strconv.FormatInt(category_id, 10)) +
+	sqlRow := "SELECT " + sqlSelectRow + " FROM cms_ads a" +
+		" LEFT JOIN cms_ads_category b ON a.category_id = b.category_id" +
+		" LEFT JOIN cms_site c ON a.site_id = c.site_id" +
+		where +
 		" ORDER BY a.is_top DESC,a.sort_id ASC"
 
 	sqlSelectCount := "count(1) as count"
-	sqlCount := "SELECT " + sqlSelectCount + " FROM cms_ads a LEFT JOIN cms_ads_category b ON a.category_id = b.category_id WHERE a.`status`=2 and NOW() between a.begin_time and a.end_time" +
-		xgeneric.IFF(call_index == "", "", " AND b.call_index = '"+call_index+"'") +
-		xgeneric.IFF(category_id <= 0, "", " AND b.category_id = "+strconv.FormatInt(category_id, 10))
+	sqlCount := "SELECT " + sqlSelectCount + " FROM cms_ads a" +
+		" LEFT JOIN cms_ads_category b ON a.category_id = b.category_id" +
+		" LEFT JOIN cms_site c ON a.site_id = c.site_id" +
+		where
 
 	var count int64
 	do.UnderlyingDB().Raw(sqlCount).Pluck("count", &count)

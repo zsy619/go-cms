@@ -7,15 +7,15 @@ import (
 	"haedu.gov.cn/cms/app/lib"
 )
 
-type ApiTagController struct{ BaseController }
+type ApiTopicController struct{ BaseController }
 
-// @router /api/tag/get [get]
-func (this *ApiTagController) Get() {
+// @router /api/topic/get [get]
+func (this *ApiTopicController) Get() {
 	site_flag := this.GetString("site_flag")
 	site_id, _ := this.GetInt64("site_id")
 	channel_id, _ := this.GetInt64("channel_id")
 	limit, _ := this.GetInt("limit", 6)
-	out, len, err := this.BaseController.TagGet(limit, site_id, site_flag, channel_id)
+	out, len, err := this.BaseController.TopicGet(limit, site_id, site_flag, channel_id)
 	if err != nil {
 		logs.Error("Get::", err)
 		this.JSONErrorOfData(err.Error(), out)
@@ -23,13 +23,13 @@ func (this *ApiTagController) Get() {
 	this.JSONSuccess(strconv.FormatInt(len, 10), out)
 }
 
-// @router /api/tag/get/new [get]
-func (this *ApiTagController) GetNew() {
+// @router /api/topic/get/new [get]
+func (this *ApiTopicController) GetNew() {
 	site_flag := this.GetString("site_flag")
 	site_id, _ := this.GetInt64("site_id")
 	channel_id, _ := this.GetInt64("channel_id")
 	limit, _ := this.GetInt("limit", 6)
-	out, len, err := this.BaseController.TagGetNew(limit, site_id, site_flag, channel_id)
+	out, len, err := this.BaseController.TopicGetNew(limit, site_id, site_flag, channel_id)
 	if err != nil {
 		logs.Error("GetNew::", err)
 		this.JSONErrorOfData(err.Error(), out)
@@ -42,10 +42,10 @@ func (this *ApiTagController) GetNew() {
  * @param {int64} ads_id 广告ID
  * @return {*}
  */
-// @router /api/tag/click [get]
-func (this *ApiTagController) Click() {
-	tag_id, _ := this.GetInt64("tag_id", 0)
-	err := this.BaseController.TagClick(tag_id)
+// @router /api/topic/click [get]
+func (this *ApiTopicController) Click() {
+	Topic_id, _ := this.GetInt64("Topic_id", 0)
+	err := this.BaseController.TopicClick(Topic_id)
 	if err != nil {
 		logs.Error("Click", err.Error())
 		this.JSONError(err.Error())
@@ -57,7 +57,7 @@ func (this *ApiTagController) Click() {
  * @description: ArticlePaginate 获取文章分页列表
  * @param {*} page 页码
  * @param {int} limit 每页数量
- * @param {string} tag_name 标签名称
+ * @param {string} Topic_name 标签名称
  * @param {int64} channel_id 频道ID
  * @param {string} channel_name 频道名称
  * @param {int64} category_id 栏目ID
@@ -71,15 +71,15 @@ func (this *ApiTagController) Click() {
  * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
  * @return {*}
  */
-// @router /api/tag/article/paginate [get]
-func (this *ApiTagController) ArticlePaginate() {
+// @router /api/topic/article/paginate [get]
+func (this *ApiTopicController) ArticlePaginate() {
 	limit, _ := this.GetInt("limit", 6)
 	page, _ := this.GetInt("page", 1)
 	order_by := this.GetString("order_by", "sort_id")
 	call_index := this.GetString("call_index")
 	channel_name := this.GetString("channel_name")
 	keyword := this.GetString("keyword")
-	tag_name := this.GetString("tag_name")
+	Topic_name := this.GetString("Topic_name")
 	channel_id, _ := this.GetInt64("channel_id", -1)
 	category_id, _ := this.GetInt64("category_id", -1)
 	is_top, _ := this.GetInt("is_top", -1)
@@ -87,7 +87,7 @@ func (this *ApiTagController) ArticlePaginate() {
 	is_hot, _ := this.GetInt("is_hot", -1)
 	is_slide, _ := this.GetInt("is_slide", -1)
 	is_search, _ := this.GetInt("is_search", -1)
-	outArticle, count, err := this.BaseController.TagArticlePaginate(page, limit, tag_name, channel_id, channel_name, category_id, call_index, keyword, is_top, is_red, is_hot, is_slide, is_search, order_by)
+	outArticle, count, err := this.BaseController.TopicArticlePaginate(page, limit, Topic_name, channel_id, channel_name, category_id, call_index, keyword, is_top, is_red, is_hot, is_slide, is_search, order_by)
 	if err != nil {
 		this.JSONPage(lib.CodeError, err.Error(), outArticle, count)
 	}

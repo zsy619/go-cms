@@ -55,6 +55,15 @@ func init() {
 		funcs["AdsTop"] = AdsTop
 		funcs["adstop"] = AdsTop
 
+		funcs["LinkNewExt"] = LinkNewExt
+		funcs["linknewext"] = LinkNewExt
+		funcs["LinkNew"] = LinkNew
+		funcs["kinknew"] = LinkNew
+		funcs["LinkTopExt"] = LinkTopExt
+		funcs["linktopext"] = LinkTopExt
+		funcs["LinkTop"] = LinkTop
+		funcs["linktop"] = LinkTop
+
 		funcs["TagNew"] = TagNew
 		funcs["tagnew"] = TagNew
 		funcs["TagNewExt"] = TagNewExt

@@ -44,8 +44,8 @@ func init() {
 		web.Router("/api/channel/get", &ApiSiteController{}, "*:ChannelGet")
 		web.Router("/api/site/menu", &ApiSiteController{}, "*:Menu")
 		web.Router("/api/site/menu/:site_id", &ApiSiteController{}, "*:Menu")
-		web.Router("/api/site/menuflag", &ApiSiteController{}, "*:MenuFlag")
-		web.Router("/api/site/menuflag/:site_flag", &ApiSiteController{}, "*:MenuFlag")
+		web.Router("/api/site/menu/flag", &ApiSiteController{}, "*:MenuFlag")
+		web.Router("/api/site/menu/flag/:site_flag", &ApiSiteController{}, "*:MenuFlag")
 
 		web.Router("/api/category/nav", &ApiArticleController{}, "*:CategoryNav")
 		web.Router("/api/category/get", &ApiArticleController{}, "*:CategoryGet")
@@ -62,10 +62,16 @@ func init() {
 		web.Router("/api/article/like", &ApiArticleController{}, "*:Like")
 		web.Router("/api/article/album/click", &ApiArticleController{}, "*:AlbumClick")
 		web.Router("/api/article/prev_next", &ApiArticleController{}, "*:PrevNext")
+
 		web.Router("/api/tag/get", &ApiTagController{}, "*:Get")
 		web.Router("/api/tag/get/new", &ApiTagController{}, "*:GetNew")
 		web.Router("/api/tag/click", &ApiTagController{}, "*:Click")
 		web.Router("/api/tag/article/paginate", &ApiTagController{}, "*:ArticlePaginate")
+
+		web.Router("/api/topic/get", &ApiTopicController{}, "*:Get")
+		web.Router("/api/topic/get/new", &ApiTopicController{}, "*:GetNew")
+		web.Router("/api/topic/click", &ApiTopicController{}, "*:Click")
+		web.Router("/api/topic/article/paginate", &ApiTopicController{}, "*:ArticlePaginate")
 	}
 
 	web.Router("/api/cache/clear", &ApiCacheController{}, "*:Clear")

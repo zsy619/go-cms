@@ -61,17 +61,21 @@ func (this *ApiLinkController) GetNew() {
  * @description: Paginate 获取链接列表
  * @param {*} page 页码
  * @param {int} limit 获取数量
+ * @param {int64} site_id 站点ID
+ * @param {string} site_flag 站点标识
  * @param {int64} category_id 链接分类ID
  * @param {string} call_index 链接分类标识
  * @return {*}
  */
 // @router /api/link/paginate [get]
 func (this *ApiLinkController) Paginate() {
+	site_id, _ := this.GetInt64("site_id")
+	site_flag := this.GetString("site_flag")
 	category_id, _ := this.GetInt64("category_id")
 	call_index := this.GetString("call_index")
 	limit, _ := this.GetInt("limit", 12)
 	page, _ := this.GetInt("page", 1)
-	out, len, err := this.BaseController.LinkPaginate(page, limit, category_id, call_index)
+	out, len, err := this.BaseController.LinkPaginate(page, limit, site_id, site_flag, category_id, call_index)
 	if err != nil {
 		logs.Error("Paginate::", "callIndex", call_index, "err", err)
 		this.JSONPage(lib.CodeError, err.Error(), out, len)
