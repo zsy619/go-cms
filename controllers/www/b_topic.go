@@ -13,7 +13,7 @@ import (
  * @param {int64} channel_id 栏目ID
  * @return {*}
  */
-func (this *BaseController) TopicGet(limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTopicListModel, int64, error) {
+func (this *BaseController) TopicGet(limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTopicModel, int64, error) {
 	return biz.NewApiTopic().Get(limit, site_id, site_flag, channel_id)
 }
 
@@ -25,7 +25,7 @@ func (this *BaseController) TopicGet(limit int, site_id int64, site_flag string,
  * @param {int64} channel_id 栏目ID
  * @return {*}
  */
-func (this *BaseController) TopicGetNew(limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTopicListModel, int64, error) {
+func (this *BaseController) TopicGetNew(limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTopicModel, int64, error) {
 	return biz.NewApiTopic().GetNew(limit, site_id, site_flag, channel_id)
 }
 

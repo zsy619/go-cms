@@ -22,10 +22,10 @@ func SiteDefault() *bizmodel.ApiSiteModel {
  * @param {int64} site_id 站点ID
  * @return {*}
  */
-func SiteMenu(site_id int64) []*bizmodel.ApiNavFindModel {
+func SiteMenu(site_id int64) []*bizmodel.ApiNavModel {
 	find, _, err := biz.NewApiSite().NavGet(site_id, 0)
 	if err != nil {
-		return []*bizmodel.ApiNavFindModel{}
+		return []*bizmodel.ApiNavModel{}
 	}
 	return find
 }
@@ -35,10 +35,10 @@ func SiteMenu(site_id int64) []*bizmodel.ApiNavFindModel {
  * @param {string} site_flag 站点标识
  * @return {*}
  */
-func SiteMenuFlag(site_flag string) []*bizmodel.ApiNavFindModel {
+func SiteMenuFlag(site_flag string) []*bizmodel.ApiNavModel {
 	find, _, err := biz.NewApiSite().NavGetByFlag(site_flag, 0)
 	if err != nil {
-		return []*bizmodel.ApiNavFindModel{}
+		return []*bizmodel.ApiNavModel{}
 	}
 	return find
 }

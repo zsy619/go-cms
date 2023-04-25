@@ -1,6 +1,6 @@
 package bizmodel
 
-type ApiTagListModel struct {
+type ApiTagModel struct {
 	TagID          int64  `gorm:"column:tag_id;type:bigint;comment:标签ID" json:"tag_id" form:"tag_id"`
 	SiteID         int64  `gorm:"column:site_id;type:bigint;comment:所属站点" json:"site_id" form:"site_id"`
 	ChannelID      int64  `gorm:"column:channel_id;type:bigint;comment:所属频道" json:"channel_id" form:"channel_id"`
@@ -12,4 +12,5 @@ type ApiTagListModel struct {
 	SeoKeyword     string `gorm:"column:seo_keyword;type:varchar(128);comment:SEO关健字" json:"seo_keyword" form:"seo_keyword"`
 	SeoDescription string `gorm:"column:seo_description;type:varchar(128);comment:SEO描述" json:"seo_description" form:"seo_description"`
 	SortID         int32  `gorm:"column:sort_id;type:int;comment:排序" json:"sort_id" form:"sort_id"`
+	SiteFlag       string `gorm:"column:site_flag;type:varchar(64);comment:站点标识" json:"site_flag" form:"site_flag"`
 }

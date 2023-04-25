@@ -2,7 +2,7 @@ package bizmodel
 
 import "time"
 
-type ApiAdsListModel struct {
+type ApiAdsModel struct {
 	AdID          int64     `gorm:"column:ad_id;type:bigint;" json:"ad_id" form:"ad_id"`                                           // 主键
 	SiteID        int64     `gorm:"column:site_id;type:bigint" json:"site_id" form:"site_id"`                                      // 所属站点
 	ChannelID     int64     `gorm:"column:channel_id;type:bigint" json:"channel_id" form:"channel_id"`                             // 所属频道
@@ -25,4 +25,5 @@ type ApiAdsListModel struct {
 	IsSlide       int32     `gorm:"column:is_slide;type:tinyint" json:"is_slide" form:"is_slide"`                                  // 是否幻灯片
 	BeginTime     time.Time `gorm:"column:begin_time;type:datetime;default:CURRENT_TIMESTAMP" json:"begin_time" form:"begin_time"` // 创建时间
 	EndTime       time.Time `gorm:"column:end_time;type:datetime;default:CURRENT_TIMESTAMP" json:"end_time" form:"end_time"`       // 创建时间
+	SiteFlag      string    `gorm:"column:site_flag;type:varchar(64)" json:"site_flag" form:"site_flag"`                           // 站点标识
 }

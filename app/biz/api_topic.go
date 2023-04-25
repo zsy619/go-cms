@@ -18,20 +18,20 @@ func NewApiTopic() *ApiTopic {
 	return &ApiTopic{}
 }
 
-func (this *ApiTopic) get(cackeKeyPrefix string, limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTopicListModel, int64, error) {
+func (this *ApiTopic) get(cackeKeyPrefix string, limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTopicModel, int64, error) {
 	if limit <= 0 {
 		limit = 10
 	}
 	cacheKey := fmt.Sprintf("%s_%d_%d_%s_%d", cackeKeyPrefix, limit, site_id, site_flag, channel_id)
 	if found, item := ApiCache.Get(cacheKey); found {
-		list := item.([]*bizmodel.ApiTopicListModel)
+		list := item.([]*bizmodel.ApiTopicModel)
 		logs.Debug("TopicFind[Cache]::", "cacheKey", cacheKey, "Topic", list)
 		return list, int64(len(list)), nil
 	}
 
-	list := make([]*bizmodel.ApiTopicListModel, 0)
+	list := make([]*bizmodel.ApiTopicModel, 0)
 	_, do := query.CmsTopicDo()
-	field := `a.topic_id,a.site_id,a.channel_id,a.name,a.title,a.img_url1,a.img_url2,a.seo_title,a.seo_keyword,a.seo_description,a.sort_id,a.click,a.template`
+	field := `a.topic_id,a.site_id,a.channel_id,a.name,a.title,a.img_url1,a.img_url2,a.seo_title,a.seo_keyword,a.seo_description,a.sort_id,a.click,a.template,b.flag as site_flag`
 	sql := `SELECT ` + field + ` FROM cms_topic a` +
 		` LEFT JOIN cms_site b ON a.site_id=b.site_id` +
 		` WHERE a.status=2` +
@@ -58,7 +58,7 @@ func (this *ApiTopic) get(cackeKeyPrefix string, limit int, site_id int64, site_
  * @param {int64} channel_id 栏目ID
  * @return {*}
  */
-func (this *ApiTopic) Get(limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTopicListModel, int64, error) {
+func (this *ApiTopic) Get(limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTopicModel, int64, error) {
 	return this.get("ApiTopic_Get", limit, site_id, site_flag, channel_id)
 }
 
@@ -69,7 +69,7 @@ func (this *ApiTopic) Get(limit int, site_id int64, site_flag string, channel_id
  * @param {int64} channel_id 栏目ID
  * @return {*}
  */
-func (this *ApiTopic) GetNew(limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTopicListModel, int64, error) {
+func (this *ApiTopic) GetNew(limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTopicModel, int64, error) {
 	return this.get("ApiTopic_GetNew", limit, site_id, site_flag, channel_id)
 }
 
@@ -85,6 +85,34 @@ func (this *ApiTopic) Click(topic_id int64) error {
 		mdl.UpdateTime.ColumnName().String(): time.Now(),
 	})
 	return nil
+}
+
+/**
+ * @description: 获取专题详情
+ * @param {int64} topic_id 专题ID
+ * @param {string} name 专题名称
+ * @return {*}
+ */
+func (this *ApiTopic) Find(topic_id int64, name string) (*bizmodel.ApiTopicModel, error) {
+	cacheKey := fmt.Sprintf("ApiTopic_Find_%d_%s", topic_id, name)
+	if found, item := ApiCache.Get(cacheKey); found {
+		model := item.(*bizmodel.ApiTopicModel)
+		logs.Debug("TopicFind[Cache]::", "cacheKey", cacheKey, "Topic", model)
+		return model, nil
+	}
+	field := `a.topic_id,a.site_id,a.channel_id,a.name,a.title,a.img_url1,a.img_url2,a.seo_title,a.seo_keyword,a.seo_description,a.sort_id,a.click,a.templat,b.flag as site_flag`
+	sql := `SELECT ` + field + ` FROM cms_topic a` +
+		` LEFT JOIN cms_site b ON a.site_id=b.site_id` +
+		` WHERE a.status=2` +
+		xgeneric.IFF(topic_id <= 0, "", " AND a.topic_id = "+strconv.FormatInt(topic_id, 10)) +
+		xgeneric.IFF(name == "", "", " AND a.name = '"+name+"'")
+	_, do := query.CmsTopicDo()
+	model := &bizmodel.ApiTopicModel{}
+	err := do.UnderlyingDB().Debug().Raw(sql).Scan(model).Error
+	if err == nil {
+		ApiCache.Set(cacheKey, model, 2400)
+	}
+	return model, err
 }
 
 /**

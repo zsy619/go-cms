@@ -13,7 +13,7 @@ import (
  * @param {int64} channel_id 栏目ID
  * @return {*}
  */
-func (this *BaseController) TagGet(limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTagListModel, int64, error) {
+func (this *BaseController) TagGet(limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTagModel, int64, error) {
 	return biz.NewApiTag().Get(limit, site_id, site_flag, channel_id)
 }
 
@@ -25,7 +25,7 @@ func (this *BaseController) TagGet(limit int, site_id int64, site_flag string, c
  * @param {int64} channel_id 栏目ID
  * @return {*}
  */
-func (this *BaseController) TagGetNew(limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTagListModel, int64, error) {
+func (this *BaseController) TagGetNew(limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTagModel, int64, error) {
 	return biz.NewApiTag().GetNew(limit, site_id, site_flag, channel_id)
 }
 

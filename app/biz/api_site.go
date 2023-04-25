@@ -71,14 +71,14 @@ func (this *ApiSite) Find(site_id int64) (*model.CmsSite, error) {
  * @param {int64} site_id 站点ID
  * @return {*}
  */
-func (this *ApiSite) ChannelGet(site_id int64) ([]*bizmodel.ApiChannelFindModel, int64, error) {
+func (this *ApiSite) ChannelGet(site_id int64) ([]*bizmodel.ApiChannelModel, int64, error) {
 	cacheKey := "ApiSite_ChannelGet_" + fmt.Sprintf("%d", site_id)
 	if found, item := ApiCache.Get(cacheKey); found {
 		logs.Debug("ApiCache")
-		find := item.([]*bizmodel.ApiChannelFindModel)
+		find := item.([]*bizmodel.ApiChannelModel)
 		return find, int64(len(find)), nil
 	}
-	outChannel := []*bizmodel.ApiChannelFindModel{}
+	outChannel := []*bizmodel.ApiChannelModel{}
 	mdl, do := query.CmsSiteChannelDo()
 	err := do.Where(mdl.SiteID.Eq(site_id)).Select(mdl.ChannelID, mdl.ParentID, mdl.Title, mdl.Name, mdl.Kind, mdl.ClassLayer, mdl.ImgUrl1, mdl.ImgUrl2, mdl.SortID, mdl.IsAlbum, mdl.IsAttach, mdl.IsSpec).Order(mdl.SortID).Scan(&outChannel)
 	if err != nil {
@@ -89,10 +89,10 @@ func (this *ApiSite) ChannelGet(site_id int64) ([]*bizmodel.ApiChannelFindModel,
 	return outChannel, int64(len(outChannel)), nil
 }
 
-func (this *ApiSite) NavGetByFlag(site_flag string, channel_id int64) ([]*bizmodel.ApiNavFindModel, int64, error) {
+func (this *ApiSite) NavGetByFlag(site_flag string, channel_id int64) ([]*bizmodel.ApiNavModel, int64, error) {
 	cacheKey := fmt.Sprintf("ApiSite_NavGetByFlag_%s_%d", site_flag, channel_id)
 	if found, item := ApiCache.Get(cacheKey); found {
-		find := item.([]*bizmodel.ApiNavFindModel)
+		find := item.([]*bizmodel.ApiNavModel)
 		return find, int64(len(find)), nil
 	}
 	site_id := int64(0)
@@ -115,10 +115,10 @@ func (this *ApiSite) NavGetByFlag(site_flag string, channel_id int64) ([]*bizmod
  * @param {int64} channel_id 频道ID
  * @return {*}
  */
-func (this *ApiSite) NavGet(site_id int64, channel_id int64) ([]*bizmodel.ApiNavFindModel, int64, error) {
+func (this *ApiSite) NavGet(site_id int64, channel_id int64) ([]*bizmodel.ApiNavModel, int64, error) {
 	cacheKey := fmt.Sprintf("ApiSite_NavGet_%d_%d", site_id, channel_id)
 	if found, item := ApiCache.Get(cacheKey); found {
-		find := item.([]*bizmodel.ApiNavFindModel)
+		find := item.([]*bizmodel.ApiNavModel)
 		return find, int64(len(find)), nil
 	}
 	flag := ""
@@ -127,17 +127,17 @@ func (this *ApiSite) NavGet(site_id int64, channel_id int64) ([]*bizmodel.ApiNav
 	if siteErr != nil {
 		return nil, 0, siteErr
 	}
-	outNav := []*bizmodel.ApiNavFindModel{}
+	outNav := []*bizmodel.ApiNavModel{}
 	mdl, do := query.CmsSiteChannelDo()
 	err := do.Where(mdl.SiteID.Eq(site_id), mdl.ParentID.Eq(channel_id), mdl.Status.Eq(int32(StatusPass)), mdl.IsShow.Is(true)).Select(
 		mdl.ChannelID.As("nav_id"), mdl.Title, mdl.Name, mdl.LinkURL, mdl.Target,
 		mdl.ImgUrl1, mdl.ImgUrl2, mdl.SortID).Order(mdl.SortID).Scan(&outNav)
 	if err != nil {
-		return []*bizmodel.ApiNavFindModel{}, 0, err
+		return []*bizmodel.ApiNavModel{}, 0, err
 	}
 	for _, v := range outNav {
 		v.Type = "channel"
-		v.Children = []*bizmodel.ApiNavFindModel{}
+		v.Children = []*bizmodel.ApiNavModel{}
 		children, _, _ := this.NavGet(site_id, v.NavID)
 		if len(children) > 0 {
 			v.Children = append(v.Children, children...)
@@ -152,19 +152,19 @@ func (this *ApiSite) NavGet(site_id int64, channel_id int64) ([]*bizmodel.ApiNav
 	return outNav, int64(len(outNav)), nil
 }
 
-func (this *ApiSite) NavCategoryGet(channel_id int64, parent_id int64, flag, name string) []*bizmodel.ApiNavFindModel {
+func (this *ApiSite) NavCategoryGet(channel_id int64, parent_id int64, flag, name string) []*bizmodel.ApiNavModel {
 	cacheKey := fmt.Sprintf("ApiSite_NavCategoryGet_%d_%d", channel_id, parent_id)
 	if found, item := ApiCache.Get(cacheKey); found {
-		find := item.([]*bizmodel.ApiNavFindModel)
+		find := item.([]*bizmodel.ApiNavModel)
 		return find
 	}
-	outNav := []*bizmodel.ApiNavFindModel{}
+	outNav := []*bizmodel.ApiNavModel{}
 	mdl, do := query.CmsArticleCategoryDo()
 	err := do.Where(mdl.ChannelID.Eq(channel_id), mdl.ParentID.Eq(parent_id), mdl.Status.Eq(int32(StatusPass)), mdl.IsShow.Is(true)).Select(
 		mdl.CategoryID.As("nav_id"), mdl.Title, mdl.CallIndex.As("name"), mdl.LinkURL, mdl.Target,
 		mdl.ImgUrl1, mdl.ImgUrl2, mdl.SortID).Order(mdl.SortID).Scan(&outNav)
 	if err != nil {
-		return []*bizmodel.ApiNavFindModel{}
+		return []*bizmodel.ApiNavModel{}
 	}
 	for _, v := range outNav {
 		v.Type = "category"
@@ -173,7 +173,7 @@ func (this *ApiSite) NavCategoryGet(channel_id int64, parent_id int64, flag, nam
 		if v.LinkURL == "" {
 			v.LinkURL = "/" + flag + "/" + name + "/" + v.Name
 		}
-		v.Children = []*bizmodel.ApiNavFindModel{}
+		v.Children = []*bizmodel.ApiNavModel{}
 		children := this.NavCategoryGet(channel_id, v.NavID, flag, name)
 		v.Children = append(v.Children, children...)
 	}

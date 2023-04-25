@@ -81,3 +81,29 @@ func UrlForChannel(name string) string {
 	}
 	return fmt.Sprintf("/%s/%s", find.SiteFlag, name)
 }
+
+/**
+ * @description: 专题链接
+ * @param {string} name
+ * @return {*}
+ */
+func UrlForTopic(name string) string {
+	find, _ := biz.NewApiTopic().Find(0, name)
+	if find.Name != "" {
+		return ""
+	}
+	return fmt.Sprintf("/%s/topic/%s", find.SiteFlag, name)
+}
+
+/**
+ * @description: 标签链接
+ * @param {string} name 标签名称
+ * @return {*}
+ */
+func UrlForTag(name string) string {
+	find, _ := biz.NewApiTag().Find(0, name)
+	if find.Name != "" {
+		return ""
+	}
+	return fmt.Sprintf("/%s/tag/%s", find.SiteFlag, name)
+}

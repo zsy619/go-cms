@@ -121,6 +121,12 @@ func init() {
 
 		funcs["UrlForChannel"] = UrlForChannel
 		funcs["urlforchannel"] = UrlForChannel
+
+		funcs["UrlForTopic"] = UrlForTopic
+		funcs["urlfortopic"] = UrlForTopic
+
+		funcs["UrlForTag"] = UrlForTag
+		funcs["urlFortag"] = UrlForTag
 	}
 
 	// 注册模板函数

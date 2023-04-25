@@ -14,15 +14,15 @@ import (
 * @param {string} call_index 广告分类标识
 * @return {*}
  */
-func AdsNewExt(limit int, site_id int64, site_flag string, category_id int64, call_index string) []*bizmodel.ApiAdsListModel {
+func AdsNewExt(limit int, site_id int64, site_flag string, category_id int64, call_index string) []*bizmodel.ApiAdsModel {
 	find, _, err := biz.NewApiAds().GetNew(limit, site_id, site_flag, category_id, call_index)
 	if err != nil {
-		find = []*bizmodel.ApiAdsListModel{}
+		find = []*bizmodel.ApiAdsModel{}
 	}
 	return find
 }
 
-func AdsNew(limit int) []*bizmodel.ApiAdsListModel {
+func AdsNew(limit int) []*bizmodel.ApiAdsModel {
 	return AdsNewExt(limit, 0, "", 0, "")
 }
 
@@ -35,14 +35,14 @@ func AdsNew(limit int) []*bizmodel.ApiAdsListModel {
 * @param {string} call_index 广告分类标识
 * @return {*}
  */
-func AdsTopExt(limit int, site_id int64, site_flag string, category_id int64, call_index string) []*bizmodel.ApiAdsListModel {
+func AdsTopExt(limit int, site_id int64, site_flag string, category_id int64, call_index string) []*bizmodel.ApiAdsModel {
 	find, _, err := biz.NewApiAds().Get(limit, site_id, site_flag, category_id, call_index)
 	if err != nil {
-		find = []*bizmodel.ApiAdsListModel{}
+		find = []*bizmodel.ApiAdsModel{}
 	}
 	return find
 }
 
-func AdsTop(limit int) []*bizmodel.ApiAdsListModel {
+func AdsTop(limit int) []*bizmodel.ApiAdsModel {
 	return AdsTopExt(limit, 0, "", 0, "")
 }

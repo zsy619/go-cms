@@ -18,17 +18,17 @@ func NewApiAds() *ApiAds {
 	return &ApiAds{}
 }
 
-func (this *ApiAds) get(cackeKeyPrefix string, limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiAdsListModel, int64, error) {
+func (this *ApiAds) get(cackeKeyPrefix string, limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiAdsModel, int64, error) {
 	cacheKey := fmt.Sprintf("%s_%d_%d_%s_%d_%s", cackeKeyPrefix, limit, site_id, site_flag, category_id, call_index)
 	if found, item := ApiCache.Get(cacheKey); found {
-		list := item.([]*bizmodel.ApiAdsListModel)
+		list := item.([]*bizmodel.ApiAdsModel)
 		logs.Debug("AdsFind[Cache]::", "cacheKey", cacheKey, "Ads", list)
 		return list, int64(len(list)), nil
 	}
-	list := []*bizmodel.ApiAdsListModel{}
+	list := []*bizmodel.ApiAdsModel{}
 
 	_, do := query.CmsAdsDo()
-	sqlSelect := "a.ads_id,a.site_id,a.channel_id,a.category_id,b.title as category_title,a.title,a.link_url,a.target,a.click,a.img_url1,a.img_url2,a.is_lock,a.is_red,a.is_hot,a.is_slide,a.begin_time,a.end_time"
+	sqlSelect := "a.ads_id,a.site_id,a.channel_id,a.category_id,b.title as category_title,a.title,a.link_url,a.target,a.click,a.img_url1,a.img_url2,a.is_lock,a.is_red,a.is_hot,a.is_slide,a.begin_time,a.end_time,c.flag as site_flag"
 	sql := `SELECT ` + sqlSelect + ` FROM cms_ads a` +
 		` LEFT JOIN cms_ads_category b ON a.category_id = b.category_id` +
 		` LEFT JOIN cms_site c ON a.site_id = c.site_id` +
@@ -61,7 +61,7 @@ func (this *ApiAds) get(cackeKeyPrefix string, limit int, site_id int64, site_fl
 * @param {string} call_index 广告分类标识
 * @return {*}
  */
-func (this *ApiAds) Get(limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiAdsListModel, int64, error) {
+func (this *ApiAds) Get(limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiAdsModel, int64, error) {
 	return this.get("ApiAds_Get", limit, site_id, site_flag, category_id, call_index)
 }
 
@@ -74,7 +74,7 @@ func (this *ApiAds) Get(limit int, site_id int64, site_flag string, category_id 
 * @param {string} call_index 广告分类标识
 * @return {*}
  */
-func (this *ApiAds) GetNew(limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiAdsListModel, int64, error) {
+func (this *ApiAds) GetNew(limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiAdsModel, int64, error) {
 	return this.get("ApiAds_GetNew", limit, site_id, site_flag, category_id, call_index)
 }
 
@@ -88,15 +88,15 @@ func (this *ApiAds) GetNew(limit int, site_id int64, site_flag string, category_
  * @param {string} call_index 广告分类标识
  * @return {*}
  */
-func (this *ApiAds) Paginate(page, limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiAdsListModel, int64, error) {
-	list := []*bizmodel.ApiAdsListModel{}
+func (this *ApiAds) Paginate(page, limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiAdsModel, int64, error) {
+	list := []*bizmodel.ApiAdsModel{}
 	where := " WHERE a.`status`=2 and NOW() between a.begin_time and a.end_time" +
 		xgeneric.IFF(site_flag == "", "", " AND c.flag = '"+site_flag+"'") +
 		xgeneric.IFF(site_id <= 0, "", " AND a.site_id = "+strconv.FormatInt(site_id, 10)) +
 		xgeneric.IFF(call_index == "", "", " AND b.call_index = '"+call_index+"'") +
 		xgeneric.IFF(category_id <= 0, "", " AND b.category_id = "+strconv.FormatInt(category_id, 10))
 	_, do := query.CmsAdsDo()
-	sqlSelectRow := "a.ad_id,a.site_id,a.channel_id,a.category_id,b.title as category_title,a.title,a.link_url,a.target,a.click,a.img_url1,a.img_url2,a.is_lock,a.is_red,a.is_hot,a.is_slide,a.begin_time,a.end_time"
+	sqlSelectRow := "a.ad_id,a.site_id,a.channel_id,a.category_id,b.title as category_title,a.title,a.link_url,a.target,a.click,a.img_url1,a.img_url2,a.is_lock,a.is_red,a.is_hot,a.is_slide,a.begin_time,a.end_time,c.flag as site_flag"
 	sqlRow := "SELECT " + sqlSelectRow + " FROM cms_ads a" +
 		" LEFT JOIN cms_ads_category b ON a.category_id = b.category_id" +
 		" LEFT JOIN cms_site c ON a.site_id = c.site_id" +

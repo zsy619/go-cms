@@ -4,8 +4,12 @@ package www
 type TopicController struct{ BaseController }
 
 // Index 专题首页
-// @router /topic/:name:string [get]
+// @router /:flag/topic/:name:string [get]
 func (this *TopicController) Index() {
+	flag := this.Ctx.Input.Param(":flag")
+	if flag == "" {
+		this.Ctx.WriteString("站点标识不能为空")
+	}
 	name := this.Ctx.Input.Param(":name")
 	if name == "" {
 		this.Ctx.WriteString("专题名称不能为空")

@@ -1,6 +1,6 @@
 package bizmodel
 
-type ApiTopicListModel struct {
+type ApiTopicModel struct {
 	TopicID        int64  `gorm:"column:topic_id;type:bigint;comment:专题ID" json:"topic_id" form:"topic_id"`
 	SiteID         int64  `gorm:"column:site_id;type:bigint;comment:所属站点" json:"site_id" form:"site_id"`
 	ChannelID      int64  `gorm:"column:channel_id;type:bigint;comment:所属频道" json:"channel_id" form:"channel_id"`
@@ -15,4 +15,5 @@ type ApiTopicListModel struct {
 	SortID         int32  `gorm:"column:sort_id;type:int;comment:排序" json:"sort_id" form:"sort_id"`
 	Click          int32  `gorm:"column:click;type:int;comment:浏览次数" json:"click" form:"click"`
 	Template       string `gorm:"column:template;type:varchar(256);comment:模板路径" json:"template" form:"template"`
+	SiteFlag       string `gorm:"column:site_flag;type:varchar(64);comment:站点标识" json:"site_flag" form:"site_flag"`
 }

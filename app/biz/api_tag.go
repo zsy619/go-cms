@@ -18,37 +18,38 @@ func NewApiTag() *ApiTag {
 	return &ApiTag{}
 }
 
-func (this *ApiTag) get(cackeKeyPrefix string, limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTagListModel, int64, error) {
+func (this *ApiTag) get(cackeKeyPrefix string, limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTagModel, int64, error) {
 	if limit <= 0 {
 		limit = 10
 	}
 	cacheKey := fmt.Sprintf("%s_%d_%d_%s_%d", cackeKeyPrefix, limit, site_id, site_flag, channel_id)
 	if found, item := ApiCache.Get(cacheKey); found {
-		tags := item.([]*bizmodel.ApiTagListModel)
+		tags := item.([]*bizmodel.ApiTagModel)
 		logs.Debug("TagFind[Cache]::", "cacheKey", cacheKey, "Ads", tags)
 		return tags, int64(len(tags)), nil
 	}
-	if site_flag != "" {
-		siteMdl, siteDo := query.CmsSiteDo()
-		siteDo.Where(siteMdl.Flag.Eq(site_flag)).Pluck(siteMdl.SiteID, &site_id)
-	}
-	outTags := make([]*bizmodel.ApiTagListModel, 0)
-	mdl, do := query.CmsTagDo()
-	if site_id > 0 {
-		do = do.Where(mdl.SiteID.Eq(site_id))
-	}
-	if channel_id > 0 {
-		do = do.Where(mdl.ChannelID.Eq(channel_id))
-	}
-	do = do.Where(mdl.Status.Eq(int32(StatusPass)))
-	do = do.Select(mdl.TagID, mdl.SiteID, mdl.ChannelID, mdl.Name, mdl.Title, mdl.ImgUrl1, mdl.ImgUrl2,
-		mdl.SeoTitle, mdl.SeoKeyword, mdl.SeoDescription, mdl.SortID).Limit(limit)
+
+	outTags := make([]*bizmodel.ApiTagModel, 0)
+	_, do := query.CmsTagDo()
+
+	where := ` where a.status=2` +
+		xgeneric.IFF(site_flag == "", "", " and b.flag = '"+site_flag+"'") +
+		xgeneric.IFF(site_id <= 0, "", " and a.site_id = "+strconv.FormatInt(site_id, 10)) +
+		xgeneric.IFF(channel_id <= 0, "", " and a.channel_id = "+strconv.FormatInt(channel_id, 10))
+
+	field := `a.tag_id,a.site_id,a.channel_id,a.name,a.title,a.img_url1,a.img_url2,a.seo_title,a.seo_keyword,a.seo_description,a.sort_id,b.flag as site_flag`
+	sql := `select ` + field + ` from cms_tag a` +
+		` left join cms_site b on a.site_id=b.site_id` +
+		where
+
 	if cackeKeyPrefix == "ApiTag_Get" {
-		do = do.Order(mdl.SortID, mdl.TagID)
+		sql += ` order by a.sort_id,a.tag_id`
 	} else {
-		do = do.Order(mdl.TagID.Desc(), mdl.SortID)
+		sql += ` order by a.tag_id desc,a.sort_id`
 	}
-	err := do.Scan(&outTags)
+	sql += ` limit ` + strconv.Itoa(limit)
+
+	err := do.UnderlyingDB().Raw(sql).Scan(&outTags).Error
 	if err == nil {
 		ApiCache.Set(cacheKey, outTags, 1800)
 	}
@@ -63,7 +64,7 @@ func (this *ApiTag) get(cackeKeyPrefix string, limit int, site_id int64, site_fl
  * @param {int64} channel_id 栏目ID
  * @return {*}
  */
-func (this *ApiTag) Get(limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTagListModel, int64, error) {
+func (this *ApiTag) Get(limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTagModel, int64, error) {
 	return this.get("ApiTag_Get", limit, site_id, site_flag, channel_id)
 }
 
@@ -75,8 +76,38 @@ func (this *ApiTag) Get(limit int, site_id int64, site_flag string, channel_id i
  * @param {int64} channelId 栏目ID
  * @return {*}
  */
-func (this *ApiTag) GetNew(limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTagListModel, int64, error) {
+func (this *ApiTag) GetNew(limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTagModel, int64, error) {
 	return this.get("ApiTag_GetNew", limit, site_id, site_flag, channel_id)
+}
+
+/**
+ * @description: 标签
+ * @param {int64} tag_id 标签ID
+ * @param {string} name 标签名称
+ * @return {*}
+ */
+func (this *ApiTag) Find(tag_id int64, name string) (*bizmodel.ApiTagModel, error) {
+	cacheKey := fmt.Sprintf("ApiTag_Find_%d_%s", tag_id, name)
+	if found, item := ApiCache.Get(cacheKey); found {
+		tag := item.(*bizmodel.ApiTagModel)
+		logs.Debug("TagFind[Cache]::", "cacheKey", cacheKey, "Ads", tag)
+		return tag, nil
+	}
+	_, do := query.CmsTagDo()
+	var outTag bizmodel.ApiTagModel
+	where := ` where a.status=2` +
+		xgeneric.IFF(tag_id <= 0, "", " and a.tag_id = "+strconv.FormatInt(tag_id, 10)) +
+		xgeneric.IFF(name == "", "", " and a.name = '"+name+"'")
+
+	field := `a.tag_id,a.site_id,a.channel_id,a.name,a.title,a.img_url1,a.img_url2,a.seo_title,a.seo_keyword,a.seo_description,a.sort_id,b.flag as site_flag`
+	sql := `select ` + field + ` from cms_tag a` +
+		` left join cms_site b on a.site_id=b.site_id` +
+		where
+	err := do.UnderlyingDB().Raw(sql).Scan(&outTag).Error
+	if err == nil {
+		ApiCache.Set(cacheKey, &outTag, 1800)
+	}
+	return &outTag, err
 }
 
 /**

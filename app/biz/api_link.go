@@ -18,17 +18,17 @@ func NewApiLink() *ApiLink {
 	return &ApiLink{}
 }
 
-func (this *ApiLink) get(cackeKeyPrefix string, limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiLinkListModel, int64, error) {
+func (this *ApiLink) get(cackeKeyPrefix string, limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiLinkModel, int64, error) {
 	cacheKey := fmt.Sprintf("%s_%d_%d_%s_%d_%s", cackeKeyPrefix, limit, site_id, site_flag, category_id, call_index)
 	if found, item := ApiCache.Get(cacheKey); found {
-		links := item.([]*bizmodel.ApiLinkListModel)
+		links := item.([]*bizmodel.ApiLinkModel)
 		logs.Debug("Get[Cache]::", "cacheKey", cacheKey, "links", links)
 		return links, int64(len(links)), nil
 	}
-	outLink := []*bizmodel.ApiLinkListModel{}
+	outLink := []*bizmodel.ApiLinkModel{}
 
 	_, linkDo := query.CmsLinkDo()
-	sqlSelect := "a.link_id,a.site_id,a.channel_id,a.category_id,a.title,a.link_url,a.target,a.click,a.img_url1,a.img_url2,a.is_lock,a.is_red,a.is_hot,a.is_slide"
+	sqlSelect := "a.link_id,a.site_id,a.channel_id,a.category_id,a.title,a.link_url,a.target,a.click,a.img_url1,a.img_url2,a.is_lock,a.is_red,a.is_hot,a.is_slide,c.flag as site_flag,b.title as category_title"
 	sql := `SELECT ` + sqlSelect + ` FROM cms_link a` +
 		` LEFT JOIN cms_link_category b ON a.category_id = b.category_id` +
 		` LEFT JOIN cms_site c ON a.site_id = c.site_id` +
@@ -61,7 +61,7 @@ func (this *ApiLink) get(cackeKeyPrefix string, limit int, site_id int64, site_f
 * @param {string} call_index 链接分类标识
 * @return {*}
  */
-func (this *ApiLink) Get(limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiLinkListModel, int64, error) {
+func (this *ApiLink) Get(limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiLinkModel, int64, error) {
 	return this.get("ApiLink_Get", limit, site_id, site_flag, category_id, call_index)
 }
 
@@ -74,7 +74,7 @@ func (this *ApiLink) Get(limit int, site_id int64, site_flag string, category_id
 * @param {string} call_index 链接分类标识
 * @return {*}
  */
-func (this *ApiLink) GetNew(limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiLinkListModel, int64, error) {
+func (this *ApiLink) GetNew(limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiLinkModel, int64, error) {
 	return this.get("ApiLink_GetNew", limit, site_id, site_flag, category_id, call_index)
 }
 
@@ -88,8 +88,8 @@ func (this *ApiLink) GetNew(limit int, site_id int64, site_flag string, category
  * @param {string} call_index 链接分类标识
  * @return {*}
  */
-func (this *ApiLink) Paginate(page, limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiLinkListModel, int64, error) {
-	outLink := []*bizmodel.ApiLinkListModel{}
+func (this *ApiLink) Paginate(page, limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiLinkModel, int64, error) {
+	outLink := []*bizmodel.ApiLinkModel{}
 	where := " WHERE a.`status`=2" +
 		xgeneric.IFF(site_flag == "", "", " AND c.flag = '"+site_flag+"'") +
 		xgeneric.IFF(site_id <= 0, "", " AND a.site_id = "+strconv.FormatInt(site_id, 10)) +

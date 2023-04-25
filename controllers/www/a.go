@@ -16,7 +16,7 @@ func init() {
 	}
 
 	{
-		web.Router("/topic/:name", &TopicController{}, "*:Index") // 专题
+		web.Router("/:flag/topic/:name", &TopicController{}, "*:Index") // 专题
 	}
 
 	{

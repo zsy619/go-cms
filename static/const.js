@@ -137,6 +137,26 @@ function UrlForArticle(callIndex, articleId, url) {
     return "/article/" + callIndex + "/" + articleId;
 }
 
+/**
+ * @description: 专题链接
+ * @param {string} site_flag 站点标识
+ * @param {string} name 专题名称
+ * @return {*}
+ */
+function UrlForTopic(site_flag, name) {
+    return "/" + site_flag + "/topic/" + name;
+}
+
+/**
+ * @description: 标签链接
+ * @param {string} site_flag 站点标识
+ * @param {string} name 标签名称
+ * @return {*}
+ */
+function UrlForTag(site_flag, name) {
+    return "/" + site_flag + "/tag/" + name;
+}
+
 function layopenB(title, content, table) {
     var heigth_screen = window.screen.height;
     var width_screen = window.screen.width;

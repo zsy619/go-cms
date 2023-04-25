@@ -98,7 +98,7 @@ func (this *BaseController) SiteFind(site_id int64) (*model.CmsSite, error) {
  * @param {int64} site_id 站点ID
  * @return {*}
  */
-func (this *BaseController) ChannelGet(site_id int64) ([]*bizmodel.ApiChannelFindModel, int64, error) {
+func (this *BaseController) ChannelGet(site_id int64) ([]*bizmodel.ApiChannelModel, int64, error) {
 	return biz.NewApiSite().ChannelGet(site_id)
 }
 
@@ -108,7 +108,7 @@ func (this *BaseController) ChannelGet(site_id int64) ([]*bizmodel.ApiChannelFin
  * @param {int64} channel_id 频道ID
  * @return {*}
  */
-func (this *BaseController) SiteMenu(site_id, channel_id int64) ([]*bizmodel.ApiNavFindModel, int64, error) {
+func (this *BaseController) SiteMenu(site_id, channel_id int64) ([]*bizmodel.ApiNavModel, int64, error) {
 	return biz.NewApiSite().NavGet(site_id, channel_id)
 }
 
@@ -118,7 +118,7 @@ func (this *BaseController) SiteMenu(site_id, channel_id int64) ([]*bizmodel.Api
  * @param {int64} channel_id 频道ID
  * @return {*}
  */
-func (this *BaseController) SiteMenuFlag(site_flag string, channel_id int64) ([]*bizmodel.ApiNavFindModel, int64, error) {
+func (this *BaseController) SiteMenuFlag(site_flag string, channel_id int64) ([]*bizmodel.ApiNavModel, int64, error) {
 	return biz.NewApiSite().NavGetByFlag(site_flag, channel_id)
 }
 

@@ -14,15 +14,15 @@ import (
 * @param {string} call_index 广告分类标识
 * @return {*}
  */
-func LinkNewExt(limit int, site_id int64, site_flag string, category_id int64, call_index string) []*bizmodel.ApiLinkListModel {
+func LinkNewExt(limit int, site_id int64, site_flag string, category_id int64, call_index string) []*bizmodel.ApiLinkModel {
 	find, _, err := biz.NewApiLink().GetNew(limit, site_id, site_flag, category_id, call_index)
 	if err != nil {
-		find = []*bizmodel.ApiLinkListModel{}
+		find = []*bizmodel.ApiLinkModel{}
 	}
 	return find
 }
 
-func LinkNew(limit int) []*bizmodel.ApiLinkListModel {
+func LinkNew(limit int) []*bizmodel.ApiLinkModel {
 	return LinkNewExt(limit, 0, "", 0, "")
 }
 
@@ -35,14 +35,14 @@ func LinkNew(limit int) []*bizmodel.ApiLinkListModel {
 * @param {string} call_index 广告分类标识
 * @return {*}
  */
-func LinkTopExt(limit int, site_id int64, site_flag string, category_id int64, call_index string) []*bizmodel.ApiLinkListModel {
+func LinkTopExt(limit int, site_id int64, site_flag string, category_id int64, call_index string) []*bizmodel.ApiLinkModel {
 	find, _, err := biz.NewApiLink().Get(limit, site_id, site_flag, category_id, call_index)
 	if err != nil {
-		find = []*bizmodel.ApiLinkListModel{}
+		find = []*bizmodel.ApiLinkModel{}
 	}
 	return find
 }
 
-func LinkTop(limit int) []*bizmodel.ApiLinkListModel {
+func LinkTop(limit int) []*bizmodel.ApiLinkModel {
 	return LinkTopExt(limit, 0, "", 0, "")
 }

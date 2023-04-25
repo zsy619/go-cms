@@ -23,17 +23,17 @@ func NewApiChannel() *ApiChannel {
  * @param {int64} channel_id 频道ID
  * @return {*}
  */
-func (this *ApiChannel) Find(name string, channel_id int64) (*bizmodel.ApiChannelFindModel, error) {
+func (this *ApiChannel) Find(name string, channel_id int64) (*bizmodel.ApiChannelModel, error) {
 	if name == "" && channel_id <= 0 {
 		return nil, errors.New("参数错误")
 	}
 	cacheKey := fmt.Sprintf("ApiChannel_Find_%s_%d", name, channel_id)
 	if found, item := ApiCache.Get(cacheKey); found {
 		logs.Debug("ApiCache")
-		return item.(*bizmodel.ApiChannelFindModel), nil
+		return item.(*bizmodel.ApiChannelModel), nil
 	}
 	_, do := query.CmsSiteChannelDo()
-	find := &bizmodel.ApiChannelFindModel{}
+	find := &bizmodel.ApiChannelModel{}
 	field := `a.channel_id,a.parent_id,a.title,a.name,a.kind,a.class_layer,a.link_url,a.img_url1,a.img_url2,a.sort_id,a.is_album,a.is_attach,a.is_spec,a.tmpl_chnl,a.tmpl_cat,a.tmpl_lst,a.tmpl_dtl` +
 		`,b.flag as site_flag`
 	sql := `SELECT ` + field + ` FROM cms_site_channel a` +
