@@ -123,14 +123,29 @@ func (this *BaseController) SiteMenuFlag(site_flag string, channel_id int64) ([]
 }
 
 /**
-* @description: LinkGet 获取链接列表
+* @description: Get 获取链接列表
 * @param {int} limit 获取数量
+* @param {int64} site_id 站点ID
+* @param {string} site_flag 站点标识
 * @param {int64} category_id 链接分类ID
 * @param {string} call_index 链接分类标识
 * @return {*}
  */
-func (this *BaseController) LinkGet(limit int, category_id int64, call_index string) ([]*bizmodel.ApiLinkListModel, int64, error) {
-	return biz.NewApiLink().Get(limit, category_id, call_index)
+func (this *BaseController) LinkGet(limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiLinkListModel, int64, error) {
+	return biz.NewApiLink().Get(limit, site_id, site_flag, category_id, call_index)
+}
+
+/**
+* @description: 获取最新链接列表
+* @param {int} limit 获取数量
+* @param {int64} site_id 站点ID
+* @param {string} site_flag 站点标识
+* @param {int64} category_id 链接分类ID
+* @param {string} call_index 链接分类标识
+* @return {*}
+ */
+func (this *BaseController) LinkGetNew(limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiLinkListModel, int64, error) {
+	return biz.NewApiLink().GetNew(limit, site_id, site_flag, category_id, call_index)
 }
 
 /**

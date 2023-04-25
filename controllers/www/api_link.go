@@ -10,20 +10,48 @@ import (
 type ApiLinkController struct{ BaseController }
 
 /**
- * @description: Get 获取链接列表
- * @param {int} limit 获取数量
- * @param {int64} category_id 链接分类ID
- * @param {string} call_index 链接分类标识
- * @return {*}
+* @description: Get 获取链接列表
+* @param {int} limit 获取数量
+* @param {int64} site_id 站点ID
+* @param {string} site_flag 站点标识
+* @param {int64} category_id 链接分类ID
+* @param {string} call_index 链接分类标识
+* @return {*}
  */
 // @router /api/link/get [get]
 func (this *ApiLinkController) Get() {
+	site_flag := this.GetString("site_flag")
+	site_id, _ := this.GetInt64("site_id")
 	category_id, _ := this.GetInt64("category_id")
 	call_index := this.GetString("call_index")
 	limit, _ := this.GetInt("limit", 6)
-	out, len, err := this.BaseController.LinkGet(limit, category_id, call_index)
+	out, len, err := this.BaseController.LinkGet(limit, site_id, site_flag, category_id, call_index)
 	if err != nil {
 		logs.Error("Get::", "callIndex", call_index, "err", err)
+		this.JSONErrorOfData(err.Error(), out)
+	}
+	this.JSONSuccess(strconv.FormatInt(len, 10), out)
+}
+
+/**
+* @description: GetNew 获取最新链接列表
+* @param {int} limit 获取数量
+* @param {int64} site_id 站点ID
+* @param {string} site_flag 站点标识
+* @param {int64} category_id 链接分类ID
+* @param {string} call_index 链接分类标识
+* @return {*}
+ */
+// @router /api/link/get/new [get]
+func (this *ApiLinkController) GetNew() {
+	site_flag := this.GetString("site_flag")
+	site_id, _ := this.GetInt64("site_id")
+	category_id, _ := this.GetInt64("category_id")
+	call_index := this.GetString("call_index")
+	limit, _ := this.GetInt("limit", 6)
+	out, len, err := this.BaseController.LinkGetNew(limit, site_id, site_flag, category_id, call_index)
+	if err != nil {
+		logs.Error("GetNew::", "callIndex", call_index, "err", err)
 		this.JSONErrorOfData(err.Error(), out)
 	}
 	this.JSONSuccess(strconv.FormatInt(len, 10), out)

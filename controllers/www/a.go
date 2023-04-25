@@ -9,18 +9,16 @@ func init() {
 		web.Router("/:flag/:name", &ChannelController{}, "*:Channel")            // 频道首页
 		web.Router("/:flag/:name/:category", &ChannelController{}, "*:Category") // 频道分类
 
-		// web.Router("/:name", &ChannelController{}, "*:Index")                      // 频道首页
-		// web.Router("/:name/:category", &ChannelController{}, "*:Category")         // 频道分类
+		web.Router("/:flag/:name/:category/:article_id", &ArticleController{}, "*:Index") // 文章详情
+		web.Router("/article/:call_index/:article_id", &ArticleController{}, "*:Detail")  // 文章详情
+		web.Router("/article/search/:keyword", &ArticleController{}, "*:Search")          // 搜索页面
+		web.Router("/article/search", &ArticleController{}, "*:Search")                   // 搜索页面
 	}
 
 	{
 		web.Router("/topic/:name", &TopicController{}, "*:Index") // 专题
 	}
 
-	web.Router("/:flag/:name/:category/:article_id", &ArticleController{}, "*:Index") // 文章详情
-	web.Router("/article/:call_index/:article_id", &ArticleController{}, "*:Detail")  // 文章详情
-	web.Router("/article/search/:keyword", &ArticleController{}, "*:Search")          // 搜索页面
-	web.Router("/article/search", &ArticleController{}, "*:Search")                   // 搜索页面
 	{
 		// 微信公众号
 		web.Router("/weixin/mp/index ", &WechatMpController{}, "GET:Signature")
@@ -30,7 +28,13 @@ func init() {
 	}
 
 	{
+		web.Router("/api/ads/find", &ApiAdsController{}, "*:Find")
+		web.Router("/api/ads/find/new", &ApiAdsController{}, "*:FindNew")
+		web.Router("/api/ads/paginate", &ApiAdsController{}, "*:Paginate")
+		web.Router("/api/ads/click", &ApiAdsController{}, "*:Click")
+
 		web.Router("/api/link/get", &ApiLinkController{}, "*:Get")
+		web.Router("/api/link/get/new", &ApiLinkController{}, "*:GetNew")
 		web.Router("/api/link/paginate", &ApiLinkController{}, "*:Paginate")
 		web.Router("/api/link/click", &ApiLinkController{}, "*:Click")
 
@@ -58,12 +62,6 @@ func init() {
 		web.Router("/api/article/like", &ApiArticleController{}, "*:Like")
 		web.Router("/api/article/album/click", &ApiArticleController{}, "*:AlbumClick")
 		web.Router("/api/article/prev_next", &ApiArticleController{}, "*:PrevNext")
-
-		web.Router("/api/ads/find", &ApiAdsController{}, "*:Find")
-		web.Router("/api/ads/find/new", &ApiAdsController{}, "*:FindNew")
-		web.Router("/api/ads/paginate", &ApiAdsController{}, "*:Paginate")
-		web.Router("/api/ads/click", &ApiAdsController{}, "*:Click")
-
 		web.Router("/api/tag/get", &ApiTagController{}, "*:Get")
 		web.Router("/api/tag/get/new", &ApiTagController{}, "*:GetNew")
 		web.Router("/api/tag/click", &ApiTagController{}, "*:Click")
