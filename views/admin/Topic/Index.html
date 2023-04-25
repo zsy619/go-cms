@@ -68,7 +68,23 @@
             cols: [[
                 { type: "checkbox", width: 50 },
                 { field: 'topic_id', width: 80, title: 'ID', sort: true },
-                { field: 'name', title: '名称', sort: true },
+                {
+                    field: 'name', title: '名称', sort: true, templet: function (d) {
+                        var label = '';
+                        switch (d.status) {
+                            case 2:
+                                label = '<span class="layui-badge-dot layui-bg-green"></span>';
+                                break;
+                            case 3:
+                                label = '<span class="layui-badge-dot"></span>';
+                                break;
+                            default:
+                                label = '<span class="layui-badge-dot layui-bg-black"></span>';
+                                break;
+                        }
+                        return label + "&nbsp;" + d.name;
+                    }
+                },
                 { field: 'title', title: '标题' },
                 {
                     field: 'img_url1', title: '图片', width: 150, templet: function (d) {

@@ -41,7 +41,7 @@
             reload: function () {
                 layer.load(2);
                 treetable.render({
-                    treeColIndex: 1,
+                    treeColIndex: 0,
                     treeSpid: 0,
                     treeIdName: 'channel_id',
                     treePidName: 'parent_id',
@@ -52,8 +52,24 @@
                     defaultToolbar: ['filter', 'exports', 'print'],
                     cols: [[
                         // { type: "checkbox", width: 50 },
-                        { field: 'channel_id', width: 80, title: 'ID' },
-                        { field: 'name', title: '频道名称' },
+                        { field: 'channel_id', width: 110, title: 'ID' },
+                        {
+                            field: 'name', title: '频道名称', templet: function (d) {
+                                var label = '';
+                                switch (d.status) {
+                                    case 2:
+                                        label = '<span class="layui-badge-dot layui-bg-green"></span>';
+                                        break;
+                                    case 3:
+                                        label = '<span class="layui-badge-dot"></span>';
+                                        break;
+                                    default:
+                                        label = '<span class="layui-badge-dot layui-bg-black"></span>';
+                                        break;
+                                }
+                                return label + "&nbsp;" + d.name;
+                            }
+                        },
                         { field: 'title', title: '频道标题' },
                         { field: 'link_url', title: '外部链接', minWidth: 150 },
                         {

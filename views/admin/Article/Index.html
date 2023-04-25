@@ -97,7 +97,23 @@
             defaultToolbar: ['filter', 'exports', 'print'],
             cols: [[
                 { type: "checkbox", width: 50 },
-                { field: 'article_id', width: 80, title: 'ID', sort: true },
+                {
+                    field: 'article_id', width: 110, title: 'ID', sort: true, templet: function (d) {
+                        var label = '';
+                        switch (d.status) {
+                            case 2:
+                                label = '<span class="layui-badge-dot layui-bg-green"></span>';
+                                break;
+                            case 3:
+                                label = '<span class="layui-badge-dot"></span>';
+                                break;
+                            default:
+                                label = '<span class="layui-badge-dot layui-bg-black"></span>';
+                                break;
+                        }
+                        return label + "&nbsp;" + d.article_id;
+                    }
+                },
                 {
                     field: 'title', title: '内容标题', templet: function (d) {
                         var outText = d.ico_url1 == "" ? "" : "<img src='" + d.ico_url1 + "' style='width:20px;height:20px;margin-right:5px;' />";

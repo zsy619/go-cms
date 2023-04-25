@@ -203,7 +203,7 @@
                         for (var i = 0; i < len; i++) {
                             var item = res.data[i];
                             var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
-                            var html = '<li><a target="_blank" href="' + url + '"><span class="txt">' + item.title + '</span><span class="fr">' + moment(item.publish_time).format('YYYY-MM-DD') + '</span></a></li>';
+                            var html = '<li><a target="_blank" title="' + item.title + '" href="' + url + '"><span class="txt">' + item.title + '</span><span class="fr">' + moment(item.publish_time).format('YYYY-MM-DD') + '</span></a></li>';
                             $("#artTzgg").append(html);
                         }
                     }

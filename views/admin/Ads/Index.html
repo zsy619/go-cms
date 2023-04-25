@@ -66,7 +66,23 @@
             cols: [[
                 { type: "checkbox", width: 50 },
                 { field: 'ads_id', width: 80, title: 'ID', sort: true },
-                { field: 'title', title: '广告标题' },
+                {
+                    field: 'title', title: '广告标题', templet: function (d) {
+                        var label = '';
+                        switch (d.status) {
+                            case 2:
+                                label = '<span class="layui-badge-dot layui-bg-green"></span>';
+                                break;
+                            case 3:
+                                label = '<span class="layui-badge-dot"></span>';
+                                break;
+                            default:
+                                label = '<span class="layui-badge-dot layui-bg-black"></span>';
+                                break;
+                        }
+                        return label + "&nbsp;" + d.title;
+                    }
+                },
                 { field: 'call_index', minWidth: 150, title: '调用别名', sort: true },
                 { field: 'link_url', title: '广告链接', minWidth: 150 },
                 { field: 'target', title: 'Target', width: 100 },

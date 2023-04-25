@@ -51,7 +51,7 @@
 
         layer.load(2);
         treetable.render({
-            treeColIndex: 1,
+            treeColIndex: 0,
             treeSpid: 0,
             treeIdName: 'category_id',
             treePidName: 'parent_id',
@@ -62,8 +62,24 @@
             defaultToolbar: ['filter', 'exports', 'print'],
             cols: [[
                 // { type: "checkbox", width: 50 },
-                { field: 'category_id', width: 80, title: 'ID' },
-                { field: 'title', title: '类别标题' },
+                { field: 'category_id', width: 110, title: 'ID' },
+                {
+                    field: 'title', title: '类别标题', templet: function (d) {
+                        var label = '';
+                        switch (d.status) {
+                            case 2:
+                                label = '<span class="layui-badge-dot layui-bg-green"></span>';
+                                break;
+                            case 3:
+                                label = '<span class="layui-badge-dot"></span>';
+                                break;
+                            default:
+                                label = '<span class="layui-badge-dot layui-bg-black"></span>';
+                                break;
+                        }
+                        return label + "&nbsp;" + d.title;
+                    }
+                },
                 { field: 'call_index', minWidth: 150, title: '调用别名' },
                 { field: 'link_url', title: '外部链接', minWidth: 150 },
                 { field: 'tmpl_cat', title: '栏目模板' },
