@@ -75,6 +75,8 @@ func (this *ApiTopicController) Click() {
 func (this *ApiTopicController) ArticlePaginate() {
 	limit, _ := this.GetInt("limit", 6)
 	page, _ := this.GetInt("page", 1)
+	site_id, _ := this.GetInt64("site_id")
+	site_flag := this.GetString("site_flag")
 	order_by := this.GetString("order_by", "sort_id")
 	call_index := this.GetString("call_index")
 	channel_name := this.GetString("channel_name")
@@ -87,7 +89,7 @@ func (this *ApiTopicController) ArticlePaginate() {
 	is_hot, _ := this.GetInt("is_hot", -1)
 	is_slide, _ := this.GetInt("is_slide", -1)
 	is_search, _ := this.GetInt("is_search", -1)
-	outArticle, count, err := this.BaseController.TopicArticlePaginate(page, limit, Topic_name, channel_id, channel_name, category_id, call_index, keyword, is_top, is_red, is_hot, is_slide, is_search, order_by)
+	outArticle, count, err := this.BaseController.TopicArticlePaginate(page, limit, Topic_name, site_id, site_flag, channel_id, channel_name, category_id, call_index, keyword, is_top, is_red, is_hot, is_slide, is_search, order_by)
 	if err != nil {
 		this.JSONPage(lib.CodeError, err.Error(), outArticle, count)
 	}

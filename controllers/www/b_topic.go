@@ -56,6 +56,6 @@ func (this *BaseController) TopicClick(Topic_id int64) error {
  * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
  * @return {*}
  */
-func (this *BaseController) TopicArticlePaginate(page, limit int, topic_name string, channel_id int64, channel_name string, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide, is_search int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
-	return biz.NewApiTopic().ArticlePaginate(page, limit, topic_name, channel_id, channel_name, category_id, call_index, keyword, is_top, is_red, is_hot, is_slide, is_search, order_by)
+func (this *BaseController) TopicArticlePaginate(page, limit int, topic_name string, site_id int64, site_flag string, channel_id int64, channel_name string, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide, is_search int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
+	return biz.NewApiTopic().ArticlePaginate(page, limit, topic_name, site_id, site_flag, channel_id, channel_name, category_id, call_index, keyword, is_top, is_red, is_hot, is_slide, is_search, order_by)
 }

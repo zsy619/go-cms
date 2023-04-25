@@ -9,6 +9,7 @@ const ApiArticleListModel_Field = `a.article_id,a.site_id,a.channel_id,a.categor
 const ApiArticleListModel_Table = `SELECT ` + ApiArticleListModel_Field + ` FROM cms_article a` +
 	` LEFT JOIN cms_article_category b ON a.category_id=b.category_id` +
 	` LEFT JOIN cms_site_channel c ON a.channel_id = c.channel_id` +
+	" LEFT JOIN cms_site d ON a.site_id = d.site_id" +
 	` WHERE a.status=2 AND b.status=2`
 
 // ApiCategoryGetModel 文章模型

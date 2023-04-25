@@ -91,6 +91,8 @@ func (this *ApiTopic) Click(topic_id int64) error {
  * @description: ArticlePaginate 获取文章分页列表
  * @param {*} page 页码
  * @param {int} limit 每页数量
+ * @param {int64} site_id 站点ID
+ * @param {string} site_flag 站点标识
  * @param {string} topic_name 专题名称
  * @param {int64} channel_id 频道ID
  * @param {string} channel_name 频道名称
@@ -105,9 +107,11 @@ func (this *ApiTopic) Click(topic_id int64) error {
  * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
  * @return {*}
  */
-func (this *ApiTopic) ArticlePaginate(page, limit int, topic_name string, channel_id int64, channel_name string, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide, is_search int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
+func (this *ApiTopic) ArticlePaginate(page, limit int, topic_name string, site_id int64, site_flag string, channel_id int64, channel_name string, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide, is_search int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
 	order_by = xgeneric.IFF(order_by == "", "sort_id", order_by)
-	where := xgeneric.IFF(channel_id <= 0, "", " And b.channel_id="+strconv.FormatInt(channel_id, 10)) +
+	where := xgeneric.IFF(site_flag == "", "", " AND d.flag = '"+site_flag+"'") +
+		xgeneric.IFF(site_id <= 0, "", " AND d.site_id = "+strconv.FormatInt(site_id, 10)) +
+		xgeneric.IFF(channel_id <= 0, "", " And b.channel_id="+strconv.FormatInt(channel_id, 10)) +
 		xgeneric.IFF(channel_name == "", "", " And c.name='"+channel_name+"'") +
 		xgeneric.IFF(topic_name == "", "", " And locate(',"+topic_name+",',concat(',',a.topic,','))") +
 		xgeneric.IFF(category_id <= 0, "", " And b.category_id="+strconv.FormatInt(category_id, 10)) +
@@ -148,13 +152,13 @@ func (this *ApiTopic) ArtilceTop(limit int, topic_name string) ([]*bizmodel.ApiA
 	if limit <= 0 {
 		limit = 10
 	}
-	cacheKey := fmt.Sprintf("%s_%d_%s", "TopicArtilceTop", limit, topic_name)
+	cacheKey := fmt.Sprintf("%s_%d_%s", "ApiTopic_ArtilceTop", limit, topic_name)
 	if found, item := ApiCache.Get(cacheKey); found {
 		list := item.([]*bizmodel.ApiArticleListModel)
 		logs.Debug("ArtilceTop[Cache]::", "cacheKey", cacheKey, "Topic", list)
 		return list, int64(len(list)), nil
 	}
-	list, _, err := NewApiTopic().ArticlePaginate(1, limit, topic_name, 0, "", 0, "", "", 0, 0, 0, 0, 0, "")
+	list, _, err := NewApiTopic().ArticlePaginate(1, limit, topic_name, 0, "", 0, "", 0, "", "", 0, 0, 0, 0, 0, "")
 	if err != nil {
 		return []*bizmodel.ApiArticleListModel{}, 0, err
 	}
