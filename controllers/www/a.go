@@ -64,8 +64,8 @@ func init() {
 		web.Router("/api/ads/paginate", &ApiAdsController{}, "*:Paginate")
 		web.Router("/api/ads/click", &ApiAdsController{}, "*:Click")
 
-		web.Router("/api/tag/find", &ApiTagController{}, "*:Find")
-		web.Router("/api/tag/find/new", &ApiTagController{}, "*:FindNew")
+		web.Router("/api/tag/get", &ApiTagController{}, "*:Get")
+		web.Router("/api/tag/get/new", &ApiTagController{}, "*:GetNew")
 		web.Router("/api/tag/click", &ApiTagController{}, "*:Click")
 		web.Router("/api/tag/article/paginate", &ApiTagController{}, "*:ArticlePaginate")
 	}

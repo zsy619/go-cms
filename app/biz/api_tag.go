@@ -18,17 +18,20 @@ func NewApiTag() *ApiTag {
 	return &ApiTag{}
 }
 
-func (this *ApiTag) get(cackeKeyPrefix string, limit int, siteId, channelId int64) ([]*bizmodel.ApiTagListModel, int64, error) {
+func (this *ApiTag) get(cackeKeyPrefix string, limit int, siteFlag string, siteId, channelId int64) ([]*bizmodel.ApiTagListModel, int64, error) {
 	if limit <= 0 {
 		limit = 10
 	}
-	cacheKey := fmt.Sprintf("%s_%d_%d_%d", cackeKeyPrefix, limit, siteId, channelId)
+	cacheKey := fmt.Sprintf("%s_%d_%s_%d_%d", cackeKeyPrefix, limit, siteFlag, siteId, channelId)
 	if found, item := ApiCache.Get(cacheKey); found {
 		tags := item.([]*bizmodel.ApiTagListModel)
 		logs.Debug("TagFind[Cache]::", "cacheKey", cacheKey, "Ads", tags)
 		return tags, int64(len(tags)), nil
 	}
-
+	if siteFlag != "" {
+		siteMdl, siteDo := query.CmsSiteDo()
+		siteDo.Where(siteMdl.Flag.Eq(siteFlag)).Pluck(siteMdl.SiteID, &siteId)
+	}
 	outTags := make([]*bizmodel.ApiTagListModel, 0)
 	mdl, do := query.CmsTagDo()
 	if siteId > 0 {
@@ -39,7 +42,7 @@ func (this *ApiTag) get(cackeKeyPrefix string, limit int, siteId, channelId int6
 	}
 	do = do.Where(mdl.Status.Eq(int32(StatusPass)))
 	do = do.Select(mdl.TagID, mdl.SiteID, mdl.ChannelID, mdl.Name, mdl.Title, mdl.ImgUrl1, mdl.ImgUrl2,
-		mdl.SeoTitle, mdl.SeoKeyword, mdl.SeoDescription, mdl.SortID)
+		mdl.SeoTitle, mdl.SeoKeyword, mdl.SeoDescription, mdl.SortID).Limit(limit)
 	if cackeKeyPrefix == "ApiTag_Get" {
 		do = do.Order(mdl.SortID, mdl.TagID)
 	} else {
@@ -55,23 +58,25 @@ func (this *ApiTag) get(cackeKeyPrefix string, limit int, siteId, channelId int6
 /**
  * @description: 获取标签列表
  * @param {int} limit 限制数量
+ * @param {*} siteFlag 站点标识
  * @param {*} siteId 站点ID
  * @param {int64} channelId 栏目ID
  * @return {*}
  */
-func (this *ApiTag) Get(limit int, siteId, channelId int64) ([]*bizmodel.ApiTagListModel, int64, error) {
-	return this.get("ApiTag_Get", limit, siteId, channelId)
+func (this *ApiTag) Get(limit int, siteFlag string, siteId, channelId int64) ([]*bizmodel.ApiTagListModel, int64, error) {
+	return this.get("ApiTag_Get", limit, siteFlag, siteId, channelId)
 }
 
 /**
  * @description: 获取最新标签列表
  * @param {int} limit 限制数量
+ * @param {*} siteFlag 站点标识
  * @param {*} siteId 站点ID
  * @param {int64} channelId 栏目ID
  * @return {*}
  */
-func (this *ApiTag) GetNew(limit int, siteId, channelId int64) ([]*bizmodel.ApiTagListModel, int64, error) {
-	return this.get("ApiTag_GetNew", limit, siteId, channelId)
+func (this *ApiTag) GetNew(limit int, siteFlag string, siteId, channelId int64) ([]*bizmodel.ApiTagListModel, int64, error) {
+	return this.get("ApiTag_GetNew", limit, siteFlag, siteId, channelId)
 }
 
 /**

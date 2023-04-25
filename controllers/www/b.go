@@ -374,23 +374,25 @@ func (this *BaseController) AdsClick(ads_id int64) error {
 /**
  * @description: 获取标签列表
  * @param {int} limit 限制数量
+ * @param {*} siteFlag 站点标识
  * @param {*} siteId 站点ID
  * @param {int64} channelId 栏目ID
  * @return {*}
  */
-func (this *BaseController) TagFind(limit int, siteId, channelId int64) ([]*bizmodel.ApiTagListModel, int64, error) {
-	return biz.NewApiTag().Get(limit, siteId, channelId)
+func (this *BaseController) TagGet(limit int, siteFlag string, siteId, channelId int64) ([]*bizmodel.ApiTagListModel, int64, error) {
+	return biz.NewApiTag().Get(limit, siteFlag, siteId, channelId)
 }
 
 /**
  * @description: 获取最新标签列表
  * @param {int} limit 限制数量
+ * @param {*} siteFlag 站点标识
  * @param {*} siteId 站点ID
  * @param {int64} channelId 栏目ID
  * @return {*}
  */
-func (this *BaseController) TagFindNew(limit int, siteId, channelId int64) ([]*bizmodel.ApiTagListModel, int64, error) {
-	return biz.NewApiTag().GetNew(limit, siteId, channelId)
+func (this *BaseController) TagGetNew(limit int, siteFlag string, siteId, channelId int64) ([]*bizmodel.ApiTagListModel, int64, error) {
+	return biz.NewApiTag().GetNew(limit, siteFlag, siteId, channelId)
 }
 
 /**

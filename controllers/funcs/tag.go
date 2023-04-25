@@ -8,12 +8,13 @@ import (
 /**
  * @description: 获取标签列表
  * @param {int} limit 限制数量
+ * @param {*} siteFlag 站点标识
  * @param {*} siteId 站点ID
  * @param {int64} channelId 栏目ID
  * @return {*}
  */
-func TagNewExt(limit int, siteId, channelId int64) []*bizmodel.ApiTagListModel {
-	find, _, _ := biz.NewApiTag().GetNew(limit, siteId, channelId)
+func TagNewExt(limit int, siteFlag string, siteId, channelId int64) []*bizmodel.ApiTagListModel {
+	find, _, _ := biz.NewApiTag().GetNew(limit, siteFlag, siteId, channelId)
 	if find == nil {
 		return []*bizmodel.ApiTagListModel{}
 	}
@@ -21,18 +22,19 @@ func TagNewExt(limit int, siteId, channelId int64) []*bizmodel.ApiTagListModel {
 }
 
 func TagNew(limit int) []*bizmodel.ApiTagListModel {
-	return TagNewExt(limit, 0, 0)
+	return TagNewExt(limit, "", 0, 0)
 }
 
 /**
  * @description: 获取最新标签列表
  * @param {int} limit 限制数量
+ * @param {*} siteFlag 站点标识
  * @param {*} siteId 站点ID
  * @param {int64} channelId 栏目ID
  * @return {*}
  */
-func TagTopExt(limit int, siteId, channelId int64) []*bizmodel.ApiTagListModel {
-	find, _, _ := biz.NewApiTag().Get(limit, siteId, channelId)
+func TagTopExt(limit int, siteFlag string, siteId, channelId int64) []*bizmodel.ApiTagListModel {
+	find, _, _ := biz.NewApiTag().Get(limit, siteFlag, siteId, channelId)
 	if find == nil {
 		return []*bizmodel.ApiTagListModel{}
 	}
@@ -40,7 +42,7 @@ func TagTopExt(limit int, siteId, channelId int64) []*bizmodel.ApiTagListModel {
 }
 
 func TagTop(limit int) []*bizmodel.ApiTagListModel {
-	return TagTopExt(limit, 0, 0)
+	return TagTopExt(limit, "", 0, 0)
 }
 
 func TagArtilceTop(limit int, tag_name string) []*bizmodel.ApiArticleListModel {

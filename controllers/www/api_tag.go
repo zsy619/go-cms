@@ -9,27 +9,29 @@ import (
 
 type ApiTagController struct{ BaseController }
 
-// @router /api/tag/find [get]
-func (this *ApiTagController) Find() {
+// @router /api/tag/get [get]
+func (this *ApiTagController) Get() {
+	site_flag := this.GetString("site_flag")
 	site_id, _ := this.GetInt64("site_id")
 	channel_id, _ := this.GetInt64("channel_id")
 	limit, _ := this.GetInt("limit", 6)
-	out, len, err := this.BaseController.TagFind(limit, site_id, channel_id)
+	out, len, err := this.BaseController.TagGet(limit, site_flag, site_id, channel_id)
 	if err != nil {
-		logs.Error("Find::", err)
+		logs.Error("Get::", err)
 		this.JSONErrorOfData(err.Error(), out)
 	}
 	this.JSONSuccess(strconv.FormatInt(len, 10), out)
 }
 
-// @router /api/tag/find/new [get]
-func (this *ApiTagController) FindNew() {
+// @router /api/tag/get/new [get]
+func (this *ApiTagController) GetNew() {
+	site_flag := this.GetString("site_flag")
 	site_id, _ := this.GetInt64("site_id")
 	channel_id, _ := this.GetInt64("channel_id")
 	limit, _ := this.GetInt("limit", 6)
-	out, len, err := this.BaseController.TagFindNew(limit, site_id, channel_id)
+	out, len, err := this.BaseController.TagGetNew(limit, site_flag, site_id, channel_id)
 	if err != nil {
-		logs.Error("Find::", err)
+		logs.Error("GetNew::", err)
 		this.JSONErrorOfData(err.Error(), out)
 	}
 	this.JSONSuccess(strconv.FormatInt(len, 10), out)
