@@ -229,7 +229,6 @@
     </tr>
 </script>
 <script>
-    var $;
     layui.use(['form', 'layer', 'wangEditor', 'tableSelect', 'upload'], function () {
         var form = layui.form;
         $ = layui.jquery;
@@ -270,7 +269,7 @@
             },
             done: function (elem, data) {
                 layui.each(data.data, function (index, item) {
-                    $("input[name='dir_path']").val(item.name);
+                    $("input[name='template']").val(item.name);
                 })
             }
         })
