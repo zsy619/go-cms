@@ -100,7 +100,7 @@ func (this *ApiTopic) Find(topic_id int64, name string) (*bizmodel.ApiTopicModel
 		logs.Debug("TopicFind[Cache]::", "cacheKey", cacheKey, "Topic", model)
 		return model, nil
 	}
-	field := `a.topic_id,a.site_id,a.channel_id,a.name,a.title,a.img_url1,a.img_url2,a.seo_title,a.seo_keyword,a.seo_description,a.sort_id,a.click,a.templat,b.flag as site_flag`
+	field := `a.topic_id,a.site_id,a.channel_id,a.name,a.title,a.img_url1,a.img_url2,a.seo_title,a.seo_keyword,a.seo_description,a.sort_id,a.click,a.template,b.flag as site_flag`
 	sql := `SELECT ` + field + ` FROM cms_topic a` +
 		` LEFT JOIN cms_site b ON a.site_id=b.site_id` +
 		` WHERE a.status=2` +
