@@ -10,40 +10,48 @@ import (
 type ApiAdsController struct{ BaseController }
 
 /**
-* @description: Find 获取广告列表
+* @description: Get 获取广告列表
 * @param {int} limit 获取数量
+* @param {int64} site_id 站点ID
+* @param {string} site_flag 站点标识
 * @param {int64} category_id 广告分类ID
 * @param {string} call_index 广告分类标识
 * @return {*}
  */
-// @router /api/ads/find [get]
-func (this *ApiAdsController) Find() {
+// @router /api/ads/get [get]
+func (this *ApiAdsController) Get() {
+	site_flag := this.GetString("site_flag")
+	site_id, _ := this.GetInt64("site_id")
 	category_id, _ := this.GetInt64("category_id")
 	call_index := this.GetString("call_index")
 	limit, _ := this.GetInt("limit", 6)
-	out, len, err := this.BaseController.AdsFind(limit, category_id, call_index)
+	out, len, err := this.BaseController.AdsGet(limit, site_id, site_flag, category_id, call_index)
 	if err != nil {
-		logs.Error("Find::", "callIndex", call_index, "err", err)
+		logs.Error("Get::", "callIndex", call_index, "err", err)
 		this.JSONErrorOfData(err.Error(), out)
 	}
 	this.JSONSuccess(strconv.FormatInt(len, 10), out)
 }
 
 /**
-* @description: FindNew 获取最新广告列表
+* @description: GetNew 获取最新广告列表
 * @param {int} limit 获取数量
+* @param {int64} site_id 站点ID
+* @param {string} site_flag 站点标识
 * @param {int64} category_id 广告分类ID
 * @param {string} call_index 广告分类标识
 * @return {*}
  */
-// @router /api/ads/find/new [get]
-func (this *ApiAdsController) FindNew() {
+// @router /api/ads/get/new [get]
+func (this *ApiAdsController) GetNew() {
+	site_flag := this.GetString("site_flag")
+	site_id, _ := this.GetInt64("site_id")
 	category_id, _ := this.GetInt64("category_id")
 	call_index := this.GetString("call_index")
 	limit, _ := this.GetInt("limit", 6)
-	out, len, err := this.BaseController.AdsFindNew(limit, category_id, call_index)
+	out, len, err := this.BaseController.AdsGetNew(limit, site_id, site_flag, category_id, call_index)
 	if err != nil {
-		logs.Error("Find::", "callIndex", call_index, "err", err)
+		logs.Error("GetNew::", "callIndex", call_index, "err", err)
 		this.JSONErrorOfData(err.Error(), out)
 	}
 	this.JSONSuccess(strconv.FormatInt(len, 10), out)

@@ -28,8 +28,8 @@ func init() {
 	}
 
 	{
-		web.Router("/api/ads/find", &ApiAdsController{}, "*:Find")
-		web.Router("/api/ads/find/new", &ApiAdsController{}, "*:FindNew")
+		web.Router("/api/ads/get", &ApiAdsController{}, "*:Get")
+		web.Router("/api/ads/get/new", &ApiAdsController{}, "*:GetNew")
 		web.Router("/api/ads/paginate", &ApiAdsController{}, "*:Paginate")
 		web.Router("/api/ads/click", &ApiAdsController{}, "*:Click")
 

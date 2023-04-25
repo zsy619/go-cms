@@ -18,8 +18,8 @@ func NewApiAds() *ApiAds {
 	return &ApiAds{}
 }
 
-func (this *ApiAds) get(cackeKeyPrefix string, limit int, category_id int64, call_index string) ([]*bizmodel.ApiAdsListModel, int64, error) {
-	cacheKey := fmt.Sprintf("%s_%d_%d_%s", cackeKeyPrefix, limit, category_id, call_index)
+func (this *ApiAds) get(cackeKeyPrefix string, limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiAdsListModel, int64, error) {
+	cacheKey := fmt.Sprintf("%s_%d_%d_%s_%d_%s", cackeKeyPrefix, limit, site_id, site_flag, category_id, call_index)
 	if found, item := ApiCache.Get(cacheKey); found {
 		list := item.([]*bizmodel.ApiAdsListModel)
 		logs.Debug("AdsFind[Cache]::", "cacheKey", cacheKey, "Ads", list)
@@ -29,7 +29,12 @@ func (this *ApiAds) get(cackeKeyPrefix string, limit int, category_id int64, cal
 
 	_, do := query.CmsAdsDo()
 	sqlSelect := "a.ads_id,a.site_id,a.channel_id,a.category_id,b.title as category_title,a.title,a.link_url,a.target,a.click,a.img_url1,a.img_url2,a.is_lock,a.is_red,a.is_hot,a.is_slide,a.begin_time,a.end_time"
-	sql := "SELECT " + sqlSelect + " FROM cms_ads a LEFT JOIN cms_ads_category b ON a.category_id = b.category_id WHERE a.`status`=2 and NOW() between a.begin_time and a.end_time " +
+	sql := `SELECT ` + sqlSelect + ` FROM cms_ads a` +
+		` LEFT JOIN cms_ads_category b ON a.category_id = b.category_id` +
+		` LEFT JOIN cms_site c ON a.site_id = c.site_id` +
+		` WHERE a.status=2 and NOW() between a.begin_time and a.end_time ` +
+		xgeneric.IFF(site_flag == "", "", " AND c.flag = '"+site_flag+"'") +
+		xgeneric.IFF(site_id <= 0, "", " AND b.site_id = "+strconv.FormatInt(site_id, 10)) +
 		xgeneric.IFF(call_index == "", "", " AND b.call_index = '"+call_index+"'") +
 		xgeneric.IFF(category_id <= 0, "", " AND b.category_id = "+strconv.FormatInt(category_id, 10))
 	if cackeKeyPrefix == "ApiAds_GetNew" {
@@ -50,23 +55,27 @@ func (this *ApiAds) get(cackeKeyPrefix string, limit int, category_id int64, cal
 /**
 * @description: Get 获取广告列表
 * @param {int} limit 获取数量
+* @param {int64} site_id 站点ID
+* @param {string} site_flag 站点标识
 * @param {int64} category_id 广告分类ID
 * @param {string} call_index 广告分类标识
 * @return {*}
  */
-func (this *ApiAds) Get(limit int, category_id int64, call_index string) ([]*bizmodel.ApiAdsListModel, int64, error) {
-	return this.get("ApiAds_Get", limit, category_id, call_index)
+func (this *ApiAds) Get(limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiAdsListModel, int64, error) {
+	return this.get("ApiAds_Get", limit, site_id, site_flag, category_id, call_index)
 }
 
 /**
 * @description: GetNew 获取最新广告列表
 * @param {int} limit 获取数量
+* @param {int64} site_id 站点ID
+* @param {string} site_flag 站点标识
 * @param {int64} category_id 广告分类ID
 * @param {string} call_index 广告分类标识
 * @return {*}
  */
-func (this *ApiAds) GetNew(limit int, category_id int64, call_index string) ([]*bizmodel.ApiAdsListModel, int64, error) {
-	return this.get("ApiAds_GetNew", limit, category_id, call_index)
+func (this *ApiAds) GetNew(limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiAdsListModel, int64, error) {
+	return this.get("ApiAds_GetNew", limit, site_id, site_flag, category_id, call_index)
 }
 
 /**
