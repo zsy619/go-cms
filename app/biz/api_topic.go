@@ -109,7 +109,7 @@ func (this *ApiTopic) Find(topic_id int64, name string) (*bizmodel.ApiTopicModel
 	_, do := query.CmsTopicDo()
 	model := &bizmodel.ApiTopicModel{}
 	err := do.UnderlyingDB().Debug().Raw(sql).Scan(model).Error
-	if err == nil {
+	if err == nil && model.Name != "" {
 		ApiCache.Set(cacheKey, model, 2400)
 	}
 	return model, err

@@ -11,6 +11,7 @@ type ApiTagModel struct {
 	SeoTitle       string `gorm:"column:seo_title;type:varchar(128);comment:SEO标题" json:"seo_title" form:"seo_title"`
 	SeoKeyword     string `gorm:"column:seo_keyword;type:varchar(128);comment:SEO关健字" json:"seo_keyword" form:"seo_keyword"`
 	SeoDescription string `gorm:"column:seo_description;type:varchar(128);comment:SEO描述" json:"seo_description" form:"seo_description"`
+	Template       string `gorm:"column:template;type:varchar(64);comment:模板" json:"template" form:"template"`
 	SortID         int32  `gorm:"column:sort_id;type:int;comment:排序" json:"sort_id" form:"sort_id"`
 	SiteFlag       string `gorm:"column:site_flag;type:varchar(64);comment:站点标识" json:"site_flag" form:"site_flag"`
 }

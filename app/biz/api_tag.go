@@ -37,7 +37,7 @@ func (this *ApiTag) get(cackeKeyPrefix string, limit int, site_id int64, site_fl
 		xgeneric.IFF(site_id <= 0, "", " and a.site_id = "+strconv.FormatInt(site_id, 10)) +
 		xgeneric.IFF(channel_id <= 0, "", " and a.channel_id = "+strconv.FormatInt(channel_id, 10))
 
-	field := `a.tag_id,a.site_id,a.channel_id,a.name,a.title,a.img_url1,a.img_url2,a.seo_title,a.seo_keyword,a.seo_description,a.sort_id,b.flag as site_flag`
+	field := `a.tag_id,a.site_id,a.channel_id,a.name,a.title,a.img_url1,a.img_url2,a.seo_title,a.seo_keyword,a.seo_description,a.sort_id,a.template,b.flag as site_flag`
 	sql := `select ` + field + ` from cms_tag a` +
 		` left join cms_site b on a.site_id=b.site_id` +
 		where
@@ -99,12 +99,12 @@ func (this *ApiTag) Find(tag_id int64, name string) (*bizmodel.ApiTagModel, erro
 		xgeneric.IFF(tag_id <= 0, "", " and a.tag_id = "+strconv.FormatInt(tag_id, 10)) +
 		xgeneric.IFF(name == "", "", " and a.name = '"+name+"'")
 
-	field := `a.tag_id,a.site_id,a.channel_id,a.name,a.title,a.img_url1,a.img_url2,a.seo_title,a.seo_keyword,a.seo_description,a.sort_id,b.flag as site_flag`
+	field := `a.tag_id,a.site_id,a.channel_id,a.name,a.title,a.img_url1,a.img_url2,a.seo_title,a.seo_keyword,a.seo_description,a.sort_id,a.template,b.flag as site_flag`
 	sql := `select ` + field + ` from cms_tag a` +
 		` left join cms_site b on a.site_id=b.site_id` +
 		where
 	err := do.UnderlyingDB().Raw(sql).Scan(&outTag).Error
-	if err == nil {
+	if err == nil && outTag.Name != "" {
 		ApiCache.Set(cacheKey, &outTag, 1800)
 	}
 	return &outTag, err
