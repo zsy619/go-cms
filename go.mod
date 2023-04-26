@@ -25,7 +25,7 @@ require (
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/ethereum/go-ethereum v1.11.6 // indirect
 	github.com/g3n/engine v0.2.0 // indirect
-	github.com/go-sql-driver/mysql v1.7.0 // indirect
+	github.com/go-sql-driver/mysql v1.7.1 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/golang/glog v1.1.1 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect

@@ -107,3 +107,12 @@ func UrlForTag(name string) string {
 	}
 	return fmt.Sprintf("/%s/tag/%s", find.SiteFlag, name)
 }
+
+/**
+ * @description: 搜索链接
+ * @param {string} keyword 关键词
+ * @return {*}
+ */
+func UrlForSearch(keyword string) string {
+	return "/article/search/" + keyword
+}

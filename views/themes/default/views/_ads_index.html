@@ -1,0 +1,52 @@
+<div class="banner-box">
+    <div class="sliderList">
+        <div class="slider single-item" id="divBanner">
+            <div class="carousel-item">
+                <img src="{{.siteStatic}}images/banner_img1.png" />
+            </div>
+            <div class="carousel-item">
+                <img src="{{.siteStatic}}images/banner_img1.png" />
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            url: "/api/ads/get?call_index=home_top&limit=6",
+            dataType: "json",
+            type: "get",
+            beforeSend: function () {
+                $("#divBanner").html("");
+                $(".banner-box").busyLoad("show", { spinner: "circle-line" });
+            },
+            success: function (res) {
+                $(".banner-box").busyLoad("hide", { animate: "fade" });
+                // console.log(res);
+                if (res.code == 0) {
+                    var len = res.data.length;
+                    for (var i = 0; i < len; i++) {
+                        var item = res.data[i];
+                        var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
+                        var html = '<div class="carousel-item"><img src="' + item.img_url1 + '" /></div>';
+                        $("#divBanner").append(html);
+                    }
+                    if (len > 0) {
+                        $('.single-item').slick({
+                            dots: true,
+                            speed: 300,
+                            autoplay: true,
+                            slidesToShow: 1,
+                            slidesToScroll: 1,
+                            arrow: true
+                        });
+                    }
+                }
+            },
+            error: function () {
+            },
+            complete: function () {
+            }
+        });
+    });
+</script>

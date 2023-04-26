@@ -13,18 +13,7 @@
 
 <body>
     {{TemplateTheme $.siteTheme "_nav.html" .}}
-    <div class="banner-box">
-        <div class="sliderList">
-            <div class="slider single-item">
-                <div class="carousel-item">
-                    <img src="{{.siteStatic}}images/banner_img1.png" />
-                </div>
-                <div class="carousel-item">
-                    <img src="{{.siteStatic}}images/banner_img1.png" />
-                </div>
-            </div>
-        </div>
-    </div>
+    {{TemplateTheme $.siteTheme "_ads_index.html" .}}
     <div class="news-box">
         <div class="w1200">
             <div class="left">
@@ -126,15 +115,6 @@
     {{TemplateTheme $.siteTheme "_footer.html" .}}
     <script src="{{.siteStatic}}js/slick.js"></script>
     <script type="text/javascript">
-        $('.single-item').slick({
-            dots: true,
-            speed: 300,
-            autoplay: true,
-            slidesToShow: 1,
-            slidesToScroll: 1,
-            arrow: true
-        });
-
         $(function () {
             TuPianXinWen();
             TongZhiGongGao();

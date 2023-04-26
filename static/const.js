@@ -138,6 +138,15 @@ function UrlForArticle(callIndex, articleId, url) {
 }
 
 /**
+ * @description: 搜索链接
+ * @param {*} keyword 关键词
+ * @return {*}
+ */
+function UrlForSearch(keyword) {
+    return "/article/search/" + keyword;
+}
+
+/**
  * @description: 专题链接
  * @param {string} site_flag 站点标识
  * @param {string} name 专题名称

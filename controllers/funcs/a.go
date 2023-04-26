@@ -126,7 +126,10 @@ func init() {
 		funcs["urlfortopic"] = UrlForTopic
 
 		funcs["UrlForTag"] = UrlForTag
-		funcs["urlFortag"] = UrlForTag
+		funcs["urlfortag"] = UrlForTag
+
+		funcs["UrlForSearch"] = UrlForSearch
+		funcs["urlforsearch"] = UrlForSearch
 	}
 
 	// 注册模板函数
