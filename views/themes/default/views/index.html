@@ -123,109 +123,90 @@
 
         // 图片新闻
         function TuPianXinWen() {
-            $.ajax({
-                url: "/api/article/get?call_index=xyxw&limit=6&is_slide=1",
-                dataType: "json",
-                type: "get",
-                beforeSend: function () {
-                    $("#divTpxw").html("");
-                    $("#divTpxw").busyLoad("show", { spinner: "circle-line" });
-                },
-                success: function (res) {
-                    $("#divTpxw").busyLoad("hide", { animate: "fade" });
-                    // console.log(res);
-                    if (res.code == 0) {
-                        var len = res.data.length;
-                        for (var i = 0; i < len; i++) {
-                            var item = res.data[i];
-                            var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
-                            var html = '<div class="carousel-item"><img src="' + item.img_url1 + '" /><div class="carousel-opc"></div><a target="_blank" href="' + url + '"><span class="title">' + item.title + '</span></a></div>';
-                            $("#divTpxw").append(html);
-                        }
-                        if (len > 0) {
-                            $('.single-item2').slick({
-                                infinite: true, //循环功能
-                                slidesToShow: 1, //可见数
-                                slidesToScroll: 1, //滚动个数
-                                autoplay: true, //自动播放
-                                arrows: true, //左右箭头
-                                draggable: true, //拖拽功能
-                                dots: true, //指示点
-                                fade: false,// 开启渐隐切换模式
-                                autoplaySpeed: 5000, //自动播放速度
-                                speed: 1000, //切换动画速度
-                            });
-                        }
+            var art = new Article();
+            art.get({
+                call_index: "xyxw",
+                limit: 6,
+                is_slide: 1
+            }, function () {
+                $("#divTpxw").html("");
+                $("#divTpxw").busyLoad("show", { spinner: "circle-line" });
+            }, function (res) {
+                $("#divTpxw").busyLoad("hide", { animate: "fade" });
+                if (res.code == CodeSuccess) {
+                    var len = res.data.length;
+                    for (var i = 0; i < len; i++) {
+                        var item = res.data[i];
+                        var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
+                        var html = '<div class="carousel-item"><img src="' + item.img_url1 + '" /><div class="carousel-opc"></div><a target="_blank" href="' + url + '"><span class="title">' + item.title + '</span></a></div>';
+                        $("#divTpxw").append(html);
                     }
-                },
-                error: function () {
-                    $("#divTpxw").busyLoad("show", { spinner: "circle-line" });
-                },
-                complete: function () {
+                    if (len > 0) {
+                        $('.single-item2').slick({
+                            infinite: true, //循环功能
+                            slidesToShow: 1, //可见数
+                            slidesToScroll: 1, //滚动个数
+                            autoplay: true, //自动播放
+                            arrows: true, //左右箭头
+                            draggable: true, //拖拽功能
+                            dots: true, //指示点
+                            fade: false,// 开启渐隐切换模式
+                            autoplaySpeed: 5000, //自动播放速度
+                            speed: 1000, //切换动画速度
+                        });
+                    }
                 }
+            }, function () {
+                $("#divTpxw").busyLoad("show", { spinner: "circle-line" });
             });
         }
 
         // 通知公告
         function TongZhiGongGao() {
-            $.ajax({
-                url: "/api/article/get?call_index=tzgg&limit=8",
-                dataType: "json",
-                type: "get",
-                beforeSend: function () {
-                    $("#artTzgg").html("");
-                    $("#artTzgg").busyLoad("show", { spinner: "circle-line" });
-                },
-                success: function (res) {
-                    // console.log(res);
-                    if (res.code == 0) {
-                        var len = res.data.length;
-                        for (var i = 0; i < len; i++) {
-                            var item = res.data[i];
-                            var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
-                            var html = '<li><a target="_blank" title="' + item.title + '" href="' + url + '"><span class="txt">' + item.title + '</span><span class="fr">' + moment(item.publish_time).format('YYYY-MM-DD') + '</span></a></li>';
-                            $("#artTzgg").append(html);
-                        }
+            var art = new Article();
+            art.get({
+                "call_index": "tzgg",
+                "limit": 8,
+            }, function () {
+                $("#artTzgg").html("");
+                $("#artTzgg").busyLoad("show", { spinner: "circle-line" });
+            }, function (res) {
+                if (res.code == CodeSuccess) {
+                    var len = res.data.length;
+                    for (var i = 0; i < len; i++) {
+                        var item = res.data[i];
+                        var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
+                        var html = '<li><a target="_blank" title="' + item.title + '" href="' + url + '"><span class="txt">' + item.title + '</span><span class="fr">' + moment(item.publish_time).format('YYYY-MM-DD') + '</span></a></li>';
+                        $("#artTzgg").append(html);
                     }
-                },
-                error: function () {
-                    alert('failed!');
-                },
-                complete: function () {
-                    $("#artTzgg").busyLoad("hide", { animate: "fade" });
                 }
+            }, function () {
+                $("#artTzgg").busyLoad("hide", { animate: "fade" });
             });
         }
 
         // 其他媒体
         function QiTeMeiTi() {
-            $.ajax({
-                url: "/api/article/get?call_index=qtmt&limit=4",
-                dataType: "json",
-                type: "get",
-                beforeSend: function () {
-                    $("#divQtmt").html("");
-                    $("#divQtmt").busyLoad("show", { spinner: "circle-line" });
-                },
-                success: function (res) {
-                    // console.log(res);
-                    if (res.code == 0) {
-                        var len = res.data.length;
-                        for (var i = 0; i < len; i++) {
-                            var item = res.data[i];
-                            var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
-                            var icon = item.ico_url1 == "" ? "" : ('<img src="' + item.ico_url1 + '" class="icon" />');
-                            var html = '<a class="slow" target="_blank" href="' + url + '"><img src="' + item.img_url1 + '" class="img" /><div class="opc"></div><div class="title">' + icon + '<span>' + (item.source == "" ? "" : (item.source + "：")) + item.title + '</span></div></a>';
-                            $("#divQtmt").append(html);
-                        }
+            var art = new Article();
+            art.get({
+                call_index: "qtmt",
+                limit: 4,
+            }, function () {
+                $("#divQtmt").html("");
+                $("#divQtmt").busyLoad("show", { spinner: "circle-line" });
+            }, function (res) {
+                if (res.code == CodeSuccess) {
+                    var len = res.data.length;
+                    for (var i = 0; i < len; i++) {
+                        var item = res.data[i];
+                        var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
+                        var icon = item.ico_url1 == "" ? "" : ('<img src="' + item.ico_url1 + '" class="icon" />');
+                        var html = '<a class="slow" target="_blank" href="' + url + '"><img src="' + item.img_url1 + '" class="img" /><div class="opc"></div><div class="title">' + icon + '<span>' + (item.source == "" ? "" : (item.source + "：")) + item.title + '</span></div></a>';
+                        $("#divQtmt").append(html);
                     }
-                },
-                error: function () {
-                    alert('failed!');
-                },
-                complete: function () {
-                    $("#divQtmt").busyLoad("hide", { animate: "fade" });
                 }
+            }, function () {
+                $("#divQtmt").busyLoad("hide", { animate: "fade" });
             });
         }
     </script>
