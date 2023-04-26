@@ -25,51 +25,47 @@
 <script type="text/javascript">
 
     var loadData = function (page, limit, call_index) {
-        $.ajax({
-            url: "/api/article/paginate?call_index=" + call_index + "&limit=" + limit + "&page=" + page + "&r=" + Math.random(),
-            dataType: "json",
-            type: "get",
-            beforeSend: function () {
-                $(".list-ul").html("");
-                $(".list-con").busyLoad("show", { spinner: "circle-line" });
-            },
-            success: function (res) {
-                if (res.code == CodeSuccess) {
-                    var len = res.data.length;
-                    var tmpl = $("#list").html();
-                    for (var i = 0; i < len; i++) {
-                        var item = res.data[i];
-                        var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
-                        var html = tmpl.replaceAll("${url}", url).replaceAll("${article_id}", item.article_id).replaceAll("${title}", item.title).
-                            replaceAll("%{publish_time}", moment(item.publish_time).format('YYYY-MM-DD'));
-                        $(".list-ul").append(html);
-                    }
-                    if (len == 0) {
-                        $(".list-con").html($("#templateEmpty").html());
-                    }
-                    if (page == 1 && len > 0) {
-                        laypage.render({
-                            elem: 'pagination'
-                            , limit: 20
-                            , prev: '上页'
-                            , next: '下页'
-                            , limits: [10, 20, 30, 40, 50, 100]
-                            , count: res.count //数据总数，从服务端得到
-                            , jump: function (obj, first) {
-                                if (!first) {
-                                    loadData(obj.curr, obj.limit, call_index);
-                                }
-                            }
-                        });
-                    }
+        var art = new Article();
+        art.paginate({
+            call_index: call_index,
+            limit: limit,
+            page: page,
+            r: Math.random()
+        }, function () {
+            $(".list-ul").html("");
+            $(".list-con").busyLoad("show", { spinner: "circle-line" });
+        }, function (res) {
+            if (res.code == CodeSuccess) {
+                var len = res.data.length;
+                var tmpl = $("#list").html();
+                for (var i = 0; i < len; i++) {
+                    var item = res.data[i];
+                    var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
+                    var html = tmpl.replaceAll("${url}", url).replaceAll("${article_id}", item.article_id).replaceAll("${title}", item.title).
+                        replaceAll("%{publish_time}", moment(item.publish_time).format('YYYY-MM-DD'));
+                    $(".list-ul").append(html);
                 }
-            },
-            error: function () {
-                alert('failed!');
-            },
-            complete: function () {
-                $(".list-con").busyLoad("hide", { animate: "fade" });
+                if (len == 0) {
+                    $(".list-con").html($("#templateEmpty").html());
+                }
+                if (page == 1 && len > 0) {
+                    laypage.render({
+                        elem: 'pagination'
+                        , limit: 20
+                        , prev: '上页'
+                        , next: '下页'
+                        , limits: [10, 20, 30, 40, 50, 100]
+                        , count: res.count //数据总数，从服务端得到
+                        , jump: function (obj, first) {
+                            if (!first) {
+                                loadData(obj.curr, obj.limit, call_index);
+                            }
+                        }
+                    });
+                }
             }
+        }, function () {
+            $(".list-con").busyLoad("hide", { animate: "fade" });
         });
     };
 

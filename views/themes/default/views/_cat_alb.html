@@ -25,47 +25,41 @@
 </script>
 <script type="text/javascript">
     $(function () {
-        $.ajax({
-            url: "/api/article/album?call_index=" + categoryName + "&r=" + Math.random(),
-            dataType: "json",
-            type: "get",
-            beforeSend: function () {
-                $("#lunbo").html("");
-                $(".sliderList").busyLoad("show", { spinner: "circle-line" });
-            },
-            success: function (res) {
-                if (res.code == CodeSuccess) {
-                    var len = parseInt(res.msg);
-                    var tmpl = $("#tmplAlbum").html();
-                    for (var i = 0; i < len; i++) {
-                        var item = res.data[i];
-                        var html = tmpl.replaceAll("${originalPath}", item.original_path).replaceAll("${title}", item.title);
-                        $("#lunbo").append(html);
-                    }
-                    if (len == 0) {
-                        $("#lunbo").html($("#templateEmpty").html());
-                    }
-
-                    var viewer = new Viewer(document.getElementById('divImg'), {
-                        url: 'data-original'
-                    });
-
-                    $('.single-item2').slick({
-                        dots: true,
-                        speed: 300,
-                        autoplay: true,
-                        slidesToShow: 1,
-                        slidesToScroll: 1,
-                        arrow: true
-                    });
+        var art = new Article();
+        art.album({
+            call_index: categoryName,
+            r: Math.random()
+        }, function () {
+            $("#lunbo").html("");
+            $(".sliderList").busyLoad("show", { spinner: "circle-line" });
+        }, function (res) {
+            if (res.code == CodeSuccess) {
+                var len = parseInt(res.msg);
+                var tmpl = $("#tmplAlbum").html();
+                for (var i = 0; i < len; i++) {
+                    var item = res.data[i];
+                    var html = tmpl.replaceAll("${originalPath}", item.original_path).replaceAll("${title}", item.title);
+                    $("#lunbo").append(html);
                 }
-            },
-            error: function () {
-                alert('failed!');
-            },
-            complete: function () {
-                $(".sliderList").busyLoad("hide", { animate: "fade" });
+                if (len == 0) {
+                    $("#lunbo").html($("#templateEmpty").html());
+                }
+
+                var viewer = new Viewer(document.getElementById('divImg'), {
+                    url: 'data-original'
+                });
+
+                $('.single-item2').slick({
+                    dots: true,
+                    speed: 300,
+                    autoplay: true,
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    arrow: true
+                });
             }
+        }, function () {
+            $(".sliderList").busyLoad("hide", { animate: "fade" });
         });
     })
 </script>

@@ -5,37 +5,30 @@
 </div>
 <script type="text/javascript">
     $(function () {
-        $.ajax({
-            url: "/api/category/get?channel_name=" + channelName + "&r=" + Math.random(),
-            dataType: "json",
-            type: "get",
-            beforeSend: function () {
-                $("#channelName").html("");
-                $("#urlNav").html("");
-                $(".nav-aside").busyLoad("show", { spinner: "circle-line" });
-            },
-            success: function (res) {
-                // console.log(res);
-                if (res.code == 0) {
-                    var len = res.data.length;
-                    for (var i = 0; i < len; i++) {
-                        var item = res.data[i];
-                        if (i == 0) {
-                            $("#channelName").html(item.channel_title);
-                        }
-                        var url = item.link_url;
-                        var title = item.title;
-                        var liItem = item.call_index == categoryName ? ('<li class="active"><a href="' + url + '">' + title + '</a></li>') : ('<li><a href="' + url + '">' + title + '</a></li>');
-                        $("#urlNav").append(liItem);
+        var cat = new Category();
+        cat.get({
+            channel_name: channelName,
+            r: Math.random()
+        }, function () {
+            $("#channelName").html("");
+            $("#urlNav").html("");
+            $(".nav-aside").busyLoad("show", { spinner: "circle-line" });
+        }, function (res) {
+            if (res.code == CodeSuccess) {
+                var len = res.data.length;
+                for (var i = 0; i < len; i++) {
+                    var item = res.data[i];
+                    if (i == 0) {
+                        $("#channelName").html(item.channel_title);
                     }
+                    var url = item.link_url;
+                    var title = item.title;
+                    var liItem = item.call_index == categoryName ? ('<li class="active"><a href="' + url + '">' + title + '</a></li>') : ('<li><a href="' + url + '">' + title + '</a></li>');
+                    $("#urlNav").append(liItem);
                 }
-            },
-            error: function () {
-                alert('failed!');
-            },
-            complete: function () {
-                $(".nav-aside").busyLoad("hide", { animate: "fade" });
             }
-        });
+        }, function () {
+            $(".nav-aside").busyLoad("hide", { animate: "fade" });
+        })
     })
 </script>

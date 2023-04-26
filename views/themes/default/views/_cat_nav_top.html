@@ -6,32 +6,27 @@
 </div>
 <script>
     $(function () {
-        $.ajax({
-            url: "/api/category/nav?call_index=" + categoryName + "&r=" + Math.random(),
-            dataType: "json",
-            type: "get",
-            beforeSend: function () {
-                $(".breadcrumb").html("");
-            },
-            success: function (res) {
-                $(".breadcrumb").append('<img src="{{.siteStatic}}images/position.png" alt="" class="position" /> 您所在的位置：');
-                $(".breadcrumb").append('<a href="/">首页</a>&nbsp;&gt;');
-                if (res.code == 0) {
-                    var len = res.data.length;
-                    for (var i = 0; i < len; i++) {
-                        if (i != len - 1) {
-                            $(".breadcrumb").append('&nbsp;<a href="javascript:void(0)">' + res.data[i].title + '</a>&nbsp;&gt;');
-                        } else {
-                            $(".breadcrumb").append('&nbsp;<a href="javascript:void(0)" class="active">' + res.data[i].title + '</a>');
-                        }
+        var cat = new Category();
+        cat.nav({
+            call_index: categoryName,
+            r: Math.random()
+        }, function () {
+            $(".breadcrumb").html("");
+        }, function (res) {
+            $(".breadcrumb").append('<img src="{{.siteStatic}}images/position.png" alt="" class="position" /> 您所在的位置：');
+            $(".breadcrumb").append('<a href="/">首页</a>&nbsp;&gt;');
+            if (res.code == CodeSuccess) {
+                var len = res.data.length;
+                for (var i = 0; i < len; i++) {
+                    if (i != len - 1) {
+                        $(".breadcrumb").append('&nbsp;<a href="javascript:void(0)">' + res.data[i].title + '</a>&nbsp;&gt;');
+                    } else {
+                        $(".breadcrumb").append('&nbsp;<a href="javascript:void(0)" class="active">' + res.data[i].title + '</a>');
                     }
                 }
-            },
-            error: function () {
-            },
-            complete: function () {
             }
-        });
+        }, function () {
 
+        });
     })
 </script>

@@ -69,6 +69,7 @@
     </div>
     {{TemplateTheme $.siteTheme "_footer.html" .}}
     <script type="text/javascript">
+        var debug = "{{.debug}}";
         layui.use(['form', 'element', 'laypage', 'layer'], function () {
             var form = layui.form,
                 element = layui.element,
@@ -76,55 +77,51 @@
                 layer = layui.layer;
 
             var loadData = function (page, limit, call_index) {
-                $.ajax({
-                    url: "/api/article/paginate?call_index=" + call_index + "&limit=" + limit + "&page=" + page + "&r=" + Math.random(),
-                    dataType: "json",
-                    type: "get",
-                    beforeSend: function () {
+                var art = new Article();
+                art.paginate({
+                    call_index: call_index,
+                    limit: limit,
+                    page: page,
+                    r: Math.random()
+                }, function () {
+                    if (debug != "debug") {
+                        $(".imgTextlist-ul2").html("");
+                    }
+                    $(".list-con").busyLoad("show", { spinner: "circle-line" });
+                }, function (res) {
+                    if (res.code == CodeSuccess) {
                         if (debug != "debug") {
-                            $(".imgTextlist-ul2").html("");
-                        }
-                        $(".list-con").busyLoad("show", { spinner: "circle-line" });
-                    },
-                    success: function (res) {
-                        if (res.code == 0) {
-                            if (debug != "debug") {
-                                var len = res.data.length;
-                                var tmpl = $('#liTmpl').html();
-                                for (var i = 0; i < len; i++) {
-                                    var item = res.data[i];
-                                    var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
-                                    var html = tmpl.replaceAll("${img_url1}", item.img_url1).replaceAll("${article_id}", item.article_id)
-                                        .replaceAll("${url}", url).replaceAll("${title}", item.title)
-                                        .replaceAll("${sub_title}", item.sub_title).replaceAll("${summary}", item.summary);
-                                    $(".imgTextlist-ul2").append(html);
-                                }
-                                if (page == 1 && len > 0) {
-                                    laypage.render({
-                                        elem: 'pagination'
-                                        , limit: 6
-                                        , prev: '上页'
-                                        , next: '下页'
-                                        , limits: [6, 12, 24, 36, 48, 54]
-                                        , count: res.count //数据总数，从服务端得到
-                                        , jump: function (obj, first) {
-                                            //首次不执行
-                                            if (!first) {
-                                                //do something
-                                                loadData(obj.curr, obj.limit, call_index);
-                                            }
+                            var len = res.data.length;
+                            var tmpl = $('#liTmpl').html();
+                            for (var i = 0; i < len; i++) {
+                                var item = res.data[i];
+                                var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
+                                var html = tmpl.replaceAll("${img_url1}", item.img_url1).replaceAll("${article_id}", item.article_id)
+                                    .replaceAll("${url}", url).replaceAll("${title}", item.title)
+                                    .replaceAll("${sub_title}", item.sub_title).replaceAll("${summary}", item.summary);
+                                $(".imgTextlist-ul2").append(html);
+                            }
+                            if (page == 1 && len > 0) {
+                                laypage.render({
+                                    elem: 'pagination'
+                                    , limit: 6
+                                    , prev: '上页'
+                                    , next: '下页'
+                                    , limits: [6, 12, 24, 36, 48, 54]
+                                    , count: res.count //数据总数，从服务端得到
+                                    , jump: function (obj, first) {
+                                        //首次不执行
+                                        if (!first) {
+                                            //do something
+                                            loadData(obj.curr, obj.limit, call_index);
                                         }
-                                    });
-                                }
+                                    }
+                                });
                             }
                         }
-                    },
-                    error: function () {
-                        alert('failed!');
-                    },
-                    complete: function () {
-                        $(".list-con").busyLoad("hide", { animate: "fade" });
                     }
+                }, function () {
+                    $(".list-con").busyLoad("hide", { animate: "fade" });
                 });
             };
 

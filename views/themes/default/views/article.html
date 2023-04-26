@@ -88,59 +88,48 @@
                 });
             }
 
-            $.ajax({
-                url: "/api/category/nav?call_index={{.article.CategoryCallIndex}}&r=" + Math.random(),
-                dataType: "json",
-                type: "get",
-                beforeSend: function () {
-                    $(".breadcrumb").html("");
-                },
-                success: function (res) {
-                    $(".breadcrumb").append('<img src="{{.siteStatic}}images/position.png" alt="" class="position" /> 您所在的位置：');
-                    $(".breadcrumb").append('<a href="/">首页</a>&nbsp;&gt;');
-                    if (res.code == 0) {
-                        var len = res.data.length;
-                        for (var i = 0; i < len; i++) {
-                            $(".breadcrumb").append('&nbsp;<a href="javascript:void(0)">' + res.data[i].title + '</a>&nbsp;&gt;');
-                        }
+            var cat = new Category();
+            cat.nav({
+                call_index: '{{.article.CategoryCallIndex}}',
+                r: Math.random()
+            }, function () {
+                $(".breadcrumb").html("");
+            }, function (res) {
+                $(".breadcrumb").append('<img src="{{.siteStatic}}images/position.png" alt="" class="position" /> 您所在的位置：');
+                $(".breadcrumb").append('<a href="/">首页</a>&nbsp;&gt;');
+                if (res.code == CodeSuccess) {
+                    var len = res.data.length;
+                    for (var i = 0; i < len; i++) {
+                        $(".breadcrumb").append('&nbsp;<a href="javascript:void(0)">' + res.data[i].title + '</a>&nbsp;&gt;');
                     }
-                    $(".breadcrumb").append('&nbsp;<a href="javascript:void(0)" class="active">明细</a>');
-                },
-                error: function () {
-                },
-                complete: function () {
                 }
+                $(".breadcrumb").append('&nbsp;<a href="javascript:void(0)" class="active">明细</a>');
+            }, function () {
             });
-            $.ajax({
-                url: "/api/category/get?channel_name={{.article.ChannelName}}&r=" + Math.random(),
-                dataType: "json",
-                type: "get",
-                beforeSend: function () {
-                    $("#channelName").html("");
-                    $("#urlNav").html("");
-                    $(".nav-aside").busyLoad("show", { spinner: "circle-line" });
-                },
-                success: function (res) {
-                    if (res.code == 0) {
-                        var len = res.data.length;
-                        for (var i = 0; i < len; i++) {
-                            var item = res.data[i];
-                            if (i == 0) {
-                                $("#channelName").html(item.channel_title);
-                            }
-                            var url = item.link_url;
-                            var title = item.title;
-                            var liItem = item.call_index == "{{.article.CategoryCallIndex}}" ? ('<li class="active"><a href="' + url + '">' + title + '</a></li>') : ('<li><a href="' + url + '">' + title + '</a></li>');
-                            $("#urlNav").append(liItem);
+
+            cat.get({
+                channel_name: '{{.article.ChannelName}}',
+                r: Math.random()
+            }, function () {
+                $("#channelName").html("");
+                $("#urlNav").html("");
+                $(".nav-aside").busyLoad("show", { spinner: "circle-line" });
+            }, function (res) {
+                if (res.code == CodeSuccess) {
+                    var len = res.data.length;
+                    for (var i = 0; i < len; i++) {
+                        var item = res.data[i];
+                        if (i == 0) {
+                            $("#channelName").html(item.channel_title);
                         }
+                        var url = item.link_url;
+                        var title = item.title;
+                        var liItem = item.call_index == "{{.article.CategoryCallIndex}}" ? ('<li class="active"><a href="' + url + '">' + title + '</a></li>') : ('<li><a href="' + url + '">' + title + '</a></li>');
+                        $("#urlNav").append(liItem);
                     }
-                },
-                error: function () {
-                    alert('failed!');
-                },
-                complete: function () {
-                    $(".nav-aside").busyLoad("hide", { animate: "fade" });
                 }
+            }, function () {
+                $(".nav-aside").busyLoad("hide", { animate: "fade" });
             });
         });
     </script>

@@ -7,26 +7,20 @@
 </div>
 <script type="text/javascript">
     var loadData = function () {
-        $.ajax({
-            url: "/api/article/article?call_index=" + categoryName + "&r=" + Math.random(),
-            dataType: "json",
-            type: "get",
-            beforeSend: function () {
-                $(".detail-box").html("");
-                $(".cont-detail").busyLoad("show", { spinner: "circle-line" });
-            },
-            success: function (res) {
-                if (res.code == 0) {
-                    $(".detail-box").html(res.data.content);
-                }
-            },
-            error: function () {
-                alert('failed!');
-            },
-            complete: function () {
-                $(".cont-detail").busyLoad("hide", { animate: "fade" });
+        var art = new Article();
+        art.article({
+            call_index: categoryName,
+            r: Math.random()
+        }, function () {
+            $(".detail-box").html("");
+            $(".cont-detail").busyLoad("show", { spinner: "circle-line" });
+        }, function (res) {
+            if (res.code == CodeSuccess) {
+                $(".detail-box").html(res.data.content);
             }
-        });
+        }, function () {
+            $(".cont-detail").busyLoad("hide", { animate: "fade" });
+        })
     };
 
     layui.use(['form', 'element', 'laypage', 'layer'], function () {
