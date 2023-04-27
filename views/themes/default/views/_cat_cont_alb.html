@@ -30,13 +30,14 @@
 <script type="text/javascript">
     var loadData = function () {
         var art = new Article();
-        art.article({
+        art.find({
             call_index: categoryName,
             r: Math.random()
         }, function () {
             $(".detail-box").html("");
             $(".cont-detail").busyLoad("show", { spinner: "circle-line" });
         }, function (res) {
+            console.log(res);
             if (res.code == CodeSuccess) {
                 $(".detail-box").html(res.data.article.content);
                 $(".artilce_title").html(res.data.article.title);
