@@ -188,6 +188,10 @@ func (this *CmsArticle) ArticleDestory(articleId int64) error {
 	// 		return err
 	// 	}
 	// }
+	cmtMdl, cmtDo := query.CmsArticleCommentDo()
+	if _, err := cmtDo.Where(cmtMdl.ArticleID.Eq(articleId)).Delete(); err != nil {
+		return err
+	}
 	mdl, do := query.CmsArticleDo()
 	if _, err := do.Where(mdl.ArticleID.Eq(articleId)).Delete(); err != nil {
 		return err

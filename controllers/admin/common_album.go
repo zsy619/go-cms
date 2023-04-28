@@ -10,7 +10,7 @@ import (
 	"haedu.gov.cn/tools/xjson"
 )
 
-// ArticleAlbum 相册管理
+// Album 相册管理
 func (c *CommonController) Album() {
 	tableName := c.GetString("tableName")
 	recordId, _ := c.GetInt64("recordId")

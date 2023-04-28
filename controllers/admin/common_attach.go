@@ -10,7 +10,7 @@ import (
 	"haedu.gov.cn/tools/xjson"
 )
 
-// ArticleAttach 附件管理
+// Attach 附件管理
 func (c *CommonController) Attach() {
 	tableName := c.GetString("tableName")
 	recordId, _ := c.GetInt64("recordId")

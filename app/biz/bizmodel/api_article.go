@@ -1,6 +1,10 @@
 package bizmodel
 
-import "time"
+import (
+	"time"
+
+	"haedu.gov.cn/cms/app/dal/model"
+)
 
 const ApiArticleListModel_Field = `a.article_id,a.site_id,a.channel_id,a.category_id,a.title,a.sub_title,a.ico_url1,a.ico_url2,a.call_index,a.source,a.author,a.link_url,a.img_url1,a.img_url2,a.seo_title,a.seo_keyword,a.seo_description,a.tags,a.summary,a.click,a.is_lock,a.is_comment,a.like_count,a.is_top,a.is_hot,a.is_slide,a.static_url,a.publish_time` +
 	`,b.call_index as category_call_index,b.title as category_title,b.link_url as category_link_url` +
@@ -132,4 +136,9 @@ type ApiArticleOneModel struct {
 	ChannelName       string    `gorm:"column:channel_name;type:varchar(128)" json:"channel_name" form:"channel_name"`                       // channel_字段名
 	ChannelTitle      string    `gorm:"column:channel_title;type:varchar(128)" json:"channel_title" form:"channel_title"`                    // channel_标题
 	TmplDtl           string    `gorm:"column:tmpl_dtl;type:varchar(256)" json:"tmpl_dtl" form:"tmpl_dtl"`                                   // 明细模板路径
+}
+
+type ApiArticleCommentModel struct {
+	Title string `gorm:"column:title;type:varchar(256)" json:"title" form:"title"` // 内容标题
+	model.CmsArticleComment
 }

@@ -29,6 +29,7 @@ var (
 	CmsArticle                 *cmsArticle
 	CmsArticleCategory         *cmsArticleCategory
 	CmsArticleCategoryRelation *cmsArticleCategoryRelation
+	CmsArticleComment          *cmsArticleComment
 	CmsArticleLabel            *cmsArticleLabel
 	CmsArticleLabelRelation    *cmsArticleLabelRelation
 	CmsAttach                  *cmsAttach
@@ -64,6 +65,7 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	CmsArticle = &Q.CmsArticle
 	CmsArticleCategory = &Q.CmsArticleCategory
 	CmsArticleCategoryRelation = &Q.CmsArticleCategoryRelation
+	CmsArticleComment = &Q.CmsArticleComment
 	CmsArticleLabel = &Q.CmsArticleLabel
 	CmsArticleLabelRelation = &Q.CmsArticleLabelRelation
 	CmsAttach = &Q.CmsAttach
@@ -100,6 +102,7 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		CmsArticle:                 newCmsArticle(db, opts...),
 		CmsArticleCategory:         newCmsArticleCategory(db, opts...),
 		CmsArticleCategoryRelation: newCmsArticleCategoryRelation(db, opts...),
+		CmsArticleComment:          newCmsArticleComment(db, opts...),
 		CmsArticleLabel:            newCmsArticleLabel(db, opts...),
 		CmsArticleLabelRelation:    newCmsArticleLabelRelation(db, opts...),
 		CmsAttach:                  newCmsAttach(db, opts...),
@@ -137,6 +140,7 @@ type Query struct {
 	CmsArticle                 cmsArticle
 	CmsArticleCategory         cmsArticleCategory
 	CmsArticleCategoryRelation cmsArticleCategoryRelation
+	CmsArticleComment          cmsArticleComment
 	CmsArticleLabel            cmsArticleLabel
 	CmsArticleLabelRelation    cmsArticleLabelRelation
 	CmsAttach                  cmsAttach
@@ -175,6 +179,7 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		CmsArticle:                 q.CmsArticle.clone(db),
 		CmsArticleCategory:         q.CmsArticleCategory.clone(db),
 		CmsArticleCategoryRelation: q.CmsArticleCategoryRelation.clone(db),
+		CmsArticleComment:          q.CmsArticleComment.clone(db),
 		CmsArticleLabel:            q.CmsArticleLabel.clone(db),
 		CmsArticleLabelRelation:    q.CmsArticleLabelRelation.clone(db),
 		CmsAttach:                  q.CmsAttach.clone(db),
@@ -220,6 +225,7 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		CmsArticle:                 q.CmsArticle.replaceDB(db),
 		CmsArticleCategory:         q.CmsArticleCategory.replaceDB(db),
 		CmsArticleCategoryRelation: q.CmsArticleCategoryRelation.replaceDB(db),
+		CmsArticleComment:          q.CmsArticleComment.replaceDB(db),
 		CmsArticleLabel:            q.CmsArticleLabel.replaceDB(db),
 		CmsArticleLabelRelation:    q.CmsArticleLabelRelation.replaceDB(db),
 		CmsAttach:                  q.CmsAttach.replaceDB(db),
@@ -255,6 +261,7 @@ type queryCtx struct {
 	CmsArticle                 *cmsArticleDo
 	CmsArticleCategory         *cmsArticleCategoryDo
 	CmsArticleCategoryRelation *cmsArticleCategoryRelationDo
+	CmsArticleComment          *cmsArticleCommentDo
 	CmsArticleLabel            *cmsArticleLabelDo
 	CmsArticleLabelRelation    *cmsArticleLabelRelationDo
 	CmsAttach                  *cmsAttachDo
@@ -290,6 +297,7 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 		CmsArticle:                 q.CmsArticle.WithContext(ctx),
 		CmsArticleCategory:         q.CmsArticleCategory.WithContext(ctx),
 		CmsArticleCategoryRelation: q.CmsArticleCategoryRelation.WithContext(ctx),
+		CmsArticleComment:          q.CmsArticleComment.WithContext(ctx),
 		CmsArticleLabel:            q.CmsArticleLabel.WithContext(ctx),
 		CmsArticleLabelRelation:    q.CmsArticleLabelRelation.WithContext(ctx),
 		CmsAttach:                  q.CmsAttach.WithContext(ctx),

@@ -4,7 +4,7 @@
 # http://blog.fatedier.com/2017/02/04/reduce-golang-program-size/
 # CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o cms main.go
 # GOOS=linux GOARCH=amd64 go build -o cms main.go
- CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o cms main.go
+ CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -gcflags="-l=4" -o cms main.go
 
 # nohup后台执行程序
 # nohup /home/api/cms  >> /home/api/output.log 2>&1 &

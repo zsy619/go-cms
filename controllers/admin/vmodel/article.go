@@ -38,3 +38,8 @@ type Article_AttachSaveBatchdModel struct {
 	SortID   int32  `gorm:"column:sort_id;type:int" json:"sort_id" form:"sort_id"`           // 排序
 	Remark   string `gorm:"column:remark;type:varchar(256)" json:"remark" form:"remark"`     // 图片描述
 }
+
+type Comment_ChangeStatusModel struct {
+	CommentIds []int64 `json:"comment_ids"`
+	Status     int32   `json:"status"`
+}

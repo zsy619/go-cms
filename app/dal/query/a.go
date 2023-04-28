@@ -104,6 +104,12 @@ func CmsArticleLabelRelationDo() (cmsArticleLabelRelation, *cmsArticleLabelRelat
 	return u, u.WithContext(defaultContext).Debug()
 }
 
+// CmsArticleCommentDo
+func CmsArticleCommentDo() (cmsArticleComment, *cmsArticleCommentDo) {
+	u := Use(dal.CmsDatabase.DB).CmsArticleComment
+	return u, u.WithContext(defaultContext).Debug()
+}
+
 // CmsLinkCategoryDo
 func CmsLinkCategoryDo() (cmsLinkCategory, *cmsLinkCategoryDo) {
 	u := Use(dal.CmsDatabase.DB).CmsLinkCategory
