@@ -1,26 +1,77 @@
 <div class="layui-container-full">
-    <div class="layui-row">
-        <div class="layui-col-md12">
-            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal  save" id="upload"><i class="fa fa-upload"></i>上传模板文件</button>
+    <div class="layui-tab layui-tab-brief layui-tab-card">
+        <ul class="layui-tab-title">
+            <li class="layui-this">模板信息</li>
+            <li>模板说明</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <div class="layui-row" style="margin: 5px;">
+                    <div class="layui-col-md12">
+                        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal  save" id="upload"><i class="fa fa-upload"></i>上传模板文件</button>
+                        <label class="layui-elem-quote">
+                            <i class="fa fa-exclamation-circle"></i> 模板文件必须为zip格式，否则无法上传
+                        </label>
+                    </div>
+                </div>
+                <div class="layui-row">
+                    {{range $index,$item := .theme}}
+                    <div class="layui-col-md3" style="padding: 10px;">
+                        <img src='{{ ConcatStr "/views/themes/" $item.Name "/" $item.Thumb}}' width="100%" height="180">
+                        <p>主题:{{$item.Title}}</p>
+                        <div style="height: 1.5em; overflow: hidden;" title="{{$item.Remark}}">描述:{{$item.Remark}}</div>
+                        <p>版本:{{$item.Version}}</p>
+                        <p>作者:{{$item.Author}} </p>
+                        <p>
+                            {{if eq $item.IsDefault true}}
+                            <button type="button" disabled class="layui-btn layui-btn-warm">默认主题</button>
+                            {{else}}
+                            <button type="button" class="layui-btn layui-btn-normal" onclick="setDefault('{{$item.Name}}')">设置默认主题</button>
+                            {{end}}
+                        </p>
+                    </div>
+                    {{end}}
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <div class="layui-row">
+                    <div class="layui-col-md12">
+                        <blockquote class="layui-elem-quote">
+                            <i class="fa fa-exclamation-circle"></i> 模板文件必须为zip格式，否则无法上传
+                        </blockquote>
+                    </div>
+                    <div class="layui-col-md12">
+                        <blockquote style="margin: 5px;">
+                            主题目录结构说明：<br>
+                            views目录 为模板文件，可以自定义，必须包含index.html、channel.html、category.html、article.html、search.html、tag.html、topic.html<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;首页 index.html<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;频道页 channel.html<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;栏目页 category.html<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;文章页 article.html<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;搜索页 search.html<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;标签页 tag.html<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;专题页 topic.html<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;其他模板文件可以自建<br>
+                            static目录 静态文件目录，包含以下目录：<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;js目录 为js文件，可以自定义子文件<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;css目录 为css文件，可以自定义子文件<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;images目录 为模板图片，可以自定义子文件<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;其他目录如fonts、plugins等，可以自定义<br>
+                            config.json 为主题配置文件，可以自定义，但是必须包含name、title、remark、author、version，格式如下：<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name": "default",<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"title": "默认模板",<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"description": "系统内置默认模板",<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"author": "教育网",<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"mail": "haedu@163.com",<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"version": "1.0.0"<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                            thumb.png 为主题预览图，必须有<br>
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="layui-row">
-        {{range $index,$item := .theme}}
-        <div class="layui-col-md3" style="padding: 10px;">
-            <img src='{{ ConcatStr "/views/themes/" $item.Name "/" $item.Thumb}}' width="100%" height="180">
-            <p>主题:{{$item.Title}}</p>
-            <div style="height: 1.5em; overflow: hidden;" title="{{$item.Remark}}">描述:{{$item.Remark}}</div>
-            <p>版本:{{$item.Version}}</p>
-            <p>作者:{{$item.Author}} </p>
-            <p>
-                {{if eq $item.IsDefault true}}
-                <button type="button" disabled class="layui-btn layui-btn-warm">默认主题</button>
-                {{else}}
-                <button type="button" class="layui-btn layui-btn-normal" onclick="setDefault('{{$item.Name}}')">设置默认主题</button>
-                {{end}}
-            </p>
-        </div>
-        {{end}}
     </div>
 </div>
 <script>
@@ -36,6 +87,7 @@
             , url: 'upload'
             , headers: { "X-Xsrftoken": csrf }
             , accept: 'file'
+            , exts: 'zip' //只允许上传 ZIP 文件
             , before: function (obj) {
                 layer.msg('上传中', { icon: 16, time: 1 });
             }

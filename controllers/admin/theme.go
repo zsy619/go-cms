@@ -91,10 +91,10 @@ func (c *ThemeController) ThemePaginate() {
 // SetDefault 设置默认主题
 // @router /admin/theme/setDefault [post]
 func (c *ThemeController) SetDefault() {
-    mdl := struct{
-        Name string `json:"name"`
-    }{}
-    if err := xjson.Unmarshal(c.Ctx.Input.RequestBody, &mdl); err != nil {
+	mdl := struct {
+		Name string `json:"name"`
+	}{}
+	if err := xjson.Unmarshal(c.Ctx.Input.RequestBody, &mdl); err != nil {
 		logs.Error("SetDefault", err.Error())
 		c.JSONError(err.Error())
 	}

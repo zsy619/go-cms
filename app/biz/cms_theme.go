@@ -121,3 +121,16 @@ func (this *CmsTheme) ThemeSaveSortId(ThemeId int64, sortId int32) error {
 	)
 	return err
 }
+
+/**
+ * @description: 判断模板是否存在
+ * @param {string} name 模板名称
+ * @return {*}
+ */
+func (this *CmsTheme) ThemeExists(name string) bool {
+	mdl, do := query.CmsThemeDo()
+	if count, _ := do.Where(mdl.Name.Eq(name)).Count(); count > 0 {
+		return true
+	}
+	return false
+}
