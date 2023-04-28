@@ -1,0 +1,64 @@
+<div class="layui-container-full">
+    <div class="layui-form-item">
+        <label class="layui-form-label required">
+            模板列表
+        </label>
+        <div class="layui-input-inline" style="width: 500px;">
+            <form class="layui-form layui-form-pane" action="">
+                <select name="theme" lay-filter="theme">
+                    {{range $index,$item := .theme}}
+                    <option value="{{$item.Name}}">{{$item.Title}}【{{$item.Name}}】</option>
+                    {{end}}
+                </select>
+            </form>
+        </div>
+    </div>
+    <div class="layui-tab layui-tab-brief layui-tab-card">
+        <ul class="layui-tab-title">
+            <li class="layui-this">模板文件</li>
+            <li>静态css文件</li>
+            <li>静态js文件</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <div class="layui-row" style="margin: 5px;">
+                    <div class="layui-col-md12">
+                        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" id="btnAdd"><i class="layui-icon layui-icon-edit"></i>新建文件</button>
+                        <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" id="btnSave"><i class="layui-icon layui-icon-ok"></i>保存文件</button>
+                        <button type="button" class="layui-btn layui-btn-sm layui-btn-yellow" id="btnDev"><i class="layui-icon layui-icon-help"></i>开发文档</button>
+                    </div>
+                </div>
+                <div class="layui-row">
+                    <div class="layui-col-md10">
+                        asdfasdfadsf
+                    </div>
+                    <div class="layui-col-md2">
+                        asdfasdfadsf
+                    </div>
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <div class="layui-row">
+                    <div class="layui-col-md12">
+                        <blockquote class="layui-elem-quote">
+                            <i class="fa fa-exclamation-circle"></i> 模板文件必须为zip格式，否则无法上传
+                        </blockquote>
+                    </div>
+                    <div class="layui-col-md12">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var csrf = getXsrfToken();
+
+    layui.use(['form', 'jquery', 'upload'], function () {
+        form = layui.form,
+            upload = layui.upload,
+            $ = layui.jquery;
+
+
+    });
+</script>
