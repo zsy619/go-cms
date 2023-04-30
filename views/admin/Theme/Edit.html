@@ -1,4 +1,4 @@
-<div class="layui-container-full">
+<div class="layui-container-full" id="divContainer">
     <div class="layui-form-item">
         <label class="layui-form-label required">
             模板列表
@@ -16,49 +16,433 @@
     <div class="layui-tab layui-tab-brief layui-tab-card">
         <ul class="layui-tab-title">
             <li class="layui-this">模板文件</li>
-            <li>静态css文件</li>
-            <li>静态js文件</li>
+            <li onclick="edtCss.focus();edtCss.refresh();">静态css文件</li>
+            <li onclick="edtJs.focus();edtJs.refresh();">静态js文件</li>
         </ul>
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
                 <div class="layui-row" style="margin: 5px;">
                     <div class="layui-col-md12">
-                        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" id="btnAdd"><i class="layui-icon layui-icon-edit"></i>新建文件</button>
-                        <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" id="btnSave"><i class="layui-icon layui-icon-ok"></i>保存文件</button>
-                        <button type="button" class="layui-btn layui-btn-sm layui-btn-yellow" id="btnDev"><i class="layui-icon layui-icon-help"></i>开发文档</button>
+                        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" onclick="addFile('View')"><i class="layui-icon layui-icon-edit"></i>新建</button>
+                        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" onclick="saveFile('View')"><i class="layui-icon layui-icon-ok"></i>保存</button>
+                        <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteFile('View')"><i class="layui-icon layui-icon-ok"></i>删除</button>
+                        <a class="layui-btn layui-btn-sm layui-btn-yellow" href="/cms/help" target="_blank"><i class="layui-icon layui-icon-help"></i>开发文档</a>
                     </div>
                 </div>
-                <div class="layui-row">
+                <div class="layui-row" id="divView" style="height: 800px;">
                     <div class="layui-col-md10">
-                        asdfasdfadsf
+                        <form class="layui-form layui-form-pane" action="">
+                            <textarea id="codeHtml" name="codeHtml" class="layui-textarea" style="height: 800px;box-sizing: border-box;font-size: 18px;"></textarea>
+                        </form>
                     </div>
                     <div class="layui-col-md2">
-                        asdfasdfadsf
+                        <div style="margin-left: 5px;margin-right: 5px;overflow-y: auto;">
+                            <div class="layui-panel site-menu">
+                                <ul class="layui-menu layui-menu-lg">
+                                    <li class="layui-menu-item-group" lay-options="{type: 'group', isAllowSpread: true}">
+                                        <div class="layui-menu-body-title">
+                                            模板文件
+                                        </div>
+                                        <hr>
+                                        <ul id="ulView">
+                                            <li class="">
+                                                <div class="layui-menu-body-title">
+                                                    <a>
+                                                        <span class="layui-font-12 layui-font-gray">Getting Started</span>
+                                                    </a>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="layui-tab-item">
-                <div class="layui-row">
+                <div class="layui-row" style="margin: 5px;">
                     <div class="layui-col-md12">
-                        <blockquote class="layui-elem-quote">
-                            <i class="fa fa-exclamation-circle"></i> 模板文件必须为zip格式，否则无法上传
-                        </blockquote>
+                        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" onclick="addFile('Css')"><i class="layui-icon layui-icon-edit"></i>新建</button>
+                        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" onclick="saveFile('Css')"><i class="layui-icon layui-icon-ok"></i>保存</button>
+                        <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteFile('Css')"><i class="layui-icon layui-icon-ok"></i>删除</button>
                     </div>
+                </div>
+                <div class="layui-row" id="divCss" style="height: 800px;">
+                    <div class="layui-col-md10">
+                        <form class="layui-form layui-form-pane" action="">
+                            <textarea id="codeCss" name="codeCss" class="layui-textarea" style="height: 800px;"></textarea>
+                        </form>
+                    </div>
+                    <div class="layui-col-md2">
+                        <div style="margin-left: 5px;margin-right: 5px;overflow-y: auto;">
+                            <div class="layui-panel site-menu">
+                                <ul class="layui-menu layui-menu-lg">
+                                    <li class="layui-menu-item-group" lay-options="{type: 'group', isAllowSpread: true}">
+                                        <div class="layui-menu-body-title">
+                                            css文件
+                                        </div>
+                                        <hr>
+                                        <ul id="ulCss">
+                                            <li class="">
+                                                <div class="layui-menu-body-title">
+                                                    <a>
+                                                        <span class="layui-font-12 layui-font-gray">Getting Started</span>
+                                                    </a>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <div class="layui-row" style="margin: 5px;">
                     <div class="layui-col-md12">
+                        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" onclick="addFile('Js')"><i class="layui-icon layui-icon-edit"></i>新建</button>
+                        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" onclick="saveFile('Js')"><i class="layui-icon layui-icon-ok"></i>保存</button>
+                        <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteFile('Js')"><i class="layui-icon layui-icon-ok"></i>删除</button>
+                    </div>
+                </div>
+                <div class="layui-row" id="divJs" style="height: 800px;">
+                    <div class="layui-col-md10">
+                        <form class="layui-form layui-form-pane" action="">
+                            <textarea id="codeJs" name="codeJs" class="layui-textarea" style="height: 800px;"></textarea>
+                        </form>
+                    </div>
+                    <div class="layui-col-md2">
+                        <div style="margin-left: 5px;margin-right: 5px;overflow-y: auto;">
+                            <div class="layui-panel site-menu">
+                                <ul class="layui-menu layui-menu-lg">
+                                    <li class="layui-menu-item-group" lay-options="{type: 'group', isAllowSpread: true}">
+                                        <div class="layui-menu-body-title">
+                                            js文件
+                                        </div>
+                                        <hr>
+                                        <ul id="ulJs">
+                                            <li class="">
+                                                <div class="layui-menu-body-title">
+                                                    <a>
+                                                        <span class="layui-font-12 layui-font-gray">Getting Started</span>
+                                                    </a>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<script>
+<link href="/static/admin/lib/codemirror-5.65.13/lib/codemirror.css" rel="stylesheet">
+<link href="/static/admin/lib/codemirror-5.65.13/theme/dracula.css" rel="stylesheet">
+<script src="/static/admin/lib/codemirror-5.65.13/lib/codemirror.js"></script>
+<script src="/static/admin/lib/codemirror-5.65.13/addon/display/placeholder.js"></script>
+<script src="/static/admin/lib/codemirror-5.65.13/addon/display/rulers.js"></script>
+<script src="/static/admin/lib/codemirror-5.65.13/mode/htmlmixed/htmlmixed.js"></script>
+<script src="/static/admin/lib/codemirror-5.65.13/mode/xml/xml.js"></script>
+<script src="/static/admin/lib/codemirror-5.65.13/mode/css/css.js"></script>
+<script src="/static/admin/lib/codemirror-5.65.13/mode/javascript/javascript.js"></script>
+<script src="/static/admin/lib/codemirror-5.65.13/addon/selection/active-line.js"></script>
+<script src="/static/admin/lib/codemirror-5.65.13/addon/edit/matchbrackets.js"></script>
+<!--支持代码折叠-->
+<link rel="stylesheet" href="/static/admin/lib/codemirror-5.65.13/addon/fold/foldgutter.css" rel="external nofollow" />
+<script src="/static/admin/lib/codemirror-5.65.13/addon/fold/foldcode.js"></script>
+<script src="/static/admin/lib/codemirror-5.65.13/addon/fold/foldgutter.js"></script>
+<script src="/static/admin/lib/codemirror-5.65.13/addon/fold/brace-fold.js"></script>
+<script src="/static/admin/lib/codemirror-5.65.13/addon/fold/comment-fold.js"></script>
+<script type="text/template" id="tmplLi">
+    <li class="" id='${type}_${index}' >
+        <div class="layui-menu-body-title">
+            <a onclick="selectFile('${type}','${file}');">
+                <span class="layui-font-12 layui-font-gray">${file}</span>
+            </a>
+        </div>
+    </li>
+</script>
+<style>
+    .CodeMirror {
+        font-size: 18px !important;
+    }
+</style>
+<script type="text/javascript">
     var csrf = getXsrfToken();
+
+    var edtHtml = createCodeMirror("codeHtml", "htmlmixed");
+    var edtCss = createCodeMirror("codeCss", "css");
+    var edtJs = createCodeMirror("codeJs", "javascript");
+    var fileName = "";
+
+    function createCodeMirror(id, type) {
+        var edt = CodeMirror.fromTextArea(document.getElementById(id), {
+            theme: "default",
+            lineNumbers: true,
+            viewportMargin: Infinity,
+            styleActiveLine: true,
+            matchBrackets: true,
+            mode: { name: type, globalVars: true },
+            extraKeys: {
+                "F11": function (cm) {
+                    cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+                },
+                "Esc": function (cm) {
+                    if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
+                }
+            }
+        });
+        edt.setSize('auto', '800px');
+        return edt;
+    }
 
     layui.use(['form', 'jquery', 'upload'], function () {
         form = layui.form,
             upload = layui.upload,
             $ = layui.jquery;
 
+        form.on('select(theme)', function (data) {
+            // console.log(data.value); // 打印选择的值
+            fileName = "";
+            loadFiles(data.value, edtHtml, edtCss, edtJs);
+        });
 
+        loadFiles($("select[name=theme]").val(), edtHtml, edtCss, edtJs);
     });
+
+    function loadFiles(theme, edtHtml, edtCss, edtJs) {
+        $.ajax({
+            url: "/admin/theme/loadFiles?theme=" + theme + "&r=" + Math.random(),
+            method: "GET",
+            dataType: "json",
+            beforeSend: function () {
+                this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+                $("#ulView").html("");
+                $("#ulCss").html("");
+                $("#ulJs").html("");
+                edtHtml.setValue("");
+                edtCss.setValue("");
+                edtJs.setValue("");
+            },
+            success: function (response) {
+                // 成功获取响应后执行的代码
+                // console.log(response);
+                if (response.code == 0) {
+                    // 加载views
+                    initFile("View", response.views.length, response.views, edtHtml);
+                    // 加载css
+                    initFile("Css", response.css.length, response.css, edtCss);
+                    // 加载js
+                    initFile("Js", response.js.length, response.js, edtJs);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                // 发生错误时执行的代码
+                console.log(textStatus + ": " + errorThrown);
+            },
+            complete: function () {
+                // 完成执行的代码
+                layer.close(this.layerIndex);
+            }
+        });
+    }
+
+    function initFile(type, len, data, edt) {
+        var templ = $("#tmplLi").html();
+        for (var i = 0; i < len; i++) {
+            var li = templ.replaceAll("${file}", data[i]).replaceAll("${type}", type).replaceAll("${index}", i);
+            $("#ul" + type).append(li);
+        }
+        if (edt) {
+            var height = $("#ul" + type).height();
+            if (height > 800) {
+                edt.setSize('auto', height + 'px');
+                $("#div" + type).height(height + 60);
+            }
+        }
+        if (len > 0) {
+            var hasChecked = false;
+            if (fileName != "") {
+                $("#ul" + type + " li span").each(function () {
+                    // console.log($(this).text(), fileName, $(this).closest("li"));
+                    if ($(this).text() == fileName) {
+                        // console.log("--------->", $(this).closest("li"));
+                        $(this).closest("li").click();
+                        $(this).closest("li a").click();
+                        hasChecked = true;
+                    }
+                });
+            }
+            if (hasChecked == false) {
+                $("#" + type + "_0").click();
+                $("#" + type + "_0 a").click();
+            }
+        }
+    }
+
+    function selectFile(type, file) {
+        var theme = $("select[name=theme]").val();
+        $.ajax({
+            url: "FileContent",
+            data: { "theme": theme, "type": type, "file": file },
+            method: "get",
+            dataType: "json",
+            beforeSend: function () {
+                this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+            },
+            success: function (res) {
+                if (res.code == CodeSuccess) {
+                    if (type == "View") {
+                        edtHtml.setValue(res.data);
+                        edtHtml.focus();
+                        edtHtml.refresh();
+                    } else if (type == "Css") {
+                        edtCss.setValue(res.data);
+                        edtCss.focus();
+                        edtCss.refresh();
+                    } else if (type == "Js") {
+                        edtJs.setValue(res.data);
+                        edtJs.focus();
+                        edtJs.refresh();
+                    }
+                }
+            },
+            error: function () {
+
+            },
+            complete: function () {
+                layer.close(this.layerIndex);
+            }
+        });
+    }
+
+    function addFile(type) {
+        var theme = $("select[name=theme]").val();
+        layer.prompt({
+            title: '请输入文件名称，不带后缀',
+            formType: 0
+        }, function (value, index, elem) {
+            if (value == "") {
+                layer.msg("文件名称不能为空");
+                return;
+            }
+            // layer.close(index); // 关闭提示框
+            switch (type) {
+                case "View":
+                    value += ".html";
+                    break;
+                case "Css":
+                    value += ".css";
+                    break;
+                case "Js":
+                    value += ".js";
+                    break;
+            }
+            fileName = value;
+            $.ajax({
+                url: "FileAdd",
+                data: { "theme": theme, "type": type, "file": value },
+                method: "get",
+                dataType: "json",
+                beforeSend: function () {
+                    this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+                },
+                success: function (res) {
+                    if (res.code == CodeSuccess) {
+                        loadFiles(theme, edtHtml, edtCss, edtJs);
+                    }
+                },
+                error: function () {
+                },
+                complete: function () {
+                    layer.closeAll();
+                }
+            });
+        });
+    }
+
+    function deleteFile(type) {
+        var theme = $("select[name=theme]").val();
+        var file = $("#ul" + type + " li[class='layui-menu-item-checked'] span").text();
+        if (file == "") {
+            layer.msg("请选择要删除的文件");
+            return;
+        }
+        layer.confirm('确定要删除文件【' + file + '】吗？', {
+            btn: ['确定', '取消'] //按钮
+        }, function () {
+            $.ajax({
+                url: "FileDelete",
+                data: { "theme": theme, "type": type, "file": file },
+                method: "get",
+                dataType: "json",
+                beforeSend: function () {
+                    this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+                },
+                success: function (res) {
+                    fileName = "";
+                    if (res.code == CodeSuccess) {
+                        loadFiles(theme, edtHtml, edtCss, edtJs);
+                    }
+                },
+                error: function () {
+                },
+                complete: function () {
+                    layer.closeAll();
+                }
+            });
+        }, function () {
+        });
+    }
+
+    function saveFile(type) {
+        var theme = $("select[name=theme]").val();
+        var file = $("#ul" + type + " li[class='layui-menu-item-checked'] span").text();
+        if (file == "") {
+            layer.msg("请选择要保存的文件");
+            return;
+        }
+        fileName = file;
+        var content = "";
+        switch (type) {
+            case "View":
+                content = edtHtml.getValue();
+                break;
+            case "Css":
+                content = edtCss.getValue();
+                break;
+            case "Js":
+                content = edtJs.getValue();
+                break;
+        }
+        layer.confirm('确定要保存文件【' + file + '】吗？', {
+            btn: ['确定', '取消'] //按钮
+        }, function () {
+            $.ajax({
+                url: "FileSave",
+                data: { "theme": theme, "type": type, "file": file, "content": content },
+                method: "post",
+                dataType: "json",
+                beforeSend: function () {
+                    this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+                },
+                success: function (res) {
+                    if (res.code == CodeSuccess) {
+                        loadFiles(theme, edtHtml, edtCss, edtJs);
+                    }
+                },
+                error: function () {
+                },
+                complete: function () {
+                    layer.closeAll();
+                }
+            });
+        }, function () {
+        });
+    }
 </script>

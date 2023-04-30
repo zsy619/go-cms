@@ -6,15 +6,6 @@ import (
 	"log"
 	"os"
 
-	"github.com/beego/beego/v2/core/logs"
-	"github.com/beego/beego/v2/server/web"
-	"github.com/beego/beego/v2/server/web/filter/cors"
-	"github.com/beego/beego/v2/server/web/session"
-	"github.com/kardianos/service"
-
-	"haedu.gov.cn/cms/app/dal/model"
-	"haedu.gov.cn/cms/controllers"
-
 	_ "haedu.gov.cn/cms/controllers"
 
 	_ "haedu.gov.cn/cms/controllers/www"
@@ -23,6 +14,15 @@ import (
 	_ "haedu.gov.cn/cms/controllers/funcs"
 
 	_ "haedu.gov.cn/cms/controllers/plugin"
+
+	"github.com/beego/beego/v2/core/logs"
+	"github.com/beego/beego/v2/server/web"
+	"github.com/beego/beego/v2/server/web/filter/cors"
+	"github.com/beego/beego/v2/server/web/session"
+	"github.com/kardianos/service"
+
+	"haedu.gov.cn/cms/app/dal/model"
+	"haedu.gov.cn/cms/controllers"
 )
 
 var globalSessions *session.Manager
