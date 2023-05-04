@@ -7,7 +7,7 @@ require (
 	github.com/beego/beego/v2 v2.0.7
 	github.com/kardianos/service v1.2.2
 	github.com/mojocn/base64Captcha v1.3.5
-	github.com/prometheus/client_golang v1.15.0
+	github.com/prometheus/client_golang v1.15.1
 	golang.org/x/net v0.9.0
 	gorm.io/driver/mysql v1.5.0
 	gorm.io/gen v0.3.22
@@ -19,7 +19,7 @@ require (
 require (
 	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.9.0 // indirect
 	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869 // indirect
-	github.com/chromedp/cdproto v0.0.0-20230419194459-b5ff65bc57a3 // indirect
+	github.com/chromedp/cdproto v0.0.0-20230502002814-67c6147a4636 // indirect
 	github.com/chromedp/chromedp v0.9.1 // indirect
 	github.com/chromedp/sysutil v1.0.0 // indirect
 	github.com/gobwas/httphead v0.1.0 // indirect
@@ -52,7 +52,7 @@ require (
 	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
 	github.com/peterbourgon/diskv v2.0.1+incompatible // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/prometheus/client_model v0.3.0 // indirect
+	github.com/prometheus/client_model v0.4.0 // indirect
 	github.com/prometheus/common v0.42.0 // indirect
 	github.com/prometheus/procfs v0.9.0 // indirect
 	github.com/satori/go.uuid v1.2.0
