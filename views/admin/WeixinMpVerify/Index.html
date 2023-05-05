@@ -1,0 +1,194 @@
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <fieldset class="table-search-fieldset">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">公众账户</label>
+                            <div class="layui-input-inline">
+                                <select name="account_id" lay-filter="account_id" lay-verify="required" lay-reqtext="微信公账号必选项">
+                                    {{range $index,$item := .accountList}}
+                                    <option value="{{$item.AccountID}}">{{$item.Name}}</option>
+                                    {{end}}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline" style="display: none;">
+                            <button type="submit" class="layui-btn layui-btn-primary" lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+    </div>
+</div>
+{{template "admin/Public/Button_AddSave.html" }}
+{{template "admin/Public/Button_EditDelete.html" }}
+<script>
+    layui.use(['form', 'table'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table;
+
+        table.render({
+            elem: '#currentTableId',
+            url: '/admin/weixin/verify/list',
+            where: {
+                "account_id": parseInt($("select[name=account_id]").val())
+            },
+            toolbar: '#toolbarDemo',
+            height: "full-170",
+            defaultToolbar: ['filter', 'exports', 'print', {
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips'
+            }],
+            cols: [[
+                { field: 'path', width: 280, title: '访问路径' },
+                { field: 'file_name', title: '认证文件' },
+                {
+                    field: 'status', width: 120, title: '状态', align: "center", sort: true, templet: function (d) {
+                        var outText = d.status == 2 ? '<span class="layui-badge layui-bg-green">通过</span>' : (d.status == 3 ? '<span class="layui-badge">拒绝</span>' : '<span class="layui-badge layui-bg-gray">草稿</span>');
+                        return outText;
+                    }
+                },
+                {
+                    field: 'sort_id', width: 120, align: "center", title: '排序', templet: function (d) {
+                        return '<input type="number" name="sort_id" verify_id="' + d.verify_id + '" value="' + d.sort_id + '" class="layui-input" style="" />';
+                    }
+                },
+                {
+                    field: 'create_time', width: 120, title: '添加时间', align: "center", sort: true, templet: function (d) {
+                        return layui.util.toDateString(d.create_time, 'yyyy-MM-dd');
+                    }
+                },
+                { title: '操作', width: 150, toolbar: '#currentTableBar', align: "center" }
+            ]],
+            limits: [10, 15, 20],
+            limit: 20,
+            page: false,
+            // skin: 'line',
+            even: true,
+            size: 'lg',
+        });
+
+        // 监听搜索操作
+        form.on('button(data-search-btn)', function (data) {
+            //执行搜索重载
+            tableReload();
+            return false;
+        });
+
+        form.on('select(account_id)', function (data) {
+            //执行搜索重载
+            tableReload();
+            return false;
+        });
+
+        function tableReload() {
+            table.reload('currentTableId', {
+                page: false,
+                where: {
+                    "account_id": parseInt($("select[name=account_id]").val())
+                }
+            }, 'data');
+        }
+
+        tableReload();
+
+        /**
+         * toolbar监听事件
+         */
+        table.on('toolbar(currentTableFilter)', function (obj) {
+            if (obj.event === 'add') {  // 监听添加操作
+                var index = layer.open({
+                    title: '添加',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin: true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: '/admin/weixin/verify/edit',
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+            } else if (obj.event === 'save') {  // 监听保存操作
+                var sorts = [];
+                $("input[name='sort_id']").each(function () {
+                    var sort = {
+                        verify_id: parseInt($(this).attr("verify_id")),
+                        sort_id: parseInt($(this).val())
+                    };
+                    sorts.push(sort);
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "/admin/weixin/verify/saveSortId", //提交的地址
+                    data: JSON.stringify(sorts),
+                    async: false,
+                    beforeSend: function () { //当一个Ajax请求开始时触发
+                        this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+                    },
+                    error: function (request) {  //失败的话
+                    },
+                    success: function (data) {  //成功
+                        if (data.code == CodeSuccess) {
+                            layer.msg("保存排序成功", { icon: 1, time: 1000 }, function () {
+                                $('button[lay-filter="data-search-btn"]').click();
+                            });
+                        } else {
+                            layer.msg(data.msg, { icon: 2, time: 1000 });
+                        }
+                    },
+                    complete: function () {
+                        layer.close(this.layerIndex);
+                    },
+                });
+            }
+        });
+
+        //监听表格复选框选择
+        table.on('checkbox(currentTableFilter)', function (obj) {
+            // console.log(obj)
+        });
+
+        table.on('tool(currentTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'edit') {
+                editUrl = "/admin/weixin/verify/Edit?verify_id=" + data.verify_id;
+                var index = layer.open({
+                    title: '编辑',
+                    content: editUrl,
+                    type: 2,
+                    shade: 0.2,
+                    maxmin: true,
+                    shadeClose: true,
+                    area: ['100%', '100%']
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            } else if (obj.event === 'delete') {
+                index = layer.confirm('确定要删除数据吗?', function (index) {
+                    $.get("/admin/weixin/verify/Destory", { "verify_id": data.verify_id }, function (data) {
+                        if (data.code == 0) {
+                            layer.close(index);
+                            table.reload('currentTableId', {
+                                page: false
+                                , where: {
+                                    "account_id": parseInt($("select[name=account_id]").val())
+                                }
+                            }, 'data');
+                        }
+                    })
+                });
+            }
+        });
+
+    });
+</script>

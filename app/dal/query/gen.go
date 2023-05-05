@@ -46,6 +46,7 @@ var (
 	PlgOnlineRegister          *plgOnlineRegister
 	WeixinAccount              *weixinAccount
 	WeixinMenu                 *weixinMenu
+	WeixinMpVerify             *weixinMpVerify
 	WeixinRequestContent       *weixinRequestContent
 	WeixinRequestRule          *weixinRequestRule
 	WeixinResponseContent      *weixinResponseContent
@@ -82,6 +83,7 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	PlgOnlineRegister = &Q.PlgOnlineRegister
 	WeixinAccount = &Q.WeixinAccount
 	WeixinMenu = &Q.WeixinMenu
+	WeixinMpVerify = &Q.WeixinMpVerify
 	WeixinRequestContent = &Q.WeixinRequestContent
 	WeixinRequestRule = &Q.WeixinRequestRule
 	WeixinResponseContent = &Q.WeixinResponseContent
@@ -119,6 +121,7 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		PlgOnlineRegister:          newPlgOnlineRegister(db, opts...),
 		WeixinAccount:              newWeixinAccount(db, opts...),
 		WeixinMenu:                 newWeixinMenu(db, opts...),
+		WeixinMpVerify:             newWeixinMpVerify(db, opts...),
 		WeixinRequestContent:       newWeixinRequestContent(db, opts...),
 		WeixinRequestRule:          newWeixinRequestRule(db, opts...),
 		WeixinResponseContent:      newWeixinResponseContent(db, opts...),
@@ -157,6 +160,7 @@ type Query struct {
 	PlgOnlineRegister          plgOnlineRegister
 	WeixinAccount              weixinAccount
 	WeixinMenu                 weixinMenu
+	WeixinMpVerify             weixinMpVerify
 	WeixinRequestContent       weixinRequestContent
 	WeixinRequestRule          weixinRequestRule
 	WeixinResponseContent      weixinResponseContent
@@ -196,6 +200,7 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		PlgOnlineRegister:          q.PlgOnlineRegister.clone(db),
 		WeixinAccount:              q.WeixinAccount.clone(db),
 		WeixinMenu:                 q.WeixinMenu.clone(db),
+		WeixinMpVerify:             q.WeixinMpVerify.clone(db),
 		WeixinRequestContent:       q.WeixinRequestContent.clone(db),
 		WeixinRequestRule:          q.WeixinRequestRule.clone(db),
 		WeixinResponseContent:      q.WeixinResponseContent.clone(db),
@@ -242,6 +247,7 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		PlgOnlineRegister:          q.PlgOnlineRegister.replaceDB(db),
 		WeixinAccount:              q.WeixinAccount.replaceDB(db),
 		WeixinMenu:                 q.WeixinMenu.replaceDB(db),
+		WeixinMpVerify:             q.WeixinMpVerify.replaceDB(db),
 		WeixinRequestContent:       q.WeixinRequestContent.replaceDB(db),
 		WeixinRequestRule:          q.WeixinRequestRule.replaceDB(db),
 		WeixinResponseContent:      q.WeixinResponseContent.replaceDB(db),
@@ -278,6 +284,7 @@ type queryCtx struct {
 	PlgOnlineRegister          *plgOnlineRegisterDo
 	WeixinAccount              *weixinAccountDo
 	WeixinMenu                 *weixinMenuDo
+	WeixinMpVerify             *weixinMpVerifyDo
 	WeixinRequestContent       *weixinRequestContentDo
 	WeixinRequestRule          *weixinRequestRuleDo
 	WeixinResponseContent      *weixinResponseContentDo
@@ -314,6 +321,7 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 		PlgOnlineRegister:          q.PlgOnlineRegister.WithContext(ctx),
 		WeixinAccount:              q.WeixinAccount.WithContext(ctx),
 		WeixinMenu:                 q.WeixinMenu.WithContext(ctx),
+		WeixinMpVerify:             q.WeixinMpVerify.WithContext(ctx),
 		WeixinRequestContent:       q.WeixinRequestContent.WithContext(ctx),
 		WeixinRequestRule:          q.WeixinRequestRule.WithContext(ctx),
 		WeixinResponseContent:      q.WeixinResponseContent.WithContext(ctx),

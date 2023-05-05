@@ -1,6 +1,10 @@
 package admin
 
-import "github.com/beego/beego/v2/server/web"
+import (
+	"fmt"
+
+	"github.com/beego/beego/v2/server/web"
+)
 
 var (
 	GlobalAdminId   int64  // 管理员id
@@ -10,6 +14,8 @@ var (
 )
 
 func init() {
+	fmt.Println("admin 开始注册路由")
+
 	web.Router("cms/admin/login", &LoginController{}, "*:AdminLogin")
 	web.Router("cms/admin/logout", &LoginController{}, "*:Logout")
 	web.Router("cms/admin/login/verify", &LoginController{}, "*:AdminLoginVerify")
@@ -44,6 +50,12 @@ func init() {
 	web.Router("admin/weixin/message/picture", &WeixinController{}, "*:Picture")
 	web.Router("admin/weixin/message/sound", &WeixinController{}, "*:Sound")
 	web.Router("admin/weixin/message/response", &WeixinController{}, "*:Response")
+	web.Router("admin/weixin/verify", &WeixinMpVerifyController{}, "*:Index")
+	web.Router("admin/weixin/verify/list", &WeixinMpVerifyController{}, "*:List")
+	web.Router("admin/weixin/verify/edit", &WeixinMpVerifyController{}, "*:Edit")
+	web.Router("admin/weixin/verify/saveSortId", &WeixinMpVerifyController{}, "post:SaveSortId")
+	web.Router("admin/weixin/verify/destory", &WeixinMpVerifyController{}, "post:Destory")
+	web.Router("admin/weixin/verify/upload", &WeixinMpVerifyController{}, "*:Upload")
 
 	web.Router("/admin/plg/register", &PlgOnlineRegisterController{}, "*:Index")
 	web.Router("/admin/plg/register/paginate", &PlgOnlineRegisterController{}, "*:Paginate")
@@ -51,4 +63,6 @@ func init() {
 	web.Router("/admin/plg/register/save", &PlgOnlineRegisterController{}, "*:Save")
 	web.Router("/admin/plg/register/destory", &PlgOnlineRegisterController{}, "*:Destory")
 	web.Router("/admin/plg/register/read", &PlgOnlineRegisterController{}, "*:ChangeRead")
+
+	fmt.Println("admin 结束注册路由")
 }

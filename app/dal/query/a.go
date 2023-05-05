@@ -140,6 +140,12 @@ func WeixinMenuDo() (weixinMenu, *weixinMenuDo) {
 	return u, u.WithContext(defaultContext).Debug()
 }
 
+// WeixinMpVerifyDo
+func WeixinMpVerifyDo() (weixinMpVerify, *weixinMpVerifyDo) {
+	u := Use(dal.CmsDatabase.DB).WeixinMpVerify
+	return u, u.WithContext(defaultContext).Debug()
+}
+
 // WeixinRequestRuleDo
 func WeixinRequestRuleDo() (weixinRequestRule, *weixinRequestRuleDo) {
 	u := Use(dal.CmsDatabase.DB).WeixinRequestRule

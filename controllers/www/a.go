@@ -1,18 +1,24 @@
 package www
 
-import "github.com/beego/beego/v2/server/web"
+import (
+	"fmt"
+
+	"github.com/beego/beego/v2/server/web"
+)
 
 func init() {
+	fmt.Println("www 开始注册路由")
+
 	web.AutoPrefix("/", &IndexController{})
 
 	{
 		web.Router("/:flag/:name", &ChannelController{}, "*:Channel")            // 频道首页
 		web.Router("/:flag/:name/:category", &ChannelController{}, "*:Category") // 频道分类
 
-		web.Router("/:flag/:name/:category/:article_id", &ArticleController{}, "*:Index") // 文章详情
-		web.Router("/article/:call_index/:article_id", &ArticleController{}, "*:Detail")  // 文章详情
-		web.Router("/article/search/:keyword", &ArticleController{}, "*:Search")          // 搜索页面
-		web.Router("/article/search", &ArticleController{}, "*:Search")                   // 搜索页面
+		// web.Router("/:flag/:name/:category/:article_id", &ArticleController{}, "*:Index") // 文章详情
+		web.Router("/article/:call_index/:article_id", &ArticleController{}, "*:Detail") // 文章详情
+		web.Router("/article/search/:keyword", &ArticleController{}, "*:Search")         // 搜索页面
+		web.Router("/article/search", &ArticleController{}, "*:Search")                  // 搜索页面
 	}
 
 	{
@@ -78,4 +84,8 @@ func init() {
 	web.Router("/api/cache/clear", &ApiCacheController{}, "*:Clear")
 
 	web.Router("/", &IndexController{}, "*:Index")
+
+	fmt.Println("www 结束注册路由")
+
+	InitMpVerifyRouter()
 }
