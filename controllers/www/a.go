@@ -15,10 +15,10 @@ func init() {
 		web.Router("/:flag/:name", &ChannelController{}, "*:Channel")            // 频道首页
 		web.Router("/:flag/:name/:category", &ChannelController{}, "*:Category") // 频道分类
 
-		// web.Router("/:flag/:name/:category/:article_id", &ArticleController{}, "*:Index") // 文章详情
-		web.Router("/article/:call_index/:article_id", &ArticleController{}, "*:Detail") // 文章详情
-		web.Router("/article/search/:keyword", &ArticleController{}, "*:Search")         // 搜索页面
-		web.Router("/article/search", &ArticleController{}, "*:Search")                  // 搜索页面
+		web.Router("/:flag/:name/:category/:article_id", &ArticleController{}, "*:Index") // 文章详情
+		web.Router("/article/:call_index/:article_id", &ArticleController{}, "*:Detail")  // 文章详情
+		web.Router("/article/search/:keyword", &ArticleController{}, "*:Search")          // 搜索页面
+		web.Router("/article/search", &ArticleController{}, "*:Search")                   // 搜索页面
 	}
 
 	{
@@ -28,10 +28,10 @@ func init() {
 
 	{
 		// 微信公众号
-		web.Router("/weixin/mp/index ", &WechatMpController{}, "GET:Signature")
-		web.Router("/weixin/mp/index ", &WechatMpController{}, "POST:Message")
-		web.Router("/wechat/mp/tooauth2 ", &MpWebAuthController{}, "*:ToOauth2")
-		web.Router("/wechat/mp/redirect_uri ", &MpWebAuthController{}, "*:RedirectUri")
+		web.Router("/wechat/mp/index ", &WechatMpController{}, "GET:Signature")
+		web.Router("/wechat/mp/index ", &WechatMpController{}, "POST:Message")
+		web.Router("/wechat/mp/tooauth2 ", &WechatMpWebAuthController{}, "*:ToOauth2")
+		web.Router("/wechat/mp/redirect_uri ", &WechatMpWebAuthController{}, "*:RedirectUri")
 	}
 
 	{
@@ -87,5 +87,5 @@ func init() {
 
 	fmt.Println("www 结束注册路由")
 
-	InitMpVerifyRouter()
+	InitWechatMpVerifyRouter()
 }

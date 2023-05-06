@@ -11,14 +11,19 @@ import (
 
 type WechatMpVerifyController struct{ web.Controller }
 
-func InitMpVerifyRouter() {
+func InitWechatMpVerifyRouter() {
 	if list, err := biz.NewWeixinMpVerify().GetStatus(2); err != nil {
 		fmt.Println("InitMpVerifyRouter--->", err.Error())
 	} else {
 		if len(list) > 0 {
 			fmt.Println("开始 初始化微信公众号验证文件路由")
 			for _, item := range list {
-				router := item.Path + "*"
+				router := ""
+				if strings.HasSuffix(item.Path, "/") {
+					router = item.Path + "*"
+				} else {
+					router = item.Path + "/*"
+				}
 				fmt.Println("     初始化微信公众号验证文件路由：", router)
 				web.Router(router, &WechatMpVerifyController{}, "get:Verify")
 			}
@@ -34,7 +39,16 @@ func (c *WechatMpVerifyController) Verify() {
 		if len(list) > 0 {
 			orpath := c.Ctx.Request.URL.Path
 			for _, item := range list {
-				if strings.Index(orpath, item.FileName) >= 0 {
+				router := item.Path
+				if !strings.HasPrefix(router, "/") {
+					router = "/" + router
+				}
+				if strings.HasSuffix(router, "/") {
+					router = router + item.FileName
+				} else {
+					router = router + "/" + item.FileName
+				}
+				if strings.HasSuffix(orpath, router) {
 					path := item.FilePath
 					fmt.Println(orpath, path) // MP_verify_dypXZFb8dvdVfv6n.txt
 					c.Ctx.Request.Header.Set("Content-Type", "application/txt")

@@ -16,12 +16,12 @@ import (
 // 3、如果需要，开发者可以刷新网页授权access_token，避免过期
 // 4、通过网页授权access_token和openid获取用户基本信息（支持UnionID机制）
 // https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/Wechat_webpage_authorization.html#0
-type MpWebAuthController struct {
+type WechatMpWebAuthController struct {
 	web.Controller
 }
 
 // GET /wechat/mp/tooauth2
-func (this *MpWebAuthController) ToOauth2() {
+func (this *WechatMpWebAuthController) ToOauth2() {
 	accountId, _ := this.GetInt64("accountId")
 	if accountId <= 0 {
 		this.Abort("500")
@@ -68,7 +68,7 @@ func (this *MpWebAuthController) ToOauth2() {
 }
 
 // GET /wechat/mp/redirect_uri
-func (c *MpWebAuthController) RedirectUri() {
+func (c *WechatMpWebAuthController) RedirectUri() {
 	// code说明 ：code作为换取access_token的票据，每次用户授权带上的code将不一样，code只能使用一次，5分钟未被使用自动过期。
 	// 	返回码	说明
 	// 10003	redirect_uri域名与后台配置不一致

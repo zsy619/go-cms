@@ -194,6 +194,6 @@ func (c *WeixinMpVerifyController) Upload() {
 }
 
 func (c *WeixinMpVerifyController) ResetRouter() {
-	www.InitMpVerifyRouter()
+	www.InitWechatMpVerifyRouter()
 	c.JSONSuccess("重置成功", nil)
 }
