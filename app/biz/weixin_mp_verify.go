@@ -21,19 +21,33 @@ func (this *WeixinMpVerify) Get(accountId int64) ([]*model.WeixinMpVerify, error
 	return do.Where(mdl.AccountID.Eq(accountId)).Order(mdl.SortID).Find()
 }
 
-func (this *WeixinMpVerify) GetStatus(status int32) ([]*model.WeixinMpVerify, error) {
-	cacheKey := fmt.Sprintf("%s_%d", "Mp_Verify", status)
+/**
+ * @description: 获取缓存
+ * @return {*}
+ */
+func (this *WeixinMpVerify) GetCache() ([]*model.WeixinMpVerify, error) {
+	cacheKey := fmt.Sprintf("%s_%d", "Weixin_Mp_Verify", 0)
 	if found, item := ApiCache.Get(cacheKey); found {
 		list := item.([]*model.WeixinMpVerify)
-		logs.Debug("GetStatus[Cache]::", "cacheKey", cacheKey, "MpVerify", list)
+		logs.Debug("GetCache[Cache]::", "cacheKey", cacheKey, "WeixinMpVerify", list)
 		return list, nil
 	}
 	mdl, do := query.WeixinMpVerifyDo()
-	list, err := do.Where(mdl.Status.Eq(status)).Order(mdl.SortID).Find()
+	list, err := do.Order(mdl.SortID).Find()
 	if list != nil && len(list) > 0 {
 		ApiCache.Set(cacheKey, list, 60*60*24)
 	}
 	return list, err
+}
+
+/**
+ * @description: 刷新缓存
+ * @return {*}
+ */
+func (this *WeixinMpVerify) RefeshCache() {
+	cacheKey := fmt.Sprintf("%s_%d", "Weixin_Mp_Verify", 0)
+	ApiCache.Delete(cacheKey)
+	this.GetCache()
 }
 
 func (this *WeixinMpVerify) Find(verifyId int64) (*model.WeixinMpVerify, error) {

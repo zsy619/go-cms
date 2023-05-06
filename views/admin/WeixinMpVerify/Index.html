@@ -25,7 +25,13 @@
         <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
     </div>
 </div>
-{{template "admin/Public/Button_AddSave.html" }}
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container layui-btn-group">
+        <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"><i class="layui-icon layui-icon-addition"></i>添加</button>
+        <button class="layui-btn layui-btn-sm layui-btn-primary data-delete-btn" lay-event="save"><i class="layui-icon layui-icon-ok"></i>保存</button>
+        <button class="layui-btn layui-btn-sm layui-btn-default data-default-btn" lay-event="refresh"><i class="layui-icon layui-icon-refresh"></i>刷新缓存</button>
+    </div>
+</script>
 {{template "admin/Public/Button_EditDelete.html" }}
 <script>
     layui.use(['form', 'table'], function () {
@@ -139,6 +145,28 @@
                         if (data.code == CodeSuccess) {
                             layer.msg("保存排序成功", { icon: 1, time: 1000 }, function () {
                                 $('button[lay-filter="data-search-btn"]').click();
+                            });
+                        } else {
+                            layer.msg(data.msg, { icon: 2, time: 1000 });
+                        }
+                    },
+                    complete: function () {
+                        layer.close(this.layerIndex);
+                    },
+                });
+            } else if (obj.event === 'refresh') {
+                $.ajax({
+                    type: "GET",
+                    url: "/admin/weixin/verify/refrshcache", //提交的地址
+                    async: false,
+                    beforeSend: function () { //当一个Ajax请求开始时触发
+                        this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+                    },
+                    error: function (request) {  //失败的话
+                    },
+                    success: function (data) {  //成功
+                        if (data.code == CodeSuccess) {
+                            layer.msg("刷新缓存成功", { icon: 1, time: 1000 }, function () {
                             });
                         } else {
                             layer.msg(data.msg, { icon: 2, time: 1000 });

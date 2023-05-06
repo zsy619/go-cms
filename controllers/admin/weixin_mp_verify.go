@@ -73,7 +73,7 @@ func (this *WeixinMpVerifyController) Edit() {
 	this.display()
 }
 
-// @router /admin/weixin/verify/saveSortId [post]
+// @router /admin/weixin/verify/savesortid [post]
 func (this *WeixinMpVerifyController) SaveSortId() {
 	mdls := []vmodel.Verify_SaveSortIdModel{}
 	data := this.Ctx.Input.RequestBody
@@ -81,6 +81,7 @@ func (this *WeixinMpVerifyController) SaveSortId() {
 	if err := xjson.Unmarshal(this.Ctx.Input.RequestBody, &mdls); err != nil {
 		logs.Error("SaveSortId", err.Error())
 		this.JSONError(err.Error())
+		return
 	}
 	for _, mdl := range mdls {
 		if err := biz.NewWeixinMpVerify().SaveSortId(mdl.VerifyId, int32(mdl.SortId)); err != nil {
@@ -90,7 +91,6 @@ func (this *WeixinMpVerifyController) SaveSortId() {
 		}
 	}
 	this.JSONSuccess("保存成功", nil)
-	this.StopRun()
 }
 
 // @router /admin/weixin/verify/destory [post]
@@ -193,7 +193,13 @@ func (c *WeixinMpVerifyController) Upload() {
 	c.ServeJSON()
 }
 
-func (c *WeixinMpVerifyController) ResetRouter() {
+/**
+ * @description: 刷新缓存
+ * @return {*}
+ */
+// @router /admin/weixin/verify/refrshcache [post]
+func (c *WeixinMpVerifyController) RefrshCache() {
+	biz.NewWeixinMpVerify().RefeshCache()
 	www.InitWechatMpVerifyRouter()
 	c.JSONSuccess("重置成功", nil)
 }

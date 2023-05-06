@@ -6,6 +6,12 @@ import (
 	"github.com/beego/beego/v2/server/web"
 )
 
+const (
+	WwwPrefix    = "www"
+	ApiPrefix    = "api"
+	WechatPrefix = "wechat"
+)
+
 func init() {
 	fmt.Println("www 开始注册路由")
 
@@ -15,10 +21,10 @@ func init() {
 		web.Router("/:flag/:name", &ChannelController{}, "*:Channel")            // 频道首页
 		web.Router("/:flag/:name/:category", &ChannelController{}, "*:Category") // 频道分类
 
-		web.Router("/:flag/:name/:category/:article_id", &ArticleController{}, "*:Index") // 文章详情
-		web.Router("/article/:call_index/:article_id", &ArticleController{}, "*:Detail")  // 文章详情
-		web.Router("/article/search/:keyword", &ArticleController{}, "*:Search")          // 搜索页面
-		web.Router("/article/search", &ArticleController{}, "*:Search")                   // 搜索页面
+		// web.Router("/:flag/:name/:category/:article_id", &ArticleController{}, "*:Index") // 文章详情
+		web.Router("/article/:call_index/:article_id", &ArticleController{}, "*:Detail") // 文章详情
+		web.Router("/article/search/:keyword", &ArticleController{}, "*:Search")         // 搜索页面
+		web.Router("/article/search", &ArticleController{}, "*:Search")                  // 搜索页面
 	}
 
 	{
@@ -28,60 +34,60 @@ func init() {
 
 	{
 		// 微信公众号
-		web.Router("/wechat/mp/index ", &WechatMpController{}, "GET:Signature")
-		web.Router("/wechat/mp/index ", &WechatMpController{}, "POST:Message")
-		web.Router("/wechat/mp/tooauth2 ", &WechatMpWebAuthController{}, "*:ToOauth2")
-		web.Router("/wechat/mp/redirect_uri ", &WechatMpWebAuthController{}, "*:RedirectUri")
+		web.Router(WechatPrefix+"/mp/index ", &WechatMpController{}, "GET:Signature")
+		web.Router(WechatPrefix+"/mp/index ", &WechatMpController{}, "POST:Message")
+		web.Router(WechatPrefix+"/mp/tooauth2 ", &WechatMpWebAuthController{}, "*:ToOauth2")
+		web.Router(WechatPrefix+"/mp/redirect_uri ", &WechatMpWebAuthController{}, "*:RedirectUri")
 	}
 
 	{
-		web.Router("/api/ads/get", &ApiAdsController{}, "*:Get")
-		web.Router("/api/ads/get/new", &ApiAdsController{}, "*:GetNew")
-		web.Router("/api/ads/paginate", &ApiAdsController{}, "*:Paginate")
-		web.Router("/api/ads/click", &ApiAdsController{}, "*:Click")
+		web.Router(ApiPrefix+"/ads/get", &ApiAdsController{}, "*:Get")
+		web.Router(ApiPrefix+"/ads/get/new", &ApiAdsController{}, "*:GetNew")
+		web.Router(ApiPrefix+"/ads/paginate", &ApiAdsController{}, "*:Paginate")
+		web.Router(ApiPrefix+"/ads/click", &ApiAdsController{}, "*:Click")
 
-		web.Router("/api/link/get", &ApiLinkController{}, "*:Get")
-		web.Router("/api/link/get/new", &ApiLinkController{}, "*:GetNew")
-		web.Router("/api/link/paginate", &ApiLinkController{}, "*:Paginate")
-		web.Router("/api/link/click", &ApiLinkController{}, "*:Click")
+		web.Router(ApiPrefix+"/link/get", &ApiLinkController{}, "*:Get")
+		web.Router(ApiPrefix+"/link/get/new", &ApiLinkController{}, "*:GetNew")
+		web.Router(ApiPrefix+"/link/paginate", &ApiLinkController{}, "*:Paginate")
+		web.Router(ApiPrefix+"/link/click", &ApiLinkController{}, "*:Click")
 
-		web.Router("/api/site/default", &ApiSiteController{}, "*:Default")
-		web.Router("/api/site/find", &ApiSiteController{}, "*:Find")
-		web.Router("/api/site/find/:site_id", &ApiSiteController{}, "*:Find")
-		web.Router("/api/channel/get", &ApiSiteController{}, "*:ChannelGet")
-		web.Router("/api/site/menu", &ApiSiteController{}, "*:Menu")
-		web.Router("/api/site/menu/:site_id", &ApiSiteController{}, "*:Menu")
-		web.Router("/api/site/menu/flag", &ApiSiteController{}, "*:MenuFlag")
-		web.Router("/api/site/menu/flag/:site_flag", &ApiSiteController{}, "*:MenuFlag")
+		web.Router(ApiPrefix+"/site/default", &ApiSiteController{}, "*:Default")
+		web.Router(ApiPrefix+"/site/find", &ApiSiteController{}, "*:Find")
+		web.Router(ApiPrefix+"/site/find/:site_id", &ApiSiteController{}, "*:Find")
+		web.Router(ApiPrefix+"/channel/get", &ApiSiteController{}, "*:ChannelGet")
+		web.Router(ApiPrefix+"/site/menu", &ApiSiteController{}, "*:Menu")
+		web.Router(ApiPrefix+"/site/menu/:site_id", &ApiSiteController{}, "*:Menu")
+		web.Router(ApiPrefix+"/site/menu/flag", &ApiSiteController{}, "*:MenuFlag")
+		web.Router(ApiPrefix+"/site/menu/flag/:site_flag", &ApiSiteController{}, "*:MenuFlag")
 
-		web.Router("/api/category/nav", &ApiArticleController{}, "*:CategoryNav")
-		web.Router("/api/category/get", &ApiArticleController{}, "*:CategoryGet")
-		web.Router("/api/category/get/:channel_name", &ApiArticleController{}, "*:CategoryGet")
-		web.Router("/api/category/find", &ApiArticleController{}, "*:CategoryFind")
-		web.Router("/api/article/get", &ApiArticleController{}, "*:Get")
-		web.Router("/api/article/get/new", &ApiArticleController{}, "*:GetNew")
-		web.Router("/api/article/paginate", &ApiArticleController{}, "*:Paginate")
-		web.Router("/api/article/find", &ApiArticleController{}, "*:Find")
-		web.Router("/api/article/article", &ApiArticleController{}, "*:Article")
-		web.Router("/api/article/album", &ApiArticleController{}, "*:Album")
-		web.Router("/api/article/attach", &ApiArticleController{}, "*:Attach")
-		web.Router("/api/article/click", &ApiArticleController{}, "*:Click")
-		web.Router("/api/article/like", &ApiArticleController{}, "*:Like")
-		web.Router("/api/article/album/click", &ApiArticleController{}, "*:AlbumClick")
-		web.Router("/api/article/prev_next", &ApiArticleController{}, "*:PrevNext")
+		web.Router(ApiPrefix+"/category/nav", &ApiArticleController{}, "*:CategoryNav")
+		web.Router(ApiPrefix+"/category/get", &ApiArticleController{}, "*:CategoryGet")
+		web.Router(ApiPrefix+"/category/get/:channel_name", &ApiArticleController{}, "*:CategoryGet")
+		web.Router(ApiPrefix+"/category/find", &ApiArticleController{}, "*:CategoryFind")
+		web.Router(ApiPrefix+"/article/get", &ApiArticleController{}, "*:Get")
+		web.Router(ApiPrefix+"/article/get/new", &ApiArticleController{}, "*:GetNew")
+		web.Router(ApiPrefix+"/article/paginate", &ApiArticleController{}, "*:Paginate")
+		web.Router(ApiPrefix+"/article/find", &ApiArticleController{}, "*:Find")
+		web.Router(ApiPrefix+"/article/article", &ApiArticleController{}, "*:Article")
+		web.Router(ApiPrefix+"/article/album", &ApiArticleController{}, "*:Album")
+		web.Router(ApiPrefix+"/article/attach", &ApiArticleController{}, "*:Attach")
+		web.Router(ApiPrefix+"/article/click", &ApiArticleController{}, "*:Click")
+		web.Router(ApiPrefix+"/article/like", &ApiArticleController{}, "*:Like")
+		web.Router(ApiPrefix+"/article/album/click", &ApiArticleController{}, "*:AlbumClick")
+		web.Router(ApiPrefix+"/article/prev_next", &ApiArticleController{}, "*:PrevNext")
 
-		web.Router("/api/tag/get", &ApiTagController{}, "*:Get")
-		web.Router("/api/tag/get/new", &ApiTagController{}, "*:GetNew")
-		web.Router("/api/tag/click", &ApiTagController{}, "*:Click")
-		web.Router("/api/tag/article/paginate", &ApiTagController{}, "*:ArticlePaginate")
+		web.Router(ApiPrefix+"/tag/get", &ApiTagController{}, "*:Get")
+		web.Router(ApiPrefix+"/tag/get/new", &ApiTagController{}, "*:GetNew")
+		web.Router(ApiPrefix+"/tag/click", &ApiTagController{}, "*:Click")
+		web.Router(ApiPrefix+"/tag/article/paginate", &ApiTagController{}, "*:ArticlePaginate")
 
-		web.Router("/api/topic/get", &ApiTopicController{}, "*:Get")
-		web.Router("/api/topic/get/new", &ApiTopicController{}, "*:GetNew")
-		web.Router("/api/topic/click", &ApiTopicController{}, "*:Click")
-		web.Router("/api/topic/article/paginate", &ApiTopicController{}, "*:ArticlePaginate")
+		web.Router(ApiPrefix+"/topic/get", &ApiTopicController{}, "*:Get")
+		web.Router(ApiPrefix+"/topic/get/new", &ApiTopicController{}, "*:GetNew")
+		web.Router(ApiPrefix+"/topic/click", &ApiTopicController{}, "*:Click")
+		web.Router(ApiPrefix+"/topic/article/paginate", &ApiTopicController{}, "*:ArticlePaginate")
 	}
 
-	web.Router("/api/cache/clear", &ApiCacheController{}, "*:Clear")
+	web.Router(ApiPrefix+"/cache/clear", &ApiCacheController{}, "*:Clear")
 
 	web.Router("/", &IndexController{}, "*:Index")
 

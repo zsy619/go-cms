@@ -57,9 +57,10 @@ func init() {
 	web.Router(AdminPreifx+"/weixin/verify", &WeixinMpVerifyController{}, "*:Index")
 	web.Router(AdminPreifx+"/weixin/verify/list", &WeixinMpVerifyController{}, "*:List")
 	web.Router(AdminPreifx+"/weixin/verify/edit", &WeixinMpVerifyController{}, "*:Edit")
-	web.Router(AdminPreifx+"/weixin/verify/saveSortId", &WeixinMpVerifyController{}, "*:SaveSortId")
+	web.Router(AdminPreifx+"/weixin/verify/savesortid", &WeixinMpVerifyController{}, "*:SaveSortId")
 	web.Router(AdminPreifx+"/weixin/verify/destory", &WeixinMpVerifyController{}, "*:Destory")
 	web.Router(AdminPreifx+"/weixin/verify/upload", &WeixinMpVerifyController{}, "*:Upload")
+	web.Router(AdminPreifx+"/weixin/verify/refrshcache", &WeixinMpVerifyController{}, "*:RefrshCache")
 
 	web.Router(AdminPreifx+"/plg/register", &PlgOnlineRegisterController{}, "*:Index")
 	web.Router(AdminPreifx+"/plg/register/paginate", &PlgOnlineRegisterController{}, "*:Paginate")
