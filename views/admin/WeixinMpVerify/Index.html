@@ -144,7 +144,7 @@
                     success: function (data) {  //成功
                         if (data.code == CodeSuccess) {
                             layer.msg("保存排序成功", { icon: 1, time: 1000 }, function () {
-                                $('button[lay-filter="data-search-btn"]').click();
+                                tableReload();
                             });
                         } else {
                             layer.msg(data.msg, { icon: 2, time: 1000 });
@@ -206,12 +206,7 @@
                     $.get("/admin/weixin/verify/Destory", { "verify_id": data.verify_id }, function (data) {
                         if (data.code == 0) {
                             layer.close(index);
-                            table.reload('currentTableId', {
-                                page: false
-                                , where: {
-                                    "account_id": parseInt($("select[name=account_id]").val())
-                                }
-                            }, 'data');
+                            tableReload();
                         }
                     })
                 });
