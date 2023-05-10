@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>YYCMS</title>
+    <link rel="stylesheet" href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/bulma/0.9.1/css/bulma.min.css">
+    <link rel="stylesheet" href="/static/help/css/style.css">
+    <script src="/static/plugins/jquery-1.7.2.min.js"></script>
+    <link href="/static/admin/lib/codemirror-5.65.13/lib/codemirror.css" rel="stylesheet">
+    <link href="/static/admin/lib/codemirror-5.65.13/theme/dracula.css" rel="stylesheet">
+    <script src="/static/admin/lib/codemirror-5.65.13/lib/codemirror.js"></script>
+    <script src="/static/admin/lib/codemirror-5.65.13/addon/display/placeholder.js"></script>
+    <script src="/static/admin/lib/codemirror-5.65.13/addon/display/rulers.js"></script>
+    <script src="/static/admin/lib/codemirror-5.65.13/mode/htmlmixed/htmlmixed.js"></script>
+    <script src="/static/admin/lib/codemirror-5.65.13/mode/xml/xml.js"></script>
+    <script src="/static/admin/lib/codemirror-5.65.13/mode/css/css.js"></script>
+    <script src="/static/admin/lib/codemirror-5.65.13/mode/javascript/javascript.js"></script>
+    <script src="/static/admin/lib/codemirror-5.65.13/addon/selection/active-line.js"></script>
+    <script src="/static/admin/lib/codemirror-5.65.13/addon/edit/matchbrackets.js"></script>
+    <!--支持代码折叠-->
+    <link rel="stylesheet" href="/static/admin/lib/codemirror-5.65.13/addon/fold/foldgutter.css" rel="external nofollow" />
+    <script src="/static/admin/lib/codemirror-5.65.13/addon/fold/foldcode.js"></script>
+    <script src="/static/admin/lib/codemirror-5.65.13/addon/fold/foldgutter.js"></script>
+    <script src="/static/admin/lib/codemirror-5.65.13/addon/fold/brace-fold.js"></script>
+    <script src="/static/admin/lib/codemirror-5.65.13/addon/fold/comment-fold.js"></script>
+    <script src="/static/help/js/pub.js?r={{.time}}"></script>
+</head>
+
+<body>
+    <div class="has-background-info	">
+        <div class="container">
+            <nav class="navbar has-background-info">
+                <div class="container">
+                    <div class="navbar-brand">
+                        <a href="/" class="navbar-item">
+                            <img src="/static/help/images/logo.png" alt="Logo">
+                        </a>
+                        <span class="navbar-burger burger" data-target="navbarMenuHeroB">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </span>
+                    </div>
+                    <div id="navbarMenuHeroB" class="navbar-menu">
+                        <div class="navbar-end">
+                            <a href="/" class="navbar-item" id="navbar">
+                                首页
+                            </a>
+                            <a href="/help/dev/index" class="navbar-item is-active">
+                                开发手册
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <section class="section">
+        <div class="container">
+            <div class="tile  ">
+                <div class="tile is-2 is-parent">
+                    <div class="tile is-child ">
+                        <aside class="menu">
+                            <p class="menu-label is-size-6">
+                                API
+                            </p>
+                            <ul class="menu-list">
+                                <li><a href="/help/dev/api_site">站点</a></li>
+                                <li><a href="/help/dev/api_ads">广告</a></li>
+                                <li><a href="/help/dev/api_link">链接</a></li>
+                                <li><a href="/help/dev/api_tag">标签</a></li>
+                                <li><a href="/help/dev/api_topic">专题</a></li>
+                                <li><a href="/help/dev/api_article">文章</a></li>
+                            </ul>
+                            <p class="menu-label is-size-6">
+                                语法
+                            </p>
+                            <ul class="menu-list">
+                                <li><a href="/help/dev/29">模板的嵌套</a></li>
+                                <li><a href="/help/dev/28">循环</a></li>
+                                <li><a href="/help/dev/27">if判断</a></li>
+                                <li><a href="/help/dev/26">函数调用</a></li>
+                                <li><a href="/help/dev/25">变量渲染</a></li>
+                            </ul>
+                            <p class="menu-label is-size-6">
+                                页面
+                            </p>
+                            <ul class="menu-list">
+                                <li><a href="/help/dev/81">主题的基本信息详解</a></li>
+                                <li><a href="/help/dev/35">page页面</a></li>
+                                <li><a href="/help/dev/34">search页面</a></li>
+                                <li><a href="/help/dev/33">message页面</a></li>
+                                <li><a href="/help/dev/32">article页面</a></li>
+                                <li><a href="/help/dev/31">category页面</a></li>
+                                <li><a href="/help/dev/30">index页面</a></li>
+                            </ul>
+                            <p class="menu-label is-size-6">
+                                数据表
+                            </p>
+                            <ul class="menu-list">
+                                <li><a href="/help/dev/120">日期表结构ArticlesByDateArchive</a></li>
+                                <li><a href="/help/dev/70">用户表结构users</a></li>
+                                <li><a href="/help/dev/69">标签表结构tags</a></li>
+                                <li><a href="/help/dev/68">系统配置表结构site_configs</a></li>
+                                <li><a href="/help/dev/67">单页表结构pages</a></li>
+                                <li><a href="/help/dev/66">留言信息表结构messages</a></li>
+                                <li><a href="/help/dev/65">内链接表结构in_links</a></li>
+                                <li><a href="/help/dev/64">评论表结构comments</a></li>
+                                <li><a href="/help/dev/63">属性组结构attribute_groups</a></li>
+                                <li><a href="/help/dev/62">属性表结构attributes</a></li>
+                                <li><a href="/help/dev/61">子文章表结构article_children</a></li>
+                                <li><a href="/help/dev/60">文章表结构articles</a></li>
+                                <li><a href="/help/dev/59">文章分类表结构article_cates</a></li>
+                                <li><a href="/help/dev/58">相册表结构albums</a></li>
+                                <li><a href="/help/dev/57">广告表结构 ads</a></li>
+                                <li><a href="/help/dev/56">广告分类表结构ad_cates</a></li>
+                            </ul>
+                        </aside>
+                    </div>
+                </div>
+                {{.LayoutContent}}
+            </div>
+        </div>
+    </section>
+    <section class="has-background-success p-6">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12">
+                    <div class="content" style="text-align: center;">
+                        <img src="/static/help/images/logo.png">
+                        <p class="title has-text-centered">免费,快速,轻量,企业级</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+        <div class="content has-text-centered">
+            <p>
+                <span><a href="https://beian.miit.gov.cn/" target="_blank">豫ICP备2022007138号-3</a></span><strong> <a href="http://yh24365.com" target="_blank">YYCMS</a>
+                    &copy;{{.year}}</strong>
+            </p>
+        </div>
+    </footer>
+</body>
+
+</html>

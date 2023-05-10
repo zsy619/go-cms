@@ -8,4 +8,7 @@ func init() {
 
 	web.Router("error/404", &ErrorController{}, "*:Error404")
 	web.Router("error/500", &ErrorController{}, "*:Error500")
+
+	web.Router("/help", &HelpController{}, "*:Index")
+	web.Router("/help/:chn/:page", &HelpController{}, "*:Index")
 }

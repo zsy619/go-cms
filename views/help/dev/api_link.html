@@ -1,0 +1,114 @@
+<div class="tile  is-ancestor  is-parent">
+    <div class="tile is-child box">
+        <article class="content ">
+            <h1 class="title has-text-centered">链接开放接口</h1>
+            <hr>
+            <p>链接相关开放接口</p>
+            <h3 id="r5spb"><b>链接API</b></h3>
+            <div>
+                <table border="0" width="100%" cellpadding="0" cellspacing="0">
+                    <tbody>
+                        <tr>
+                            <th>访问路径</th>
+                            <th>参数说明</th>
+                            <th style="word-break: keep-all;">返回值</th>
+                            <th>说明</th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>/api/link/get</p>
+                            </td>
+                            <td>
+                                {int} limit 获取数量<br>
+                                {int64} site_id 站点ID<br>
+                                {string} site_flag 站点标识<br>
+                                {int64} category_id 链接分类ID<br>
+                                {string} call_index 链接分类标识
+                            </td>
+                            <td><a href="#link1">查看</a></td>
+                            <td>获取链接，按is_top升序排序</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>/api/link/get/new</p>
+                            </td>
+                            <td>
+                                {int} limit 获取数量<br>
+                                {int64} site_id 站点ID<br>
+                                {string} site_flag 站点标识<br>
+                                {int64} category_id 链接分类ID<br>
+                                {string} call_index 链接分类标识
+                            </td>
+                            <td><a href="#link1">查看</a></td>
+                            <td>获取最新链接，按link_id倒序排序</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>/api/link/paginate</p>
+                            </td>
+                            <td>
+                                {int} page 页码<br>
+                                {int} limit 获取数量<br>
+                                {int64} site_id 站点ID<br>
+                                {string} site_flag 站点标识<br>
+                                {int64} category_id 链接分类ID<br>
+                                {string} call_index 链接分类标识
+                            </td>
+                            <td><a href="#link1">查看</a></td>
+                            <td>分页取链接，按is_top升序排序</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>/api/link/click</p>
+                            </td>
+                            <td>{int64} link_id 链接ID</td>
+                            <td></td>
+                            <td>点击数+1</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h3><b><a name='link1'>链接结构</a></b></h3>
+            <textarea id="adsJson" code-type="javascript">
+{
+    "count": 5, // 返回总条数
+    "code": 0, // 0表示成功，其它表示失败
+    "msg": "", // 提示信息
+    "data": [
+        {
+            "link_id": 100000, // 链接ID
+            "site_id": 0, // 站点ID，0表示全局
+            "channel_id": 0, // 频道ID，0表示全局
+            "category_id": 100000, // 栏目ID，0表示全局
+            "category_title": "首页顶部", // 栏目名称
+            "title": "首页banner1", // 链接标题
+            "call_index": "", // 调用别名
+            "link_url": "", // 链接地址
+            "target": "_blank", // 打开方式
+            "img_url1": "/images/banner_img1.png", // 链接图片
+            "img_url2": "http://域名/images/banner_img1.png", // 链接图片
+            "remark": "", // 备注信息 
+            "sort_id": 0, // 排序号
+            "click": 0, // 点击率
+            "is_lock": 0, // 是否锁定
+            "is_top": 0, // 是否置顶
+            "is_red": 0, // 是否推荐
+            "is_hot": 0, // 是否热门
+            "is_slide": 0, // 是否幻灯片
+            "begin_time": "2023-04-18T15:41:25+08:00", // 开始时间
+            "end_time": "2030-10-25T15:41:25+08:00", // 结束时间
+            "site_flag": "" // 站点标识
+        }
+    ]
+}</textarea>
+        </article>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("textarea[code-type]").each(function () {
+            var codeType = $(this).attr("code-type");
+            var codeMirror = createCodeMirror($(this).attr("id"), codeType);
+        })
+    });
+</script>

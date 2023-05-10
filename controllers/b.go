@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/beego/beego/v2/server/web"
 	"haedu.gov.cn/cms/app/lib"
@@ -48,6 +49,7 @@ func (c *BaseController) Prepare() {
 	c.Data["curController"] = c.ControllerName
 	c.Data["curAction"] = c.ActionName
 	c.Data["time"] = xphp.Time()
+	c.Data["year"] = time.Now().Year()
 	c.Data["themePath"] = global.ThemePath
 }
 

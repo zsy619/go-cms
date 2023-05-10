@@ -1,13 +1,10 @@
 package www
 
 import (
-	"strconv"
-
 	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/cms/app/biz/bizmodel"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/lib"
-	"haedu.gov.cn/tools/xinterface"
 )
 
 type ApiArticleController struct{ BaseController }
@@ -31,9 +28,9 @@ func (this *ApiArticleController) CategoryNav() {
 
 	outNav, err := this.BaseController.CategoryNav(channel_name, channel_id, call_index, category_id, article_id)
 	if err != nil {
-		this.JSONErrorOfData(err.Error(), outNav)
+		this.JSONPage(lib.CodeError, err.Error(), outNav, 0)
 	}
-	this.JSONSuccess("", outNav)
+	this.JSONPageSuccess(outNav, int64(len(outNav)))
 }
 
 /**
@@ -53,9 +50,9 @@ func (this *ApiArticleController) CategoryGet() {
 	}
 	outChannel, count, err := this.BaseController.CategoryGet(channel_name)
 	if err != nil {
-		this.JSONErrorOfData(err.Error(), outChannel)
+		this.JSONPage(lib.CodeError, err.Error(), outChannel, count)
 	}
-	this.JSONSuccess(strconv.FormatInt(count, 10), outChannel)
+	this.JSONPageSuccess(outChannel, count)
 }
 
 /**
@@ -70,9 +67,9 @@ func (this *ApiArticleController) CategoryFind() {
 	call_index := this.GetString("call_index")
 	outChannel, err := this.BaseController.CategoryFind(category_id, call_index)
 	if err != nil {
-		this.JSONErrorOfData(err.Error(), outChannel)
+		this.JSONPage(lib.CodeError, err.Error(), outChannel, 0)
 	}
-	this.JSONSuccess("1", outChannel)
+	this.JSONPageSuccess(outChannel, 1)
 }
 
 /**
@@ -103,13 +100,13 @@ func (this *ApiArticleController) Get() {
 	is_slide, _ := this.GetInt("is_slide", 0)
 	outArticle, count, err := this.BaseController.ArticleGet(limit, channel_id, channel_name, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
 	if err != nil {
-		this.JSONErrorOfData(err.Error(), outArticle)
+		this.JSONPage(lib.CodeError, err.Error(), outArticle, count)
 	}
-	this.JSONSuccess(strconv.FormatInt(count, 10), outArticle)
+	this.JSONPageSuccess(outArticle, count)
 }
 
 /**
- * @description: GetNew 获取文章列表
+ * @description: GetNew 获取最新文章列表
  * @param {int} limit 获取数量
  * @param {int64} channel_id 频道ID
  * @param {string} channel_name 频道名称
@@ -136,9 +133,9 @@ func (this *ApiArticleController) GetNew() {
 	is_slide, _ := this.GetInt("is_slide", 0)
 	outArticle, count, err := this.BaseController.ArticleGetNew(limit, channel_id, channel_name, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
 	if err != nil {
-		this.JSONErrorOfData(err.Error(), outArticle)
+		this.JSONPage(lib.CodeError, err.Error(), outArticle, count)
 	}
-	this.JSONSuccess(strconv.FormatInt(count, 10), outArticle)
+	this.JSONPageSuccess(outArticle, count)
 }
 
 /**
@@ -181,7 +178,7 @@ func (this *ApiArticleController) Paginate() {
 }
 
 /**
- * @description: One 根据article_id获取文章详情、相册、附件
+ * @description: 根据article_id获取文章详情、相册、附件
  * @param {string} call_index 调用别名
  * @param {int64} article_id 文章id
  * @return {*}
@@ -202,9 +199,9 @@ func (this *ApiArticleController) Find() {
 	}
 	if err != nil {
 		logs.Error("", err.Error())
-		this.JSONErrorOfData(err.Error(), result)
+		this.JSONPage(lib.CodeError, err.Error(), result, 0)
 	}
-	this.JSONSuccess("", result)
+	this.JSONPageSuccess(result, 1)
 }
 
 /**
@@ -221,13 +218,20 @@ func (this *ApiArticleController) PrevNext() {
 	call_index := this.GetString("call_index")
 	prev, next := this.BaseController.ArticlePrevNext(call_index, category_id, article_id)
 	result := struct {
-		Prev *bizmodel.ApiArticleOneModel `json:"prev"`
-		Next *bizmodel.ApiArticleOneModel `json:"next"`
+		Prev *bizmodel.ApiArticlePrevNextModel `json:"prev"`
+		Next *bizmodel.ApiArticlePrevNextModel `json:"next"`
 	}{
 		Prev: prev,
 		Next: next,
 	}
-	this.JSONSuccess("", result)
+	var count int64
+	if result.Prev.CategoryID > 0 {
+		count++
+	}
+	if result.Next.CategoryID > 0 {
+		count++
+	}
+	this.JSONPageSuccess(result, count)
 }
 
 /**
@@ -243,9 +247,9 @@ func (this *ApiArticleController) Article() {
 	article, err := this.BaseController.ArticleArticle(call_index, article_id)
 	if err != nil {
 		logs.Error("", err.Error())
-		this.JSONErrorOfData(err.Error(), article)
+		this.JSONPage(lib.CodeError, err.Error(), article, 0)
 	}
-	this.JSONSuccess("", article)
+	this.JSONPageSuccess(article, 1)
 }
 
 /**
@@ -262,9 +266,9 @@ func (this *ApiArticleController) Album() {
 	album, err := this.BaseController.ArticleAlbum(call_index, article_id, type_id)
 	if err != nil {
 		logs.Error("", err.Error())
-		this.JSONErrorOfData(err.Error(), album)
+		this.JSONPage(lib.CodeError, err.Error(), album, 0)
 	}
-	this.JSONSuccess(xinterface.ToString(len(album)), album)
+	this.JSONPageSuccess(album, int64(len(album)))
 }
 
 /**
@@ -281,9 +285,9 @@ func (this *ApiArticleController) Attach() {
 	attach, err := this.BaseController.ArticleAttach(call_index, article_id, type_id)
 	if err != nil {
 		logs.Error("", err.Error())
-		this.JSONErrorOfData(err.Error(), attach)
+		this.JSONPage(lib.CodeError, err.Error(), attach, 0)
 	}
-	this.JSONSuccess(xinterface.ToString(len(attach)), attach)
+	this.JSONPageSuccess(attach, int64(len(attach)))
 }
 
 /**

@@ -8,8 +8,8 @@ import (
 /**
  * @description: 获取标签列表
  * @param {int} limit 限制数量
- * @param {*} site_flag 站点标识
- * @param {*} site_id 站点ID
+ * @param {string} site_flag 站点标识
+ * @param {int64} site_id 站点ID
  * @param {int64} channel_id 栏目ID
  * @return {*}
  */
@@ -20,8 +20,8 @@ func (this *BaseController) TopicGet(limit int, site_id int64, site_flag string,
 /**
  * @description: 获取最新标签列表
  * @param {int} limit 限制数量
- * @param {*} site_flag 站点标识
- * @param {*} site_id 站点ID
+ * @param {string} site_flag 站点标识
+ * @param {int64} site_id 站点ID
  * @param {int64} channel_id 栏目ID
  * @return {*}
  */

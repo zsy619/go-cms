@@ -3,7 +3,7 @@ package bizmodel
 import "time"
 
 type ApiAdsModel struct {
-	AdID          int64     `gorm:"column:ad_id;type:bigint;" json:"ad_id" form:"ad_id"`                                           // 主键
+	AdsID         int64     `gorm:"column:ads_id;type:bigint;" json:"ads_id" form:"ads_id"`                                        // 主键
 	SiteID        int64     `gorm:"column:site_id;type:bigint" json:"site_id" form:"site_id"`                                      // 所属站点
 	ChannelID     int64     `gorm:"column:channel_id;type:bigint" json:"channel_id" form:"channel_id"`                             // 所属频道
 	CategoryID    int64     `gorm:"column:category_id;type:bigint" json:"category_id" form:"category_id"`                          // 类别ID

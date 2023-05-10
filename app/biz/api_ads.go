@@ -96,12 +96,12 @@ func (this *ApiAds) Paginate(page, limit int, site_id int64, site_flag string, c
 		xgeneric.IFF(call_index == "", "", " AND b.call_index = '"+call_index+"'") +
 		xgeneric.IFF(category_id <= 0, "", " AND b.category_id = "+strconv.FormatInt(category_id, 10))
 	_, do := query.CmsAdsDo()
-	sqlSelectRow := "a.ad_id,a.site_id,a.channel_id,a.category_id,b.title as category_title,a.title,a.link_url,a.target,a.click,a.img_url1,a.img_url2,a.is_lock,a.is_red,a.is_hot,a.is_slide,a.begin_time,a.end_time,c.flag as site_flag"
+	sqlSelectRow := "a.ads_id,a.site_id,a.channel_id,a.category_id,b.title as category_title,a.title,a.link_url,a.target,a.click,a.img_url1,a.img_url2,a.is_lock,a.is_red,a.is_hot,a.is_slide,a.begin_time,a.end_time,c.flag as site_flag"
 	sqlRow := "SELECT " + sqlSelectRow + " FROM cms_ads a" +
 		" LEFT JOIN cms_ads_category b ON a.category_id = b.category_id" +
 		" LEFT JOIN cms_site c ON a.site_id = c.site_id" +
 		where +
-		" ORDER BY a.is_top DESC,a.sort_id ASC"
+		" ORDER BY a.is_top ASC,a.sort_id ASC"
 
 	sqlSelectCount := "count(1) as count"
 	sqlCount := "SELECT " + sqlSelectCount + " FROM cms_ads a" +

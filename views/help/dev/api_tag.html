@@ -1,0 +1,155 @@
+<div class="tile  is-ancestor  is-parent">
+    <div class="tile is-child box">
+        <article class="content ">
+            <h1 class="title has-text-centered">标签开放接口</h1>
+            <hr>
+            <p>标签相关开放接口</p>
+            <h3 id="r5spb"><b>标签API</b></h3>
+            <div>
+                <table border="0" width="100%" cellpadding="0" cellspacing="0">
+                    <tbody>
+                        <tr>
+                            <th>访问路径</th>
+                            <th>参数说明</th>
+                            <th style="word-break: keep-all;">返回值</th>
+                            <th>说明</th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>/api/tag/get</p>
+                            </td>
+                            <td>
+                                {int} limit 限制数量<br>
+                                {string} site_flag 站点标识<br>
+                                {int64} site_id 站点ID<br>
+                                {int64} channel_id 栏目ID
+                            </td>
+                            <td><a href="#tag1">查看</a></td>
+                            <td>获取标签，按is_top升序排序</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>/api/tag/get/new</p>
+                            </td>
+                            <td>
+                                {int} limit 限制数量<br>
+                                {string} site_flag 站点标识<br>
+                                {int64} site_id 站点ID<br>
+                                {int64} channel_id 栏目ID
+                            </td>
+                            <td><a href="#tag1">查看</a></td>
+                            <td>获取最新标签，按tag_id倒序排序</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>/api/tag/click</p>
+                            </td>
+                            <td>{int64} tag_id 标签ID</td>
+                            <td></td>
+                            <td>点击数+1</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>/api/tag/article/paginate</p>
+                            </td>
+                            <td>
+                                {int} page 页码<br>
+                                {int} limit 每页数量<br>
+                                {string} tag_name 标签名称<br>
+                                {int64} channel_id 频道ID<br>
+                                {string} channel_name 频道名称<br>
+                                {int64} category_id 栏目ID<br>
+                                {string} call_index 栏目别名<br>
+                                {string} keyword 关键词：按标题、摘要进行搜索<br>
+                                {int} is_top 是否置顶<br>
+                                {int} is_red 是否推荐<br>
+                                {int} is_hot 是否热门<br>
+                                {int} is_slide 是否幻灯片<br>
+                                {int} is_search 是否搜索<br>
+                                {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
+                            </td>
+                            <td><a href="#tag2">查看</a></td>
+                            <td>获取文章分页列表</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h3><b><a name='tag1'>标签结构</a></b></h3>
+            <textarea id="tagJson" code-type="javascript">
+{
+    "count": 3, // 标签总数
+    "code": 0, // 返回状态码，0为正常
+    "msg": "3", // 返回信息
+    "data": [
+        {
+            "tag_id": 100000, // 标签ID
+            "site_id": 100000, // 站点ID
+            "channel_id": 0, // 频道ID
+            "name": "name", // 标签名称
+            "title": "", // 标签标题
+            "img_url1": "", // 标签图片1
+            "img_url2": "", // 标签图片2
+            "seo_title": "", // SEO标题
+            "seo_keyword": "", // SEO关键字
+            "seo_description": "", // SEO描述
+            "template": "", // 模板
+            "sort_id": 99, // 排序
+            "site_flag": "web" // 站点标识
+        }
+    ]
+}</textarea>
+            <h3><b><a name='tag2'>文章结构</a></b></h3>
+            <textarea id="tagJson2" code-type="javascript">
+{
+    "count": 41, // 文章总数
+    "code": 0, // 返回状态码，0为正常
+    "msg": "", // 返回信息
+    "data": [
+        {
+            "article_id": 100042, // 文章ID
+            "site_id": 100000, // 站点ID
+            "channel_id": 100013, // 频道ID
+            "category_id": 100021, // 分类ID
+            "title": "教师风采", // 文章标题
+            "sub_title": "朱书彦", // 文章副标题
+            "ico_url1": "", // 文章图标1
+            "ico_url2": "", // 文章图标2
+            "call_index": "", // 调用别名
+            "source": "", // 来源
+            "author": "管理员", // 作者
+            "link_url": "", // 链接地址
+            "img_url1": "/images/jsfc_img1.png", // 图片1
+            "img_url2": "http://域名/images/jsfc_img1.png", // 图片2
+            "seo_title": "", // SEO标题
+            "seo_keyword": "", // SEO关键字
+            "seo_description": "", // SEO描述
+            "tags": "", // 标签
+            "summary": "", // 文章摘要
+            "click": 71, // 点击数
+            "is_lock": false, // 是否锁定
+            "is_comment": false, // 是否允许评论
+            "like_count": 0, // 点赞数
+            "is_top": false, // 是否置顶
+            "is_hot": false, // 是否热门
+            "is_slide": false, // 是否幻灯片
+            "static_url": "", // 静态地址
+            "publish_time": "2023-04-02T21:13:38+08:00", // 发布时间
+            "category_title": "教师风采", // 分类标题
+            "category_call_index": "jsfc", // 分类调用别名
+            "category_link_url": "/web/jyjx/jsfc", // 分类链接地址
+            "channel_name": "jyjx", // 频道名称
+            "channel_title": "教育教学" // 频道标题
+        },
+    ]
+}</textarea>
+        </article>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("textarea[code-type]").each(function () {
+            var codeType = $(this).attr("code-type");
+            var codeMirror = createCodeMirror($(this).attr("id"), codeType);
+        })
+    });
+</script>

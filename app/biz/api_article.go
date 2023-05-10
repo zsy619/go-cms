@@ -359,15 +359,16 @@ func (this *ApiArticle) ArticleFind(call_index string, article_id int64) (*bizmo
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *ApiArticle) PrevNext(call_index string, category_id, article_id int64) (prev *bizmodel.ApiArticleOneModel, next *bizmodel.ApiArticleOneModel) {
+func (this *ApiArticle) PrevNext(call_index string, category_id, article_id int64) (prev *bizmodel.ApiArticlePrevNextModel, next *bizmodel.ApiArticlePrevNextModel) {
 	_, do := query.CmsArticleDo()
-	field := `a.*,b.call_index as category_call_index,b.title as category_title,b.link_url as category_link_url,c.name as channel_name,c.title as channel_title,case when b.tmpl_dtl='' then c.tmpl_dtl else b.tmpl_dtl end tmpl_dtl`
+	field := `a.*` +
+		`,b.call_index as category_call_index,b.title as category_title,b.link_url as category_link_url,c.name as channel_name,c.title as channel_title,case when b.tmpl_dtl='' then c.tmpl_dtl else b.tmpl_dtl end tmpl_dtl`
 	sql := `SELECT ` + field + ` FROM cms_article a LEFT JOIN cms_article_category b ON a.category_id = b.category_id LEFT JOIN cms_site_channel c ON a.channel_id = c.channel_id`
 	sql += ` WHERE a.is_deleted=0 AND a.status=2 AND b.status=2` +
 		xgeneric.IFF(category_id <= 0, "", " AND b.category_id="+strconv.FormatInt(category_id, 10)) +
 		xgeneric.IFF(call_index == "", "", " AND b.call_index='"+call_index+"'") +
 		` AND a.article_id<? ORDER BY a.sort_id DESC LIMIT 1`
-	prev = &bizmodel.ApiArticleOneModel{}
+	prev = &bizmodel.ApiArticlePrevNextModel{}
 	if err := do.Debug().UnderlyingDB().Raw(sql, article_id).Scan(&prev).Error; err != nil {
 		logs.Error("PrevNext", err.Error())
 	}
@@ -376,7 +377,7 @@ func (this *ApiArticle) PrevNext(call_index string, category_id, article_id int6
 		xgeneric.IFF(category_id <= 0, "", " AND b.category_id="+strconv.FormatInt(category_id, 10)) +
 		xgeneric.IFF(call_index == "", "", " AND b.call_index='"+call_index+"'") +
 		` AND a.article_id>? ORDER BY a.sort_id ASC LIMIT 1`
-	next = &bizmodel.ApiArticleOneModel{}
+	next = &bizmodel.ApiArticlePrevNextModel{}
 	if err := do.Debug().UnderlyingDB().Raw(sql, article_id).Scan(&next).Error; err != nil {
 		logs.Error("PrevNext", err.Error())
 	}

@@ -4,21 +4,23 @@ import (
 	"strconv"
 
 	"github.com/beego/beego/v2/core/logs"
+	"haedu.gov.cn/cms/app/lib"
 )
 
 type ApiSiteController struct{ BaseController }
 
 /**
- * @description: Default 获取站点信息
+ * @description: Default 默认站点信息
  * @return {*}
  */
 // @router /api/site/default [get]
 func (this *ApiSiteController) Default() {
 	out, err := this.BaseController.SiteDefault()
 	if err != nil {
-		this.JSONErrorOfData(err.Error(), out)
+		logs.Error(err.Error())
+		this.JSONPage(lib.CodeError, err.Error(), out, 0)
 	}
-	this.JSONSuccess("", out)
+	this.JSONPageSuccess(out, 1)
 }
 
 /*
@@ -26,8 +28,8 @@ func (this *ApiSiteController) Default() {
  * @param {int64} site_id 站点ID
  * @return {*}
  */
-// @router /api/site/get [get]
-// @router /api/site/get/:site_id:int64 [get]
+// @router /api/site/find [get]
+// @router /api/site/find/:site_id:int64 [get]
 func (this *ApiSiteController) Find() {
 	site_id, _ := this.GetInt64("site_id")
 	if site_id == 0 {
@@ -37,9 +39,9 @@ func (this *ApiSiteController) Find() {
 	out, err := this.BaseController.SiteFind(site_id)
 	if err != nil {
 		logs.Error("Site Find::", "siteId", site_id, "err", err)
-		this.JSONErrorOfData(err.Error(), out)
+		this.JSONPage(lib.CodeError, err.Error(), out, 0)
 	}
-	this.JSONSuccess("", out)
+	this.JSONPageSuccess(out, 1)
 }
 
 /*
@@ -53,9 +55,9 @@ func (this *ApiSiteController) ChannelGet() {
 	out, len, err := this.BaseController.ChannelGet(site_id)
 	if err != nil {
 		logs.Error("Channel Get::", "siteId", site_id, "err", err)
-		this.JSONErrorOfData(err.Error(), out)
+		this.JSONPage(lib.CodeError, err.Error(), out, 0)
 	}
-	this.JSONSuccess(strconv.FormatInt(len, 10), out)
+	this.JSONPageSuccess(out, len)
 }
 
 /**
@@ -71,12 +73,12 @@ func (this *ApiSiteController) Menu() {
 		site_id, _ = strconv.ParseInt(site_idx, 10, 64)
 	}
 	channel_id, _ := this.GetInt64("channel_id")
-	out, _, err := this.BaseController.SiteMenu(site_id, channel_id)
+	out, len, err := this.BaseController.SiteMenu(site_id, channel_id)
 	if err != nil {
 		logs.Error("Site Menu::", "siteId", site_id, "err", err)
-		this.JSONErrorOfData(err.Error(), out)
+		this.JSONPage(lib.CodeError, err.Error(), out, 0)
 	}
-	this.JSONSuccess("", out)
+	this.JSONPageSuccess(out, len)
 }
 
 /**

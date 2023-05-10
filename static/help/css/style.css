@@ -1,0 +1,19 @@
+a.navbar-item.is-active:not(:focus):not(:hover) {
+    background-color: skyblue;
+    color: whitesmoke;
+}
+
+.linux-install {
+    padding: 20px;
+}
+
+.linux-install>span {
+    color: red;
+}
+
+.vv-index-center {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

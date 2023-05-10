@@ -1,8 +1,6 @@
 package www
 
 import (
-	"strconv"
-
 	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/cms/app/lib"
 )
@@ -28,9 +26,9 @@ func (this *ApiAdsController) Get() {
 	out, len, err := this.BaseController.AdsGet(limit, site_id, site_flag, category_id, call_index)
 	if err != nil {
 		logs.Error("Get::", "callIndex", call_index, "err", err)
-		this.JSONErrorOfData(err.Error(), out)
+		this.JSONPage(lib.CodeError, err.Error(), out, 0)
 	}
-	this.JSONSuccess(strconv.FormatInt(len, 10), out)
+	this.JSONPageSuccess(out, len)
 }
 
 /**
@@ -52,9 +50,9 @@ func (this *ApiAdsController) GetNew() {
 	out, len, err := this.BaseController.AdsGetNew(limit, site_id, site_flag, category_id, call_index)
 	if err != nil {
 		logs.Error("GetNew::", "callIndex", call_index, "err", err)
-		this.JSONErrorOfData(err.Error(), out)
+		this.JSONPage(lib.CodeError, err.Error(), out, 0)
 	}
-	this.JSONSuccess(strconv.FormatInt(len, 10), out)
+	this.JSONPageSuccess(out, len)
 }
 
 /**

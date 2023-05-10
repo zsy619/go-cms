@@ -228,7 +228,7 @@ func (this *BaseController) ArticleFind(call_index string, article_id int64) (*b
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *BaseController) ArticlePrevNext(call_index string, category_id, article_id int64) (*bizmodel.ApiArticleOneModel, *bizmodel.ApiArticleOneModel) {
+func (this *BaseController) ArticlePrevNext(call_index string, category_id, article_id int64) (*bizmodel.ApiArticlePrevNextModel, *bizmodel.ApiArticlePrevNextModel) {
 	return biz.NewApiArticle().PrevNext(call_index, category_id, article_id)
 }
 

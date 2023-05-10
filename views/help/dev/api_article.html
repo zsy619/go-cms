@@ -1,0 +1,594 @@
+<div class="tile  is-ancestor  is-parent">
+    <div class="tile is-child box">
+        <article class="content ">
+            <h1 class="title has-text-centered">文章开放接口</h1>
+            <hr>
+            <p>文章相关开放接口</p>
+            <h3 id="r5spb"><b>文章API</b></h3>
+            <div>
+                <table border="0" width="100%" cellpadding="0" cellspacing="0">
+                    <tbody>
+                        <tr>
+                            <th>访问路径</th>
+                            <th>参数说明</th>
+                            <th style="word-break: keep-all;">返回值</th>
+                            <th>说明</th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>/api/category/nav</p>
+                            </td>
+                            <td>
+                                {string} channel_name 频道名称<br>
+                                {in64} channel_id 频道ID<br>
+                                {string} call_index 栏目别名<br>
+                                {in64} category_id 栏目ID<br>
+                                {int64} article_id 文章ID
+                            </td>
+                            <td><a href="#category1">查看</a></td>
+                            <td>获取栏目导航</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>/api/category/get</p>
+                            </td>
+                            <td>
+                                {string} channel_name 频道名称
+                            </td>
+                            <td><a href="#category2">查看</a></td>
+                            <td>获取栏目列表</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>/api/category/get/:channel_name:string</p>
+                            </td>
+                            <td>
+                                {string} channel_name 频道名称
+                            </td>
+                            <td><a href="#category2">查看</a></td>
+                            <td>获取栏目列表</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>/api/category/find</p>
+                            </td>
+                            <td>
+                                {int64} category_id 栏目ID<br>
+                                {string} call_index 栏目别名
+                            </td>
+                            <td><a href="#category3">查看</a></td>
+                            <td>获取栏目详情</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>/api/article/get</p>
+                            </td>
+                            <td>
+                                {int} limit 获取数量，默认值6<br>
+                                {int64} channel_id 频道ID<br>
+                                {int64} category_id 栏目ID<br>
+                                {string} call_index 栏目别名<br>
+                                {int} is_top 是否置顶<br>
+                                {int} is_red 是否推荐<br>
+                                {int} is_hot 是否热门<br>
+                                {int} is_slide 是否幻灯片<br>
+                                {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time<br>
+                                {bool} is_cache 是否使用缓存
+                            </td>
+                            <td><a href="#article1">查看</a></td>
+                            <td>获取文章列表</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>/api/article/get/new</p>
+                            </td>
+                            <td>
+                                {int} limit 获取数量，默认值6<br>
+                                {int64} channel_id 频道ID<br>
+                                {int64} category_id 栏目ID<br>
+                                {string} call_index 栏目别名<br>
+                                {int} is_top 是否置顶<br>
+                                {int} is_red 是否推荐<br>
+                                {int} is_hot 是否热门<br>
+                                {int} is_slide 是否幻灯片<br>
+                                {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time<br>
+                            </td>
+                            <td><a href="#article1">查看</a></td>
+                            <td>获取最新文章列表</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>/api/article/paginate</p>
+                            </td>
+                            <td>
+                                {int} limit 获取数量，默认值6<br>
+                                {int64} channel_id 频道ID<br>
+                                {int64} category_id 栏目ID<br>
+                                {string} call_index 栏目别名<br>
+                                {int} is_top 是否置顶<br>
+                                {int} is_red 是否推荐<br>
+                                {int} is_hot 是否热门<br>
+                                {int} is_slide 是否幻灯片<br>
+                                {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time<br>
+                            </td>
+                            <td><a href="#article1">查看</a></td>
+                            <td>获取文章分页列表</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>/api/article/find</p>
+                            </td>
+                            <td>
+                                {string} call_index 调用别名<br>
+                                {int64} article_id 文章id
+                            </td>
+                            <td><a href="#article2">查看</a></td>
+                            <td>根据article_id获取文章详情、相册、附件</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>/api/article/prev_next</p>
+                            </td>
+                            <td>
+                                {string} call_index 栏目调用别名<br>
+                                {int64} category_id 栏目id<br>
+                                {int64} article_id 文章id
+                            </td>
+                            <td><a href="#article3">查看</a></td>
+                            <td>根据article_id获取文章上一个、下一个</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>/api/article/article</p>
+                            </td>
+                            <td>
+                                {string} call_index 调用别名<br>
+                                {int64} article_id 文章id
+                            </td>
+                            <td><a href="#article4">查看</a></td>
+                            <td>获取文章详情，不包括附件、相册</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>/api/article/album</p>
+                            </td>
+                            <td>
+                                {string} call_index 调用别名<br>
+                                {int64} article_id 文章id
+                            </td>
+                            <td><a href="#article5">查看</a></td>
+                            <td>获取文章相册列表</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>/api/article/attach</p>
+                            </td>
+                            <td>
+                                {string} call_index 调用别名<br>
+                                {int64} article_id 文章id
+                            </td>
+                            <td><a href="#article5">查看</a></td>
+                            <td>获取文章附件列表</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>/api/article/click</p>
+                            </td>
+                            <td>
+                                {string} call_index 调用别名<br>
+                                {int64} article_id 文章id
+                            </td>
+                            <td></td>
+                            <td>文章点击数+1</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>/api/article/like</p>
+                            </td>
+                            <td>
+                                {string} call_index 调用别名<br>
+                                {int64} article_id 文章id
+                            </td>
+                            <td></td>
+                            <td>文章点赞数+1</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>/api/article/album/click</p>
+                            </td>
+                            <td>
+                                {int64} article_id 文章id<br>
+                                {int64} ablum_id 图片id
+                            </td>
+                            <td></td>
+                            <td>文章相册点击数+1</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h3><b><a name='category1'>栏目导航结构</a></b></h3>
+            <textarea id="tagJson" code-type="javascript">
+{
+    "count": 2,
+    "code": 0,
+    "msg": "",
+    "data": [
+        {
+            "title": "机构设置",
+            "call_index": "jgsz",
+            "link_url": "",
+            "nav_type": "channel"
+        },
+        {
+            "title": "财务处",
+            "call_index": "cwc",
+            "link_url": "/web/jgsz/cwc",
+            "nav_type": "category"
+        }
+    ]
+}</textarea>
+            <h3><b><a name='category2'>栏目列表结构</a></b></h3>
+            <textarea id="tagJson2" code-type="javascript">
+{
+    "count": 11,
+    "code": 0,
+    "msg": "",
+    "data": [
+        {
+            "channel_name": "jgsz",
+            "channel_title": "机构设置",
+            "category_id": 100006,
+            "parent_id": 0,
+            "site_id": 100000,
+            "channel_id": 100011,
+            "title": "校长办公室",
+            "call_index": "xzbgs",
+            "class_layer": 1,
+            "link_url": "/web/jgsz/xzbgs",
+            "img_url1": "",
+            "img_url2": "",
+            "sort_id": 1,
+            "is_show": true,
+            "is_search": true,
+            "is_deleted": false
+        }
+    ]
+}</textarea>
+            <h3><b><a name='category3'>栏目详情结构</a></b></h3>
+            <textarea id="tagJson3" code-type="javascript">
+{
+    "count": 1,
+    "code": 0,
+    "msg": "",
+    "data": {
+        "channel_name": "jgsz",
+        "channel_title": "机构设置",
+        "category_id": 100006,
+        "parent_id": 0,
+        "site_id": 100000,
+        "channel_id": 100011,
+        "title": "校长办公室",
+        "call_index": "xzbgs",
+        "class_layer": 1,
+        "link_url": "/web/jgsz/xzbgs",
+        "img_url1": "",
+        "img_url2": "",
+        "sort_id": 1,
+        "is_show": true,
+        "is_search": true,
+        "is_deleted": false,
+        "target": "_blank",
+        "seo_title": "校长办公室",
+        "seo_keyword": "",
+        "seo_description": "",
+        "content": "",
+        "tmpl_cat": "category_cont.html",
+        "tmpl_lst": "",
+        "tmpl_dtl": "",
+        "site_flag": "web"
+    }
+}</textarea>
+            <h3><b><a name='article1'>文章列表结构</a></b></h3>
+            <textarea id="tagJson4" code-type="javascript">
+{
+    "count": 6,
+    "code": 0,
+    "msg": "",
+    "data": [
+        {
+            "article_id": 100042,
+            "site_id": 100000,
+            "channel_id": 100013,
+            "category_id": 100021,
+            "title": "教师风采",
+            "sub_title": "",
+            "ico_url1": "",
+            "ico_url2": "",
+            "call_index": "",
+            "source": "",
+            "author": ",
+            "link_url": "",
+            "img_url1": "/images/jsfc_img1.png",
+            "img_url2": "",
+            "seo_title": "",
+            "seo_keyword": "",
+            "seo_description": "",
+            "tags": "",
+            "summary": "教师风采",
+            "click": 71,
+            "is_lock": false,
+            "is_comment": false,
+            "like_count": 0,
+            "is_top": false,
+            "is_hot": false,
+            "is_slide": false,
+            "static_url": "",
+            "publish_time": "2023-04-02T21:13:38+08:00",
+            "category_title": "教师风采",
+            "category_call_index": "jsfc",
+            "category_link_url": "/web/jyjx/jsfc",
+            "channel_name": "jyjx",
+            "channel_title": "教育教学"
+        }
+    ]
+}</textarea>
+            <h3><b><a name='article2'>文章结构</a></b></h3>
+            <textarea id="tagJson5" code-type="javascript">
+{
+    "count": 1,
+    "code": 0,
+    "msg": "",
+    "data": {
+        "article": {
+            "article_id": 100002,
+            "site_id": 100000,
+            "channel_id": 100010,
+            "category_id": 100004,
+            "title": "学校荣誉",
+            "sub_title": "学校荣誉",
+            "ico_url1": "",
+            "ico_url2": "",
+            "call_index": "xxry",
+            "source": "",
+            "author": "",
+            "link_url": "",
+            "img_url1": "",
+            "img_url2": "",
+            "seo_title": "",
+            "seo_keyword": "",
+            "seo_description": "",
+            "tags": "",
+            "summary": "学校荣誉",
+            "content": "学校荣誉",
+            "sort_id": 2,
+            "click": 16,
+            "is_lock": 0,
+            "is_comment": 0,
+            "comment_count": 0,
+            "like_count": 7,
+            "is_top": 0,
+            "is_red": 0,
+            "is_hot": 0,
+            "is_slide": 0,
+            "static_url": "",
+            "publish_time": "2023-03-24T17:02:10+08:00",
+            "template": "",
+            "category_title": "学校荣誉",
+            "category_call_index": "xxry",
+            "category_link_url": "/web/xxgk/xxry",
+            "channel_name": "xxgk",
+            "channel_title": "学校概况",
+            "tmpl_dtl": ""
+        },
+        "album": [
+            {
+                "album_id": 100004,
+                "table_name": "article",
+                "record_id": 100002,
+                "type_id": 0,
+                "title": "WechatIMG67.jpeg",
+                "thumb_path": "",
+                "original_path": "/images/py3uOAhvQa.jpeg",
+                "file_path": "http://域名/images/py3uOAhvQa.jpeg",
+                "file_size": 128397,
+                "file_mime": "",
+                "file_ext": ".jpeg",
+                "link_url": "",
+                "click": 0,
+                "sort_id": 0,
+                "is_show": 1,
+                "remark": ""
+            }
+        ],
+        "attatch": [
+            {
+                "attach_id": 100000,
+                "table_name": "article",
+                "record_id": 100002,
+                "type_id": 0,
+                "title": "moment.min.js",
+                "original_path": "/files/hqtJailkjZ.js",
+                "file_path": "http://域名/files/hqtJailkjZ.js",
+                "file_size": 58103,
+                "file_mime": "",
+                "file_ext": ".js",
+                "point": 0,
+                "click": 0,
+                "sort_id": 11,
+                "is_show": 1,
+                "remark": "sss"
+            }
+        ]
+    }
+}</textarea>
+            <h3><b><a name='article3'>文章上下结构</a></b></h3>
+            <textarea id="tagJson6" code-type="javascript">
+{
+    "count": 1,
+    "code": 0,
+    "msg": "",
+    "data": {
+        "prev": {
+            "article_id": 0,
+            "site_id": 0,
+            "channel_id": 0,
+            "category_id": 0,
+            "title": "",
+            "sub_title": "",
+            "ico_url1": "",
+            "ico_url2": "",
+            "call_index": "",
+            "link_url": "",
+            "img_url1": "",
+            "img_url2": "",
+            "is_top": 0,
+            "is_red": 0,
+            "is_hot": 0,
+            "is_slide": 0,
+            "publish_time": "0001-01-01T00:00:00Z",
+            "category_title": "",
+            "category_call_index": "",
+            "category_link_url": "",
+            "channel_name": "",
+            "channel_title": "",
+            "tmpl_dtl": ""
+        },
+        "next": {
+            "article_id": 100029,
+            "site_id": 100000,
+            "channel_id": 100010,
+            "category_id": 100003,
+            "title": "学校简介",
+            "sub_title": "学校简介",
+            "ico_url1": "/Uploads/album/2023/04/uHNb3BMb2X.png",
+            "ico_url2": "http://localhost:8125/Uploads/album/2023/04/uHNb3BMb2X.png",
+            "call_index": "xxjj",
+            "link_url": "",
+            "img_url1": "/Uploads/ad/2023/04/YwcyoeTPtz.jpeg",
+            "img_url2": "http://localhost:8125/Uploads/ad/2023/04/YwcyoeTPtz.jpeg",
+            "is_top": 0,
+            "is_red": 0,
+            "is_hot": 0,
+            "is_slide": 0,
+            "publish_time": "2023-04-03T08:18:29+08:00",
+            "category_title": "学校简介",
+            "category_call_index": "xxjj",
+            "category_link_url": "/web/xxgk/xxjj",
+            "channel_name": "xxgk",
+            "channel_title": "学校概况",
+            "tmpl_dtl": ""
+        }
+    }
+}</textarea>
+            <h3><b><a name='article4'>文章(Article)结构</a></b></h3>
+            <textarea id="tagJson7" code-type="javascript">
+{
+    "count": 1,
+    "code": 0,
+    "msg": "",
+    "data": {
+        "article_id": 100002,
+        "site_id": 100000,
+        "channel_id": 100010,
+        "category_id": 100004,
+        "title": "学校荣誉",
+        "sub_title": "学校荣誉",
+        "ico_url1": "",
+        "ico_url2": "",
+        "call_index": "xxry",
+        "source": "",
+        "author": "",
+        "link_url": "",
+        "img_url1": "",
+        "img_url2": "",
+        "seo_title": "",
+        "seo_keyword": "",
+        "seo_description": "",
+        "tags": "",
+        "summary": "学校荣誉",
+        "content": "学校荣誉",
+        "sort_id": 2,
+        "click": 16,
+        "is_lock": 0,
+        "is_comment": 0,
+        "comment_count": 0,
+        "like_count": 7,
+        "is_top": 0,
+        "is_red": 0,
+        "is_hot": 0,
+        "is_slide": 0,
+        "static_url": "",
+        "publish_time": "2023-03-24T17:02:10+08:00",
+        "template": "",
+        "category_title": "学校荣誉",
+        "category_call_index": "xxry",
+        "category_link_url": "/web/xxgk/xxry",
+        "channel_name": "xxgk",
+        "channel_title": "学校概况",
+        "tmpl_dtl": ""
+    }
+}</textarea>
+            <h3><b><a name='article5'>文章(Album)结构</a></b></h3>
+            <textarea id="tagJson8" code-type="javascript">
+{
+    "count": 5,
+    "code": 0,
+    "msg": "",
+    "data": [
+        {
+            "album_id": 100004,
+            "table_name": "article",
+            "record_id": 100002,
+            "type_id": 0,
+            "title": "WechatIMG67.jpeg",
+            "thumb_path": "",
+            "original_path": "",
+            "file_path": "",
+            "file_size": 128397,
+            "file_mime": "",
+            "file_ext": ".jpeg",
+            "link_url": "",
+            "click": 0,
+            "sort_id": 0,
+            "is_show": 1,
+            "remark": ""
+        }
+    ]
+}</textarea>
+            <h3><b><a name='article6'>文章(Attach)结构</a></b></h3>
+            <textarea id="tagJson9" code-type="javascript">
+{
+    "count": 1,
+    "code": 0,
+    "msg": "",
+    "data": [
+        {
+            "attach_id": 100000,
+            "table_name": "article",
+            "record_id": 100002,
+            "type_id": 0,
+            "title": "moment.min.js",
+            "original_path": "/files/hqtJailkjZ.js",
+            "file_path": "http://域名/files/hqtJailkjZ.js",
+            "file_size": 58103,
+            "file_mime": "",
+            "file_ext": ".js",
+            "point": 0,
+            "click": 0,
+            "sort_id": 11,
+            "is_show": 1,
+            "remark": "sss"
+        }
+    ]
+}</textarea>
+        </article>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("textarea[code-type]").each(function () {
+            var codeType = $(this).attr("code-type");
+            var codeMirror = createCodeMirror($(this).attr("id"), codeType);
+        })
+    });
+</script>

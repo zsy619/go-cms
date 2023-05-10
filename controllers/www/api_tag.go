@@ -18,9 +18,9 @@ func (this *ApiTagController) Get() {
 	out, len, err := this.BaseController.TagGet(limit, site_id, site_flag, channel_id)
 	if err != nil {
 		logs.Error("Get::", err)
-		this.JSONErrorOfData(err.Error(), out)
+		this.JSONPage(lib.CodeError, err.Error(), out, 0)
 	}
-	this.JSONSuccess(strconv.FormatInt(len, 10), out)
+	this.JSONPageSuccess(out, len)
 }
 
 // @router /api/tag/get/new [get]

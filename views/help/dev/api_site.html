@@ -1,0 +1,199 @@
+<div class="tile  is-ancestor  is-parent">
+    <div class="tile is-child box">
+        <article class="content ">
+            <h1 class="title has-text-centered">站点开放接口</h1>
+            <hr>
+            <p>站点相关开放接口</p>
+            <h3 id="r5spb"><b>站点API</b></h3>
+            <div>
+                <table border="0" width="100%" cellpadding="0" cellspacing="0">
+                    <tbody>
+                        <tr>
+                            <th>访问路径</th>
+                            <th>参数说明</th>
+                            <th style="word-break: keep-all;">返回值</th>
+                            <th>说明</th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>/api/site/default</p>
+                            </td>
+                            <td></td>
+                            <td><a href="#site">查看</a></td>
+                            <td>默认站点信息</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>/api/site/find</p>
+                            </td>
+                            <td>{int64} site_id 站点ID</td>
+                            <td><a href="#site">查看</a></td>
+                            <td>获取站点信息</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>/api/site/find/:site_id:int64</p>
+                            </td>
+                            <td>{int64} site_id 站点ID</td>
+                            <td><a href="#site">查看</a></td>
+                            <td>获取站点信息</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>/api/channel/get</p>
+                            </td>
+                            <td>url参数site_id：站点ID</td>
+                            <td><a href="#channel">查看</a></td>
+                            <td>获取站点频道</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>/api/site/menu</p>
+                            </td>
+                            <td>url参数site_id：站点ID</td>
+                            <td><a href="#menu">查看</a></td>
+                            <td>获取站点菜单</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>/api/site/menu/:site_id:int64</p>
+                            </td>
+                            <td>{int64} site_id 站点ID</td>
+                            <td><a href="#menu">查看</a></td>
+                            <td>获取站点菜单</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>/api/site/menu/flag</p>
+                            </td>
+                            <td>
+                                {string} site_flag 站点标识<br>
+                                {int64} channel_id 频道ID
+                            </td>
+                            <td><a href="#menu">查看</a></td>
+                            <td>获取站点菜单</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>/api/site/menu/flag/:site_flag:string </p>
+                            </td>
+                            <td>
+                                {string} site_flag 站点标识<br>
+                                {int64} channel_id 频道ID
+                            </td>
+                            <td><a href="#menu">查看</a></td>
+                            <td>获取站点菜单</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h3 id="r5spb"><b><a name="site">站点结构</a></b></h3>
+            <textarea id="siteJson" code-type="javascript">
+{
+    "count": 1,
+    "code": 0, // 0表示成功，其他表示失败
+    "msg": "", // 提示信息
+    "data": { // 站点信息
+        "site_id": 900000, //站点编码
+        "parent_id": 0, //父站点编码
+        "name": "河南省教育网有限公司", //站点名称
+        "flag": "haedu", //站点标识
+        "title": "河南省教育网有限公司", //站点标题
+        "template": "template", //站点模板
+        "is_default": true, //是否默认站点
+        "is_mobile": false, //是否手机站点
+        "logo1": "/images/logo.png", //站点logo
+        "logo2": "http://域名/images/logo.png", //站点logo
+        "icon1": "/images/favion.ico", //站点图标
+        "icon2": "http://域名/images/favion.ico", //站点图标
+        "company": "河南省教育网有限公司", //公司名称
+        "address": "", //公司地址
+        "telphone": "", //公司电话
+        "fax": "", //公司传真
+        "email": "", //公司邮箱
+        "crod": "豫ICP备10201850号", //备案号
+        "cache": 0, //缓存时间
+        "max_length": 2048, //最大长度
+        "file_type": "png|gif|jpg|jpeg|zip|rar", //文件类型
+        "home_title": "河南省教育网有限公司", //首页标题
+        "copyright": "", // 版权信息，支持html
+        "statcode": "", //统计代码，支持html
+        "robots": "", //robots协议，支持html
+        "meta_keyword": "", //meta关键字
+        "meta_description": "" //meta描述
+    }
+}</textarea>
+            <h3 id="r5spb"><b><a name="channel">频道结构</a></b></h3>
+            <textarea id="chnJson" code-type="javascript">
+{
+    "count": 7, // 频道数量
+    "code": 0, // 0表示成功，其他表示失败
+    "msg": "0", // 提示信息
+    "data": [ // 频道列表，数组
+        {
+            "channel_id": 100010, //频道编码
+            "parent_id": 0, //父频道编码
+            "title": "公司概况", //频道标题
+            "name": "gsgk", //频道名称
+            "kind": 0, //频道类型，本参数暂时无用
+            "class_layer": 1, //频道层级
+            "link_url": "", //链接地址
+            "img_url1": "/images/other_banner.png", //频道banner
+            "img_url2": "http://域名/images/other_banner.png", //频道banner
+            "sort_id": 10, //排序
+            "is_album": 1, //是启用相册
+            "is_attach": 1, //是否启用附件
+            "is_spec": 0, //是否启用规格
+            "tmpl_chnl": "", //频道模板
+            "tmpl_cat": "", //分类模板
+            "tmpl_lst": "", //列表模板
+            "tmpl_dtl": "", //详情模板
+            "site_flag": "" //站点标识
+        },
+    ]
+}</textarea>
+            <h3 id="r5spb"><b><a name="menu">菜单结构</a></b></h3>
+            <textarea id="menuJson" code-type="javascript">
+{
+    "count": 6, // 菜单数量
+    "code": 0, // 0表示成功，其他表示失败
+    "msg": "", // 提示信息
+    "data": [ //菜单数据
+        {
+            "nav_id": 100010, //菜单编码
+            "title": "学校概况", //菜单标题
+            "name": "xxgk", //菜单名称
+            "link_url": "", //链接地址
+            "target": "_blank", //打开方式
+            "img_url1": "/images/other_banner.png", //菜单banner
+            "img_url2": "http://域名/images/other_banner.png", //菜单banner
+            "sort_id": 10, //排序
+            "type": "channel", //菜单类型，channel表示频道，category表示分类
+            "children": [ //子菜单
+                {
+                    "nav_id": 100003,
+                    "title": "学校简介",
+                    "name": "xxjj",
+                    "link_url": "/web/xxgk/xxjj",
+                    "target": "_blank",
+                    "img_url1": "",
+                    "img_url2": "",
+                    "sort_id": 1,
+                    "type": "category",
+                    "children": []
+                },
+            ]
+        }
+    ]
+}</textarea>
+        </article>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("textarea[code-type]").each(function () {
+            var codeType = $(this).attr("code-type");
+            var codeMirror = createCodeMirror($(this).attr("id"), codeType);
+        })
+    });
+</script>
