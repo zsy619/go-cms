@@ -1,0 +1,109 @@
+<div class="tile  is-ancestor  is-parent">
+    <div class="tile is-child box">
+        <article class="content ">
+            <h1 class="title has-text-centered">函数调用</h1>
+            <hr>
+            <p><b>YYCMS提供了大量的函数给予前端调用，保证功能，这些函数可以方便地在模板中使用。以下是一些常用的内置模板函数：</b></p>
+            <p><b>1.eq：判断两个值是否相等。</b></p>
+            <textarea id="code1" code-type="htmlmixed">{{`{{`}} if eq .Var1 .Var2 }}
+<p>Var1 and Var2 are equal.</p>
+{{`{{`}}end }}</textarea>
+            <p><b>2.ne：判断两个值是否不相等。</b></p>
+            <textarea id="code2" code-type="htmlmixed">{{`{{`}} if ne .Var1 .Var2 }}
+<p>Var1 and Var2 are not equal.</p>
+{{`{{`}} end }}</textarea>
+            <p><b>3.lt：判断一个值是否小于另一个值。</b></p>
+            <textarea id="code3" code-type="htmlmixed">{{`{{`}} if lt .Var1 .Var2 }}
+<p>Var1 is less than Var2.</p>
+{{`{{`}} end }}</textarea>
+            <p><b>4.le：判断一个值是否小于等于另一个值。</b></p>
+            <textarea id="code4" code-type="htmlmixed">{{`{{`}} if le .Var1 .Var2 }}
+<p>Var1 is less than or equal to Var2.</p>
+{{`{{`}} end }}</textarea>
+            <p><b>5.gt：判断一个值是否大于另一个值。</b></p>
+            <textarea id="code5" code-type="htmlmixed">{{`{{`}} if gt .Var1 .Var2 }}
+<p>Var1 is greater than Var2.</p>
+{{`{{`}} end }}</textarea>
+            <p><b>6.ge：判断一个值是否大于等于另一个值。</b></p>
+            <textarea id="code6" code-type="htmlmixed">{{`{{`}} if ge .Var1 .Var2 }}
+<p>Var1 is greater than or equal to Var2.</p>
+{{`{{`}} end }}</textarea>
+            <p><b>7.html：将模板变量的 HTML 标签转义。</b></p>
+            <textarea id="code7" code-type="htmlmixed">{{`{{`}} .HtmlContent | html }}</textarea>
+            <p><b>8.substr：截取字符串的一部分。</b></p>
+            <textarea id="code24" code-type="htmlmixed">{{`{{`}} .LongString | substr 0 10 }}</textarea>
+            <p><b>9.date：格式化时间和日期。</b></p>
+            <textarea id="code8" code-type="htmlmixed">{{`{{`}} .Timestamp | date "2006-01-02 15:04:05" }}</textarea>
+            <p><b>10.len：计算字符串、数组、切片或映射的长度。</b></p>
+            <textarea id="code9" code-type="htmlmixed">{{`{{`}} .Items | len }}</textarea>
+            <p><b>11.default：如果变量为空或零值，返回默认值。</b></p>
+            <textarea id="code10" code-type="htmlmixed">{{`{{`}} .Var | default "DefaultValue" }}</textarea>
+            <p><b>12.lower：将字符串转换为小写。</b></p>
+            <textarea id="code11" code-type="htmlmixed">{{`{{`}} .UpperCaseString | lower }}</textarea>
+            <p><b>13.upper：将字符串转换为大写。</b></p>
+            <textarea id="code12" code-type="htmlmixed">{{`{{`}} .LowerCaseString | upper }}</textarea>
+            <p><b>14.title：将字符串中每个单词的首字母大写。</b></p>
+            <textarea id="code13" code-type="htmlmixed">{{`{{`}} .Text | title }}</textarea>
+            <p><b>15.add：将两个整数相加。</b></p>
+            <textarea id="code14" code-type="htmlmixed">{{`{{`}} add .Var1 .Var2 }}</textarea>
+            <p><b>16.div：将两个整数相除，返回商。</b></p>
+            <textarea id="code15" code-type="htmlmixed">{{`{{`}} div .Var1 .Var2 }}</textarea>
+            <p><b>17.mod：将两个整数相除，返回余数。</b></p>
+            <textarea id="code16" code-type="htmlmixed">{{`{{`}} mod .Var1 .Var2 }}</textarea>
+            <p><b>18.mul：将两个整数相乘。</b></p>
+            <textarea id="code17" code-type="htmlmixed">{{`{{`}} mul .Var1 .Var2 }}</textarea>
+            <p><b>19.urlquery：将字符串转换为 URL 查询参数的格式。</b></p>
+            <textarea id="code18" code-type="htmlmixed"><a href="/search?q={{`{{`}} .SearchTerm | urlquery }}">Search</a></textarea>
+            <p><b>20.json：将 Go 数据结构转换为 JSON 字符串。</b></p>
+            <textarea id="code19" code-type="htmlmixed">var data = {{`{{`}} .Data | json }};</textarea>
+            <p><b>21.and 和 or：布尔逻辑运算。</b></p>
+            <textarea id="code20" code-type="htmlmixed">{{"{{"}} if and (gt .Var1 .Var2) (lt .Var1 .Var3) }}
+<p>Var1 is greater than Var2 and less than Var3.</p>
+{{"{{"}} end }}</textarea>
+            <p><b>22.call：调用一个函数。</b></p>
+            <textarea id="code21" code-type="htmlmixed">{{"{{"}} call .MyFunction "arg1" "arg2" }}</textarea>
+            <p><b>23.index：获取数组、切片或映射的值。</b></p>
+            <textarea id="code22" code-type="htmlmixed">{{"{{"}} index .Items 0 }}</textarea>
+            <p><b>24.print：输出传入的参数。</b></p>
+            <textarea id="code23" code-type="htmlmixed">{{"{{"}} print .Var1 .Var2 }}</textarea>
+            <p><b>25.dateformat：实现了时间的格式化，返回字符串</b></p>
+            <textarea id="code25" code-type="htmlmixed">{{"{{"}} dateformat .Time “2006-01-02T15:04:05Z07:00” }}</textarea>
+            <p><b>26.date：实现了类似 PHP 的 date 函数，可以很方便的根据字符串返回时间</b></p>
+            <textarea id="code26" code-type="htmlmixed">{{"{{"}} date .T “Y-m-d H:i:s” }}</textarea>
+            <p><b>27.compare：实现了两个对象的比较，如果相同返回 true，否者 false</b></p>
+            <textarea id="code27" code-type="htmlmixed">{{"{{"}} compare .A .B }}</textarea>
+            <p><b>28.html2str：实现了把 html 转化为字符串，剔除一些 script、css 之类的元素，返回纯文本信息</b></p>
+            <textarea id="code28" code-type="htmlmixed">{{"{{"}} html2str .Htmlinfo }}</textarea>
+            <p><b>29.str2html：实现了把相应的字符串当作 HTML 来输出，不转义</b></p>
+            <textarea id="code29" code-type="htmlmixed">{{"{{"}} str2html .Strhtml }}</textarea>
+            <p><b>30.htmlquote：实现了基本的 html 字符转义</b></p>
+            <textarea id="code30" code-type="htmlmixed">{{"{{"}} htmlquote .quote }}</textarea>
+            <p><b>31.htmlunquote：实现了基本的反转移字符</b></p>
+            <textarea id="code31" code-type="htmlmixed">{{"{{"}} htmlunquote .unquote}}</textarea>
+            <p><b>32.renderform：根据 StructTag 直接生成对应的表单</b></p>
+            <textarea id="code32" code-type="htmlmixed">{{"{{"}} &struct | renderform }}</textarea>
+            <p><b>33.assets_js：为 js 文件生成一个 script 标签</b></p>
+            <textarea id="code33" code-type="htmlmixed">{{"{{"}} assets_js src }}</textarea>
+            <p><b>34.assets_css：为 css 文件生成一个 link 标签</b></p>
+            <textarea id="code34" code-type="htmlmixed">{{"{{"}} assets_css src }}</textarea>
+            <p><b>35.config：获取 AppConfig 的值，可选的 configType 有 String, Bool, Int, Int64, Float, DIY</b></p>
+            <textarea id="code35" code-type="htmlmixed">{{"{{"}} config configType configKey defaultValue }}</textarea>
+            <p><b>36.map_get：获取 map 的值</b></p>
+            <textarea id="code36" code-type="javascript">
+// In controller
+Data["m"] = map[string]interface{} {
+    "a": 1,
+    "1": map[string]float64{
+        "c": 4,
+    },
+}
+    
+// In view
+{{"{{"}} map_get m "a" }} // return 1
+{{"{{"}} map_get m 1 "c" }} // return 4
+</textarea>
+            <p><b>37.urlfor：获取控制器方法的 URL</b></p>
+            <textarea id="code37" code-type="htmlmixed">{{"{{"}} urlfor "TestController.List" }}</textarea>
+        </article>
+    </div>
+</div>

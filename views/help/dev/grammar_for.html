@@ -1,0 +1,39 @@
+<div class="tile  is-ancestor  is-parent">
+    <div class="tile is-child box">
+        <article class="content ">
+            <h1 class="title has-text-centered">循环</h1>
+            <hr>
+            <p><b>使用 {{"{{"}} range }} 和 {{"{{"}} end }} 来实现循环遍历。这可以用于遍历数组、切片、映射等。下面是一些常见的循环示例：</b></p>
+            <p><b>1.遍历数组或切片：</b></p>
+            <textarea id="code1" code-type="htmlmixed">
+<ul>
+    {{"{{"}} range .Items }}
+        <li>{{"{{"}} . }}</li>
+    {{"{{"}} end }}
+</ul>
+            </textarea>
+            <p><b>在这个例子中，.Items 是一个数组或切片，{{"{{"}} range .Items }} 遍历每个元素，{{"{{"}} . }} 输出当前元素的值。</b></p>
+            <p><b>2.遍历映射：</b></p>
+            <textarea id="code2" code-type="htmlmixed">
+<table>
+    {{"{{"}} range $key, $value := .ItemsMap }}
+        <tr>
+        <td>{{"{{"}} $key }}</td>
+        <td>{{"{{"}} $value }}</td>
+        </tr>
+    {{"{{"}} end }}
+</table>
+            </textarea>
+            <p><b>在这个例子中，.ItemsMap 是一个映射，{{"{{"}} range $key, $value := .ItemsMap }} 遍历每个键值对，$key 和 $value 分别表示当前的键和值。</b></p>
+            <p><b>3.在循环中使用索引：</b></p>
+            <textarea id="code3" code-type="htmlmixed">
+<ol>
+    {{"{{"}} range $index, $element := .Items }}
+        <li>{{"{{"}} $index }}: {{"{{"}} $element }}</li>
+    {{"{{"}} end }}
+</ol>
+            </textarea>
+            <p><b>在这个例子中，{{"{{"}} range $index, $element := .Items }} 遍历每个元素，同时获取其索引值（从 0 开始），$index 表示当前元素的索引，$element 表示当前元素的值。</b></p>
+        </article>
+    </div>
+</div>

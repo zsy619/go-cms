@@ -1,0 +1,15 @@
+<div class="tile  is-ancestor  is-parent">
+    <div class="tile is-child box">
+        <article class="content ">
+            <h1 class="title has-text-centered">变量渲染</h1>
+            <hr>
+            <p><b>模板内内嵌的语法支持，全部需要加{{"{{"}}}}来标记</b><br></p>
+            <p><b>打印变量</b></p>
+            <textarea id="code1" code-type="javascript"><p>{{"{{"}}.Title}}<span>{{"{{"}}.Keywords}}</span></p></textarea>
+            <p><b>变量定义</b></p>
+            <textarea id="code2" code-type="javascript">{{"{{"}}$article := "hello"}}</textarea>
+            <p><b>变量赋值</b></p>
+            <textarea id="code3" code-type="javascript">{{"{{"}}$article := .ArticleContent}}</textarea>
+        </article>
+    </div>
+</div>

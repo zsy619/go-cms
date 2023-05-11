@@ -79,11 +79,12 @@
                                 语法
                             </p>
                             <ul class="menu-list">
-                                <li><a href="/help/dev/29">模板的嵌套</a></li>
-                                <li><a href="/help/dev/28">循环</a></li>
-                                <li><a href="/help/dev/27">if判断</a></li>
-                                <li><a href="/help/dev/26">函数调用</a></li>
-                                <li><a href="/help/dev/25">变量渲染</a></li>
+                                <li><a href="/help/dev/grammar_tmpl">模板的嵌套</a></li>
+                                <li><a href="/help/dev/grammar_for">range循环</a></li>
+                                <li><a href="/help/dev/grammar_if">if判断</a></li>
+                                <li><a href="/help/dev/grammar_switch">switch分支</a></li>
+                                <li><a href="/help/dev/grammar_func">内置函数</a></li>
+                                <li><a href="/help/dev/grammar_var">变量渲染</a></li>
                             </ul>
                             <p class="menu-label is-size-6">
                                 页面
@@ -145,6 +146,14 @@
             </p>
         </div>
     </footer>
+    <script type="text/javascript">
+        $(function () {
+            $("textarea[code-type]").each(function () {
+                var codeType = $(this).attr("code-type");
+                var codeMirror = createCodeMirror($(this).attr("id"), codeType);
+            })
+        });
+    </script>
 </body>
 
 </html>
