@@ -13,7 +13,7 @@ import (
  * @param {int64} channel_id 栏目ID
  * @return {*}
  */
-func TopicNewExt(limit int, site_id int64, site_flag string, channel_id int64) []*bizmodel.ApiTopicModel {
+func TopicNewExtend(limit int, site_id int64, site_flag string, channel_id int64) []*bizmodel.ApiTopicModel {
 	find, _, _ := biz.NewApiTopic().GetNew(limit, site_id, site_flag, channel_id)
 	if find == nil {
 		return []*bizmodel.ApiTopicModel{}
@@ -22,7 +22,7 @@ func TopicNewExt(limit int, site_id int64, site_flag string, channel_id int64) [
 }
 
 func TopicNew(limit int) []*bizmodel.ApiTopicModel {
-	return TopicNewExt(limit, 0, "", 0)
+	return TopicNewExtend(limit, 0, "", 0)
 }
 
 /**
@@ -33,7 +33,7 @@ func TopicNew(limit int) []*bizmodel.ApiTopicModel {
  * @param {int64} channel_id 栏目ID
  * @return {*}
  */
-func TopicTopExt(limit int, site_id int64, site_flag string, channel_id int64) []*bizmodel.ApiTopicModel {
+func TopicTopExtend(limit int, site_id int64, site_flag string, channel_id int64) []*bizmodel.ApiTopicModel {
 	find, _, _ := biz.NewApiTopic().Get(limit, site_id, site_flag, channel_id)
 	if find == nil {
 		return []*bizmodel.ApiTopicModel{}
@@ -42,7 +42,7 @@ func TopicTopExt(limit int, site_id int64, site_flag string, channel_id int64) [
 }
 
 func TopicTop(limit int) []*bizmodel.ApiTopicModel {
-	return TopicTopExt(limit, 0, "", 0)
+	return TopicTopExtend(limit, 0, "", 0)
 }
 
 func TopicArtilceTop(limit int, topic_name string) []*bizmodel.ApiArticleListModel {

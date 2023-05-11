@@ -58,10 +58,20 @@ func StrCheck(x, y string) bool {
 	return strings.Compare(x, y) == 0
 }
 
+/**
+ * @description: 首字符大写
+ * @param {string} str
+ * @return {*}
+ */
 func UcWords(str string) string {
 	return strings.Title(str)
 }
 
-func ToUpper(s string) string {
-	return strings.ToUpper(s)
+/**
+ * @description: 转换为大写
+ * @param {string} str
+ * @return {*}
+ */
+func ToUpper(str string) string {
+	return strings.ToUpper(str)
 }

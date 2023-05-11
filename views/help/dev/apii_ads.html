@@ -1,0 +1,97 @@
+<div class="tile  is-ancestor  is-parent">
+    <div class="tile is-child box">
+        <article class="content ">
+            <h1 class="title has-text-centered">广告函数</h1>
+            <hr>
+            <h3 id="r5spb"><b>广告函数</b></h3>
+            <div>
+                <table border="0" width="100%" cellpadding="0" cellspacing="0">
+                    <tbody>
+                        <tr>
+                            <th>api名称</th>
+                            <th>需要参数</th>
+                            <th style="word-break: keep-all;">返回值</th>
+                            <th>说明</th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>AdsNew</p>
+                            </td>
+                            <td>
+                                {int} limit 获取数量，小于等于0时按6条处理
+                            </td>
+                            <td><a href="#ApiAdsModel">[]*ApiAdsModel</a></td>
+                            <td>获取最新广告列表</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>AdsNewExtend</p>
+                            </td>
+                            <td>
+                                {int} limit 获取数量，小于等于0时按6条处理<br>
+                                {int64} site_id 站点ID<br>
+                                {string} site_flag 站点标识<br>
+                                {int64} category_id 广告分类ID<br>
+                                {string} call_index 广告分类标识
+                            </td>
+                            <td><a href="#ApiAdsModel">[]*ApiAdsModel</a></td>
+                            <td>获取最新广告列表</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>AdsTop</p>
+                            </td>
+                            <td>
+                                {int} limit 获取数量，小于等于0时按6条处理
+                            </td>
+                            <td><a href="#ApiAdsModel">[]*ApiAdsModel</a></td>
+                            <td>获取广告列表</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>AdsTopExtend</p>
+                            </td>
+                            <td>
+                                {int} limit 获取数量，小于等于0时按6条处理<br>
+                                {int64} site_id 站点ID<br>
+                                {string} site_flag 站点标识<br>
+                                {int64} category_id 广告分类ID<br>
+                                {string} call_index 广告分类标识
+                            </td>
+                            <td><a href="#ApiAdsModel">[]*ApiAdsModel</a></td>
+                            <td>获取广告列表</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h3 id="r5spb"><b><a name="ApiAdsModel">ApiAdsModel结构</a></b></h3>
+            <textarea id="code1" code-type="go">
+type ApiAdsModel struct {
+    AdsID         int64     `gorm:"column:ads_id;type:bigint;" json:"ads_id" form:"ads_id"`                                        // 主键
+    SiteID        int64     `gorm:"column:site_id;type:bigint" json:"site_id" form:"site_id"`                                      // 所属站点
+    ChannelID     int64     `gorm:"column:channel_id;type:bigint" json:"channel_id" form:"channel_id"`                             // 所属频道
+    CategoryID    int64     `gorm:"column:category_id;type:bigint" json:"category_id" form:"category_id"`                          // 类别ID
+    CategoryTitle string    `gorm:"column:category_title;type:varchar(128)" json:"category_title" form:"category_title"`           // 列表标题
+    Title         string    `gorm:"column:title;type:varchar(128)" json:"title" form:"title"`                                      // 标题
+    CallIndex     string    `gorm:"column:call_index;type:varchar(64)" json:"call_index" form:"call_index"`                        // 调用别名
+    LinkURL       string    `gorm:"column:link_url;type:varchar(256)" json:"link_url" form:"link_url"`                             // 外部链接
+    Target        string    `gorm:"column:target;type:varchar(16);default:_blank" json:"target" form:"target"`                     // 是否开启浏览器新窗口
+    ImgUrl1       string    `gorm:"column:img_url1;type:varchar(256)" json:"img_url1" form:"img_url1"`                             // 图片地址
+    ImgUrl2       string    `gorm:"column:img_url2;type:varchar(256)" json:"img_url2" form:"img_url2"`                             // 图片地址
+    Remark        string    `gorm:"column:remark;type:varchar(256)" json:"remark" form:"remark"`                                   // 备注
+    SortID        int32     `gorm:"column:sort_id;type:int" json:"sort_id" form:"sort_id"`                                         // 排序
+    Click         int32     `gorm:"column:click;type:int" json:"click" form:"click"`                                               // 浏览次数
+    Status        int32     `gorm:"column:status;type:tinyint" json:"status" form:"status"`                                        // 状态0草稿1提交2审核通过3审核未通过4驳回
+    IsLock        int32     `gorm:"column:is_lock;type:tinyint" json:"is_lock" form:"is_lock"`                                     // 是否锁定（不允许编辑）
+    IsTop         int32     `gorm:"column:is_top;type:tinyint" json:"is_top" form:"is_top"`                                        // 是否置顶
+    IsRed         int32     `gorm:"column:is_red;type:tinyint" json:"is_red" form:"is_red"`                                        // 是否推荐
+    IsHot         int32     `gorm:"column:is_hot;type:tinyint" json:"is_hot" form:"is_hot"`                                        // 是否热门
+    IsSlide       int32     `gorm:"column:is_slide;type:tinyint" json:"is_slide" form:"is_slide"`                                  // 是否幻灯片
+    BeginTime     time.Time `gorm:"column:begin_time;type:datetime;default:CURRENT_TIMESTAMP" json:"begin_time" form:"begin_time"` // 创建时间
+    EndTime       time.Time `gorm:"column:end_time;type:datetime;default:CURRENT_TIMESTAMP" json:"end_time" form:"end_time"`       // 创建时间
+    SiteFlag      string    `gorm:"column:site_flag;type:varchar(64)" json:"site_flag" form:"site_flag"`                           // 站点标识
+}                
+            </textarea>
+        </article>
+    </div>
+</div>

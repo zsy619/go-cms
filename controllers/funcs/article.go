@@ -20,7 +20,7 @@ import (
  * @param {bool} is_cache 是否使用缓存
  * @return {*}
  */
-func ArticleNewExt(limit int, channel_id int64, channel_name string, category_id int64, call_index string, is_top, is_red, is_hot, is_slide int, order_by string) []*bizmodel.ApiArticleListModel {
+func ArticleNewExtend(limit int, channel_id int64, channel_name string, category_id int64, call_index string, is_top, is_red, is_hot, is_slide int, order_by string) []*bizmodel.ApiArticleListModel {
 	if limit <= 0 {
 		limit = 5
 	}
@@ -32,7 +32,7 @@ func ArticleNewExt(limit int, channel_id int64, channel_name string, category_id
 }
 
 func ArticleNew(limit int) []*bizmodel.ApiArticleListModel {
-	return ArticleNewExt(limit, 0, "", 0, "", 0, 0, 0, 0, "")
+	return ArticleNewExtend(limit, 0, "", 0, "", 0, 0, 0, 0, "")
 }
 
 /**
@@ -47,10 +47,9 @@ func ArticleNew(limit int) []*bizmodel.ApiArticleListModel {
  * @param {int} is_hot 是否热门
  * @param {int} is_slide 是否幻灯片
  * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
- * @param {bool} is_cache 是否使用缓存
  * @return {*}
  */
-func ArticleTopExt(limit int, channel_id int64, channel_name string, category_id int64, call_index string, is_top, is_red, is_hot, is_slide int, order_by string) []*bizmodel.ApiArticleListModel {
+func ArticleTopExtend(limit int, channel_id int64, channel_name string, category_id int64, call_index string, is_top, is_red, is_hot, is_slide int, order_by string) []*bizmodel.ApiArticleListModel {
 	if limit <= 0 {
 		limit = 5
 	}
@@ -62,5 +61,5 @@ func ArticleTopExt(limit int, channel_id int64, channel_name string, category_id
 }
 
 func ArticleTop(limit int) []*bizmodel.ApiArticleListModel {
-	return ArticleTopExt(limit, 0, "", 0, "", 0, 0, 0, 0, "")
+	return ArticleTopExtend(limit, 0, "", 0, "", 0, 0, 0, 0, "")
 }

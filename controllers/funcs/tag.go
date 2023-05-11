@@ -13,7 +13,7 @@ import (
  * @param {int64} channel_id 栏目ID
  * @return {*}
  */
-func TagNewExt(limit int, site_id int64, site_flag string, channel_id int64) []*bizmodel.ApiTagModel {
+func TagNewExtend(limit int, site_id int64, site_flag string, channel_id int64) []*bizmodel.ApiTagModel {
 	find, _, _ := biz.NewApiTag().GetNew(limit, site_id, site_flag, channel_id)
 	if find == nil {
 		return []*bizmodel.ApiTagModel{}
@@ -22,7 +22,7 @@ func TagNewExt(limit int, site_id int64, site_flag string, channel_id int64) []*
 }
 
 func TagNew(limit int) []*bizmodel.ApiTagModel {
-	return TagNewExt(limit, 0, "", 0)
+	return TagNewExtend(limit, 0, "", 0)
 }
 
 /**
@@ -33,7 +33,7 @@ func TagNew(limit int) []*bizmodel.ApiTagModel {
  * @param {int64} channel_id 栏目ID
  * @return {*}
  */
-func TagTopExt(limit int, site_id int64, site_flag string, channel_id int64) []*bizmodel.ApiTagModel {
+func TagTopExtend(limit int, site_id int64, site_flag string, channel_id int64) []*bizmodel.ApiTagModel {
 	find, _, _ := biz.NewApiTag().Get(limit, site_id, site_flag, channel_id)
 	if find == nil {
 		return []*bizmodel.ApiTagModel{}
@@ -42,7 +42,7 @@ func TagTopExt(limit int, site_id int64, site_flag string, channel_id int64) []*
 }
 
 func TagTop(limit int) []*bizmodel.ApiTagModel {
-	return TagTopExt(limit, 0, "", 0)
+	return TagTopExtend(limit, 0, "", 0)
 }
 
 func TagArtilceTop(limit int, tag_name string) []*bizmodel.ApiArticleListModel {

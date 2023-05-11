@@ -6,15 +6,18 @@ import (
 )
 
 /**
-* @description: LinkNewExt 获取最新广告列表
-* @param {int} limit 获取数量
+* @description: LinkNewExtend 获取最新链接列表
+* @param {int} limit 获取数量，小于等于0时按6条处理
 * @param {int64} site_id 站点ID
 * @param {string} site_flag 站点标识
-* @param {int64} category_id 广告分类ID
-* @param {string} call_index 广告分类标识
+* @param {int64} category_id 链接分类ID
+* @param {string} call_index 链接分类标识
 * @return {*}
  */
-func LinkNewExt(limit int, site_id int64, site_flag string, category_id int64, call_index string) []*bizmodel.ApiLinkModel {
+func LinkNewExtend(limit int, site_id int64, site_flag string, category_id int64, call_index string) []*bizmodel.ApiLinkModel {
+	if limit <= 0 {
+		limit = 6
+	}
 	find, _, err := biz.NewApiLink().GetNew(limit, site_id, site_flag, category_id, call_index)
 	if err != nil {
 		find = []*bizmodel.ApiLinkModel{}
@@ -22,20 +25,31 @@ func LinkNewExt(limit int, site_id int64, site_flag string, category_id int64, c
 	return find
 }
 
+/**
+ * @description:获取最新链接列表
+ * @param {int} limit 获取数量，小于等于0时按6条处理
+ * @return {*}
+ */
 func LinkNew(limit int) []*bizmodel.ApiLinkModel {
-	return LinkNewExt(limit, 0, "", 0, "")
+	if limit <= 0 {
+		limit = 6
+	}
+	return LinkNewExtend(limit, 0, "", 0, "")
 }
 
 /**
-* @description: LinkTopExt 获取广告列表
-* @param {int} limit 获取数量
+* @description: LinkTopExtend 获取链接列表
+* @param {int} limit 获取数量，小于等于0时按6条处理
 * @param {int64} site_id 站点ID
 * @param {string} site_flag 站点标识
-* @param {int64} category_id 广告分类ID
-* @param {string} call_index 广告分类标识
+* @param {int64} category_id 链接分类ID
+* @param {string} call_index 链接分类标识
 * @return {*}
  */
-func LinkTopExt(limit int, site_id int64, site_flag string, category_id int64, call_index string) []*bizmodel.ApiLinkModel {
+func LinkTopExtend(limit int, site_id int64, site_flag string, category_id int64, call_index string) []*bizmodel.ApiLinkModel {
+	if limit <= 0 {
+		limit = 6
+	}
 	find, _, err := biz.NewApiLink().Get(limit, site_id, site_flag, category_id, call_index)
 	if err != nil {
 		find = []*bizmodel.ApiLinkModel{}
@@ -43,6 +57,14 @@ func LinkTopExt(limit int, site_id int64, site_flag string, category_id int64, c
 	return find
 }
 
+/**
+ * @description: 获取链接列表
+ * @param {int} limit 获取数量，小于等于0时按6条处理
+ * @return {*}
+ */
 func LinkTop(limit int) []*bizmodel.ApiLinkModel {
-	return LinkTopExt(limit, 0, "", 0, "")
+	if limit <= 0 {
+		limit = 6
+	}
+	return LinkTopExtend(limit, 0, "", 0, "")
 }

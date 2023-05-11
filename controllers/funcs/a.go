@@ -37,50 +37,61 @@ func init() {
 		funcs["Time2Str"] = Time2Str
 		funcs["time2str"] = Time2Str
 
+		funcs["IIF"] = IIF
+		funcs["iif"] = IIF
+
 		funcs["ArticleNew"] = ArticleNew
 		funcs["ArticleNew"] = ArticleNew
-		funcs["ArticleNewExt"] = ArticleNewExt
-		funcs["articlenewext"] = ArticleNewExt
+		funcs["ArticleNewExtend"] = ArticleNewExtend
+		funcs["articlenewextend"] = ArticleNewExtend
+		funcs["article_new_extend"] = ArticleNewExtend
 		funcs["ArticleTop"] = ArticleTop
 		funcs["articletop"] = ArticleTop
-		funcs["ArticleTopExt"] = ArticleTopExt
-		funcs["articletopext"] = ArticleTopExt
+		funcs["ArticleTopExtend"] = ArticleTopExtend
+		funcs["articletopextend"] = ArticleTopExtend
+		funcs["article_top_extend"] = ArticleTopExtend
 
-		funcs["AdsNewExt"] = AdsNewExt
-		funcs["adsnewext"] = AdsNewExt
+		funcs["AdsNewExtend"] = AdsNewExtend
+		funcs["adsnewextend"] = AdsNewExtend
+		funcs["ads_new_extend"] = AdsNewExtend
 		funcs["AdsNew"] = AdsNew
 		funcs["adsnew"] = AdsNew
-		funcs["AdsTopExt"] = AdsTopExt
-		funcs["adstopext"] = AdsTopExt
+		funcs["AdsTopExtend"] = AdsTopExtend
+		funcs["adstopextend"] = AdsTopExtend
+		funcs["ads_top_extend"] = AdsTopExtend
 		funcs["AdsTop"] = AdsTop
 		funcs["adstop"] = AdsTop
 
-		funcs["LinkNewExt"] = LinkNewExt
-		funcs["linknewext"] = LinkNewExt
+		funcs["LinkNewExtend"] = LinkNewExtend
+		funcs["linknewextend"] = LinkNewExtend
 		funcs["LinkNew"] = LinkNew
 		funcs["kinknew"] = LinkNew
-		funcs["LinkTopExt"] = LinkTopExt
-		funcs["linktopext"] = LinkTopExt
+		funcs["LinkTopExtend"] = LinkTopExtend
+		funcs["linktopextend"] = LinkTopExtend
 		funcs["LinkTop"] = LinkTop
 		funcs["linktop"] = LinkTop
 
 		funcs["TagNew"] = TagNew
 		funcs["tagnew"] = TagNew
-		funcs["TagNewExt"] = TagNewExt
-		funcs["tagnewext"] = TagNewExt
+		funcs["TagNewExtend"] = TagNewExtend
+		funcs["tagnewextend"] = TagNewExtend
+		funcs["tag_new_extend"] = TagNewExtend
 		funcs["TagTop"] = TagTop
 		funcs["tagtop"] = TagTop
-		funcs["TagTopExt"] = TagTopExt
-		funcs["tagtopext"] = TagTopExt
+		funcs["TagTopExtend"] = TagTopExtend
+		funcs["tagtopextend"] = TagTopExtend
+		funcs["tag_top_extend"] = TagTopExtend
 		funcs["TagArtilceTop"] = TagArtilceTop
 		funcs["tagartilcetop"] = TagArtilceTop
 
-		funcs["TopicNewExt"] = TopicNewExt
-		funcs["topicnewext"] = TopicNewExt
+		funcs["TopicNewExtend"] = TopicNewExtend
+		funcs["topicnewextend"] = TopicNewExtend
+		funcs["topic_new_extend"] = TopicNewExtend
 		funcs["TopicNew"] = TopicNew
 		funcs["topicnew"] = TopicNew
-		funcs["TopicTopExt"] = TopicTopExt
-		funcs["topictopext"] = TopicTopExt
+		funcs["TopicTopExtend"] = TopicTopExtend
+		funcs["topictopextend"] = TopicTopExtend
+		funcs["topic_top_extend"] = TopicTopExtend
 		funcs["TopicTop"] = TopicTop
 		funcs["topictop"] = TopicTop
 		funcs["TopicArtilceTop"] = TopicArtilceTop
@@ -105,9 +116,6 @@ func init() {
 		funcs["sitemenu"] = SiteMenu
 		funcs["SiteMenuFlag"] = SiteMenuFlag
 		funcs["sitemenuflag"] = SiteMenuFlag
-
-		funcs["IIF"] = IIF
-		funcs["iif"] = IIF
 
 		funcs["UrlForArticle"] = UrlForArticle
 		funcs["urlforarticle"] = UrlForArticle

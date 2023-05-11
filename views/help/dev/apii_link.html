@@ -1,0 +1,90 @@
+<div class="tile  is-ancestor  is-parent">
+    <div class="tile is-child box">
+        <article class="content ">
+            <h1 class="title has-text-centered">链接函数</h1>
+            <hr>
+            <h3 id="r5spb"><b>链接函数</b></h3>
+            <div>
+                <table border="0" width="100%" cellpadding="0" cellspacing="0">
+                    <tbody>
+                        <tr>
+                            <th>api名称</th>
+                            <th>需要参数</th>
+                            <th style="word-break: keep-all;">返回值</th>
+                            <th>说明</th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>LinkNew</p>
+                            </td>
+                            <td>
+                                {int} limit 获取数量，小于等于0时按6条处理
+                            </td>
+                            <td><a href="#ApiLinkModel">[]*ApiLinkModel</a></td>
+                            <td>获取最新链接列表</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>LinkNewExtend</p>
+                            </td>
+                            <td>
+                                {int} limit 获取数量，小于等于0时按6条处理<br>
+                                {int64} site_id 站点ID<br>
+                                {string} site_flag 站点标识<br>
+                                {int64} category_id 链接分类ID<br>
+                                {string} call_index 链接分类标识
+                            </td>
+                            <td><a href="#ApiLinkModel">[]*ApiLinkModel</a></td>
+                            <td>获取最新链接列表</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>LinkTop</p>
+                            </td>
+                            <td>
+                                {int} limit 获取数量，小于等于0时按6条处理
+                            </td>
+                            <td><a href="#ApiLinkModel">[]*ApiLinkModel</a></td>
+                            <td>获取链接列表</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>LinkTopExtend</p>
+                            </td>
+                            <td>
+                                {int} limit 获取数量，小于等于0时按6条处理<br>
+                                {int64} site_id 站点ID<br>
+                                {string} site_flag 站点标识<br>
+                                {int64} category_id 链接分类ID<br>
+                                {string} call_index 链接分类标识
+                            </td>
+                            <td><a href="#ApiLinkModel">[]*ApiLinkModel</a></td>
+                            <td>获取链接列表</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h3 id="r5spb"><b><a name="ApiLinkModel">ApiLinkModel结构</a></b></h3>
+            <textarea id="code1" code-type="go">
+type ApiLinkModel struct {
+    LinkID        int64  `gorm:"column:link_id;type:bigint;primaryKey;" json:"link_id" form:"link_id"`                // 主键
+    SiteID        int64  `gorm:"column:site_id;type:bigint" json:"site_id" form:"site_id"`                            // 所属站点
+    ChannelID     int64  `gorm:"column:channel_id;type:bigint" json:"channel_id" form:"channel_id"`                   // 所属频道
+    CategoryID    int64  `gorm:"column:category_id;type:bigint" json:"category_id" form:"category_id"`                // 类别ID
+    Title         string `gorm:"column:title;type:varchar(128)" json:"title" form:"title"`                            // 标题
+    LinkURL       string `gorm:"column:link_url;type:varchar(256)" json:"link_url" form:"link_url"`                   // 外部链接
+    Target        string `gorm:"column:target;type:varchar(16);default:_blank" json:"target" form:"target"`           // 是否开启浏览器新窗口
+    ImgUrl1       string `gorm:"column:img_url1;type:varchar(256)" json:"img_url1" form:"img_url1"`                   // 网站logo地址
+    ImgUrl2       string `gorm:"column:img_url2;type:varchar(256)" json:"img_url2" form:"img_url2"`                   // 网站logo地址
+    IsLock        int32  `gorm:"column:is_lock;type:tinyint" json:"is_lock" form:"is_lock"`                           // 是否锁定（不允许编辑）
+    IsTop         int32  `gorm:"column:is_top;type:tinyint" json:"is_top" form:"is_top"`                              // 是否置顶
+    IsRed         int32  `gorm:"column:is_red;type:tinyint" json:"is_red" form:"is_red"`                              // 是否推荐
+    IsHot         int32  `gorm:"column:is_hot;type:tinyint" json:"is_hot" form:"is_hot"`                              // 是否热门
+    IsSlide       int32  `gorm:"column:is_slide;type:tinyint" json:"is_slide" form:"is_slide"`                        // 是否幻灯片
+    SiteFlag      string `gorm:"column:site_flag;type:varchar(64)" json:"site_flag" form:"site_flag"`                 // 站点标识
+    CategoryTitle string `gorm:"column:category_title;type:varchar(128)" json:"category_title" form:"category_title"` // 类别名称
+}                     
+            </textarea>
+        </article>
+    </div>
+</div>

@@ -3,13 +3,44 @@
         <article class="content ">
             <h1 class="title has-text-centered">变量渲染</h1>
             <hr>
-            <p><b>模板内内嵌的语法支持，全部需要加{{"{{"}}}}来标记</b><br></p>
+            <p><b>变量通常用点（.）表示。当在模板中看到 . 时，它表示当前上下文的值。这个上下文值可能是一个结构体，一个数组，一个切片，一个映射，或者一个基本数据类型。</b><br></p>
+            <p><b>模板内内嵌的语法支持，全部需要加{{"{{"}}}}来标记。</b><br></p>
             <p><b>打印变量</b></p>
             <textarea id="code1" code-type="javascript"><p>{{"{{"}}.Title}}<span>{{"{{"}}.Keywords}}</span></p></textarea>
             <p><b>变量定义</b></p>
             <textarea id="code2" code-type="javascript">{{"{{"}}$article := "hello"}}</textarea>
             <p><b>变量赋值</b></p>
             <textarea id="code3" code-type="javascript">{{"{{"}}$article := .ArticleContent}}</textarea>
+            <p><b>例如，如果你有一个如下的结构体：</b></p>
+            <textarea id="code4" code-type="go">
+type User struct {
+    Name  string
+    Email string
+}</textarea>
+            <p><b>你可以像这样在模板中使用这个结构体的字段：</b></p>
+            <textarea id="code5" code-type="htmlmixed">
+<p>Name: {{`{{`}} .Name }}</p>
+<p>Email: {{`{{`}} .Email }}</p></textarea>
+            <p><b>在这个例子中，.Name 和 .Email 分别表示 User 结构体的 Name 和 Email 字段。</b></p>
+            <p><b>当你在 range 循环中时，. 会变成当前的迭代项。例如，如果你有一个 User 切片，可以这样遍历它：</b></p>
+            <textarea id="code6" code-type="htmlmixed">
+{{`{{`}} range . }}
+    <p>Name: {{`{{`}} .Name }}</p>
+    <p>Email: {{`{{`}} .Email }}</p>
+{{`{{`}} end }}</textarea>
+            <p><b>在这个例子中，每次迭代时，. 都表示一个 User 对象。</b></p>
+            <textarea id="code7" code-type="htmlmixed">
+{{`{{`}} with .User }}
+    <p>Name: {{`{{`}} .Name }}</p>
+    <p>Email: {{`{{`}} .Email }}</p>
+{{`{{`}} end }}</textarea>
+            <p><b>在这个例子中，with .User 将上下文改变为 .User，所以你可以直接使用 .Name 和 .Email，而不需要写成 .User.Name 和 .User.Email。</b></p>
+            <p><b>注意，尽管我们通常使用 . 来表示当前的上下文，但你也可以使用模板的 := 操作符定义新的模板变量。例如：</b></p>
+            <textarea id="code8" code-type="htmlmixed">
+{{`{{`}} $user := .User }}
+<p>Name: {{`{{`}} $user.Name }}</p>
+<p>Email: {{`{{`}} $user.Email }}</p></textarea>
+            <p><b>在这个例子中，$user 是一个模板变量，它的值是 .User。</b></p>
         </article>
     </div>
 </div>
