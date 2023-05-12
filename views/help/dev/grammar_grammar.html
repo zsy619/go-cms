@@ -1,0 +1,24 @@
+<div class="tile  is-ancestor  is-parent">
+    <div class="tile is-child box">
+        <article class="content ">
+            <h1 class="title has-text-centered">模板语法</h1>
+            <hr>
+            <p><b>统一使用了 {{`{{`}} 和 }} 作为左右标签，没有其他的标签符号。</b></p>
+            <p>使用 . 来访问当前位置的上下文。</p>
+            <p>使用 $ 来引用当前模板根级的上下文。</p>
+            <p>使用 $var 来访问创建的变量。</p>
+            <p><b>模板中支持的 go 语言符号</b></p>
+            <textarea id="code1" code-type="go">
+{{`{{`}}"string"}} // 一般 string
+{{`{{`}}`raw string`}} // 原始 string
+{{`{{`}}'c'}} // byte
+{{`{{`}}print nil}} // nil 也被支持
+            </textarea>
+            <p><b>模板中的 pipeline</b></p>
+            <p>可以是上下文的变量输出，也可以是函数通过管道传递的返回值</p>
+            <textarea id="code2" code-type="go">
+{{`{{`}}. | FuncA | FuncB | FuncC}}
+            </textarea>
+        </article>
+    </div>
+</div>
