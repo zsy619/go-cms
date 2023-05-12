@@ -321,7 +321,7 @@ func (this *ApiArticle) ArticlePaginate(page, limit int, channel_id int64, chann
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *ApiArticle) ArticleFind(call_index string, article_id int64) (*bizmodel.ApiArticleOneModel, []*model.CmsAlbum, []*model.CmsAttach, error) {
+func (this *ApiArticle) ArticleFind(call_index string, article_id int64) (*bizmodel.ApiArticleOneModel, []*bizmodel.ApiAlbumModel, []*bizmodel.ApiAttachModel, error) {
 	mdl, do := query.CmsArticleDo()
 	if call_index != "" {
 		if article_id <= 0 {
@@ -336,20 +336,20 @@ func (this *ApiArticle) ArticleFind(call_index string, article_id int64) (*bizmo
 	list := &bizmodel.ApiArticleOneModel{}
 	if err := do.Debug().UnderlyingDB().Raw(sql, article_id).Scan(&list).Error; err != nil {
 		logs.Error("Get", err.Error())
-		return list, []*model.CmsAlbum{}, []*model.CmsAttach{}, err
+		return list, []*bizmodel.ApiAlbumModel{}, []*bizmodel.ApiAttachModel{}, err
 	}
 
 	albumMdl, alblumDo := query.CmsAlbumDo()
-	album, _ := alblumDo.Where(albumMdl.TableName_.Eq("article"), albumMdl.RecordID.Eq(article_id), albumMdl.IsShow.Eq(1)).Order(albumMdl.SortID).Find()
-	if album == nil {
-		album = []*model.CmsAlbum{}
+	albums := []*bizmodel.ApiAlbumModel{}
+	if err := alblumDo.Where(albumMdl.TableName_.Eq("article"), albumMdl.RecordID.Eq(article_id), albumMdl.IsShow.Eq(1)).Order(albumMdl.SortID).Scan(&albums); err != nil {
+		albums = []*bizmodel.ApiAlbumModel{}
 	}
 	attachMdl, attachDo := query.CmsAttachDo()
-	attach, _ := attachDo.Where(attachMdl.TableName_.Eq("article"), attachMdl.RecordID.Eq(article_id), attachMdl.IsShow.Eq(1)).Order(attachMdl.SortID).Find()
-	if attach == nil {
-		attach = []*model.CmsAttach{}
+	attachs := []*bizmodel.ApiAttachModel{}
+	if err := attachDo.Where(attachMdl.TableName_.Eq("article"), attachMdl.RecordID.Eq(article_id), attachMdl.IsShow.Eq(1)).Order(attachMdl.SortID).Scan(&attachs); err != nil {
+		attachs = []*bizmodel.ApiAttachModel{}
 	}
-	return list, album, attach, nil
+	return list, albums, attachs, nil
 }
 
 /**
@@ -415,30 +415,36 @@ func (this *ApiArticle) Article(call_index string, article_id int64) (*bizmodel.
  * @description: Album 获取文章相册列表
  * @param {string} call_index 文章调用别名
  * @param {int64} article_id 文章id
+ * @param {int32} type_id 分类
  * @return {*}
  */
-func (this *ApiArticle) Album(call_index string, article_id int64, type_id int32) ([]*model.CmsAlbum, error) {
+func (this *ApiArticle) Album(call_index string, article_id int64, type_id int32) ([]*bizmodel.ApiAlbumModel, error) {
 	if call_index != "" {
 		article, articleDo := query.CmsArticleDo()
 		articleDo.Where(article.CallIndex.Eq(call_index), article.Status.Eq(2)).Pluck(article.ArticleID, &article_id)
 	}
 	albumMdl, alblumDo := query.CmsAlbumDo()
-	return alblumDo.Where(albumMdl.TableName_.Eq("article"), albumMdl.RecordID.Eq(article_id), albumMdl.TypeID.Eq(type_id), albumMdl.IsShow.Eq(1)).Order(albumMdl.SortID).Find()
+	albums := make([]*bizmodel.ApiAlbumModel, 0)
+	err := alblumDo.Where(albumMdl.TableName_.Eq("article"), albumMdl.RecordID.Eq(article_id), albumMdl.TypeID.Eq(type_id), albumMdl.IsShow.Eq(1)).Order(albumMdl.SortID).Scan(&albums)
+	return albums, err
 }
 
 /**
  * @description: Attach 获取文章附件列表
  * @param {string} call_index 文章调用别名
  * @param {int64} article_id 文章id
+ * @param {int32} type_id 分类
  * @return {*}
  */
-func (this *ApiArticle) Attach(call_index string, article_id int64, type_id int32) ([]*model.CmsAttach, error) {
+func (this *ApiArticle) Attach(call_index string, article_id int64, type_id int32) ([]*bizmodel.ApiAttachModel, error) {
 	if call_index != "" {
 		article, articleDo := query.CmsArticleDo()
 		articleDo.Where(article.CallIndex.Eq(call_index), article.Status.Eq(2)).Pluck(article.ArticleID, &article_id)
 	}
 	attachMdl, attachDo := query.CmsAttachDo()
-	return attachDo.Where(attachMdl.TableName_.Eq("article"), attachMdl.RecordID.Eq(article_id), attachMdl.TypeID.Eq(type_id), attachMdl.IsShow.Eq(1)).Order(attachMdl.SortID).Find()
+	attachs := make([]*bizmodel.ApiAttachModel, 0)
+	err := attachDo.Where(attachMdl.TableName_.Eq("article"), attachMdl.RecordID.Eq(article_id), attachMdl.TypeID.Eq(type_id), attachMdl.IsShow.Eq(1)).Order(attachMdl.SortID).Scan(&attachs)
+	return attachs, err
 }
 
 /**

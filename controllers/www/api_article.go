@@ -3,7 +3,6 @@ package www
 import (
 	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/cms/app/biz/bizmodel"
-	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/lib"
 )
 
@@ -188,11 +187,7 @@ func (this *ApiArticleController) Find() {
 	article_id, _ := this.GetInt64("article_id", 0)
 	call_index := this.GetString("call_index")
 	aritcle, album, attatch, err := this.BaseController.ArticleFind(call_index, article_id)
-	result := struct {
-		Article *bizmodel.ApiArticleOneModel `json:"article"`
-		Album   []*model.CmsAlbum            `json:"album"`
-		Attach  []*model.CmsAttach           `json:"attatch"`
-	}{
+	result := bizmodel.ApiArticleModel{
 		Article: aritcle,
 		Album:   album,
 		Attach:  attatch,

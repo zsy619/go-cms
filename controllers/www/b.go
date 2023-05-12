@@ -217,7 +217,7 @@ func (this *BaseController) ArticlePaginate(page, limit int, channel_id int64, c
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *BaseController) ArticleFind(call_index string, article_id int64) (*bizmodel.ApiArticleOneModel, []*model.CmsAlbum, []*model.CmsAttach, error) {
+func (this *BaseController) ArticleFind(call_index string, article_id int64) (*bizmodel.ApiArticleOneModel, []*bizmodel.ApiAlbumModel, []*bizmodel.ApiAttachModel, error) {
 	return biz.NewApiArticle().ArticleFind(call_index, article_id)
 }
 
@@ -243,20 +243,24 @@ func (this *BaseController) ArticleArticle(call_index string, article_id int64) 
 }
 
 /**
- * @description: ArticleAlbum 获取文章相册列表
+ * @description: Album 获取文章相册列表
+ * @param {string} call_index 文章调用别名
  * @param {int64} article_id 文章id
+ * @param {int32} type_id 分类
  * @return {*}
  */
-func (this *BaseController) ArticleAlbum(call_index string, article_id int64, type_id int32) ([]*model.CmsAlbum, error) {
+func (this *BaseController) ArticleAlbum(call_index string, article_id int64, type_id int32) ([]*bizmodel.ApiAlbumModel, error) {
 	return biz.NewApiArticle().Album(call_index, article_id, type_id)
 }
 
 /**
- * @description: ArticleAttach 获取文章附件列表
+ * @description: Attach 获取文章附件列表
+ * @param {string} call_index 文章调用别名
  * @param {int64} article_id 文章id
+ * @param {int32} type_id 分类
  * @return {*}
  */
-func (this *BaseController) ArticleAttach(call_index string, article_id int64, type_id int32) ([]*model.CmsAttach, error) {
+func (this *BaseController) ArticleAttach(call_index string, article_id int64, type_id int32) ([]*bizmodel.ApiAttachModel, error) {
 	return biz.NewApiArticle().Attach(call_index, article_id, type_id)
 }
 

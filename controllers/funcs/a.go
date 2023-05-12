@@ -50,6 +50,22 @@ func init() {
 		funcs["ArticleTopExtend"] = ArticleTopExtend
 		funcs["articletopextend"] = ArticleTopExtend
 		funcs["article_top_extend"] = ArticleTopExtend
+		funcs["CategoryNav"] = CategoryNav
+		funcs["categorynav"] = CategoryNav
+		funcs["CategoryGet"] = CategoryGet
+		funcs["categoryget"] = CategoryGet
+		funcs["CategoryFind"] = CategoryFind
+		funcs["categoryfind"] = CategoryFind
+		funcs["ArticleAlbum"] = ArticleAlbum
+		funcs["articlealbum"] = ArticleAlbum
+		funcs["ArticleAttach"] = ArticleAttach
+		funcs["articleattach"] = ArticleAttach
+		funcs["ArticleArticle"] = ArticleArticle
+		funcs["articlearticle"] = ArticleArticle
+		funcs["ArticlePrevNext"] = ArticlePrevNext
+		funcs["articleprevnext"] = ArticlePrevNext
+		funcs["ArticleFind"] = ArticleFind
+		funcs["articlefind"] = ArticleFind
 
 		funcs["AdsNewExtend"] = AdsNewExtend
 		funcs["adsnewextend"] = AdsNewExtend
@@ -119,13 +135,13 @@ func init() {
 
 		funcs["UrlForArticle"] = UrlForArticle
 		funcs["urlforarticle"] = UrlForArticle
-		funcs["UrlForArticleExt"] = UrlForArticleExt
-		funcs["urlforarticleext"] = UrlForArticleExt
+		funcs["UrlForArticleExtend"] = UrlForArticleExtend
+		funcs["urlforarticleextend"] = UrlForArticleExtend
 
 		funcs["UrlForCategory"] = UrlForCategory
 		funcs["urlforcategory"] = UrlForCategory
-		funcs["UrlForCategoryExt"] = UrlForCategoryExt
-		funcs["urlforcategoryext"] = UrlForCategoryExt
+		funcs["UrlForCategoryExtend"] = UrlForCategoryExtend
+		funcs["urlforcategoryextend"] = UrlForCategoryExtend
 
 		funcs["UrlForChannel"] = UrlForChannel
 		funcs["urlforchannel"] = UrlForChannel

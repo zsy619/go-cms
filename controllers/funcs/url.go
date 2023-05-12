@@ -14,7 +14,7 @@ import (
  * @param {int64} article_id 文章ID
  * @return {*}
  */
-func UrlForArticleExt(flag, name, call_index string, article_id int64) string {
+func UrlForArticleExtend(flag, name, call_index string, article_id int64) string {
 	return fmt.Sprintf("/%s/%s/%s/%d", flag, name, call_index, article_id)
 }
 
@@ -39,7 +39,7 @@ func UrlForArticle(call_index string, article_id int64, url string) string {
  * @param {string} call_index 栏目别名
  * @return {*}
  */
-func UrlForCategoryExt(flag, name, call_index string) string {
+func UrlForCategoryExtend(flag, name, call_index string) string {
 	find, err := biz.NewApiArticle().CategoryFind(0, call_index)
 	if err != nil {
 		return ""

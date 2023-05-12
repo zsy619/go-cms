@@ -1,0 +1,108 @@
+<div class="tile  is-ancestor  is-parent">
+    <div class="tile is-child box">
+        <article class="content ">
+            <h1 class="title has-text-centered">路径函数</h1>
+            <hr>
+            <h3 id="r5spb"><b>路径函数</b></h3>
+            <div>
+                <table border="0" width="100%" cellpadding="0" cellspacing="0">
+                    <tbody>
+                        <tr>
+                            <th>api名称</th>
+                            <th>需要参数</th>
+                            <th style="word-break: keep-all;">返回值</th>
+                            <th>说明</th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>UrlForArticle</p>
+                            </td>
+                            <td>
+                                {string} call_index 栏目别名<br>
+                                {int64} article_id 文章ID<br>
+                                {string} url 自定义链接
+                            </td>
+                            <td>如url为空，返回/article/:call_index/:article_id</td>
+                            <td>文章链接</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>UrlForArticleExtend</p>
+                            </td>
+                            <td>
+                                {string} flag 站点标识<br>
+                                {string} name 频道名称<br>
+                                {string} call_index 栏目别名<br>
+                                {int64} article_id 文章ID
+                            </td>
+                            <td>/:flag/:name/:call_index/:article_id</td>
+                            <td>文章链接</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>UrlForCategory</p>
+                            </td>
+                            <td>
+                                {string} call_index 栏目别名
+                            </td>
+                            <td></td>
+                            <td>栏目链接</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>UrlForCategoryExtend</p>
+                            </td>
+                            <td>
+                                {string} flag 站点标识<br>
+                                {string} name 频道名称<br>
+                                {string} call_index 栏目别名
+                            </td>
+                            <td></td>
+                            <td>栏目链接</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>UrlForChannel</p>
+                            </td>
+                            <td>
+                                {string} name 频道名称
+                            </td>
+                            <td></td>
+                            <td>频道链接</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>UrlForTopic</p>
+                            </td>
+                            <td>
+                                {string} name 专题名称
+                            </td>
+                            <td></td>
+                            <td>专题链接</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>UrlForTag</p>
+                            </td>
+                            <td>
+                                {string} name 标签名称
+                            </td>
+                            <td></td>
+                            <td>标签链接</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>UrlForSearch</p>
+                            </td>
+                            <td>
+                                {string} keyword 关键词
+                            </td>
+                            <td></td>
+                            <td>搜索链接</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </article>
+    </div>
+</div>
