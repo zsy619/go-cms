@@ -1,0 +1,118 @@
+<div class="tile  is-ancestor  is-parent">
+    <div class="tile is-child box">
+        <article class="content ">
+            <h1 class="title has-text-centered">文章函数</h1>
+            <hr>
+            <h3 id="r5spb"><b>文章函数</b></h3>
+            <div>
+                <table border="0" width="100%" cellpadding="0" cellspacing="0">
+                    <tbody>
+                        <tr>
+                            <th>api名称</th>
+                            <th>需要参数</th>
+                            <th style="word-break: keep-all;">返回值</th>
+                            <th>说明</th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>ArticleNew</p>
+                            </td>
+                            <td>
+                                {int} limit 获取数量，小于等于0时按6条处理
+                            </td>
+                            <td><a href="#ApiArticleListModel">[]*ApiArticleListModel</a></td>
+                            <td>获取最新文章列表</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>ArticleNewExtend</p>
+                            </td>
+                            <td>
+                                {int} limit 获取数量，小于等于0时按6条处理<br>
+                                {int64} channel_id 频道ID<br>
+                                {string} channel_name 频道名称<br>
+                                {int64} category_id 栏目ID<br>
+                                {string} call_index 栏目别名<br>
+                                {int} is_top 是否置顶<br>
+                                {int} is_red 是否推荐<br>
+                                {int} is_hot 是否热门<br>
+                                {int} is_slide 是否幻灯片<br>
+                                {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
+                            </td>
+                            <td><a href="#ApiArticleListModel">[]*ApiArticleListModel</a></td>
+                            <td>获取最新文章列表</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>ArticleTop</p>
+                            </td>
+                            <td>
+                                {int} limit 获取数量，小于等于0时按6条处理
+                            </td>
+                            <td><a href="#ApiArticleListModel">[]*ApiArticleListModel</a></td>
+                            <td>获取文章列表</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>ArticleTopExtend</p>
+                            </td>
+                            <td>
+                                {int} limit 获取数量，小于等于0时按6条处理<br>
+                                {int64} channel_id 频道ID<br>
+                                {string} channel_name 频道名称<br>
+                                {int64} category_id 栏目ID<br>
+                                {string} call_index 栏目别名<br>
+                                {int} is_top 是否置顶<br>
+                                {int} is_red 是否推荐<br>
+                                {int} is_hot 是否热门<br>
+                                {int} is_slide 是否幻灯片<br>
+                                {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
+                            </td>
+                            <td><a href="#ApiArticleListModel">[]*ApiArticleListModel</a></td>
+                            <td>获取文章列表</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h3 id="r5spb"><b><a name="ApiArticleListModel">ApiArticleListModel结构</a></b></h3>
+            <textarea id="codeApiArticleListModel" code-type="go">
+// ApiArticleListModel 文章查询模型
+type ApiArticleListModel struct {
+    ArtilceID         int64     `gorm:"column:article_id;type:bigint;" json:"article_id" form:"article_id"`                                // 主键
+    SiteID            int64     `gorm:"column:site_id;type:bigint" json:"site_id" form:"site_id"`                                          // 所属站点
+    ChannelID         int64     `gorm:"column:channel_id;type:bigint" json:"channel_id" form:"channel_id"`                                 // 所属频道
+    CategoryID        int64     `gorm:"column:category_id;type:bigint" json:"category_id" form:"category_id"`                              // 所属类别
+    Title             string    `gorm:"column:title;type:varchar(128)" json:"title" form:"title"`                                          // 文章标题
+    SubTitle          string    `gorm:"column:sub_title;type:varchar(128)" json:"sub_title" form:"sub_title"`                              // 副标题
+    IcoURL1           string    `gorm:"column:ico_url1;type:varchar(256)" json:"ico_url1" form:"ico_url1"`                                 // 图标地址
+    IcoURL2           string    `gorm:"column:ico_url2;type:varchar(256)" json:"ico_url2" form:"ico_url2"`                                 // 图标地址
+    CallIndex         string    `gorm:"column:call_index;type:varchar(64)" json:"call_index" form:"call_index"`                            // 调用别名
+    Source            string    `gorm:"column:source;type:varchar(64)" json:"source" form:"source"`                                        // 文章来源
+    Author            string    `gorm:"column:author;type:varchar(64)" json:"author" form:"author"`                                        // 作者
+    LinkURL           string    `gorm:"column:link_url;type:varchar(256)" json:"link_url" form:"link_url"`                                 // 外部链接
+    ImgURL1           string    `gorm:"column:img_url1;type:varchar(256)" json:"img_url1" form:"img_url1"`                                 // 图片地址
+    ImgURL2           string    `gorm:"column:img_url2;type:varchar(256)" json:"img_url2" form:"img_url2"`                                 // 图片地址
+    SeoTitle          string    `gorm:"column:seo_title;type:varchar(128)" json:"seo_title" form:"seo_title"`                              // SEO标题
+    SeoKeyword        string    `gorm:"column:seo_keyword;type:varchar(128)" json:"seo_keyword" form:"seo_keyword"`                        // SEO关健字
+    SeoDescription    string    `gorm:"column:seo_description;type:varchar(128)" json:"seo_description" form:"seo_description"`            // SEO描述
+    Tags              string    `gorm:"column:tags;type:varchar(128)" json:"tags" form:"tags"`                                             // 标签
+    Summary           string    `gorm:"column:summary;type:varchar(128)" json:"summary" form:"summary"`                                    // 摘要
+    Click             int32     `gorm:"column:click;type:int" json:"click" form:"click"`                                                   // 点击数
+    IsLock            bool      `gorm:"column:is_lock;type:tinyint(1)" json:"is_lock" form:"is_lock"`                                      // 是否锁定
+    IsComment         bool      `gorm:"column:is_comment;type:tinyint(1)" json:"is_comment" form:"is_comment"`                             // 是否允许评论
+    LikeCount         int32     `gorm:"column:like_count;type:int" json:"like_count" form:"like_count"`                                    // 点赞数
+    IsTop             bool      `gorm:"column:is_top;type:tinyint(1)" json:"is_top" form:"is_top"`                                         // 是否置顶
+    IsHot             bool      `gorm:"column:is_hot;type:tinyint(1)" json:"is_hot" form:"is_hot"`                                         // 是否热门
+    IsSlide           bool      `gorm:"column:is_slide;type:tinyint(1)" json:"is_slide" form:"is_slide"`                                   // 是否幻灯片
+    StaticURL         string    `gorm:"column:static_url;type:varchar(256)" json:"static_url" form:"static_url"`                           // 静态化地址
+    PublishTime       time.Time `gorm:"column:publish_time;type:datetime" json:"publish_time" form:"publish_time"`                         // 发布时间
+    CategoryTitle     string    `gorm:"column:category_title;type:varchar(128)" json:"category_title" form:"category_title"`               // category_类别标题
+    CategoryCallIndex string    `gorm:"column:category_call_index;type:varchar(64)" json:"category_call_index" form:"category_call_index"` // category_调用别名
+    CategoryLinkURL   string    `gorm:"column:category_link_url;type:varchar(256)" json:"category_link_url" form:"link_url"`               // category_外部链接
+    ChannelName       string    `gorm:"column:channel_name;type:varchar(128)" json:"channel_name" form:"channel_name"`                     // channel_字段名
+    ChannelTitle      string    `gorm:"column:channel_title;type:varchar(128)" json:"channel_title" form:"channel_title"`                  // channel_标题
+}          
+            </textarea>
+        </article>
+    </div>
+</div>
