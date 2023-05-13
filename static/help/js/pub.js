@@ -26,14 +26,28 @@ $(document).ready(function () {
     });
 });
 
-
 function createCodeMirror(id, typex) {
     var editor = CodeMirror.fromTextArea(document.getElementById(id), {
-        theme: "default",
+        theme: "dracula",
         lineNumbers: true,
+        //括号匹配
+        matchBrackets: true,
+        lineNumberFormatter: function (number) {
+            // 将行号格式化为三位数
+            var str = String(number);
+            while (str.length < 4) {
+                str = "0" + str;
+            }
+            return str;
+        },
+        smartIndent: true,
         viewportMargin: Infinity,
         styleActiveLine: true,
         matchBrackets: true,
+        //代码折叠
+        lineWrapping: true,
+        foldGutter: true,
+        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
         mode: { name: typex, globalVars: true },
         extraKeys: {
             "F11": function (cm) {
@@ -44,7 +58,8 @@ function createCodeMirror(id, typex) {
             }
         }
     });
-    editor.setSize('auto', 'auto');
+    editor.setSize("auto", 'auto');
     editor.setOption("readOnly", true);
+    // editor.setOption("lineWrapping", true);
     return editor;
 }

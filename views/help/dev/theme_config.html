@@ -1,0 +1,53 @@
+<div class="tile  is-ancestor  is-parent">
+    <div class="tile is-child box">
+        <article class="content ">
+            <h1 class="title has-text-centered">主题的基本信息详解</h1>
+            <hr>
+            <p>在制作主题模板的时候，需要显示主题的图片和一些主题相关的描述信息，这是怎么做到的呢？下面来看看。</p>
+            <p>1. 最首先的就是config.json这个专门用来描述主题信息的文件。&nbsp;</p>
+            <textarea id="config" code-type="javascript">{
+    "name": "default", // 确保唯一，不要和其他主题重名
+    "title": "默认模板", // 主题的名称
+    "description": "默认模板", // 主题的描述
+    "author": "教育网", // 主题的作者
+    "mail": "haedu@163.com", // 主题作者的邮箱
+    "version": "1.0.0" // 主题的版本
+}</textarea>
+            <p>如上所示，YYCMS收集的信息都很好理解。具体的展现如下</p>
+            <p><img src="/views/help/images/theme.png" style="max-width:100%;"><br></p>
+            <p>2. 图片信息</p>
+            <p>图片需要为thumb.png即可。</p>
+            <p>3. 皮肤目录结构</p>
+            <p>
+                <textarea id="config1" code-type="javascript">
+├── config.json // 主题的配置文件
+├── thumb.png   // 主题的缩略图
+├── static      // 主题的静态资源
+│   ├── css     // 主题的样式文件
+│   │   ├── bulma.min.css
+│   │   ├── font-awesome.min.css
+│   │   └── style.css
+│   ├── images // 主题的图片资源
+│   │   ├── logo.png
+│   │   └── thumb.png
+│   └── js     // 主题的js文件
+│       ├── jquery.min.js
+│       └── main.js
+└── views      // 主题的模板文件
+    ├── _top.html
+    ├── _bottom.html
+    ├── _menu.html
+    ├── index.html
+    ├── article.html
+    ├── category.html
+    ├── index.html
+    ├── search.html
+    ├── tag.html
+    └── topic.html
+</textarea>
+            </p>
+            <p><br></p>
+            <p>怎么样，主题是不是很简单呢。</p>
+        </article>
+    </div>
+</div>

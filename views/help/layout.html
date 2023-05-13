@@ -28,6 +28,31 @@
     <script src="/static/admin/lib/codemirror-5.65.13/addon/fold/brace-fold.js"></script>
     <script src="/static/admin/lib/codemirror-5.65.13/addon/fold/comment-fold.js"></script>
     <script src="/static/help/js/pub.js?r={{.time}}"></script>
+    <style>
+        .CodeMirror {
+            width: 100%;
+            min-height: 100px;
+            overflow: auto;
+        }
+
+        .CodeMirror-linenumber {
+            padding: 0 3px 0 5px;
+            width: 40px;
+        }
+
+        .CodeMirror-scrollbar {
+            width: 10px;
+            background-color: #f1f1f1;
+        }
+
+        .CodeMirror-scrollbar-filler {
+            background-color: transparent;
+        }
+
+        .CodeMirror-scrollbar-thumb {
+            background-color: #888;
+        }
+    </style>
 </head>
 
 <body>
@@ -105,13 +130,13 @@
                                 页面
                             </p>
                             <ul class="menu-list">
-                                <li><a href="/help/dev/81">主题的基本信息详解</a></li>
-                                <li><a href="/help/dev/35">page页面</a></li>
-                                <li><a href="/help/dev/34">search页面</a></li>
-                                <li><a href="/help/dev/33">message页面</a></li>
-                                <li><a href="/help/dev/32">article页面</a></li>
-                                <li><a href="/help/dev/31">category页面</a></li>
-                                <li><a href="/help/dev/30">index页面</a></li>
+                                <li><a href="/help/dev/theme_config">主题的基本信息详解</a></li>
+                                <li><a href="/help/dev/theme_index">index页面</a></li>
+                                <li><a href="/help/dev/theme_search">search页面</a></li>
+                                <li><a href="/help/dev/theme_tag">tag页面</a></li>
+                                <li><a href="/help/dev/theme_topic">topic页面</a></li>
+                                <li><a href="/help/dev/theme_category">category页面</a></li>
+                                <li><a href="/help/dev/theme_article">article页面</a></li>
                             </ul>
                         </aside>
                     </div>
