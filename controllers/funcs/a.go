@@ -128,6 +128,8 @@ func init() {
 
 		funcs["SiteDefault"] = SiteDefault
 		funcs["sitedefault"] = SiteDefault
+		funcs["SiteChannel"] = SiteChannel
+		funcs["sitechannel"] = SiteChannel
 		funcs["SiteMenu"] = SiteMenu
 		funcs["sitemenu"] = SiteMenu
 		funcs["SiteMenuFlag"] = SiteMenuFlag

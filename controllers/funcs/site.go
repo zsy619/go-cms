@@ -42,3 +42,16 @@ func SiteMenuFlag(site_flag string) []*bizmodel.ApiNavModel {
 	}
 	return find
 }
+
+/**
+ * @description: 站点频道
+ * @param {int64} site_id 站点ID
+ * @return {*}
+ */
+func SiteChannel(site_id int64) []*bizmodel.ApiChannelModel {
+	find, _, err := biz.NewApiSite().ChannelGet(site_id)
+	if err != nil {
+		return []*bizmodel.ApiChannelModel{}
+	}
+	return find
+}

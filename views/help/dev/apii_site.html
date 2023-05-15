@@ -20,7 +20,16 @@
                             <td>
                             </td>
                             <td><a href="#ApiSiteModel">[]*ApiSiteModel</a></td>
-                            <td>获取默认站点</td>
+                            <td>默认站点</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>SiteChannel</p>
+                            </td>
+                            <td>
+                            </td>
+                            <td><a href="#ApiChannelModel">[]*ApiChannelModel</a></td>
+                            <td>站点频道</td>
                         </tr>
                         <tr>
                             <td>
@@ -91,6 +100,29 @@ type ApiNavModel struct {
     Type     string         `gorm:"-" json:"type" form:"type"`                                          // 类型 channel:频道 category:分类
     Children []*ApiNavModel `gorm:"-" json:"children"`                                                  // 子级
 }                                         
+            </textarea>
+            <h3 id="r5spb"><b><a name="ApiChannelModel">ApiChannelModel结构</a></b></h3>
+            <textarea id="ApiChannelModelCode" code-type="go">
+type ApiChannelModel struct {
+	ChannelID  int64  `gorm:"column:channel_id;type:bigint;primaryKey;" json:"channel_id" form:"channel_id"` // 主键
+	ParentID   int64  `gorm:"column:parent_id;type:bigint" json:"parent_id" form:"parent_id"`                // 父级ID
+	Title      string `gorm:"column:title;type:varchar(128)" json:"title" form:"title"`                      // 标题
+	Name       string `gorm:"column:name;type:varchar(128)" json:"name" form:"name"`                         // 频道名称
+	Kind       int32  `gorm:"column:kind;type:tinyint" json:"kind" form:"kind"`                              // 频道类型
+	ClassLayer int32  `gorm:"column:class_layer;type:tinyint" json:"class_layer" form:"class_layer"`         // 层级
+	LinkURL    string `gorm:"column:link_url;type:varchar(256)" json:"link_url" form:"link_url"`             // 外部链接
+	ImgUrl1    string `gorm:"column:img_url1;type:varchar(256)" json:"img_url1" form:"img_url1"`             // 图片地址
+	ImgUrl2    string `gorm:"column:img_url2;type:varchar(256)" json:"img_url2" form:"img_url2"`             // 图片地址
+	SortID     int32  `gorm:"column:sort_id;type:tinyint" json:"sort_id" form:"sort_id"`                     // 排序
+	IsAlbum    int32  `gorm:"column:is_album;type:tinyint" json:"is_album" form:"is_album"`                  // 是否相册
+	IsAttach   int32  `gorm:"column:is_attach;type:tinyint" json:"is_attach" form:"is_attach"`               // 是否附件
+	IsSpec     int32  `gorm:"column:is_spec;type:tinyint" json:"is_spec" form:"is_spec"`                     // 是否规格
+	TmplChnl   string `gorm:"column:tmpl_chnl;type:varchar(256)" json:"tmpl_chnl" form:"tmpl_chnl"`          // 频道模板路径
+	TmplCat    string `gorm:"column:tmpl_cat;type:varchar(256)" json:"tmpl_cat" form:"tmpl_cat"`             // 栏目模板路径
+	TmplLst    string `gorm:"column:tmpl_lst;type:varchar(256)" json:"tmpl_lst" form:"tmpl_lst"`             // 列表模板路径
+	TmplDtl    string `gorm:"column:tmpl_dtl;type:varchar(256)" json:"tmpl_dtl" form:"tmpl_dtl"`             // 明细模板路径
+	SiteFlag   string `gorm:"column:site_flag;type:varchar(64)" json:"site_flag" form:"site_flag"`           // 站点标识
+}                                       
             </textarea>
         </article>
     </div>
