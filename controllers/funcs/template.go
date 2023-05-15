@@ -12,7 +12,7 @@ import (
 
 /**
  * @description: 根据theme加载模板
- * @param {*} theme 主题名称，如defalut、h5、pc等，对应views/themes目录下的文件夹，区分大小写
+ * @param {string} theme 主题名称，如defalut、h5、pc等，对应views/themes目录下的文件夹，区分大小写
  * @param {string} file 模板文件名称，如index.html、list.html等，对应views/themes/主题名称/views目录下的文件
  * @param {map[interface{}]interface{}} b 模板变量
  * @return {*}
@@ -68,6 +68,12 @@ func TemplateView(views, file string, b map[interface{}]interface{}) template.HT
 	return web.Str2html(buf.String())
 }
 
+/**
+ * @description: 获取模板路径
+ * @param {string} theme 主题名称，如defalut、h5、pc等，对应views/themes目录下的文件夹，区分大小写
+ * @param {string} file 视图名称 如index.html、list.html等，对应views/themes/主题名称/views目录下的文件
+ * @return {*}
+ */
 func UrlForView(theme, file string) string {
 	return path.Join("themes", theme, "views", file)
 }

@@ -1,0 +1,7 @@
+
+
+@host = http://localhost:8125
+
+###
+
+GET {{host}}/sse/message

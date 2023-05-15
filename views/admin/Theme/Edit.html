@@ -184,9 +184,20 @@
         var edt = CodeMirror.fromTextArea(document.getElementById(id), {
             theme: "default",
             lineNumbers: true,
+            lineNumberFormatter: function (number) {
+                // 将行号格式化为三位数
+                var str = String(number);
+                while (str.length < 5) {
+                    str = "0" + str;
+                }
+                return str;
+            },
             viewportMargin: Infinity,
             styleActiveLine: true,
             matchBrackets: true,
+            //代码折叠
+            foldGutter: true,
+            gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
             mode: { name: type, globalVars: true },
             extraKeys: {
                 "F11": function (cm) {

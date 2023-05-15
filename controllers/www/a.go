@@ -91,6 +91,8 @@ func init() {
 
 	web.Router("/", &IndexController{}, "*:Index")
 
+	web.Router("/sse", &SSEController{}, "*:Message")
+
 	fmt.Println("www 结束注册路由")
 
 	InitWechatMpVerifyRouter()
