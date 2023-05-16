@@ -130,6 +130,8 @@ func (c cmsAdminNav) TableName() string { return c.cmsAdminNavDo.TableName() }
 
 func (c cmsAdminNav) Alias() string { return c.cmsAdminNavDo.Alias() }
 
+func (c cmsAdminNav) Columns(cols ...field.Expr) gen.Columns { return c.cmsAdminNavDo.Columns(cols...) }
+
 func (c *cmsAdminNav) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := c.fieldMap[fieldName]
 	if !ok || _f == nil {

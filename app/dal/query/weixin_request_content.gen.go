@@ -112,6 +112,10 @@ func (w weixinRequestContent) TableName() string { return w.weixinRequestContent
 
 func (w weixinRequestContent) Alias() string { return w.weixinRequestContentDo.Alias() }
 
+func (w weixinRequestContent) Columns(cols ...field.Expr) gen.Columns {
+	return w.weixinRequestContentDo.Columns(cols...)
+}
+
 func (w *weixinRequestContent) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := w.fieldMap[fieldName]
 	if !ok || _f == nil {

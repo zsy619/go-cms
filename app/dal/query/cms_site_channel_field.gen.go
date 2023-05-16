@@ -109,6 +109,10 @@ func (c cmsSiteChannelField) TableName() string { return c.cmsSiteChannelFieldDo
 
 func (c cmsSiteChannelField) Alias() string { return c.cmsSiteChannelFieldDo.Alias() }
 
+func (c cmsSiteChannelField) Columns(cols ...field.Expr) gen.Columns {
+	return c.cmsSiteChannelFieldDo.Columns(cols...)
+}
+
 func (c *cmsSiteChannelField) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := c.fieldMap[fieldName]
 	if !ok || _f == nil {

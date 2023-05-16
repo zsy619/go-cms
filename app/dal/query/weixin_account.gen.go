@@ -124,6 +124,10 @@ func (w weixinAccount) TableName() string { return w.weixinAccountDo.TableName()
 
 func (w weixinAccount) Alias() string { return w.weixinAccountDo.Alias() }
 
+func (w weixinAccount) Columns(cols ...field.Expr) gen.Columns {
+	return w.weixinAccountDo.Columns(cols...)
+}
+
 func (w *weixinAccount) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := w.fieldMap[fieldName]
 	if !ok || _f == nil {

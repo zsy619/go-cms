@@ -106,6 +106,10 @@ func (c cmsArticleLabel) TableName() string { return c.cmsArticleLabelDo.TableNa
 
 func (c cmsArticleLabel) Alias() string { return c.cmsArticleLabelDo.Alias() }
 
+func (c cmsArticleLabel) Columns(cols ...field.Expr) gen.Columns {
+	return c.cmsArticleLabelDo.Columns(cols...)
+}
+
 func (c *cmsArticleLabel) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := c.fieldMap[fieldName]
 	if !ok || _f == nil {

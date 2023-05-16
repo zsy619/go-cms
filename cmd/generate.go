@@ -2,7 +2,6 @@ package main
 
 import (
 	"gorm.io/gen"
-	"gorm.io/gen/field"
 	"haedu.gov.cn/cms/app/dal"
 )
 
@@ -45,18 +44,18 @@ func main() {
 	// 将非默认字段名的字段定义为自动时间戳和软删除字段;
 	// 自动时间戳默认字段名为:`updated_at`、`created_at, 表字段数据类型为: INT 或 DATETIME
 	// 软删除默认字段名为:`deleted_at`, 表字段数据类型为: DATETIME
-	autoUpdateTimeField := gen.FieldGORMTag("update_time", func(tag field.GormTag) field.GormTag {
-		out := field.NewGormTag()
-		out.Set("column", "update_time")
-		out.Set("type", "int unsigned;autoUpdateTime")
-		return out
-	})
-	autoCreateTimeField := gen.FieldGORMTag("create_time", func(tag field.GormTag) field.GormTag {
-		out := field.NewGormTag()
-		out.Set("column", "create_time")
-		out.Set("type", "int unsigned;autoUpdateTime")
-		return out
-	})
+	// autoUpdateTimeField := gen.FieldGORMTag("update_time", func(tag field.GormTag) field.GormTag {
+	// 	out := field.NewGormTag()
+	// 	out.Set("column", "update_time")
+	// 	out.Set("type", "int unsigned;autoUpdateTime")
+	// 	return out
+	// })
+	// autoCreateTimeField := gen.FieldGORMTag("create_time", func(tag field.GormTag) field.GormTag {
+	// 	out := field.NewGormTag()
+	// 	out.Set("column", "create_time")
+	// 	out.Set("type", "int unsigned;autoUpdateTime")
+	// 	return out
+	// })
 	softDeleteField := gen.FieldType("delete_time", "soft_delete.DeletedAt")
 	formField := gen.FieldNewTagWithNS("form", func(columnName string) (tagContent string) {
 		// toStringField := `balance, `
@@ -67,7 +66,8 @@ func main() {
 	})
 
 	// 模型自定义选项组
-	fieldOpts := []gen.ModelOpt{formField, jsonField, autoCreateTimeField, autoUpdateTimeField, softDeleteField}
+	// fieldOpts := []gen.ModelOpt{formField, jsonField, autoCreateTimeField, autoUpdateTimeField, softDeleteField}
+	fieldOpts := []gen.ModelOpt{formField, jsonField, softDeleteField}
 
 	// generate all table from database
 	g.ApplyBasic(g.GenerateAllTable(fieldOpts...)...)

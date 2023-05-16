@@ -94,6 +94,8 @@ func (c cmsAdminLog) TableName() string { return c.cmsAdminLogDo.TableName() }
 
 func (c cmsAdminLog) Alias() string { return c.cmsAdminLogDo.Alias() }
 
+func (c cmsAdminLog) Columns(cols ...field.Expr) gen.Columns { return c.cmsAdminLogDo.Columns(cols...) }
+
 func (c *cmsAdminLog) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := c.fieldMap[fieldName]
 	if !ok || _f == nil {

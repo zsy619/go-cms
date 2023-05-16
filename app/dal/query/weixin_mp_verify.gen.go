@@ -106,6 +106,10 @@ func (w weixinMpVerify) TableName() string { return w.weixinMpVerifyDo.TableName
 
 func (w weixinMpVerify) Alias() string { return w.weixinMpVerifyDo.Alias() }
 
+func (w weixinMpVerify) Columns(cols ...field.Expr) gen.Columns {
+	return w.weixinMpVerifyDo.Columns(cols...)
+}
+
 func (w *weixinMpVerify) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := w.fieldMap[fieldName]
 	if !ok || _f == nil {

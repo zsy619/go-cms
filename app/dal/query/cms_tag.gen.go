@@ -131,6 +131,8 @@ func (c cmsTag) TableName() string { return c.cmsTagDo.TableName() }
 
 func (c cmsTag) Alias() string { return c.cmsTagDo.Alias() }
 
+func (c cmsTag) Columns(cols ...field.Expr) gen.Columns { return c.cmsTagDo.Columns(cols...) }
+
 func (c *cmsTag) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := c.fieldMap[fieldName]
 	if !ok || _f == nil {

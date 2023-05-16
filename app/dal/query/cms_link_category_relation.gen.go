@@ -76,6 +76,10 @@ func (c cmsLinkCategoryRelation) TableName() string { return c.cmsLinkCategoryRe
 
 func (c cmsLinkCategoryRelation) Alias() string { return c.cmsLinkCategoryRelationDo.Alias() }
 
+func (c cmsLinkCategoryRelation) Columns(cols ...field.Expr) gen.Columns {
+	return c.cmsLinkCategoryRelationDo.Columns(cols...)
+}
+
 func (c *cmsLinkCategoryRelation) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := c.fieldMap[fieldName]
 	if !ok || _f == nil {

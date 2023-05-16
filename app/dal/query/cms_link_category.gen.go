@@ -133,6 +133,10 @@ func (c cmsLinkCategory) TableName() string { return c.cmsLinkCategoryDo.TableNa
 
 func (c cmsLinkCategory) Alias() string { return c.cmsLinkCategoryDo.Alias() }
 
+func (c cmsLinkCategory) Columns(cols ...field.Expr) gen.Columns {
+	return c.cmsLinkCategoryDo.Columns(cols...)
+}
+
 func (c *cmsLinkCategory) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := c.fieldMap[fieldName]
 	if !ok || _f == nil {

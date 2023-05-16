@@ -12,25 +12,25 @@ const TableNameWeixinAccount = "weixin_account"
 
 // WeixinAccount mapped from table <weixin_account>
 type WeixinAccount struct {
-	AccountID  int64     `gorm:"column:account_id;type:bigint;primaryKey;autoIncrement:true;comment:主键" json:"account_id" form:"account_id"`
-	Name       string    `gorm:"column:name;type:varchar(64);comment:公众号名称" json:"name" form:"name"`
-	OriginalID string    `gorm:"column:original_id;type:varchar(64);comment:公众号原始ID" json:"original_id" form:"original_id"`
-	WxCode     string    `gorm:"column:wx_code;type:varchar(64);comment:公众平台微信号" json:"wx_code" form:"wx_code"`
-	Token      string    `gorm:"column:token;type:varchar(512);comment:令牌ToKen" json:"token" form:"token"`
-	AppID      string    `gorm:"column:app_id;type:varchar(128);comment:开发者IDAppId" json:"app_id" form:"app_id"`
-	AppSecret  string    `gorm:"column:app_secret;type:varchar(128);comment:开发者密码AppSecret" json:"app_secret" form:"app_secret"`
-	AppAesKey  string    `gorm:"column:app_aes_key;type:varchar(128);comment:消息加解密密钥" json:"app_aes_key" form:"app_aes_key"`
-	IsPush     bool      `gorm:"column:is_push;type:tinyint(1);comment:内容推送" json:"is_push" form:"is_push"`
-	SortID     int32     `gorm:"column:sort_id;type:int;comment:排序" json:"sort_id" form:"sort_id"`
-	Status     int32     `gorm:"column:status;type:tinyint;comment:状态0草稿1提交2审核通过3审核未通过4驳回" json:"status" form:"status"`
-	IsDeleted  bool      `gorm:"column:is_deleted;type:tinyint(1);comment:删除标识" json:"is_deleted" form:"is_deleted"`
-	BelongTo   string    `gorm:"column:belong_to;type:varchar(64);comment:归属" json:"belong_to" form:"belong_to"`
-	CreateID   int32     `gorm:"column:create_id;type:int;comment:创建人ID" json:"create_id" form:"create_id"`
-	CreateName string    `gorm:"column:create_name;type:varchar(64);comment:创建人姓名" json:"create_name" form:"create_name"`
-	CreateTime time.Time `gorm:"column:create_time;type:int unsigned;autoUpdateTime" json:"create_time" form:"create_time"`
-	UpdateID   int32     `gorm:"column:update_id;type:int;comment:更新人ID" json:"update_id" form:"update_id"`
-	UpdateName string    `gorm:"column:update_name;type:varchar(64);comment:更新人姓名" json:"update_name" form:"update_name"`
-	UpdateTime time.Time `gorm:"column:update_time;type:int unsigned;autoUpdateTime" json:"update_time" form:"update_time"`
+	AccountID  int64     `gorm:"column:account_id;type:bigint;primaryKey;autoIncrement:true;comment:主键" json:"account_id" form:"account_id"`    // 主键
+	Name       string    `gorm:"column:name;type:varchar(64);comment:公众号名称" json:"name" form:"name"`                                            // 公众号名称
+	OriginalID string    `gorm:"column:original_id;type:varchar(64);comment:公众号原始ID" json:"original_id" form:"original_id"`                     // 公众号原始ID
+	WxCode     string    `gorm:"column:wx_code;type:varchar(64);comment:公众平台微信号" json:"wx_code" form:"wx_code"`                                 // 公众平台微信号
+	Token      string    `gorm:"column:token;type:varchar(512);comment:令牌ToKen" json:"token" form:"token"`                                      // 令牌ToKen
+	AppID      string    `gorm:"column:app_id;type:varchar(128);comment:开发者IDAppId" json:"app_id" form:"app_id"`                                // 开发者IDAppId
+	AppSecret  string    `gorm:"column:app_secret;type:varchar(128);comment:开发者密码AppSecret" json:"app_secret" form:"app_secret"`                // 开发者密码AppSecret
+	AppAesKey  string    `gorm:"column:app_aes_key;type:varchar(128);comment:消息加解密密钥" json:"app_aes_key" form:"app_aes_key"`                    // 消息加解密密钥
+	IsPush     bool      `gorm:"column:is_push;type:tinyint(1);comment:内容推送" json:"is_push" form:"is_push"`                                     // 内容推送
+	SortID     int32     `gorm:"column:sort_id;type:int;comment:排序" json:"sort_id" form:"sort_id"`                                              // 排序
+	Status     int32     `gorm:"column:status;type:tinyint;comment:状态0草稿1提交2审核通过3审核未通过4驳回" json:"status" form:"status"`                         // 状态0草稿1提交2审核通过3审核未通过4驳回
+	IsDeleted  bool      `gorm:"column:is_deleted;type:tinyint(1);comment:删除标识" json:"is_deleted" form:"is_deleted"`                            // 删除标识
+	BelongTo   string    `gorm:"column:belong_to;type:varchar(64);comment:归属" json:"belong_to" form:"belong_to"`                                // 归属
+	CreateID   int32     `gorm:"column:create_id;type:int;comment:创建人ID" json:"create_id" form:"create_id"`                                     // 创建人ID
+	CreateName string    `gorm:"column:create_name;type:varchar(64);comment:创建人姓名" json:"create_name" form:"create_name"`                       // 创建人姓名
+	CreateTime time.Time `gorm:"column:create_time;type:datetime;default:CURRENT_TIMESTAMP;comment:创建时间" json:"create_time" form:"create_time"` // 创建时间
+	UpdateID   int32     `gorm:"column:update_id;type:int;comment:更新人ID" json:"update_id" form:"update_id"`                                     // 更新人ID
+	UpdateName string    `gorm:"column:update_name;type:varchar(64);comment:更新人姓名" json:"update_name" form:"update_name"`                       // 更新人姓名
+	UpdateTime time.Time `gorm:"column:update_time;type:datetime;comment:修改时间" json:"update_time" form:"update_time"`                           // 修改时间
 }
 
 // TableName WeixinAccount's table name

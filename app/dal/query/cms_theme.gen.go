@@ -116,6 +116,8 @@ func (c cmsTheme) TableName() string { return c.cmsThemeDo.TableName() }
 
 func (c cmsTheme) Alias() string { return c.cmsThemeDo.Alias() }
 
+func (c cmsTheme) Columns(cols ...field.Expr) gen.Columns { return c.cmsThemeDo.Columns(cols...) }
+
 func (c *cmsTheme) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := c.fieldMap[fieldName]
 	if !ok || _f == nil {

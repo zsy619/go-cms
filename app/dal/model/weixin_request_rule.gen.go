@@ -12,21 +12,21 @@ const TableNameWeixinRequestRule = "weixin_request_rule"
 
 // WeixinRequestRule mapped from table <weixin_request_rule>
 type WeixinRequestRule struct {
-	RuleID       int64     `gorm:"column:rule_id;type:bigint;primaryKey;autoIncrement:true;comment:主键" json:"rule_id" form:"rule_id"`
-	AccountID    int64     `gorm:"column:account_id;type:bigint;not null;comment:归属公众号" json:"account_id" form:"account_id"`
-	Name         string    `gorm:"column:name;type:varchar(256);comment:规则名称" json:"name" form:"name"`
-	Keywords     string    `gorm:"column:keywords;type:varchar(2048);comment:请求关键词,逗号分隔" json:"keywords" form:"keywords"`
-	RequestType  int32     `gorm:"column:request_type;type:int;comment:请求类型(0默认回复1文字2图片3语音4链接5地理位置6关注7取消关注8扫描带参数二维码事件9上报地理位置事件10自定义菜单事件）" json:"request_type" form:"request_type"`
-	ResponseType int32     `gorm:"column:response_type;type:int;comment:回复类型(1文本2图文3语音4视频5第三方接口)" json:"response_type" form:"response_type"`
-	IsLikeQuery  int32     `gorm:"column:is_like_query;type:tinyint;comment:是否模糊查询" json:"is_like_query" form:"is_like_query"`
-	IsDefault    int32     `gorm:"column:is_default;type:tinyint;comment:是否默认回复" json:"is_default" form:"is_default"`
-	SortID       int32     `gorm:"column:sort_id;type:int;comment:排序" json:"sort_id" form:"sort_id"`
-	CreateID     int32     `gorm:"column:create_id;type:int;comment:创建人ID" json:"create_id" form:"create_id"`
-	CreateName   string    `gorm:"column:create_name;type:varchar(64);comment:创建人姓名" json:"create_name" form:"create_name"`
-	CreateTime   time.Time `gorm:"column:create_time;type:int unsigned;autoUpdateTime" json:"create_time" form:"create_time"`
-	UpdateID     int32     `gorm:"column:update_id;type:int;comment:更新人ID" json:"update_id" form:"update_id"`
-	UpdateName   string    `gorm:"column:update_name;type:varchar(64);comment:更新人姓名" json:"update_name" form:"update_name"`
-	UpdateTime   time.Time `gorm:"column:update_time;type:int unsigned;autoUpdateTime" json:"update_time" form:"update_time"`
+	RuleID       int64     `gorm:"column:rule_id;type:bigint;primaryKey;autoIncrement:true;comment:主键" json:"rule_id" form:"rule_id"`                                              // 主键
+	AccountID    int64     `gorm:"column:account_id;type:bigint;not null;comment:归属公众号" json:"account_id" form:"account_id"`                                                       // 归属公众号
+	Name         string    `gorm:"column:name;type:varchar(256);comment:规则名称" json:"name" form:"name"`                                                                             // 规则名称
+	Keywords     string    `gorm:"column:keywords;type:varchar(2048);comment:请求关键词,逗号分隔" json:"keywords" form:"keywords"`                                                          // 请求关键词,逗号分隔
+	RequestType  int32     `gorm:"column:request_type;type:int;comment:请求类型(0默认回复1文字2图片3语音4链接5地理位置6关注7取消关注8扫描带参数二维码事件9上报地理位置事件10自定义菜单事件）" json:"request_type" form:"request_type"` // 请求类型(0默认回复1文字2图片3语音4链接5地理位置6关注7取消关注8扫描带参数二维码事件9上报地理位置事件10自定义菜单事件）
+	ResponseType int32     `gorm:"column:response_type;type:int;comment:回复类型(1文本2图文3语音4视频5第三方接口)" json:"response_type" form:"response_type"`                                       // 回复类型(1文本2图文3语音4视频5第三方接口)
+	IsLikeQuery  int32     `gorm:"column:is_like_query;type:tinyint;comment:是否模糊查询" json:"is_like_query" form:"is_like_query"`                                                     // 是否模糊查询
+	IsDefault    int32     `gorm:"column:is_default;type:tinyint;comment:是否默认回复" json:"is_default" form:"is_default"`                                                              // 是否默认回复
+	SortID       int32     `gorm:"column:sort_id;type:int;comment:排序" json:"sort_id" form:"sort_id"`                                                                               // 排序
+	CreateID     int32     `gorm:"column:create_id;type:int;comment:创建人ID" json:"create_id" form:"create_id"`                                                                      // 创建人ID
+	CreateName   string    `gorm:"column:create_name;type:varchar(64);comment:创建人姓名" json:"create_name" form:"create_name"`                                                        // 创建人姓名
+	CreateTime   time.Time `gorm:"column:create_time;type:datetime;default:CURRENT_TIMESTAMP;comment:创建时间" json:"create_time" form:"create_time"`                                  // 创建时间
+	UpdateID     int32     `gorm:"column:update_id;type:int;comment:更新人ID" json:"update_id" form:"update_id"`                                                                      // 更新人ID
+	UpdateName   string    `gorm:"column:update_name;type:varchar(64);comment:更新人姓名" json:"update_name" form:"update_name"`                                                        // 更新人姓名
+	UpdateTime   time.Time `gorm:"column:update_time;type:datetime;comment:修改时间" json:"update_time" form:"update_time"`                                                            // 修改时间
 }
 
 // TableName WeixinRequestRule's table name

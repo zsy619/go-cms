@@ -133,6 +133,10 @@ func (p plgOnlineRegister) TableName() string { return p.plgOnlineRegisterDo.Tab
 
 func (p plgOnlineRegister) Alias() string { return p.plgOnlineRegisterDo.Alias() }
 
+func (p plgOnlineRegister) Columns(cols ...field.Expr) gen.Columns {
+	return p.plgOnlineRegisterDo.Columns(cols...)
+}
+
 func (p *plgOnlineRegister) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := p.fieldMap[fieldName]
 	if !ok || _f == nil {

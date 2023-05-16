@@ -131,6 +131,8 @@ func (c cmsAlbum) TableName() string { return c.cmsAlbumDo.TableName() }
 
 func (c cmsAlbum) Alias() string { return c.cmsAlbumDo.Alias() }
 
+func (c cmsAlbum) Columns(cols ...field.Expr) gen.Columns { return c.cmsAlbumDo.Columns(cols...) }
+
 func (c *cmsAlbum) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := c.fieldMap[fieldName]
 	if !ok || _f == nil {

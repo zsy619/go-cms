@@ -103,6 +103,10 @@ func (c cmsAdminRole) TableName() string { return c.cmsAdminRoleDo.TableName() }
 
 func (c cmsAdminRole) Alias() string { return c.cmsAdminRoleDo.Alias() }
 
+func (c cmsAdminRole) Columns(cols ...field.Expr) gen.Columns {
+	return c.cmsAdminRoleDo.Columns(cols...)
+}
+
 func (c *cmsAdminRole) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := c.fieldMap[fieldName]
 	if !ok || _f == nil {

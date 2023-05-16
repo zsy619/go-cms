@@ -12,42 +12,42 @@ const TableNameCmsSite = "cms_site"
 
 // CmsSite mapped from table <cms_site>
 type CmsSite struct {
-	SiteID          int64     `gorm:"column:site_id;type:bigint;primaryKey;autoIncrement:true;comment:主键" json:"site_id" form:"site_id"`
-	ParentID        int64     `gorm:"column:parent_id;type:bigint;not null;comment:父级ID" json:"parent_id" form:"parent_id"`
-	Name            string    `gorm:"column:name;type:varchar(128);comment:站点名称" json:"name" form:"name"`
-	Flag            string    `gorm:"column:flag;type:varchar(64);comment:站点标识" json:"flag" form:"flag"`
-	Title           string    `gorm:"column:title;type:varchar(128);comment:标题" json:"title" form:"title"`
-	Template        string    `gorm:"column:template;type:varchar(128);comment:模板名称" json:"template" form:"template"`
-	IsDefault       bool      `gorm:"column:is_default;type:tinyint(1);comment:是否默认站" json:"is_default" form:"is_default"`
-	IsMobile        bool      `gorm:"column:is_mobile;type:tinyint(1);comment:是否移动端" json:"is_mobile" form:"is_mobile"`
-	Logo1           string    `gorm:"column:logo1;type:varchar(512);comment:网站LOGO" json:"logo1" form:"logo1"`
-	Logo2           string    `gorm:"column:logo2;type:varchar(512);comment:网站LOGO" json:"logo2" form:"logo2"`
-	Icon1           string    `gorm:"column:icon1;type:varchar(512);comment:网站icon" json:"icon1" form:"icon1"`
-	Icon2           string    `gorm:"column:icon2;type:varchar(512);comment:网站icon" json:"icon2" form:"icon2"`
-	Company         string    `gorm:"column:company;type:varchar(512);comment:公司名称" json:"company" form:"company"`
-	Address         string    `gorm:"column:address;type:varchar(512);comment:通讯地址" json:"address" form:"address"`
-	Telphone        string    `gorm:"column:telphone;type:varchar(64);comment:联系电话" json:"telphone" form:"telphone"`
-	Fax             string    `gorm:"column:fax;type:varchar(64);comment:传真" json:"fax" form:"fax"`
-	Email           string    `gorm:"column:email;type:varchar(64);comment:邮箱" json:"email" form:"email"`
-	Crod            string    `gorm:"column:crod;type:varchar(64);comment:备案号" json:"crod" form:"crod"`
-	Cache           int32     `gorm:"column:cache;type:int;comment:缓存时间" json:"cache" form:"cache"`
-	MaxLength       int32     `gorm:"column:max_length;type:int;default:2048;comment:最大文件上传" json:"max_length" form:"max_length"`
-	FileType        string    `gorm:"column:file_type;type:varchar(64);default:png|gif|jpg|jpeg|zip|rar;comment:上传文件类型" json:"file_type" form:"file_type"`
-	HomeTitle       string    `gorm:"column:home_title;type:varchar(128);comment:首页标题" json:"home_title" form:"home_title"`
-	Copyright       string    `gorm:"column:copyright;type:varchar(128);comment:版权信息" json:"copyright" form:"copyright"`
-	Statcode        string    `gorm:"column:statcode;type:varchar(128);comment:统计代码" json:"statcode" form:"statcode"`
-	Robots          string    `gorm:"column:robots;type:varchar(128);comment:爬虫规则" json:"robots" form:"robots"`
-	MetaKeyword     string    `gorm:"column:meta_keyword;type:varchar(512);comment:META关键词" json:"meta_keyword" form:"meta_keyword"`
-	MetaDescription string    `gorm:"column:meta_description;type:varchar(128);comment:META描述" json:"meta_description" form:"meta_description"`
-	SortID          int32     `gorm:"column:sort_id;type:int;comment:排序" json:"sort_id" form:"sort_id"`
-	Status          int32     `gorm:"column:status;type:tinyint;comment:状态0草稿1提交2审核通过3审核未通过4驳回" json:"status" form:"status"`
-	IsDeleted       bool      `gorm:"column:is_deleted;type:tinyint(1);comment:删除标识" json:"is_deleted" form:"is_deleted"`
-	CreateID        int32     `gorm:"column:create_id;type:int;comment:创建人ID" json:"create_id" form:"create_id"`
-	CreateName      string    `gorm:"column:create_name;type:varchar(64);comment:创建人姓名" json:"create_name" form:"create_name"`
-	CreateTime      time.Time `gorm:"column:create_time;type:int unsigned;autoUpdateTime" json:"create_time" form:"create_time"`
-	UpdateID        int32     `gorm:"column:update_id;type:int;comment:更新人ID" json:"update_id" form:"update_id"`
-	UpdateName      string    `gorm:"column:update_name;type:varchar(64);comment:更新人姓名" json:"update_name" form:"update_name"`
-	UpdateTime      time.Time `gorm:"column:update_time;type:int unsigned;autoUpdateTime" json:"update_time" form:"update_time"`
+	SiteID          int64     `gorm:"column:site_id;type:bigint;primaryKey;autoIncrement:true;comment:主键" json:"site_id" form:"site_id"`                   // 主键
+	ParentID        int64     `gorm:"column:parent_id;type:bigint;not null;comment:父级ID" json:"parent_id" form:"parent_id"`                                // 父级ID
+	Name            string    `gorm:"column:name;type:varchar(128);comment:站点名称" json:"name" form:"name"`                                                  // 站点名称
+	Flag            string    `gorm:"column:flag;type:varchar(64);comment:站点标识" json:"flag" form:"flag"`                                                   // 站点标识
+	Title           string    `gorm:"column:title;type:varchar(128);comment:标题" json:"title" form:"title"`                                                 // 标题
+	Template        string    `gorm:"column:template;type:varchar(128);comment:模板名称" json:"template" form:"template"`                                      // 模板名称
+	IsDefault       bool      `gorm:"column:is_default;type:tinyint(1);comment:是否默认站" json:"is_default" form:"is_default"`                                 // 是否默认站
+	IsMobile        bool      `gorm:"column:is_mobile;type:tinyint(1);comment:是否移动端" json:"is_mobile" form:"is_mobile"`                                    // 是否移动端
+	Logo1           string    `gorm:"column:logo1;type:varchar(512);comment:网站LOGO" json:"logo1" form:"logo1"`                                             // 网站LOGO
+	Logo2           string    `gorm:"column:logo2;type:varchar(512);comment:网站LOGO" json:"logo2" form:"logo2"`                                             // 网站LOGO
+	Icon1           string    `gorm:"column:icon1;type:varchar(512);comment:网站icon" json:"icon1" form:"icon1"`                                             // 网站icon
+	Icon2           string    `gorm:"column:icon2;type:varchar(512);comment:网站icon" json:"icon2" form:"icon2"`                                             // 网站icon
+	Company         string    `gorm:"column:company;type:varchar(512);comment:公司名称" json:"company" form:"company"`                                         // 公司名称
+	Address         string    `gorm:"column:address;type:varchar(512);comment:通讯地址" json:"address" form:"address"`                                         // 通讯地址
+	Telphone        string    `gorm:"column:telphone;type:varchar(64);comment:联系电话" json:"telphone" form:"telphone"`                                       // 联系电话
+	Fax             string    `gorm:"column:fax;type:varchar(64);comment:传真" json:"fax" form:"fax"`                                                        // 传真
+	Email           string    `gorm:"column:email;type:varchar(64);comment:邮箱" json:"email" form:"email"`                                                  // 邮箱
+	Crod            string    `gorm:"column:crod;type:varchar(64);comment:备案号" json:"crod" form:"crod"`                                                    // 备案号
+	Cache           int32     `gorm:"column:cache;type:int;comment:缓存时间" json:"cache" form:"cache"`                                                        // 缓存时间
+	MaxLength       int32     `gorm:"column:max_length;type:int;default:2048;comment:最大文件上传" json:"max_length" form:"max_length"`                          // 最大文件上传
+	FileType        string    `gorm:"column:file_type;type:varchar(64);default:png|gif|jpg|jpeg|zip|rar;comment:上传文件类型" json:"file_type" form:"file_type"` // 上传文件类型
+	HomeTitle       string    `gorm:"column:home_title;type:varchar(128);comment:首页标题" json:"home_title" form:"home_title"`                                // 首页标题
+	Copyright       string    `gorm:"column:copyright;type:varchar(128);comment:版权信息" json:"copyright" form:"copyright"`                                   // 版权信息
+	Statcode        string    `gorm:"column:statcode;type:varchar(128);comment:统计代码" json:"statcode" form:"statcode"`                                      // 统计代码
+	Robots          string    `gorm:"column:robots;type:varchar(128);comment:爬虫规则" json:"robots" form:"robots"`                                            // 爬虫规则
+	MetaKeyword     string    `gorm:"column:meta_keyword;type:varchar(512);comment:META关键词" json:"meta_keyword" form:"meta_keyword"`                       // META关键词
+	MetaDescription string    `gorm:"column:meta_description;type:varchar(128);comment:META描述" json:"meta_description" form:"meta_description"`            // META描述
+	SortID          int32     `gorm:"column:sort_id;type:int;comment:排序" json:"sort_id" form:"sort_id"`                                                    // 排序
+	Status          int32     `gorm:"column:status;type:tinyint;comment:状态0草稿1提交2审核通过3审核未通过4驳回" json:"status" form:"status"`                               // 状态0草稿1提交2审核通过3审核未通过4驳回
+	IsDeleted       bool      `gorm:"column:is_deleted;type:tinyint(1);comment:删除标识" json:"is_deleted" form:"is_deleted"`                                  // 删除标识
+	CreateID        int32     `gorm:"column:create_id;type:int;comment:创建人ID" json:"create_id" form:"create_id"`                                           // 创建人ID
+	CreateName      string    `gorm:"column:create_name;type:varchar(64);comment:创建人姓名" json:"create_name" form:"create_name"`                             // 创建人姓名
+	CreateTime      time.Time `gorm:"column:create_time;type:datetime;default:CURRENT_TIMESTAMP;comment:创建时间" json:"create_time" form:"create_time"`       // 创建时间
+	UpdateID        int32     `gorm:"column:update_id;type:int;comment:更新人ID" json:"update_id" form:"update_id"`                                           // 更新人ID
+	UpdateName      string    `gorm:"column:update_name;type:varchar(64);comment:更新人姓名" json:"update_name" form:"update_name"`                             // 更新人姓名
+	UpdateTime      time.Time `gorm:"column:update_time;type:datetime;comment:修改时间" json:"update_time" form:"update_time"`                                 // 修改时间
 }
 
 // TableName CmsSite's table name

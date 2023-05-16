@@ -79,6 +79,10 @@ func (c cmsAdminRoleValue) TableName() string { return c.cmsAdminRoleValueDo.Tab
 
 func (c cmsAdminRoleValue) Alias() string { return c.cmsAdminRoleValueDo.Alias() }
 
+func (c cmsAdminRoleValue) Columns(cols ...field.Expr) gen.Columns {
+	return c.cmsAdminRoleValueDo.Columns(cols...)
+}
+
 func (c *cmsAdminRoleValue) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := c.fieldMap[fieldName]
 	if !ok || _f == nil {

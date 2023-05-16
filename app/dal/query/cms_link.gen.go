@@ -143,6 +143,8 @@ func (c cmsLink) TableName() string { return c.cmsLinkDo.TableName() }
 
 func (c cmsLink) Alias() string { return c.cmsLinkDo.Alias() }
 
+func (c cmsLink) Columns(cols ...field.Expr) gen.Columns { return c.cmsLinkDo.Columns(cols...) }
+
 func (c *cmsLink) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := c.fieldMap[fieldName]
 	if !ok || _f == nil {

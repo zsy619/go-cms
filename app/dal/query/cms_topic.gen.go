@@ -131,6 +131,8 @@ func (c cmsTopic) TableName() string { return c.cmsTopicDo.TableName() }
 
 func (c cmsTopic) Alias() string { return c.cmsTopicDo.Alias() }
 
+func (c cmsTopic) Columns(cols ...field.Expr) gen.Columns { return c.cmsTopicDo.Columns(cols...) }
+
 func (c *cmsTopic) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := c.fieldMap[fieldName]
 	if !ok || _f == nil {

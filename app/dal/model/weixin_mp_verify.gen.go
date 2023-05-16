@@ -12,19 +12,19 @@ const TableNameWeixinMpVerify = "weixin_mp_verify"
 
 // WeixinMpVerify mapped from table <weixin_mp_verify>
 type WeixinMpVerify struct {
-	VerifyID   int64     `gorm:"column:verify_id;type:bigint;primaryKey;autoIncrement:true;comment:主键" json:"verify_id" form:"verify_id"`
-	AccountID  int64     `gorm:"column:account_id;type:bigint;not null;comment:归属公众号" json:"account_id" form:"account_id"`
-	Path       string    `gorm:"column:path;type:varchar(128);comment:访问路径，默认/MP_verify_公众号原始ID.txt" json:"path" form:"path"`
-	FilePath   string    `gorm:"column:file_path;type:varchar(128);comment:文件路径" json:"file_path" form:"file_path"`
-	FileName   string    `gorm:"column:file_name;type:varchar(128);comment:文件名称" json:"file_name" form:"file_name"`
-	SortID     int32     `gorm:"column:sort_id;type:int;comment:排序" json:"sort_id" form:"sort_id"`
-	Status     int32     `gorm:"column:status;type:tinyint;comment:状态0草稿1提交2审核通过3审核未通过4驳回" json:"status" form:"status"`
-	CreateID   int32     `gorm:"column:create_id;type:int;comment:创建人ID" json:"create_id" form:"create_id"`
-	CreateName string    `gorm:"column:create_name;type:varchar(64);comment:创建人姓名" json:"create_name" form:"create_name"`
-	CreateTime time.Time `gorm:"column:create_time;type:int unsigned;autoUpdateTime" json:"create_time" form:"create_time"`
-	UpdateID   int32     `gorm:"column:update_id;type:int;comment:更新人ID" json:"update_id" form:"update_id"`
-	UpdateName string    `gorm:"column:update_name;type:varchar(64);comment:更新人姓名" json:"update_name" form:"update_name"`
-	UpdateTime time.Time `gorm:"column:update_time;type:int unsigned;autoUpdateTime" json:"update_time" form:"update_time"`
+	VerifyID   int64     `gorm:"column:verify_id;type:bigint;primaryKey;autoIncrement:true;comment:主键" json:"verify_id" form:"verify_id"`       // 主键
+	AccountID  int64     `gorm:"column:account_id;type:bigint;not null;comment:归属公众号" json:"account_id" form:"account_id"`                      // 归属公众号
+	Path       string    `gorm:"column:path;type:varchar(128);comment:访问路径，默认/MP_verify_公众号原始ID.txt" json:"path" form:"path"`                   // 访问路径，默认/MP_verify_公众号原始ID.txt
+	FilePath   string    `gorm:"column:file_path;type:varchar(128);comment:文件路径" json:"file_path" form:"file_path"`                             // 文件路径
+	FileName   string    `gorm:"column:file_name;type:varchar(128);comment:文件名称" json:"file_name" form:"file_name"`                             // 文件名称
+	SortID     int32     `gorm:"column:sort_id;type:int;comment:排序" json:"sort_id" form:"sort_id"`                                              // 排序
+	Status     int32     `gorm:"column:status;type:tinyint;comment:状态0草稿1提交2审核通过3审核未通过4驳回" json:"status" form:"status"`                         // 状态0草稿1提交2审核通过3审核未通过4驳回
+	CreateID   int32     `gorm:"column:create_id;type:int;comment:创建人ID" json:"create_id" form:"create_id"`                                     // 创建人ID
+	CreateName string    `gorm:"column:create_name;type:varchar(64);comment:创建人姓名" json:"create_name" form:"create_name"`                       // 创建人姓名
+	CreateTime time.Time `gorm:"column:create_time;type:datetime;default:CURRENT_TIMESTAMP;comment:创建时间" json:"create_time" form:"create_time"` // 创建时间
+	UpdateID   int32     `gorm:"column:update_id;type:int;comment:更新人ID" json:"update_id" form:"update_id"`                                     // 更新人ID
+	UpdateName string    `gorm:"column:update_name;type:varchar(64);comment:更新人姓名" json:"update_name" form:"update_name"`                       // 更新人姓名
+	UpdateTime time.Time `gorm:"column:update_time;type:datetime;comment:修改时间" json:"update_time" form:"update_time"`                           // 修改时间
 }
 
 // TableName WeixinMpVerify's table name

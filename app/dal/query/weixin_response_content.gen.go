@@ -100,6 +100,10 @@ func (w weixinResponseContent) TableName() string { return w.weixinResponseConte
 
 func (w weixinResponseContent) Alias() string { return w.weixinResponseContentDo.Alias() }
 
+func (w weixinResponseContent) Columns(cols ...field.Expr) gen.Columns {
+	return w.weixinResponseContentDo.Columns(cols...)
+}
+
 func (w *weixinResponseContent) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := w.fieldMap[fieldName]
 	if !ok || _f == nil {

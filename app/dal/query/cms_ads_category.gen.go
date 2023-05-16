@@ -115,6 +115,10 @@ func (c cmsAdsCategory) TableName() string { return c.cmsAdsCategoryDo.TableName
 
 func (c cmsAdsCategory) Alias() string { return c.cmsAdsCategoryDo.Alias() }
 
+func (c cmsAdsCategory) Columns(cols ...field.Expr) gen.Columns {
+	return c.cmsAdsCategoryDo.Columns(cols...)
+}
+
 func (c *cmsAdsCategory) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := c.fieldMap[fieldName]
 	if !ok || _f == nil {

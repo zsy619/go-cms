@@ -12,32 +12,32 @@ const TableNameCmsLink = "cms_link"
 
 // CmsLink mapped from table <cms_link>
 type CmsLink struct {
-	LinkID     int64     `gorm:"column:link_id;type:bigint;primaryKey;autoIncrement:true;comment:主键" json:"link_id" form:"link_id"`
-	SiteID     int64     `gorm:"column:site_id;type:bigint;comment:所属站点" json:"site_id" form:"site_id"`
-	ChannelID  int64     `gorm:"column:channel_id;type:bigint;comment:所属频道" json:"channel_id" form:"channel_id"`
-	CategoryID int64     `gorm:"column:category_id;type:bigint;comment:类别ID" json:"category_id" form:"category_id"`
-	Title      string    `gorm:"column:title;type:varchar(128);comment:标题" json:"title" form:"title"`
-	CallIndex  string    `gorm:"column:call_index;type:varchar(64);comment:调用别名" json:"call_index" form:"call_index"`
-	LinkURL    string    `gorm:"column:link_url;type:varchar(256);comment:外部链接" json:"link_url" form:"link_url"`
-	Target     string    `gorm:"column:target;type:varchar(16);default:_blank;comment:是否开启浏览器新窗口" json:"target" form:"target"`
-	ImgUrl1    string    `gorm:"column:img_url1;type:varchar(256);comment:网站logo地址" json:"img_url1" form:"img_url1"`
-	ImgUrl2    string    `gorm:"column:img_url2;type:varchar(256);comment:网站logo地址" json:"img_url2" form:"img_url2"`
-	Remark     string    `gorm:"column:remark;type:varchar(256);comment:备注" json:"remark" form:"remark"`
-	SortID     int32     `gorm:"column:sort_id;type:int;comment:排序" json:"sort_id" form:"sort_id"`
-	Click      int32     `gorm:"column:click;type:int;comment:浏览次数" json:"click" form:"click"`
-	Status     int32     `gorm:"column:status;type:tinyint;comment:状态0草稿1提交2审核通过3审核未通过4驳回" json:"status" form:"status"`
-	IsLock     int32     `gorm:"column:is_lock;type:tinyint;comment:是否锁定（不允许编辑）" json:"is_lock" form:"is_lock"`
-	IsTop      int32     `gorm:"column:is_top;type:tinyint;comment:是否置顶" json:"is_top" form:"is_top"`
-	IsRed      int32     `gorm:"column:is_red;type:tinyint;comment:是否推荐" json:"is_red" form:"is_red"`
-	IsHot      int32     `gorm:"column:is_hot;type:tinyint;comment:是否热门" json:"is_hot" form:"is_hot"`
-	IsSlide    int32     `gorm:"column:is_slide;type:tinyint;comment:是否幻灯片" json:"is_slide" form:"is_slide"`
-	BelongTo   string    `gorm:"column:belong_to;type:varchar(64);comment:归属" json:"belong_to" form:"belong_to"`
-	CreateID   int32     `gorm:"column:create_id;type:int;comment:创建人ID" json:"create_id" form:"create_id"`
-	CreateName string    `gorm:"column:create_name;type:varchar(64);comment:创建人姓名" json:"create_name" form:"create_name"`
-	CreateTime time.Time `gorm:"column:create_time;type:int unsigned;autoUpdateTime" json:"create_time" form:"create_time"`
-	UpdateID   int32     `gorm:"column:update_id;type:int;comment:更新人ID" json:"update_id" form:"update_id"`
-	UpdateName string    `gorm:"column:update_name;type:varchar(64);comment:更新人姓名" json:"update_name" form:"update_name"`
-	UpdateTime time.Time `gorm:"column:update_time;type:int unsigned;autoUpdateTime" json:"update_time" form:"update_time"`
+	LinkID     int64     `gorm:"column:link_id;type:bigint;primaryKey;autoIncrement:true;comment:主键" json:"link_id" form:"link_id"`             // 主键
+	SiteID     int64     `gorm:"column:site_id;type:bigint;comment:所属站点" json:"site_id" form:"site_id"`                                         // 所属站点
+	ChannelID  int64     `gorm:"column:channel_id;type:bigint;comment:所属频道" json:"channel_id" form:"channel_id"`                                // 所属频道
+	CategoryID int64     `gorm:"column:category_id;type:bigint;comment:类别ID" json:"category_id" form:"category_id"`                             // 类别ID
+	Title      string    `gorm:"column:title;type:varchar(128);comment:标题" json:"title" form:"title"`                                           // 标题
+	CallIndex  string    `gorm:"column:call_index;type:varchar(64);comment:调用别名" json:"call_index" form:"call_index"`                           // 调用别名
+	LinkURL    string    `gorm:"column:link_url;type:varchar(256);comment:外部链接" json:"link_url" form:"link_url"`                                // 外部链接
+	Target     string    `gorm:"column:target;type:varchar(16);default:_blank;comment:是否开启浏览器新窗口" json:"target" form:"target"`                  // 是否开启浏览器新窗口
+	ImgUrl1    string    `gorm:"column:img_url1;type:varchar(256);comment:网站logo地址" json:"img_url1" form:"img_url1"`                            // 网站logo地址
+	ImgUrl2    string    `gorm:"column:img_url2;type:varchar(256);comment:网站logo地址" json:"img_url2" form:"img_url2"`                            // 网站logo地址
+	Remark     string    `gorm:"column:remark;type:varchar(256);comment:备注" json:"remark" form:"remark"`                                        // 备注
+	SortID     int32     `gorm:"column:sort_id;type:int;comment:排序" json:"sort_id" form:"sort_id"`                                              // 排序
+	Click      int32     `gorm:"column:click;type:int;comment:浏览次数" json:"click" form:"click"`                                                  // 浏览次数
+	Status     int32     `gorm:"column:status;type:tinyint;comment:状态0草稿1提交2审核通过3审核未通过4驳回" json:"status" form:"status"`                         // 状态0草稿1提交2审核通过3审核未通过4驳回
+	IsLock     int32     `gorm:"column:is_lock;type:tinyint;comment:是否锁定（不允许编辑）" json:"is_lock" form:"is_lock"`                                 // 是否锁定（不允许编辑）
+	IsTop      int32     `gorm:"column:is_top;type:tinyint;comment:是否置顶" json:"is_top" form:"is_top"`                                           // 是否置顶
+	IsRed      int32     `gorm:"column:is_red;type:tinyint;comment:是否推荐" json:"is_red" form:"is_red"`                                           // 是否推荐
+	IsHot      int32     `gorm:"column:is_hot;type:tinyint;comment:是否热门" json:"is_hot" form:"is_hot"`                                           // 是否热门
+	IsSlide    int32     `gorm:"column:is_slide;type:tinyint;comment:是否幻灯片" json:"is_slide" form:"is_slide"`                                    // 是否幻灯片
+	BelongTo   string    `gorm:"column:belong_to;type:varchar(64);comment:归属" json:"belong_to" form:"belong_to"`                                // 归属
+	CreateID   int32     `gorm:"column:create_id;type:int;comment:创建人ID" json:"create_id" form:"create_id"`                                     // 创建人ID
+	CreateName string    `gorm:"column:create_name;type:varchar(64);comment:创建人姓名" json:"create_name" form:"create_name"`                       // 创建人姓名
+	CreateTime time.Time `gorm:"column:create_time;type:datetime;default:CURRENT_TIMESTAMP;comment:创建时间" json:"create_time" form:"create_time"` // 创建时间
+	UpdateID   int32     `gorm:"column:update_id;type:int;comment:更新人ID" json:"update_id" form:"update_id"`                                     // 更新人ID
+	UpdateName string    `gorm:"column:update_name;type:varchar(64);comment:更新人姓名" json:"update_name" form:"update_name"`                       // 更新人姓名
+	UpdateTime time.Time `gorm:"column:update_time;type:datetime;comment:修改时间" json:"update_time" form:"update_time"`                           // 修改时间
 }
 
 // TableName CmsLink's table name

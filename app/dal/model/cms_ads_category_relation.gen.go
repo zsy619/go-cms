@@ -8,9 +8,9 @@ const TableNameCmsAdsCategoryRelation = "cms_ads_category_relation"
 
 // CmsAdsCategoryRelation mapped from table <cms_ads_category_relation>
 type CmsAdsCategoryRelation struct {
-	RelationID int64 `gorm:"column:relation_id;type:bigint;primaryKey;autoIncrement:true;comment:主键" json:"relation_id" form:"relation_id"`
-	CategoryID int64 `gorm:"column:category_id;type:bigint;comment:所属分类" json:"category_id" form:"category_id"`
-	AdsID      int64 `gorm:"column:ads_id;type:bigint;comment:所属广告" json:"ads_id" form:"ads_id"`
+	RelationID int64 `gorm:"column:relation_id;type:bigint;primaryKey;autoIncrement:true;comment:主键" json:"relation_id" form:"relation_id"` // 主键
+	CategoryID int64 `gorm:"column:category_id;type:bigint;comment:所属分类" json:"category_id" form:"category_id"`                             // 所属分类
+	AdsID      int64 `gorm:"column:ads_id;type:bigint;comment:所属广告" json:"ads_id" form:"ads_id"`                                            // 所属广告
 }
 
 // TableName CmsAdsCategoryRelation's table name

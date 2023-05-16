@@ -130,6 +130,8 @@ func (c cmsAttach) TableName() string { return c.cmsAttachDo.TableName() }
 
 func (c cmsAttach) Alias() string { return c.cmsAttachDo.Alias() }
 
+func (c cmsAttach) Columns(cols ...field.Expr) gen.Columns { return c.cmsAttachDo.Columns(cols...) }
+
 func (c *cmsAttach) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := c.fieldMap[fieldName]
 	if !ok || _f == nil {

@@ -115,6 +115,10 @@ func (c cmsArticleComment) TableName() string { return c.cmsArticleCommentDo.Tab
 
 func (c cmsArticleComment) Alias() string { return c.cmsArticleCommentDo.Alias() }
 
+func (c cmsArticleComment) Columns(cols ...field.Expr) gen.Columns {
+	return c.cmsArticleCommentDo.Columns(cols...)
+}
+
 func (c *cmsArticleComment) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := c.fieldMap[fieldName]
 	if !ok || _f == nil {

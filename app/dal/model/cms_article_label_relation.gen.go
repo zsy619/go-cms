@@ -8,9 +8,9 @@ const TableNameCmsArticleLabelRelation = "cms_article_label_relation"
 
 // CmsArticleLabelRelation mapped from table <cms_article_label_relation>
 type CmsArticleLabelRelation struct {
-	RelationID int64 `gorm:"column:relation_id;type:bigint;primaryKey;autoIncrement:true;comment:主键" json:"relation_id" form:"relation_id"`
-	LabelID    int64 `gorm:"column:label_id;type:bigint;comment:所属标签" json:"label_id" form:"label_id"`
-	ArticleID  int64 `gorm:"column:article_id;type:bigint;comment:所属文章" json:"article_id" form:"article_id"`
+	RelationID int64 `gorm:"column:relation_id;type:bigint;primaryKey;autoIncrement:true;comment:主键" json:"relation_id" form:"relation_id"` // 主键
+	LabelID    int64 `gorm:"column:label_id;type:bigint;comment:所属标签" json:"label_id" form:"label_id"`                                      // 所属标签
+	ArticleID  int64 `gorm:"column:article_id;type:bigint;comment:所属文章" json:"article_id" form:"article_id"`                                // 所属文章
 }
 
 // TableName CmsArticleLabelRelation's table name

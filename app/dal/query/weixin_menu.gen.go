@@ -121,6 +121,8 @@ func (w weixinMenu) TableName() string { return w.weixinMenuDo.TableName() }
 
 func (w weixinMenu) Alias() string { return w.weixinMenuDo.Alias() }
 
+func (w weixinMenu) Columns(cols ...field.Expr) gen.Columns { return w.weixinMenuDo.Columns(cols...) }
+
 func (w *weixinMenu) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := w.fieldMap[fieldName]
 	if !ok || _f == nil {

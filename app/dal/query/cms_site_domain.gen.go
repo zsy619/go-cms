@@ -79,6 +79,10 @@ func (c cmsSiteDomain) TableName() string { return c.cmsSiteDomainDo.TableName()
 
 func (c cmsSiteDomain) Alias() string { return c.cmsSiteDomainDo.Alias() }
 
+func (c cmsSiteDomain) Columns(cols ...field.Expr) gen.Columns {
+	return c.cmsSiteDomainDo.Columns(cols...)
+}
+
 func (c *cmsSiteDomain) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := c.fieldMap[fieldName]
 	if !ok || _f == nil {

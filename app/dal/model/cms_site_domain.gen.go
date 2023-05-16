@@ -8,10 +8,10 @@ const TableNameCmsSiteDomain = "cms_site_domain"
 
 // CmsSiteDomain mapped from table <cms_site_domain>
 type CmsSiteDomain struct {
-	DomainID int64  `gorm:"column:domain_id;type:bigint;primaryKey;autoIncrement:true;comment:主键" json:"domain_id" form:"domain_id"`
-	SiteID   int64  `gorm:"column:site_id;type:bigint;not null;comment:所属站点" json:"site_id" form:"site_id"`
-	Domain   string `gorm:"column:domain;type:varchar(128);comment:站点域名" json:"domain" form:"domain"`
-	Remark   string `gorm:"column:remark;type:varchar(512);comment:备注说明" json:"remark" form:"remark"`
+	DomainID int64  `gorm:"column:domain_id;type:bigint;primaryKey;autoIncrement:true;comment:主键" json:"domain_id" form:"domain_id"` // 主键
+	SiteID   int64  `gorm:"column:site_id;type:bigint;not null;comment:所属站点" json:"site_id" form:"site_id"`                          // 所属站点
+	Domain   string `gorm:"column:domain;type:varchar(128);comment:站点域名" json:"domain" form:"domain"`                                // 站点域名
+	Remark   string `gorm:"column:remark;type:varchar(512);comment:备注说明" json:"remark" form:"remark"`                                // 备注说明
 }
 
 // TableName CmsSiteDomain's table name

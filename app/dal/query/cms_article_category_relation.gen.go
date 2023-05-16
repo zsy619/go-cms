@@ -78,6 +78,10 @@ func (c cmsArticleCategoryRelation) TableName() string {
 
 func (c cmsArticleCategoryRelation) Alias() string { return c.cmsArticleCategoryRelationDo.Alias() }
 
+func (c cmsArticleCategoryRelation) Columns(cols ...field.Expr) gen.Columns {
+	return c.cmsArticleCategoryRelationDo.Columns(cols...)
+}
+
 func (c *cmsArticleCategoryRelation) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := c.fieldMap[fieldName]
 	if !ok || _f == nil {
