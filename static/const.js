@@ -102,9 +102,67 @@ function PrintLayuiTable(tablelayid) {
     }
 }
 
+/**
+ * @description: 文章点击率
+ * @param {int64} articleId 文章ID
+ * @param {string} callIndex 文件调用别名
+ * @return {*}
+ */
 function ArticleClick(articleId, callIndex) {
     var url = "/api/article/click?article_id=" + articleId;
-    if (callIndex != undefined) {
+    if (callIndex != "" && callIndex != undefined) {
+        url += "&call_index=" + callIndex;
+    }
+    url += "&t=" + new Date().getTime();
+    $.ajax({
+        url: url,
+        dataType: "json",
+        type: "get",
+        beforeSend: function () {
+        },
+        success: function (res) {
+        },
+        error: function () {
+        },
+        complete: function () {
+        }
+    });
+}
+
+/**
+ * @description: 广告点击率
+ * @param {int64} ads_id 广告ID
+ * @return {*}
+ */
+function AdsClick(ads_id) {
+    var url = "/api/ads/click?ads_id=" + ads_id;
+    if (callIndex != "" && callIndex != undefined) {
+        url += "&call_index=" + callIndex;
+    }
+    url += "&t=" + new Date().getTime();
+    $.ajax({
+        url: url,
+        dataType: "json",
+        type: "get",
+        beforeSend: function () {
+        },
+        success: function (res) {
+        },
+        error: function () {
+        },
+        complete: function () {
+        }
+    });
+}
+
+/**
+ * @description: 链接点击率
+ * @param {int64} link_id 链接ID
+ * @return {*}
+ */
+function LinkClick(link_id) {
+    var url = "/api/link/click?link_id=" + link_id;
+    if (callIndex != "" && callIndex != undefined) {
         url += "&call_index=" + callIndex;
     }
     url += "&t=" + new Date().getTime();
@@ -139,7 +197,7 @@ function UrlForArticle(callIndex, articleId, url) {
 
 /**
  * @description: 搜索链接
- * @param {*} keyword 关键词
+ * @param {string} keyword 关键词
  * @return {*}
  */
 function UrlForSearch(keyword) {
@@ -181,7 +239,6 @@ function layopenB(title, content, table) {
     } else {
         width_screen = "600px";
     }
-
 
     layer.open({
         title: [title, "color:#fff;background-color:#1E9FFF ;"],
@@ -253,7 +310,6 @@ function laybatch_del(url, data, obj) {
         dataType: "json",
         data: JSON.stringify(data)
     });
-
 }
 
 function laybatch_recove(url, type, data) {
@@ -266,7 +322,6 @@ function laybatch_recove(url, type, data) {
         },
         dataType: "json",
         data: JSON.stringify(data),
-
     });
 }
 

@@ -7,13 +7,15 @@
             <h3 id="r5spb"><b>站点API</b></h3>
             <div>
                 <table border="0" width="100%" cellpadding="0" cellspacing="0">
-                    <tbody>
+                    <thead>
                         <tr>
                             <th>访问路径</th>
                             <th>参数说明</th>
                             <th style="word-break: keep-all;">返回值</th>
                             <th>说明</th>
                         </tr>
+                    </thead>
+                    <tbody>
                         <tr>
                             <td>
                                 <p>/api/site/default</p>
@@ -26,7 +28,10 @@
                             <td>
                                 <p>/api/site/find</p>
                             </td>
-                            <td>{int64} site_id 站点ID</td>
+                            <td>
+                                <a name="find"></a>
+                                {int64} site_id 站点ID
+                            </td>
                             <td><a href="#site">查看</a></td>
                             <td>获取站点信息</td>
                         </tr>
@@ -42,7 +47,10 @@
                             <td>
                                 <p>/api/channel/get</p>
                             </td>
-                            <td>url参数site_id：站点ID</td>
+                            <td>
+                                <a name="channel_get"></a>
+                                url参数site_id：站点ID
+                            </td>
                             <td><a href="#channel">查看</a></td>
                             <td>获取站点频道</td>
                         </tr>
@@ -50,7 +58,10 @@
                             <td>
                                 <p>/api/site/menu</p>
                             </td>
-                            <td>url参数site_id：站点ID</td>
+                            <td>
+                                <a name="menu"></a>
+                                url参数site_id：站点ID
+                            </td>
                             <td><a href="#menu">查看</a></td>
                             <td>获取站点菜单</td>
                         </tr>
@@ -67,6 +78,7 @@
                                 <p>/api/site/menu/flag</p>
                             </td>
                             <td>
+                                <a name="menu_flag"></a>
                                 {string} site_flag 站点标识<br>
                                 {int64} channel_id 频道ID
                             </td>
