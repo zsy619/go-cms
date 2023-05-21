@@ -9,7 +9,7 @@ require (
 	github.com/mojocn/base64Captcha v1.3.5
 	github.com/prometheus/client_golang v1.15.1
 	golang.org/x/net v0.10.0
-	gorm.io/driver/mysql v1.5.1-0.20230509030346-3715c134c25b
+	gorm.io/driver/mysql v1.5.1
 	gorm.io/gen v0.3.23-0.20230510094235-52edd3090a54
 	gorm.io/gorm v1.25.1
 	gorm.io/plugin/dbresolver v1.4.1
@@ -19,12 +19,12 @@ require (
 require (
 	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.9.0 // indirect
 	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869 // indirect
-	github.com/chromedp/cdproto v0.0.0-20230512205701-c5692af2b095 // indirect
+	github.com/chromedp/cdproto v0.0.0-20230517232016-8abedd933e7a // indirect
 	github.com/chromedp/chromedp v0.9.1 // indirect
 	github.com/chromedp/sysutil v1.0.0 // indirect
 	github.com/gobwas/httphead v0.1.0 // indirect
 	github.com/gobwas/pool v0.2.1 // indirect
-	github.com/gobwas/ws v1.2.0 // indirect
+	github.com/gobwas/ws v1.2.1 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 )
