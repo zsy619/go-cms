@@ -95,6 +95,8 @@ func (this *CmsTag) TagSave(input *model.CmsTag) error {
 			mdl.Status.ColumnName().String():         input.Status,
 			mdl.Template.ColumnName().String():       input.Template,
 			mdl.UpdateTime.ColumnName().String():     input.UpdateTime,
+			mdl.UpdateID.ColumnName().String():       input.UpdateID,
+			mdl.UpdateName.ColumnName().String():     input.UpdateName,
 		})
 	}
 	return err

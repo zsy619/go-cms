@@ -4,13 +4,17 @@ import (
 	"fmt"
 
 	"github.com/beego/beego/v2/server/web"
+	"haedu.gov.cn/cms/app/lib"
 )
 
 var (
-	GlobalAdminId   int64  // 管理员id
-	GlobalAuthFlag  int    // 1:管理员 2:学校
-	GlobalAdminName string // 管理员名称
-	GlobalRealName  string // 管理员名称
+	GlobalAdminId    int64  // 管理员id
+	GlobalAuthFlag   string // admin:管理员 school:学校
+	GlobalUserType   int    // 用户类型
+	GlobalAdminName  string // 管理员名称
+	GlobalRealName   string // 管理员名称
+	GlobalSchoolName string // 学校名称
+	GlobalIsAudit    int32  // 是否审核
 )
 
 const (
@@ -27,6 +31,9 @@ func init() {
 	web.AutoPrefix(AdminPreifx, &ToolsController{})
 	web.AutoPrefix(AdminPreifx, &FileController{})
 	web.AutoPrefix(AdminPreifx, &UEditorController{})
+
+	web.Router(lib.Url_School_Login, &LoginController{}, "*:School")
+	web.Router(lib.Url_Admin_Login, &LoginController{}, "*:Admin")
 
 	web.Router(AdminPreifx+"/index", &IndexController{}, "*:Index")
 

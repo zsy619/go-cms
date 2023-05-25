@@ -24,7 +24,7 @@ func (c *BaseController) Prepare() {
 	if GlobalAdminId == 0 {
 		user := c.GetSession("user").(*model.CmsAdmin)
 		GlobalAdminId = user.UserID
-		GlobalAuthFlag = int(user.UserType) // 1:管理员 2:学校
+		GlobalUserType = int(user.UserType) // 1:管理员 2:学校
 		GlobalAdminName = user.UserName
 		GlobalRealName = user.RealName
 	}

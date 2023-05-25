@@ -50,6 +50,13 @@ func (c *WeixinController) MenuSave() {
 		logs.Error("MenuSave", err.Error())
 		c.JSONError(err.Error())
 	}
+	if mdl.MenuID == 0 {
+		mdl.CreateID = int32(GlobalAdminId)
+		mdl.CreateName = GlobalAdminName
+	} else {
+		mdl.UpdateID = int32(GlobalAdminId)
+		mdl.UpdateName = GlobalAdminName
+	}
 	if err := biz.NewWeixinMenu().MenuSave(&mdl); err != nil {
 		logs.Error("MenuSave", err.Error())
 		c.JSONError(err.Error())

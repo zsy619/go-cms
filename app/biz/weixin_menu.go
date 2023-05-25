@@ -65,6 +65,8 @@ func (this *WeixinMenu) MenuSave(input *model.WeixinMenu) error {
 			mdl.ArticleID.ColumnName().String():  input.ArticleID,
 			mdl.SortID.ColumnName().String():     input.SortID,
 			mdl.UpdateTime.ColumnName().String(): input.UpdateTime,
+			mdl.UpdateID.ColumnName().String():   input.UpdateID,
+			mdl.UpdateName.ColumnName().String(): input.UpdateName,
 		})
 	}
 	return err

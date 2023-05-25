@@ -197,6 +197,8 @@ func (this *CmsAds) AdsSave(input *model.CmsAds) error {
 			mdl.BeginTime.ColumnName().String():  input.BeginTime,
 			mdl.EndTime.ColumnName().String():    input.EndTime,
 			mdl.UpdateTime.ColumnName().String(): input.UpdateTime,
+			mdl.UpdateID.ColumnName().String():   input.UpdateID,
+			mdl.UpdateName.ColumnName().String(): input.UpdateName,
 		})
 	}
 	return err

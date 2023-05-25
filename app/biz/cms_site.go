@@ -119,6 +119,9 @@ func (this *CmsSite) SiteSave(mdl *model.CmsSite, domains []string, remarks []st
 			site.Robots.ColumnName().String():          mdl.Robots,
 			site.MetaKeyword.ColumnName().String():     mdl.MetaKeyword,
 			site.MetaDescription.ColumnName().String(): mdl.MetaDescription,
+			site.UpdateID.ColumnName().String():        mdl.UpdateID,
+			site.UpdateName.ColumnName().String():      mdl.UpdateName,
+			site.UpdateTime.ColumnName().String():      time.Now(),
 		}); err != nil {
 			return err
 		}

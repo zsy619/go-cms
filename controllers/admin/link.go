@@ -51,6 +51,13 @@ func (c *LinkController) LinkSave() {
 		logs.Error("LinkSave", err.Error())
 		c.JSONError(err.Error())
 	}
+	if mdl.LinkID <= 0 {
+		mdl.CreateID = int32(GlobalAdminId)
+		mdl.CreateName = GlobalAdminName
+	} else {
+		mdl.UpdateID = int32(GlobalAdminId)
+		mdl.UpdateName = GlobalAdminName
+	}
 	if err := biz.NewCmsLink().LinkSave(&mdl); err != nil {
 		logs.Error("LinkSave", err.Error())
 		c.JSONError(err.Error())

@@ -9,15 +9,11 @@ import (
 )
 
 const (
-	Url_Student_Login = "/student/login"
-	Url_Company_Login = "/company/login"
-	Url_School_Login  = "/school/login"
-	Url_Admin_Login   = "/admin/login"
+	Url_School_Login = "/cas/school/login"
+	Url_Admin_Login  = "/cas/admin/login"
 
-	Url_Student_Index = "/stu/home/index"
-	Url_Company_Index = "/cpy/self/index"
-	Url_School_Index  = "/admin/home/index"
-	Url_Admin_Index   = "/admin/home/index"
+	Url_School_Index = "/admin/home/index"
+	Url_Admin_Index  = "/admin/home/index"
 
 	Url_File_Upload = "/file/upload"
 )
@@ -62,8 +58,6 @@ func init() {
 	CasValidatePath = CasHost + xcas.CASValidateURI
 	CaseServiceValidatePath = CasHost + xcas.CASVersion2ServiceValidateURI
 
-	LoginPathOfStudent = C_LOCAL_DOMAIN() + Url_Student_Login
-	LoginPathOfCompany = C_LOCAL_DOMAIN() + Url_Company_Login
 	LoginPathOfSchool = C_LOCAL_DOMAIN() + Url_School_Login
 	LoginPathOfAdmin = C_LOCAL_DOMAIN() + Url_Admin_Login
 

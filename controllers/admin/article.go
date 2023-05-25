@@ -75,6 +75,13 @@ func (c *ArticleController) ArticleSave() {
 		logs.Error("ArticleSave", err.Error())
 		c.JSONError(err.Error())
 	}
+	if mdl.ArticleID > 0 {
+		mdl.UpdateID = int32(GlobalAdminId)
+		mdl.UpdateName = GlobalAdminName
+	} else {
+		mdl.CreateID = int32(GlobalAdminId)
+		mdl.CreateName = GlobalAdminName
+	}
 	if mdl.Summary == "" {
 		// 解析 HTML 文本
 		doc, err := html.Parse(strings.NewReader(mdl.Content))

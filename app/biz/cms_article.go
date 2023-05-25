@@ -125,6 +125,8 @@ func (this *CmsArticle) ArticleSave(input *model.CmsArticle) error {
 			mdl.Topic.ColumnName().String():          input.Topic,
 			mdl.Template.ColumnName().String():       input.Template,
 			mdl.UpdateTime.ColumnName().String():     input.UpdateTime,
+			mdl.UpdateID.ColumnName().String():       input.UpdateID,
+			mdl.UpdateName.ColumnName().String():     input.UpdateName,
 		})
 		if err != nil {
 			logs.Error(err.Error())

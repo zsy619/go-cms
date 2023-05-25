@@ -83,6 +83,8 @@ func (this *WeixinAccount) AccountSave(input *model.WeixinAccount) error {
 			mdl.SortID.ColumnName().String():     input.SortID,
 			mdl.Status.ColumnName().String():     input.Status,
 			mdl.UpdateTime.ColumnName().String(): input.UpdateTime,
+			mdl.UpdateID.ColumnName().String():   input.UpdateID,
+			mdl.UpdateName.ColumnName().String(): input.UpdateName,
 		})
 	}
 	return err

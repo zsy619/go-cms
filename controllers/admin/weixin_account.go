@@ -44,6 +44,13 @@ func (c *WeixinController) AccountSave() {
 		logs.Error("AccountSave", err.Error())
 		c.JSONError(err.Error())
 	}
+	if mdl.AccountID == 0 {
+		mdl.CreateID = int32(GlobalAdminId)
+		mdl.CreateName = GlobalAdminName
+	} else {
+		mdl.UpdateID = int32(GlobalAdminId)
+		mdl.UpdateName = GlobalAdminName
+	}
 	if err := biz.NewWeixinAccount().AccountSave(&mdl); err != nil {
 		logs.Error("AccountSave", err.Error())
 		c.JSONError(err.Error())

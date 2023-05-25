@@ -87,6 +87,8 @@ func (this *CmsTheme) ThemeSave(input *model.CmsTheme) error {
 			mdl.SortID.ColumnName().String():     input.SortID,
 			mdl.IsDefault.ColumnName().String():  input.IsDefault,
 			mdl.UpdateTime.ColumnName().String(): input.UpdateTime,
+			mdl.UpdateID.ColumnName().String():   input.UpdateID,
+			mdl.UpdateName.ColumnName().String(): input.UpdateName,
 		})
 	}
 	return err

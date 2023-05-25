@@ -62,7 +62,10 @@ func (this *Menu) MenuList(adminId int64) *MenuOuter {
 	sqlRole := fmt.Sprintf("SELECT a.role_id,a.type,a.is_sys FROM cms_admin_role a LEFT JOIN cms_admin b ON a.role_id = b.role_id WHERE b.user_id = %d", adminId)
 	_, adminRoleDo := query.CmsAdminRoleDo()
 	role := model.CmsAdminRole{}
-	if err := adminRoleDo.UnderlyingDB().Exec(sqlRole).First(&role).Error; err != nil {
+	if err := adminRoleDo.UnderlyingDB().Raw(sqlRole).Scan(&role).Error; err != nil {
+		return outerMenu
+	}
+	if role.RoleID == 0 {
 		return outerMenu
 	}
 	// 是否为超级管理员
@@ -76,9 +79,10 @@ LEFT JOIN cms_admin_role_value b ON a.name=b.nav_name
 WHERE a.is_hide=0 AND b.role_id=%d
 ORDER BY a.sort_id`, role.RoleID)
 	}
+	fmt.Println("sqlNav---------->", sqlNav)
 	_, adminNavDo := query.CmsAdminNavDo()
 	navs := []*model.CmsAdminNav{}
-	if err := adminNavDo.UnderlyingDB().Exec(sqlNav).Find(&navs).Error; err != nil {
+	if err := adminNavDo.UnderlyingDB().Raw(sqlNav).Scan(&navs).Error; err != nil {
 		return outerMenu
 	}
 

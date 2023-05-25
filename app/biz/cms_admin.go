@@ -227,6 +227,12 @@ func (this *CmsAdmin) AdminSaveSortId(userId int64, sortId int32) error {
 	return err
 }
 
+// FindByAccount 根据账号查找
+func (this *CmsAdmin) FindByAccount(userName string) (*model.CmsAdmin, error) {
+	mdl, do := query.CmsAdminDo()
+	return do.Where(mdl.UserName.Eq(userName)).First()
+}
+
 func (m *CmsAdmin) AdminFind(userId int64) (*model.CmsAdmin, error) {
 	mdl, do := query.CmsAdminDo()
 	return do.Where(mdl.UserID.Eq(userId)).First()

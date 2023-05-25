@@ -202,6 +202,8 @@ func (this *CmsLink) LinkSave(input *model.CmsLink) error {
 			mdl.IsHot.ColumnName().String():      input.IsHot,
 			mdl.IsSlide.ColumnName().String():    input.IsSlide,
 			mdl.UpdateTime.ColumnName().String(): input.UpdateTime,
+			mdl.UpdateID.ColumnName().String():   input.UpdateID,
+			mdl.UpdateName.ColumnName().String(): input.UpdateName,
 		})
 	}
 	return err

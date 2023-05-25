@@ -50,6 +50,13 @@ func (c *TopicController) TopicSave() {
 		logs.Error("TopicSave", err.Error())
 		c.JSONError(err.Error())
 	}
+	if mdl.TopicID <= 0 {
+		mdl.CreateID = int32(GlobalAdminId)
+		mdl.CreateName = GlobalAdminName
+	} else {
+		mdl.UpdateID = int32(GlobalAdminId)
+		mdl.UpdateName = GlobalAdminName
+	}
 	if err := biz.NewCmsTopic().TopicSave(&mdl); err != nil {
 		logs.Error("TopicSave", err.Error())
 		c.JSONError(err.Error())
