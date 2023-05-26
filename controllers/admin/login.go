@@ -3,7 +3,6 @@ package admin
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/cms/app/biz"
@@ -41,35 +40,6 @@ func (c *LoginController) SavaAdminState(user *model.CmsAdmin) {
 	GlobalAdminName = user.UserName
 	GlobalRealName = user.RealName
 	GlobalIsAudit = user.IsAudit
-}
-
-func (c *LoginController) SavaAdminStateOfCas(account string, user []*xcas.XmlNamedAttribute) {
-	c.SetSession("userName", account)
-	GlobalAdminName = account
-	for _, attr := range user {
-		c.SetSession(attr.Name, attr.Value)
-		fmt.Println("---->", attr.Name, attr.Value)
-		switch attr.Name {
-		case "id":
-			{
-				fmt.Println("id: ", attr.Value)
-				userId, err := strconv.Atoi(attr.Value)
-				if err != nil {
-					fmt.Println("error: ", err.Error())
-				}
-				GlobalAdminId = int64(userId)
-				c.SetSession("userId", GlobalAdminId)
-			}
-		case "fg":
-			{
-				// GlobalAuthFlag, _ = strconv.Atoi(attr.Value)
-			}
-		case "gx":
-			{
-				GlobalSchoolName = attr.Value
-			}
-		}
-	}
 }
 
 // AdminLoginVerify 管理员登录验证

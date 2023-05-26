@@ -243,7 +243,7 @@ func (m *CmsAdmin) LogPaginate(page, limit int, userId int64, userName string) (
 	if userId > 0 {
 		do = do.Where(mdl.UserID.Eq(userId))
 	}
-	return do.Where(mdl.UserName.Like("%"+userName+"%")).FindByPage((page-1)*limit, limit)
+	return do.Where(mdl.UserName.Like("%"+userName+"%")).Order(mdl.LogID.Desc()).FindByPage((page-1)*limit, limit)
 }
 
 func (m *CmsAdmin) RolePaginate(page, limit int, name string) ([]*model.CmsAdminRole, int64, error) {
