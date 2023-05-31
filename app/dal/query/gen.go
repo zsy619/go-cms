@@ -21,6 +21,7 @@ var (
 	CmsAdminLog                *cmsAdminLog
 	CmsAdminNav                *cmsAdminNav
 	CmsAdminRole               *cmsAdminRole
+	CmsAdminRoleSite           *cmsAdminRoleSite
 	CmsAdminRoleValue          *cmsAdminRoleValue
 	CmsAds                     *cmsAds
 	CmsAdsCategory             *cmsAdsCategory
@@ -58,6 +59,7 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	CmsAdminLog = &Q.CmsAdminLog
 	CmsAdminNav = &Q.CmsAdminNav
 	CmsAdminRole = &Q.CmsAdminRole
+	CmsAdminRoleSite = &Q.CmsAdminRoleSite
 	CmsAdminRoleValue = &Q.CmsAdminRoleValue
 	CmsAds = &Q.CmsAds
 	CmsAdsCategory = &Q.CmsAdsCategory
@@ -96,6 +98,7 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		CmsAdminLog:                newCmsAdminLog(db, opts...),
 		CmsAdminNav:                newCmsAdminNav(db, opts...),
 		CmsAdminRole:               newCmsAdminRole(db, opts...),
+		CmsAdminRoleSite:           newCmsAdminRoleSite(db, opts...),
 		CmsAdminRoleValue:          newCmsAdminRoleValue(db, opts...),
 		CmsAds:                     newCmsAds(db, opts...),
 		CmsAdsCategory:             newCmsAdsCategory(db, opts...),
@@ -135,6 +138,7 @@ type Query struct {
 	CmsAdminLog                cmsAdminLog
 	CmsAdminNav                cmsAdminNav
 	CmsAdminRole               cmsAdminRole
+	CmsAdminRoleSite           cmsAdminRoleSite
 	CmsAdminRoleValue          cmsAdminRoleValue
 	CmsAds                     cmsAds
 	CmsAdsCategory             cmsAdsCategory
@@ -175,6 +179,7 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		CmsAdminLog:                q.CmsAdminLog.clone(db),
 		CmsAdminNav:                q.CmsAdminNav.clone(db),
 		CmsAdminRole:               q.CmsAdminRole.clone(db),
+		CmsAdminRoleSite:           q.CmsAdminRoleSite.clone(db),
 		CmsAdminRoleValue:          q.CmsAdminRoleValue.clone(db),
 		CmsAds:                     q.CmsAds.clone(db),
 		CmsAdsCategory:             q.CmsAdsCategory.clone(db),
@@ -222,6 +227,7 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		CmsAdminLog:                q.CmsAdminLog.replaceDB(db),
 		CmsAdminNav:                q.CmsAdminNav.replaceDB(db),
 		CmsAdminRole:               q.CmsAdminRole.replaceDB(db),
+		CmsAdminRoleSite:           q.CmsAdminRoleSite.replaceDB(db),
 		CmsAdminRoleValue:          q.CmsAdminRoleValue.replaceDB(db),
 		CmsAds:                     q.CmsAds.replaceDB(db),
 		CmsAdsCategory:             q.CmsAdsCategory.replaceDB(db),
@@ -259,6 +265,7 @@ type queryCtx struct {
 	CmsAdminLog                *cmsAdminLogDo
 	CmsAdminNav                *cmsAdminNavDo
 	CmsAdminRole               *cmsAdminRoleDo
+	CmsAdminRoleSite           *cmsAdminRoleSiteDo
 	CmsAdminRoleValue          *cmsAdminRoleValueDo
 	CmsAds                     *cmsAdsDo
 	CmsAdsCategory             *cmsAdsCategoryDo
@@ -296,6 +303,7 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 		CmsAdminLog:                q.CmsAdminLog.WithContext(ctx),
 		CmsAdminNav:                q.CmsAdminNav.WithContext(ctx),
 		CmsAdminRole:               q.CmsAdminRole.WithContext(ctx),
+		CmsAdminRoleSite:           q.CmsAdminRoleSite.WithContext(ctx),
 		CmsAdminRoleValue:          q.CmsAdminRoleValue.WithContext(ctx),
 		CmsAds:                     q.CmsAds.WithContext(ctx),
 		CmsAdsCategory:             q.CmsAdsCategory.WithContext(ctx),
