@@ -3,6 +3,7 @@ package biz
 import (
 	"context"
 	"errors"
+	"strconv"
 	"time"
 
 	"github.com/beego/beego/v2/core/logs"
@@ -289,6 +290,26 @@ func (this *CmsAdmin) RoleValSave(roleId int64, values map[string]string) error 
 			RoleID:  roleId,
 			NavName: k,
 			Action:  v,
+		})
+	}
+	return err
+}
+
+// RoleSiteFind 站点权限-根据roleId获取列表
+func (this *CmsAdmin) RoleSiteFind(roleId int64) ([]*model.CmsAdminRoleSite, int64, error) {
+	mdl, do := query.CmsAdminRoleSiteDo()
+	return do.Where(mdl.RoleID.Eq(roleId)).FindByPage(0, 99999)
+}
+
+// RoleSiteSave 站点权限-保存
+func (this *CmsAdmin) RoleSiteSave(roleId int64, values []string) error {
+	mdl, do := query.CmsAdminRoleSiteDo()
+	_, err := do.Where(mdl.RoleID.Eq(roleId)).Delete()
+	for i := 0; i < len(values); i++ {
+		item, _ := strconv.ParseInt(values[i], 0, 64)
+		err = do.Save(&model.CmsAdminRoleSite{
+			RoleID: roleId,
+			SiteID: item,
 		})
 	}
 	return err

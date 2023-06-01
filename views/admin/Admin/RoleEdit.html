@@ -4,6 +4,7 @@
             <ul class="layui-tab-title">
                 <li class="layui-this">基本信息</li>
                 <li>管理权限</li>
+                <li>站点权限</li>
             </ul>
             <div class="layui-tab-content">
                 <div class="layui-tab-item layui-show">
@@ -53,6 +54,10 @@
                     <table id="tabNav" class="layui-table" lay-filter="tabNav"></table>
                     <input type="hidden" name="action" value="">
                 </div>
+                <div class="layui-tab-item">
+                    <table id="tabSite" class="layui-table" lay-filter="currentTableFilter"></table>
+                    <input type="hidden" name="siteSelect" value="">
+                </div>
             </div>
         </div>
         <div class="layui-form-item">
@@ -73,6 +78,7 @@
             wangEditor = layui.wangEditor;
         var upload = layui.upload;
         var treetable = layui.treetable;
+        var table = layui.table;
 
         form.on('checkbox(nav-id)', function (data) {
             var nav_id = $(data.elem).attr('data-index');
@@ -165,6 +171,72 @@
             }
         });
 
+        table.render({
+            elem: '#tabSite',
+            url: '/admin/site/data',
+            height: "full-170",
+            cols: [[
+                // { type: "checkbox", width: 50 },
+                { field: 'site_id', width: 80, title: 'ID', sort: true },
+                { field: 'title', title: '站点名称' },
+                { field: 'dir_path', width: 180, title: '模板文件' },
+                { field: 'name', title: '网站名称', sort: true },
+                { field: 'crod', title: '网站备案号', sort: true },
+                {
+                    field: 'is_mobile', width: 120, title: '移动站', align: "center", sort: true, templet: function (d) {
+                        return d.is_mobile == false ? "×" : "√";
+                    }
+                },
+                {
+                    field: 'is_default', width: 120, title: '默认', align: "center", sort: true, templet: function (d) {
+                        return d.is_default == false ? "×" : "√";
+                    }
+                },
+                {
+                    field: 'logo1', title: '网站LOGO', width: 150, templet: function (d) {
+                        if (d.logo1 != "") {
+                            return '<img src="' + d.logo1 + '" style="max-width: 100px;max-height: 100px;" />';
+                        }
+                        return "";
+                    }
+                },
+                { title: '选择', width: 90, field: 'siteSelect', align: "center", templet: function (d) {
+                    return '<input type="checkbox" id="" select-key="'+ 'site' + d.site_id+'" select-index="' + d.site_id + '" value="' + d.site_id + '" lay-skin="primary" lay-filter="">';
+                    }
+                }
+            ]],
+            page: false,
+            even: true,
+            size: 'lg',
+            done: function () {
+                layer.closeAll('loading');
+                $.ajax({
+                    type: "POST", //提交的方法
+                    url: "/admin/admin/RoleSiteFind?roleId={{.mdl.RoleID}}", //提交的地址
+                    data: $('#frmEdit').serialize(), // 序列化表单值
+                    async: false,
+                    error: function (request) {  //失败的话
+                    },
+                    success: function (data) {  //成功
+                        console.log(data);
+                        layer.closeAll();
+                        if (data.code == CodeSuccess) {
+                            for (let i = 0; i < data.data.length; i++) {
+                                $("input[select-key='"+ 'site' + data.data[i].site_id+"'][value='"+data.data[i].site_id+"']").prop("checked", true);
+                            }
+
+                            form.render();
+                        } else {
+                            layer.msg(data.msg, { icon: 2, time: 1000 });
+                        }
+                    },
+                    complete: function () {
+                        layer.close(this.layerIndex);
+                    },
+                });
+            }
+        });
+
         $('#btn-expand').click(function () {
             treetable.expandAll('#tabNav');
         });
@@ -196,6 +268,18 @@
 
         //方法提交
         $('#btnSubmit').on('click', function () {
+            let str = "";
+            const len = $('input[select-key]:checked').length;
+            for (let i = 0; i < len; i++) {
+                const val = $($('input[select-key]:checked')[i]).val();
+                if (i == len -1){
+                    str += val;
+                }else{
+                    str += val + ",";
+                }
+            }
+            $('input[name=siteSelect]').val(str);
+
             var actions = {};
             $('input[data-key]:checked').each(function (idx, obj) {
                 var key = $(obj).attr("data-key");

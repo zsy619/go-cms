@@ -130,6 +130,16 @@ func (c *AdminController) RoleSave() {
 		c.JSONError(err.Error())
 		return
 	}
+
+	// 保存站点权限
+	var siteValue = c.Ctx.Request.FormValue("siteSelect")
+	var siteList = xstring.Split(siteValue, ",")
+	if err := do.RoleSiteSave(mdl.RoleID, siteList); err != nil {
+		logs.Error("RoleSave", err.Error())
+		c.JSONError(err.Error())
+		return
+	}
+
 	c.JSONSuccess("保存成功", nil)
 }
 
@@ -173,6 +183,15 @@ func (c *AdminController) NavFind() {
 func (c *AdminController) RoleValueFind() {
 	roleId, _ := c.GetInt64("roleId")
 	list, count, err := biz.NewCmsAdmin().RoleValueFind(roleId)
+	if err != nil {
+		logs.Error("RoleValueFind", err.Error())
+	}
+	c.JSONPage(lib.CodeSuccess, "", list, count)
+}
+
+func (c *AdminController) RoleSiteFind() {
+	roleId, _ := c.GetInt64("roleId")
+	list, count, err := biz.NewCmsAdmin().RoleSiteFind(roleId)
 	if err != nil {
 		logs.Error("RoleValueFind", err.Error())
 	}

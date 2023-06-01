@@ -32,6 +32,12 @@ func CmsAdminRoleValueDo() (cmsAdminRoleValue, *cmsAdminRoleValueDo) {
 	return u, u.WithContext(defaultContext).Debug()
 }
 
+// CmsAdminRoleSiteDo
+func CmsAdminRoleSiteDo() (cmsAdminRoleSite, *cmsAdminRoleSiteDo) {
+	u := Use(dal.CmsDatabase.DB).CmsAdminRoleSite
+	return u, u.WithContext(defaultContext).Debug()
+}
+
 // CmsAdminNavDo
 func CmsAdminNavDo() (cmsAdminNav, *cmsAdminNavDo) {
 	u := Use(dal.CmsDatabase.DB).CmsAdminNav
