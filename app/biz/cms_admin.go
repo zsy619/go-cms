@@ -325,6 +325,10 @@ func (this *CmsAdmin) RoleDestory(roleId int64) error {
 	if _, err := valueDo.Where(valueMdl.RoleID.Eq(roleId)).Delete(); err != nil {
 		return err
 	}
+	siteMdl, siteDo := query.CmsAdminRoleSiteDo()
+	if _, err := siteDo.Where(siteMdl.RoleID.Eq(roleId)).Delete(); err != nil {
+		return err
+	}
 	mdl, do := query.CmsAdminRoleDo()
 	if _, err := do.Where(mdl.RoleID.Eq(roleId)).Delete(); err != nil {
 		return err
