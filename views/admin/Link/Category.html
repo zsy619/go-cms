@@ -9,6 +9,7 @@
                             <label class="layui-form-label">站点列表</label>
                             <div class="layui-input-inline">
                                 <select id="siteId" name="siteId" lay-filter="siteId">
+                                    <option value="0">请选择</option>
                                     {{range $index,$item := .siteList}}
                                     <option value="{{$item.SiteID}}">{{$item.Title}}</option>
                                     {{end}}

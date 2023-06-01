@@ -15,6 +15,8 @@ var (
 	GlobalRealName   string // 管理员名称
 	GlobalSchoolName string // 学校名称
 	GlobalIsAudit    int32  // 是否审核
+	GlobalRoleId     int64  // 管理员角色id
+	GlobalRoleType   string // 管理员角色类型
 )
 
 const (

@@ -27,6 +27,8 @@ func (c *BaseController) Prepare() {
 		GlobalUserType = int(user.UserType) // 1:管理员 2:学校
 		GlobalAdminName = user.UserName
 		GlobalRealName = user.RealName
+		GlobalRoleId = user.RoleID
+		GlobalRoleType = user.RoleType
 	}
 }
 

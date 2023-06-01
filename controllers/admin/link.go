@@ -16,10 +16,31 @@ type LinkController struct{ BaseController }
 // Index 链接管理
 // @router /admin/link/index [get]
 func (c *LinkController) Index() {
-	list, _, _ := biz.NewCmsLink().CategoryPaginate(1, 99999, -1, -1, "", "")
-	c.Data["categoryList"] = list
-	sitelist, _, _ := biz.NewCmsSite().SitePaginate(1, 999999, "", "")
-	c.Data["siteList"] = sitelist
+	// 根据站点权限查询站点列表
+	if GlobalRoleType == "super" {
+		list, _, _ := biz.NewCmsLink().CategoryPaginate(1, 99999, -1, -1, "", "")
+		c.Data["categoryList"] = list
+		siteList, _, _ := biz.NewCmsSite().SitePaginate(1, 999999, "", "")
+		c.Data["siteList"] = siteList
+	} else {
+		siteIdList, _, _ := biz.NewCmsAdmin().RoleSiteFind(GlobalRoleId)
+		siteList := make([]interface{}, 0)
+		categoryList := make([]interface{}, 0)
+		if len(siteIdList) > 0 {
+			for i := 0; i < len(siteIdList); i++ {
+				list, _, _ := biz.NewCmsLink().CategoryPaginate(1, 99999, siteIdList[i].SiteID, -1, "", "")
+				if len(list) > 0 {
+					for j := 0; j < len(list); j++ {
+						categoryList = append(categoryList, list[j])
+					}
+				}
+				item, _ := biz.NewCmsSite().SiteOne(siteIdList[i].SiteID)
+				siteList = append(siteList, item)
+			}
+		}
+		c.Data["categoryList"] = categoryList
+		c.Data["siteList"] = siteList
+	}
 	c.display()
 }
 
@@ -40,8 +61,25 @@ func (c *LinkController) LinkEdit() {
 		mdl.LinkID = 0
 	}
 	c.Data["mdl"] = mdl
-	list, _, _ := biz.NewCmsLink().CategoryPaginate(1, 99999, -1, -1, "", "")
-	c.Data["categoryList"] = list
+	if GlobalRoleType == "super" {
+		list, _, _ := biz.NewCmsLink().CategoryPaginate(1, 99999, -1, -1, "", "")
+		c.Data["categoryList"] = list
+	} else {
+		siteIdList, _, _ := biz.NewCmsAdmin().RoleSiteFind(GlobalRoleId)
+		categoryList := make([]interface{}, 0)
+		if len(siteIdList) > 0 {
+			for i := 0; i < len(siteIdList); i++ {
+				list, _, _ := biz.NewCmsLink().CategoryPaginate(1, 99999, siteIdList[i].SiteID, -1, "", "")
+				if len(list) > 0 {
+					for j := 0; j < len(list); j++ {
+						categoryList = append(categoryList, list[j])
+					}
+				}
+			}
+		}
+		c.Data["categoryList"] = categoryList
+	}
+
 	c.display()
 }
 
@@ -123,15 +161,46 @@ func (c *LinkController) LinkPaginate() {
 	status, _ := c.GetInt32("status")
 	title := c.GetString("title")
 	callIndex := c.GetString("callIndex")
-	list, count, _ := biz.NewCmsLink().LinkPaginate(page, limit, siteId, -1, categoryId, title, callIndex, status)
-	c.JSONPage(lib.CodeSuccess, "", list, count)
+	if GlobalRoleType == "super" || siteId != 0 {
+		list, count, _ := biz.NewCmsLink().LinkPaginate(page, limit, siteId, -1, categoryId, title, callIndex, status)
+		c.JSONPage(lib.CodeSuccess, "", list, count)
+	} else {
+		siteIdList, _, _ := biz.NewCmsAdmin().RoleSiteFind(GlobalRoleId)
+		linkList := make([]interface{}, 0)
+		var totalCount int64 = 0
+		if len(siteIdList) > 0 {
+			for i := 0; i < len(siteIdList); i++ {
+				list, count, _ := biz.NewCmsLink().LinkPaginate(page, limit, siteIdList[i].SiteID, -1, categoryId, title, callIndex, status)
+				totalCount += count
+				if count > 0 {
+					for j := 0; j < len(list); j++ {
+						linkList = append(linkList, list[j])
+					}
+				}
+			}
+		}
+		c.JSONPage(lib.CodeSuccess, "", linkList, totalCount)
+	}
 }
 
 // Category 链接分类
 // @router /admin/link/category [get]
 func (c *LinkController) Category() {
-	sitelist, _, _ := biz.NewCmsSite().SitePaginate(1, 999999, "", "")
-	c.Data["siteList"] = sitelist
+	// 根据站点权限查询站点列表
+	if GlobalRoleType == "super" {
+		siteList, _, _ := biz.NewCmsSite().SitePaginate(1, 999999, "", "")
+		c.Data["siteList"] = siteList
+	} else {
+		siteIdList, _, _ := biz.NewCmsAdmin().RoleSiteFind(GlobalRoleId)
+		siteList := make([]interface{}, 0)
+		if len(siteIdList) > 0 {
+			for i := 0; i < len(siteIdList); i++ {
+				item, _ := biz.NewCmsSite().SiteOne(siteIdList[i].SiteID)
+				siteList = append(siteList, item)
+			}
+		}
+		c.Data["siteList"] = siteList
+	}
 	c.display()
 }
 
@@ -146,8 +215,20 @@ func (c *LinkController) CategoryEdit() {
 		}
 	}
 	c.Data["mdl"] = mdl
-	sitelist, _, _ := biz.NewCmsSite().SitePaginate(1, 999999, "", "")
-	c.Data["siteList"] = sitelist
+	if GlobalRoleType == "super" {
+		siteList, _, _ := biz.NewCmsSite().SitePaginate(1, 999999, "", "")
+		c.Data["siteList"] = siteList
+	} else {
+		siteIdList, _, _ := biz.NewCmsAdmin().RoleSiteFind(GlobalRoleId)
+		siteList := make([]interface{}, 0)
+		if len(siteIdList) > 0 {
+			for i := 0; i < len(siteIdList); i++ {
+				item, _ := biz.NewCmsSite().SiteOne(siteIdList[i].SiteID)
+				siteList = append(siteList, item)
+			}
+		}
+		c.Data["siteList"] = siteList
+	}
 	c.display()
 }
 
@@ -200,6 +281,26 @@ func (c *LinkController) CategoryPaginate() {
 	siteId, _ := c.GetInt64("siteId")
 	title := c.GetString("title")
 	callIndex := c.GetString("callIndex")
-	list, count, _ := biz.NewCmsLink().CategoryPaginate(page, limit, siteId, -1, title, callIndex)
-	c.JSONPage(lib.CodeSuccess, "", list, count)
+
+	if GlobalRoleType == "super" {
+		list, count, _ := biz.NewCmsLink().CategoryPaginate(page, limit, siteId, -1, title, callIndex)
+		c.JSONPage(lib.CodeSuccess, "", list, count)
+	} else {
+		siteIdList, _, _ := biz.NewCmsAdmin().RoleSiteFind(GlobalRoleId)
+		categoryList := make([]interface{}, 0)
+		var totalCount int64 = 0
+		if len(siteIdList) > 0 {
+			for i := 0; i < len(siteIdList); i++ {
+				list, count, _ := biz.NewCmsLink().CategoryPaginate(1, 99999, siteIdList[i].SiteID, -1, "", "")
+				totalCount += count
+				if len(list) > 0 {
+					for j := 0; j < len(list); j++ {
+						categoryList = append(categoryList, list[j])
+					}
+				}
+			}
+		}
+		c.JSONPage(lib.CodeSuccess, "", categoryList, totalCount)
+	}
+
 }
