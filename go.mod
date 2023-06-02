@@ -19,7 +19,7 @@ require (
 require (
 	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.9.0 // indirect
 	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869 // indirect
-	github.com/chromedp/cdproto v0.0.0-20230524011726-8501c74e8228 // indirect
+	github.com/chromedp/cdproto v0.0.0-20230601223857-b9862e644d94 // indirect
 	github.com/chromedp/chromedp v0.9.1 // indirect
 	github.com/chromedp/sysutil v1.0.0 // indirect
 	github.com/gobwas/httphead v0.1.0 // indirect
@@ -62,7 +62,7 @@ require (
 	golang.org/x/mod v0.10.0 // indirect
 	golang.org/x/sys v0.8.0 // indirect
 	golang.org/x/text v0.9.0 // indirect
-	golang.org/x/tools v0.9.1 // indirect
+	golang.org/x/tools v0.9.3 // indirect
 	google.golang.org/protobuf v1.30.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
