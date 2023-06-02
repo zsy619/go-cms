@@ -17,30 +17,9 @@ type LinkController struct{ BaseController }
 // @router /admin/link/index [get]
 func (c *LinkController) Index() {
 	// 根据站点权限查询站点列表
-	if GlobalRoleType == "super" {
-		list, _, _ := biz.NewCmsLink().CategoryPaginate(1, 99999, -1, -1, "", "")
-		c.Data["categoryList"] = list
-		siteList, _, _ := biz.NewCmsSite().SitePaginate(1, 999999, "", "")
-		c.Data["siteList"] = siteList
-	} else {
-		siteIdList, _, _ := biz.NewCmsAdmin().RoleSiteFind(GlobalRoleId)
-		siteList := make([]interface{}, 0)
-		categoryList := make([]interface{}, 0)
-		if len(siteIdList) > 0 {
-			for i := 0; i < len(siteIdList); i++ {
-				list, _, _ := biz.NewCmsLink().CategoryPaginate(1, 99999, siteIdList[i].SiteID, -1, "", "")
-				if len(list) > 0 {
-					for j := 0; j < len(list); j++ {
-						categoryList = append(categoryList, list[j])
-					}
-				}
-				item, _ := biz.NewCmsSite().SiteOne(siteIdList[i].SiteID)
-				siteList = append(siteList, item)
-			}
-		}
-		c.Data["categoryList"] = categoryList
-		c.Data["siteList"] = siteList
-	}
+	siteList, categoryList, _ := biz.NewCmsLink().SiteCategoryGet(GlobalRoleId, GlobalRoleType)
+	c.Data["categoryList"] = categoryList
+	c.Data["siteList"] = siteList
 	c.display()
 }
 
@@ -302,5 +281,4 @@ func (c *LinkController) CategoryPaginate() {
 		}
 		c.JSONPage(lib.CodeSuccess, "", categoryList, totalCount)
 	}
-
 }

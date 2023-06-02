@@ -30,6 +30,14 @@ func (this *CmsSite) SiteSaveSortId(siteId int64, sortId int32) error {
 	return err
 }
 
+/**
+ * @description: 获取站点列表
+ * @param {*} page
+ * @param {int} limit
+ * @param {string} name
+ * @param {string} title
+ * @return {*}
+ */
 func (this *CmsSite) SitePaginate(page, limit int, name string, title string) ([]*model.CmsSite, int64, error) {
 	site, siteDo := query.CmsSiteDo()
 	siteDo = siteDo.Where(site.IsDeleted.Is(false))

@@ -218,6 +218,12 @@ func (this *CmsLink) LinkDestory(linkId int64) error {
 	return nil
 }
 
+/**
+ * @description: 保存排序
+ * @param {int64} linkId
+ * @param {int32} sortId
+ * @return {*}
+ */
 func (this *CmsLink) LinkSaveSortId(linkId int64, sortId int32) error {
 	mdl, do := query.CmsLinkDo()
 	_, err := do.Where(mdl.LinkID.Eq(linkId)).UpdateColumns(
@@ -227,4 +233,29 @@ func (this *CmsLink) LinkSaveSortId(linkId int64, sortId int32) error {
 		},
 	)
 	return err
+}
+
+// SiteCategoryFind 获取站点与分类
+func (this *CmsLink) SiteCategoryGet(roleId int64, roleType string) ([]*model.CmsSite, []*model.CmsLinkCategory, error) {
+	if roleType == "super" {
+		list, _, _ := this.CategoryPaginate(1, 99999, -1, -1, "", "")
+		siteList, _, _ := NewCmsSite().SitePaginate(1, 999999, "", "")
+		return siteList, list, nil
+	}
+	siteIdList, _, _ := NewCmsAdmin().RoleSiteFind(roleId)
+	siteList := []*model.CmsSite{}
+	categoryList := []*model.CmsLinkCategory{}
+	if len(siteIdList) > 0 {
+		for i := 0; i < len(siteIdList); i++ {
+			list, _, _ := this.CategoryPaginate(1, 99999, siteIdList[i].SiteID, -1, "", "")
+			if len(list) > 0 {
+				for j := 0; j < len(list); j++ {
+					categoryList = append(categoryList, list[j])
+				}
+			}
+			item, _ := NewCmsSite().SiteOne(siteIdList[i].SiteID)
+			siteList = append(siteList, item)
+		}
+	}
+	return siteList, categoryList, nil
 }
