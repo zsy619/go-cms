@@ -235,7 +235,7 @@ func (this *CmsLink) LinkSaveSortId(linkId int64, sortId int32) error {
 	return err
 }
 
-// SiteCategoryFind 获取站点与分类
+// SiteCategoryGet 获取站点与分类
 func (this *CmsLink) SiteCategoryGet(roleId int64, roleType string) ([]*model.CmsSite, []*model.CmsLinkCategory, error) {
 	if roleType == "super" {
 		list, _, _ := this.CategoryPaginate(1, 99999, -1, -1, "", "")

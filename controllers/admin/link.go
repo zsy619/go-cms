@@ -40,25 +40,8 @@ func (c *LinkController) LinkEdit() {
 		mdl.LinkID = 0
 	}
 	c.Data["mdl"] = mdl
-	if GlobalRoleType == "super" {
-		list, _, _ := biz.NewCmsLink().CategoryPaginate(1, 99999, -1, -1, "", "")
-		c.Data["categoryList"] = list
-	} else {
-		siteIdList, _, _ := biz.NewCmsAdmin().RoleSiteFind(GlobalRoleId)
-		categoryList := make([]interface{}, 0)
-		if len(siteIdList) > 0 {
-			for i := 0; i < len(siteIdList); i++ {
-				list, _, _ := biz.NewCmsLink().CategoryPaginate(1, 99999, siteIdList[i].SiteID, -1, "", "")
-				if len(list) > 0 {
-					for j := 0; j < len(list); j++ {
-						categoryList = append(categoryList, list[j])
-					}
-				}
-			}
-		}
-		c.Data["categoryList"] = categoryList
-	}
-
+	_, categoryList, _ := biz.NewCmsLink().SiteCategoryGet(GlobalRoleId, GlobalRoleType)
+	c.Data["categoryList"] = categoryList
 	c.display()
 }
 
@@ -83,7 +66,7 @@ func (c *LinkController) LinkSave() {
 	c.JSONSuccess("保存成功", nil)
 }
 
-// LinkPaginate 保存排序
+// LinkSaveSortId 保存排序
 func (c *LinkController) LinkSaveSortId() {
 	mdls := []vmodel.Link_SaveSortIdModel{}
 	data := c.Ctx.Input.RequestBody
@@ -166,20 +149,8 @@ func (c *LinkController) LinkPaginate() {
 // @router /admin/link/category [get]
 func (c *LinkController) Category() {
 	// 根据站点权限查询站点列表
-	if GlobalRoleType == "super" {
-		siteList, _, _ := biz.NewCmsSite().SitePaginate(1, 999999, "", "")
-		c.Data["siteList"] = siteList
-	} else {
-		siteIdList, _, _ := biz.NewCmsAdmin().RoleSiteFind(GlobalRoleId)
-		siteList := make([]interface{}, 0)
-		if len(siteIdList) > 0 {
-			for i := 0; i < len(siteIdList); i++ {
-				item, _ := biz.NewCmsSite().SiteOne(siteIdList[i].SiteID)
-				siteList = append(siteList, item)
-			}
-		}
-		c.Data["siteList"] = siteList
-	}
+	siteList, _, _ := biz.NewCmsLink().SiteCategoryGet(GlobalRoleId, GlobalRoleType)
+	c.Data["siteList"] = siteList
 	c.display()
 }
 
@@ -194,20 +165,8 @@ func (c *LinkController) CategoryEdit() {
 		}
 	}
 	c.Data["mdl"] = mdl
-	if GlobalRoleType == "super" {
-		siteList, _, _ := biz.NewCmsSite().SitePaginate(1, 999999, "", "")
-		c.Data["siteList"] = siteList
-	} else {
-		siteIdList, _, _ := biz.NewCmsAdmin().RoleSiteFind(GlobalRoleId)
-		siteList := make([]interface{}, 0)
-		if len(siteIdList) > 0 {
-			for i := 0; i < len(siteIdList); i++ {
-				item, _ := biz.NewCmsSite().SiteOne(siteIdList[i].SiteID)
-				siteList = append(siteList, item)
-			}
-		}
-		c.Data["siteList"] = siteList
-	}
+	siteList, _, _ := biz.NewCmsLink().SiteCategoryGet(GlobalRoleId, GlobalRoleType)
+	c.Data["siteList"] = siteList
 	c.display()
 }
 
