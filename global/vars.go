@@ -4,6 +4,10 @@ import (
 	"github.com/beego/beego/v2/server/web"
 )
 
+const (
+	SuperFlag = "supper"
+)
+
 var (
 	// CMSConfig   *cms.CmsConfig
 	// WxMpConfig  *cms.WechatMpConfig

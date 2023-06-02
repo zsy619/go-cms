@@ -2,6 +2,7 @@ package admin
 
 import (
 	"fmt"
+	"haedu.gov.cn/cms/global"
 
 	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/cms/app/biz"
@@ -125,24 +126,17 @@ func (c *TopicController) TopicPaginate() {
 	status, _ := c.GetInt32("status")
 	title := c.GetString("title")
 	name := c.GetString("name")
-	if GlobalRoleType == "super" || siteId != 0 {
-		list, count, _ := biz.NewCmsTopic().TopicPaginate(page, limit, siteId, -1, name, title, status)
-		c.JSONPage(lib.CodeSuccess, "", list, count)
+	var siteIds []int64
+	if siteId > 0 {
+		siteIds = append(siteIds, siteId)
 	} else {
-		siteIdList, _, _ := biz.NewCmsAdmin().RoleSiteFind(GlobalRoleId)
-		list := make([]interface{}, 0)
-		var totalCount int64 = 0
-		if len(siteIdList) > 0 {
-			for i := 0; i < len(siteIdList); i++ {
-				topicList, count, _ := biz.NewCmsTopic().TopicPaginate(page, limit, siteIdList[i].SiteID, -1, name, title, status)
-				totalCount += count
-				if count > 0 {
-					for j := 0; j < len(topicList); j++ {
-						list = append(list, topicList[j])
-					}
-				}
+		if !global.IsSuper(GlobalRoleType) {
+			siteIdList, _, _ := biz.NewCmsAdmin().RoleSiteFind(GlobalRoleId)
+			for _, item := range siteIdList {
+				siteIds = append(siteIds, item.SiteID)
 			}
 		}
-		c.JSONPage(lib.CodeSuccess, "", list, totalCount)
 	}
+	list, count, _ := biz.NewCmsTopic().TopicPaginate(page, limit, -1, name, title, status, siteIds...)
+	c.JSONPage(lib.CodeSuccess, "", list, count)
 }

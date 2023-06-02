@@ -2,6 +2,7 @@ package biz
 
 import (
 	"errors"
+	"haedu.gov.cn/cms/global"
 	"time"
 
 	"haedu.gov.cn/cms/app/dal/model"
@@ -16,10 +17,10 @@ func NewCmsLink() *CmsLink {
 }
 
 // CategoryPaginate 分页查询
-func (this *CmsLink) CategoryPaginate(page, limit int, siteId, channelId int64, title, callIndex string) ([]*model.CmsLinkCategory, int64, error) {
+func (this *CmsLink) CategoryPaginate(page, limit int, channelId int64, title, callIndex string, siteId ...int64) ([]*model.CmsLinkCategory, int64, error) {
 	mdl, do := query.CmsLinkCategoryDo()
-	if siteId > 0 {
-		do = do.Where(mdl.SiteID.Eq(siteId))
+	if len(siteId) > 0 {
+		do = do.Where(mdl.SiteID.In(siteId...))
 	}
 	if channelId > 0 {
 		do = do.Where(mdl.ChannelID.Eq(channelId))
@@ -136,10 +137,10 @@ func (this *CmsLink) LinkDestroyByCategoryId(categoryId int64) error {
 }
 
 // LinkPaginate 分页查询
-func (this *CmsLink) LinkPaginate(page, limit int, siteId, channelId, categoryId int64, title, callIndex string, status int32) ([]*model.CmsLink, int64, error) {
+func (this *CmsLink) LinkPaginate(page, limit int, channelId, categoryId int64, title, callIndex string, status int32, siteId ...int64) ([]*model.CmsLink, int64, error) {
 	mdl, do := query.CmsLinkDo()
-	if siteId > 0 {
-		do = do.Where(mdl.SiteID.Eq(siteId))
+	if len(siteId) > 0 {
+		do = do.Where(mdl.SiteID.In(siteId...))
 	}
 	if channelId > 0 {
 		do = do.Where(mdl.ChannelID.Eq(channelId))
@@ -237,8 +238,8 @@ func (this *CmsLink) LinkSaveSortId(linkId int64, sortId int32) error {
 
 // SiteCategoryGet 获取站点与分类
 func (this *CmsLink) SiteCategoryGet(roleId int64, roleType string) ([]*model.CmsSite, []*model.CmsLinkCategory, error) {
-	if roleType == "super" {
-		list, _, _ := this.CategoryPaginate(1, 99999, -1, -1, "", "")
+	if global.IsSuper(roleType) {
+		list, _, _ := this.CategoryPaginate(1, 99999, -1, "", "")
 		siteList, _, _ := NewCmsSite().SitePaginate(1, 999999, "", "")
 		return siteList, list, nil
 	}
@@ -246,16 +247,29 @@ func (this *CmsLink) SiteCategoryGet(roleId int64, roleType string) ([]*model.Cm
 	siteList := []*model.CmsSite{}
 	categoryList := []*model.CmsLinkCategory{}
 	if len(siteIdList) > 0 {
+		var siteIds []int64
 		for i := 0; i < len(siteIdList); i++ {
-			list, _, _ := this.CategoryPaginate(1, 99999, siteIdList[i].SiteID, -1, "", "")
-			if len(list) > 0 {
-				for j := 0; j < len(list); j++ {
-					categoryList = append(categoryList, list[j])
-				}
-			}
+			siteIds = append(siteIds, siteIdList[i].SiteID)
 			item, _ := NewCmsSite().SiteOne(siteIdList[i].SiteID)
 			siteList = append(siteList, item)
 		}
+		categoryList, _, _ = this.CategoryPaginate(1, 99999, -1, "", "", siteIds...)
 	}
 	return siteList, categoryList, nil
+}
+
+// SiteIdsGet 根据传入的站点筛选条件、角色类型、角色ID获取站点ID集合
+func (this *CmsLink) SiteIdsGet(siteId int64, roleType string, roleId int64) []int64 {
+	var siteIds []int64
+	if siteId > 0 {
+		siteIds = append(siteIds, siteId)
+	} else {
+		if !global.IsSuper(roleType) {
+			siteIdList, _, _ := NewCmsAdmin().RoleSiteFind(roleId)
+			for _, item := range siteIdList {
+				siteIds = append(siteIds, item.SiteID)
+			}
+		}
+	}
+	return siteIds
 }

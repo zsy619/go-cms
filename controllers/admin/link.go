@@ -123,26 +123,10 @@ func (c *LinkController) LinkPaginate() {
 	status, _ := c.GetInt32("status")
 	title := c.GetString("title")
 	callIndex := c.GetString("callIndex")
-	if GlobalRoleType == "super" || siteId != 0 {
-		list, count, _ := biz.NewCmsLink().LinkPaginate(page, limit, siteId, -1, categoryId, title, callIndex, status)
-		c.JSONPage(lib.CodeSuccess, "", list, count)
-	} else {
-		siteIdList, _, _ := biz.NewCmsAdmin().RoleSiteFind(GlobalRoleId)
-		linkList := make([]interface{}, 0)
-		var totalCount int64 = 0
-		if len(siteIdList) > 0 {
-			for i := 0; i < len(siteIdList); i++ {
-				list, count, _ := biz.NewCmsLink().LinkPaginate(page, limit, siteIdList[i].SiteID, -1, categoryId, title, callIndex, status)
-				totalCount += count
-				if count > 0 {
-					for j := 0; j < len(list); j++ {
-						linkList = append(linkList, list[j])
-					}
-				}
-			}
-		}
-		c.JSONPage(lib.CodeSuccess, "", linkList, totalCount)
-	}
+
+	siteIds := biz.NewCmsLink().SiteIdsGet(siteId, GlobalRoleType, GlobalRoleId)
+	list, count, _ := biz.NewCmsLink().LinkPaginate(page, limit, -1, categoryId, title, callIndex, status, siteIds...)
+	c.JSONPage(lib.CodeSuccess, "", list, count)
 }
 
 // Category 链接分类
@@ -220,24 +204,7 @@ func (c *LinkController) CategoryPaginate() {
 	title := c.GetString("title")
 	callIndex := c.GetString("callIndex")
 
-	if GlobalRoleType == "super" {
-		list, count, _ := biz.NewCmsLink().CategoryPaginate(page, limit, siteId, -1, title, callIndex)
-		c.JSONPage(lib.CodeSuccess, "", list, count)
-	} else {
-		siteIdList, _, _ := biz.NewCmsAdmin().RoleSiteFind(GlobalRoleId)
-		categoryList := make([]interface{}, 0)
-		var totalCount int64 = 0
-		if len(siteIdList) > 0 {
-			for i := 0; i < len(siteIdList); i++ {
-				list, count, _ := biz.NewCmsLink().CategoryPaginate(1, 99999, siteIdList[i].SiteID, -1, "", "")
-				totalCount += count
-				if len(list) > 0 {
-					for j := 0; j < len(list); j++ {
-						categoryList = append(categoryList, list[j])
-					}
-				}
-			}
-		}
-		c.JSONPage(lib.CodeSuccess, "", categoryList, totalCount)
-	}
+	siteIds := biz.NewCmsLink().SiteIdsGet(siteId, GlobalRoleType, GlobalRoleId)
+	categoryList, count, _ := biz.NewCmsLink().CategoryPaginate(page, limit, -1, title, callIndex, siteIds...)
+	c.JSONPage(lib.CodeSuccess, "", categoryList, count)
 }

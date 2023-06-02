@@ -2,6 +2,7 @@ package biz
 
 import (
 	"errors"
+	"haedu.gov.cn/cms/global"
 	"time"
 
 	"haedu.gov.cn/cms/app/dal/model"
@@ -43,10 +44,10 @@ func (this *CmsTopic) TopicChangeStatus(topicId int64, status int32) error {
 }
 
 // TopicPaginate 分页查询
-func (this *CmsTopic) TopicPaginate(page, limit int, siteId, channelId int64, name, title string, status int32) ([]*model.CmsTopic, int64, error) {
+func (this *CmsTopic) TopicPaginate(page, limit int, channelId int64, name, title string, status int32, siteId ...int64) ([]*model.CmsTopic, int64, error) {
 	mdl, do := query.CmsTopicDo()
-	if siteId > 0 {
-		do = do.Where(mdl.SiteID.Eq(siteId))
+	if len(siteId) > 0 {
+		do = do.Where(mdl.SiteID.In(siteId...))
 	}
 	if name != "" {
 		do = do.Where(mdl.Name.Like("%" + name + "%"))
@@ -134,7 +135,7 @@ func (this *CmsTopic) TopicSaveSortId(topicId int64, sortId int32) error {
 
 // SiteGet 获取站点
 func (this *CmsTopic) SiteGet(roleId int64, roleType string) ([]*model.CmsSite, error) {
-	if roleType == "super" {
+	if global.IsSuper(roleType) {
 		siteList, _, _ := NewCmsSite().SitePaginate(1, 999999, "", "")
 		return siteList, nil
 	}
