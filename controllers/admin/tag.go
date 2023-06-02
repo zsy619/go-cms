@@ -134,11 +134,11 @@ func (c *TagController) TagPaginate() {
 		var totalCount int64 = 0
 		if len(siteIdList) > 0 {
 			for i := 0; i < len(siteIdList); i++ {
-				list, count, _ := biz.NewCmsTag().TagPaginate(page, limit, siteIdList[i].SiteID, -1, name, title, status)
+				tagList, count, _ := biz.NewCmsTag().TagPaginate(page, limit, siteIdList[i].SiteID, -1, name, title, status)
 				totalCount += count
 				if count > 0 {
-					for j := 0; j < len(list); j++ {
-						list = append(list, list[j])
+					for j := 0; j < len(tagList); j++ {
+						list = append(list, tagList[j])
 					}
 				}
 			}

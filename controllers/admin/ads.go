@@ -140,11 +140,11 @@ func (c *AdsController) AdsPaginate() {
 		var totalCount int64 = 0
 		if len(siteIdList) > 0 {
 			for i := 0; i < len(siteIdList); i++ {
-				list, count, _ := biz.NewCmsAds().AdsPaginate(page, limit, siteIdList[i].SiteID, -1, categoryId, title, callIndex, status)
+				adsList, count, _ := biz.NewCmsAds().AdsPaginate(page, limit, siteIdList[i].SiteID, -1, categoryId, title, callIndex, status)
 				totalCount += count
 				if count > 0 {
-					for j := 0; j < len(list); j++ {
-						list = append(list, list[j])
+					for j := 0; j < len(adsList); j++ {
+						list = append(list, adsList[j])
 					}
 				}
 			}

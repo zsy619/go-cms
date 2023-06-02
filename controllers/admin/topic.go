@@ -134,11 +134,11 @@ func (c *TopicController) TopicPaginate() {
 		var totalCount int64 = 0
 		if len(siteIdList) > 0 {
 			for i := 0; i < len(siteIdList); i++ {
-				list, count, _ := biz.NewCmsTopic().TopicPaginate(page, limit, siteIdList[i].SiteID, -1, name, title, status)
+				topicList, count, _ := biz.NewCmsTopic().TopicPaginate(page, limit, siteIdList[i].SiteID, -1, name, title, status)
 				totalCount += count
 				if count > 0 {
-					for j := 0; j < len(list); j++ {
-						list = append(list, list[j])
+					for j := 0; j < len(topicList); j++ {
+						list = append(list, topicList[j])
 					}
 				}
 			}
