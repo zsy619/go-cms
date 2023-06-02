@@ -131,3 +131,20 @@ func (this *CmsTag) TagSaveSortId(tagId int64, sortId int32) error {
 	)
 	return err
 }
+
+// SiteGet 获取站点
+func (this *CmsTag) SiteGet(roleId int64, roleType string) ([]*model.CmsSite, error) {
+	if roleType == "super" {
+		siteList, _, _ := NewCmsSite().SitePaginate(1, 999999, "", "")
+		return siteList, nil
+	}
+	siteIdList, _, _ := NewCmsAdmin().RoleSiteFind(roleId)
+	siteList := []*model.CmsSite{}
+	if len(siteIdList) > 0 {
+		for i := 0; i < len(siteIdList); i++ {
+			item, _ := NewCmsSite().SiteOne(siteIdList[i].SiteID)
+			siteList = append(siteList, item)
+		}
+	}
+	return siteList, nil
+}

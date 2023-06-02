@@ -16,8 +16,8 @@ type TopicController struct{ BaseController }
 // Index 标签管理
 // @router /admin/Topic/index [get]
 func (c *TopicController) Index() {
-	list, _, _ := biz.NewCmsSite().SitePaginate(1, 9999, "", "")
-	c.Data["site"] = list
+	siteList, _ := biz.NewCmsTopic().SiteGet(GlobalRoleId, GlobalRoleType)
+	c.Data["site"] = siteList
 	c.display()
 }
 
@@ -37,8 +37,8 @@ func (c *TopicController) TopicEdit() {
 		mdl.TopicID = 0
 	}
 	c.Data["mdl"] = mdl
-	list, _, _ := biz.NewCmsSite().SitePaginate(1, 9999, "", "")
-	c.Data["site"] = list
+	siteList, _ := biz.NewCmsTopic().SiteGet(GlobalRoleId, GlobalRoleType)
+	c.Data["site"] = siteList
 	c.display()
 }
 
@@ -125,6 +125,24 @@ func (c *TopicController) TopicPaginate() {
 	status, _ := c.GetInt32("status")
 	title := c.GetString("title")
 	name := c.GetString("name")
-	list, count, _ := biz.NewCmsTopic().TopicPaginate(page, limit, siteId, -1, name, title, status)
-	c.JSONPage(lib.CodeSuccess, "", list, count)
+	if GlobalRoleType == "super" || siteId != 0 {
+		list, count, _ := biz.NewCmsTopic().TopicPaginate(page, limit, siteId, -1, name, title, status)
+		c.JSONPage(lib.CodeSuccess, "", list, count)
+	} else {
+		siteIdList, _, _ := biz.NewCmsAdmin().RoleSiteFind(GlobalRoleId)
+		list := make([]interface{}, 0)
+		var totalCount int64 = 0
+		if len(siteIdList) > 0 {
+			for i := 0; i < len(siteIdList); i++ {
+				list, count, _ := biz.NewCmsTopic().TopicPaginate(page, limit, siteIdList[i].SiteID, -1, name, title, status)
+				totalCount += count
+				if count > 0 {
+					for j := 0; j < len(list); j++ {
+						list = append(list, list[j])
+					}
+				}
+			}
+		}
+		c.JSONPage(lib.CodeSuccess, "", list, totalCount)
+	}
 }

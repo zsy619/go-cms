@@ -40,6 +40,8 @@ func (c *LoginController) SavaAdminState(user *model.CmsAdmin) {
 	GlobalAdminName = user.UserName
 	GlobalRealName = user.RealName
 	GlobalIsAudit = user.IsAudit
+	GlobalRoleId = user.RoleID
+	GlobalRoleType = user.RoleType
 }
 
 // AdminLoginVerify 管理员登录验证

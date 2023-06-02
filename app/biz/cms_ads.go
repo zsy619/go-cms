@@ -233,3 +233,28 @@ func (this *CmsAds) AdsSaveSortId(adsId int64, sortId int32) error {
 	)
 	return err
 }
+
+// SiteCategoryGet 获取站点与分类
+func (this *CmsAds) SiteCategoryGet(roleId int64, roleType string) ([]*model.CmsSite, []*model.CmsAdsCategory, error) {
+	if roleType == "super" {
+		list, _, _ := this.CategoryPaginate(1, 99999, -1, -1, "", "")
+		siteList, _, _ := NewCmsSite().SitePaginate(1, 999999, "", "")
+		return siteList, list, nil
+	}
+	siteIdList, _, _ := NewCmsAdmin().RoleSiteFind(roleId)
+	siteList := []*model.CmsSite{}
+	categoryList := []*model.CmsAdsCategory{}
+	if len(siteIdList) > 0 {
+		for i := 0; i < len(siteIdList); i++ {
+			list, _, _ := this.CategoryPaginate(1, 99999, siteIdList[i].SiteID, -1, "", "")
+			if len(list) > 0 {
+				for j := 0; j < len(list); j++ {
+					categoryList = append(categoryList, list[j])
+				}
+			}
+			item, _ := NewCmsSite().SiteOne(siteIdList[i].SiteID)
+			siteList = append(siteList, item)
+		}
+	}
+	return siteList, categoryList, nil
+}

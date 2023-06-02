@@ -17,10 +17,9 @@ type AdsController struct{ BaseController }
 // Index 广告管理
 // @router /admin/ads/index [get]
 func (c *AdsController) Index() {
-	list, _, _ := biz.NewCmsAds().CategoryPaginate(1, 99999, -1, -1, "", "")
-	c.Data["categoryList"] = list
-	sitelist, _, _ := biz.NewCmsSite().SitePaginate(1, 999999, "", "")
-	c.Data["siteList"] = sitelist
+	siteList, categoryList, _ := biz.NewCmsAds().SiteCategoryGet(GlobalRoleId, GlobalRoleType)
+	c.Data["categoryList"] = categoryList
+	c.Data["siteList"] = siteList
 	c.display()
 }
 
@@ -43,8 +42,8 @@ func (c *AdsController) AdsEdit() {
 		mdl.AdsID = 0
 	}
 	c.Data["mdl"] = mdl
-	list, _, _ := biz.NewCmsAds().CategoryPaginate(1, 99999, -1, -1, "", "")
-	c.Data["categoryList"] = list
+	_, categoryList, _ := biz.NewCmsAds().SiteCategoryGet(GlobalRoleId, GlobalRoleType)
+	c.Data["categoryList"] = categoryList
 	c.display()
 }
 
@@ -132,15 +131,33 @@ func (c *AdsController) AdsPaginate() {
 	status, _ := c.GetInt32("status")
 	title := c.GetString("title")
 	callIndex := c.GetString("callIndex")
-	list, count, _ := biz.NewCmsAds().AdsPaginate(page, limit, siteId, -1, categoryId, title, callIndex, status)
-	c.JSONPage(lib.CodeSuccess, "", list, count)
+	if GlobalRoleType == "super" || siteId != 0 {
+		list, count, _ := biz.NewCmsAds().AdsPaginate(page, limit, siteId, -1, categoryId, title, callIndex, status)
+		c.JSONPage(lib.CodeSuccess, "", list, count)
+	} else {
+		siteIdList, _, _ := biz.NewCmsAdmin().RoleSiteFind(GlobalRoleId)
+		list := make([]interface{}, 0)
+		var totalCount int64 = 0
+		if len(siteIdList) > 0 {
+			for i := 0; i < len(siteIdList); i++ {
+				list, count, _ := biz.NewCmsAds().AdsPaginate(page, limit, siteIdList[i].SiteID, -1, categoryId, title, callIndex, status)
+				totalCount += count
+				if count > 0 {
+					for j := 0; j < len(list); j++ {
+						list = append(list, list[j])
+					}
+				}
+			}
+		}
+		c.JSONPage(lib.CodeSuccess, "", list, totalCount)
+	}
 }
 
 // Category 链接分类
 // @router /admin/ads/category [get]
 func (c *AdsController) Category() {
-	sitelist, _, _ := biz.NewCmsSite().SitePaginate(1, 999999, "", "")
-	c.Data["siteList"] = sitelist
+	siteList, _, _ := biz.NewCmsAds().SiteCategoryGet(GlobalRoleId, GlobalRoleType)
+	c.Data["siteList"] = siteList
 	c.display()
 }
 
@@ -153,8 +170,8 @@ func (c *AdsController) CategoryEdit() {
 		}
 	}
 	c.Data["mdl"] = mdl
-	sitelist, _, _ := biz.NewCmsSite().SitePaginate(1, 999999, "", "")
-	c.Data["siteList"] = sitelist
+	siteList, _, _ := biz.NewCmsAds().SiteCategoryGet(GlobalRoleId, GlobalRoleType)
+	c.Data["siteList"] = siteList
 	c.display()
 }
 
@@ -207,6 +224,24 @@ func (c *AdsController) CategoryPaginate() {
 	siteId, _ := c.GetInt64("siteId")
 	title := c.GetString("title")
 	callIndex := c.GetString("callIndex")
-	list, count, _ := biz.NewCmsAds().CategoryPaginate(page, limit, siteId, -1, title, callIndex)
-	c.JSONPage(lib.CodeSuccess, "", list, count)
+	if GlobalRoleType == "super" {
+		list, count, _ := biz.NewCmsAds().CategoryPaginate(page, limit, siteId, -1, title, callIndex)
+		c.JSONPage(lib.CodeSuccess, "", list, count)
+	} else {
+		siteIdList, _, _ := biz.NewCmsAdmin().RoleSiteFind(GlobalRoleId)
+		categoryList := make([]interface{}, 0)
+		var totalCount int64 = 0
+		if len(siteIdList) > 0 {
+			for i := 0; i < len(siteIdList); i++ {
+				list, count, _ := biz.NewCmsAds().CategoryPaginate(1, 99999, siteIdList[i].SiteID, -1, "", "")
+				totalCount += count
+				if len(list) > 0 {
+					for j := 0; j < len(list); j++ {
+						categoryList = append(categoryList, list[j])
+					}
+				}
+			}
+		}
+		c.JSONPage(lib.CodeSuccess, "", categoryList, totalCount)
+	}
 }
