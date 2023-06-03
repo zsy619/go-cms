@@ -193,7 +193,7 @@ func (c *AdminController) RoleSiteFind() {
 	roleId, _ := c.GetInt64("roleId")
 	list, count, err := biz.NewCmsAdmin().RoleSiteFind(roleId)
 	if err != nil {
-		logs.Error("RoleValueFind", err.Error())
+		logs.Error("RoleSiteFind", err.Error())
 	}
 	c.JSONPage(lib.CodeSuccess, "", list, count)
 }

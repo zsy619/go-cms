@@ -73,7 +73,7 @@
                             <input name="is_slide" type="checkbox" value="1" title="幻灯片" {{if eq .mdl.IsSlide 1}} checked="" {{end}}>
                         </div>
                     </div>
-                    <div class="layui-form-item">
+                    <div class="layui-form-item" role-index="audit">
                         <label class="layui-form-label">状&nbsp;&nbsp;态</label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="radio" name="status" value="0" title="草稿" {{if eq .mdl.Status 0}}checked="checked" {{end}}>
@@ -114,6 +114,47 @@
             tableSelect = layui.tableSelect,
             wangEditor = layui.wangEditor;
         var upload = layui.upload;
+
+        $.ajax({
+            type: "POST", //提交的方法
+            url: "/admin/admin/RoleValueFind?roleId={{.roleId}}", //提交的地址
+            data: $('#frmEdit').serialize(), // 序列化表单值
+            async: false,
+            beforeSend: function () { //当一个Ajax请求开始时触发
+                this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+            },
+            error: function (request) {  //失败的话
+            },
+            success: function (data) {  //成功
+                console.log(data);
+                layer.closeAll();
+                if (data.code == CodeSuccess) {
+                    var roleList = data.data;
+                    for (var i = 0; i < roleList.length; i++) {
+                        if(roleList[i].nav_name === "links_index"){
+                            var actions = roleList[i].action.split(',');
+                            var isHasAudit = false;
+                            if(actions.length > 0){
+                                for (let j = 0; j < actions.length; j++) {
+                                    if (actions[j] === "Audit"){
+                                        isHasAudit = true;
+                                    }
+                                }
+                            }
+                            if (!isHasAudit){
+                                $("div[role-index='audit']").remove();
+                            }
+                        }
+                    }
+                    form.render();
+                } else {
+                    layer.msg(data.msg, { icon: 2, time: 1000 });
+                }
+            },
+            complete: function () {
+                layer.close(this.layerIndex);
+            },
+        });
 
         tableSelect.render({
             elem: '#btnSelect',
