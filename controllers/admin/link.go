@@ -20,7 +20,6 @@ func (c *LinkController) Index() {
 	siteList, categoryList, _ := biz.NewCmsLink().SiteCategoryGet(GlobalRoleId, GlobalRoleType)
 	c.Data["categoryList"] = categoryList
 	c.Data["siteList"] = siteList
-	c.Data["roleId"] = GlobalRoleId
 	c.display()
 }
 
@@ -43,7 +42,6 @@ func (c *LinkController) LinkEdit() {
 	c.Data["mdl"] = mdl
 	_, categoryList, _ := biz.NewCmsLink().SiteCategoryGet(GlobalRoleId, GlobalRoleType)
 	c.Data["categoryList"] = categoryList
-	c.Data["roleId"] = GlobalRoleId
 	c.display()
 }
 

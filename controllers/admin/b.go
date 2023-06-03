@@ -30,6 +30,7 @@ func (c *BaseController) Prepare() {
 		GlobalRoleId = user.RoleID
 		GlobalRoleType = user.RoleType
 	}
+	c.Data["roleId"] = GlobalRoleId
 }
 
 func (c *BaseController) Finish() {
