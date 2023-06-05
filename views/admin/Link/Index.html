@@ -151,73 +151,25 @@
                     });
                 });
 
-                $.ajax({
-                    type: "POST", //提交的方法
-                    url: "/admin/admin/RoleValueFind?roleId={{.roleId}}", //提交的地址
-                    data: $('#frmEdit').serialize(), // 序列化表单值
-                    async: false,
-                    beforeSend: function () { //当一个Ajax请求开始时触发
-                        this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
-                    },
-                    error: function (request) {  //失败的话
-                    },
-                    success: function (data) {  //成功
-                        console.log(data);
-                        layer.closeAll();
-                        if (data.code == CodeSuccess) {
-                            var roleList = data.data;
-                            for (var i = 0; i < roleList.length; i++) {
-                                if(roleList[i].nav_name === "links_index"){
-                                    var actions = roleList[i].action.split(',');
-                                    var isHasAdd = false,
-                                        isHasAudit = false,
-                                        isHasEdit = false,
-                                        isHasDelete = false,
-                                        isHasView = false;
-                                    if(actions.length > 0){
-                                        for (let j = 0; j < actions.length; j++) {
-                                            if (actions[j] === "Add"){
-                                                isHasAdd = true;
-                                            }
-                                            if (actions[j] === "Audit"){
-                                                isHasAudit = true;
-                                            }
-                                            if (actions[j] === "Edit"){
-                                                isHasEdit = true;
-                                            }
-                                            if (actions[j] === "Delete"){
-                                                isHasDelete = true;
-                                            }
-                                            if (actions[j] === "View"){
-                                                isHasView = true;
-                                            }
-                                        }
-                                    }
-                                    if (!isHasAdd){
-                                        $("button[lay-event='add']").remove();
-                                        $("a[lay-event='clone']").remove();
-                                    }
-                                    if (!isHasAudit){
-                                        $("button[lay-event='audit']").remove();
-                                        $("button[lay-event='reject']").remove();
-                                    }
-                                    if (!isHasEdit){
-                                        $("button[lay-event='save']").remove();
-                                        $("a[lay-event='edit']").remove();
-                                    }
-                                    if (!isHasDelete){
-                                        $("a[lay-event='delete']").remove();
-                                    }
-                                }
-                            }
-                            form.render();
-                        } else {
-                            layer.msg(data.msg, { icon: 2, time: 1000 });
+                // 检查页面权限
+                rolePower("{{.roleId}}", "links_index", function (roleMap){
+                    if (roleMap != null && roleMap.isSuccess === true){
+                        if (!roleMap.isHasAdd){
+                            $("button[lay-event='add']").remove();
+                            $("a[lay-event='clone']").remove();
                         }
-                    },
-                    complete: function () {
-                        layer.close(this.layerIndex);
-                    },
+                        if (!roleMap.isHasAudit){
+                            $("button[lay-event='audit']").remove();
+                            $("button[lay-event='reject']").remove();
+                        }
+                        if (!roleMap.isHasEdit){
+                            $("button[lay-event='save']").remove();
+                            $("a[lay-event='edit']").remove();
+                        }
+                        if (!roleMap.isHasDelete){
+                            $("a[lay-event='delete']").remove();
+                        }
+                    }
                 });
             },
         });

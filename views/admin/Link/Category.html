@@ -94,6 +94,23 @@
                         $($(this).find(".layui-table-header thead tr")[index]).height($(val).height());
                     });
                 });
+
+                // 检查页面权限
+                rolePower("{{.roleId}}", "links_category", function (roleMap){
+                    if (roleMap != null && roleMap.isSuccess === true){
+                        if (!roleMap.isHasAdd){
+                            $("button[lay-event='add']").remove();
+                            $("a[lay-event='clone']").remove();
+                        }
+                        if (!roleMap.isHasEdit){
+                            $("button[lay-event='save']").remove();
+                            $("a[lay-event='edit']").remove();
+                        }
+                        if (!roleMap.isHasDelete){
+                            $("a[lay-event='delete']").remove();
+                        }
+                    }
+                });
             }
         });
 

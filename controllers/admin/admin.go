@@ -189,6 +189,16 @@ func (c *AdminController) RoleValueFind() {
 	c.JSONPage(lib.CodeSuccess, "", list, count)
 }
 
+func (c *AdminController) RolePower() {
+	roleId, _ := c.GetInt64("roleId")
+	navName := c.GetString("navName")
+	mdl, err := biz.NewCmsAdmin().RolePower(roleId, navName)
+	if err != nil {
+		logs.Error("RoleValueFind", err.Error())
+	}
+	c.JSONSuccess("", mdl)
+}
+
 func (c *AdminController) RoleSiteFind() {
 	roleId, _ := c.GetInt64("roleId")
 	list, count, err := biz.NewCmsAdmin().RoleSiteFind(roleId)

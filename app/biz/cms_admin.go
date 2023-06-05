@@ -352,6 +352,11 @@ func (this *CmsAdmin) RoleValueFind(roleId int64) ([]*model.CmsAdminRoleValue, i
 	return do.Where(mdl.RoleID.Eq(roleId)).FindByPage(0, 99999)
 }
 
+func (this *CmsAdmin) RolePower(roleId int64, navName string) (*model.CmsAdminRoleValue, error) {
+	mdl, do := query.CmsAdminRoleValueDo()
+	return do.Where(mdl.RoleID.Eq(roleId)).Where(mdl.NavName.Eq(navName)).First()
+}
+
 func (this *CmsAdmin) NavFind(roleId int64) ([]*model.CmsAdminNav, int64, error) {
 	mdl, do := query.CmsAdminNavDo()
 	return do.Order(mdl.SortID).FindByPage(0, 99999)

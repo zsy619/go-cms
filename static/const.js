@@ -1,4 +1,3 @@
-
 var CodeSuccess = 0; // 成功
 var CodeError = 1;// 失败
 var CodeInvalid = 2;// 无效
@@ -277,7 +276,7 @@ function laydel(url, data, obj) {
     layer.confirm('确认要删除吗？', function (index) {
         $.ajax({
             url: url,
-            headers: { "X-CSRF-Token": csrf, },
+            headers: {"X-CSRF-Token": csrf,},
             type: "DELETE",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
@@ -285,9 +284,9 @@ function laydel(url, data, obj) {
             success: function (data) {
                 if (data.code == 200) {
                     obj.del();
-                    layer.msg('删除成功!', { icon: 1, time: 1000 });
+                    layer.msg('删除成功!', {icon: 1, time: 1000});
                 } else {
-                    layer.msg(data.msg, { icon: 2 })
+                    layer.msg(data.msg, {icon: 2})
                     return false;
                 }
             },
@@ -304,7 +303,7 @@ function laydel(url, data, obj) {
 function laybatch_del(url, data, obj) {
     $.ajax({
         url: url,
-        headers: { "X-CSRF-Token": csrf, },
+        headers: {"X-CSRF-Token": csrf,},
         type: "DELETE",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
@@ -337,9 +336,9 @@ function layajax(url, type, data) {
         data: JSON.stringify(data),
         success: function (data) {
             if (data.code == 200) {
-                layer.msg(data.msg, { icon: 6 });
+                layer.msg(data.msg, {icon: 6});
             } else {
-                layer.msg(data.msg, { icon: 5 })
+                layer.msg(data.msg, {icon: 5})
                 return
             }
         },
@@ -365,14 +364,14 @@ function layopen_ajax(url, type, data) {
         data: JSON.stringify(data),
         success: function (data) {
             if (data.code == 200) {
-                var msg = layer.alert(data.msg, { icon: 6 },
+                var msg = layer.alert(data.msg, {icon: 6},
                     function () {
                         layer.close(msg);
                         var index = parent.layer.getFrameIndex(window.name);
                         parent.layer.close(index);
                     });
             } else {
-                layer.alert(data.msg, { icon: 5 })
+                layer.alert(data.msg, {icon: 5})
                 return
             }
         },
@@ -399,12 +398,12 @@ function laydraft_ajax(url, type, data) {
         data: JSON.stringify(data),
         success: function (data) {
             if (data.code == 200) {
-                layer.msg("保存成功", { icon: 1 })
+                layer.msg("保存成功", {icon: 1})
                 $("#id").val(data.msg);
                 $("#type").val("PUT");
                 // 更改返回的ID，和属性
             } else {
-                layer.msg(data.msg, { icon: 5 })
+                layer.msg(data.msg, {icon: 5})
                 return
             }
         },
@@ -466,4 +465,60 @@ function refresh(table) {
         return
     }
     location.reload()
+}
+
+// 获取各个页面权限
+// rolePower(1,'admin',function(rt){});
+function rolePower(roleId, navName, callback) {
+    var roleMap = {
+        isSuccess: false,
+        isHasAdd: false,
+        isHasAudit: false,
+        isHasEdit: false,
+        isHasDelete: false,
+        isHasView: false,
+    }
+    $.ajax({
+        type: "POST", //提交的方法
+        url: "/admin/admin/RolePower?roleId=" + roleId + "&navName=" + navName + "&r=" + Math.random(), //提交的地址
+        data: $('#frmEdit').serialize(), // 序列化表单值
+        async: false,
+        error: function (request) { //失败
+            if (callback) {
+                callback(roleMap);
+            }
+        },
+        success: function (data) {  //成功
+            console.log(data);
+            if (data.code == CodeSuccess) {
+                var roleMdl = data.data;
+                if(roleMdl.action != null){
+                    var item = roleMdl.action.split(',');
+                    if (item.length > 0) {
+                        roleMap.isSuccess = true;
+                        for (let j = 0; j < item.length; j++) {
+                            if (item[j] === "Add") {
+                                roleMap.isHasAdd = true;
+                            }
+                            if (item[j] === "Audit") {
+                                roleMap.isHasAudit = true;
+                            }
+                            if (item[j] === "Edit") {
+                                roleMap.isHasEdit = true;
+                            }
+                            if (item[j] === "Delete") {
+                                roleMap.isHasDelete = true;
+                            }
+                            if (item[j] === "View") {
+                                roleMap.isHasView = true;
+                            }
+                        }
+                    }
+                }
+            }
+            if (callback) {
+                callback(roleMap);
+            }
+        },
+    });
 }
