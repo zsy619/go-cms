@@ -344,7 +344,7 @@ func (this *CmsSite) ChannelNav(input *model.CmsSiteChannel) error {
 					Title:      "评论管理",
 					SubTitle:   "评论管理",
 					SortID:     3,
-					Action:     "Show,View,Add,Edit,Delete,Audit",
+					Action:     "Show,View,Delete,Audit",
 					LinkURL:    fmt.Sprintf("/admin/article/comment?channelId=%d", input.ChannelID),
 					IconURL:    "fa fa-tachometer",
 					IsHide:     0,
