@@ -110,6 +110,7 @@ func (this *SiteController) Save() {
 	user := adminSerice.OneByUserId(this.IsLogin())
 	if site.SiteID <= 0 {
 		site.CreateTime = time.Now()
+		site.UpdateTime = time.Now()
 		site.CreateID = int32(this.IsLogin())
 		site.CreateName = user.RealName
 	} else {
