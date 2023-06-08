@@ -45,6 +45,14 @@ function AjaxRequest(cache, url, type, data, beforeSend, success, complete) {
 }
 
 /**
+ * @description: 根据变量cmsSite获取站点url
+ * @return {*}
+ */
+function getCmsSite() {
+    return cmsSite == undefined || cmsSite == "" ? "" : cmsSite;
+}
+
+/**
  * @description: 站点定义
  * @return {*}
  */
@@ -62,7 +70,7 @@ function Site() {
  */
 Site.prototype.default = function (data, beforeSend, success, complete) {
     const params = Json2Param(data);
-    var url = "/api/site/default?" + params;
+    var url = getCmsSite() + "/api/site/default?" + params;
     AjaxRequest(true, url, "get", data, beforeSend, success, complete);
 }
 
@@ -76,7 +84,7 @@ Site.prototype.default = function (data, beforeSend, success, complete) {
  */
 Site.prototype.find = function (data, beforeSend, success, complete) {
     const params = Json2Param(data);
-    var url = "/api/site/find?" + params;
+    var url = getCmsSite() + "/api/site/find?" + params;
     AjaxRequest(true, url, "get", data, beforeSend, success, complete);
 }
 
@@ -90,7 +98,7 @@ Site.prototype.find = function (data, beforeSend, success, complete) {
  */
 Site.prototype.channelGet = function (data, beforeSend, success, complete) {
     const params = Json2Param(data);
-    var url = "/api/channel/get?" + params;
+    var url = getCmsSite() + "/api/channel/get?" + params;
     AjaxRequest(true, url, "get", data, beforeSend, success, complete);
 }
 
@@ -104,7 +112,7 @@ Site.prototype.channelGet = function (data, beforeSend, success, complete) {
  */
 Site.prototype.menu = function (data, beforeSend, success, complete) {
     const params = Json2Param(data);
-    var url = "/api/site/menu?" + params;
+    var url = getCmsSite() + "/api/site/menu?" + params;
     AjaxRequest(true, url, "get", data, beforeSend, success, complete);
 }
 
@@ -118,7 +126,7 @@ Site.prototype.menu = function (data, beforeSend, success, complete) {
  */
 Site.prototype.menuFlag = function (data, beforeSend, success, complete) {
     const params = Json2Param(data);
-    var url = "/api/site/menu/flag?" + params;
+    var url = getCmsSite() + "/api/site/menu/flag?" + params;
     AjaxRequest(true, url, "get", data, beforeSend, success, complete);
 }
 
@@ -127,7 +135,7 @@ Site.prototype.menuFlag = function (data, beforeSend, success, complete) {
  * @return {*}
  */
 function Ads() {
-    this.url = "/api/ads/get";
+    this.url = getCmsSite() + "/api/ads/get";
     this.cache = true;
 }
 
@@ -169,7 +177,7 @@ Ads.prototype.getNew = function (data, beforeSend, success, complete) {
  */
 Ads.prototype.paginate = function (data, beforeSend, success, complete) {
     const params = Json2Param(data);
-    var url = "/api/ads/paginate?" + params;
+    var url = getCmsSite() + "/api/ads/paginate?" + params;
     AjaxRequest(this.cache, url, "get", data, beforeSend, success, complete);
 }
 
@@ -178,8 +186,8 @@ Ads.prototype.paginate = function (data, beforeSend, success, complete) {
  * @return {*}
  */
 function Article() {
-    this.url = "/api/article/get";
-    this.urlNew = "/api/article/get/new";
+    this.url = getCmsSite() + "/api/article/get";
+    this.urlNew = getCmsSite() + "/api/article/get/new";
     this.cache = true;
 }
 
@@ -221,7 +229,7 @@ Article.prototype.getNew = function (data, beforeSend, success, complete) {
  */
 Article.prototype.album = function (data, beforeSend, success, complete) {
     const params = Json2Param(data);
-    var url = "/api/article/album?" + params;
+    var url = getCmsSite() + "/api/article/album?" + params;
     AjaxRequest(this.cache, url, "get", data, beforeSend, success, complete);
 }
 
@@ -235,7 +243,7 @@ Article.prototype.album = function (data, beforeSend, success, complete) {
  */
 Article.prototype.attach = function (data, beforeSend, success, complete) {
     const params = Json2Param(data);
-    var url = "/api/article/attach?" + params;
+    var url = getCmsSite() + "/api/article/attach?" + params;
     AjaxRequest(this.cache, url, "get", data, beforeSend, success, complete);
 }
 
@@ -249,7 +257,7 @@ Article.prototype.attach = function (data, beforeSend, success, complete) {
  */
 Article.prototype.article = function (data, beforeSend, success, complete) {
     const params = Json2Param(data);
-    var url = "/api/article/article?" + params;
+    var url = getCmsSite() + "/api/article/article?" + params;
     AjaxRequest(this.cache, url, "get", data, beforeSend, success, complete);
 }
 
@@ -263,7 +271,7 @@ Article.prototype.article = function (data, beforeSend, success, complete) {
  */
 Article.prototype.find = function (data, beforeSend, success, complete) {
     const params = Json2Param(data);
-    var url = "/api/article/find?" + params;
+    var url = getCmsSite() + "/api/article/find?" + params;
     AjaxRequest(this.cache, url, "get", data, beforeSend, success, complete);
 }
 
@@ -277,7 +285,7 @@ Article.prototype.find = function (data, beforeSend, success, complete) {
  */
 Article.prototype.paginate = function (data, beforeSend, success, complete) {
     const params = Json2Param(data);
-    var url = "/api/article/paginate?" + params;
+    var url = getCmsSite() + "/api/article/paginate?" + params;
     AjaxRequest(this.cache, url, "get", data, beforeSend, success, complete);
 }
 
@@ -286,7 +294,7 @@ Article.prototype.paginate = function (data, beforeSend, success, complete) {
  * @return {*}
  */
 function Category() {
-    this.url = "/api/category/get";
+    this.url = getCmsSite() + "/api/category/get";
     this.cache = true;
 }
 
@@ -300,7 +308,7 @@ function Category() {
  */
 Category.prototype.get = function (data, beforeSend, success, complete) {
     const params = Json2Param(data);
-    var url = "/api/category/get?" + params;
+    var url = getCmsSite() + "/api/category/get?" + params;
     AjaxRequest(this.cache, url, "get", data, beforeSend, success, complete);
 }
 
@@ -314,7 +322,7 @@ Category.prototype.get = function (data, beforeSend, success, complete) {
  */
 Category.prototype.nav = function (data, beforeSend, success, complete) {
     const params = Json2Param(data);
-    var url = "/api/category/nav?" + params;
+    var url = getCmsSite() + "/api/category/nav?" + params;
     AjaxRequest(this.cache, url, "get", data, beforeSend, success, complete);
 }
 
@@ -328,7 +336,7 @@ Category.prototype.nav = function (data, beforeSend, success, complete) {
  */
 Category.prototype.find = function (data, beforeSend, success, complete) {
     const params = Json2Param(data);
-    var url = "/api/category/find?" + params;
+    var url = getCmsSite() + "/api/category/find?" + params;
     AjaxRequest(this.cache, url, "get", data, beforeSend, success, complete);
 }
 
@@ -346,7 +354,7 @@ function Link() {
  */
 Link.prototype.get = function (data, beforeSend, success, complete) {
     const params = Json2Param(data);
-    var url = "/api/link/get?" + params;
+    var url = getCmsSite() + "/api/link/get?" + params;
     AjaxRequest(this.cache, url, "get", data, beforeSend, success, complete);
 }
 
@@ -360,7 +368,7 @@ Link.prototype.get = function (data, beforeSend, success, complete) {
  */
 Link.prototype.getNew = function (data, beforeSend, success, complete) {
     const params = Json2Param(data);
-    var url = "/api/link/get/new?" + params;
+    var url = getCmsSite() + "/api/link/get/new?" + params;
     AjaxRequest(this.cache, url, "get", data, beforeSend, success, complete);
 }
 
@@ -374,6 +382,6 @@ Link.prototype.getNew = function (data, beforeSend, success, complete) {
  */
 Link.prototype.paginate = function (data, beforeSend, success, complete) {
     const params = Json2Param(data);
-    var url = "/api/link/paginate?" + params;
+    var url = getCmsSite() + "/api/link/paginate?" + params;
     AjaxRequest(this.cache, url, "get", data, beforeSend, success, complete);
 }
