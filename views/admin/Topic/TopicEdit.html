@@ -48,6 +48,7 @@
                             <i class="layui-icon layui-icon-list"></i>选择
                         </button>
                     </div>
+                    {{if .roleMap.IsHasAudit}}
                     <div class="layui-form-item">
                         <label class="layui-form-label">状&nbsp;&nbsp;态</label>
                         <div class="layui-input-inline" style="width: 500px;">
@@ -56,6 +57,7 @@
                             <input type="radio" name="status" value="3" title="拒绝" {{if eq .mdl.Status 3}}checked="checked" {{end}}>
                         </div>
                     </div>
+                    {{end}}
                     <div class="layui-form-item">
                         <label class="layui-form-label">排序号</label>
                         <div class="layui-input-inline" style="width: 80px;">

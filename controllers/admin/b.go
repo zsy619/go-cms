@@ -2,7 +2,12 @@ package admin
 
 import (
 	"fmt"
+	"github.com/beego/beego/v2/core/logs"
+	"haedu.gov.cn/cms/app/biz"
+	"haedu.gov.cn/cms/controllers/admin/vmodel"
+	"haedu.gov.cn/cms/global"
 	"html/template"
+	"strings"
 
 	"haedu.gov.cn/cms/app/dal/model"
 
@@ -74,4 +79,54 @@ func (this *BaseController) IsLogin() int64 {
 			return 0
 		}
 	}
+}
+
+func (this *BaseController) RolePowerGet(navName string) vmodel.RoleAction {
+	roleAction := vmodel.RoleAction{}
+	if global.IsSuper(GlobalRoleType) {
+		roleAction.IsSuccess = true
+		roleAction.IsSuper = true
+		roleAction.IsHasAdd = true
+		roleAction.IsHasAudit = true
+		roleAction.IsHasEdit = true
+		roleAction.IsHasDelete = true
+		roleAction.IsHasView = true
+		roleAction.IsHasAttach = true
+		roleAction.IsHasAlbum = true
+	} else {
+		mdl, err := biz.NewCmsAdmin().RolePower(GlobalRoleId, navName)
+		if err != nil {
+			logs.Error("RoleValueFind", err.Error())
+		}
+		if len(mdl.Action) > 0 {
+			action := strings.Split(mdl.Action, ",")
+			if len(action) > 0 {
+				roleAction.IsSuccess = true
+				for i := 0; i < len(action); i++ {
+					if action[i] == "Add" { // 添加、拷贝
+						roleAction.IsHasAdd = true
+					}
+					if action[i] == "Audit" { // 审核
+						roleAction.IsHasAudit = true
+					}
+					if action[i] == "Edit" { // 编辑、保存
+						roleAction.IsHasEdit = true
+					}
+					if action[i] == "Delete" { // 删除
+						roleAction.IsHasDelete = true
+					}
+					if action[i] == "View" { // 查看
+						roleAction.IsHasView = true
+					}
+					if action[i] == "Attach" { // 附件
+						roleAction.IsHasAttach = true
+					}
+					if action[i] == "Album" { // 相册
+						roleAction.IsHasAlbum = true
+					}
+				}
+			}
+		}
+	}
+	return roleAction
 }

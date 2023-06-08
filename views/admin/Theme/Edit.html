@@ -23,9 +23,15 @@
             <div class="layui-tab-item layui-show">
                 <div class="layui-row" style="margin: 5px;">
                     <div class="layui-col-md12">
+                        {{if .roleMap.IsHasAdd}}
                         <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" onclick="addFile('View')"><i class="layui-icon layui-icon-edit"></i>新建</button>
+                        {{end}}
+                        {{if .roleMap.IsHasEdit}}
                         <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" onclick="saveFile('View')"><i class="layui-icon layui-icon-ok"></i>保存</button>
+                        {{end}}
+                        {{if .roleMap.IsHasDelete}}
                         <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteFile('View')"><i class="layui-icon layui-icon-ok"></i>删除</button>
+                        {{end}}
                         <a class="layui-btn layui-btn-sm layui-btn-yellow" href="/help" target="_blank"><i class="layui-icon layui-icon-help"></i>开发文档</a>
                     </div>
                 </div>
@@ -63,9 +69,15 @@
             <div class="layui-tab-item">
                 <div class="layui-row" style="margin: 5px;">
                     <div class="layui-col-md12">
+                        {{if .roleMap.IsHasAdd}}
                         <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" onclick="addFile('Css')"><i class="layui-icon layui-icon-edit"></i>新建</button>
+                        {{end}}
+                        {{if .roleMap.IsHasEdit}}
                         <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" onclick="saveFile('Css')"><i class="layui-icon layui-icon-ok"></i>保存</button>
+                        {{end}}
+                        {{if .roleMap.IsHasDelete}}
                         <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteFile('Css')"><i class="layui-icon layui-icon-ok"></i>删除</button>
+                        {{end}}
                     </div>
                 </div>
                 <div class="layui-row" id="divCss" style="height: 800px;">
@@ -102,9 +114,15 @@
             <div class="layui-tab-item">
                 <div class="layui-row" style="margin: 5px;">
                     <div class="layui-col-md12">
-                        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" onclick="addFile('Js')"><i class="layui-icon layui-icon-edit"></i>新建</button>
-                        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" onclick="saveFile('Js')"><i class="layui-icon layui-icon-ok"></i>保存</button>
-                        <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteFile('Js')"><i class="layui-icon layui-icon-ok"></i>删除</button>
+                        {{if .roleMap.IsHasAdd}}
+                        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" onclick="addFile('Js')" lay-event="add"><i class="layui-icon layui-icon-edit"></i>新建</button>
+                        {{end}}
+                        {{if .roleMap.IsHasEdit}}
+                        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" onclick="saveFile('Js')" lay-event="save"><i class="layui-icon layui-icon-ok"></i>保存</button>
+                        {{end}}
+                        {{if .roleMap.IsHasDelete}}
+                        <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteFile('Js')" lay-event="delete"><i class="layui-icon layui-icon-ok"></i>删除</button>
+                        {{end}}
                     </div>
                 </div>
                 <div class="layui-row" id="divJs" style="height: 800px;">
@@ -179,6 +197,21 @@
     var edtCss = createCodeMirror("codeCss", "css");
     var edtJs = createCodeMirror("codeJs", "javascript");
     var fileName = "";
+
+    /*// 检查页面权限
+    rolePower("{{.roleId}}", "themes_index", function (roleMap){
+        if (roleMap != null && roleMap.isSuccess === true){
+            if (!roleMap.isHasAdd){
+                $("button[lay-event='add']").remove();
+            }
+            if (!roleMap.isHasEdit){
+                $("button[lay-event='save']").remove();
+            }
+            if (!roleMap.isHasDelete){
+                $("button[lay-event='delete']").remove();
+            }
+        }
+    });*/
 
     function createCodeMirror(id, type) {
         var edt = CodeMirror.fromTextArea(document.getElementById(id), {

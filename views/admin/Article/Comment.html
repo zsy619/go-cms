@@ -52,12 +52,6 @@
         <button class="layui-btn layui-btn-danger layui-btn-sm data-add-btn" lay-event="reject"><i class="layui-icon layui-icon-close"></i>拒绝</button>
     </div>
 </script>
-<script type="text/html" id="currentTableBar">
-    <div class="layui-btn-group">
-        <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit layui-btn-radius" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
-        <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete layui-btn-radius" lay-event="delete"><i class="layui-icon layui-icon-close"></i>删除</a>
-    </div>
-</script>
 <script>
     var channelId = parseInt("{{.channelId}}");
     layui.use(['form', 'table', 'treeSelect'], function () {
@@ -105,7 +99,19 @@
                         return outText;
                     }
                 },
-                { title: '操作', width: 150, toolbar: '#currentTableBar', align: "center", fixed: "right" }
+                { title: '操作', width: 150, align: "center", fixed: "right", templet: function (d){
+                        var htmlValue = "<div class=\"layui-btn-group\">\n";
+                        if ("{{.roleMap}}" != null && "{{.roleMap.IsSuccess}}" === "true") {
+                            if ("{{.roleMap.IsHasEdit}}" === "true") {
+                                htmlValue += "<a class=\"layui-btn layui-btn-normal layui-btn-xs data-count-edit layui-btn-radius\" lay-event=\"edit\"><i class=\"layui-icon layui-icon-edit\"></i>编辑</a>\n";
+                            }
+                            if ("{{.roleMap.IsHasDelete}}" === "true") {
+                                htmlValue += "<a class=\"layui-btn layui-btn-xs layui-btn-danger data-count-delete layui-btn-radius\" lay-event=\"delete\"><i class=\"layui-icon layui-icon-close\"></i>删除</a>\n";
+                            }
+                        }
+                        htmlValue += "</div>";
+                        return htmlValue;
+                    } }
             ]],
             limits: [10, 15, 20, 25, 50, 100],
             limit: 20,
@@ -124,6 +130,14 @@
                         $($(this).find(".layui-table-header thead tr")[index]).height($(val).height());
                     });
                 });
+            },
+            before: function (){
+                if ("{{.roleMap}}" != null && "{{.roleMap.IsSuccess}}" === "true"){
+                    if ("{{.roleMap.IsHasAudit}}" === "false"){
+                        $("button[lay-event='audit']").remove();
+                        $("button[lay-event='reject']").remove();
+                    }
+                }
             }
         });
 

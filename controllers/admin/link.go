@@ -20,6 +20,9 @@ func (c *LinkController) Index() {
 	siteList, categoryList, _ := biz.NewCmsLink().SiteCategoryGet(GlobalRoleId, GlobalRoleType)
 	c.Data["categoryList"] = categoryList
 	c.Data["siteList"] = siteList
+	// 获取角色权限
+	roleMap := c.RolePowerGet("links_index")
+	c.Data["roleMap"] = roleMap
 	c.display()
 }
 
@@ -42,6 +45,9 @@ func (c *LinkController) LinkEdit() {
 	c.Data["mdl"] = mdl
 	_, categoryList, _ := biz.NewCmsLink().SiteCategoryGet(GlobalRoleId, GlobalRoleType)
 	c.Data["categoryList"] = categoryList
+	// 获取角色权限
+	roleMap := c.RolePowerGet("links_index")
+	c.Data["roleMap"] = roleMap
 	c.display()
 }
 
@@ -135,6 +141,9 @@ func (c *LinkController) Category() {
 	// 根据站点权限查询站点列表
 	siteList, _, _ := biz.NewCmsLink().SiteCategoryGet(GlobalRoleId, GlobalRoleType)
 	c.Data["siteList"] = siteList
+	// 获取角色权限
+	roleMap := c.RolePowerGet("links_category")
+	c.Data["roleMap"] = roleMap
 	c.display()
 }
 

@@ -19,6 +19,9 @@ type TopicController struct{ BaseController }
 func (c *TopicController) Index() {
 	siteList, _ := biz.NewCmsTopic().SiteGet(GlobalRoleId, GlobalRoleType)
 	c.Data["site"] = siteList
+	// 获取角色权限
+	roleMap := c.RolePowerGet("topic")
+	c.Data["roleMap"] = roleMap
 	c.display()
 }
 
@@ -40,6 +43,9 @@ func (c *TopicController) TopicEdit() {
 	c.Data["mdl"] = mdl
 	siteList, _ := biz.NewCmsTopic().SiteGet(GlobalRoleId, GlobalRoleType)
 	c.Data["site"] = siteList
+	// 获取角色权限
+	roleMap := c.RolePowerGet("topic")
+	c.Data["roleMap"] = roleMap
 	c.display()
 }
 

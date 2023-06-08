@@ -61,7 +61,6 @@
     </div>
 </div>
 {{template "admin/Public/Button_AddAuditSave.html" }}
-{{template "admin/Public/Button_EditCopyDelete.html" }}
 <script>
     layui.use(['form', 'table'], function () {
         var $ = layui.jquery,
@@ -131,7 +130,22 @@
                         return '<input type="number" name="sort_id" link_id="' + d.link_id + '" value="' + d.sort_id + '" class="layui-input" style="" />';
                     }
                 },
-                { title: '操作', width: 210, toolbar: '#currentTableBar', align: "center", fixed: "right" }
+                { title: '操作', width: 210, align: "center", fixed: "right", templet: function (d){
+                        var htmlValue = "<div class=\"layui-btn-group\">\n";
+                        if ("{{.roleMap}}" != null && "{{.roleMap.IsSuccess}}" === "true") {
+                            if ("{{.roleMap.IsHasEdit}}" === "true") {
+                                htmlValue += "<a class=\"layui-btn layui-btn-normal layui-btn-xs data-count-edit layui-btn-radius\" lay-event=\"edit\"><i class=\"layui-icon layui-icon-edit\"></i>编辑</a>\n";
+                            }
+                            if ("{{.roleMap.IsHasAdd}}" === "true") {
+                                htmlValue += "<a class=\"layui-btn layui-btn-primary layui-btn-xs data-count-clone\" lay-event=\"clone\"><i class=\"layui-icon layui-icon-form\"></i>拷贝</a>\n";
+                            }
+                            if ("{{.roleMap.IsHasDelete}}" === "true") {
+                                htmlValue += "<a class=\"layui-btn layui-btn-xs layui-btn-danger data-count-delete layui-btn-radius\" lay-event=\"delete\"><i class=\"layui-icon layui-icon-close\"></i>删除</a>\n";
+                            }
+                        }
+                        htmlValue += "</div>";
+                        return htmlValue;
+                    } }
             ]],
             limits: [10, 15, 20, 25, 50, 100],
             limit: 20,
@@ -150,28 +164,21 @@
                         $($(this).find(".layui-table-header thead tr")[index]).height($(val).height());
                     });
                 });
-
-                // 检查页面权限
-                rolePower("{{.roleId}}", "links_index", function (roleMap){
-                    if (roleMap != null && roleMap.isSuccess === true){
-                        if (!roleMap.isHasAdd){
-                            $("button[lay-event='add']").remove();
-                            $("a[lay-event='clone']").remove();
-                        }
-                        if (!roleMap.isHasAudit){
-                            $("button[lay-event='audit']").remove();
-                            $("button[lay-event='reject']").remove();
-                        }
-                        if (!roleMap.isHasEdit){
-                            $("button[lay-event='save']").remove();
-                            $("a[lay-event='edit']").remove();
-                        }
-                        if (!roleMap.isHasDelete){
-                            $("a[lay-event='delete']").remove();
-                        }
-                    }
-                });
             },
+            before: function (){
+                if ("{{.roleMap}}" != null && "{{.roleMap.IsSuccess}}" === "true"){
+                    if ("{{.roleMap.IsHasAdd}}" === "false"){
+                        $("button[lay-event='add']").remove();
+                    }
+                    if ("{{.roleMap.IsHasAudit}}" === "false"){
+                        $("button[lay-event='audit']").remove();
+                        $("button[lay-event='reject']").remove();
+                    }
+                    if ("{{.roleMap.IsHasEdit}}" === "false"){
+                        $("button[lay-event='save']").remove();
+                    }
+                }
+            }
         });
 
         // 监听搜索操作

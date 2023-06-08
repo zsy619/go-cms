@@ -17,6 +17,9 @@ type SiteController struct{ BaseController }
 // Index 站点管理列表
 // @router /admin/site/index [get]
 func (c *SiteController) Index() {
+	// 获取角色权限
+	roleMap := c.RolePowerGet("site_index")
+	c.Data["roleMap"] = roleMap
 	c.display()
 }
 
@@ -38,6 +41,9 @@ func (c *SiteController) Channel() {
 	service := biz.NewCmsSite()
 	list, _, _ := service.SitePaginate(1, 999999, "", "")
 	c.Data["siteList"] = list
+	// 获取角色权限
+	roleMap := c.RolePowerGet("site_channel")
+	c.Data["roleMap"] = roleMap
 	c.display()
 }
 
@@ -169,6 +175,9 @@ func (c *SiteController) ChannelEdit() {
 		}
 	}
 	c.Data["mdl"] = mdl
+	// 获取角色权限
+	roleMap := c.RolePowerGet("site_channel")
+	c.Data["roleMap"] = roleMap
 	c.display()
 }
 

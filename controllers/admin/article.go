@@ -3,6 +3,7 @@ package admin
 import (
 	"bytes"
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -25,6 +26,9 @@ func (c *ArticleController) Index() {
 		return
 	}
 	c.Data["channelId"] = channelId
+	// 获取角色权限
+	roleMap := c.RolePowerGet("channel_" + strconv.FormatInt(channelId, 10) + "_article")
+	c.Data["roleMap"] = roleMap
 	c.display()
 }
 
@@ -66,6 +70,9 @@ func (c *ArticleController) ArticleEdit() {
 		mdl.ArticleID = 0
 	}
 	c.Data["mdl"] = mdl
+	// 获取角色权限
+	roleMap := c.RolePowerGet("channel_" + strconv.FormatInt(channelId, 10) + "_article")
+	c.Data["roleMap"] = roleMap
 	c.display()
 }
 
@@ -192,6 +199,9 @@ func (c *ArticleController) Category() {
 		return
 	}
 	c.Data["channelId"] = channelId
+	// 获取角色权限
+	roleMap := c.RolePowerGet("channel_" + strconv.FormatInt(channelId, 10) + "_category")
+	c.Data["roleMap"] = roleMap
 	c.display()
 }
 
@@ -225,6 +235,9 @@ func (c *ArticleController) CategoryEdit() {
 		}
 	}
 	c.Data["mdl"] = mdl
+	// 获取角色权限
+	roleMap := c.RolePowerGet("channel_" + strconv.FormatInt(channelId, 10) + "_category")
+	c.Data["roleMap"] = roleMap
 	c.display()
 }
 

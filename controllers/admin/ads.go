@@ -20,6 +20,9 @@ func (c *AdsController) Index() {
 	siteList, categoryList, _ := biz.NewCmsAds().SiteCategoryGet(GlobalRoleId, GlobalRoleType)
 	c.Data["categoryList"] = categoryList
 	c.Data["siteList"] = siteList
+	// 获取角色权限
+	roleMap := c.RolePowerGet("ads_index")
+	c.Data["roleMap"] = roleMap
 	c.display()
 }
 
@@ -44,6 +47,9 @@ func (c *AdsController) AdsEdit() {
 	c.Data["mdl"] = mdl
 	_, categoryList, _ := biz.NewCmsAds().SiteCategoryGet(GlobalRoleId, GlobalRoleType)
 	c.Data["categoryList"] = categoryList
+	// 获取角色权限
+	roleMap := c.RolePowerGet("ads_index")
+	c.Data["roleMap"] = roleMap
 	c.display()
 }
 
@@ -142,6 +148,9 @@ func (c *AdsController) AdsPaginate() {
 func (c *AdsController) Category() {
 	siteList, _, _ := biz.NewCmsAds().SiteCategoryGet(GlobalRoleId, GlobalRoleType)
 	c.Data["siteList"] = siteList
+	// 获取角色权限
+	roleMap := c.RolePowerGet("ads_category")
+	c.Data["roleMap"] = roleMap
 	c.display()
 }
 

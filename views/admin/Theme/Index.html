@@ -8,7 +8,9 @@
             <div class="layui-tab-item layui-show">
                 <div class="layui-row" style="margin: 5px;">
                     <div class="layui-col-md12">
+                        {{if .roleMap.IsHasAdd}}
                         <button type="button" class="layui-btn layui-btn-sm layui-btn-normal  save" id="upload"><i class="layui-icon layui-icon-upload"></i>上传模板文件</button>
+                        {{end}}
                     </div>
                 </div>
                 <div class="layui-row">
@@ -23,7 +25,7 @@
                             {{if eq $item.IsDefault true}}
                             <button type="button" disabled class="layui-btn layui-btn-warm">默认主题</button>
                             {{else}}
-                            <button type="button" class="layui-btn layui-btn-normal" onclick="setDefault('{{$item.Name}}')">设置默认主题</button>
+                            <button type="button" class="layui-btn layui-btn-normal" lay-event="normal" onclick="setDefault('{{$item.Name}}')">设置默认主题</button>
                             {{end}}
                         </p>
                     </div>
@@ -73,6 +75,22 @@
 </div>
 <script>
     var csrf = getXsrfToken();
+
+    // 检查页面权限
+    /*rolePower("{{.roleId}}", "themes_index", function (roleMap){
+        if (roleMap != null && roleMap.isSuccess === true){
+            if (!roleMap.isHasAdd){
+                $("button[lay-event='upload']").remove();
+            }
+            if (!roleMap.isHasEdit){
+                $("button[lay-event='normal']").remove();
+            }
+        }
+    });*/
+
+    if ("{{.roleMap.IsHasEdit}}" === "false"){
+        $("button[lay-event='normal']").remove();
+    }
 
     layui.use(['form', 'jquery', 'upload'], function () {
         form = layui.form,

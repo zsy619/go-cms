@@ -354,7 +354,7 @@ func (this *CmsAdmin) RoleValueFind(roleId int64) ([]*model.CmsAdminRoleValue, i
 
 func (this *CmsAdmin) RolePower(roleId int64, navName string) (*model.CmsAdminRoleValue, error) {
 	mdl, do := query.CmsAdminRoleValueDo()
-	return do.Where(mdl.RoleID.Eq(roleId)).Where(mdl.NavName.Eq(navName)).First()
+	return do.Where(mdl.RoleID.Eq(roleId), mdl.NavName.Eq(navName)).First()
 }
 
 func (this *CmsAdmin) NavFind(roleId int64) ([]*model.CmsAdminNav, int64, error) {

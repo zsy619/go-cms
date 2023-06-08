@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"strconv"
 	"time"
 
 	"github.com/beego/beego/v2/core/logs"
@@ -18,6 +19,9 @@ func (c *ArticleController) Comment() {
 		return
 	}
 	c.Data["channelId"] = channelId
+	// 获取角色权限
+	roleMap := c.RolePowerGet("channel_" + strconv.FormatInt(channelId, 10) + "_comment")
+	c.Data["roleMap"] = roleMap
 	c.display()
 }
 
@@ -70,6 +74,9 @@ func (c *ArticleController) CommentEdit() {
 		mdl.CommentID = 0
 	}
 	c.Data["mdl"] = mdl
+	// 获取角色权限
+	roleMap := c.RolePowerGet("channel_" + strconv.FormatInt(channelId, 10) + "_comment")
+	c.Data["roleMap"] = roleMap
 	c.display()
 }
 

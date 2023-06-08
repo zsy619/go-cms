@@ -73,7 +73,8 @@
                             <input name="is_slide" type="checkbox" value="1" title="幻灯片" {{if eq .mdl.IsSlide 1}} checked="" {{end}}>
                         </div>
                     </div>
-                    <div class="layui-form-item" role-index="audit">
+                    {{if .roleMap.IsHasAudit}}
+                    <div class="layui-form-item">
                         <label class="layui-form-label">状&nbsp;&nbsp;态</label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="radio" name="status" value="0" title="草稿" {{if eq .mdl.Status 0}}checked="checked" {{end}}>
@@ -81,6 +82,7 @@
                             <input type="radio" name="status" value="3" title="拒绝" {{if eq .mdl.Status 3}}checked="checked" {{end}}>
                         </div>
                     </div>
+                    {{end}}
                     <div class="layui-form-item">
                         <label class="layui-form-label">排序号</label>
                         <div class="layui-input-inline" style="width: 80px;">
@@ -114,15 +116,6 @@
             tableSelect = layui.tableSelect,
             wangEditor = layui.wangEditor;
         var upload = layui.upload;
-
-        // 检查页面权限
-        rolePower("{{.roleId}}", "links_index", function (roleMap){
-            if (roleMap != null && roleMap.isSuccess === true){
-                if (!roleMap.isHasAudit){
-                    $("div[role-index='audit']").remove();
-                }
-            }
-        });
 
         tableSelect.render({
             elem: '#btnSelect',

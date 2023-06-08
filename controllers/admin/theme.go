@@ -18,6 +18,9 @@ type ThemeController struct{ BaseController }
 func (c *ThemeController) Index() {
 	list, _, _ := biz.NewCmsTheme().ThemePaginate(1, 9999, "", "")
 	c.Data["theme"] = list
+	// 获取角色权限
+	roleMap := c.RolePowerGet("themes_index")
+	c.Data["roleMap"] = roleMap
 	c.display()
 }
 
@@ -26,6 +29,9 @@ func (c *ThemeController) Index() {
 func (c *ThemeController) Edit() {
 	list, _, _ := biz.NewCmsTheme().ThemePaginate(1, 9999, "", "")
 	c.Data["theme"] = list
+	// 获取角色权限
+	roleMap := c.RolePowerGet("themes_index")
+	c.Data["roleMap"] = roleMap
 	c.display()
 }
 
@@ -37,13 +43,13 @@ func (c *ThemeController) ThemeSave() {
 		logs.Error("ThemeSave", err.Error())
 		c.JSONError(err.Error())
 	}
-    if mdl.ThemeID <= 0 {
-        mdl.CreateID = int32(GlobalAdminId)
-        mdl.CreateName = GlobalAdminName
-    } else {
-        mdl.UpdateID = int32(GlobalAdminId)
-        mdl.UpdateName = GlobalAdminName
-    }
+	if mdl.ThemeID <= 0 {
+		mdl.CreateID = int32(GlobalAdminId)
+		mdl.CreateName = GlobalAdminName
+	} else {
+		mdl.UpdateID = int32(GlobalAdminId)
+		mdl.UpdateName = GlobalAdminName
+	}
 	if err := biz.NewCmsTheme().ThemeSave(&mdl); err != nil {
 		logs.Error("ThemeSave", err.Error())
 		c.JSONError(err.Error())

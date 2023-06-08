@@ -28,7 +28,6 @@
     </div>
 </div>
 {{template "admin/Public/Button_AddSave.html" }}
-{{template "admin/Public/Button_Edit.html" }}
 <script>
     layui.use(['form', 'table'], function () {
         var $ = layui.jquery,
@@ -75,7 +74,16 @@
                         return '<input type="number" name="sort_id" site_id="' + d.site_id + '" value="' + d.sort_id + '" class="layui-input" style="" />';
                     }
                 },
-                { title: '操作', width: 150, toolbar: '#currentTableBar', align: "center" }
+                { title: '操作', width: 150, align: "center", templet: function (d){
+                        var htmlValue = "<div class=\"layui-btn-container layui-btn-group\">\n";
+                        if ("{{.roleMap}}" != null && "{{.roleMap.IsSuccess}}" === "true") {
+                            if ("{{.roleMap.IsHasEdit}}" === "true") {
+                                htmlValue += "<a class=\"layui-btn layui-btn-normal layui-btn-xs data-count-edit layui-btn-radius\" lay-event=\"edit\"><i class=\"layui-icon layui-icon-edit\"></i>编辑</a>\n";
+                            }
+                        }
+                        htmlValue += "</div>";
+                        return htmlValue;
+                    } }
             ]],
             limits: [10, 15, 20],
             limit: 20,
@@ -83,6 +91,16 @@
             // skin: 'line',
             even: true,
             size: 'lg',
+            before: function (){
+                if ("{{.roleMap}}" != null && "{{.roleMap.IsSuccess}}" === "true"){
+                    if ("{{.roleMap.IsHasAdd}}" === "false"){
+                        $("button[lay-event='add']").remove();
+                    }
+                    if ("{{.roleMap.IsHasEdit}}" === "false"){
+                        $("button[lay-event='save']").remove();
+                    }
+                }
+            }
         });
 
         // 监听搜索操作

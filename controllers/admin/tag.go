@@ -19,6 +19,9 @@ type TagController struct{ BaseController }
 func (c *TagController) Index() {
 	siteList, _ := biz.NewCmsTag().SiteGet(GlobalRoleId, GlobalRoleType)
 	c.Data["site"] = siteList
+	// 获取角色权限
+	roleMap := c.RolePowerGet("tag")
+	c.Data["roleMap"] = roleMap
 	c.display()
 }
 
@@ -40,6 +43,9 @@ func (c *TagController) TagEdit() {
 	c.Data["mdl"] = mdl
 	siteList, _ := biz.NewCmsTag().SiteGet(GlobalRoleId, GlobalRoleType)
 	c.Data["site"] = siteList
+	// 获取角色权限
+	roleMap := c.RolePowerGet("tag")
+	c.Data["roleMap"] = roleMap
 	c.display()
 }
 
