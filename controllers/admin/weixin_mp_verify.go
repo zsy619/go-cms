@@ -12,6 +12,7 @@ import (
 	"haedu.gov.cn/cms/app/lib"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
 	"haedu.gov.cn/cms/controllers/www"
+	"haedu.gov.cn/cms/global"
 	"haedu.gov.cn/tools/xjson"
 )
 
@@ -127,6 +128,13 @@ func (c *WeixinMpVerifyController) Upload() {
 		return
 	}
 	defer file.Close()
+	if isAllow := global.IsAllowFile(head.Filename); !isAllow {
+		result.Code = 1
+		result.Msg = "不支持的文件类型"
+		c.Data["json"] = result
+		c.ServeJSON()
+		return
+	}
 
 	result.File.Name1 = head.Filename
 	result.File.Size = head.Size

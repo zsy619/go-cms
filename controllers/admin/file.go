@@ -56,9 +56,19 @@ func (this *FileController) GetFileDataVm() {
 		}
 		fmt.Println("fs---->", fs)
 		if info.IsDir() {
-			rs.Images = append(rs.Images, map[string]interface{}{"thumb": "", "name": info.Name(), "type": "dir", "path": path[1:] + strings.Replace(fs, runPath, "", -1)})
+			rs.Images = append(rs.Images, map[string]interface{}{
+				"thumb": "",
+				"name":  info.Name(),
+				"type":  "dir",
+				"path":  path[1:] + strings.Replace(fs, runPath, "", -1),
+			})
 		} else {
-			rs.Images = append(rs.Images, map[string]interface{}{"thumb": info.Name(), "name": info.Name(), "type": filepath.Ext(info.Name())[1:], "path": path[1:] + strings.Replace(fs, runPath, "", -1)})
+			rs.Images = append(rs.Images, map[string]interface{}{
+				"thumb": info.Name(),
+				"name":  info.Name(),
+				"type":  filepath.Ext(info.Name())[1:],
+				"path":  path[1:] + strings.Replace(fs, runPath, "", -1),
+			})
 		}
 	}
 	// rand.Shuffle(len(rs.Images), func(i, j int) {

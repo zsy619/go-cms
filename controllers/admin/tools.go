@@ -16,6 +16,7 @@ import (
 	"haedu.gov.cn/cms/app/biz"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/lib"
+	"haedu.gov.cn/cms/global"
 )
 
 type UploadResult struct {
@@ -164,6 +165,13 @@ func (c *ToolsController) Upload() {
 		return
 	}
 	defer file.Close()
+	if isAllow := global.IsAllowFile(head.Filename); !isAllow {
+		result.Code = 1
+		result.Msg = "不支持的文件类型"
+		c.Data["json"] = result
+		c.ServeJSON()
+		return
+	}
 
 	result.File.Name1 = head.Filename
 	result.File.Size = head.Size
