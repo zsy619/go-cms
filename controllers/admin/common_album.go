@@ -30,7 +30,7 @@ func (c *CommonController) AlbumSearch() {
 	tableName := c.GetString("tableName")
 	title := c.GetString("title")
 	ext := c.GetString("ext")
-	list, count, err := biz.NewCmsAlbum().AlbumSearch(page, limit, tableName, title, ext)
+	list, count, err := biz.NewCmsAlbum().AlbumSearch(page, limit, tableName, title, ext, GlobalAdminId, GlobalRoleType)
 	if err != nil {
 		logs.Error("AlbumSearch", err.Error())
 	}
@@ -41,7 +41,7 @@ func (c *CommonController) AlbumPaginate() {
 	tableName := c.GetString("tableName")
 	recordId, _ := c.GetInt64("recordId")
 	typeId, _ := c.GetInt32("typeId")
-	list, count, err := biz.NewCmsAlbum().AlbumPaginate(1, 99999, tableName, recordId, typeId)
+	list, count, err := biz.NewCmsAlbum().AlbumPaginate(1, 99999, tableName, recordId, typeId, GlobalAdminId, GlobalRoleType)
 	if err != nil {
 		logs.Error("AlbumPaginate", err.Error())
 	}
@@ -54,6 +54,7 @@ func (c *CommonController) AlbumSave() {
 		logs.Error("AlbumSave", err.Error())
 		c.JSONError(err.Error())
 	}
+	mdl.CreateID = int32(GlobalAdminId)
 	if err := biz.NewCmsAlbum().AlbumSave(&mdl); err != nil {
 		logs.Error("AlbumSave", err.Error())
 		c.JSONError(err.Error())

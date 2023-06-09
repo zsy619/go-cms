@@ -29,7 +29,7 @@ func (c *CommonController) AttachPaginate() {
 	tableName := c.GetString("tableName")
 	recordId, _ := c.GetInt64("recordId")
 	typeId, _ := c.GetInt32("typeId")
-	list, count, err := biz.NewCmsAttach().AttachPaginate(1, 99999, tableName, recordId, typeId)
+	list, count, err := biz.NewCmsAttach().AttachPaginate(1, 99999, tableName, recordId, typeId, GlobalAdminId, GlobalRoleType)
 	if err != nil {
 		logs.Error("AttachPaginate", err.Error())
 	}
@@ -42,6 +42,7 @@ func (c *CommonController) AttachSave() {
 		logs.Error("AttachSave", err.Error())
 		c.JSONError(err.Error())
 	}
+	mdl.CreateID = int32(GlobalAdminId)
 	if err := biz.NewCmsAttach().AttachSave(&mdl); err != nil {
 		logs.Error("AttachSave", err.Error())
 		c.JSONError(err.Error())

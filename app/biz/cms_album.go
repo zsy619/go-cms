@@ -1,6 +1,7 @@
 package biz
 
 import (
+	"haedu.gov.cn/cms/global"
 	"os"
 	"strings"
 	"time"
@@ -17,12 +18,16 @@ func NewCmsAlbum() *CmsAlbum {
 }
 
 // AlbumPaginate 获取
-func (this *CmsAlbum) AlbumPaginate(page, limit int, tableName string, recordId int64, typeId int32) ([]*model.CmsAlbum, int64, error) {
+func (this *CmsAlbum) AlbumPaginate(page, limit int, tableName string, recordId int64, typeId int32, adminId int64, roleType string) ([]*model.CmsAlbum, int64, error) {
 	mdl, do := query.CmsAlbumDo()
-	return do.Where(mdl.TableName_.Eq(tableName), mdl.RecordID.Eq(recordId), mdl.TypeID.Eq(typeId)).Order(mdl.SortID).FindByPage((page-1)*limit, limit)
+	if global.IsSuper(roleType) {
+		return do.Where(mdl.TableName_.Eq(tableName), mdl.RecordID.Eq(recordId), mdl.TypeID.Eq(typeId)).Order(mdl.SortID).FindByPage((page-1)*limit, limit)
+	} else {
+		return do.Where(mdl.TableName_.Eq(tableName), mdl.RecordID.Eq(recordId), mdl.TypeID.Eq(typeId), mdl.CreateID.Eq(int32(adminId))).Order(mdl.SortID).FindByPage((page-1)*limit, limit)
+	}
 }
 
-func (this *CmsAlbum) AlbumSearch(page, limit int, tableName, title, ext string) ([]*model.CmsAlbum, int64, error) {
+func (this *CmsAlbum) AlbumSearch(page, limit int, tableName, title, ext string, adminId int64, roleType string) ([]*model.CmsAlbum, int64, error) {
 	mdl, do := query.CmsAlbumDo()
 	if tableName != "" {
 		do = do.Where(mdl.TableName_.Eq(tableName))
@@ -33,7 +38,12 @@ func (this *CmsAlbum) AlbumSearch(page, limit int, tableName, title, ext string)
 	if ext != "" {
 		do = do.Where(mdl.FileExt.Like("%" + ext + "%"))
 	}
-	return do.Order(mdl.SortID).FindByPage((page-1)*limit, limit)
+	if global.IsSuper(roleType) {
+		return do.Order(mdl.SortID).FindByPage((page-1)*limit, limit)
+	} else {
+		do = do.Where(mdl.CreateID.Eq(int32(adminId)))
+		return do.Order(mdl.SortID).FindByPage((page-1)*limit, limit)
+	}
 }
 
 // AlbumSave 保存或更新
@@ -60,6 +70,7 @@ func (this *CmsAlbum) AlbumSave(input *model.CmsAlbum) error {
 			mdl.Remark.ColumnName().String():       input.Remark,
 			mdl.SortID.ColumnName().String():       input.SortID,
 			mdl.UpdateTime.ColumnName().String():   input.UpdateTime,
+			mdl.CreateID.ColumnName().String():     input.CreateID,
 		})
 	}
 	return err

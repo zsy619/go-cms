@@ -1,6 +1,7 @@
 package biz
 
 import (
+	"haedu.gov.cn/cms/global"
 	"os"
 	"strings"
 	"time"
@@ -17,9 +18,13 @@ func NewCmsAttach() *CmsAttach {
 }
 
 // AttachPaginate 获取
-func (this *CmsAttach) AttachPaginate(page, limit int, tableName string, recordId int64, typeId int32) ([]*model.CmsAttach, int64, error) {
+func (this *CmsAttach) AttachPaginate(page, limit int, tableName string, recordId int64, typeId int32, adminId int64, roleType string) ([]*model.CmsAttach, int64, error) {
 	mdl, do := query.CmsAttachDo()
-	return do.Where(mdl.TableName_.Eq(tableName), mdl.RecordID.Eq(recordId), mdl.TypeID.Eq(typeId)).Order(mdl.SortID).FindByPage((page-1)*limit, limit)
+	if global.IsSuper(roleType) {
+		return do.Where(mdl.TableName_.Eq(tableName), mdl.RecordID.Eq(recordId), mdl.TypeID.Eq(typeId)).Order(mdl.SortID).FindByPage((page-1)*limit, limit)
+	} else {
+		return do.Where(mdl.TableName_.Eq(tableName), mdl.RecordID.Eq(recordId), mdl.TypeID.Eq(typeId), mdl.CreateID.Eq(int32(adminId))).Order(mdl.SortID).FindByPage((page-1)*limit, limit)
+	}
 }
 
 // AttachSave 保存或更新
@@ -38,6 +43,7 @@ func (this *CmsAttach) AttachSave(input *model.CmsAttach) error {
 			mdl.IsShow.ColumnName().String():     input.IsShow,
 			mdl.Remark.ColumnName().String():     input.Remark,
 			mdl.SortID.ColumnName().String():     input.SortID,
+			mdl.CreateID.ColumnName().String():   input.CreateID,
 			mdl.UpdateTime.ColumnName().String(): input.UpdateTime,
 		})
 	}
