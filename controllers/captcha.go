@@ -37,8 +37,8 @@ func (controller *CaptchaController) GenerateHandler() {
 	id, content, answer := c.Driver.GenerateIdQuestionAnswer()
 	fmt.Println(" ---> ", id, content, answer)
 	item, _ := c.Driver.DrawCaptcha(content)
-	c.Store.Set(verifyId, answer)
-	item.WriteTo(controller.Ctx.ResponseWriter)
+	_ = c.Store.Set(verifyId, answer)
+	_, _ = item.WriteTo(controller.Ctx.ResponseWriter)
 }
 
 // 验证
@@ -49,7 +49,7 @@ func (controller *CaptchaController) VerifyHandle() {
 		body = map[string]interface{}{"code": 1001, "msg": "ok"}
 	}
 	controller.Ctx.ResponseWriter.Header().Set("Content-Type", "application/json; charset=utf-8")
-	json.NewEncoder(controller.Ctx.ResponseWriter).Encode(body)
+	_ = json.NewEncoder(controller.Ctx.ResponseWriter).Encode(body)
 }
 
 // VerifyCode 验证

@@ -64,7 +64,7 @@ func (c *BaseController) JSON(code lib.CodeResult, message string, data interfac
 		Message: message,
 		Data:    data,
 	}
-	c.ServeJSON()
+	_ = c.ServeJSON()
 	c.StopRun()
 }
 
@@ -90,7 +90,7 @@ func (c *BaseController) JSONPage(code lib.CodeResult, message string, data inte
 			Data:    data,
 		},
 	}
-	c.ServeJSON()
+	_ = c.ServeJSON()
 	c.StopRun()
 }
 
@@ -107,7 +107,7 @@ func (c *BaseController) JSONPageError(msg string, data interface{}, count int64
 // JSONData 公共返回方法
 func (c *BaseController) JSONData(data *lib.JSONResponse) {
 	c.Data["json"] = data
-	c.ServeJSON()
+	_ = c.ServeJSON()
 	c.StopRun()
 }
 
@@ -161,9 +161,9 @@ func (c *BaseController) GetSessionInt(sName string) int {
 
 func (c *BaseController) SetSessionBool(sName string, value bool) {
 	if value {
-		c.SetSession(sName, "true")
+		_ = c.SetSession(sName, "true")
 	} else {
-		c.SetSession(sName, "false")
+		_ = c.SetSession(sName, "false")
 	}
 }
 

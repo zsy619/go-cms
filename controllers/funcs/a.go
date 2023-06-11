@@ -160,7 +160,7 @@ func init() {
 
 	// 注册模板函数
 	for k, v := range funcs {
-		web.AddFuncMap(k, v)
+		_ = web.AddFuncMap(k, v)
 	}
 
 	fmt.Println("初始化模板函数-------->结束")
