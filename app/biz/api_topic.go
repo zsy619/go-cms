@@ -80,11 +80,11 @@ func (this *ApiTopic) GetNew(limit int, site_id int64, site_flag string, channel
  */
 func (this *ApiTopic) Click(topic_id int64) error {
 	mdl, do := query.CmsTopicDo()
-	do.Where(mdl.TopicID.Eq(topic_id), mdl.Status.Eq(int32(StatusPass))).Updates(map[string]interface{}{
+	_, err := do.Where(mdl.TopicID.Eq(topic_id), mdl.Status.Eq(int32(StatusPass))).Updates(map[string]interface{}{
 		mdl.Click.ColumnName().String():      gorm.Expr("click + ?", 1),
 		mdl.UpdateTime.ColumnName().String(): time.Now(),
 	})
-	return nil
+	return err
 }
 
 /**

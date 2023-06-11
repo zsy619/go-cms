@@ -2,8 +2,10 @@ package biz
 
 import (
 	"errors"
-	"haedu.gov.cn/cms/global"
+	"fmt"
 	"time"
+
+	"haedu.gov.cn/cms/global"
 
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
@@ -64,11 +66,17 @@ func (this *CmsAds) CategorySave(input *model.CmsAdsCategory) error {
 			mdl.Template.ColumnName().String():   input.Template,
 			mdl.UpdateTime.ColumnName().String(): input.UpdateTime,
 		})
+		if err != nil {
+			fmt.Println(err.Error())
+		}
 		adsMdl, adsDo := query.CmsAdsDo()
-		adsDo.Where(adsMdl.CategoryID.Eq(input.CategoryID)).UpdateColumns(map[string]interface{}{
+		_, err = adsDo.Where(adsMdl.CategoryID.Eq(input.CategoryID)).UpdateColumns(map[string]interface{}{
 			adsMdl.SiteID.ColumnName().String():     input.SiteID,
 			adsMdl.UpdateTime.ColumnName().String(): input.UpdateTime,
 		})
+		if err != nil {
+			fmt.Println(err.Error())
+		}
 	}
 	return err
 }

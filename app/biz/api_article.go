@@ -421,7 +421,7 @@ func (this *ApiArticle) Article(call_index string, article_id int64) (*bizmodel.
 func (this *ApiArticle) Album(call_index string, article_id int64, type_id int32) ([]*bizmodel.ApiAlbumModel, error) {
 	if call_index != "" {
 		article, articleDo := query.CmsArticleDo()
-		articleDo.Where(article.CallIndex.Eq(call_index), article.Status.Eq(2)).Pluck(article.ArticleID, &article_id)
+		_ = articleDo.Where(article.CallIndex.Eq(call_index), article.Status.Eq(2)).Pluck(article.ArticleID, &article_id)
 	}
 	albumMdl, alblumDo := query.CmsAlbumDo()
 	albums := make([]*bizmodel.ApiAlbumModel, 0)
@@ -439,7 +439,7 @@ func (this *ApiArticle) Album(call_index string, article_id int64, type_id int32
 func (this *ApiArticle) Attach(call_index string, article_id int64, type_id int32) ([]*bizmodel.ApiAttachModel, error) {
 	if call_index != "" {
 		article, articleDo := query.CmsArticleDo()
-		articleDo.Where(article.CallIndex.Eq(call_index), article.Status.Eq(2)).Pluck(article.ArticleID, &article_id)
+		_ = articleDo.Where(article.CallIndex.Eq(call_index), article.Status.Eq(2)).Pluck(article.ArticleID, &article_id)
 	}
 	attachMdl, attachDo := query.CmsAttachDo()
 	attachs := make([]*bizmodel.ApiAttachModel, 0)

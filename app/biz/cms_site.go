@@ -60,7 +60,7 @@ func (this *CmsSite) SiteDelete(ids string) {
 		id := idarr[i]
 		id64, _ := strconv.ParseInt(id, 0, 64)
 		if id != "" {
-			siteDo.Where(site.SiteID.Eq(id64)).Update(site.IsDeleted, true)
+			_, _ = siteDo.Where(site.SiteID.Eq(id64)).Update(site.IsDeleted, true)
 		}
 	}
 }
@@ -99,7 +99,7 @@ func (this *CmsSite) SiteSave(mdl *model.CmsSite, domains []string, remarks []st
 	} else {
 		// 修改 cms_admin_nav
 		nav, navDo := query.CmsAdminNavDo()
-		navDo.Where(nav.SiteID.Eq(mdl.SiteID), nav.Type.Eq("Site")).UpdateColumns(map[string]interface{}{
+		_, _ = navDo.Where(nav.SiteID.Eq(mdl.SiteID), nav.Type.Eq("Site")).UpdateColumns(map[string]interface{}{
 			nav.Title.ColumnName().String():      mdl.Title,
 			nav.SortID.ColumnName().String():     mdl.SortID,
 			nav.UpdateTime.ColumnName().String(): time.Now(),
@@ -135,7 +135,7 @@ func (this *CmsSite) SiteSave(mdl *model.CmsSite, domains []string, remarks []st
 		}
 	}
 	domain, domainDo := query.CmsSiteDomainDo()
-	domainDo.Where(domain.SiteID.Eq(mdl.SiteID)).Delete()
+	_, _ = domainDo.Where(domain.SiteID.Eq(mdl.SiteID)).Delete()
 	if domains != nil {
 		domainLen := len(domains)
 		for i := 0; i < domainLen; i++ {
@@ -146,7 +146,7 @@ func (this *CmsSite) SiteSave(mdl *model.CmsSite, domains []string, remarks []st
 			domain.Domain = domains[i]
 			domain.Remark = remarks[i]
 			domain.SiteID = mdl.SiteID
-			domainDo.Save(domain)
+			_ = domainDo.Save(domain)
 		}
 	}
 	return nil
@@ -191,7 +191,7 @@ func (this *CmsSite) ChannelSave(input *model.CmsSiteChannel) error {
 	}
 	{
 		var classLayer int32
-		do.Where(mdl.ChannelID.Eq(input.ParentID)).Pluck(mdl.ClassLayer, &classLayer)
+		_ = do.Where(mdl.ChannelID.Eq(input.ParentID)).Pluck(mdl.ClassLayer, &classLayer)
 		classLayer++
 		input.ClassLayer = classLayer
 	}
@@ -227,7 +227,7 @@ func (this *CmsSite) ChannelSave(input *model.CmsSiteChannel) error {
 		})
 	}
 	if err == nil {
-		this.ChannelNav(input)
+		_ = this.ChannelNav(input)
 	}
 	return err
 }
@@ -242,7 +242,7 @@ func (this *CmsSite) ChannelNav(input *model.CmsSiteChannel) error {
 	// cms_admin_nav
 	var siteNavId int64
 	navMdl, navDo := query.CmsAdminNavDo()
-	navDo.Where(navMdl.SiteID.Eq(input.SiteID), navMdl.Type.Eq("Site")).Pluck(navMdl.NavID, &siteNavId)
+	_ = navDo.Where(navMdl.SiteID.Eq(input.SiteID), navMdl.Type.Eq("Site")).Pluck(navMdl.NavID, &siteNavId)
 	if siteNavId <= 0 {
 		siteMdl, siteDo := query.CmsSiteDo()
 		site, _ := siteDo.Where(siteMdl.SiteID.Eq(input.SiteID)).First()
@@ -262,13 +262,13 @@ func (this *CmsSite) ChannelNav(input *model.CmsSiteChannel) error {
 			CreateTime: dt,
 			UpdateTime: dt,
 		}
-		navDo.Create(nav)
+		_ = navDo.Create(nav)
 		siteNavId = nav.NavID
 	}
 	if siteNavId > 0 {
 		var channelNavId int64
 		// 创建频道导航
-		navDo.Where(navMdl.ChannelID.Eq(input.ChannelID), navMdl.Type.Eq("Channel")).Pluck(navMdl.NavID, &channelNavId)
+		_ = navDo.Where(navMdl.ChannelID.Eq(input.ChannelID), navMdl.Type.Eq("Channel")).Pluck(navMdl.NavID, &channelNavId)
 		if channelNavId <= 0 {
 			nav := &model.CmsAdminNav{
 				SiteID:     input.SiteID,
@@ -287,10 +287,10 @@ func (this *CmsSite) ChannelNav(input *model.CmsSiteChannel) error {
 				CreateTime: dt,
 				UpdateTime: dt,
 			}
-			navDo.Create(nav)
+			_ = navDo.Create(nav)
 			channelNavId = nav.NavID
 		} else {
-			navDo.Where(navMdl.NavID.Eq(channelNavId)).Updates(map[string]interface{}{
+			_, _ = navDo.Where(navMdl.NavID.Eq(channelNavId)).Updates(map[string]interface{}{
 				navMdl.Title.ColumnName().String():      input.Title,
 				navMdl.SortID.ColumnName().String():     input.SortID,
 				navMdl.UpdateTime.ColumnName().String(): input.UpdateTime,
@@ -316,7 +316,7 @@ func (this *CmsSite) ChannelNav(input *model.CmsSiteChannel) error {
 					CreateTime: dt,
 					UpdateTime: dt,
 				}
-				navDo.Create(navArticle)
+				_ = navDo.Create(navArticle)
 				navCategory := &model.CmsAdminNav{
 					SiteID:     input.SiteID,
 					ChannelID:  input.ChannelID,
@@ -334,7 +334,7 @@ func (this *CmsSite) ChannelNav(input *model.CmsSiteChannel) error {
 					CreateTime: dt,
 					UpdateTime: dt,
 				}
-				navDo.Create(navCategory)
+				_ = navDo.Create(navCategory)
 				navComment := &model.CmsAdminNav{
 					SiteID:     input.SiteID,
 					ChannelID:  input.ChannelID,
@@ -352,7 +352,7 @@ func (this *CmsSite) ChannelNav(input *model.CmsSiteChannel) error {
 					CreateTime: dt,
 					UpdateTime: dt,
 				}
-				navDo.Create(navComment)
+				_ = navDo.Create(navComment)
 			}
 		}
 	}

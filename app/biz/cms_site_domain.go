@@ -1,10 +1,12 @@
 package biz
 
 import (
-	"haedu.gov.cn/cms/app/dal/model"
-	"haedu.gov.cn/cms/app/dal/query"
+	"fmt"
 	"strconv"
 	"strings"
+
+	"haedu.gov.cn/cms/app/dal/model"
+	"haedu.gov.cn/cms/app/dal/query"
 )
 
 type CmsSiteDomain struct{}
@@ -20,10 +22,12 @@ func (this *CmsSiteDomain) Delete(ids string) {
 	domain, domainDo := query.CmsSiteDomainDo()
 	idarr := strings.Split(ids, ",")
 	for i := 0; i < len(idarr); i++ {
-		var id = idarr[i]
+		id := idarr[i]
 		id64, _ := strconv.ParseInt(id, 0, 64)
 		if id != "" {
-			domainDo.Where(domain.SiteID.Eq(id64)).Delete()
+			if _, err := domainDo.Where(domain.SiteID.Eq(id64)).Delete(); err != nil {
+				fmt.Println(err.Error())
+			}
 		}
 	}
 }

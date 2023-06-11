@@ -124,9 +124,9 @@ func (this *ApiAds) Paginate(page, limit int, site_id int64, site_flag string, c
  */
 func (this *ApiAds) Click(ads_id int64) error {
 	mdl, do := query.CmsAdsDo()
-	do.Where(mdl.AdsID.Eq(ads_id), mdl.Status.Eq(int32(StatusPass))).Updates(map[string]interface{}{
+	_, err := do.Where(mdl.AdsID.Eq(ads_id), mdl.Status.Eq(int32(StatusPass))).Updates(map[string]interface{}{
 		mdl.Click.ColumnName().String():      gorm.Expr("click + ?", 1),
 		mdl.UpdateTime.ColumnName().String(): time.Now(),
 	})
-	return nil
+	return err
 }

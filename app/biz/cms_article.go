@@ -82,7 +82,7 @@ func (this *CmsArticle) ArticleSave(input *model.CmsArticle) error {
 	{
 		chnMdl, chnDo := query.CmsSiteChannelDo()
 		var siteId int64
-		chnDo.Where(chnMdl.ChannelID.Eq(input.ChannelID)).Pluck(chnMdl.SiteID, &siteId)
+		_ = chnDo.Where(chnMdl.ChannelID.Eq(input.ChannelID)).Pluck(chnMdl.SiteID, &siteId)
 		input.SiteID = siteId
 	}
 	var err error
@@ -249,10 +249,10 @@ func (this *CmsArticle) CategorySave(input *model.CmsArticleCategory) error {
 	{
 		chnMdl, chnDo := query.CmsSiteChannelDo()
 		var siteId int64
-		chnDo.Where(chnMdl.ChannelID.Eq(input.ChannelID)).Pluck(chnMdl.SiteID, &siteId)
+		_ = chnDo.Where(chnMdl.ChannelID.Eq(input.ChannelID)).Pluck(chnMdl.SiteID, &siteId)
 		input.SiteID = siteId
 		var classLayer int32
-		do.Where(mdl.CategoryID.Eq(input.ParentID)).Pluck(mdl.ClassLayer, &classLayer)
+		_ = do.Where(mdl.CategoryID.Eq(input.ParentID)).Pluck(mdl.ClassLayer, &classLayer)
 		classLayer++
 		input.ClassLayer = classLayer
 	}

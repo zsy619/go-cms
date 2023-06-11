@@ -117,11 +117,11 @@ func (this *ApiTag) Find(tag_id int64, name string) (*bizmodel.ApiTagModel, erro
  */
 func (this *ApiTag) Click(tag_id int64) error {
 	mdl, do := query.CmsTagDo()
-	do.Where(mdl.TagID.Eq(tag_id), mdl.Status.Eq(int32(StatusPass))).Updates(map[string]interface{}{
+	_, err := do.Where(mdl.TagID.Eq(tag_id), mdl.Status.Eq(int32(StatusPass))).Updates(map[string]interface{}{
 		mdl.Click.ColumnName().String():      gorm.Expr("click + ?", 1),
 		mdl.UpdateTime.ColumnName().String(): time.Now(),
 	})
-	return nil
+	return err
 }
 
 /**

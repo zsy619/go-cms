@@ -225,9 +225,12 @@ func (w *WeixinRequest) RuleSaveSortId(ruleId int64, sortId int32) error {
 func (w *WeixinRequest) RuleDestory(ruleId int64) error {
 	ruleMdl, ruleDo := query.WeixinRequestRuleDo()
 	contentMdl, contentDo := query.WeixinRequestContentDo()
-	contentDo.Where(contentMdl.RuleID.Eq(ruleId)).Delete()
-	ruleDo.Where(ruleMdl.RuleID.Eq(ruleId)).Delete()
-	return nil
+	_, err := contentDo.Where(contentMdl.RuleID.Eq(ruleId)).Delete()
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	_, err = ruleDo.Where(ruleMdl.RuleID.Eq(ruleId)).Delete()
+	return err
 }
 
 // RuleSave 规则保存

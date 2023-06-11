@@ -125,9 +125,9 @@ func (this *ApiLink) Paginate(page, limit int, site_id int64, site_flag string, 
  */
 func (this *ApiLink) Click(link_id int64) error {
 	mdl, do := query.CmsLinkDo()
-	do.Where(mdl.LinkID.Eq(link_id), mdl.Status.Eq(2)).Updates(map[string]interface{}{
+	_, err := do.Where(mdl.LinkID.Eq(link_id), mdl.Status.Eq(2)).Updates(map[string]interface{}{
 		mdl.Click.ColumnName().String():      gorm.Expr("click + ?", 1),
 		mdl.UpdateTime.ColumnName().String(): time.Now(),
 	})
-	return nil
+	return err
 }

@@ -47,7 +47,7 @@ func (this *WeixinMpVerify) GetCache() ([]*model.WeixinMpVerify, error) {
 func (this *WeixinMpVerify) RefeshCache() {
 	cacheKey := fmt.Sprintf("%s_%d", "Weixin_Mp_Verify", 0)
 	ApiCache.Delete(cacheKey)
-	this.GetCache()
+	_, _ = this.GetCache()
 }
 
 func (this *WeixinMpVerify) Find(verifyId int64) (*model.WeixinMpVerify, error) {

@@ -2,8 +2,10 @@ package biz
 
 import (
 	"errors"
-	"haedu.gov.cn/cms/global"
+	"fmt"
 	"time"
+
+	"haedu.gov.cn/cms/global"
 
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
@@ -71,11 +73,17 @@ func (this *CmsLink) CategorySave(input *model.CmsLinkCategory) error {
 			mdl.Template.ColumnName().String():       input.Template,
 			mdl.UpdateTime.ColumnName().String():     input.UpdateTime,
 		})
+		if err == nil {
+			fmt.Println(err.Error())
+		}
 		linkMdl, linkDo := query.CmsLinkDo()
-		linkDo.Where(linkMdl.CategoryID.Eq(input.CategoryID)).UpdateColumns(map[string]interface{}{
+		_, err = linkDo.Where(linkMdl.CategoryID.Eq(input.CategoryID)).UpdateColumns(map[string]interface{}{
 			linkMdl.SiteID.ColumnName().String():     input.SiteID,
 			linkMdl.UpdateTime.ColumnName().String(): input.UpdateTime,
 		})
+		if err == nil {
+			fmt.Println(err.Error())
+		}
 	}
 	return err
 }

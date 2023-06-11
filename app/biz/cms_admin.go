@@ -107,9 +107,9 @@ func (m *CmsAdmin) LoginLog(userId int64, userName string, method, path, queryx,
 		IP:         ip,
 		CreateTime: time.Now(),
 	}
-	logDo.Create(log)
+	_ = logDo.Create(log)
 	mdl, do := query.CmsAdminDo()
-	do.Where(mdl.UserID.Eq(userId)).UpdateColumns(
+	_, _ = do.Where(mdl.UserID.Eq(userId)).UpdateColumns(
 		map[string]interface{}{
 			mdl.LastIP.ColumnName().String():   ip,
 			mdl.LastTime.ColumnName().String(): time.Now().Format("2006-01-02 15:04:05"),
