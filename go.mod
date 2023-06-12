@@ -18,20 +18,15 @@ require (
 
 require (
 	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.9.0 // indirect
-	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869 // indirect
-	github.com/chromedp/cdproto v0.0.0-20230605001715-1e95ea08ffe6 // indirect
+	github.com/chromedp/cdproto v0.0.0-20230611221135-4cd95c996604 // indirect
 	github.com/chromedp/chromedp v0.9.1 // indirect
 	github.com/chromedp/sysutil v1.0.0 // indirect
 	github.com/gobwas/httphead v0.1.0 // indirect
 	github.com/gobwas/pool v0.2.1 // indirect
 	github.com/gobwas/ws v1.2.1 // indirect
-	github.com/google/uuid v1.3.0 // indirect
-	github.com/gookit/color v1.5.3 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
-	github.com/nbutton23/zxcvbn-go v0.0.0-20210217022336-fa2cb2858354 // indirect
-	github.com/securego/gosec/v2 v2.16.0 // indirect
-	github.com/xo/terminfo v0.0.0-20210125001918-ca9a967f8778 // indirect
+	github.com/tjfoc/gmsm v1.4.1 // indirect
 )
 
 require (

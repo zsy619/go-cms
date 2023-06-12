@@ -205,3 +205,9 @@ func CmsTopicDo() (cmsTopic, *cmsTopicDo) {
 	u := Use(dal.CmsDatabase.DB).CmsTopic
 	return u, u.WithContext(defaultContext).Debug()
 }
+
+// AdminNoticeDo
+func AdminNoticeDo() (adminNotice, *adminNoticeDo) {
+	u := Use(dal.CmsDatabase.DB).AdminNotice
+	return u, u.WithContext(defaultContext).Debug()
+}
