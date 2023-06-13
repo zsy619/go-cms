@@ -231,49 +231,49 @@
                                     <div class="welcome-module">
                                         <div class="layui-row layui-col-space10 layuimini-qiuck">
                                             <div class="layui-col-xs3 layuimini-qiuck-module">
-                                                <a href="javascript:;" layuimini-content-href="/admin/site/index" data-title="站点管理" data-icon="fa fa-window-maximize">
+                                                <a href="javascript:;" data-title="站点管理" data-icon="fa fa-window-maximize" onclick="quickJump('站点管理', 'site_index', '/admin/site/index')">
                                                     <i class="fa fa-window-maximize"></i>
                                                     <cite>站点管理</cite>
                                                 </a>
                                             </div>
                                             <div class="layui-col-xs3 layuimini-qiuck-module">
-                                                <a href="javascript:;" layuimini-content-href="/admin/site/channel" data-title="频道管理" data-icon="fa fa-gears">
+                                                <a href="javascript:;" data-title="频道管理" data-icon="fa fa-gears" onclick="quickJump('频道管理', 'site_channel', '/admin/site/channel')">
                                                     <i class="fa fa-gears"></i>
                                                     <cite>频道管理</cite>
                                                 </a>
                                             </div>
                                             <div class="layui-col-xs3 layuimini-qiuck-module">
-                                                <a href="javascript:;" layuimini-content-href="/admin/admin/index" data-title="管理员管理" data-icon="fa fa-file-text">
+                                                <a href="javascript:;" data-title="管理员管理" data-icon="fa fa-file-text" onclick="quickJump('管理员管理', 'user_manager', '/admin/admin/index')">
                                                     <i class="fa fa-file-text"></i>
                                                     <cite>管理员管理</cite>
                                                 </a>
                                             </div>
                                             <div class="layui-col-xs3 layuimini-qiuck-module">
-                                                <a href="javascript:;" layuimini-content-href="/admin/admin/role" data-title="角色管理" data-icon="fa fa-dot-circle-o">
+                                                <a href="javascript:;" data-title="角色管理" data-icon="fa fa-dot-circle-o" onclick="quickJump('角色管理', 'user_role', '/admin/admin/role')">
                                                     <i class="fa fa-dot-circle-o"></i>
                                                     <cite>角色管理</cite>
                                                 </a>
                                             </div>
                                             <div class="layui-col-xs3 layuimini-qiuck-module">
-                                                <a href="javascript:;" layuimini-content-href="/admin/admin/log" data-title="日志管理" data-icon="fa fa-hourglass-end">
+                                                <a href="javascript:;" data-title="日志管理" data-icon="fa fa-hourglass-end" onclick="quickJump('日志管理', 'user_log', '/admin/admin/log')">
                                                     <i class="fa fa-hourglass-end"></i>
                                                     <cite>日志管理</cite>
                                                 </a>
                                             </div>
                                             <div class="layui-col-xs3 layuimini-qiuck-module">
-                                                <a href="javascript:;" layuimini-content-href="/admin/link/index" data-title="链接管理" data-icon="fa fa-calendar">
+                                                <a href="javascript:;" data-title="链接管理" data-icon="fa fa-calendar" onclick="quickJump('链接管理', 'links_index', '/admin/link/index')">
                                                     <i class="fa fa-calendar"></i>
                                                     <cite>链接管理</cite>
                                                 </a>
                                             </div>
                                             <div class="layui-col-xs3 layuimini-qiuck-module">
-                                                <a href="javascript:;" layuimini-content-href="/admin/weixin/index" data-title="公众平台管理" data-icon="fa fa-snowflake-o">
+                                                <a href="javascript:;" data-title="公众平台管理" data-icon="fa fa-snowflake-o" onclick="quickJump('公众平台管理', 'wexin_base_gzh', '/admin/weixin/index')">
                                                     <i class="fa fa-snowflake-o"></i>
                                                     <cite>公众平台管理</cite>
                                                 </a>
                                             </div>
                                             <div class="layui-col-xs3 layuimini-qiuck-module">
-                                                <a href="javascript:;" layuimini-content-href="/admin/plg/register" data-title="在线报名" data-icon="fa fa-search">
+                                                <a href="javascript:;" data-title="在线报名" data-icon="fa fa-search" onclick="quickJump('在线报名', 'plg_online_register', '/admin/plg/register')">
                                                     <i class="fa fa-search"></i>
                                                     <cite>在线报名</cite>
                                                 </a>
@@ -297,90 +297,13 @@
                     <div class="layui-card">
                         <div class="layui-card-header"><i class="fa fa-bullhorn icon icon-tip"></i>系统公告</div>
                         <div class="layui-card-body layui-text">
+                            {{range $index,$item := .noticeList}}
                             <div class="layuimini-notice">
-                                <div class="layuimini-notice-title">修改选项卡样式</div>
-                                <div class="layuimini-notice-extra">2019-07-11 23:06</div>
-                                <div class="layuimini-notice-content layui-hide">
-                                    界面足够简洁清爽。<br>
-                                    一个接口几行代码而已直接初始化整个框架，无需复杂操作。<br>
-                                    支持多tab，可以打开多窗口。<br>
-                                    支持无限级菜单和对font-awesome图标库的完美支持。<br>
-                                    失效以及报错菜单无法直接打开，并给出弹出层提示完美的线上用户体验。<br>
-                                    url地址hash定位，可以清楚看到当前tab的地址信息。<br>
-                                    刷新页面会保留当前的窗口，并且会定位当前窗口对应左侧菜单栏。<br>
-                                    移动端的友好支持。<br>
-                                </div>
+                                <div class="layuimini-notice-title">{{$item.Title}}</div>
+                                <div class="layuimini-notice-extra">{{dateformat $item.CreateTime "2006-01-02 15:04:05"}}</div>
+                                <div class="layuimini-notice-content layui-hide">{{$item.Content}}</div>
                             </div>
-                            <div class="layuimini-notice">
-                                <div class="layuimini-notice-title">新增系统404模板</div>
-                                <div class="layuimini-notice-extra">2019-07-11 12:57</div>
-                                <div class="layuimini-notice-content layui-hide">
-                                    界面足够简洁清爽。<br>
-                                    一个接口几行代码而已直接初始化整个框架，无需复杂操作。<br>
-                                    支持多tab，可以打开多窗口。<br>
-                                    支持无限级菜单和对font-awesome图标库的完美支持。<br>
-                                    失效以及报错菜单无法直接打开，并给出弹出层提示完美的线上用户体验。<br>
-                                    url地址hash定位，可以清楚看到当前tab的地址信息。<br>
-                                    刷新页面会保留当前的窗口，并且会定位当前窗口对应左侧菜单栏。<br>
-                                    移动端的友好支持。<br>
-                                </div>
-                            </div>
-                            <div class="layuimini-notice">
-                                <div class="layuimini-notice-title">新增treetable插件和菜单管理样式</div>
-                                <div class="layuimini-notice-extra">2019-07-05 14:28</div>
-                                <div class="layuimini-notice-content layui-hide">
-                                    界面足够简洁清爽。<br>
-                                    一个接口几行代码而已直接初始化整个框架，无需复杂操作。<br>
-                                    支持多tab，可以打开多窗口。<br>
-                                    支持无限级菜单和对font-awesome图标库的完美支持。<br>
-                                    失效以及报错菜单无法直接打开，并给出弹出层提示完美的线上用户体验。<br>
-                                    url地址hash定位，可以清楚看到当前tab的地址信息。<br>
-                                    刷新页面会保留当前的窗口，并且会定位当前窗口对应左侧菜单栏。<br>
-                                    移动端的友好支持。<br>
-                                </div>
-                            </div>
-                            <div class="layuimini-notice">
-                                <div class="layuimini-notice-title">修改logo缩放问题</div>
-                                <div class="layuimini-notice-extra">2019-07-04 11:02</div>
-                                <div class="layuimini-notice-content layui-hide">
-                                    界面足够简洁清爽。<br>
-                                    一个接口几行代码而已直接初始化整个框架，无需复杂操作。<br>
-                                    支持多tab，可以打开多窗口。<br>
-                                    支持无限级菜单和对font-awesome图标库的完美支持。<br>
-                                    失效以及报错菜单无法直接打开，并给出弹出层提示完美的线上用户体验。<br>
-                                    url地址hash定位，可以清楚看到当前tab的地址信息。<br>
-                                    刷新页面会保留当前的窗口，并且会定位当前窗口对应左侧菜单栏。<br>
-                                    移动端的友好支持。<br>
-                                </div>
-                            </div>
-                            <div class="layuimini-notice">
-                                <div class="layuimini-notice-title">修复左侧菜单缩放tab无法移动</div>
-                                <div class="layuimini-notice-extra">2019-06-17 11:55</div>
-                                <div class="layuimini-notice-content layui-hide">
-                                    界面足够简洁清爽。<br>
-                                    一个接口几行代码而已直接初始化整个框架，无需复杂操作。<br>
-                                    支持多tab，可以打开多窗口。<br>
-                                    支持无限级菜单和对font-awesome图标库的完美支持。<br>
-                                    失效以及报错菜单无法直接打开，并给出弹出层提示完美的线上用户体验。<br>
-                                    url地址hash定位，可以清楚看到当前tab的地址信息。<br>
-                                    刷新页面会保留当前的窗口，并且会定位当前窗口对应左侧菜单栏。<br>
-                                    移动端的友好支持。<br>
-                                </div>
-                            </div>
-                            <div class="layuimini-notice">
-                                <div class="layuimini-notice-title">修复多模块菜单栏展开有问题</div>
-                                <div class="layuimini-notice-extra">2019-06-13 14:53</div>
-                                <div class="layuimini-notice-content layui-hide">
-                                    界面足够简洁清爽。<br>
-                                    一个接口几行代码而已直接初始化整个框架，无需复杂操作。<br>
-                                    支持多tab，可以打开多窗口。<br>
-                                    支持无限级菜单和对font-awesome图标库的完美支持。<br>
-                                    失效以及报错菜单无法直接打开，并给出弹出层提示完美的线上用户体验。<br>
-                                    url地址hash定位，可以清楚看到当前tab的地址信息。<br>
-                                    刷新页面会保留当前的窗口，并且会定位当前窗口对应左侧菜单栏。<br>
-                                    移动端的友好支持。<br>
-                                </div>
-                            </div>
+                            {{end}}
                         </div>
                     </div>
                     <div class="layui-card">
@@ -430,6 +353,50 @@
     <script src="/static/admin/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
     <script src="/static/admin/js/lay-config.js?v=1.0.4" charset="utf-8"></script>
     <script type="text/javascript">
+        var roleList = null;
+        if("{{.roleType}}" != "supper"){
+            $.ajax({
+                type: "POST", //提交的方法
+                url: "/admin/admin/RoleValueFind?roleId={{.roleId}}", //提交的地址
+                data: $('#frmEdit').serialize(), // 序列化表单值
+                async: false,
+                beforeSend: function () { //当一个Ajax请求开始时触发
+                },
+                error: function (request) {  //失败的话
+                },
+                success: function (data) {  //成功
+                    if (data.code == CodeSuccess) {
+                        roleList = data.data;
+                        console.log(roleList)
+                    }
+                },
+                complete: function () {
+                },
+            });
+        }
+        function quickJump(title, navName, jumpUrl){
+            if("{{.roleType}}" === "supper"){
+                layui.miniTab.openNewTabByIframe({
+                    href: jumpUrl,
+                    title: title,
+                });
+            }else{
+                var isHas = false;
+                for (let i = 0; i < roleList.length; i++) {
+                    if(roleList[i].nav_name === navName){
+                        layui.miniTab.openNewTabByIframe({
+                            href: jumpUrl,
+                            title: title,
+                        });
+                        break;
+                    }
+                }
+                if (!isHas){
+                    layer.msg("无"+title+"相关权限");
+                }
+            }
+        }
+
         $.ajax({
             url: "/admin/index/count?r=" + Math.random(),
             dataType: "json",
@@ -489,6 +456,17 @@
                 });
             });
 
+            function getDateList(){
+                var dateLists = [];
+                var dd;
+                for (let i = 0; i < 7; i++) {
+                    dd = new Date();
+                    dd.setDate(dd.getDate() - (7-i));
+                    dateLists.push(dd.toLocaleDateString());
+                }
+                return dateLists;
+            }
+
             /**
              * 报表功能
              */
@@ -496,9 +474,6 @@
             var optionRecords = {
                 tooltip: {
                     trigger: 'axis'
-                },
-                legend: {
-                    data: ['邮件营销', '联盟广告', '视频广告', '直接访问', '搜索引擎']
                 },
                 grid: {
                     left: '3%',
@@ -514,7 +489,7 @@
                 xAxis: {
                     type: 'category',
                     boundaryGap: false,
-                    data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+                    data: getDateList()
                 },
                 yAxis: {
                     type: 'value'
