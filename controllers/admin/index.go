@@ -67,6 +67,10 @@ func (c *IndexController) UserPasswordSave() {
 	if newPassword != confirmPassword {
 		c.JSONError("两次输入的密码不一致")
 	}
+	// 检查密码是否符合规则
+	if psErr := CheckPasswordRole(newPassword); psErr != nil {
+		c.JSONError(psErr.Error())
+	}
 	err := biz.NewCmsAdmin().ModifyPassword(GlobalAdminId, oldPassword, newPassword)
 	if err != nil {
 		c.JSONError(err.Error())

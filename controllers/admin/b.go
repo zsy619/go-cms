@@ -7,6 +7,7 @@ import (
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
 	"haedu.gov.cn/cms/global"
 	"html/template"
+	"regexp"
 	"strings"
 
 	"haedu.gov.cn/cms/app/dal/model"
@@ -129,4 +130,28 @@ func (this *BaseController) RolePowerGet(navName string) vmodel.RoleAction {
 		}
 	}
 	return roleAction
+}
+
+// CheckPasswordRole 检查密码规则
+func CheckPasswordRole(ps string) error {
+	if len(ps) < 8 {
+		return fmt.Errorf("密码长度不得小于8位")
+	}
+	num := `[0-9]{1}`
+	a_z := `[a-z]{1}`
+	A_Z := `[A-Z]{1}`
+	symbol := `[!@#~$%^&*()+|_]{1}`
+	if b, err := regexp.MatchString(num, ps); !b || err != nil {
+		return fmt.Errorf("密码中必须包含数字")
+	}
+	if b, err := regexp.MatchString(a_z, ps); !b || err != nil {
+		return fmt.Errorf("密码中必须包含小写字母")
+	}
+	if b, err := regexp.MatchString(A_Z, ps); !b || err != nil {
+		return fmt.Errorf("密码中必须包含大写字母")
+	}
+	if b, err := regexp.MatchString(symbol, ps); !b || err != nil {
+		return fmt.Errorf("密码中必须包含特殊字符")
+	}
+	return nil
 }

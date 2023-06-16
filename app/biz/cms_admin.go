@@ -3,6 +3,7 @@ package biz
 import (
 	"context"
 	"errors"
+	"haedu.gov.cn/cms/global"
 	"strconv"
 	"time"
 
@@ -80,6 +81,8 @@ func (m *CmsAdmin) Login(userKey, password string, userType int, loginType Login
 	// 密码加密格式 0不加密 1默认加密 2MD5类型
 	switch find.PasswordFormat {
 	case 1: // 默认加密
+		key := global.ReverseLowerString(userKey)
+		password, _ = xcrypto.Sm4Encrypt(password, key)
 		break
 	case 2: // MD5加密
 		password = xcrypto.GetMD5Hash(password + find.PasswordSalt)
@@ -390,6 +393,8 @@ func (this *CmsAdmin) ModifyPassword(userId int64, oldPassword, newPassword stri
 		// 密码加密格式 0不加密 1默认加密 2MD5类型
 		switch admin.PasswordFormat {
 		case 1: // 默认加密
+			key := global.ReverseLowerString(admin.UserName)
+			oldPassword, _ = xcrypto.Sm4Encrypt(oldPassword, key)
 			break
 		case 2: // MD5加密
 			oldPassword = xcrypto.GetMD5Hash(oldPassword + admin.PasswordSalt)
@@ -408,6 +413,8 @@ func (this *CmsAdmin) ModifyPassword(userId int64, oldPassword, newPassword stri
 	// 密码加密格式 0不加密 1默认加密 2MD5类型
 	switch admin.PasswordFormat {
 	case 1: // 默认加密
+		key := global.ReverseLowerString(admin.UserName)
+		password, _ = xcrypto.Sm4Encrypt(password, key)
 		break
 	case 2: // MD5加密
 		passwordSalt, _ = xstring.RandomHexStr(8)

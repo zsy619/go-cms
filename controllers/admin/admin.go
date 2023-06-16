@@ -7,6 +7,7 @@ import (
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/lib"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
+	"haedu.gov.cn/cms/global"
 	"haedu.gov.cn/tools/xcrypto"
 	"haedu.gov.cn/tools/xjson"
 	"haedu.gov.cn/tools/xstring"
@@ -52,10 +53,17 @@ func (c *AdminController) AdminSave() {
 		logs.Error("AdminSave", err.Error())
 		c.JSONError(err.Error())
 	}
+	// 默认加密sm4加密
 	if mdl.Password != "" {
+		// 检查密码是否符合规则
+		if psErr := CheckPasswordRole(mdl.Password); psErr != nil {
+			c.JSONError(psErr.Error())
+		}
+		// 加密后存储
+		key := global.ReverseLowerString(mdl.UserName)
 		mdl.PasswordSalt, _ = xstring.RandomHexStr(8)
-		mdl.PasswordFormat = 2
-		mdl.Password = xcrypto.GetMD5Hash(mdl.Password + mdl.PasswordSalt)
+		mdl.PasswordFormat = 1
+		mdl.Password, _ = xcrypto.Sm4Encrypt(mdl.Password, key)
 	}
 	do := biz.NewCmsAdmin()
 	if err := do.AdminSave(&mdl); err != nil {
