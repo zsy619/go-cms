@@ -7,8 +7,8 @@ require (
 	github.com/beego/beego/v2 v2.1.0
 	github.com/kardianos/service v1.2.2
 	github.com/mojocn/base64Captcha v1.3.5
-	github.com/prometheus/client_golang v1.15.1
-	golang.org/x/net v0.10.0
+	github.com/prometheus/client_golang v1.16.0
+	golang.org/x/net v0.11.0
 	gorm.io/driver/mysql v1.5.1
 	gorm.io/gen v0.3.23-0.20230510094235-52edd3090a54
 	gorm.io/gorm v1.25.1
@@ -57,12 +57,12 @@ require (
 	github.com/prometheus/procfs v0.10.1 // indirect
 	github.com/satori/go.uuid v1.2.0
 	github.com/shiena/ansicolor v0.0.0-20230509054315-a9deabde6e02 // indirect
-	golang.org/x/crypto v0.9.0
-	golang.org/x/image v0.7.0 // indirect
-	golang.org/x/mod v0.10.0 // indirect
-	golang.org/x/sys v0.8.0 // indirect
-	golang.org/x/text v0.9.0 // indirect
-	golang.org/x/tools v0.9.3 // indirect
+	golang.org/x/crypto v0.10.0
+	golang.org/x/image v0.8.0 // indirect
+	golang.org/x/mod v0.11.0 // indirect
+	golang.org/x/sys v0.9.0 // indirect
+	golang.org/x/text v0.10.0 // indirect
+	golang.org/x/tools v0.10.0 // indirect
 	google.golang.org/protobuf v1.30.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
