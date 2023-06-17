@@ -138,6 +138,9 @@ func (c *ToolsController) ImageUpload() {
 		}
 	}
 
+	// 写入日志
+	biz.NewCmsAdmin().LoginLog(GlobalAdminId, GlobalAdminName, "ImageUpload", result.File.Url1, "", "OK", c.GetClientIp())
+
 	c.Data["json"] = result
 	c.ServeJSON()
 }
@@ -240,6 +243,8 @@ func (c *ToolsController) Upload() {
 			logs.Error("Upload AttachSave", err.Error())
 		}
 	}
+	// 写入日志
+	biz.NewCmsAdmin().LoginLog(GlobalAdminId, GlobalAdminName, "UploadFile", result.File.Url1, "", "OK", c.GetClientIp())
 
 	c.Data["json"] = result
 	c.ServeJSON()

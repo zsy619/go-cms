@@ -134,8 +134,8 @@ func (this *BaseController) RolePowerGet(navName string) vmodel.RoleAction {
 
 // CheckPasswordRole 检查密码规则
 func CheckPasswordRole(ps string) error {
-	if len(ps) < 8 {
-		return fmt.Errorf("密码长度不得小于8位")
+	if len(ps) < 8 || len(ps) > 16 {
+		return fmt.Errorf("密码长度应为8~16位")
 	}
 	num := `[0-9]{1}`
 	a_z := `[a-z]{1}`

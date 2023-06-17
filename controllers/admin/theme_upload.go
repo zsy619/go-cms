@@ -160,6 +160,9 @@ func (c *ThemeController) Upload() {
 		return
 	}
 
+	// 写入日志
+	biz.NewCmsAdmin().LoginLog(GlobalAdminId, GlobalAdminName, "ThemeUpload", "", "", "OK", c.GetClientIp())
+
 	// 6. 删除临时目录
 	err = os.RemoveAll(tmpDir)
 	if err != nil {

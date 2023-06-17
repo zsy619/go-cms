@@ -2,6 +2,8 @@ package admin
 
 import (
 	"fmt"
+	"haedu.gov.cn/cms/controllers/admin/vmodel"
+	"time"
 
 	"haedu.gov.cn/cms/app/biz"
 	"haedu.gov.cn/cms/app/dal/query"
@@ -81,4 +83,43 @@ func (c *IndexController) UserPasswordSave() {
 
 func (c *IndexController) UserSetting() {
 	c.display()
+}
+
+// ReportFormsGet 获取首页报表数据
+func (c *IndexController) ReportFormsGet() {
+	currentDate := time.Now()
+	var times []time.Time
+	var showTimes []string
+	for i := 0; i < 7; i++ {
+		duration, _ := time.ParseDuration(fmt.Sprintf("%dh", -(7-i)*24))
+		yesTime := currentDate.Add(duration)
+		yesTime = time.Date(yesTime.Year(), yesTime.Month(), yesTime.Day(), 0, 0, 0, 0, time.Local)
+		times = append(times, yesTime)
+		showTimes = append(showTimes, yesTime.Format("01-02"))
+	}
+	linkCounts := biz.NewCmsLink().FindByDate(times...)
+	adsCounts := biz.NewCmsAds().FindByDate(times...)
+	articleCounts := biz.NewCmsArticle().FindByDate(times...)
+
+	mdl := vmodel.ReportFormsModel{}
+	mdl.Dates = showTimes
+	item := vmodel.ReportFormsItemModel{}
+	item.Name = "链接"
+	item.Data = linkCounts
+	item.Type = "line"
+	mdl.Items = append(mdl.Items, item)
+
+	item = vmodel.ReportFormsItemModel{}
+	item.Name = "广告"
+	item.Data = adsCounts
+	item.Type = "line"
+	mdl.Items = append(mdl.Items, item)
+
+	item = vmodel.ReportFormsItemModel{}
+	item.Name = "内容"
+	item.Data = articleCounts
+	item.Type = "line"
+	mdl.Items = append(mdl.Items, item)
+
+	c.JSONSuccess("", mdl)
 }

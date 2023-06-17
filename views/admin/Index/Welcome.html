@@ -299,7 +299,7 @@
                         <div class="layui-card-body layui-text">
                             {{range $index,$item := .noticeList}}
                             <div class="layuimini-notice">
-                                <div class="layuimini-notice-title">{{$item.Title}}</div>
+                                <div class="layuimini-notice-title" style="max-width: 350px">{{$item.Title}}</div>
                                 <div class="layuimini-notice-extra">{{dateformat $item.CreateTime "2006-01-02 15:04:05"}}</div>
                                 <div class="layuimini-notice-content layui-hide">{{$item.Content}}</div>
                             </div>
@@ -417,6 +417,33 @@
             }
         });
 
+        var dateList = null;
+        var reportFormsList = null;
+        $.ajax({
+            type: "POST", //提交的方法
+            url: "/admin/index/ReportFormsGet", //提交的地址
+            data: $('#frmEdit').serialize(), // 序列化表单值
+            async: false,
+            beforeSend: function () { //当一个Ajax请求开始时触发
+            },
+            error: function (request) {  //失败的话
+            },
+            success: function (data) {  //成功
+                if (data.code == CodeSuccess) {
+                    console.log(data.data)
+                    dateList = data.data.dates;
+                    reportFormsList = data.data.items;
+                    if(reportFormsList.length > 0){
+                        for (let i = 0; i < reportFormsList.length; i++) {
+                            reportFormsList[i].smooth = false;
+                        }
+                    }
+                }
+            },
+            complete: function () {
+            },
+        });
+
         layui.use(['layer', 'miniTab', 'echarts'], function () {
             var $ = layui.jquery,
                 layer = layui.layer,
@@ -475,6 +502,7 @@
                 tooltip: {
                     trigger: 'axis'
                 },
+                smooth: false,
                 grid: {
                     left: '3%',
                     right: '4%',
@@ -489,38 +517,12 @@
                 xAxis: {
                     type: 'category',
                     boundaryGap: false,
-                    data: getDateList()
+                    data: dateList
                 },
                 yAxis: {
                     type: 'value'
                 },
-                series: [
-                    {
-                        name: '邮件营销',
-                        type: 'line',
-                        data: [120, 132, 101, 134, 90, 230, 210]
-                    },
-                    {
-                        name: '联盟广告',
-                        type: 'line',
-                        data: [220, 182, 191, 234, 290, 330, 310]
-                    },
-                    {
-                        name: '视频广告',
-                        type: 'line',
-                        data: [150, 232, 201, 154, 190, 330, 410]
-                    },
-                    {
-                        name: '直接访问',
-                        type: 'line',
-                        data: [320, 332, 301, 334, 390, 330, 320]
-                    },
-                    {
-                        name: '搜索引擎',
-                        type: 'line',
-                        data: [820, 932, 901, 934, 1290, 1330, 1320]
-                    }
-                ]
+                series: reportFormsList
             };
             echartsRecords.setOption(optionRecords);
 

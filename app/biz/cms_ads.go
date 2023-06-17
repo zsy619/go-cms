@@ -280,3 +280,16 @@ func (this *CmsAds) SiteIdsGet(siteId int64, roleType string, roleId int64) []in
 	}
 	return siteIds
 }
+
+func (this *CmsAds) FindByDate(selectTime ...time.Time) []int64 {
+	mdl, do := query.CmsAdsDo()
+	duration, _ := time.ParseDuration("24h")
+	var counts []int64
+	if len(selectTime) > 0 {
+		for i := 0; i < len(selectTime); i++ {
+			count, _ := do.Where(mdl.Status.Eq(2), mdl.CreateTime.Between(selectTime[i], selectTime[i].Add(duration))).Count()
+			counts = append(counts, count)
+		}
+	}
+	return counts
+}

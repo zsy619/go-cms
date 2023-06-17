@@ -458,3 +458,16 @@ func (this *CmsArticle) CategoryTreeByParentId(parentId, categoryId int64) ([]*b
 	}
 	return out, nil
 }
+
+func (this *CmsArticle) FindByDate(selectTime ...time.Time) []int64 {
+	mdl, do := query.CmsArticleDo()
+	duration, _ := time.ParseDuration("24h")
+	var counts []int64
+	if len(selectTime) > 0 {
+		for i := 0; i < len(selectTime); i++ {
+			count, _ := do.Where(mdl.Status.Eq(2), mdl.CreateTime.Between(selectTime[i], selectTime[i].Add(duration))).Count()
+			counts = append(counts, count)
+		}
+	}
+	return counts
+}
