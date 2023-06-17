@@ -4,9 +4,17 @@
             <h1 class="title has-text-centered">cms.js文件</h1>
             <hr>
             <p></p>
-            <p>1. 页面引用cms.js文件。&nbsp;</p>
+            <p>1. 引用cms.js文件。&nbsp;</p>
+            <p>站内引用</p>
             <textarea id="config" code-type="javascript">
 <script src="/static/cms.min.js"></script>
+</textarea>
+            <p>站外引用</p>
+            <textarea id="configOuter" code-type="javascript">
+<script type="text/javascript">
+    var cmsSite = 'http(s)://cms域名';
+</script>
+<script src="http(s)://cms域名/static/cms.min.js"></script>
 </textarea>
             <p>对站点、广告、链接、标签、专题、文章api接口进行封装。</p>
             <p>2. Article文章对象</p>
