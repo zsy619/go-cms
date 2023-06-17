@@ -318,7 +318,7 @@
                                     <tr>
                                         <td>系统名称</td>
                                         <td>
-                                            教育网内容管理系统
+                                            YY内容管理系统
                                         </td>
                                     </tr>
                                     <tr>
@@ -354,7 +354,7 @@
     <script src="/static/admin/js/lay-config.js?v=1.0.4" charset="utf-8"></script>
     <script type="text/javascript">
         var roleList = null;
-        if("{{.roleType}}" != "supper"){
+        if ("{{.roleType}}" != "supper") {
             $.ajax({
                 type: "POST", //提交的方法
                 url: "/admin/admin/RoleValueFind?roleId={{.roleId}}", //提交的地址
@@ -374,16 +374,16 @@
                 },
             });
         }
-        function quickJump(title, navName, jumpUrl){
-            if("{{.roleType}}" === "supper"){
+        function quickJump(title, navName, jumpUrl) {
+            if ("{{.roleType}}" === "supper") {
                 layui.miniTab.openNewTabByIframe({
                     href: jumpUrl,
                     title: title,
                 });
-            }else{
+            } else {
                 var isHas = false;
                 for (let i = 0; i < roleList.length; i++) {
-                    if(roleList[i].nav_name === navName){
+                    if (roleList[i].nav_name === navName) {
                         layui.miniTab.openNewTabByIframe({
                             href: jumpUrl,
                             title: title,
@@ -391,8 +391,8 @@
                         break;
                     }
                 }
-                if (!isHas){
-                    layer.msg("无"+title+"相关权限");
+                if (!isHas) {
+                    layer.msg("无" + title + "相关权限");
                 }
             }
         }
@@ -456,12 +456,12 @@
                 });
             });
 
-            function getDateList(){
+            function getDateList() {
                 var dateLists = [];
                 var dd;
                 for (let i = 0; i < 7; i++) {
                     dd = new Date();
-                    dd.setDate(dd.getDate() - (7-i));
+                    dd.setDate(dd.getDate() - (7 - i));
                     dateLists.push(dd.toLocaleDateString());
                 }
                 return dateLists;
