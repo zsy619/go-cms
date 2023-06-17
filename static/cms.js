@@ -49,7 +49,10 @@ function AjaxRequest(cache, url, type, data, beforeSend, success, complete) {
  * @return {*}
  */
 function getCmsSite() {
-    return cmsSite == undefined || cmsSite == "" ? "" : cmsSite;
+    if (typeof cmsSite == "undefined") {
+        return "";
+    }
+    return cmsSite == "" ? "" : cmsSite;
 }
 
 /**
