@@ -2,12 +2,13 @@ package admin
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/cms/app/biz"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
 	"haedu.gov.cn/tools/xjson"
-	"time"
 )
 
 type NoticeController struct {
@@ -27,9 +28,9 @@ func (c *NoticeController) Index() {
 // @router /admin/notice/NoticeEdit [get]
 func (c *NoticeController) NoticeEdit() {
 	noticeId, _ := c.GetInt64("noticeId")
-	mdl, err := biz.NewCmsNotice().NoticeFind(noticeId)
+	mdl, err := biz.NewCmsAdminNotice().NoticeFind(noticeId)
 	if err != nil {
-		mdl = &model.AdminNotice{
+		mdl = &model.CmsAdminNotice{
 			SortID:      99,
 			CreateName:  GlobalAdminName,
 			PublishTime: time.Now(),
@@ -44,7 +45,7 @@ func (c *NoticeController) NoticeEdit() {
 
 // NoticeHomePaginate 首页系统公告列表
 func (c *NoticeController) NoticeHomePaginate() {
-	noticeList, err := biz.NewCmsNotice().NoticeShow()
+	noticeList, err := biz.NewCmsAdminNotice().NoticeShow()
 	if err != nil {
 		logs.Error("NoticeHomePaginate", err.Error())
 	}
@@ -56,7 +57,7 @@ func (c *NoticeController) NoticePaginate() {
 	page, limit := c.GetPagingParameters()
 	title := c.GetString("title")
 	status, _ := c.GetInt32("status")
-	noticeList, count, err := biz.NewCmsNotice().NoticePaginate(page, limit, title, status, GlobalAdminId, GlobalRoleType)
+	noticeList, count, err := biz.NewCmsAdminNotice().NoticePaginate(page, limit, title, status, GlobalAdminId, GlobalRoleType)
 	if err != nil {
 		logs.Error("NoticePaginate", err.Error())
 	}
@@ -73,7 +74,7 @@ func (c *NoticeController) NoticeSaveSortId() {
 		logs.Error("NoticeSaveSortId", err.Error())
 		c.JSONError(err.Error())
 	}
-	service := biz.NewCmsNotice()
+	service := biz.NewCmsAdminNotice()
 	for _, mdl := range mdls {
 		if err := service.NoticeSaveSortId(mdl.NoticeId, int32(GlobalAdminId), GlobalAdminName, int32(mdl.SortId)); err != nil {
 			logs.Error("NoticeSaveSortId", err.Error())
@@ -94,7 +95,7 @@ func (c *NoticeController) NoticeChangeStatus() {
 		return
 	}
 	for _, noticeId := range mdl.NoticeIds {
-		if err := biz.NewCmsNotice().NoticeChangeStatus(noticeId, int32(GlobalAdminId), GlobalAdminName, mdl.Status); err != nil {
+		if err := biz.NewCmsAdminNotice().NoticeChangeStatus(noticeId, int32(GlobalAdminId), GlobalAdminName, mdl.Status); err != nil {
 			logs.Error("NoticeChangeStatus", err.Error())
 			c.JSONError(err.Error())
 			return
@@ -107,7 +108,7 @@ func (c *NoticeController) NoticeChangeStatus() {
 // @router /admin/notice/NoticeDestroy [post]
 func (c *NoticeController) NoticeDestroy() {
 	noticeId, _ := c.GetInt64("noticeId")
-	if err := biz.NewCmsNotice().NoticeDestroy(noticeId); err != nil {
+	if err := biz.NewCmsAdminNotice().NoticeDestroy(noticeId); err != nil {
 		logs.Error("NoticeDestroy", err.Error())
 		c.JSONError(err.Error())
 		return
@@ -118,7 +119,7 @@ func (c *NoticeController) NoticeDestroy() {
 // NoticeSave 保存
 // @router /admin/notice/NoticeSave [post]
 func (c *NoticeController) NoticeSave() {
-	mdl := model.AdminNotice{}
+	mdl := model.CmsAdminNotice{}
 	if err := c.ParseForm(&mdl); err != nil {
 		logs.Error("NoticeSave", err.Error())
 		c.JSONError(err.Error())
@@ -130,7 +131,7 @@ func (c *NoticeController) NoticeSave() {
 		mdl.CreateID = int32(GlobalAdminId)
 		mdl.CreateName = GlobalAdminName
 	}
-	if err := biz.NewCmsNotice().NoticeSave(&mdl); err != nil {
+	if err := biz.NewCmsAdminNotice().NoticeSave(&mdl); err != nil {
 		logs.Error("NoticeSave", err.Error())
 		c.JSONError(err.Error())
 		return

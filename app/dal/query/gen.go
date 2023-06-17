@@ -17,10 +17,10 @@ import (
 
 var (
 	Q                          = new(Query)
-	AdminNotice                *adminNotice
 	CmsAdmin                   *cmsAdmin
 	CmsAdminLog                *cmsAdminLog
 	CmsAdminNav                *cmsAdminNav
+	CmsAdminNotice             *cmsAdminNotice
 	CmsAdminRole               *cmsAdminRole
 	CmsAdminRoleSite           *cmsAdminRoleSite
 	CmsAdminRoleValue          *cmsAdminRoleValue
@@ -56,10 +56,10 @@ var (
 
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	*Q = *Use(db, opts...)
-	AdminNotice = &Q.AdminNotice
 	CmsAdmin = &Q.CmsAdmin
 	CmsAdminLog = &Q.CmsAdminLog
 	CmsAdminNav = &Q.CmsAdminNav
+	CmsAdminNotice = &Q.CmsAdminNotice
 	CmsAdminRole = &Q.CmsAdminRole
 	CmsAdminRoleSite = &Q.CmsAdminRoleSite
 	CmsAdminRoleValue = &Q.CmsAdminRoleValue
@@ -96,10 +96,10 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
 		db:                         db,
-		AdminNotice:                newAdminNotice(db, opts...),
 		CmsAdmin:                   newCmsAdmin(db, opts...),
 		CmsAdminLog:                newCmsAdminLog(db, opts...),
 		CmsAdminNav:                newCmsAdminNav(db, opts...),
+		CmsAdminNotice:             newCmsAdminNotice(db, opts...),
 		CmsAdminRole:               newCmsAdminRole(db, opts...),
 		CmsAdminRoleSite:           newCmsAdminRoleSite(db, opts...),
 		CmsAdminRoleValue:          newCmsAdminRoleValue(db, opts...),
@@ -137,10 +137,10 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 type Query struct {
 	db *gorm.DB
 
-	AdminNotice                adminNotice
 	CmsAdmin                   cmsAdmin
 	CmsAdminLog                cmsAdminLog
 	CmsAdminNav                cmsAdminNav
+	CmsAdminNotice             cmsAdminNotice
 	CmsAdminRole               cmsAdminRole
 	CmsAdminRoleSite           cmsAdminRoleSite
 	CmsAdminRoleValue          cmsAdminRoleValue
@@ -179,10 +179,10 @@ func (q *Query) Available() bool { return q.db != nil }
 func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
 		db:                         db,
-		AdminNotice:                q.AdminNotice.clone(db),
 		CmsAdmin:                   q.CmsAdmin.clone(db),
 		CmsAdminLog:                q.CmsAdminLog.clone(db),
 		CmsAdminNav:                q.CmsAdminNav.clone(db),
+		CmsAdminNotice:             q.CmsAdminNotice.clone(db),
 		CmsAdminRole:               q.CmsAdminRole.clone(db),
 		CmsAdminRoleSite:           q.CmsAdminRoleSite.clone(db),
 		CmsAdminRoleValue:          q.CmsAdminRoleValue.clone(db),
@@ -228,10 +228,10 @@ func (q *Query) WriteDB() *Query {
 func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 	return &Query{
 		db:                         db,
-		AdminNotice:                q.AdminNotice.replaceDB(db),
 		CmsAdmin:                   q.CmsAdmin.replaceDB(db),
 		CmsAdminLog:                q.CmsAdminLog.replaceDB(db),
 		CmsAdminNav:                q.CmsAdminNav.replaceDB(db),
+		CmsAdminNotice:             q.CmsAdminNotice.replaceDB(db),
 		CmsAdminRole:               q.CmsAdminRole.replaceDB(db),
 		CmsAdminRoleSite:           q.CmsAdminRoleSite.replaceDB(db),
 		CmsAdminRoleValue:          q.CmsAdminRoleValue.replaceDB(db),
@@ -267,10 +267,10 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 }
 
 type queryCtx struct {
-	AdminNotice                *adminNoticeDo
 	CmsAdmin                   *cmsAdminDo
 	CmsAdminLog                *cmsAdminLogDo
 	CmsAdminNav                *cmsAdminNavDo
+	CmsAdminNotice             *cmsAdminNoticeDo
 	CmsAdminRole               *cmsAdminRoleDo
 	CmsAdminRoleSite           *cmsAdminRoleSiteDo
 	CmsAdminRoleValue          *cmsAdminRoleValueDo
@@ -306,10 +306,10 @@ type queryCtx struct {
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
-		AdminNotice:                q.AdminNotice.WithContext(ctx),
 		CmsAdmin:                   q.CmsAdmin.WithContext(ctx),
 		CmsAdminLog:                q.CmsAdminLog.WithContext(ctx),
 		CmsAdminNav:                q.CmsAdminNav.WithContext(ctx),
+		CmsAdminNotice:             q.CmsAdminNotice.WithContext(ctx),
 		CmsAdminRole:               q.CmsAdminRole.WithContext(ctx),
 		CmsAdminRoleSite:           q.CmsAdminRoleSite.WithContext(ctx),
 		CmsAdminRoleValue:          q.CmsAdminRoleValue.WithContext(ctx),

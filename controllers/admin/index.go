@@ -19,7 +19,7 @@ func (c *IndexController) Index() {
 func (c *IndexController) Welcome() {
 	c.Data["roleId"] = GlobalRoleId
 	c.Data["roleType"] = GlobalRoleType
-	noticeList, _ := biz.NewCmsNotice().NoticeShow()
+	noticeList, _ := biz.NewCmsAdminNotice().NoticeShow()
 	c.Data["noticeList"] = noticeList
 	c.display()
 }

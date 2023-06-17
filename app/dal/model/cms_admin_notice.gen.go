@@ -8,10 +8,10 @@ import (
 	"time"
 )
 
-const TableNameAdminNotice = "admin_notice"
+const TableNameCmsAdminNotice = "cms_admin_notice"
 
-// AdminNotice mapped from table <admin_notice>
-type AdminNotice struct {
+// CmsAdminNotice mapped from table <cms_admin_notice>
+type CmsAdminNotice struct {
 	NoticeID    int64     `gorm:"column:notice_id;type:bigint;primaryKey;autoIncrement:true;comment:主键" json:"notice_id" form:"notice_id"`          // 主键
 	Title       string    `gorm:"column:title;type:varchar(256);comment:内容标题" json:"title" form:"title"`                                            // 内容标题
 	SubTitle    string    `gorm:"column:sub_title;type:varchar(128);comment:副标题" json:"sub_title" form:"sub_title"`                                 // 副标题
@@ -28,7 +28,7 @@ type AdminNotice struct {
 	UpdateTime  time.Time `gorm:"column:update_time;type:datetime;comment:修改时间" json:"update_time" form:"update_time"`                              // 修改时间
 }
 
-// TableName AdminNotice's table name
-func (*AdminNotice) TableName() string {
-	return TableNameAdminNotice
+// TableName CmsAdminNotice's table name
+func (*CmsAdminNotice) TableName() string {
+	return TableNameCmsAdminNotice
 }

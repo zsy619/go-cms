@@ -3,22 +3,22 @@ package biz
 import (
 	"errors"
 	"fmt"
+	"time"
+
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
 	"haedu.gov.cn/cms/global"
-	"time"
 )
 
-type CmsNotice struct {
-}
+type CmsAdminNotice struct{}
 
-func NewCmsNotice() *CmsNotice {
-	return &CmsNotice{}
+func NewCmsAdminNotice() *CmsAdminNotice {
+	return &CmsAdminNotice{}
 }
 
 // NoticePaginate 获取系统公告列表
-func (this *CmsNotice) NoticePaginate(page, limit int, title string, status int32, adminId int64, roleType string) ([]*model.AdminNotice, int64, error) {
-	mdl, do := query.AdminNoticeDo()
+func (this *CmsAdminNotice) NoticePaginate(page, limit int, title string, status int32, adminId int64, roleType string) ([]*model.CmsAdminNotice, int64, error) {
+	mdl, do := query.CmsAdminNoticeDo()
 	if title != "" {
 		do = do.Where(mdl.Title.Like("%" + title + "%"))
 	}
@@ -34,20 +34,20 @@ func (this *CmsNotice) NoticePaginate(page, limit int, title string, status int3
 }
 
 // NoticeShow 首页展示系统公告列表
-func (this *CmsNotice) NoticeShow() ([]*model.AdminNotice, error) {
-	mdl, do := query.AdminNoticeDo()
+func (this *CmsAdminNotice) NoticeShow() ([]*model.CmsAdminNotice, error) {
+	mdl, do := query.CmsAdminNoticeDo()
 	return do.Where(mdl.Status.Eq(2)).Order(mdl.IsTop.Desc(), mdl.CreateTime.Desc()).Limit(6).Find()
 }
 
 // NoticeFind 通过notice_id获取详情
-func (this *CmsNotice) NoticeFind(noticeId int64) (*model.AdminNotice, error) {
-	mdl, do := query.AdminNoticeDo()
+func (this *CmsAdminNotice) NoticeFind(noticeId int64) (*model.CmsAdminNotice, error) {
+	mdl, do := query.CmsAdminNoticeDo()
 	return do.Where(mdl.NoticeID.Eq(noticeId)).First()
 }
 
 // NoticeDestroy 根据notice_id删除
-func (this *CmsNotice) NoticeDestroy(noticeId int64) error {
-	mdl, do := query.AdminNoticeDo()
+func (this *CmsAdminNotice) NoticeDestroy(noticeId int64) error {
+	mdl, do := query.CmsAdminNoticeDo()
 	if _, err := do.Where(mdl.NoticeID.Eq(noticeId)).Delete(); err != nil {
 		return err
 	}
@@ -55,14 +55,14 @@ func (this *CmsNotice) NoticeDestroy(noticeId int64) error {
 }
 
 // NoticeSave 保存
-func (this *CmsNotice) NoticeSave(input *model.AdminNotice) error {
+func (this *CmsAdminNotice) NoticeSave(input *model.CmsAdminNotice) error {
 	if input.Title == "" {
 		return errors.New("标题不能为空")
 	}
 	if input.Content == "" {
 		return errors.New("内容不能为空")
 	}
-	mdl, do := query.AdminNoticeDo()
+	mdl, do := query.CmsAdminNoticeDo()
 	var err error
 	input.UpdateTime = time.Now()
 	if input.NoticeID <= 0 {
@@ -89,8 +89,8 @@ func (this *CmsNotice) NoticeSave(input *model.AdminNotice) error {
 }
 
 // NoticeSaveSortId 更新排序
-func (this *CmsNotice) NoticeSaveSortId(noticeId int64, updateId int32, updateName string, sortId int32) error {
-	mdl, do := query.AdminNoticeDo()
+func (this *CmsAdminNotice) NoticeSaveSortId(noticeId int64, updateId int32, updateName string, sortId int32) error {
+	mdl, do := query.CmsAdminNoticeDo()
 	_, err := do.Where(mdl.NoticeID.Eq(noticeId)).UpdateColumns(
 		map[string]interface{}{
 			mdl.SortID.ColumnName().String():     sortId,
@@ -103,8 +103,8 @@ func (this *CmsNotice) NoticeSaveSortId(noticeId int64, updateId int32, updateNa
 }
 
 // NoticeChangeStatus 更新审核状态
-func (this *CmsNotice) NoticeChangeStatus(noticeId int64, updateId int32, updateName string, status int32) error {
-	mdl, do := query.AdminNoticeDo()
+func (this *CmsAdminNotice) NoticeChangeStatus(noticeId int64, updateId int32, updateName string, status int32) error {
+	mdl, do := query.CmsAdminNoticeDo()
 	_, err := do.Where(mdl.NoticeID.Eq(noticeId)).UpdateColumns(
 		map[string]interface{}{
 			mdl.Status.ColumnName().String():     status,
