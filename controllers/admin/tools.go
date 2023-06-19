@@ -16,7 +16,7 @@ import (
 	"haedu.gov.cn/cms/app/biz"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/lib"
-	"haedu.gov.cn/cms/global"
+	"haedu.gov.cn/tools/xio"
 )
 
 type UploadResult struct {
@@ -168,7 +168,7 @@ func (c *ToolsController) Upload() {
 		return
 	}
 	defer file.Close()
-	if isAllow := global.IsAllowFile(head.Filename); !isAllow {
+	if isAllow := xio.IsAllowFile(head.Filename); !isAllow {
 		result.Code = 1
 		result.Msg = "不支持的文件类型"
 		c.Data["json"] = result
