@@ -46,6 +46,12 @@ layui.use(['form'], function () {
             layer.msg('验证码不能为空');
             return false;
         }
+        const psdRole = checkPasswordRole(data.password);
+        if(psdRole.length > 0){
+            layer.msg(psdRole);
+            return false;
+        }
+
         // var loading = layer.msg('处理中，请稍后...', { icon: 16, shade: 0.3, time: 0 });
         $.ajax({
             url: "/cms/admin/login/verify",
@@ -83,4 +89,15 @@ layui.use(['form'], function () {
         });
         return false;
     });
+
+    function checkPasswordRole(password){
+        if (password.length < 8 || password.length > 16) {
+            return "密码长度应为8~16位";
+        }
+        const regex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s])/
+        if(!regex.test(password)){
+            return "密码校验未通过，密码应至少包含一个大、小写字母,一个数字,一个特殊字符";
+        }
+        return "";
+    }
 });

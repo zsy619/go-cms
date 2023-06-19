@@ -11,7 +11,6 @@ import (
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
 	"haedu.gov.cn/tools/xcrypto"
-	"haedu.gov.cn/tools/xstring"
 )
 
 type LoginType int
@@ -79,17 +78,8 @@ func (m *CmsAdmin) Login(userKey, password string, userType int, loginType Login
 		return nil, errors.New("用户已禁用")
 	}
 	// 密码加密格式 0不加密 1默认加密 2MD5类型
-	switch find.PasswordFormat {
-	case 1: // 默认加密
-		key := global.ReverseLowerString(userKey)
-		password, _ = xcrypto.Sm4Encrypt(password, key)
-		break
-	case 2: // MD5加密
-		password = xcrypto.GetMD5Hash(password + find.PasswordSalt)
-		break
-	default:
-		break
-	}
+	key := global.ReverseLowerString(userKey)
+	password, _ = xcrypto.Sm4Encrypt(password, key)
 	logs.Debug("Login --> ", find.Password, password)
 	if find.Password == password {
 		return find, nil
@@ -389,40 +379,17 @@ func (this *CmsAdmin) ModifyPassword(userId int64, oldPassword, newPassword stri
 	if err != nil {
 		return err
 	}
-	{
-		// 密码加密格式 0不加密 1默认加密 2MD5类型
-		switch admin.PasswordFormat {
-		case 1: // 默认加密
-			key := global.ReverseLowerString(admin.UserName)
-			oldPassword, _ = xcrypto.Sm4Encrypt(oldPassword, key)
-			break
-		case 2: // MD5加密
-			oldPassword = xcrypto.GetMD5Hash(oldPassword + admin.PasswordSalt)
-			break
-		default:
-			break
-		}
-		logs.Debug("ModifyPassword --> ", admin.Password, oldPassword)
-		if admin.Password != oldPassword {
-			return errors.New("旧密码错误")
-		}
+
+	key := global.ReverseLowerString(admin.UserName)
+	oldPassword, _ = xcrypto.Sm4Encrypt(oldPassword, key)
+	logs.Debug("ModifyPassword --> ", admin.Password, oldPassword)
+	if admin.Password != oldPassword {
+		return errors.New("旧密码错误")
 	}
-	// 密码加密格式 0不加密 1默认加密 2MD5类型
+
 	password := newPassword
 	passwordSalt := ""
-	// 密码加密格式 0不加密 1默认加密 2MD5类型
-	switch admin.PasswordFormat {
-	case 1: // 默认加密
-		key := global.ReverseLowerString(admin.UserName)
-		password, _ = xcrypto.Sm4Encrypt(password, key)
-		break
-	case 2: // MD5加密
-		passwordSalt, _ = xstring.RandomHexStr(8)
-		password = xcrypto.GetMD5Hash(password + passwordSalt)
-		break
-	default:
-		break
-	}
+	password, _ = xcrypto.Sm4Encrypt(password, key)
 	_, err = do.Where(mdl.UserID.Eq(userId)).UpdateColumns(map[string]interface{}{
 		mdl.Password.ColumnName().String():       password,
 		mdl.PasswordSalt.ColumnName().String():   passwordSalt,
