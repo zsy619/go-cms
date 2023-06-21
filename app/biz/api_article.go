@@ -203,8 +203,8 @@ func (this *ApiArticle) ArticleGet(limit int, channel_id int64, channel_name str
 		xgeneric.IFF(channel_name == "", "", " And c.name='"+channel_name+"'") +
 		xgeneric.IFF(category_id <= 0, "", " And b.category_id="+strconv.FormatInt(category_id, 10)) +
 		xgeneric.IFF(call_index == "", "", " And b.call_index='"+call_index+"'") +
-		xgeneric.IFF(is_top <= 0, "", " And a.is_top="+strconv.Itoa(is_hot)) +
-		xgeneric.IFF(is_red <= 0, "", " And a.is_red="+strconv.Itoa(is_hot)) +
+		xgeneric.IFF(is_top <= 0, "", " And a.is_top="+strconv.Itoa(is_top)) +
+		xgeneric.IFF(is_red <= 0, "", " And a.is_red="+strconv.Itoa(is_red)) +
 		xgeneric.IFF(is_hot <= 0, "", " And a.is_hot="+strconv.Itoa(is_hot)) +
 		xgeneric.IFF(is_slide <= 0, "", " And a.is_slide="+strconv.Itoa(is_slide)) +
 		" ORDER BY a.is_top DESC," + order_by +
@@ -248,8 +248,8 @@ func (this *ApiArticle) ArticleGetNew(limit int, channel_id int64, channel_name 
 		xgeneric.IFF(channel_name == "", "", " And c.name='"+channel_name+"'") +
 		xgeneric.IFF(category_id <= 0, "", " And b.category_id="+strconv.FormatInt(category_id, 10)) +
 		xgeneric.IFF(call_index == "", "", " And b.call_index='"+call_index+"'") +
-		xgeneric.IFF(is_top <= 0, "", " And a.is_top="+strconv.Itoa(is_hot)) +
-		xgeneric.IFF(is_red <= 0, "", " And a.is_red="+strconv.Itoa(is_hot)) +
+		xgeneric.IFF(is_top <= 0, "", " And a.is_top="+strconv.Itoa(is_top)) +
+		xgeneric.IFF(is_red <= 0, "", " And a.is_red="+strconv.Itoa(is_red)) +
 		xgeneric.IFF(is_hot <= 0, "", " And a.is_hot="+strconv.Itoa(is_hot)) +
 		xgeneric.IFF(is_slide <= 0, "", " And a.is_slide="+strconv.Itoa(is_slide)) +
 		" ORDER BY a.publish_time DESC," + order_by +
@@ -284,8 +284,8 @@ func (this *ApiArticle) ArticlePaginate(page, limit int, channel_id int64, chann
 		xgeneric.IFF(channel_name == "", "", " And c.name='"+channel_name+"'") +
 		xgeneric.IFF(category_id <= 0, "", " And b.category_id="+strconv.FormatInt(category_id, 10)) +
 		xgeneric.IFF(call_index == "", "", " And b.call_index='"+call_index+"'") +
-		xgeneric.IFF(is_top < 0, "", " And a.is_top="+strconv.Itoa(is_hot)) +
-		xgeneric.IFF(is_red < 0, "", " And a.is_red="+strconv.Itoa(is_hot)) +
+		xgeneric.IFF(is_top < 0, "", " And a.is_top="+strconv.Itoa(is_top)) +
+		xgeneric.IFF(is_red < 0, "", " And a.is_red="+strconv.Itoa(is_red)) +
 		xgeneric.IFF(is_hot < 0, "", " And a.is_hot="+strconv.Itoa(is_hot)) +
 		xgeneric.IFF(is_slide < 0, "", " And a.is_slide="+strconv.Itoa(is_slide)) +
 		xgeneric.IFF(is_search < 0, "", " And b.is_search="+strconv.Itoa(is_search)) +
