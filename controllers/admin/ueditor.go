@@ -186,7 +186,7 @@ func (ue *UEditorController) UploadFileX(op string, fieldName string, exts []str
 	io.Copy(f, file)
 	ret_json := map[string]interface{}{
 		"state":    "SUCCESS",
-		"url":      "/" + fileName,
+		"url":      lib.C_LOCAL_DOMAIN_Backslash() + fileName,
 		"title":    h.Filename,
 		"original": h.Filename,
 		"type":     h.Header.Get("Content-Type"),
