@@ -3,9 +3,10 @@ package biz
 import (
 	"errors"
 	"fmt"
+	"github.com/beego/beego/v2/core/logs"
+	"haedu.gov.cn/cms/app/lib"
 	"time"
 
-	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
 )
@@ -27,15 +28,21 @@ func (this *WeixinMpVerify) Get(accountId int64) ([]*model.WeixinMpVerify, error
  */
 func (this *WeixinMpVerify) GetCache() ([]*model.WeixinMpVerify, error) {
 	cacheKey := fmt.Sprintf("%s_%d", "Weixin_Mp_Verify", 0)
-	if found, item := ApiCache.Get(cacheKey); found {
+	/*if found, item := ApiCache.Get(cacheKey); found {
 		list := item.([]*model.WeixinMpVerify)
 		logs.Debug("GetCache[Cache]::", "cacheKey", cacheKey, "WeixinMpVerify", list)
+		return list, nil
+	}*/
+	if found, item := lib.WechatVerifyCache.Get(cacheKey); found {
+		list := item.([]*model.WeixinMpVerify)
+		logs.Debug("WechatVerifyList[Cache]::", "cacheKey", cacheKey, "WechatVerifyList", list)
 		return list, nil
 	}
 	mdl, do := query.WeixinMpVerifyDo()
 	list, err := do.Order(mdl.SortID).Find()
 	if list != nil && len(list) > 0 {
-		ApiCache.Set(cacheKey, list, 60*60*24)
+		// ApiCache.Set(cacheKey, list, 60*60*24)
+		lib.WechatVerifyCache.Set(cacheKey, list)
 	}
 	return list, err
 }

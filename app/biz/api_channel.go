@@ -3,9 +3,10 @@ package biz
 import (
 	"errors"
 	"fmt"
+	"github.com/beego/beego/v2/core/logs"
+	"haedu.gov.cn/cms/app/lib"
 	"strconv"
 
-	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/cms/app/biz/bizmodel"
 	"haedu.gov.cn/cms/app/dal/query"
 	"haedu.gov.cn/tools/xgeneric"
@@ -28,9 +29,14 @@ func (this *ApiChannel) Find(name string, channel_id int64) (*bizmodel.ApiChanne
 		return nil, errors.New("参数错误")
 	}
 	cacheKey := fmt.Sprintf("ApiChannel_Find_%s_%d", name, channel_id)
-	if found, item := ApiCache.Get(cacheKey); found {
+	/*if found, item := ApiCache.Get(cacheKey); found {
 		logs.Debug("ApiCache")
 		return item.(*bizmodel.ApiChannelModel), nil
+	}*/
+	if found, item := lib.ArticleCache.Get(cacheKey); found {
+		mdl := item.(*bizmodel.ApiChannelModel)
+		logs.Debug("ArticleList[Cache]::", "cacheKey", cacheKey, "ArticleList", mdl)
+		return mdl, nil
 	}
 	_, do := query.CmsSiteChannelDo()
 	find := &bizmodel.ApiChannelModel{}
@@ -48,6 +54,7 @@ func (this *ApiChannel) Find(name string, channel_id int64) (*bizmodel.ApiChanne
 	if find == nil || find.Name == "" {
 		return nil, errors.New("频道不存在")
 	}
-	ApiCache.Set(cacheKey, find, 3600)
+	// ApiCache.Set(cacheKey, find, 3600)
+	lib.ChannelCache.Set(cacheKey, find)
 	return find, nil
 }

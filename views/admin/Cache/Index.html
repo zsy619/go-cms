@@ -1,0 +1,80 @@
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <table class="layui-hide" id="tableContainer" lay-filter="currentTableFilter"></table>
+    </div>
+</div>
+<script>
+    layui.use(['form', 'table',], function (){
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table;
+
+        var renderThisTable = function (){
+            table.render({
+                elem: '#tableContainer',
+                url: '/admin/cache/GetList',
+                cols: [[
+                    { field: 'note', title: '缓存' },
+                    { field: 'key', title: '键值' },
+                    { field: 'len', title: '子健个数' },
+                    { field: 'expired', title: '默认缓存时间（秒）' },
+                    { title: '操作', width: 290, align: "center", fixed: "right", templet: function (d){
+                            var htmlValue = "<div class=\"layui-btn-group\">\n";
+                            htmlValue += "<a class=\"layui-btn layui-btn-normal layui-btn-xs data-count-edit layui-btn-radius\" lay-event=\"reset\"><i class=\"layui-icon layui-icon-refresh-1\"></i>重置</a>\n";
+                            htmlValue += "</div>";
+                            return htmlValue;
+                        } }
+                ]],
+                height: "full-170",
+                even: true,
+                size: 'lg',
+                done: function (){
+                    $(".layui-table-main tr").each(function (index, val) {
+                        $(".layui-table-fixed").each(function () {
+                            $($(this).find(".layui-table-body tbody tr")[index]).height($(val).height());
+                        });
+                    });
+                    $(".layui-table-header tr").each(function (index, val) {
+                        $(".layui-table-fixed").each(function () {
+                            $($(this).find(".layui-table-header thead tr")[index]).height($(val).height());
+                        });
+                    });
+                },
+            });
+        }
+        // 开始加载树形列表
+        renderThisTable();
+
+        table.on('tool(currentTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'reset') {
+                $.ajax({
+                    type: "POST",
+                    url: "/admin/cache/Reset", //提交的地址
+                    data: {
+                        "cacheKey": data.key
+                    },
+                    async: false,
+                    beforeSend: function () { //当一个Ajax请求开始时触发
+                        this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+                    },
+                    error: function (request) {  //失败的话
+                    },
+                    success: function (data) {  //成功
+                        if (data.code == CodeSuccess) {
+                            layer.msg("重置成功", { icon: 1, time: 1000 }, function () {
+                                // 刷新页面
+                                renderThisTable();
+                            });
+                        } else {
+                            layer.msg(data.msg, { icon: 2, time: 1000 });
+                        }
+                    },
+                    complete: function () {
+                        layer.close(this.layerIndex);
+                    },
+                });
+            }
+        });
+    });
+</script>

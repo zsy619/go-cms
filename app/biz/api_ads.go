@@ -2,10 +2,11 @@ package biz
 
 import (
 	"fmt"
+	"github.com/beego/beego/v2/core/logs"
+	"haedu.gov.cn/cms/app/lib"
 	"strconv"
 	"time"
 
-	"github.com/beego/beego/v2/core/logs"
 	"gorm.io/gorm"
 	"haedu.gov.cn/cms/app/biz/bizmodel"
 	"haedu.gov.cn/cms/app/dal/query"
@@ -20,9 +21,14 @@ func NewApiAds() *ApiAds {
 
 func (this *ApiAds) get(cackeKeyPrefix string, limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiAdsModel, int64, error) {
 	cacheKey := fmt.Sprintf("%s_%d_%d_%s_%d_%s", cackeKeyPrefix, limit, site_id, site_flag, category_id, call_index)
-	if found, item := ApiCache.Get(cacheKey); found {
+	/*if found, item := ApiCache.Get(cacheKey); found {
 		list := item.([]*bizmodel.ApiAdsModel)
 		logs.Debug("AdsFind[Cache]::", "cacheKey", cacheKey, "Ads", list)
+		return list, int64(len(list)), nil
+	}*/
+	if found, item := lib.AdsCache.Get(cacheKey); found {
+		list := item.([]*bizmodel.ApiAdsModel)
+		logs.Debug("AdsList[Cache]::", "cacheKey", cacheKey, "AdsList", list)
 		return list, int64(len(list)), nil
 	}
 	list := []*bizmodel.ApiAdsModel{}
@@ -47,7 +53,8 @@ func (this *ApiAds) get(cackeKeyPrefix string, limit int, site_id int64, site_fl
 	}
 	err := do.UnderlyingDB().Raw(sql).Scan(&list).Error
 	if err == nil {
-		ApiCache.Set(cacheKey, list, 2400)
+		// ApiCache.Set(cacheKey, list, 2400)
+		lib.AdsCache.Set(cacheKey, list)
 	}
 	return list, int64(len(list)), err
 }

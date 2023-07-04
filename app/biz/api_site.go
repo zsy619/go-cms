@@ -2,6 +2,7 @@ package biz
 
 import (
 	"fmt"
+	"haedu.gov.cn/cms/app/lib"
 
 	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/cms/app/biz/bizmodel"
@@ -23,8 +24,13 @@ func NewApiSite() *ApiSite {
  */
 func (this *ApiSite) Default() (*bizmodel.ApiSiteModel, error) {
 	cacheKey := "ApiSite_Default"
-	if found, item := ApiCache.Get(cacheKey); found {
+	/*if found, item := ApiCache.Get(cacheKey); found {
 		return item.(*bizmodel.ApiSiteModel), nil
+	}*/
+	if found, item := lib.SiteCache.Get(cacheKey); found {
+		mdl := item.(*bizmodel.ApiSiteModel)
+		logs.Debug("SiteList[Cache]::", "cacheKey", cacheKey, "SiteList", mdl)
+		return mdl, nil
 	}
 	site, siteDo := query.CmsSiteDo()
 	find := &bizmodel.ApiSiteModel{}
@@ -39,7 +45,8 @@ func (this *ApiSite) Default() (*bizmodel.ApiSiteModel, error) {
 				find.Template = theme.Name
 			}
 		}
-		ApiCache.Set(cacheKey, find, 1800)
+		// ApiCache.Set(cacheKey, find, 1800)
+		lib.SiteCache.Set(cacheKey, find)
 	} else {
 		find = &bizmodel.ApiSiteModel{}
 	}

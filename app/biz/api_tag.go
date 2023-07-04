@@ -2,6 +2,7 @@ package biz
 
 import (
 	"fmt"
+	"haedu.gov.cn/cms/app/lib"
 	"strconv"
 	"time"
 
@@ -23,10 +24,15 @@ func (this *ApiTag) get(cackeKeyPrefix string, limit int, site_id int64, site_fl
 		limit = 10
 	}
 	cacheKey := fmt.Sprintf("%s_%d_%d_%s_%d", cackeKeyPrefix, limit, site_id, site_flag, channel_id)
-	if found, item := ApiCache.Get(cacheKey); found {
+	/*if found, item := ApiCache.Get(cacheKey); found {
 		tags := item.([]*bizmodel.ApiTagModel)
 		logs.Debug("TagFind[Cache]::", "cacheKey", cacheKey, "Ads", tags)
 		return tags, int64(len(tags)), nil
+	}*/
+	if found, item := lib.ArticleCache.Get(cacheKey); found {
+		list := item.([]*bizmodel.ApiTagModel)
+		logs.Debug("TagList[Cache]::", "cacheKey", cacheKey, "TagList", list)
+		return list, int64(len(list)), nil
 	}
 
 	outTags := make([]*bizmodel.ApiTagModel, 0)
@@ -51,7 +57,8 @@ func (this *ApiTag) get(cackeKeyPrefix string, limit int, site_id int64, site_fl
 
 	err := do.UnderlyingDB().Raw(sql).Scan(&outTags).Error
 	if err == nil {
-		ApiCache.Set(cacheKey, outTags, 1800)
+		// ApiCache.Set(cacheKey, outTags, 1800)
+		lib.TagCache.Set(cacheKey, outTags)
 	}
 	return outTags, int64(len(outTags)), err
 }

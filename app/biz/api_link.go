@@ -2,10 +2,11 @@ package biz
 
 import (
 	"fmt"
+	"github.com/beego/beego/v2/core/logs"
+	"haedu.gov.cn/cms/app/lib"
 	"strconv"
 	"time"
 
-	"github.com/beego/beego/v2/core/logs"
 	"gorm.io/gorm"
 	"haedu.gov.cn/cms/app/biz/bizmodel"
 	"haedu.gov.cn/cms/app/dal/query"
@@ -20,10 +21,15 @@ func NewApiLink() *ApiLink {
 
 func (this *ApiLink) get(cackeKeyPrefix string, limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiLinkModel, int64, error) {
 	cacheKey := fmt.Sprintf("%s_%d_%d_%s_%d_%s", cackeKeyPrefix, limit, site_id, site_flag, category_id, call_index)
-	if found, item := ApiCache.Get(cacheKey); found {
+	/*if found, item := ApiCache.Get(cacheKey); found {
 		links := item.([]*bizmodel.ApiLinkModel)
 		logs.Debug("Get[Cache]::", "cacheKey", cacheKey, "links", links)
 		return links, int64(len(links)), nil
+	}*/
+	if found, item := lib.LinkCache.Get(cacheKey); found {
+		list := item.([]*bizmodel.ApiLinkModel)
+		logs.Debug("LinkList[Cache]::", "cacheKey", cacheKey, "LinkList", list)
+		return list, int64(len(list)), nil
 	}
 	outLink := []*bizmodel.ApiLinkModel{}
 
@@ -47,7 +53,8 @@ func (this *ApiLink) get(cackeKeyPrefix string, limit int, site_id int64, site_f
 	}
 	err := linkDo.UnderlyingDB().Raw(sql).Scan(&outLink).Error
 	if err == nil {
-		ApiCache.Set(cacheKey, outLink, 1800)
+		// ApiCache.Set(cacheKey, outLink, 1800)
+		lib.LinkCache.Set(cacheKey, outLink)
 	}
 	return outLink, int64(len(outLink)), err
 }

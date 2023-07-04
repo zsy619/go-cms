@@ -3,6 +3,8 @@ package biz
 import (
 	"errors"
 	"fmt"
+	"github.com/beego/beego/v2/core/logs"
+	"haedu.gov.cn/cms/app/lib"
 	"time"
 
 	"haedu.gov.cn/cms/app/dal/model"
@@ -35,13 +37,19 @@ func (this *WeixinAccount) AccountFind(accountId int64) (*model.WeixinAccount, e
 
 func (this *WeixinAccount) AccountFindCache(accountId int64) (*model.WeixinAccount, error) {
 	cacheKey := fmt.Sprintf("AccountFindCache_%d", accountId)
-	if ok, v := WeiXinCache.Get(cacheKey); ok {
+	/*if ok, v := WeiXinCache.Get(cacheKey); ok {
 		return v.(*model.WeixinAccount), nil
+	}*/
+	if found, item := lib.WechatAccountCache.Get(cacheKey); found {
+		mdl := item.(*model.WeixinAccount)
+		logs.Debug("WechatAccountList[Cache]::", "cacheKey", cacheKey, "WechatAccountList", mdl)
+		return mdl, nil
 	}
 	mdl, do := query.WeixinAccountDo()
 	find, err := do.Where(mdl.AccountID.Eq(accountId)).First()
 	if err == nil {
-		WeiXinCache.Set(cacheKey, find, 7100)
+		// WeiXinCache.Set(cacheKey, find, 7100)
+		lib.WechatAccountCache.Set(cacheKey, find)
 		return find, nil
 	}
 	return nil, err

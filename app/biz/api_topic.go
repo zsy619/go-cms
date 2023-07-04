@@ -2,6 +2,7 @@ package biz
 
 import (
 	"fmt"
+	"haedu.gov.cn/cms/app/lib"
 	"strconv"
 	"time"
 
@@ -23,9 +24,14 @@ func (this *ApiTopic) get(cackeKeyPrefix string, limit int, site_id int64, site_
 		limit = 10
 	}
 	cacheKey := fmt.Sprintf("%s_%d_%d_%s_%d", cackeKeyPrefix, limit, site_id, site_flag, channel_id)
-	if found, item := ApiCache.Get(cacheKey); found {
+	/*if found, item := ApiCache.Get(cacheKey); found {
 		list := item.([]*bizmodel.ApiTopicModel)
 		logs.Debug("TopicFind[Cache]::", "cacheKey", cacheKey, "Topic", list)
+		return list, int64(len(list)), nil
+	}*/
+	if found, item := lib.TopicCache.Get(cacheKey); found {
+		list := item.([]*bizmodel.ApiTopicModel)
+		logs.Debug("TopicList[Cache]::", "cacheKey", cacheKey, "TopicList", list)
 		return list, int64(len(list)), nil
 	}
 
@@ -45,7 +51,8 @@ func (this *ApiTopic) get(cackeKeyPrefix string, limit int, site_id int64, site_
 	}
 	err := do.UnderlyingDB().Debug().Raw(sql).Scan(&list).Error
 	if err == nil {
-		ApiCache.Set(cacheKey, list, 1800)
+		// ApiCache.Set(cacheKey, list, 1800)
+		lib.TopicCache.Set(cacheKey, list)
 	}
 	return list, int64(len(list)), err
 }

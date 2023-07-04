@@ -2,6 +2,7 @@ package biz
 
 import (
 	"fmt"
+	"haedu.gov.cn/cms/app/lib"
 	"strconv"
 	"time"
 
@@ -191,8 +192,13 @@ func (this *ApiArticle) ArticleGet(limit int, channel_id int64, channel_name str
 		limit = 10
 	}
 	cacheKey := fmt.Sprintf("ApiArticle_ArticleGet_%d_%d_%s_%d_%s_%d_%d_%d_%d_%s", limit, channel_id, channel_name, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
-	if found, item := ApiCache.Get(cacheKey); found {
+	/*if found, item := ApiCache.Get(cacheKey); found {
 		list := item.([]*bizmodel.ApiArticleListModel)
+		return list, int64(len(list)), nil
+	}*/
+	if found, item := lib.ArticleCache.Get(cacheKey); found {
+		list := item.([]*bizmodel.ApiArticleListModel)
+		logs.Debug("ArticleList[Cache]::", "cacheKey", cacheKey, "ArticleList", list)
 		return list, int64(len(list)), nil
 	}
 	list := make([]*bizmodel.ApiArticleListModel, 0)
@@ -212,7 +218,8 @@ func (this *ApiArticle) ArticleGet(limit int, channel_id int64, channel_name str
 	fmt.Println(order_by)
 	err := do.UnderlyingDB().Raw(sql, limit).Scan(&list).Error
 	if err == nil {
-		ApiCache.Set(cacheKey, list, 1800)
+		// ApiCache.Set(cacheKey, list, 1800)
+		lib.ArticleCache.Set(cacheKey, list)
 	}
 	return list, int64(len(list)), err
 }
