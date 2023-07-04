@@ -70,13 +70,13 @@ var (
 // init 初始化
 func init() {
 	ArticleCache = NewCacheItemModel("ArticleCache", "文章列表缓存", 60*20)
-	NoticeCache = NewCacheItemModel("NoticeCache", "系统公告列表缓存", 60*20)
-	AdsCache = NewCacheItemModel("AdsCache", "广告列表缓存", 60*20)
-	LinkCache = NewCacheItemModel("LinkCache", "链接列表缓存", 60*20)
-	TagCache = NewCacheItemModel("TagCache", "标签列表缓存", 60*20)
-	TopicCache = NewCacheItemModel("TopicCache", "专题列表缓存", 60*20)
-	SiteCache = NewCacheItemModel("SiteCache", "站点列表缓存", 60*20)
-	ChannelCache = NewCacheItemModel("ChannelCache", "频道列表缓存", 60*20)
-	WechatAccountCache = NewCacheItemModel("WechatAccountCache", "微信账号列表缓存", 60*20)
-	WechatVerifyCache = NewCacheItemModel("WechatVerifyCache", "微信校验文件列表缓存", 60*20)
+	NoticeCache = NewCacheItemModel("NoticeCache", "系统公告列表缓存", 60*90)
+	AdsCache = NewCacheItemModel("AdsCache", "广告列表缓存", 60*80)
+	LinkCache = NewCacheItemModel("LinkCache", "链接列表缓存", 60*70)
+	TagCache = NewCacheItemModel("TagCache", "标签列表缓存", 60*60)
+	TopicCache = NewCacheItemModel("TopicCache", "专题列表缓存", 60*30)
+	SiteCache = NewCacheItemModel("SiteCache", "站点列表缓存", 60*50)
+	ChannelCache = NewCacheItemModel("ChannelCache", "频道列表缓存", 60*50)
+	WechatAccountCache = NewCacheItemModel("WechatAccountCache", "微信账号列表缓存", 60*90)
+	WechatVerifyCache = NewCacheItemModel("WechatVerifyCache", "微信校验文件列表缓存", 60*90)
 }

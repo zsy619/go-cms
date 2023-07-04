@@ -56,7 +56,7 @@ func (this *ApiTag) get(cackeKeyPrefix string, limit int, site_id int64, site_fl
 	sql += ` limit ` + strconv.Itoa(limit)
 
 	err := do.UnderlyingDB().Raw(sql).Scan(&outTags).Error
-	if err == nil {
+	if err == nil && len(outTags) > 0 {
 		// ApiCache.Set(cacheKey, outTags, 1800)
 		lib.TagCache.Set(cacheKey, outTags)
 	}

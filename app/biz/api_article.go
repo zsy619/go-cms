@@ -217,7 +217,7 @@ func (this *ApiArticle) ArticleGet(limit int, channel_id int64, channel_name str
 		" LIMIT ?"
 	fmt.Println(order_by)
 	err := do.UnderlyingDB().Raw(sql, limit).Scan(&list).Error
-	if err == nil {
+	if err == nil && len(list) > 0 {
 		// ApiCache.Set(cacheKey, list, 1800)
 		lib.ArticleCache.Set(cacheKey, list)
 	}

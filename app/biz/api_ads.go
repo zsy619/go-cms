@@ -52,7 +52,7 @@ func (this *ApiAds) get(cackeKeyPrefix string, limit int, site_id int64, site_fl
 		sql += fmt.Sprintf(" LIMIT %d", limit)
 	}
 	err := do.UnderlyingDB().Raw(sql).Scan(&list).Error
-	if err == nil {
+	if err == nil && len(list) > 0 {
 		// ApiCache.Set(cacheKey, list, 2400)
 		lib.AdsCache.Set(cacheKey, list)
 	}

@@ -50,7 +50,7 @@ func (this *ApiTopic) get(cackeKeyPrefix string, limit int, site_id int64, site_
 		sql += ` ORDER BY a.topic_id desc,a.sort_id`
 	}
 	err := do.UnderlyingDB().Debug().Raw(sql).Scan(&list).Error
-	if err == nil {
+	if err == nil && len(list) > 0 {
 		// ApiCache.Set(cacheKey, list, 1800)
 		lib.TopicCache.Set(cacheKey, list)
 	}

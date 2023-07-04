@@ -52,7 +52,7 @@ func (this *ApiLink) get(cackeKeyPrefix string, limit int, site_id int64, site_f
 		sql += fmt.Sprintf(" LIMIT %d", limit)
 	}
 	err := linkDo.UnderlyingDB().Raw(sql).Scan(&outLink).Error
-	if err == nil {
+	if err == nil && len(outLink) > 0 {
 		// ApiCache.Set(cacheKey, outLink, 1800)
 		lib.LinkCache.Set(cacheKey, outLink)
 	}
