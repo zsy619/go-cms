@@ -1,0 +1,168 @@
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div class="layui-form-item" style="margin: 10px;">
+            <div class="layui-btn-container layui-btn-group">
+                <button type="button" class="layui-btn layui-btn-sm" id="btn-expand">全部展开</button>
+                <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" id="btn-fold">全部折叠</button>
+            </div>
+        </div>
+        <table id="tabNav" class="layui-table" lay-filter="tabNav"></table>
+    </div>
+</div>
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container layui-btn-group">
+        <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"><i class="layui-icon layui-icon-addition"></i>添加</button>
+    </div>
+</script>
+<script>
+    layui.use(['form', 'table', 'treetable'], function (){
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table;
+        var treetable = layui.treetable;
+
+        var renderTreeTable = function (){
+            layer.load(2);
+            treetable.render({
+                toolbar: '#toolbarDemo',
+                treeColIndex: 1,
+                treeSpid: 0,
+                treeIdName: 'nav_id',
+                treePidName: 'parent_id',
+                elem: '#tabNav',
+                url: '/admin/admin/NavFind?roleId={{.roleId}}',
+                page: false,
+                even: true,
+                size: 'lg',
+                cols: [[
+                    { type: 'numbers' },
+                    { field: 'title', title: '导航名称' },
+                    { field: 'nav_id', width: 80, title: 'ID'},
+                    { field: 'name', width: 200, title: '导航标识' },
+                    { field: 'link_url', title: '导航链接' },
+                    {
+                        field: 'is_hide', width: 80, align: 'center', title: '显示', templet: function (d) {
+                            return d.is_hide == 0 ? '√' : '×';
+                        }
+                    },
+                    { field: 'sort_id', width: 80, align: 'center', title: '排序号' },
+                    { title: '操作', width: 210, align: "center", fixed: "right", templet: function (d){
+                            var htmlValue = "<div class=\"layui-btn-group\">\n";
+                            if ("{{.roleMap}}" != null && "{{.roleMap.IsSuccess}}" === "true") {
+                                if ("{{.roleMap.IsHasEdit}}" === "true") {
+                                    htmlValue += "<a class=\"layui-btn layui-btn-normal layui-btn-xs data-count-edit layui-btn-radius\" lay-event=\"edit\"><i class=\"layui-icon layui-icon-edit\"></i>编辑</a>\n";
+                                }
+                                if ("{{.roleMap.IsHasDelete}}" === "true") {
+                                    htmlValue += "<a class=\"layui-btn layui-btn-xs layui-btn-danger data-count-delete layui-btn-radius\" lay-event=\"delete\"><i class=\"layui-icon layui-icon-close\"></i>删除</a>\n";
+                                }
+                            }
+                            htmlValue += "</div>";
+                            return htmlValue;
+                        }
+                    },
+                ]],
+                done: function () {
+                    $(".layui-table-main tr").each(function (index, val) {
+                        $(".layui-table-fixed").each(function () {
+                            $($(this).find(".layui-table-body tbody tr")[index]).height($(val).height());
+                        });
+                    });
+                    $(".layui-table-header tr").each(function (index, val) {
+                        $(".layui-table-fixed").each(function () {
+                            $($(this).find(".layui-table-header thead tr")[index]).height($(val).height());
+                        });
+                    });
+                    layer.closeAll('loading');
+                },
+                before: function (){
+                    if ("{{.roleMap}}" != null && "{{.roleMap.IsSuccess}}" === "true"){
+                        if ("{{.roleMap.IsHasAdd}}" === "false"){
+                            $("button[lay-event='add']").remove();
+                        }
+                        if ("{{.roleMap.IsHasEdit}}" === "false"){
+                            $("button[lay-event='save']").remove();
+                        }
+                    }
+                }
+            });
+        };
+        // 开始加载树形列表
+        renderTreeTable();
+
+        $('#btn-expand').click(function () {
+            treetable.expandAll('#tabNav');
+        });
+
+        $('#btn-fold').click(function () {
+            treetable.foldAll('#tabNav');
+        });
+
+        // toolbar监听事件
+        table.on('toolbar(tabNav)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'add') {  // 监听添加操作
+                var index = layer.open({
+                    title: '编辑导航',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin: true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: 'NavEdit',
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+            }
+        });
+        table.on('tool(tabNav)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'edit') {
+                var index = layer.open({
+                    title: '编辑导航',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin: true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: 'NavEdit?navId=' + data.nav_id,
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            } else if (obj.event === 'delete') {
+                layer.confirm('真的删除行么', function (index) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/admin/nav/NavDestroy", //提交的地址
+                        data: {
+                            "navId": data.nav_id
+                        },
+                        async: false,
+                        beforeSend: function () { //当一个Ajax请求开始时触发
+                            this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+                        },
+                        error: function (request) {  //失败的话
+                        },
+                        success: function (data) {  //成功
+                            if (data.code == CodeSuccess) {
+                                layer.msg("提交成功", { icon: 1, time: 1000 }, function () {
+                                    // 刷新页面
+                                    renderTreeTable();
+                                });
+                            } else {
+                                layer.msg(data.msg, { icon: 2, time: 1000 });
+                            }
+                        },
+                        complete: function () {
+                            layer.closeAll();
+                            layer.close(this.layerIndex);
+                        },
+                    });
+                });
+            }
+        });
+
+    });
+</script>
