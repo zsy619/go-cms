@@ -95,7 +95,7 @@ func (this *ApiTag) GetNew(limit int, site_id int64, site_flag string, channel_i
  */
 func (this *ApiTag) Find(tag_id int64, name string) (*bizmodel.ApiTagModel, error) {
 	cacheKey := fmt.Sprintf("ApiTag_Find_%d_%s", tag_id, name)
-	if found, item := ApiCache.Get(cacheKey); found {
+	if found, item := lib.TagFindCache.Get(cacheKey); found {
 		tag := item.(*bizmodel.ApiTagModel)
 		logs.Debug("TagFind[Cache]::", "cacheKey", cacheKey, "Ads", tag)
 		return tag, nil
@@ -112,7 +112,7 @@ func (this *ApiTag) Find(tag_id int64, name string) (*bizmodel.ApiTagModel, erro
 		where
 	err := do.UnderlyingDB().Raw(sql).Scan(&outTag).Error
 	if err == nil && outTag.Name != "" {
-		ApiCache.Set(cacheKey, &outTag, 1800)
+		lib.TagFindCache.Set(cacheKey, &outTag)
 	}
 	return &outTag, err
 }
@@ -192,15 +192,17 @@ func (this *ApiTag) ArtilceTop(limit int, tag_name string) ([]*bizmodel.ApiArtic
 		limit = 10
 	}
 	cacheKey := fmt.Sprintf("%s_%d_%s", "TagArtilceTop", limit, tag_name)
-	if found, item := ApiCache.Get(cacheKey); found {
+	if found, item := lib.TagArticleCache.Get(cacheKey); found {
 		list := item.([]*bizmodel.ApiArticleListModel)
-		logs.Debug("TopicFind[Cache]::", "cacheKey", cacheKey, "Tag", list)
+		logs.Debug("ArticleTop[Cache]::", "cacheKey", cacheKey, "TagArticle", list)
 		return list, int64(len(list)), nil
 	}
 	list, _, err := this.ArticlePaginate(1, limit, tag_name, 0, "", 0, "", "", 0, 0, 0, 0, 0, "")
 	if err != nil {
 		return []*bizmodel.ApiArticleListModel{}, 0, err
 	}
-	ApiCache.Set(cacheKey, list, 1800)
+	if len(list) > 0 {
+		lib.TagArticleCache.Set(cacheKey, list)
+	}
 	return list, int64(len(list)), nil
 }

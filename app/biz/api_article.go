@@ -35,7 +35,7 @@ func NewApiArticle() *ApiArticle {
 func (this *ApiArticle) CategoryNav(channel_name string, channel_id int64, call_index string, category_id int64, article_id int64) ([]*bizmodel.ApiCategoryNav, error) {
 	if article_id > 0 && category_id <= 0 {
 		cacheKey := fmt.Sprintf("ApiArticle_CategoryNav_%d", article_id)
-		if found, item := ApiCache.Get(cacheKey); found {
+		if found, item := lib.CategoryNavCache.Get(cacheKey); found {
 			if oks, ok := xstring.ToInt64Array(item.(string), "#"); ok && len(oks) == 2 {
 				channel_id = oks[0]
 				category_id = oks[1]
@@ -46,13 +46,13 @@ func (this *ApiArticle) CategoryNav(channel_name string, channel_id int64, call_
 			} else {
 				category_id = article.CategoryID
 				channel_id = article.ChannelID
-				ApiCache.Set(cacheKey, fmt.Sprintf("%d#%d", channel_id, category_id), 1800)
+				lib.CategoryNavCache.Set(cacheKey, fmt.Sprintf("%d#%d", channel_id, category_id))
 			}
 		}
 	}
 	if (channel_name == "" && channel_id <= 0) && (call_index != "" || category_id > 0) {
 		cacheKey := fmt.Sprintf("ApiArticle_CategoryNav_%s_%d", call_index, category_id)
-		if found, item := ApiCache.Get(cacheKey); found {
+		if found, item := lib.CategoryNavCache.Get(cacheKey); found {
 			channel_name = item.(string)
 		} else {
 			_, do := query.CmsSiteChannelDo()
@@ -64,12 +64,12 @@ func (this *ApiArticle) CategoryNav(channel_name string, channel_id int64, call_
 			}
 			if err := do.Debug().UnderlyingDB().Raw(sql).Scan(&channel_name); err != nil {
 			} else {
-				ApiCache.Set(cacheKey, channel_name, 1800)
+				lib.CategoryNavCache.Set(cacheKey, channel_name)
 			}
 		}
 	}
 	cacheKey := fmt.Sprintf("ApiArticle_CategoryNav_%s_%d_%s_%d_%d", channel_name, channel_id, call_index, category_id, article_id)
-	if found, item := ApiCache.Get(cacheKey); found {
+	if found, item := lib.CategoryNavCache.Get(cacheKey); found {
 		return item.([]*bizmodel.ApiCategoryNav), nil
 	}
 	outResult := []*bizmodel.ApiCategoryNav{}
@@ -112,7 +112,9 @@ func (this *ApiArticle) CategoryNav(channel_name string, channel_id int64, call_
 		}
 	}
 
-	ApiCache.Set(cacheKey, outResult, 1800)
+	if len(outResult) > 0 {
+		lib.CategoryNavCache.Set(cacheKey, outResult)
+	}
 
 	return outResult, nil
 }
@@ -124,7 +126,7 @@ func (this *ApiArticle) CategoryNav(channel_name string, channel_id int64, call_
  */
 func (this *ApiArticle) CategoryGet(channel_name string) ([]*bizmodel.ApiCategoryGetModel, int64, error) {
 	cacheKey := fmt.Sprintf("ApiArticle_CategoryGet_%s", channel_name)
-	if found, item := ApiCache.Get(cacheKey); found {
+	if found, item := lib.CategoryGetCache.Get(cacheKey); found {
 		list := item.([]*bizmodel.ApiCategoryGetModel)
 		return list, int64(len(list)), nil
 	}
@@ -136,7 +138,9 @@ func (this *ApiArticle) CategoryGet(channel_name string) ([]*bizmodel.ApiCategor
 	if err != nil {
 		return nil, 0, err
 	}
-	ApiCache.Set(cacheKey, list, 1800)
+	if len(list) > 0 {
+		lib.CategoryGetCache.Set(cacheKey, list)
+	}
 	return list, int64(len(list)), nil
 }
 
@@ -148,7 +152,7 @@ func (this *ApiArticle) CategoryGet(channel_name string) ([]*bizmodel.ApiCategor
  */
 func (this *ApiArticle) CategoryFind(category_id int64, call_index string) (*bizmodel.ApiCategoryFindModel, error) {
 	cacheKey := fmt.Sprintf("ApiArticle_CategoryFind_%d_%s", category_id, call_index)
-	if found, item := ApiCache.Get(cacheKey); found {
+	if found, item := lib.CategoryFindCache.Get(cacheKey); found {
 		return item.(*bizmodel.ApiCategoryFindModel), nil
 	}
 	find := &bizmodel.ApiCategoryFindModel{}
@@ -168,7 +172,9 @@ func (this *ApiArticle) CategoryFind(category_id int64, call_index string) (*biz
 	if err != nil {
 		return nil, err
 	}
-	ApiCache.Set(cacheKey, find, 1800)
+	if find != nil {
+		lib.CategoryFindCache.Set(cacheKey, find)
+	}
 	return find, nil
 }
 
@@ -244,7 +250,7 @@ func (this *ApiArticle) ArticleGetNew(limit int, channel_id int64, channel_name 
 		limit = 10
 	}
 	cacheKey := fmt.Sprintf("ApiArticle_ArticleGetNew_%d_%d_%s_%d_%s_%d_%d_%d_%d_%s", limit, channel_id, channel_name, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
-	if found, item := ApiCache.Get(cacheKey); found {
+	if found, item := lib.ArticleGetNewCache.Get(cacheKey); found {
 		find := item.([]*bizmodel.ApiArticleListModel)
 		return find, int64(len(find)), nil
 	}
@@ -262,8 +268,8 @@ func (this *ApiArticle) ArticleGetNew(limit int, channel_id int64, channel_name 
 		" ORDER BY a.publish_time DESC," + order_by +
 		" LIMIT ?"
 	err := do.UnderlyingDB().Raw(sql, limit).Scan(&outArticle).Error
-	if err == nil {
-		ApiCache.Set(cacheKey, outArticle, 1800)
+	if err == nil && outArticle != nil && len(outArticle) > 0 {
+		lib.ArticleGetNewCache.Set(cacheKey, outArticle)
 	}
 	return outArticle, int64(len(outArticle)), err
 }

@@ -102,7 +102,7 @@ func (this *ApiTopic) Click(topic_id int64) error {
  */
 func (this *ApiTopic) Find(topic_id int64, name string) (*bizmodel.ApiTopicModel, error) {
 	cacheKey := fmt.Sprintf("ApiTopic_Find_%d_%s", topic_id, name)
-	if found, item := ApiCache.Get(cacheKey); found {
+	if found, item := lib.TopicFindCache.Get(cacheKey); found {
 		model := item.(*bizmodel.ApiTopicModel)
 		logs.Debug("TopicFind[Cache]::", "cacheKey", cacheKey, "Topic", model)
 		return model, nil
@@ -117,7 +117,7 @@ func (this *ApiTopic) Find(topic_id int64, name string) (*bizmodel.ApiTopicModel
 	model := &bizmodel.ApiTopicModel{}
 	err := do.UnderlyingDB().Debug().Raw(sql).Scan(model).Error
 	if err == nil && model.Name != "" {
-		ApiCache.Set(cacheKey, model, 2400)
+		lib.TopicFindCache.Set(cacheKey, model)
 	}
 	return model, err
 }
@@ -188,7 +188,7 @@ func (this *ApiTopic) ArtilceTop(limit int, topic_name string) ([]*bizmodel.ApiA
 		limit = 10
 	}
 	cacheKey := fmt.Sprintf("%s_%d_%s", "ApiTopic_ArtilceTop", limit, topic_name)
-	if found, item := ApiCache.Get(cacheKey); found {
+	if found, item := lib.TopicArticleCache.Get(cacheKey); found {
 		list := item.([]*bizmodel.ApiArticleListModel)
 		logs.Debug("ArtilceTop[Cache]::", "cacheKey", cacheKey, "Topic", list)
 		return list, int64(len(list)), nil
@@ -197,6 +197,8 @@ func (this *ApiTopic) ArtilceTop(limit int, topic_name string) ([]*bizmodel.ApiA
 	if err != nil {
 		return []*bizmodel.ApiArticleListModel{}, 0, err
 	}
-	ApiCache.Set(cacheKey, list, 1800)
+	if len(list) > 0 {
+		lib.TopicArticleCache.Set(cacheKey, list)
+	}
 	return list, int64(len(list)), nil
 }

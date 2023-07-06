@@ -60,7 +60,7 @@ func (this *ApiSite) Default() (*bizmodel.ApiSiteModel, error) {
  */
 func (this *ApiSite) Find(site_id int64) (*model.CmsSite, error) {
 	cacheKey := "ApiSite_Find_" + fmt.Sprintf("%d", site_id)
-	if found, item := ApiCache.Get(cacheKey); found {
+	if found, item := lib.SiteFindCache.Get(cacheKey); found {
 		logs.Debug("ApiCache")
 		return item.(*model.CmsSite), nil
 	}
@@ -68,7 +68,9 @@ func (this *ApiSite) Find(site_id int64) (*model.CmsSite, error) {
 	if err != nil {
 		return nil, err
 	} else {
-		ApiCache.Set(cacheKey, out, 1800)
+		if out != nil {
+			lib.SiteFindCache.Set(cacheKey, out)
+		}
 	}
 	return out, nil
 }
@@ -80,7 +82,7 @@ func (this *ApiSite) Find(site_id int64) (*model.CmsSite, error) {
  */
 func (this *ApiSite) ChannelGet(site_id int64) ([]*bizmodel.ApiChannelModel, int64, error) {
 	cacheKey := "ApiSite_ChannelGet_" + fmt.Sprintf("%d", site_id)
-	if found, item := ApiCache.Get(cacheKey); found {
+	if found, item := lib.ChannelGetCache.Get(cacheKey); found {
 		logs.Debug("ApiCache")
 		find := item.([]*bizmodel.ApiChannelModel)
 		return find, int64(len(find)), nil
@@ -91,14 +93,16 @@ func (this *ApiSite) ChannelGet(site_id int64) ([]*bizmodel.ApiChannelModel, int
 	if err != nil {
 		return nil, 0, err
 	} else {
-		ApiCache.Set(cacheKey, outChannel, 1800)
+		if len(outChannel) > 0 {
+			lib.ChannelGetCache.Set(cacheKey, outChannel, 1800)
+		}
 	}
 	return outChannel, int64(len(outChannel)), nil
 }
 
 func (this *ApiSite) NavGetByFlag(site_flag string, channel_id int64) ([]*bizmodel.ApiNavModel, int64, error) {
 	cacheKey := fmt.Sprintf("ApiSite_NavGetByFlag_%s_%d", site_flag, channel_id)
-	if found, item := ApiCache.Get(cacheKey); found {
+	if found, item := lib.NavGetByFlagCache.Get(cacheKey); found {
 		find := item.([]*bizmodel.ApiNavModel)
 		return find, int64(len(find)), nil
 	}
@@ -112,7 +116,9 @@ func (this *ApiSite) NavGetByFlag(site_flag string, channel_id int64) ([]*bizmod
 	if err != nil {
 		return nil, 0, err
 	}
-	ApiCache.Set(cacheKey, find, 1800)
+	if len(find) > 0 {
+		lib.NavGetByFlagCache.Set(cacheKey, find)
+	}
 	return find, count, nil
 }
 
@@ -124,7 +130,7 @@ func (this *ApiSite) NavGetByFlag(site_flag string, channel_id int64) ([]*bizmod
  */
 func (this *ApiSite) NavGet(site_id int64, channel_id int64) ([]*bizmodel.ApiNavModel, int64, error) {
 	cacheKey := fmt.Sprintf("ApiSite_NavGet_%d_%d", site_id, channel_id)
-	if found, item := ApiCache.Get(cacheKey); found {
+	if found, item := lib.NavGetCache.Get(cacheKey); found {
 		find := item.([]*bizmodel.ApiNavModel)
 		return find, int64(len(find)), nil
 	}
@@ -155,13 +161,15 @@ func (this *ApiSite) NavGet(site_id int64, channel_id int64) ([]*bizmodel.ApiNav
 			v.Children = append(v.Children, categorys...)
 		}
 	}
-	ApiCache.Set(cacheKey, outNav, 1800)
+	if len(outNav) > 0 {
+		lib.NavGetCache.Set(cacheKey, outNav)
+	}
 	return outNav, int64(len(outNav)), nil
 }
 
 func (this *ApiSite) NavCategoryGet(channel_id int64, parent_id int64, flag, name string) []*bizmodel.ApiNavModel {
 	cacheKey := fmt.Sprintf("ApiSite_NavCategoryGet_%d_%d", channel_id, parent_id)
-	if found, item := ApiCache.Get(cacheKey); found {
+	if found, item := lib.NavCategoryGetCache.Get(cacheKey); found {
 		find := item.([]*bizmodel.ApiNavModel)
 		return find
 	}
@@ -184,6 +192,8 @@ func (this *ApiSite) NavCategoryGet(channel_id int64, parent_id int64, flag, nam
 		children := this.NavCategoryGet(channel_id, v.NavID, flag, name)
 		v.Children = append(v.Children, children...)
 	}
-	ApiCache.Set(cacheKey, outNav, 1800)
+	if len(outNav) > 0 {
+		lib.NavCategoryGetCache.Set(cacheKey, outNav)
+	}
 	return outNav
 }
