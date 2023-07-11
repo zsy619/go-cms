@@ -312,15 +312,15 @@
                 <div class="center">
                     <div class="item">
                         <span class="icon icon-2"></span>
-                        <input type="text" name="username" lay-verify="required|account" lay-reqtext="登录账号为必填项" placeholder="输入登录账号或手机号或邮箱" autocomplete="off" class="layui-input" value="">
+                        <input type="text" name="username" style="font-size: large;" lay-verify="required|account" lay-reqtext="登录账号为必填项" placeholder="输入登录账号或手机号或邮箱" autocomplete="off" class="layui-input" value="">
                     </div>
                     <div class="item">
                         <span class="icon icon-3"></span>
-                        <input type="password" name="password" lay-verify="required|password" lay-reqtext="登录密码为必填项" placeholder="输入登录密码" autocomplete="off" class="layui-input" value="">
+                        <input type="password" name="password" style="font-size: large;" lay-verify="required|password" lay-reqtext="登录密码为必填项" placeholder="输入登录密码" autocomplete="off" class="layui-input" value="">
                         <span class="bind-password icon icon-4"></span>
                     </div>
                     <div id="validatePanel" class="item" style="width: 137px;">
-                        <input type="text" id="captcha" name="captcha" lay-verify="required|captcha" lay-reqtext="图形验证码为必填项" placeholder="输入图形验证码" autocomplete="off" class="layui-input verification captcha" value="">
+                        <input type="text" id="captcha" name="captcha" style="font-size: large;" lay-verify="required|captcha" lay-reqtext="图形验证码为必填项" placeholder="输入图形验证码" autocomplete="off" class="layui-input verification captcha" value="">
                         <div class="captcha-img">
                             <img id="refreshCaptcha" onclick="this.src='/captcha?r' + Math.random();" class="validateImg" src="/captcha">
                         </div>
