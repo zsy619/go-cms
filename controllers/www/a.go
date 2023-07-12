@@ -52,6 +52,7 @@ func init() {
 		web.Router(ApiPrefix+"/link/click", &ApiLinkController{}, "*:Click")
 
 		web.Router(ApiPrefix+"/site/default", &ApiSiteController{}, "*:Default")
+		web.Router(ApiPrefix+"/site/domain", &ApiSiteController{}, "*:FindDomain")
 		web.Router(ApiPrefix+"/site/find", &ApiSiteController{}, "*:Find")
 		web.Router(ApiPrefix+"/site/find/:site_id", &ApiSiteController{}, "*:Find")
 		web.Router(ApiPrefix+"/channel/get", &ApiSiteController{}, "*:ChannelGet")

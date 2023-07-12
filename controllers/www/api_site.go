@@ -23,6 +23,15 @@ func (this *ApiSiteController) Default() {
 	this.JSONPageSuccess(out, 1)
 }
 
+/**
+ * @description: 通过域名获取站点信息（使用缓存）
+ * @param {string} domain 域名
+ * @return {*}
+ */
+// @router /api/site/find/domain [get]
+func (this *ApiSiteController) FindDomain() {
+}
+
 /*
  * @description: Find 获取站点信息
  * @param {int64} site_id 站点ID
