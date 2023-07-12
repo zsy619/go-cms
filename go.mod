@@ -10,7 +10,7 @@ require (
 	github.com/prometheus/client_golang v1.16.0
 	golang.org/x/net v0.12.0
 	gorm.io/driver/mysql v1.5.1
-	gorm.io/gen v0.3.23-0.20230510094235-52edd3090a54
+	gorm.io/gen v0.3.23
 	gorm.io/gorm v1.25.2
 	gorm.io/plugin/dbresolver v1.4.1
 	haedu.gov.cn/tools v0.0.0-00010101000000-000000000000
