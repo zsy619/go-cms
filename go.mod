@@ -18,7 +18,7 @@ require (
 
 require (
 	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.9.0 // indirect
-	github.com/chromedp/cdproto v0.0.0-20230625224106-7fafe342e117 // indirect
+	github.com/chromedp/cdproto v0.0.0-20230713004731-6192861feb61 // indirect
 	github.com/chromedp/chromedp v0.9.1 // indirect
 	github.com/chromedp/sysutil v1.0.0 // indirect
 	github.com/gobwas/httphead v0.1.0 // indirect
