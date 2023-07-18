@@ -1,0 +1,379 @@
+
+.layui-form-select dl dd.layui-this {
+    color: var(--main-primary);
+}
+.layui-form-onswitch{
+    border-color: var(--main-primary);
+    background-color: var(--main-primary);
+}
+
+.layui-input,
+.layui-select,
+.layui-textarea {
+    border-color: #ccc;
+    border-radius: 4px;
+    line-height: 30px;
+}
+
+.layui-layer-btn a {
+    border-radius: 4px !important;
+}
+
+.layui-table-tips-c:before {
+    position: relative;
+    right: 1px;
+    top: -4px;
+}
+
+.layui-laypage-btn {
+    font-size: 14px;
+}
+
+.layui-laypage-limits select {
+    font-size: 14px;
+}
+
+.layui-table tbody tr:hover,
+.layui-table thead tr,
+.layui-table-header,
+.layui-table-hover,
+.layui-table-mend,
+.layui-table-patch,
+.layui-table-tool,
+.layui-table-total,
+.layui-table-total tr,
+.layui-table[lay-even] tr:nth-child(even) {
+    background: #eff5ff;
+}
+
+.layui-table {
+    margin-top: 0;
+}
+.layui-table thead tr{
+    border-top: 1px solid #eee;
+}
+.layui-table thead tr th{
+    border-right: 1px solid #e6e6e6;
+}
+.layui-table-view {
+    border: 0;
+    .layui-table {
+        width: 100%;
+        th {
+            padding: 8px 0;
+        }
+        td {
+            padding: 9px 0;
+        }
+    }
+    .layui-table-page {
+        padding: 17px 7px 0;
+        height: 51px;
+        .layui-laypage-limits {
+            display: none;
+        }
+        .layui-laypage a,
+        .layui-laypage span.layui-laypage-curr {
+            padding: 0px 16px;
+        }
+    }
+}
+
+.layui-table tbody tr:hover {
+    background: #F5F5F5;
+}
+
+.layui-table td,
+.layui-table th {
+    border-width: 0 1px 1px !important;
+    border-color: #eee;
+    font-size: 13px;
+    text-align: center;
+    
+}
+.layui-table td{
+    padding: 10px 5px;
+}
+.layui-table th{
+    padding: 14px 5px;
+}
+.layui-table-fixed {
+    z-index: 2;
+}
+
+.layui-laypage a:hover {
+    color: var(--main-primary);
+}
+
+.layui-laypage .layui-laypage-curr .layui-laypage-em {
+    background: var(--main-primary);
+}
+
+.layui-laypage input:focus,
+.layui-laypage select:focus {
+    border-color: var(--main-primary) !important;
+}
+
+.layui-table-click {
+    background-color: #fff !important;
+}
+
+.layui-form-radio,
+.layui-form-checkbox {
+    margin-top: 0;
+}
+
+.layui-form-radio>i {
+    font-size: 20px;
+    color: #ccc;
+}
+
+.layui-form-radio>i:hover,
+{
+    color: #c2c2c2;
+}
+
+.layui-form-radioed>i {
+    color: var(--main-primary);
+}
+
+.layui-form-radioed>i {
+    color: var(--main-primary);
+}
+.layui-form-radio:hover>*, .layui-form-radioed, .layui-form-radioed>i{
+     color: var(--main-primary);
+}
+
+.layui-radio-disbaled * {
+    color: #c2c2c2;
+}
+
+.layui-form-checkbox {
+    height: 20px;
+    line-height: 20px;
+    padding-right: 20px;
+}
+
+.layui-form-checkbox i {
+    width: 20px;
+    height: 20px;
+    border-radius: 2px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 0;
+}
+//.layui-form-checked:hover>div, 
+//.layui-form-checked>div{
+//  background-color: var(--main-primary);
+//}
+.layui-form-checked i,
+.layui-form-checked:hover i {
+    color: var(--main-primary);
+}
+
+.layui-form-checked[lay-skin=primary] i {
+    border-color: var(--main-primary) !important;
+    background-color: var(--main-primary);
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+    font-size: 14px;
+}
+
+.layui-form-checkbox[lay-skin=primary]:hover i {
+    border-color: #c2c2c2;
+}
+
+.layui-form-checkbox[lay-skin=primary] span {
+    color: #333;
+}
+.layui-form-checkbox[lay-skin=primary]>.layui-icon-indeterminate{
+    border-color: var(--main-primary);
+}
+.layui-form-checkbox[lay-skin=primary]>.layui-icon-indeterminate:before{
+    background-color: var(--main-primary);
+}
+
+.layui-layer-page .layui-layer-content {
+    margin: 0 10px;
+}
+
+.layui-laydate .layui-this {
+    background-color: var(--main-primary)!important;
+}
+
+.layui-laydate-content td.laydate-selected {
+    //background-color: rgba(33, 127, 225, 0.3);
+    background-color:var(--main_light_blue);
+}
+.layui-laydate .layui-this, .layui-laydate .layui-this>div{
+    background-color: var(--main-primary)!important;
+}
+.layui-laydate-content .laydate-day-next, 
+.layui-laydate-content .laydate-day-prev{
+    color: #999;
+}
+.layui-laydate-content td{
+    color: #555;
+}
+.layui-laydate-header i:hover, .layui-laydate-header span:hover{
+    color: var(--main-primary);
+}
+.layui-colorpicker-main{
+   box-sizing: initial;
+}
+.layui-colorpicker-main-input input.layui-input{
+    font-size: 13px;
+}
+.layui-laypage-curr {
+    em {
+        padding-right: 0;
+        vertical-align: baseline;
+    }
+}
+
+.xm-form-selected .xm-select {
+    border-color: var(--main-primary) !important;
+}
+
+.xm-select-parent .xm-select {
+    min-height: 38px;
+}
+
+.xm-form-selected .xm-select:focus,
+.xm-form-selected .xm-select:hover {
+    border-color: var(--main-primary) !important;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, 0.6);
+}
+
+.xm-select-parent .xm-select:hover {
+    border-color: var(--main-primary);
+}
+
+.xm-select-parent dl dd.xm-select-this div i {
+    color: var(--main-primary);
+}
+
+.xm-select-parent .xm-select-title div.xm-select-label>span {
+    background: var(--main-primary);
+}
+
+div[xm-select-skin] .xm-select-title div.xm-select-label>span {
+    border: 1px solid var(--main-primary);
+}
+
+.xm-select-parent dd .xm-cz:hover {
+    color: var(--main-primary);
+}
+
+.xm-form-checkbox>i {
+    border: 1px solid var(--main-primary);
+}
+
+.layui-timeline-axis {
+    color: var(--main-primary);
+    font-weight: bold;
+}
+.layui-carousel-ind ul{
+    background: transparent;
+}
+.layui-carousel-ind li{
+    width: 40px;
+    height: 5px;
+    border-radius: 5px;
+    margin: 0 5px;
+    cursor: pointer;
+}
+.layui-carousel-ind ul:hover {
+    background-color: transparent;
+}
+//.text-gray {
+//  color: #999;
+//}
+//
+//.text-red {
+//  color: #F03030;
+//}
+
+.layui-tab-title li.layui-this a{
+    color: #fff;
+}
+
+
+.layui-tab-item {
+    min-height: 300px;
+}
+.layui-layer-setwin .layui-layer-close2 {
+    right: -10px !important;
+    top: -10px !important;
+    width: 30px !important;
+    height: 30px !important;
+}
+.layui-layer-btn .layui-layer-btn0 {
+    border-color: var(--main-primary) !important;
+    background-color: var(--main-primary) !important;
+    color: #fff;
+}
+.layui-layer-iframe .layui-layer-btn,
+.layui-layer-page .layui-layer-btn {
+    border-top: 1px solid #e3e4e5;
+    padding: 8px 15px 8px 15px !important;
+}
+.layui-layer .layui-layer-btn a {
+    height: 34px;
+    line-height: 34px;
+    margin: 5px 10px 5px;
+    padding: 0px 28px;
+}
+
+
+.layui-tab-card {
+    border: 0;
+    background: #FFF;
+    box-shadow: 0px 0px 24px 0px rgba(210, 223, 241, 0.45);
+    border-radius: 4px;
+    padding: 40px 30px 10px;
+    &>.layui-tab-title {
+        background: #fff;
+        height: 42px;
+        li {
+            margin: 0;
+            line-height: 42px;
+            padding: 0 30px;
+            font-size: 16px;
+        }
+        .layui-this {
+            background: var(--main-primary);
+            color: #fff;
+            border-top-left-radius: 3px;
+            border-top-right-radius: 3px;
+            box-shadow: -2px 0 3px -1px rgba(210, 223, 241, 0.45), 0 -2px 3px -1px rgba(210, 223, 241, 0.45), 2px 0 3px -1px rgba(210, 223, 241, 0.45);
+            &:after {
+                height: 43px;
+            }
+        }
+    }
+    .layui-tab-content {
+        padding: 10px 0;
+    }
+}
+
+.layui-form-item .layui-form-checkbox[lay-skin=primary] {
+    margin-top: 5px;
+}
+.layui-btn-normal{
+    background-color:var(--main-primary);
+}
+.layui-tab-brief>.layui-tab-title .layui-this{
+    color: var(--main-primary);
+}
+.layui-tab-brief>.layui-tab-more li.layui-this:after, .layui-tab-brief>.layui-tab-title .layui-this:after{
+    border-bottom: 2px solid var(--main-primary);
+}
+//bootstrap重置
+.color-gray{
+    color: #999 !important;
+}
+.color-red{
+    color: #F03030 !important;
+}

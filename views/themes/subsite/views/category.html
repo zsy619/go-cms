@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>{{if eq .site.HomeTitle ""}}{{.site.Title}}{{else}}{{.site.HomeTitle}}{{end}}</title>
+
+    <link href="{{.siteStatic}}plugins/layui/css/layui.css" rel="stylesheet" type="text/css" />
+    <link href="{{.siteStatic}}css/layui-reset.css" rel="stylesheet" >
+    <link href="{{.siteStatic}}css/global.css" rel="stylesheet">
+    <link href="{{.siteStatic}}css/main.css" rel="stylesheet" >
+
+    <script src="{{.siteStatic}}js/jquery-1.7.2.min.js"></script>
+    <script src="{{.siteStatic}}plugins/layui/layui.js"></script>
+    <script src="{{.siteStatic}}js/main.js"></script>
+
+    <link href="/static/plugins/loading/app.min.css?r={{.time}}" rel="stylesheet" />
+    <script src="/static/plugins/loading/app.min.js?r={{.time}}"></script>
+    <script src="/static/plugins/moment/moment.min.js?r={{.time}}"></script>
+    <script src="/static/const.min.js?r={{.time}}"></script>
+    <script src="/static/cms.min.js?r={{.time}}"></script>
+
+    <!--[if lt IE 9]>
+    <script src="{{.siteStatic}}js/lib/html5shiv.min.js"></script>
+    <script src="{{.siteStatic}}js/lib/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+<div class="other-banner">
+    <img src="{{.siteStatic}}images/other_banner1.png" class="img">
+</div>
+<!-- main -->
+<div class="body bg-white">
+
+    <div class="container show-margin" style="position: relative;">
+        <div class="listCon clearfix">
+            <div class="m-aside">
+                <div class="top">{{.channel.Title}}</div>
+                <ul class="data-list" id="categoryList">
+                </ul>
+            </div>
+            <div class="right">
+                <div class="subnav">
+                    <img src="{{.siteStatic}}images/position.png" alt="" class="position">
+                    <span>位置：</span>
+                    <a href="/">首页</a>
+                    <span class="division">&gt;</span>
+                    <a href="javascript:void(0)" class="last">{{.channel.Title}}</a>
+                </div>
+                <div class="subcon">
+                    <div class="list">
+                        <ul id="articleList">
+                        </ul>
+
+                    </div>
+                    <div id="pagination" class="pagination"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="{{.siteStatic}}js/common/footer.js" type="text/javascript"></script>
+<script type="text/javascript">
+    var siteStatic = "{{.siteStatic}}";
+    var channelName = "{{.channelName}}";
+    var categoryName = "{{.categoryName}}";
+    var siteFlag = "{{.channel.SiteFlag}}";
+    var debug = "{{.debug}}";
+
+    $(function () {
+        GetCategoryList();
+        GetArticleList(categoryName);
+    })
+
+    // 获取栏目列表
+    function GetCategoryList() {
+        var cate = new Category();
+        cate.get(
+            {channel_name: channelName,},
+            function (){
+
+            }, function (res){
+                if (res.code == CodeSuccess) {
+                    var len = res.data.length;
+                    if(len > 0){
+                        for (var i = 0; i < len; i++) {
+                            var item = res.data[i];
+                            console.log(item)
+                            var url = "/" + siteFlag + "/"+ item.channel_name +"/"+item.call_index;
+                            console.log(url)
+                            var html;
+                            if (item.call_index === categoryName){
+                                html = '<li class="active"><a href="' + url + '">'+item.title+'</a></li>';
+                            }else{
+                                html = '<li><a href="' + url + '">'+item.title+'</a></li>';
+                            }
+                            $("#categoryList").append(html);
+                        }
+                    }
+                }
+            },function (){
+
+            }
+        )
+    }
+
+    // 获取文章列表
+    function GetArticleList(categoryStr){
+        console.log("article=====>" + categoryStr)
+        var art = new Article();
+        art.get({
+            limit: 10,
+            call_index: categoryStr,
+        }, function (){
+
+        }, function (res){
+            if (res.code == CodeSuccess) {
+                var len = res.data.length;
+                if(len > 0){
+                    for (var i = 0; i < len; i++) {
+                        var item = res.data[i];
+                        var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
+                        var html = '<li><a href="' + url + '">'+item.title+'</a><span class="fr">' + moment(item.publish_time).format('YYYY-MM-DD') + '</span></li>';
+                        $("#articleList").append(html);
+                    }
+                }
+            }
+        }, function (){
+
+        });
+    }
+</script>
+</body>
+</html>
