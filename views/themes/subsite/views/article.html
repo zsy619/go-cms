@@ -1,33 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="renderer" content="webkit">
-    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-    <title>{{if eq .site.HomeTitle ""}}{{.site.Title}}{{else}}{{.site.HomeTitle}}{{end}}</title>
-
-    <link href="{{.siteStatic}}plugins/layui/css/layui.css" rel="stylesheet" type="text/css" />
-    <link href="{{.siteStatic}}css/layui-reset.css" rel="stylesheet" >
-    <link href="{{.siteStatic}}css/global.css" rel="stylesheet">
-    <link href="{{.siteStatic}}css/main.css" rel="stylesheet" >
-
-    <script src="{{.siteStatic}}js/jquery-1.7.2.min.js"></script>
-    <script src="{{.siteStatic}}plugins/layui/layui.js"></script>
-    <script src="{{.siteStatic}}js/main.js"></script>
-
-    <link href="/static/plugins/loading/app.min.css?r={{.time}}" rel="stylesheet" />
-    <script src="/static/plugins/loading/app.min.js?r={{.time}}"></script>
-    <script src="/static/plugins/moment/moment.min.js?r={{.time}}"></script>
-    <script src="/static/const.min.js?r={{.time}}"></script>
-    <script src="/static/cms.min.js?r={{.time}}"></script>
-
-    <!--[if lt IE 9]>
-    <script src="{{.siteStatic}}js/lib/html5shiv.min.js"></script>
-    <script src="{{.siteStatic}}js/lib/respond.min.js"></script>
-    <![endif]-->
-</head>
+{{TemplateTheme $.siteTheme "_header.html" .}}
 
 <body>
 <div class="other-banner">
@@ -60,19 +34,19 @@
                             <div id="cke_pastebin">{{str2html .article.Content}}</div>
                         </div>
 
-                        <!--<div class="fj-box">
+                        {{if gt (len .attach) 0}}
+                        <div class="fj-box">
                             <span class="label">附件：</span>
                             <div>
+                                {{range $index, $item := .attach}}
                                 <p>
-                                    <img src="../static/images/icon-fujian.png">
-                                    <a href="#">附件1</a>
+                                    <img src="{{$.siteStatic}}images/icon-fujian.png" />
+                                    <a target="_blank" href="{{$item.OriginalPath}}">{{$item.Title}}</a>
                                 </p>
-                                <p>
-                                    <img src="../static/images/icon-fujian.png">
-                                    <a href="#">附件2</a>
-                                </p>
+                                {{end}}
                             </div>
-                        </div>-->
+                        </div>
+                        {{end}}
                     </div>
 
                 </div>

@@ -1,35 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="renderer" content="webkit">
-    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-    <title>{{if eq .site.HomeTitle ""}}{{.site.Title}}{{else}}{{.site.HomeTitle}}{{end}}</title>
-
-    <link href="{{.siteStatic}}plugins/layui/css/layui.css" rel="stylesheet" type="text/css" />
-    <link href="{{.siteStatic}}css/layui-reset.css" rel="stylesheet" >
-    <link href="{{.siteStatic}}css/global.css" rel="stylesheet">
-    <link href="{{.siteStatic}}css/main.css" rel="stylesheet" >
-
-    <script src="{{.siteStatic}}js/jquery-1.7.2.min.js"></script>
-    <script src="{{.siteStatic}}plugins/layui/layui.js"></script>
-    <script src="{{.siteStatic}}js/main.js"></script>
-
-    <link href="/static/plugins/loading/app.min.css?r={{.time}}" rel="stylesheet" />
-    <script src="/static/plugins/loading/app.min.js?r={{.time}}"></script>
-    <script src="/static/plugins/moment/moment.min.js?r={{.time}}"></script>
-    <script src="/static/const.min.js?r={{.time}}"></script>
-    <script src="/static/cms.min.js?r={{.time}}"></script>
-
-    <!--[if lt IE 9]>
-    <script src="{{.siteStatic}}js/lib/html5shiv.min.js"></script>
-    <script src="{{.siteStatic}}js/lib/respond.min.js"></script>
-    <![endif]-->
-
-</head>
-
+{{TemplateTheme $.siteTheme "_header.html" .}}
 <body>
 <div class="other-banner">
     <img src="{{.siteStatic}}images/other_banner1.png" class="img">
@@ -91,9 +63,7 @@
                     if(len > 0){
                         for (var i = 0; i < len; i++) {
                             var item = res.data[i];
-                            console.log(item)
                             var url = "/" + siteFlag + "/"+ item.channel_name +"/"+item.call_index;
-                            console.log(url)
                             var html;
                             if (item.call_index === categoryName){
                                 html = '<li class="active"><a href="' + url + '">'+item.title+'</a></li>';

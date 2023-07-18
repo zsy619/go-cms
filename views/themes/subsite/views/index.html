@@ -1,30 +1,7 @@
 <!DOCTYPE html>
 <html>
 
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="renderer" content="webkit">
-		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<title>{{if eq .site.HomeTitle ""}}{{.site.Title}}{{else}}{{.site.HomeTitle}}{{end}}</title>
-
-		<link rel="stylesheet" href="{{.siteStatic}}plugins/layui_exts/laydateNote/laydateNote.css" />
-		<link href="{{.siteStatic}}plugins/layui/css/layui.css" rel="stylesheet" type="text/css" />
-		<link href="{{.siteStatic}}css/layui-reset.css" rel="stylesheet" >
-		<link href="{{.siteStatic}}css/global.css" rel="stylesheet">
-		<link href="{{.siteStatic}}css/main.css" rel="stylesheet" >
-
-		<script src="{{.siteStatic}}js/jquery-1.7.2.min.js"></script>
-		<script src="{{.siteStatic}}plugins/layui/layui.js"></script>
-		<script src="{{.siteStatic}}js/main.js"></script>
-		<script src="{{.siteStatic}}plugins/calendar/schedule.js" type="text/javascript" charset="utf-8"></script>
-
-		<link href="/static/plugins/loading/app.min.css?r={{.time}}" rel="stylesheet" />
-		<script src="/static/plugins/loading/app.min.js?r={{.time}}"></script>
-		<script src="/static/plugins/moment/moment.min.js?r={{.time}}"></script>
-		<script src="/static/const.min.js?r={{.time}}"></script>
-		<script src="/static/cms.min.js?r={{.time}}"></script>
-	</head>
+{{TemplateTheme $.siteTheme "_header.html" .}}
 
 	<body>
 		<div class="header">
@@ -81,13 +58,14 @@
 					<li>
 						<a href="">创业天地 </a>
 						<div class="subNav">
-							<a href="javascript:void(0)">新 闻</a>
-							<a href="javascript:void(0)">政 策</a>
-							<a href="javascript:void(0)">行业动态</a>
+							<a href='{{UrlForCategory "subsite_jyfw_zcwj"}}'>政策文件</a>
+							<a href='{{UrlForCategory "subsite_jyfw_jyzd"}}'>就业指导</a>
+							<a href='{{UrlForCategory "subsite_jyfw_zygh"}}'>职业规划</a>
+							<a href='{{UrlForCategory "subsite_jyfw_cyfw"}}'>创业服务</a>
 						</div>
 					</li>
 					<li>
-						<a href="下载中心.html">下载中心</a>
+						<a href='{{UrlForCategory "subsite_xzzx_cyxz"}}'>下载中心</a>
 					</li>
 					<li>
 						<a href="">关于我们</a>
@@ -125,9 +103,6 @@
 							<a href="#">
 								<div class="fl">
 									<span class="icon">
-										<!--<svg s></svg>-->
-										<!--<img src="{{.siteStatic}}images/svg/icon_login_student.svg" class="img" />-->
-										<!--<img src="{{.siteStatic}}images/icon_student.png" class="img" />-->
 									</span>
 									
 									<span class="name">学生&nbsp;&nbsp;STUDENT</span>
@@ -741,11 +716,7 @@
 							</ul>
 						</div>
 						<div class="tab-content">
-							<div class="active box">
-								<a href="#"><img src="{{.siteStatic}}images/link_img1.png" /></a>
-								<a href="#"><img src="{{.siteStatic}}images/link_img2.png" /></a>
-								<a href="#"><img src="{{.siteStatic}}images/link_img3.png" /></a>
-								<a href="#"><img src="{{.siteStatic}}images/link_img4.png" /></a>
+							<div class="active box" id="yqljList">
 							</div>
 						</div>
 					</div>
@@ -776,6 +747,9 @@
 				HomeZyghTopList();
 				HomeCyfwTopList();
 				HomeCyxzTopList();
+
+				// 友情链接
+				HomeYqljList();
 			})
 
 			function HomeLbList() {
@@ -971,6 +945,29 @@
 								var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
 								var html = '<li><a href="' + url + '">'+item.title+'</a><span class="fr">' + moment(item.publish_time).format('YYYY-MM-DD') + '</span></li>';
 								$("#cyxzList").append(html);
+							}
+						}
+					}
+				}, function (){
+
+				});
+			}
+
+			function HomeYqljList(){
+				var link = new Link();
+				link.get({
+					call_index: "subsite_yqlj",
+					limit: 4
+				}, function (){
+
+				}, function (res){
+					if (res.code == CodeSuccess) {
+						var len = res.data.length;
+						if(len > 0){
+							for (var i = 0; i < len; i++) {
+								var item = res.data[i];
+								var html = '<a href="'+item.link_url+'" target="_blank"><img src="'+ item.img_url2 +'" /></a>';
+								$("#yqljList").append(html);
 							}
 						}
 					}
