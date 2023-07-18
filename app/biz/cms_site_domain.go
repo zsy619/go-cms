@@ -40,3 +40,12 @@ func (this *CmsSiteDomain) List(siteID int64) []*model.CmsSiteDomain {
 	}
 	return list
 }
+
+func (this *CmsSiteDomain) One(domainUrl string) *model.CmsSiteDomain {
+	domain, domainDo := query.CmsSiteDomainDo()
+	mdl, err := domainDo.Where(domain.Domain.Eq(domainUrl)).First()
+	if err != nil {
+		return nil
+	}
+	return mdl
+}

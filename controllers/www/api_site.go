@@ -1,6 +1,9 @@
 package www
 
 import (
+	"haedu.gov.cn/cms/app/biz"
+	"log"
+	"regexp"
 	"strconv"
 
 	"github.com/beego/beego/v2/core/logs"
@@ -30,6 +33,22 @@ func (this *ApiSiteController) Default() {
  */
 // @router /api/site/find/domain [get]
 func (this *ApiSiteController) FindDomain() {
+	url := "http://" + this.Ctx.Request.Host
+	patt := `^((http://)|(https://))?([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}(/)`
+	reg := regexp.MustCompile(patt)
+	preUrl := reg.FindString(url)
+	// 查询站点表获取对应站点ID
+	domainMdl := biz.NewCmsSiteDomainModel().One(preUrl)
+	if domainMdl == nil || domainMdl.SiteID > 0 {
+		this.JSONError("获取数据失败")
+	}
+	// 获取站点信息
+	siteMdl, err := biz.NewCmsSite().SiteOne(domainMdl.SiteID)
+	if err != nil {
+		this.JSONError("获取数据失败")
+	}
+	log.Println(siteMdl)
+	this.JSONSuccess("获取成功", siteMdl)
 }
 
 /*
