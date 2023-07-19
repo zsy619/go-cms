@@ -219,6 +219,13 @@
 .layui-laydate-header i:hover, .layui-laydate-header span:hover{
     color: var(--main-primary);
 }
+.laydate-day-mark{
+    font-size: 14px;
+    line-height: 39px;
+}
+.laydate-day-mark::after{
+    background-color: var(--main_light_primary);
+}
 .layui-colorpicker-main{
    box-sizing: initial;
 }
@@ -376,4 +383,7 @@ div[xm-select-skin] .xm-select-title div.xm-select-label>span {
 }
 .color-red{
     color: #F03030 !important;
+}
+.layui-layer-setwin .layui-layer-close2:hover{
+        background-color: var(--main-primary);
 }

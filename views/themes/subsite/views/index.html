@@ -17,9 +17,9 @@
 				</div>-->
 				<!--登录后-->
 				<div class="theme-box">
-					<div class="theme-item blue" data-theme="blue"></div>
-					<div class="theme-item green active" data-theme="green"></div>
-					<div class="theme-item red" data-theme="red"></div>
+					<div class="theme-item skin_0" data-theme="skin_0"></div>
+					<div class="theme-item skin_1" data-theme="skin_1"></div>
+					<div class="theme-item skin_2" data-theme="skin_2"></div>
 				</div>
 				<div class="user-box">
 					<a href="javascript:void(0)" class="user">王博与
@@ -44,12 +44,8 @@
 					<li>
 						<a href="#">学生</a>
 						<div class="subNav">
-							<a href="javascript:void(0)">项目通知</a>
-							<a href="javascript:void(0)">专项研究项目</a>
-							<a href="javascript:void(0)">示范校建设项目</a>
-							<a href="javascript:void(0)">研究实验室项目</a>
-							<a href="javascript:void(0)">教改案例项目</a>
-							<a href="javascript:void(0)">……</a>
+							<a href='{{UrlForCategory "subsite_xs_xmtz"}}'>项目通知</a>
+							<a href='{{UrlForCategory "subsite_xs_zxyjxm"}}'>专项研究项目</a>
 						</div>
 					</li>
 					<li>
@@ -723,14 +719,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="footer">
-			<div class="container">
-				<div class="text-center">
-					<p>技术支持：教育网提供技术支持</p>
-					<p>豫ICP备2022007138号-1</p>
-				</div>
-			</div>
-		</div>
+		{{TemplateTheme $.siteTheme "_footer.html" .}}
 
 		<script type="text/javascript">
 			$(function () {

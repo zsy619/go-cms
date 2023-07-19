@@ -1,8 +1,0 @@
-document.write(`<div class="footer">
-			<div class="container">
-				<div class="text-center">
-					<p>技术支持：教育网提供技术支持</p>
-					<p>豫ICP备2022007138号-1</p>
-				</div>
-			</div>
-		</div>`)

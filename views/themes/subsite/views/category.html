@@ -37,7 +37,8 @@
 
     </div>
 </div>
-<script src="{{.siteStatic}}js/common/footer.js" type="text/javascript"></script>
+{{TemplateTheme $.siteTheme "_footer.html" .}}
+
 <script type="text/javascript">
     var siteStatic = "{{.siteStatic}}";
     var channelName = "{{.channelName}}";
@@ -45,17 +46,51 @@
     var siteFlag = "{{.channel.SiteFlag}}";
     var debug = "{{.debug}}";
 
-    $(function () {
-        GetCategoryList();
-        GetArticleList(categoryName);
-    })
+    layui.use(['form', 'element', 'laypage', 'layer'], function () {
+        var laypage = layui.laypage,
+            layer = layui.layer;
 
-    // 获取栏目列表
-    function GetCategoryList() {
-        var cate = new Category();
-        cate.get(
-            {channel_name: channelName,},
-            function (){
+        GetCategoryList();
+        GetArticleList(1, 10)
+
+        // 获取栏目列表
+        function GetCategoryList() {
+            var cate = new Category();
+            cate.get(
+                {channel_name: channelName,},
+                function (){
+
+                }, function (res){
+                    if (res.code == CodeSuccess) {
+                        var len = res.data.length;
+                        if(len > 0){
+                            for (var i = 0; i < len; i++) {
+                                var item = res.data[i];
+                                var url = "/" + siteFlag + "/"+ item.channel_name +"/"+item.call_index;
+                                var html;
+                                if (item.call_index === categoryName){
+                                    html = '<li class="active"><a href="' + url + '">'+item.title+'</a></li>';
+                                }else{
+                                    html = '<li><a href="' + url + '">'+item.title+'</a></li>';
+                                }
+                                $("#categoryList").append(html);
+                            }
+                        }
+                    }
+                },function (){
+
+                }
+            )
+        }
+
+        // 获取文章列表
+        function GetArticleList(page, limit){
+            var art = new Article();
+            art.paginate({
+                limit: limit,
+                page: page,
+                call_index: categoryName,
+            }, function (){
 
             }, function (res){
                 if (res.code == CodeSuccess) {
@@ -63,48 +98,36 @@
                     if(len > 0){
                         for (var i = 0; i < len; i++) {
                             var item = res.data[i];
-                            var url = "/" + siteFlag + "/"+ item.channel_name +"/"+item.call_index;
-                            var html;
-                            if (item.call_index === categoryName){
-                                html = '<li class="active"><a href="' + url + '">'+item.title+'</a></li>';
-                            }else{
-                                html = '<li><a href="' + url + '">'+item.title+'</a></li>';
-                            }
-                            $("#categoryList").append(html);
+                            var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
+                            var html = '<li><a href="' + url + '">'+item.title+'</a><span class="fr">' + moment(item.publish_time).format('YYYY-MM-DD') + '</span></li>';
+                            $("#articleList").append(html);
                         }
                     }
-                }
-            },function (){
-
-            }
-        )
-    }
-
-    // 获取文章列表
-    function GetArticleList(categoryStr){
-        console.log("article=====>" + categoryStr)
-        var art = new Article();
-        art.get({
-            limit: 10,
-            call_index: categoryStr,
-        }, function (){
-
-        }, function (res){
-            if (res.code == CodeSuccess) {
-                var len = res.data.length;
-                if(len > 0){
-                    for (var i = 0; i < len; i++) {
-                        var item = res.data[i];
-                        var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
-                        var html = '<li><a href="' + url + '">'+item.title+'</a><span class="fr">' + moment(item.publish_time).format('YYYY-MM-DD') + '</span></li>';
-                        $("#articleList").append(html);
+                    $(".total").html("共" + res.count + "条");
+                    if (res.count == 0) {
+                        $(".list-ul").html($("#templateEmpty").html());
+                    }
+                    if (page === 1 && len > 0) {
+                        laypage.render({
+                            elem: 'pagination'
+                            , limit: 10
+                            , prev: '上页'
+                            , next: '下页'
+                            , limits: [10, 20, 30, 40, 50, 100]
+                            , count: res.count //数据总数，从服务端得到
+                            , jump: function (obj, first) {
+                                if (!first) {
+                                    GetArticleList(obj.curr, obj.limit);
+                                }
+                            }
+                        });
                     }
                 }
-            }
-        }, function (){
+            }, function (){
 
-        });
-    }
+            });
+        }
+    })
 </script>
 </body>
 </html>
