@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	DefatulSite *bizmodel.ApiSiteModel // 默认站点
+	DefaultSite *bizmodel.ApiSiteModel // 默认站点
 	SiteStatic  string                 // 站点静态文件
 	SiteTheme   string                 // 站点模板
 )
@@ -40,14 +40,25 @@ func (c *BaseController) Prepare() {
 	c.BaseController.Prepare()
 	fmt.Println("www BaseController Prepare")
 
-	if DefatulSite == nil {
-		DefatulSite, _ = c.SiteDefault()
-		if DefatulSite.Template == "" {
+	// 根据域名获取站点信息
+	DefaultSite, _ = c.SiteByHost(c.Ctx.Request.Host)
+	if DefaultSite == nil {
+		c.Ctx.WriteString("未找到相关站点信息")
+		c.StopRun()
+	}
+	if DefaultSite.Template == "" {
+		c.Ctx.WriteString("请为该站点设置模板")
+		c.StopRun()
+	}
+	// 获取默认站点、模板
+	/*if DefaultSite == nil {
+		DefaultSite, _ = c.SiteDefault()
+		if DefaultSite.Template == "" {
 			c.Ctx.WriteString("请设置默认模板")
 			c.StopRun()
 		}
-	}
-	SiteTheme = DefatulSite.Template
+	}*/
+	SiteTheme = DefaultSite.Template
 	SiteStatic = "/views/themes/" + SiteTheme + "/static/"
 	c.Data["siteTheme"] = SiteTheme
 	c.Data["siteStatic"] = SiteStatic
@@ -56,8 +67,8 @@ func (c *BaseController) Prepare() {
 	c.Data["siteCss"] = path.Join(SiteStatic, "css")
 	c.Data["siteViews"] = "themes/" + SiteTheme + "/views/"
 
-	c.Data["site"] = DefatulSite
-	channel, _, _ := c.ChannelGet(DefatulSite.SiteID)
+	c.Data["site"] = DefaultSite
+	channel, _, _ := c.ChannelGet(DefaultSite.SiteID)
 	c.Data["channel"] = channel
 
 	c.Data["webroot"] = "/static/www/"
@@ -77,11 +88,19 @@ func (c *BaseController) Finish() {
 }
 
 /**
- * @description: SiteDefault 获取站点信息
+ * @description: SiteDefault 获取默认站点信息
  * @return {*}
  */
 func (this *BaseController) SiteDefault() (*bizmodel.ApiSiteModel, error) {
 	return biz.NewApiSite().Default()
+}
+
+/**
+ * @description: SiteByHost 根据域名获取站点信息
+ * @return {*}
+ */
+func (this *BaseController) SiteByHost(host string) (*bizmodel.ApiSiteModel, error) {
+	return biz.NewApiSite().FindByHost(host)
 }
 
 /**

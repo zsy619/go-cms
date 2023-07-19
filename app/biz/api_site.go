@@ -2,12 +2,12 @@ package biz
 
 import (
 	"fmt"
-	"haedu.gov.cn/cms/app/lib"
-
 	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/cms/app/biz/bizmodel"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
+	"haedu.gov.cn/cms/app/lib"
+	"net/url"
 )
 
 // ApiSite 站点
@@ -49,6 +49,34 @@ func (this *ApiSite) Default() (*bizmodel.ApiSiteModel, error) {
 		lib.SiteCache.Set(cacheKey, find)
 	} else {
 		find = &bizmodel.ApiSiteModel{}
+	}
+	return find, nil
+}
+
+/**
+ * @description: FindByHost 根据域名获取站点信息
+ * @return {*}
+ */
+func (this *ApiSite) FindByHost(host string) (*bizmodel.ApiSiteModel, error) {
+	// 解析域名
+	urlStr := "http://" + host
+	u, _ := url.Parse(urlStr)
+	preUrl := u.Hostname()
+	if preUrl == "" {
+		return nil, nil
+	}
+
+	// 查询站点表获取对应站点ID
+	find := &bizmodel.ApiSiteModel{}
+	domainMdl := NewCmsSiteDomainModel().One(preUrl)
+	if domainMdl == nil || domainMdl.SiteID <= 0 {
+		return nil, nil
+	}
+	// 获取站点信息
+	site, siteDo := query.CmsSiteDo()
+	err := siteDo.Where(site.SiteID.Eq(domainMdl.SiteID), site.IsDeleted.Is(false)).Scan(&find)
+	if err != nil {
+		return nil, err
 	}
 	return find, nil
 }

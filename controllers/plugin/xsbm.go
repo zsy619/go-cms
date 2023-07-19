@@ -21,7 +21,7 @@ func (c *XsbmController) Index() {
 	}
 	c.Data["channel"] = channelModel
 	c.Data["channelName"] = channelName
-	c.TplName = c.GetView(www.DefatulSite.Template, "plgn.xsbm.html")
+	c.TplName = c.GetView(www.DefaultSite.Template, "plgn.xsbm.html")
 }
 
 // Save 线上报名

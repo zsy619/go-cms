@@ -7,6 +7,6 @@ type ApiCacheController struct{ BaseController }
 // @router /api/cache/clear [get]
 func (this *ApiCacheController) Clear() {
 	biz.CleanCahe()
-	DefatulSite = nil
+	DefaultSite = nil
 	this.JSONError("清除缓存成功")
 }

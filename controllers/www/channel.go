@@ -24,12 +24,12 @@ func (this *ChannelController) Channel() {
 	this.Data["channel"] = channelModel
 	this.Data["channelName"] = channelName
 	if channelModel.TmplChnl == "" {
-		this.TplName = this.GetView(DefatulSite.Template, "channel.html")
+		this.TplName = this.GetView(DefaultSite.Template, "channel.html")
 	} else {
 		if xstring.HasSuffix(channelModel.TmplChnl, ".html", ".htm", ".tpl") == false {
 			channelModel.TmplChnl += ".html"
 		}
-		this.TplName = this.GetView(DefatulSite.Template, channelModel.TmplChnl)
+		this.TplName = this.GetView(DefaultSite.Template, channelModel.TmplChnl)
 	}
 }
 
@@ -66,11 +66,11 @@ func (this *ChannelController) Category() {
 	this.Data["categoryName"] = categoryName
 
 	if categoryModel.TmplCat == "" {
-		this.TplName = this.GetView(DefatulSite.Template, "category.html")
+		this.TplName = this.GetView(DefaultSite.Template, "category.html")
 	} else {
 		if xstring.HasSuffix(categoryModel.TmplCat, ".html", ".htm", ".tpl") == false {
 			categoryModel.TmplCat += ".html"
 		}
-		this.TplName = this.GetView(DefatulSite.Template, categoryModel.TmplCat)
+		this.TplName = this.GetView(DefaultSite.Template, categoryModel.TmplCat)
 	}
 }

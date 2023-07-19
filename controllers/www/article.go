@@ -51,12 +51,12 @@ func (c *ArticleController) Detail() {
 		}
 	}
 	if articleModel.Template == "" {
-		c.TplName = c.GetView(DefatulSite.Template, "article.html")
+		c.TplName = c.GetView(DefaultSite.Template, "article.html")
 	} else {
 		if xstring.HasSuffix(articleModel.Template, ".html", ".htm", ".tpl") == false {
 			articleModel.Template += ".html"
 		}
-		c.TplName = c.GetView(DefatulSite.Template, articleModel.Template)
+		c.TplName = c.GetView(DefaultSite.Template, articleModel.Template)
 	}
 }
 
@@ -65,5 +65,5 @@ func (c *ArticleController) Detail() {
 func (c *ArticleController) Search() {
 	keyword := c.Ctx.Input.Param(":keyword") // 获取路由参数
 	c.Data["keyword"] = keyword
-	c.TplName = c.GetView(DefatulSite.Template, "search.html")
+	c.TplName = c.GetView(DefaultSite.Template, "search.html")
 }
