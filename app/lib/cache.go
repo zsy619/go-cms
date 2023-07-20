@@ -72,7 +72,7 @@ var (
 	SiteCache           *CacheItemModel // SiteCache 站点列表缓存
 	SiteFindCache       *CacheItemModel // SiteFindCache 站点信息缓存
 	NavGetByFlagCache   *CacheItemModel // NavGetByFlagCache 站点导航缓存
-	NavGetCache         *CacheItemModel // NavGetCache 站点菜单缓存
+	NavGetCache         *CacheItemModel // NavGetCache 导航菜单缓存
 	NavCategoryGetCache *CacheItemModel // NavCategoryGetCache 站点栏目缓存
 	ChannelCache        *CacheItemModel // ChannelCache 频道列表缓存
 	ChannelGetCache     *CacheItemModel // ChannelGetCache 站点频道缓存
@@ -99,7 +99,7 @@ func init() {
 	SiteCache = NewCacheItemModel("SiteCache", "站点列表缓存", 60*50)
 	SiteFindCache = NewCacheItemModel("SiteFindCache", "站点信息缓存", 60*50)
 	NavGetByFlagCache = NewCacheItemModel("NavGetByFlagCache", "站点导航缓存", 60*50)
-	NavGetCache = NewCacheItemModel("NavGetCache", "站点菜单缓存", 60*50)
+	NavGetCache = NewCacheItemModel("NavGetCache", "导航菜单缓存", 60*50)
 	NavCategoryGetCache = NewCacheItemModel("NavCategoryGetCache", "站点栏目缓存", 60*50)
 	ChannelCache = NewCacheItemModel("ChannelCache", "频道列表缓存", 60*50)
 	ChannelGetCache = NewCacheItemModel("ChannelGetCache", "站点频道缓存", 60*50)
