@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>{{if eq .site.HomeTitle ""}}{{.site.Title}}{{else}}{{.site.HomeTitle}}{{end}}</title>
+		<script src="/views/themes/subIII/static/js/common/commonCss.js"></script>
+
+	</head>
+
+	<body class="theme3 bg-white">
+		{{TemplateTheme $.siteTheme "_nav.html" .}}
+		<div class="index-list">
+			<div class="lunbo-box">
+				<div class="layui-carousel" id="swiper">
+					<div carousel-item="">
+						<div class="slick-slide">
+							<a href="#"><img src="{{.siteStatic}}images/lunbo_img1.png" alt="" /></a>
+						</div>
+						<div class="slick-slide">
+							<a href="#"><img src="{{.siteStatic}}images/lunbo_img1.png" alt="" /></a>
+						</div>
+						<div class="slick-slide">
+							<a href="#"><img src="{{.siteStatic}}images/lunbo_img1.png" alt="" /></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="body">
+			<div class="container">
+
+				<div class="index-list">
+					<div class="clearfix partA">
+
+						<div class="left">
+							<div class="news-list tab-box">
+								<div class="tab-head">
+									<ul class="clearfix">
+										<li class="active">公告</li>
+										<li>就业指导</li>
+										<li>下载专区</li>
+									</ul>
+									<a id="topMore" href="" class="more">更多+</a>
+								</div>
+								<div class="tab-content">
+									<div class="inner-div active">
+										<ul class="new-list" id="ggList">
+										</ul>
+									</div>
+									<div class="inner-div">
+										<ul class="new-list" id="jyzdList">
+										</ul>
+									</div>
+									<div class="inner-div">
+										<ul class="new-list" id="cyxzList">
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="right">
+							<div class="tab-box">
+								<div class="tab-head">
+									<ul class="clearfix">
+										<li class="active">校招聘日历</li>
+									</ul>
+								</div>
+								<div class="tab-content">
+									<div class="inner-div active">
+										<div class="calendar-box">
+											<div class="layui-inline" id="calendar"></div>
+										</div>
+									</div>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="index-list clearfix">
+					<div class="clearfix">
+						<div class="tab-box position-box">
+							<div class="tab-head tab-head">
+								<ul class="clearfix">
+									<li class="active">招聘信息</li>
+									<li>宣讲会</li>
+									<li>线上招聘会</li>
+									<li>线下招聘会</li>
+									<li>推荐单位</li>
+									<li>推荐职位</li>
+								</ul>
+								<a href="#" class="more">更多>></a>
+							</div>
+							<div class="tab-content tab-content">
+								<div class="inner-div list job-list active">
+									<ul class="clearfix">
+										<li class="col-3">
+											<a href="#">
+												<div class="top">
+													<span class="title" title="计算机教师（电商、PR、插画、组装）">计算机教师（电商、PR、插画、组装）</span>
+													<span class="price">3K-13K</span>
+												</div>
+												<div class="middle">
+													<span class="address">广东省深圳市</span>|
+													<span class="xueli">硕士及以上</span>
+												</div>
+											</a>
+											<a href="javascript:void(0)" class="bot">
+												<img src="{{.siteStatic}}images/icon_company_default.png" alt="" class="logo" />
+												<div class="fr">
+													<p class="name">河南省京成现代叉车销售有限公司</p>
+													<p>贸易/进出口|民营/股份制用人单位</p>
+												</div>
+
+											</a>
+										</li>
+										<li class="col-3">
+											<a href="#">
+												<div class="top">
+													<span class="title" title="计算机教师（电商、PR、插画、组装）">计算机教师（电商、PR、插画、组装）</span>
+													<span class="price">3K-13K</span>
+												</div>
+												<div class="middle">
+													<span class="xueli">本科</span>|
+													<span class="address">河南郑州</span>
+												</div>
+											</a>
+											<a href="javascript:void(0)" class="bot">
+												<img src="{{.siteStatic}}images/dw-logo-img1.jpg" alt="" class="logo" />
+												<div class="fr">
+													<p class="name">河南省京成现代叉车销售有限公司</p>
+													<p>贸易/进出口|民营/股份制用人单位</p>
+												</div>
+
+											</a>
+										</li>
+										<li class="col-3">
+											<a href="#">
+												<div class="top">
+													<span class="title" title="计算机教师（电商、PR、插画、组装）">计算机教师（电商、PR、插画、组装）</span>
+													<span class="price">3K-13K</span>
+												</div>
+												<div class="middle">
+													<span class="address">广东省深圳市</span>|
+													<span class="xueli">硕士及以上</span>
+												</div>
+											</a>
+											<a href="javascript:void(0)" class="bot">
+												<img src="{{.siteStatic}}images/icon_company_default.png" alt="" class="logo" />
+												<div class="fr">
+													<p class="name">河南省京成现代叉车销售有限公司</p>
+													<p>贸易/进出口|民营/股份制用人单位</p>
+												</div>
+
+											</a>
+										</li>
+										<li class="col-3">
+											<a href="#">
+												<div class="top">
+													<span class="title" title="计算机教师（电商、PR、插画、组装）">计算机教师（电商、PR、插画、组装）</span>
+													<span class="price">3K-13K</span>
+												</div>
+												<div class="middle">
+													<span class="xueli">本科</span>|
+													<span class="address">河南郑州</span>
+												</div>
+											</a>
+											<a href="javascript:void(0)" class="bot">
+												<img src="{{.siteStatic}}images/dw-logo-img1.jpg" alt="" class="logo" />
+												<div class="fr">
+													<p class="name">河南省京成现代叉车销售有限公司</p>
+													<p>贸易/进出口|民营/股份制用人单位</p>
+												</div>
+
+											</a>
+										</li>
+										<li class="col-3">
+											<a href="#">
+												<div class="top">
+													<span class="title" title="计算机教师（电商、PR、插画、组装）">计算机教师（电商、PR、插画、组装）</span>
+													<span class="price">3K-13K</span>
+												</div>
+												<div class="middle">
+													<span class="address">广东省深圳市</span>|
+													<span class="xueli">硕士及以上</span>
+												</div>
+											</a>
+											<a href="javascript:void(0)" class="bot">
+												<img src="{{.siteStatic}}images/icon_company_default.png" alt="" class="logo" />
+												<div class="fr">
+													<p class="name">河南省京成现代叉车销售有限公司</p>
+													<p>贸易/进出口|民营/股份制用人单位</p>
+												</div>
+
+											</a>
+										</li>
+										<li class="col-3">
+											<a href="#">
+												<div class="top">
+													<span class="title" title="计算机教师（电商、PR、插画、组装）">计算机教师（电商、PR、插画、组装）</span>
+													<span class="price">3K-13K</span>
+												</div>
+												<div class="middle">
+													<span class="xueli">本科</span>|
+													<span class="address">河南郑州</span>
+												</div>
+											</a>
+											<a href="javascript:void(0)" class="bot">
+												<img src="{{.siteStatic}}images/dw-logo-img1.jpg" alt="" class="logo" />
+												<div class="fr">
+													<p class="name">河南省京成现代叉车销售有限公司</p>
+													<p>贸易/进出口|民营/股份制用人单位</p>
+												</div>
+
+											</a>
+										</li>
+
+									</ul>
+								</div>
+								<div class="inner-div list zphList ">
+									<ul class="clearfix">
+										<li class="col-3">
+											<a href="3.2-招聘会详情.html">
+												<img src="{{.siteStatic}}images/zph_img1.jpg" alt="" class="zph-img">
+												<div class="detail">
+													<div class="title">闽北高校2021届毕业生网络视频招聘会</div>
+													<p class="type c-light">视频招聘会</p>
+													<p class="date c-light">2021-04-13 08:00</p>
+												</div>
+											</a>
+										</li>
+										<li class="col-3">
+											<a href="3.2-招聘会详情.html">
+												<img src="{{.siteStatic}}images/zph_img2.jpg" alt="" class="zph-img">
+												<div class="detail">
+													<div class="title">福建师范大学协和学院2021届毕业生春季线下双选会（校友企业专场）</div>
+													<p class="type c-light">视频招聘会</p>
+													<p class="date c-light">2021-04-13 08:00</p>
+												</div>
+
+											</a>
+										</li>
+										<li class="col-3">
+											<a href="3.2-招聘会详情.html">
+												<img src="{{.siteStatic}}images/zph_img3.jpg" alt="" class="zph-img">
+												<div class="detail">
+													<div class="title">闽北高校2021届毕业生网络视频招聘会</div>
+													<p class="type c-light">视频招聘会</p>
+													<p class="date c-light">2021-04-13 08:00</p>
+												</div>
+											</a>
+										</li>
+										<li class="col-3">
+											<a href="3.2-招聘会详情.html">
+												<img src="{{.siteStatic}}images/zph_img3.jpg" alt="" class="zph-img">
+												<div class="detail">
+													<div class="title">闽北高校2021届毕业生网络视频招聘会</div>
+													<p class="type c-light">视频招聘会</p>
+													<p class="date c-light">2021-04-13 08:00</p>
+												</div>
+											</a>
+										</li>
+									</ul>
+								</div>
+								<div class="inner-div list zphList ">
+									<ul class="clearfix">
+										<li class="col-3">
+											<a href="3.2-招聘会详情.html">
+												<img src="{{.siteStatic}}images/zph_img1.jpg" alt="" class="zph-img">
+												<div class="detail">
+													<div class="title">2.闽北高校2021届毕业生网络视频招聘会</div>
+													<p class="type c-light">视频招聘会</p>
+													<p class="date c-light">2021-04-13 08:00</p>
+												</div>
+											</a>
+										</li>
+										<li class="col-3">
+											<a href="3.2-招聘会详情.html">
+												<img src="{{.siteStatic}}images/zph_img2.jpg" alt="" class="zph-img">
+												<div class="detail">
+													<div class="title">福建师范大学协和学院2021届毕业生春季线下双选会（校友企业专场）</div>
+													<p class="type c-light">视频招聘会</p>
+													<p class="date c-light">2021-04-13 08:00</p>
+												</div>
+
+											</a>
+										</li>
+										<li class="col-3">
+											<a href="3.2-招聘会详情.html">
+												<img src="{{.siteStatic}}images/zph_img3.jpg" alt="" class="zph-img">
+												<div class="detail">
+													<div class="title">闽北高校2021届毕业生网络视频招聘会</div>
+													<p class="type c-light">视频招聘会</p>
+													<p class="date c-light">2021-04-13 08:00</p>
+												</div>
+											</a>
+										</li>
+										<li class="col-3">
+											<a href="3.2-招聘会详情.html">
+												<img src="{{.siteStatic}}images/zph_img3.jpg" alt="" class="zph-img">
+												<div class="detail">
+													<div class="title">闽北高校2021届毕业生网络视频招聘会</div>
+													<p class="type c-light">视频招聘会</p>
+													<p class="date c-light">2021-04-13 08:00</p>
+												</div>
+											</a>
+										</li>
+									</ul>
+								</div>
+								<div class="inner-div list zphList ">
+									<ul class="clearfix">
+										<li class="col-3">
+											<a href="3.2-招聘会详情.html">
+												<img src="{{.siteStatic}}images/zph_img1.jpg" alt="" class="zph-img">
+												<div class="detail">
+													<div class="title">3.闽北高校2021届毕业生网络视频招聘会</div>
+													<p class="type c-light">视频招聘会</p>
+													<p class="date c-light">2021-04-13 08:00</p>
+												</div>
+											</a>
+										</li>
+										<li class="col-3">
+											<a href="3.2-招聘会详情.html">
+												<img src="{{.siteStatic}}images/zph_img2.jpg" alt="" class="zph-img">
+												<div class="detail">
+													<div class="title">福建师范大学协和学院2021届毕业生春季线下双选会（校友企业专场）</div>
+													<p class="type c-light">视频招聘会</p>
+													<p class="date c-light">2021-04-13 08:00</p>
+												</div>
+
+											</a>
+										</li>
+										<li class="col-3">
+											<a href="3.2-招聘会详情.html">
+												<img src="{{.siteStatic}}images/zph_img3.jpg" alt="" class="zph-img">
+												<div class="detail">
+													<div class="title">闽北高校2021届毕业生网络视频招聘会</div>
+													<p class="type c-light">视频招聘会</p>
+													<p class="date c-light">2021-04-13 08:00</p>
+												</div>
+											</a>
+										</li>
+										<li class="col-3">
+											<a href="3.2-招聘会详情.html">
+												<img src="{{.siteStatic}}images/zph_img3.jpg" alt="" class="zph-img">
+												<div class="detail">
+													<div class="title">闽北高校2021届毕业生网络视频招聘会</div>
+													<p class="type c-light">视频招聘会</p>
+													<p class="date c-light">2021-04-13 08:00</p>
+												</div>
+											</a>
+										</li>
+									</ul>
+								</div>
+								<div class="inner-div list hot-company">
+									<ul class="clearfix">
+										<li class="col-3">
+											<div class="company-div">
+												<a href="#">
+													<div class="top">
+														<img src="{{.siteStatic}}images/icon_company_default.png" alt="" class="img">
+														<p class="name">河南智盛通讯器材有限公司</p>
+													</div>
+												</a>
+												<div class="bot">招
+													<span class="num">1296</span>人
+												</div>
+											</div>
+											<div class="hover">
+												<a href="">机械研发工程师</a>
+												<a href="">机械设计师</a>
+												<a href="">性能测试工程师</a>
+												<a href="#" class="more">共招65人</a>
+											</div>
+										</li>
+										<li class="col-3">
+											<div class="company-div">
+												<a href="#">
+													<div class="top">
+														<img src="{{.siteStatic}}images/icon_company_default.png" alt="" class="img">
+														<p class="name">河南智盛通讯器材有限公司</p>
+													</div>
+												</a>
+												<div class="bot">招
+													<span class="num">1296</span>人
+												</div>
+											</div>
+											<div class="hover">
+												<a href="">机械研发工程师</a>
+												<a href="">机械设计师</a>
+												<a href="">性能测试工程师</a>
+												<a href="#" class="more">共招65人</a>
+											</div>
+										</li>
+										<li class="col-3">
+											<div class="company-div">
+												<a href="#">
+													<div class="top">
+														<img src="{{.siteStatic}}images/icon_company_default.png" alt="" class="img">
+														<p class="name">河南智盛通讯器材有限公司</p>
+													</div>
+												</a>
+												<div class="bot">招
+													<span class="num">1296</span>人
+												</div>
+											</div>
+											<div class="hover">
+												<a href="">机械研发工程师</a>
+												<a href="">机械设计师</a>
+												<a href="">性能测试工程师</a>
+												<a href="#" class="more">共招65人</a>
+											</div>
+										</li>
+										<li class="col-3">
+											<div class="company-div">
+												<a href="#">
+													<div class="top">
+														<img src="{{.siteStatic}}images/icon_company_default.png" alt="" class="img">
+														<p class="name">河南智盛通讯器材有限公司</p>
+													</div>
+												</a>
+												<div class="bot">招
+													<span class="num">1296</span>人
+												</div>
+											</div>
+											<div class="hover">
+												<a href="">机械研发工程师</a>
+												<a href="">机械设计师</a>
+												<a href="">性能测试工程师</a>
+												<a href="#" class="more">共招65人</a>
+											</div>
+										</li>
+										<li class="col-3">
+											<div class="company-div">
+												<a href="#">
+													<div class="top">
+														<img src="{{.siteStatic}}images/icon_company_default.png" alt="" class="img">
+														<p class="name">河南智盛通讯器材有限公司</p>
+													</div>
+												</a>
+												<div class="bot">招
+													<span class="num">1296</span>人
+												</div>
+											</div>
+											<div class="hover">
+												<a href="">机械研发工程师</a>
+												<a href="">机械设计师</a>
+												<a href="">性能测试工程师</a>
+												<a href="#" class="more">共招65人</a>
+											</div>
+										</li>
+										<li class="col-3">
+											<div class="company-div">
+												<a href="#">
+													<div class="top">
+														<img src="{{.siteStatic}}images/icon_company_default.png" alt="" class="img">
+														<p class="name">河南智盛通讯器材有限公司</p>
+													</div>
+												</a>
+												<div class="bot">招
+													<span class="num">1296</span>人
+												</div>
+											</div>
+											<div class="hover">
+												<a href="">机械研发工程师</a>
+												<a href="">机械设计师</a>
+												<a href="">性能测试工程师</a>
+												<a href="#" class="more">共招65人</a>
+											</div>
+										</li>
+									</ul>
+								</div>
+
+								<div class="inner-div list job-list">
+									<ul class="clearfix">
+										<li class="col-3">
+											<a href="#">
+												<div class="top">
+													<span class="title" title="计算机教师（电商、PR、插画、组装）">4.计算机教师（电商、PR、插画、组装）</span>
+													<span class="price">3K-13K</span>
+												</div>
+												<div class="middle">
+													<span class="address">广东省深圳市</span>|
+													<span class="xueli">硕士及以上</span>
+												</div>
+											</a>
+											<a href="javascript:void(0)" class="bot">
+												<img src="{{.siteStatic}}images/icon_company_default.png" alt="" class="logo" />
+												<div class="fr">
+													<p class="name">河南省京成现代叉车销售有限公司</p>
+													<p>贸易/进出口|民营/股份制用人单位</p>
+												</div>
+
+											</a>
+										</li>
+										<li class="col-3">
+											<a href="#">
+												<div class="top">
+													<span class="title" title="计算机教师（电商、PR、插画、组装）">4.计算机教师（电商、PR、插画、组装）</span>
+													<span class="price">3K-13K</span>
+												</div>
+												<div class="middle">
+													<span class="address">广东省深圳市</span>|
+													<span class="xueli">硕士及以上</span>
+												</div>
+											</a>
+											<a href="javascript:void(0)" class="bot">
+												<img src="{{.siteStatic}}images/icon_company_default.png" alt="" class="logo" />
+												<div class="fr">
+													<p class="name">河南省京成现代叉车销售有限公司</p>
+													<p>贸易/进出口|民营/股份制用人单位</p>
+												</div>
+
+											</a>
+										</li>
+										<li class="col-3">
+											<a href="#">
+												<div class="top">
+													<span class="title" title="计算机教师（电商、PR、插画、组装）">4.计算机教师（电商、PR、插画、组装）</span>
+													<span class="price">3K-13K</span>
+												</div>
+												<div class="middle">
+													<span class="address">广东省深圳市</span>|
+													<span class="xueli">硕士及以上</span>
+												</div>
+											</a>
+											<a href="javascript:void(0)" class="bot">
+												<img src="{{.siteStatic}}images/icon_company_default.png" alt="" class="logo" />
+												<div class="fr">
+													<p class="name">河南省京成现代叉车销售有限公司</p>
+													<p>贸易/进出口|民营/股份制用人单位</p>
+												</div>
+
+											</a>
+										</li>
+										<li class="col-3">
+											<a href="#">
+												<div class="top">
+													<span class="title" title="计算机教师（电商、PR、插画、组装）">4.计算机教师（电商、PR、插画、组装）</span>
+													<span class="price">3K-13K</span>
+												</div>
+												<div class="middle">
+													<span class="address">广东省深圳市</span>|
+													<span class="xueli">硕士及以上</span>
+												</div>
+											</a>
+											<a href="javascript:void(0)" class="bot">
+												<img src="{{.siteStatic}}images/icon_company_default.png" alt="" class="logo" />
+												<div class="fr">
+													<p class="name">河南省京成现代叉车销售有限公司</p>
+													<p>贸易/进出口|民营/股份制用人单位</p>
+												</div>
+
+											</a>
+										</li>
+										<li class="col-3">
+											<a href="#">
+												<div class="top">
+													<span class="title" title="计算机教师（电商、PR、插画、组装）">4.计算机教师（电商、PR、插画、组装）</span>
+													<span class="price">3K-13K</span>
+												</div>
+												<div class="middle">
+													<span class="address">广东省深圳市</span>|
+													<span class="xueli">硕士及以上</span>
+												</div>
+											</a>
+											<a href="javascript:void(0)" class="bot">
+												<img src="{{.siteStatic}}images/icon_company_default.png" alt="" class="logo" />
+												<div class="fr">
+													<p class="name">河南省京成现代叉车销售有限公司</p>
+													<p>贸易/进出口|民营/股份制用人单位</p>
+												</div>
+
+											</a>
+										</li>
+										<li class="col-3">
+											<a href="#">
+												<div class="top">
+													<span class="title" title="计算机教师（电商、PR、插画、组装）">4.计算机教师（电商、PR、插画、组装）</span>
+													<span class="price">3K-13K</span>
+												</div>
+												<div class="middle">
+													<span class="address">广东省深圳市</span>|
+													<span class="xueli">硕士及以上</span>
+												</div>
+											</a>
+											<a href="javascript:void(0)" class="bot">
+												<img src="{{.siteStatic}}images/icon_company_default.png" alt="" class="logo" />
+												<div class="fr">
+													<p class="name">河南省京成现代叉车销售有限公司</p>
+													<p>贸易/进出口|民营/股份制用人单位</p>
+												</div>
+
+											</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+				<div class="index-list">
+					<div class="tab-box kjrk-box">
+						<div class="tab-head">
+							<ul class="clearfix">
+								<li class="active">快捷入口</li>
+							</ul>
+						</div>
+						<div class="tab-content">
+							<div class="active ">
+								<ul class="clearfix">
+									<li class="col-3">
+										<a href="#">
+											<div class="img-box">
+												<img src="{{.siteStatic}}images/kjrk_bg1.png" alt="" class="img">
+											</div>
+											
+											<img src="{{.siteStatic}}images/kjrk_icon1.png" alt="" class="icon">
+											<div class="detail">
+												<div class="title">职位</div>
+												<span class="btn-enter">进入></span>
+											</div>
+										</a>
+									</li>
+									<li class="col-3">
+										<a href="#">
+											<div class="img-box">
+												<img src="{{.siteStatic}}images/kjrk_bg2.png" alt="" class="img">
+											</div>
+											<img src="{{.siteStatic}}images/kjrk_icon2.png" alt="" class="icon">
+											<div class="detail">
+												<div class="title">用人单位</div>
+												<span class="btn-enter">进入></span>
+											</div>
+										</a>
+									</li>
+									<li class="col-3">
+										<a href="#">
+											<div class="img-box">
+												<img src="{{.siteStatic}}images/kjrk_bg3.png" alt="" class="img">
+											</div>
+											<img src="{{.siteStatic}}images/kjrk_icon3.png" alt="" class="icon">
+											<div class="detail">
+												<div class="title">双选会</div>
+												<span class="btn-enter">进入></span>
+											</div>
+										</a>
+									</li>
+									<li class="col-3">
+										<a href="#">
+											<div class="img-box">
+												<img src="{{.siteStatic}}images/kjrk_bg4.png" alt="" class="img">
+											</div>
+											<img src="{{.siteStatic}}images/kjrk_icon4.png" alt="" class="icon">
+											<div class="detail">
+												<div class="title">空中宣讲会</div>
+												<span class="btn-enter">进入></span>
+											</div>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="index-list">
+					<div class="tab-box link-box">
+						<div class="tab-head">
+							<ul class="clearfix">
+								<li class="active">友情链接</li>
+							</ul>
+						</div>
+						<div class="tab-content">
+							<div class="active box" id="yqljList">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+			{{TemplateTheme $.siteTheme "_footer.html" .}}
+
+			<script type="text/javascript">
+				var siteFlag = "{{.siteTheme}}";
+
+				$(function () {
+					// 首页公告置顶列表
+					HomeGgTopList();
+					// 首页就业指导列表
+					HomeJyzdTopList();
+					// 首页下载中心列表
+					HomeCyxzTopList();
+					// 友情链接
+					HomeYqljList();
+				})
+
+				function HomeGgTopList() {
+					var art = new Article();
+					art.get({
+						call_index: "subsite_xwgg_gg",
+						limit: 6,
+						is_top: 1
+					}, function () {
+
+					}, function (res) {
+						if (res.code == CodeSuccess) {
+							var len = res.data.length;
+							if (len > 0) {
+								for (var i = 0; i < len; i++) {
+									var item = res.data[i];
+									var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
+									var html = '<li><a href="' + url + '">' + item.title + '</a><span class="fr">' + moment(item.publish_time).format('YYYY-MM-DD') + '</span></li>';
+									$("#ggList").append(html);
+								}
+							}
+						}
+					}, function () {
+
+					});
+				}
+
+				function HomeJyzdTopList() {
+					var art = new Article();
+					art.get({
+						call_index: "subsite_jyfw_jyzd",
+						limit: 6,
+						is_top: 1
+					}, function () {
+
+					}, function (res) {
+						if (res.code == CodeSuccess) {
+							var len = res.data.length;
+							if (len > 0) {
+								for (var i = 0; i < len; i++) {
+									var item = res.data[i];
+									var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
+									var html = '<li><a href="' + url + '">' + item.title + '</a><span class="fr">' + moment(item.publish_time).format('YYYY-MM-DD') + '</span></li>';
+									$("#jyzdList").append(html);
+								}
+							}
+						}
+					}, function () {
+
+					});
+				}
+
+				function HomeCyxzTopList() {
+					var art = new Article();
+					art.get({
+						call_index: "subsite_xzzx_cyxz",
+						limit: 6,
+						is_top: 1
+					}, function () {
+
+					}, function (res) {
+						if (res.code == CodeSuccess) {
+							var len = res.data.length;
+							if (len > 0) {
+								for (var i = 0; i < len; i++) {
+									var item = res.data[i];
+									var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
+									var html = '<li><a href="' + url + '">' + item.title + '</a><span class="fr">' + moment(item.publish_time).format('YYYY-MM-DD') + '</span></li>';
+									$("#cyxzList").append(html);
+								}
+							}
+						}
+					}, function () {
+
+					});
+				}
+
+				function HomeYqljList() {
+					var link = new Link();
+					link.get({
+						call_index: "subsite_yqlj",
+						limit: 4
+					}, function () {
+
+					}, function (res) {
+						if (res.code == CodeSuccess) {
+							var len = res.data.length;
+							if (len > 0) {
+								for (var i = 0; i < len; i++) {
+									var item = res.data[i];
+									var html = '<a href="' + item.link_url + '" target="_blank"><img src="' + item.img_url2 + '" /></a>';
+									$("#yqljList").append(html);
+								}
+							}
+						}
+					}, function () {
+
+					});
+				}
+
+				var ins, ins2;
+				layui.use(['carousel', 'form', 'laydate'], function() {
+					var carousel = layui.carousel,
+						laydate = layui.laydate,
+						form = layui.form;
+
+					//改变下时间间隔、动画类型、高度
+					ins = carousel.render({
+						elem: '#swiper',
+						interval: 3000,
+						width: '100%',
+					});
+
+					ins2 = carousel.render({
+						elem: '#swiper2',
+						interval: 3000,
+						width: '100%',
+					});
+
+					laydate.render({
+						elem: '#calendar',
+						position: 'static',
+						mark: {
+							'2023-7-15': '',
+							'2023-7-16': '',
+							'2023-7-17': '',
+							'2023-7-18': ''
+						},
+						done: function(value, date, endDate) {
+							window.location.href = '活动日历-时间轴.html?date=' + value
+
+						}
+					});
+				})
+
+				$('.tab-box .tab-head ul li').click(function() {
+					var index = $(this).index();
+					var innerDiv = $($(this).parents('.tab-box').find('.inner-div')[index]);
+					console.log(innerDiv)
+					$(this).addClass('active').siblings().removeClass('active');
+					innerDiv.addClass('active').siblings().removeClass('active')
+
+					var ulId = $(this).parents('.tab-head').find('ul').attr("id");
+
+					if (ulId === "ggList") {
+						var url = "/" + siteFlag + "/subsite_xwgg/subsite_xwgg_gg";
+						$("#topMore").attr("href", url);
+					}
+
+					if (ulId === "jyzdList") {
+						var url = "/" + siteFlag + "/subsite_jyfw/subsite_jyfw_jyzd";
+						$("#topMore").attr("href", url);
+					}
+
+					if (ulId === "cyxzList") {
+						var url = "/" + siteFlag + "/subsite_xzzx/subsite_xzzx_cyxz";
+						$("#topMore").attr("href", url);
+					}
+				})
+			</script>
+	</body>
+
+</html>
