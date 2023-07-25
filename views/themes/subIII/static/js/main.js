@@ -21,15 +21,15 @@ function renderTheme(skin){
 	//skin_2:red	
 	if(skin == 'skin_0' || skin==undefined){
 		$('.skin_0').addClass('active')
-		$('head').append('<link href="/views/themes/subTwo/static/css/skin_0.css?v='+Math.random()+'" rel="stylesheet" type="text/css" class="skin"/>')
+		$('head').append('<link href="/views/themes/subIII/static/css/skin_0.css?v='+Math.random()+'" rel="stylesheet" type="text/css" class="skin"/>')
 		renderPagination('skin_0','#285396')  
 	}
 	if(skin == 'skin_1'){
-		$('head').append('<link href="/views/themes/subTwo/static/css/skin_1.css?v='+Math.random()+'" rel="stylesheet" type="text/css" class="skin"/>')
+		$('head').append('<link href="/views/themes/subIII/static/css/skin_1.css?v='+Math.random()+'" rel="stylesheet" type="text/css" class="skin"/>')
 		renderPagination('skin_1','#0B7C81')  
 	}
 	if(skin == 'skin_2'){
-		$('head').append('<link href="/views/themes/subTwo/static/css/skin_2.css?v='+Math.random()+'" rel="stylesheet" type="text/css" class="skin"/>/>')
+		$('head').append('<link href="/views/themes/subIII/static/css/skin_2.css?v='+Math.random()+'" rel="stylesheet" type="text/css" class="skin"/>/>')
 		renderPagination('skin_2','#a81b00')  
 	}
 }
