@@ -5,31 +5,33 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="renderer" content="webkit">
-    <meta name="viewport"
-          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
     <title>{{if eq .site.HomeTitle ""}}{{.site.Title}}{{else}}{{.site.HomeTitle}}{{end}}</title>
 
-    <meta name="Keywords" content="{{.article.SeoKeyword}}" />
-    <meta name="description" content="{{.article.SeoDescription}}" />
-
-    <script src="/views/themes/subIV/static/js/common/commonCss.js"></script>
+    <script src="/views/themes/subV/static/js/common/commonCss.js"></script>
     <script>
         var siteStatic = "{{.siteStatic}}";
         var categoryName = "{{.article.CategoryCallIndex}}";
     </script>
+
+    <!--[if lt IE 9]>
+    <script src="js/lib/html5shiv.min.js"></script>
+    <script src="js/lib/respond.min.js"></script>
+    <![endif]-->
+
 </head>
 
-<body>
-{{TemplateTheme $.siteTheme "_nav.html" .}}
-<!-- main -->
-<div class="body theme2">
-    <div class="container show-margin" style="position: relative;">
-        <div class="listCon clearfix">
-            <div class="right" style="width: 100%;">
+<body class="theme5">
+    {{TemplateTheme $.siteTheme "_nav.html" .}}
+    <!-- main -->
+    <div class="body">
+
+        <div class="container show-margin" style="position: relative;">
+            <div class="listCon clearfix">
                 {{TemplateTheme $.siteTheme "_nav_top_path.html" .}}
                 <div class="subcon">
                     <div class="subcon-detail">
-                        <p class="title">{{.article.Title}}</p>
+                        <p class="title">{{.article.Title}}？</p>
                         <div class="sub-other">
                             <span>分类：{{.article.CategoryTitle}}</span>
                             <span>时间：{{dateformat .article.PublishTime "2006-01-02"}}</span>
@@ -50,7 +52,7 @@
                             </div>
                             {{end}}
                             {{if gt (len .attach) 0}}
-                            <div class="fj-box">
+                            <div class="fj-box mb40">
                                 <span class="label">附件：</span>
                                 <div>
                                     {{range $index, $item := .attach}}
@@ -67,17 +69,14 @@
                     </div>
 
                 </div>
+
             </div>
+
         </div>
-
-
     </div>
-</div>
-<!-- footer -->
-{{TemplateTheme $.siteTheme "_footer.html" .}}
-<script type="text/javascript">
-
-</script>
+    {{TemplateTheme $.siteTheme "_footer.html" .}}
+    <script type="text/javascript">
+    </script>
 </body>
 
 </html>

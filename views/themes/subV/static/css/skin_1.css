@@ -1,0 +1,16 @@
+:root {
+  --main-primary:#0B7C81;
+  --main_light_primary:#0cafb7;
+	--main_deep_light_primary:#C7E6E8;
+  --main_nav_active:#086c71;
+  --main_bg_login1:#70C1B0;
+  --main_bg_login2:#67C1DB;
+  --main_bg_login3:#77A3EF;
+  --main_aisde:rgba(11, 124, 129, .7); 
+  --main_app-nav-bg:rgba(11, 124, 129, .9);
+}
+  
+
+.nav-box{
+	background: #0B7C81;
+}

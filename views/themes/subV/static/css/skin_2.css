@@ -1,0 +1,17 @@
+:root{
+    --main-primary:#a81b00;
+    --main_light_primary:#5A0000;
+   	--main_deep_light_primary:#EEDBDB;
+    --main_nav_active: #7e1805;
+    --main_bg_login1:#FAA65E; 
+    --main_bg_login2:#C18080;
+    --main_bg_login3:#CC6A69;
+    --main_app-nav-bg:rgba(171,46,54,.95);
+    --main_aisde:rgba(168, 27, 0, .7);
+}
+/*.nav-box{
+	background: #5A0000;
+}*/
+
+
+
