@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>{{if eq .site.HomeTitle ""}}{{.site.Title}}{{else}}{{.site.HomeTitle}}{{end}}</title>
+		<script src="/views/themes/subIV/static/js/common/commonCss.js"></script>
+	
+	</head>
+
+	<body class="theme2">
+		{{TemplateTheme $.siteTheme "_nav.html" .}}
+		<div class="index-list">
+			<div class="lunbo-box">
+				<div class="layui-carousel" id="swiper">
+					<div carousel-item="" id="topSlideList">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="body">
+			<div class="container">
+				<div class="index-list">
+					<div class="login-enter">
+						<div class="box bg-stu">
+							<a href="#">
+								<div class="fl">
+									<span class="icon">
+										<svg width="38" height="29" viewBox="0 0 38 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M22.3174 0.949717C26.0592 2.46318 32.6441 5.12667 36.1914 6.62206C39.0371 7.8687 37.9184 8.42533 36.9119 8.92615C36.7113 9.02596 36.5152 9.12356 36.3558 9.22395V15.3863L37.8223 17.0876L35.0124 19.5751L32.4499 17.0909L33.9986 15.3863V10.2414C25.9208 13.6035 23.5783 14.6981 21.803 15.5276C21.7558 15.5497 21.7089 15.5716 21.6623 15.5934C20.8933 15.9938 20.0463 16.2142 19.1831 16.2383C18.32 16.2624 17.4624 16.0897 16.6731 15.7327C14.809 15.048 6.54371 11.8484 2.22615 9.79428C-0.652489 8.39666 -0.83028 7.53071 2.22615 6.34254C4.37865 5.51608 7.12829 4.44065 9.77126 3.40694C12.1774 2.46585 14.4951 1.55935 16.1934 0.906755C18.304 0.0118006 19.4142 -0.420774 21.347 0.557151C21.6424 0.676683 21.9675 0.808171 22.3174 0.949717ZM16.0007 18.1786C17.9433 18.9818 20.1165 18.9818 22.0591 18.1786L22.0156 18.177C23.0016 17.766 24.1594 17.2216 25.4322 16.623C26.7464 16.0051 28.1832 15.3295 29.6804 14.6833V24.9137C26.82 27.5814 23.0712 29.0401 19.1947 28.9938C15.1148 29.1102 11.143 27.6472 8.07835 24.8992V15.3842C9.71978 16.0595 11.5126 16.6624 13.5414 17.3445C14.3244 17.6078 15.1426 17.8829 16.0007 18.1786Z"/>
+										</svg>
+									</span>
+
+									<span class="name">求职者&nbsp;&nbsp;EMPLOYEE</span>
+								</div>
+								<div>
+									<span class="s1">登录</span>
+									<span class="line">|</span>
+									<span class="s1">注册</span>
+								</div>
+							</a>
+						</div>
+						<div class="box bg-yrdw">
+							<a href="#">
+								<div class="fl">
+									<span class="icon">
+										<svg width="33" height="36" viewBox="0 0 33 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path fill="currentColor" d="M11.7529 35.919H4.32261V32.508L11.7529 31.968V35.919ZM11.7529 29.526L4.32261 30.24V27.012L11.7529 25.764V29.526ZM11.7529 23.115L4.32261 24.597V21.297L11.7529 19.344V23.115ZM11.7529 16.803L4.32261 18.846V15.402L11.7529 12.888V16.803ZM19.9932 35.883H13.8917V9.513L2.07881 13.407V36H0L0.0059989 12.258L15.7966 6.564L19.9932 9.114V35.883ZM32.997 35.871H23.5659V2.514L9.40115 7.287V5.829L24.9997 0L29.6883 4.083V33.729H33V35.871H32.997Z"/>
+										</svg>
+									</span>
+									<span class="name">用人单位&nbsp;&nbsp;EMPLOYER</span>
+								</div>
+								<div>
+									<span class="s1">登录</span>
+									<span class="line">|</span>
+									<span class="s1">注册</span>
+								</div>
+							</a>
+						</div>
+						<div class="box bg-teacher">
+							<a href="#">
+								<div class="fl">
+									<span class="icon">
+										<svg width="29" height="37" viewBox="0 0 29 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path fill="currentColor" d="M14.3308 0C15.0159 0 15.695 0.0800067 16.3682 0.24002C17.0414 0.400033 17.6733 0.615436 18.2639 0.886228C18.8544 1.15702 19.38 1.46474 19.8406 1.80938C20.3013 2.15403 20.6615 2.49867 20.9213 2.84331C21.5355 3.63107 21.9843 4.49884 22.2678 5.44661C22.5512 6.39438 22.752 7.29907 22.8701 8.16068C22.9882 9.14538 23.0473 10.1424 23.0473 11.1517C23.2126 11.2748 23.3426 11.4348 23.4371 11.6317C23.5315 11.8041 23.6083 12.0256 23.6674 12.2964C23.7264 12.5672 23.7323 12.8995 23.6851 13.2934C23.6378 13.8104 23.5374 14.2227 23.3839 14.5304C23.2304 14.8382 23.0591 15.0782 22.8701 15.2505C22.6575 15.4474 22.4331 15.5828 22.1969 15.6567C22.0788 16.0752 21.9607 16.4691 21.8426 16.8383C21.7245 17.1584 21.5886 17.4722 21.4351 17.7799C21.2816 18.0877 21.1103 18.3277 20.9213 18.5C20.4725 18.8693 20.1064 19.1831 19.8229 19.4416C19.5395 19.7001 19.3505 20.1371 19.256 20.7525C19.1851 21.1218 19.1615 21.4972 19.1851 21.8787C19.2087 22.2603 19.3091 22.6419 19.4863 23.0235C19.6635 23.405 19.9351 23.7681 20.3013 24.1128C20.6674 24.4574 21.1812 24.7651 21.8426 25.0359C22.4331 25.2821 23.0768 25.5037 23.7737 25.7006C24.4705 25.8975 25.1496 26.1252 25.8111 26.3837C26.4725 26.6422 27.0571 26.9622 27.565 27.3438C28.0728 27.7254 28.4331 28.2485 28.6457 28.9132C28.7638 29.3071 28.8524 29.7932 28.9114 30.3718C28.9705 30.9503 29 31.5349 29 32.1257C29 32.7166 28.9587 33.2705 28.876 33.7874C28.7933 34.3044 28.6693 34.6983 28.5039 34.9691C28.3858 35.1414 28.0492 35.3137 27.4941 35.486C26.939 35.6583 26.254 35.8245 25.439 35.9845C24.6241 36.1445 23.7146 36.2861 22.7107 36.4092C21.7068 36.5323 20.6969 36.6369 19.6812 36.7231C18.6654 36.8092 17.691 36.8769 16.758 36.9261C15.8249 36.9754 15.0159 37 14.3308 37C13.6458 37 12.8486 36.9754 11.9391 36.9261C11.0297 36.8769 10.0907 36.8092 9.12222 36.7231C8.15373 36.6369 7.19113 36.5384 6.23445 36.4276C5.27777 36.3169 4.40966 36.1999 3.63014 36.0768C2.85062 35.9538 2.18921 35.8307 1.64591 35.7076C1.10261 35.5845 0.76009 35.4614 0.618359 35.3383C0.38214 35.1414 0.199071 34.5383 0.069151 33.5289C-0.0607691 32.5196 -0.00761997 31.2149 0.228598 29.6148C0.346708 28.7039 0.69513 28.0085 1.27386 27.5284C1.8526 27.0484 2.52582 26.6668 3.29353 26.3837C4.06124 26.1006 4.85848 25.8483 5.68524 25.6267C6.51201 25.4052 7.24428 25.0852 7.88207 24.6667C8.37813 24.3466 8.75608 24.0389 9.01592 23.7435C9.27576 23.4481 9.46474 23.1527 9.58285 22.8573C9.70096 22.5619 9.76001 22.2542 9.76001 21.9341C9.76001 21.6141 9.7482 21.2572 9.72458 20.8633C9.67734 20.2971 9.48836 19.8478 9.15765 19.5155C8.82695 19.1831 8.46081 18.8446 8.05924 18.5C7.87026 18.3277 7.70491 18.0877 7.56318 17.7799C7.42145 17.4722 7.29153 17.1584 7.17342 16.8383C7.05531 16.4691 6.9372 16.0752 6.81909 15.6567C6.65374 15.6075 6.48839 15.5213 6.32303 15.3982C6.1813 15.2751 6.02776 15.1028 5.86241 14.8812C5.69705 14.6597 5.55532 14.3397 5.43721 13.9212C5.29548 13.5027 5.24233 13.1211 5.27777 12.7764C5.3132 12.4318 5.37816 12.1364 5.47265 11.8902C5.56713 11.6194 5.72068 11.3609 5.93327 11.1148C5.90965 10.1793 5.95689 9.24385 6.075 8.30838C6.16949 7.52063 6.34075 6.67132 6.58878 5.76048C6.83681 4.84963 7.20885 4.03726 7.70491 3.32335C8.15373 2.63407 8.65569 2.07402 9.2108 1.64321C9.76592 1.21241 10.3328 0.873919 10.9116 0.627745C11.4903 0.38157 12.069 0.215403 12.6478 0.129242C13.2265 0.0430805 13.7875 -2.40885e-08 14.3308 0Z"/>
+										</svg>
+									</span>
+									<span class="name">学校  &nbsp;&nbsp;SCHOOL</span>
+								</div>
+								<div>
+									<span class="s1">登录</span>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="index-list">
+					<div class="lunbo-list">
+						<div class="fl">
+							<div class="fl">
+								<div class="news-list tab-box">
+									<div class="tab-head">
+										<ul class="clearfix">
+											<li class="active">通知公告</li>
+										</ul>
+										<a href='{{UrlForCategory "subsite_xwgg_gg"}}' class="more">更多>></a>
+									</div>
+									<div class="tab-content">
+										<div class="inner-div active">
+											<ul class="new-list" id="ggList">
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="fr">
+								<div class="news-list tab-box">
+									<div class="tab-head">
+										<ul class="clearfix">
+											<li class="active">工作动态</li>
+										</ul>
+										<a href='{{UrlForCategory "subsite_xwgg_dt"}}' class="more">更多>></a>
+									</div>
+									<div class="tab-content">
+										<div class="inner-div active">
+											<ul class="new-list" id="dtList">
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+						</div>
+						
+						<div class="fr">
+							<div class="news-list tab-box">
+								<div class="tab-head">
+									<ul class="clearfix">
+										<li class="active">招聘信息</li>
+									</ul>
+									<a href="/" class="more">更多>></a>
+								</div>
+								<div class="tab-content">
+									<div class="inner-div active">
+										<ul class="new-list">
+											<li>
+												<span class="time">2020-11-20</span>
+												<a href="导航详情页.html">我校组织处级以上领导干部赴河南廉政文化教育馆我校组织处级以上领导干部赴河南廉政文化教育馆</a>
+											</li>
+											<li>
+												<span class="time">2020-11-20</span>
+												<a href="导航详情页.html">我校组织处级以上领导干部赴河南廉政文化教育馆我校组织处级以上领导干部赴河南廉政文化教育馆</a>
+											</li>
+											<li>
+												<span class="time">2020-11-20</span>
+												<a href="导航详情页.html">我校组织处级以上领导干部赴河南廉政文化教育馆我校组织处级以上领导干部赴河南廉政文化教育馆</a>
+											</li>
+											<li>
+												<span class="time">2020-11-20</span>
+												<a href="导航详情页.html">我校组织处级以上领导干部赴河南廉政文化教育馆我校组织处级以上领导干部赴河南廉政文化教育馆</a>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+				<div class="index-list">
+					<div class="tab-box position-box app-more-hide">
+						<div class="tab-head tab-head2">
+							<ul class="clearfix">
+								<li class="active">招聘信息</li>
+								<li>宣讲会</li>
+								<li>线上招聘会</li>
+								<li>线下招聘会</li>
+								<li>推荐单位</li>
+								<li>推荐职位</li>
+							</ul>
+							<a href="#" class="more">更多>></a>
+						</div>
+						<div class="tab-content tab-content2">
+							<div class="inner-div list job-list active">
+								<ul class="clearfix">
+									<li class="col-4">
+										<a href="#">
+											<div class="top">
+												<span class="title" title="计算机教师（电商、PR、插画、组装）">计算机教师（电商、PR、插画、组装）</span>
+												<span class="price">3K-13K</span>
+											</div>
+											<div class="middle">
+												<span class="address">广东省深圳市</span>|
+												<span class="xueli">硕士及以上</span>
+											</div>
+										</a>
+										<a href="javascript:void(0)" class="bot">
+											<img src="{{.siteStatic}}images/icon_company_default.png" alt="" class="logo" />
+											<div class="fr">
+												<p class="name">河南省京成现代叉车销售有限公司</p>
+												<p>贸易/进出口|民营/股份制用人单位</p>
+											</div>
+
+										</a>
+									</li>
+									<li class="col-4">
+										<a href="#">
+											<div class="top">
+												<span class="title" title="计算机教师（电商、PR、插画、组装）">计算机教师（电商、PR、插画、组装）</span>
+												<span class="price">3K-13K</span>
+											</div>
+											<div class="middle">
+												<span class="xueli">本科</span>|
+												<span class="address">河南郑州</span>
+											</div>
+										</a>
+										<a href="javascript:void(0)" class="bot">
+											<img src="{{.siteStatic}}images/dw-logo-img1.jpg" alt="" class="logo" />
+											<div class="fr">
+												<p class="name">河南省京成现代叉车销售有限公司</p>
+												<p>贸易/进出口|民营/股份制用人单位</p>
+											</div>
+
+										</a>
+									</li>
+									<li class="col-4">
+										<a href="#">
+											<div class="top">
+												<span class="title" title="计算机教师（电商、PR、插画、组装）">计算机教师（电商、PR、插画、组装）</span>
+												<span class="price">3K-13K</span>
+											</div>
+											<div class="middle">
+												<span class="address">广东省深圳市</span>|
+												<span class="xueli">硕士及以上</span>
+											</div>
+										</a>
+										<a href="javascript:void(0)" class="bot">
+											<img src="{{.siteStatic}}images/icon_company_default.png" alt="" class="logo" />
+											<div class="fr">
+												<p class="name">河南省京成现代叉车销售有限公司</p>
+												<p>贸易/进出口|民营/股份制用人单位</p>
+											</div>
+
+										</a>
+									</li>
+									<li class="col-4">
+										<a href="#">
+											<div class="top">
+												<span class="title" title="计算机教师（电商、PR、插画、组装）">计算机教师（电商、PR、插画、组装）</span>
+												<span class="price">3K-13K</span>
+											</div>
+											<div class="middle">
+												<span class="xueli">本科</span>|
+												<span class="address">河南郑州</span>
+											</div>
+										</a>
+										<a href="javascript:void(0)" class="bot">
+											<img src="{{.siteStatic}}images/dw-logo-img1.jpg" alt="" class="logo" />
+											<div class="fr">
+												<p class="name">河南省京成现代叉车销售有限公司</p>
+												<p>贸易/进出口|民营/股份制用人单位</p>
+											</div>
+
+										</a>
+									</li>
+									<li class="col-4">
+										<a href="3.1-招聘会.html">
+											<div class="top">
+												<span class="title" title="计算机教师（电商、PR、插画、组装）">计算机教师（电商、PR、插画、组装）</span>
+												<span class="price">3K-13K</span>
+											</div>
+											<div class="middle">
+												<span class="address">广东省深圳市</span>|
+												<span class="xueli">硕士及以上</span>
+											</div>
+										</a>
+										<a href="javascript:void(0)" class="bot">
+											<img src="{{.siteStatic}}images/icon_company_default.png" alt="" class="logo" />
+											<div class="fr">
+												<p class="name">河南省京成现代叉车销售有限公司</p>
+												<p>贸易/进出口|民营/股份制用人单位</p>
+											</div>
+
+										</a>
+									</li>
+									<li class="col-4">
+										<a href="#">
+											<div class="top">
+												<span class="title" title="计算机教师（电商、PR、插画、组装）">计算机教师（电商、PR、插画、组装）</span>
+												<span class="price">3K-13K</span>
+											</div>
+											<div class="middle">
+												<span class="xueli">本科</span>|
+												<span class="address">河南郑州</span>
+											</div>
+										</a>
+										<a href="javascript:void(0)" class="bot">
+											<img src="{{.siteStatic}}images/dw-logo-img1.jpg" alt="" class="logo" />
+											<div class="fr">
+												<p class="name">河南省京成现代叉车销售有限公司</p>
+												<p>贸易/进出口|民营/股份制用人单位</p>
+											</div>
+
+										</a>
+									</li>
+
+								</ul>
+							</div>
+							<div class="inner-div list zphList ">
+								<ul class="clearfix">
+									<li class="col-4">
+										<a href="3.2-招聘会详情.html">
+											<img src="{{.siteStatic}}images/zph_img1.jpg" alt="" class="zph-img">
+											<div class="detail">
+												<div class="title">闽北高校2021届毕业生网络视频招聘会</div>
+												<p class="type c-light">视频招聘会</p>
+												<p class="date c-light">2021-04-13 08:00</p>
+											</div>
+										</a>
+									</li>
+									<li class="col-4">
+										<a href="3.2-招聘会详情.html">
+											<img src="{{.siteStatic}}images/zph_img2.jpg" alt="" class="zph-img">
+											<div class="detail">
+												<div class="title">福建师范大学协和学院2021届毕业生春季线下双选会（校友企业专场）</div>
+												<p class="type c-light">视频招聘会</p>
+												<p class="date c-light">2021-04-13 08:00</p>
+											</div>
+
+										</a>
+									</li>
+									<li class="col-4">
+										<a href="3.2-招聘会详情.html">
+											<img src="{{.siteStatic}}images/zph_img3.jpg" alt="" class="zph-img">
+											<div class="detail">
+												<div class="title">闽北高校2021届毕业生网络视频招聘会</div>
+												<p class="type c-light">视频招聘会</p>
+												<p class="date c-light">2021-04-13 08:00</p>
+											</div>
+										</a>
+									</li>
+									<li class="col-4">
+										<a href="3.2-招聘会详情.html">
+											<img src="{{.siteStatic}}images/zph_img3.jpg" alt="" class="zph-img">
+											<div class="detail">
+												<div class="title">闽北高校2021届毕业生网络视频招聘会</div>
+												<p class="type c-light">视频招聘会</p>
+												<p class="date c-light">2021-04-13 08:00</p>
+											</div>
+										</a>
+									</li>
+								</ul>
+							</div>
+							<div class="inner-div list zphList ">
+								<ul class="clearfix">
+									<li class="col-4">
+										<a href="3.2-招聘会详情.html">
+											<img src="{{.siteStatic}}images/zph_img1.jpg" alt="" class="zph-img">
+											<div class="detail">
+												<div class="title">2.闽北高校2021届毕业生网络视频招聘会</div>
+												<p class="type c-light">视频招聘会</p>
+												<p class="date c-light">2021-04-13 08:00</p>
+											</div>
+										</a>
+									</li>
+									<li class="col-4">
+										<a href="3.2-招聘会详情.html">
+											<img src="{{.siteStatic}}images/zph_img2.jpg" alt="" class="zph-img">
+											<div class="detail">
+												<div class="title">福建师范大学协和学院2021届毕业生春季线下双选会（校友企业专场）</div>
+												<p class="type c-light">视频招聘会</p>
+												<p class="date c-light">2021-04-13 08:00</p>
+											</div>
+
+										</a>
+									</li>
+									<li class="col-4">
+										<a href="3.2-招聘会详情.html">
+											<img src="{{.siteStatic}}images/zph_img3.jpg" alt="" class="zph-img">
+											<div class="detail">
+												<div class="title">闽北高校2021届毕业生网络视频招聘会</div>
+												<p class="type c-light">视频招聘会</p>
+												<p class="date c-light">2021-04-13 08:00</p>
+											</div>
+										</a>
+									</li>
+									<li class="col-4">
+										<a href="3.2-招聘会详情.html">
+											<img src="{{.siteStatic}}images/zph_img3.jpg" alt="" class="zph-img">
+											<div class="detail">
+												<div class="title">闽北高校2021届毕业生网络视频招聘会</div>
+												<p class="type c-light">视频招聘会</p>
+												<p class="date c-light">2021-04-13 08:00</p>
+											</div>
+										</a>
+									</li>
+								</ul>
+							</div>
+							<div class="inner-div list zphList ">
+								<ul class="clearfix">
+									<li class="col-4">
+										<a href="3.2-招聘会详情.html">
+											<img src="{{.siteStatic}}images/zph_img1.jpg" alt="" class="zph-img">
+											<div class="detail">
+												<div class="title">3.闽北高校2021届毕业生网络视频招聘会</div>
+												<p class="type c-light">视频招聘会</p>
+												<p class="date c-light">2021-04-13 08:00</p>
+											</div>
+										</a>
+									</li>
+									<li class="col-4">
+										<a href="3.2-招聘会详情.html">
+											<img src="{{.siteStatic}}images/zph_img2.jpg" alt="" class="zph-img">
+											<div class="detail">
+												<div class="title">福建师范大学协和学院2021届毕业生春季线下双选会（校友企业专场）</div>
+												<p class="type c-light">视频招聘会</p>
+												<p class="date c-light">2021-04-13 08:00</p>
+											</div>
+
+										</a>
+									</li>
+									<li class="col-4">
+										<a href="3.2-招聘会详情.html">
+											<img src="{{.siteStatic}}images/zph_img3.jpg" alt="" class="zph-img">
+											<div class="detail">
+												<div class="title">闽北高校2021届毕业生网络视频招聘会</div>
+												<p class="type c-light">视频招聘会</p>
+												<p class="date c-light">2021-04-13 08:00</p>
+											</div>
+										</a>
+									</li>
+									<li class="col-4">
+										<a href="3.2-招聘会详情.html">
+											<img src="{{.siteStatic}}images/zph_img3.jpg" alt="" class="zph-img">
+											<div class="detail">
+												<div class="title">闽北高校2021届毕业生网络视频招聘会</div>
+												<p class="type c-light">视频招聘会</p>
+												<p class="date c-light">2021-04-13 08:00</p>
+											</div>
+										</a>
+									</li>
+								</ul>
+							</div>
+							<div class="inner-div list hot-company">
+								<ul class="clearfix">
+									<li class="col-4">
+										<div class="company-div">
+											<a href="#">
+												<div class="top">
+													<img src="{{.siteStatic}}images/icon_company_default.png" alt="" class="img">
+													<p class="name">河南智盛通讯器材有限公司</p>
+												</div>
+											</a>
+											<div class="bot">招
+												<span class="num">1296</span>人
+											</div>
+										</div>
+										<div class="hover">
+											<a href="">机械研发工程师</a>
+											<a href="">机械设计师</a>
+											<a href="">性能测试工程师</a>
+											<a href="#" class="more">共招65人</a>
+										</div>
+									</li>
+									<li class="col-4">
+										<div class="company-div">
+											<a href="#">
+												<div class="top">
+													<img src="{{.siteStatic}}images/icon_company_default.png" alt="" class="img">
+													<p class="name">河南智盛通讯器材有限公司</p>
+												</div>
+											</a>
+											<div class="bot">招
+												<span class="num">1296</span>人
+											</div>
+										</div>
+										<div class="hover">
+											<a href="">机械研发工程师</a>
+											<a href="">机械设计师</a>
+											<a href="">性能测试工程师</a>
+											<a href="#" class="more">共招65人</a>
+										</div>
+									</li>
+									<li class="col-4">
+										<div class="company-div">
+											<a href="#">
+												<div class="top">
+													<img src="{{.siteStatic}}images/icon_company_default.png" alt="" class="img">
+													<p class="name">河南智盛通讯器材有限公司</p>
+												</div>
+											</a>
+											<div class="bot">招
+												<span class="num">1296</span>人
+											</div>
+										</div>
+										<div class="hover">
+											<a href="">机械研发工程师</a>
+											<a href="">机械设计师</a>
+											<a href="">性能测试工程师</a>
+											<a href="#" class="more">共招65人</a>
+										</div>
+									</li>
+									<li class="col-4">
+										<div class="company-div">
+											<a href="#">
+												<div class="top">
+													<img src="{{.siteStatic}}images/icon_company_default.png" alt="" class="img">
+													<p class="name">河南智盛通讯器材有限公司</p>
+												</div>
+											</a>
+											<div class="bot">招
+												<span class="num">1296</span>人
+											</div>
+										</div>
+										<div class="hover">
+											<a href="">机械研发工程师</a>
+											<a href="">机械设计师</a>
+											<a href="">性能测试工程师</a>
+											<a href="#" class="more">共招65人</a>
+										</div>
+									</li>
+									<li class="col-4">
+										<div class="company-div">
+											<a href="#">
+												<div class="top">
+													<img src="{{.siteStatic}}images/icon_company_default.png" alt="" class="img">
+													<p class="name">河南智盛通讯器材有限公司</p>
+												</div>
+											</a>
+											<div class="bot">招
+												<span class="num">1296</span>人
+											</div>
+										</div>
+										<div class="hover">
+											<a href="">机械研发工程师</a>
+											<a href="">机械设计师</a>
+											<a href="">性能测试工程师</a>
+											<a href="#" class="more">共招65人</a>
+										</div>
+									</li>
+									<li class="col-4">
+										<div class="company-div">
+											<a href="#">
+												<div class="top">
+													<img src="{{.siteStatic}}images/icon_company_default.png" alt="" class="img">
+													<p class="name">河南智盛通讯器材有限公司</p>
+												</div>
+											</a>
+											<div class="bot">招
+												<span class="num">1296</span>人
+											</div>
+										</div>
+										<div class="hover">
+											<a href="">机械研发工程师</a>
+											<a href="">机械设计师</a>
+											<a href="">性能测试工程师</a>
+											<a href="#" class="more">共招65人</a>
+										</div>
+									</li>
+								</ul>
+							</div>
+
+							<div class="inner-div list job-list">
+								<ul class="clearfix">
+									<li class="col-4">
+										<a href="#">
+											<div class="top">
+												<span class="title" title="计算机教师（电商、PR、插画、组装）">4.计算机教师（电商、PR、插画、组装）</span>
+												<span class="price">3K-13K</span>
+											</div>
+											<div class="middle">
+												<span class="address">广东省深圳市</span>|
+												<span class="xueli">硕士及以上</span>
+											</div>
+										</a>
+										<a href="javascript:void(0)" class="bot">
+											<img src="{{.siteStatic}}images/icon_company_default.png" alt="" class="logo" />
+											<div class="fr">
+												<p class="name">河南省京成现代叉车销售有限公司</p>
+												<p>贸易/进出口|民营/股份制用人单位</p>
+											</div>
+
+										</a>
+									</li>
+									<li class="col-4">
+										<a href="#">
+											<div class="top">
+												<span class="title" title="计算机教师（电商、PR、插画、组装）">4.计算机教师（电商、PR、插画、组装）</span>
+												<span class="price">3K-13K</span>
+											</div>
+											<div class="middle">
+												<span class="address">广东省深圳市</span>|
+												<span class="xueli">硕士及以上</span>
+											</div>
+										</a>
+										<a href="javascript:void(0)" class="bot">
+											<img src="{{.siteStatic}}images/icon_company_default.png" alt="" class="logo" />
+											<div class="fr">
+												<p class="name">河南省京成现代叉车销售有限公司</p>
+												<p>贸易/进出口|民营/股份制用人单位</p>
+											</div>
+
+										</a>
+									</li>
+									<li class="col-4">
+										<a href="#">
+											<div class="top">
+												<span class="title" title="计算机教师（电商、PR、插画、组装）">4.计算机教师（电商、PR、插画、组装）</span>
+												<span class="price">3K-13K</span>
+											</div>
+											<div class="middle">
+												<span class="address">广东省深圳市</span>|
+												<span class="xueli">硕士及以上</span>
+											</div>
+										</a>
+										<a href="javascript:void(0)" class="bot">
+											<img src="{{.siteStatic}}images/icon_company_default.png" alt="" class="logo" />
+											<div class="fr">
+												<p class="name">河南省京成现代叉车销售有限公司</p>
+												<p>贸易/进出口|民营/股份制用人单位</p>
+											</div>
+
+										</a>
+									</li>
+									<li class="col-4">
+										<a href="#">
+											<div class="top">
+												<span class="title" title="计算机教师（电商、PR、插画、组装）">4.计算机教师（电商、PR、插画、组装）</span>
+												<span class="price">3K-13K</span>
+											</div>
+											<div class="middle">
+												<span class="address">广东省深圳市</span>|
+												<span class="xueli">硕士及以上</span>
+											</div>
+										</a>
+										<a href="javascript:void(0)" class="bot">
+											<img src="{{.siteStatic}}images/icon_company_default.png" alt="" class="logo" />
+											<div class="fr">
+												<p class="name">河南省京成现代叉车销售有限公司</p>
+												<p>贸易/进出口|民营/股份制用人单位</p>
+											</div>
+
+										</a>
+									</li>
+									<li class="col-4">
+										<a href="#">
+											<div class="top">
+												<span class="title" title="计算机教师（电商、PR、插画、组装）">4.计算机教师（电商、PR、插画、组装）</span>
+												<span class="price">3K-13K</span>
+											</div>
+											<div class="middle">
+												<span class="address">广东省深圳市</span>|
+												<span class="xueli">硕士及以上</span>
+											</div>
+										</a>
+										<a href="javascript:void(0)" class="bot">
+											<img src="{{.siteStatic}}images/icon_company_default.png" alt="" class="logo" />
+											<div class="fr">
+												<p class="name">河南省京成现代叉车销售有限公司</p>
+												<p>贸易/进出口|民营/股份制用人单位</p>
+											</div>
+
+										</a>
+									</li>
+									<li class="col-4">
+										<a href="#">
+											<div class="top">
+												<span class="title" title="计算机教师（电商、PR、插画、组装）">4.计算机教师（电商、PR、插画、组装）</span>
+												<span class="price">3K-13K</span>
+											</div>
+											<div class="middle">
+												<span class="address">广东省深圳市</span>|
+												<span class="xueli">硕士及以上</span>
+											</div>
+										</a>
+										<a href="javascript:void(0)" class="bot">
+											<img src="{{.siteStatic}}images/icon_company_default.png" alt="" class="logo" />
+											<div class="fr">
+												<p class="name">河南省京成现代叉车销售有限公司</p>
+												<p>贸易/进出口|民营/股份制用人单位</p>
+											</div>
+
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="index-list clearfix">
+					<div class="lunbo-list">
+						<div class="fl">
+							<div class="fl">
+								<div class="tab-box">
+									<div class="tab-content">
+										<div class="inner-div active">
+											<div class="jy-nav">
+												<a href="#">
+													<div class="icon">
+														<svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+															<path fill="currentColor" d="M21.1111 27.9231C25.8431 27.9231 29.6911 24.1141 29.6911 19.4276C29.6911 14.7411 25.8431 10.9321 21.1111 10.9321C16.3791 10.9321 12.5311 14.7411 12.5311 19.4276C12.5311 24.1141 16.3856 27.9231 21.1111 27.9231ZM21.1111 13.5321C24.4066 13.5321 27.0911 16.1776 27.0911 19.4276C27.0911 22.6776 24.4066 25.3231 21.1111 25.3231C17.8156 25.3231 15.1311 22.6776 15.1311 19.4276C15.1311 16.1776 17.8156 13.5321 21.1111 13.5321ZM29.2816 29.6781H12.9471C10.1911 29.6781 7.95508 31.9206 7.95508 34.6701V42.4571H10.5551V34.6701C10.5551 33.3506 11.6276 32.2781 12.9471 32.2781H29.2881C30.6076 32.2781 31.6801 33.3506 31.6801 34.6701V42.4571H34.2801V34.6701C34.2801 31.9141 32.0376 29.6781 29.2816 29.6781ZM37.4521 25.1931C40.6566 25.1931 43.2696 22.6061 43.2696 19.4276C43.2696 16.2491 40.6631 13.6621 37.4521 13.6621C34.2476 13.6621 31.6346 16.2491 31.6346 19.4276C31.6346 22.6061 34.2411 25.1931 37.4521 25.1931ZM37.4521 16.2621C39.2266 16.2621 40.6696 17.6791 40.6696 19.4276C40.6696 21.1761 39.2266 22.5931 37.4521 22.5931C35.6776 22.5931 34.2346 21.1761 34.2346 19.4276C34.2346 17.6791 35.6776 16.2621 37.4521 16.2621ZM41.7291 27.3446H36.5226V29.9446H41.7291C43.0486 29.9446 44.1211 31.0171 44.1211 32.3366V38.9601H46.7211V32.3366C46.7276 29.5806 44.4851 27.3446 41.7291 27.3446Z"/>
+														</svg>
+													</div>
+													<p class="name">生源信息核对</p>
+												</a>
+												<a href="#">
+													<div class="icon">
+														<svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+															<path fill="currentColor" d="M42.0938 14.4219V44.6094H16.9375V14.4219H42.0938ZM42.0938 11.9062H16.9375C15.5494 11.9062 14.4219 13.0338 14.4219 14.4219V44.6094C14.4219 45.9975 15.5494 47.125 16.9375 47.125H42.0938C43.4818 47.125 44.6094 45.9975 44.6094 44.6094V14.4219C44.6094 13.0338 43.4818 11.9062 42.0938 11.9062Z"/>
+															<path fill="currentColor" d="M37.0625 9.39062V11.9062H16.9375L14.4219 14.4219V39.5781H11.9062V9.39062H37.0625ZM37.0625 6.875H11.9062C10.5182 6.875 9.39062 8.00254 9.39062 9.39062V39.5781C9.39062 40.9662 10.5182 42.0938 11.9062 42.0938H16.9375V14.4219H39.5781V9.39062C39.5781 8.00254 38.4506 6.875 37.0625 6.875Z"/>
+															<path fill="currentColor" d="M35.8447 23.2266H23.2666C22.5703 23.2266 22.0088 22.665 22.0088 21.9688C22.0088 21.2725 22.5703 20.7109 23.2666 20.7109H35.8447C36.541 20.7109 37.1025 21.2725 37.1025 21.9688C37.1025 22.665 36.5365 23.2266 35.8447 23.2266ZM35.8447 30.7734H23.2666C22.5703 30.7734 22.0088 30.2119 22.0088 29.5156C22.0088 28.8193 22.5703 28.2578 23.2666 28.2578H35.8447C36.541 28.2578 37.1025 28.8193 37.1025 29.5156C37.1025 30.2119 36.5365 30.7734 35.8447 30.7734ZM35.8447 38.3203H23.2666C22.5703 38.3203 22.0088 37.7588 22.0088 37.0625C22.0088 36.3662 22.5703 35.8047 23.2666 35.8047H35.8447C36.541 35.8047 37.1025 36.3662 37.1025 37.0625C37.1025 37.7588 36.5365 38.3203 35.8447 38.3203Z"/>
+														</svg>
+													</div>
+													<p class="name">推荐表注册</p>
+												</a>
+												<a href="#">
+													<div class="icon">
+														<svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+															<path fill="currentColor" d="M27.3539 46.1715H14.5188C13.281 46.1715 12.0939 45.6798 11.2186 44.8045C10.3433 43.9292 9.85156 42.7421 9.85156 41.5043V14.6673C9.85156 13.4294 10.3433 12.2423 11.2186 11.367C12.0939 10.4917 13.281 10 14.5188 10H34.3549C35.5927 10 36.7799 10.4917 37.6551 11.367C38.5304 12.2423 39.0222 13.4294 39.0222 14.6673V24.0019C39.0197 24.3098 38.8957 24.6042 38.6772 24.821C38.4586 25.0379 38.1632 25.1596 37.8554 25.1596C37.5475 25.1596 37.2521 25.0379 37.0335 24.821C36.815 24.6042 36.691 24.3098 36.6886 24.0019V14.6673C36.6886 14.3608 36.6282 14.0573 36.5109 13.7742C36.3937 13.4911 36.2218 13.2338 36.0051 13.0171C35.7883 12.8004 35.5311 12.6285 35.2479 12.5112C34.9648 12.394 34.6613 12.3336 34.3549 12.3336H14.5188C14.2124 12.3336 13.9089 12.394 13.6258 12.5112C13.3427 12.6285 13.0854 12.8004 12.8687 13.0171C12.652 13.2338 12.4801 13.4911 12.3628 13.7742C12.2456 14.0574 12.1852 14.3608 12.1852 14.6673V41.5042C12.1852 41.8107 12.2456 42.1141 12.3628 42.3973C12.4801 42.6804 12.652 42.9377 12.8687 43.1544C13.0854 43.3711 13.3427 43.543 13.6258 43.6602C13.9089 43.7775 14.2124 43.8379 14.5188 43.8379H27.3539C27.6623 43.8396 27.9574 43.9633 28.1748 44.1819C28.3922 44.4005 28.5143 44.6964 28.5143 45.0047C28.5143 45.313 28.3922 45.6088 28.1748 45.8275C27.9574 46.0461 27.6622 46.1698 27.3539 46.1715ZM37.5951 30.3494L42.7455 33.0879L41.6487 35.1486L36.4983 32.4088L37.5951 30.3494Z"/>
+															<path fill="currentColor" d="M33.2697 47.0001C32.8628 46.9998 32.4621 46.8997 32.1029 46.7084C31.666 46.478 31.3093 46.1203 31.0802 45.6828C30.851 45.2452 30.76 44.7484 30.8194 44.258C31.2395 40.9443 31.4028 39.8591 31.5195 39.4157L31.6362 39.0773L37.657 27.7475C37.8006 27.4758 37.9964 27.2351 38.2332 27.0393C38.47 26.8435 38.7431 26.6964 39.0369 26.6064C39.3307 26.5164 39.6394 26.4854 39.9452 26.515C40.251 26.5446 40.548 26.6343 40.8191 26.779L43.9112 28.4242C44.1809 28.5698 44.4192 28.767 44.6127 29.0047C44.8061 29.2424 44.9509 29.5159 45.0386 29.8095C45.1264 30.1031 45.1555 30.4112 45.1242 30.716C45.0929 31.0209 45.0019 31.3166 44.8563 31.5863L38.8238 42.9162C38.7071 43.1379 38.5555 43.4179 34.7983 46.4167C34.3759 46.7892 33.8329 46.9964 33.2697 47.0001ZM33.7598 40.0575C33.6665 40.5242 33.3748 42.6478 33.1414 44.5381C33.1372 44.5596 33.1408 44.582 33.1514 44.6012C33.1621 44.6204 33.1792 44.6353 33.1997 44.6431C33.219 44.6603 33.2439 44.6698 33.2698 44.6698C33.2956 44.6698 33.3205 44.6603 33.3398 44.6431C34.7866 43.4762 36.4668 42.0994 36.8402 41.7143L42.8027 30.5012L39.7223 28.8443L33.7598 40.0575ZM18.0193 18.1678H30.8544C31.6323 18.1678 32.0212 18.5568 32.0212 19.3346C32.0212 20.1125 31.6323 20.5015 30.8544 20.5015H18.0193C17.2415 20.5015 16.8525 20.1125 16.8525 19.3346C16.8525 18.5568 17.2415 18.1678 18.0193 18.1678ZM18.0193 25.7522H30.8544C31.6323 25.7522 32.0212 26.1411 32.0212 26.919C32.0212 27.6969 31.6323 28.0858 30.8544 28.0858H18.0193C17.2415 28.0858 16.8525 27.6969 16.8525 26.919C16.8525 26.1411 17.2415 25.7522 18.0193 25.7522ZM18.0193 33.3365H30.8544C31.6323 33.3365 32.0212 33.7255 32.0212 34.5034C32.0212 35.2812 31.6323 35.6702 30.8544 35.6702H18.0193C17.2415 35.6702 16.8525 35.2812 16.8525 34.5034C16.8525 33.7255 17.2415 33.3365 18.0193 33.3365Z"/>
+														</svg>
+													</div>
+													<p class="name">网上签约</p>
+												</a>
+												<a href="#">
+													<div class="icon">
+														<svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+															<path fill="currentColor" d="M42.7782 37.0791L42.8244 37.1229C42.9525 37.2436 43.0545 37.3892 43.1243 37.5508C43.194 37.7123 43.23 37.8865 43.23 38.0625C43.23 38.2385 43.194 38.4126 43.1243 38.5742C43.0545 38.7357 42.9525 38.8813 42.8244 39.002L35.801 45.6228C35.5354 45.8737 35.1811 46.0091 34.8158 45.9995C34.4503 46.0093 34.0958 45.8738 33.83 45.6228L29.7967 41.8207C29.6686 41.7 29.5665 41.5544 29.4968 41.3928C29.427 41.2313 29.391 41.0571 29.391 40.8811C29.391 40.7051 29.427 40.531 29.4968 40.3694C29.5665 40.2079 29.6686 40.0623 29.7967 39.9416L29.8433 39.8977C30.1003 39.6554 30.4402 39.5204 30.7935 39.5204C31.1467 39.5204 31.4866 39.6554 31.7436 39.8977L34.8158 42.7935L40.8779 37.0791C41.1349 36.8367 41.4748 36.7018 41.828 36.7018C42.1813 36.7018 42.5212 36.8367 42.7782 37.0791ZM37.2401 9C40.045 9 42.3188 11.2739 42.3188 14.0787V31.1615C42.3188 31.5288 42.1729 31.8811 41.9131 32.1409C41.6534 32.4006 41.3011 32.5466 40.9337 32.5466C40.5664 32.5466 40.2141 32.4006 39.9543 32.1409C39.6946 31.8811 39.5486 31.5288 39.5486 31.1615V14.0787C39.5486 13.7755 39.4889 13.4753 39.3729 13.1953C39.2569 12.9152 39.0869 12.6607 38.8725 12.4463C38.6581 12.232 38.4036 12.0619 38.1236 11.9459C37.8435 11.8299 37.5433 11.7702 37.2401 11.7702H15.0787C14.7755 11.7702 14.4753 11.8299 14.1953 11.9459C13.9152 12.0619 13.6607 12.232 13.4463 12.4463C13.232 12.6607 13.0619 12.9152 12.9459 13.1953C12.8299 13.4753 12.7702 13.7755 12.7702 14.0787V40.8571C12.7702 41.1603 12.8299 41.4605 12.9459 41.7405C13.0619 42.0206 13.232 42.2751 13.4463 42.4895C13.6607 42.7038 13.9152 42.8739 14.1953 42.9899C14.4753 43.1059 14.7755 43.1656 15.0787 43.1656H25.236C25.6034 43.1656 25.9557 43.3115 26.2154 43.5713C26.4752 43.831 26.6211 44.1834 26.6211 44.5507C26.6211 44.9181 26.4752 45.2704 26.2154 45.5301C25.9557 45.7899 25.6034 45.9358 25.236 45.9358H15.0787C12.2739 45.9358 10 43.6619 10 40.8571V14.0787C10 11.2739 12.2739 9 15.0787 9H37.2401ZM28.0062 28.853C28.3735 28.853 28.7259 28.9989 28.9856 29.2587C29.2454 29.5184 29.3913 29.8707 29.3913 30.2381C29.3913 30.6054 29.2454 30.9577 28.9856 31.2175C28.7259 31.4772 28.3735 31.6232 28.0062 31.6232H18.7723C18.4049 31.6232 18.0526 31.4772 17.7928 31.2175C17.5331 30.9577 17.3872 30.6054 17.3872 30.2381C17.3872 29.8707 17.5331 29.5184 17.7928 29.2587C18.0526 28.9989 18.4049 28.853 18.7723 28.853H28.0062ZM33.5466 21.4658C33.9139 21.4658 34.2662 21.6118 34.526 21.8715C34.7857 22.1313 34.9317 22.4836 34.9317 22.8509C34.9317 23.2183 34.7857 23.5706 34.526 23.8303C34.2662 24.0901 33.9139 24.236 33.5466 24.236H18.7723C18.4049 24.236 18.0526 24.0901 17.7928 23.8303C17.5331 23.5706 17.3872 23.2183 17.3872 22.8509C17.3872 22.4836 17.5331 22.1313 17.7928 21.8715C18.0526 21.6118 18.4049 21.4658 18.7723 21.4658H33.5466Z"/>
+														</svg>
+													</div>
+													<p class="name">问卷调查</p>
+												</a>
+												<a href="#">
+													<div class="icon">
+														<svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+															<path fill="currentColor" d="M16.6713 43.1867H14.1443C12.265 43.1867 10.7363 41.658 10.7363 39.7787V34.2867C10.7363 32.4074 12.265 30.8787 14.1443 30.8787H16.6713C18.5506 30.8787 20.0793 32.4074 20.0793 34.2867V39.7787C20.0793 41.658 18.5506 43.1867 16.6713 43.1867ZM14.1443 33.1506C13.518 33.1506 13.0082 33.66 13.0082 34.2867V39.7787C13.0082 40.405 13.5176 40.9148 14.1443 40.9148H16.6713C17.2976 40.9148 17.8074 40.4054 17.8074 39.7787V34.2867C17.8074 33.6604 17.298 33.1506 16.6713 33.1506H14.1443ZM28.1491 43.1867H25.6217C23.7424 43.1867 22.2137 41.658 22.2137 39.7787V34.2867C22.2137 32.4074 23.7424 30.8787 25.6217 30.8787H28.1487C30.028 30.8787 31.5567 32.4074 31.5567 34.2867V39.7787C31.5571 41.658 30.028 43.1867 28.1491 43.1867ZM25.6217 33.1506C24.9954 33.1506 24.4856 33.66 24.4856 34.2867V39.7787C24.4856 40.405 24.995 40.9148 25.6217 40.9148H28.1487C28.775 40.9148 29.2848 40.4054 29.2848 39.7787V34.2867C29.2848 33.6604 28.7754 33.1506 28.1487 33.1506H25.6217ZM34.9548 22.5292H18.8156C16.9362 22.5292 15.4076 21.0005 15.4076 19.1212V13.6292C15.4076 11.7498 16.9362 10.2212 18.8156 10.2212H34.9548C36.8342 10.2212 38.3628 11.7498 38.3628 13.6292V19.1212C38.3628 21.0005 36.8342 22.5292 34.9548 22.5292ZM18.8156 12.4935C18.1893 12.4935 17.6795 13.0029 17.6795 13.6296V19.1216C17.6795 19.7479 18.1889 20.2577 18.8156 20.2577H34.9548C35.5811 20.2577 36.091 19.7483 36.091 19.1216V13.6296C36.091 13.0033 35.5815 12.4935 34.9548 12.4935H18.8156ZM39.6265 43.1867H37.0995C35.2202 43.1867 33.6915 41.658 33.6915 39.7787V34.2867C33.6915 32.4074 35.2202 30.8787 37.0995 30.8787H39.6265C41.5058 30.8787 43.0345 32.4074 43.0345 34.2867V39.7787C43.0345 41.658 41.5058 43.1867 39.6265 43.1867ZM37.0995 33.1506C36.4732 33.1506 35.9634 33.66 35.9634 34.2867V39.7787C35.9634 40.405 36.4728 40.9148 37.0995 40.9148H39.6265C40.2528 40.9148 40.7626 40.4054 40.7626 39.7787V34.2867C40.7626 33.6604 40.2532 33.1506 39.6265 33.1506H37.0995Z"/>
+															<path fill="currentColor" d="M25.749 21.3936H28.0213V31.7639H25.749V21.3936Z"/>
+															<path fill="currentColor" d="M39.4986 32.1333H37.2267V28.4674C37.2267 28.154 36.972 27.8993 36.6586 27.8993H17.1114C16.798 27.8993 16.5433 28.154 16.5433 28.4674V32.1333H14.2715V28.4674C14.2715 26.9014 15.5454 25.6274 17.1114 25.6274H36.6586C38.2246 25.6274 39.4986 26.9014 39.4986 28.4674V32.1333Z"/>
+														</svg>
+													</div>
+													<p class="name">办事流程</p>
+												</a>
+												<a href='{{UrlForCategory "subsite_xzzx_cyxz"}}'>
+													<div class="icon">
+														<svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+															<path fill="currentColor" d="M8.82617 36.0741H14.1042V38.6221H8.82617V36.0741ZM39.2982 36.0741H44.5762V38.6221H39.2982V36.0741ZM27.8062 10.2561V26.9481C27.8062 27.5461 27.3122 28.0401 26.7142 28.0401C26.1162 28.0401 25.6222 27.5461 25.6222 26.9481V10.2561C25.6222 9.65806 26.1162 9.16406 26.7142 9.16406C27.3122 9.16406 27.8062 9.65806 27.8062 10.2561Z"/>
+															<path fill="currentColor" d="M26.6882 30.2502C26.1942 30.2502 25.7262 30.0682 25.3622 29.7042L18.5502 22.8662C18.0562 22.3722 18.0562 21.5662 18.5502 21.0722C19.0442 20.5782 19.8502 20.5782 20.3442 21.0722L26.7142 27.4422L33.0842 21.0722C33.5782 20.5782 34.3842 20.5782 34.8782 21.0722C35.3722 21.5662 35.3722 22.3722 34.8782 22.8662L28.0662 29.6782C27.6502 30.0682 27.1822 30.2502 26.6882 30.2502Z"/>
+															<path fill="currentColor" d="M44.6018 44.68H8.7998V29.99H21.0198C21.7218 29.99 22.2938 30.562 22.2938 31.264C22.2938 31.966 21.7218 32.538 21.0198 32.538H11.3478V42.158H42.0538V32.538H32.4598C31.7578 32.538 31.1858 31.966 31.1858 31.264C31.1858 30.562 31.7578 29.99 32.4598 29.99H44.6018V44.68Z"/>
+															<path fill="currentColor" d="M26.6877 38.674C22.8397 38.674 19.7197 35.528 19.7197 31.68C19.7197 30.978 20.2917 30.406 20.9937 30.406C21.6957 30.406 22.2677 30.978 22.2677 31.68C22.2677 34.124 24.2697 36.126 26.7137 36.126C29.1577 36.126 31.1597 34.124 31.1597 31.68C31.1597 30.978 31.7317 30.406 32.4337 30.406C33.1357 30.406 33.7077 30.978 33.7077 31.68C33.6817 35.528 30.5357 38.674 26.6877 38.674Z"/>
+														</svg>
+													</div>
+													<p class="name">常用下载</p>
+												</a>
+											</div>
+										</div>
+								
+									</div>
+								</div>
+							</div>
+							
+							<div class="fr">
+								<div class="news-list tab-box">
+										<div class="tab-head">
+											<ul class="clearfix">
+												<li class="active">双创动态</li>
+											</ul>
+											<a href="导航列表页.html" class="more">更多>></a>
+										</div>
+										<div class="tab-content">
+											<div class="inner-div active">
+												<ul class="new-list">
+													<li>
+														<div class="news">
+															<div class="fl">
+																<span class="day">20</span> </br>
+																<span class="year">2020-11</span>
+															</div>
+															<a href="导航详情页.html" class="fr">我校组织处级以上领导干部赴河南廉政文化教育馆我校组织处级以上领导干部赴河南廉政文化教育馆</a>
+														</div>
+														
+													</li>
+													<li>
+														<div class="news">
+															<div class="fl">
+																<span class="day">20</span> </br>
+																<span class="year">2020-11</span>
+															</div>
+															<a href="导航详情页.html" class="fr">我校组织处级以上领导干部赴河南廉政文化教育馆我校组织处级以上领导干部赴河南廉政文化教育馆</a>
+														</div>
+														
+													</li>
+													<li>
+														<div class="news">
+															<div class="fl">
+																<span class="day">20</span> </br>
+																<span class="year">2020-11</span>
+															</div>
+															<a href="导航详情页.html" class="fr">我校组织处级以上领导干部赴河南廉政文化教育馆我校组织处级以上领导干部赴河南廉政文化教育馆</a>
+														</div>
+														
+													</li>
+													<li>
+														<div class="news">
+															<div class="fl">
+																<span class="day">20</span> </br>
+																<span class="year">2020-11</span>
+															</div>
+															<a href="导航详情页.html" class="fr">我校组织处级以上领导干部赴河南廉政文化教育馆我校组织处级以上领导干部赴河南廉政文化教育馆</a>
+														</div>
+														
+													</li>
+												</ul>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="fr">
+								<div class="news-list tab-box">
+										<div class="tab-head">
+											<ul class="clearfix">
+												<li class="active">双创政策</li>
+											</ul>
+											<a href="导航列表页.html" class="more">更多>></a>
+										</div>
+										<div class="tab-content">
+											<div class="inner-div active">
+												<ul class="new-list">
+													<li>
+														<div class="news">
+															<div class="fl">
+																<span class="day">20</span> </br>
+																<span class="year">2020-11</span>
+															</div>
+															<a href="导航详情页.html" class="fr">我校组织处级以上领导干部赴河南廉政文化教育馆我校组织处级以上领导干部赴河南廉政文化教育馆</a>
+														</div>
+
+													</li>
+													<li>
+														<div class="news">
+															<div class="fl">
+																<span class="day">20</span> </br>
+																<span class="year">2020-11</span>
+															</div>
+															<a href="导航详情页.html" class="fr">我校组织处级以上领导干部赴河南廉政文化教育馆我校组织处级以上领导干部赴河南廉政文化教育馆</a>
+														</div>
+
+													</li>
+													<li>
+														<div class="news">
+															<div class="fl">
+																<span class="day">20</span> </br>
+																<span class="year">2020-11</span>
+															</div>
+															<a href="导航详情页.html" class="fr">我校组织处级以上领导干部赴河南廉政文化教育馆我校组织处级以上领导干部赴河南廉政文化教育馆</a>
+														</div>
+
+													</li>
+													<li>
+														<div class="news">
+															<div class="fl">
+																<span class="day">20</span> </br>
+																<span class="year">2020-11</span>
+															</div>
+															<a href="导航详情页.html" class="fr">我校组织处级以上领导干部赴河南廉政文化教育馆我校组织处级以上领导干部赴河南廉政文化教育馆</a>
+														</div>
+
+													</li>
+												</ul>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+				<div class="index-list">
+					<div class="tab-box position-box app-more-hide">
+						<div class="lunbo-list">
+							<div class="fl">
+								<div class="fl">
+									<div class="news-list tab-box jyDiv">
+										<div class="tab-head">
+											<ul class="clearfix">
+												<li class="active">就业政策</li>
+											</ul>
+											<a href='{{UrlForCategory "subsite_jyfw_zcwj"}}' class="more">更多>></a>
+										</div>
+										<div class="tab-content">
+											<div class="inner-div active">
+												<ul class="new-list" id="zcwjList">
+												</ul>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="fr">
+									<div class="news-list tab-box jyDiv">
+										<div class="tab-head">
+											<ul class="clearfix">
+												<li class="active">就业指导</li>
+											</ul>
+											<a href='{{UrlForCategory "subsite_jyfw_jyzd"}}' class="more">更多>></a>
+										</div>
+										<div class="tab-content">
+											<div class="inner-div active">
+												<ul class="new-list" id="jyzdList">
+												</ul>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="fr" style="margin-left: 10px">
+								<div class="news-list tab-box jyDiv">
+									<div class="tab-head">
+										<ul class="clearfix">
+											<li class="active">创业服务</li>
+										</ul>
+										<a href='{{UrlForCategory "subsite_jyfw_cyfw"}}' class="more">更多>></a>
+									</div>
+									<div class="tab-content">
+										<div class="inner-div active">
+											<ul class="new-list" id="cyfwList">
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+
+				<div class="index-list">
+					<div class="tab-box link-box">
+						<div class="tab-head">
+							<ul class="clearfix">
+								<li class="active">友情链接</li>
+							</ul>
+						</div>
+						<div class="tab-content">
+							<div class="active box" id="yqljList">
+							</div>
+						</div>
+					</div>
+				</div>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+		{{TemplateTheme $.siteTheme "_footer.html" .}}
+		
+		<script type="text/javascript">
+			var ins;
+			layui.use(['carousel', 'form', 'laydate'], function() {
+				var carousel = layui.carousel, 
+					laydate = layui.laydate,
+					form = layui.form;
+
+				// 首页新闻轮播图列表
+				HomeLbList();
+				// 首页公告置顶列表
+				HomeGgTopList();
+				// 首页动态置顶列表
+				HomeDtTopList();
+				// 政策文件
+				HomeZcTopList();
+				// 就业指导
+				HomeJyzdTopList();
+				// 创业服务
+				HomeCyfwTopList();
+
+				// 友情链接
+				HomeYqljList();
+
+				function HomeLbList() {
+					var art = new Article();
+					art.get({
+						call_index: "subsite_xwgg_dt",
+						limit: 3,
+						is_slide: 1,
+						is_top: 1
+					}, function () {
+
+					}, function (res) {
+						if (res.code == CodeSuccess) {
+							var len = res.data.length;
+							if (len > 0) {
+								for (var i = 0; i < len; i++) {
+									var item = res.data[i];
+									var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
+									var html = '<div class="slick-slide"><a href="' + url + '"><img src="' + item.img_url2 + '" alt=""/></a></div>';
+									$("#topSlideList").append(html);
+								}
+							}
+
+							//改变下时间间隔、动画类型、高度
+							ins = carousel.render({
+								elem: '#swiper',
+								interval: 3000,
+								width: '100%',
+							});
+						}
+					}, function () {
+
+					});
+				}
+
+				function HomeGgTopList() {
+					var art = new Article();
+					art.get({
+						call_index: "subsite_xwgg_gg",
+						limit: 6,
+						is_top: 1
+					}, function () {
+
+					}, function (res) {
+						if (res.code == CodeSuccess) {
+							var len = res.data.length;
+							if (len > 0) {
+								for (var i = 0; i < len; i++) {
+									var item = res.data[i];
+									var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
+									var html = '<li><span class="time">' + moment(item.publish_time).format('YYYY-MM-DD') + '</span>\n<a href="' + url + '">' + item.title + '</a></li>';
+									$("#ggList").append(html);
+								}
+							}
+						}
+					}, function () {
+
+					});
+				}
+
+				function HomeDtTopList() {
+					var art = new Article();
+					art.get({
+						call_index: "subsite_xwgg_dt",
+						limit: 6,
+						is_top: 1
+					}, function () {
+
+					}, function (res) {
+						if (res.code == CodeSuccess) {
+							var len = res.data.length;
+							if (len > 0) {
+								for (var i = 0; i < len; i++) {
+									var item = res.data[i];
+									var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
+									var html = '<li><span class="time">' + moment(item.publish_time).format('YYYY-MM-DD') + '</span>\n<a href="' + url + '">' + item.title + '</a></li>';
+									$("#dtList").append(html);
+								}
+							}
+						}
+					}, function () {
+
+					});
+				}
+
+				function HomeYqljList() {
+					var link = new Link();
+					link.get({
+						call_index: "subsite_yqlj",
+						limit: 4
+					}, function () {
+
+					}, function (res) {
+						if (res.code == CodeSuccess) {
+							var len = res.data.length;
+							if (len > 0) {
+								for (var i = 0; i < len; i++) {
+									var item = res.data[i];
+									var html = '<a href="' + item.link_url + '" target="_blank"><img src="' + item.img_url2 + '" /></a>';
+									$("#yqljList").append(html);
+								}
+							}
+						}
+					}, function () {
+
+					});
+				}
+
+				function HomeZcTopList(){
+					var art = new Article();
+					art.get({
+						call_index: "subsite_jyfw_zcwj",
+						limit: 4,
+						is_top: 1
+					}, function (){
+
+					}, function (res){
+						if (res.code == CodeSuccess) {
+							var len = res.data.length;
+							if(len > 0){
+								for (var i = 0; i < len; i++) {
+									var item = res.data[i];
+									var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
+									var html = '<li><span class="time">' + moment(item.publish_time).format('YYYY-MM-DD') + '</span>\n<a href="' + url + '">' + item.title + '</a></li>';
+									$("#zcwjList").append(html);
+								}
+							}
+						}
+					}, function (){
+
+					});
+				}
+
+				function HomeJyzdTopList(){
+					var art = new Article();
+					art.get({
+						call_index: "subsite_jyfw_jyzd",
+						limit: 4,
+						is_top: 1
+					}, function (){
+
+					}, function (res){
+						if (res.code == CodeSuccess) {
+							var len = res.data.length;
+							if(len > 0){
+								for (var i = 0; i < len; i++) {
+									var item = res.data[i];
+									var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
+									var html = '<li><span class="time">' + moment(item.publish_time).format('YYYY-MM-DD') + '</span>\n<a href="' + url + '">' + item.title + '</a></li>';
+									$("#jyzdList").append(html);
+								}
+							}
+						}
+					}, function (){
+
+					});
+				}
+
+				function HomeCyfwTopList(){
+					var art = new Article();
+					art.get({
+						call_index: "subsite_jyfw_cyfw",
+						limit: 4,
+						is_top: 1
+					}, function (){
+
+					}, function (res){
+						if (res.code == CodeSuccess) {
+							var len = res.data.length;
+							if(len > 0){
+								for (var i = 0; i < len; i++) {
+									var item = res.data[i];
+									var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
+									var html = '<li><span class="time">' + moment(item.publish_time).format('YYYY-MM-DD') + '</span>\n<a href="' + url + '">' + item.title + '</a></li>';
+									$("#cyfwList").append(html);
+								}
+							}
+						}
+					}, function (){
+
+					});
+				}
+
+				laydate.render({
+                  elem: '#calendar',
+                  position: 'static',     
+                  mark:{
+                  	'2023-7-15':'',
+                  	'2023-7-16':'',
+                  	'2023-7-17':'',
+                  	'2023-7-18':''
+                  },
+                  done: function(value, date, endDate){
+                  	window.location.href = '活动日历-时间轴.html?date='+value
+
+                  }
+              });
+			})
+
+			$('.tab-box .tab-head ul li').click(function() {
+				var index = $(this).index();
+				var innerDiv = $($(this).parents('.tab-box').find('.inner-div')[index]);
+				console.log(innerDiv)
+				$(this).addClass('active').siblings().removeClass('active');
+				innerDiv.addClass('active').siblings().removeClass('active')
+			})
+		</script>
+	</body>
+
+</html>
