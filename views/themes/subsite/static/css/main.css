@@ -182,7 +182,7 @@
       .header .theme-box .theme-item.skin_1 {
         background: #0B7C81; }
       .header .theme-box .theme-item.skin_2 {
-        background: #5A0000; }
+        background: #a81b00; }
       .header .theme-box .theme-item.active {
         background-image: url(../images/icon_check.png);
         background-repeat: no-repeat;
@@ -520,8 +520,7 @@
   .index-list .position-box .tab-content .job-list {
     margin-bottom: 0; }
     .index-list .position-box .tab-content .job-list ul li {
-      padding: 13px 15px 14px;
-      width: 287px;
+      padding: 18px 15px 18px;
       margin-bottom: 12px;
       margin-right: 12px; }
       .index-list .position-box .tab-content .job-list ul li a {

@@ -667,21 +667,6 @@
             li {}
         }
     }
-    .col-6 {
-        width: calc(50% - 25px);
-        float: left;
-        &:nth-child(2n+1) {
-            margin-right: 50px;
-        }
-    }
-    .col-4 {
-        margin-right: 15px;
-        width: calc(33% - 6px);
-        float: left;
-        &:nth-child(3n+3) {
-            margin-right: 0;
-        }
-    }
     .hot-company {
         ul {
             display: flex;
@@ -874,9 +859,9 @@
         background: none;
     }
     .layui-laydate-content {
-        padding: 0 10px;
         background: #fff;
         height: calc(100% - 63px);
+        padding: 0;
         table {
             width: 100%;
         }
@@ -889,9 +874,9 @@
         }
         td,
         th {
-            height: 34px;
+            height: 38px;
             &>div {
-                line-height: 34px;
+                line-height: 38px;
             }
         }
     }
@@ -903,7 +888,7 @@
         display: none;
     }
     .tab-content {
-        padding: 10px 10px 20px;
+        padding: 0px 0px 0px;
     }
 }
 
@@ -3851,16 +3836,6 @@
 }
 
 @media only screen and (max-width: 750px) {
-     ::-webkit-scrollbar {
-        width: 4px;
-        height: 4px;
-        background-color: #fff;
-    }
-     ::-webkit-scrollbar-thumb {
-        height: 4px;
-        background-color: #d1d4db;
-        border-radius: 5px;
-    }
     .app-nav-btn {
         display: block;
         float: right;
@@ -3925,9 +3900,6 @@
         .slick-slide img {
             height: 100%;
         }
-    }
-    .theme5{
-        
     }
     .calendar-box {
         width: 100%;
@@ -4258,7 +4230,6 @@
     .theme5{
         .index-list{
             .col-4{
-                width: 100%;
                 padding: 0 12px;
             }
              .news-list{

@@ -516,17 +516,6 @@
     margin-bottom: 12px; }
     .index-list .news-list .new-list {
       overflow: hidden; }
-  .index-list .col-6 {
-    width: calc(50% - 25px);
-    float: left; }
-    .index-list .col-6:nth-child(2n+1) {
-      margin-right: 50px; }
-  .index-list .col-4 {
-    margin-right: 15px;
-    width: calc(33% - 6px);
-    float: left; }
-    .index-list .col-4:nth-child(3n+3) {
-      margin-right: 0; }
   .index-list .hot-company ul {
     display: flex;
     flex-wrap: wrap;
@@ -677,9 +666,9 @@
     box-shadow: none;
     background: none; }
   .calendar-box .layui-laydate-content {
-    padding: 0 10px;
     background: #fff;
-    height: calc(100% - 63px); }
+    height: calc(100% - 63px);
+    padding: 0; }
     .calendar-box .layui-laydate-content table {
       width: 100%; }
     .calendar-box .layui-laydate-content td,
@@ -689,17 +678,17 @@
       padding: 0; }
     .calendar-box .layui-laydate-content td,
     .calendar-box .layui-laydate-content th {
-      height: 34px; }
+      height: 38px; }
       .calendar-box .layui-laydate-content td > div,
       .calendar-box .layui-laydate-content th > div {
-        line-height: 34px; }
+        line-height: 38px; }
   .calendar-box .layui-laydate-main {
     width: 100%;
     height: 100%; }
   .calendar-box .layui-laydate-footer {
     display: none; }
   .calendar-box .tab-content {
-    padding: 10px 10px 20px; }
+    padding: 0px 0px 0px; }
 
 .position-detail-header {
   background: #fff;
@@ -3008,16 +2997,6 @@
     z-index: 999; }
 
 @media only screen and (max-width: 750px) {
-  ::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
-    background-color: #fff; }
-
-  ::-webkit-scrollbar-thumb {
-    height: 4px;
-    background-color: #d1d4db;
-    border-radius: 5px; }
-
   .app-nav-btn {
     display: block;
     float: right;
@@ -3309,7 +3288,6 @@
       margin-top: 35px; }
 
   .theme5 .index-list .col-4 {
-    width: 100%;
     padding: 0 12px; }
   .theme5 .index-list .news-list {
     height: auto; }

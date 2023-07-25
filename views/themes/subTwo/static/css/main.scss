@@ -228,7 +228,7 @@
                 background: #0B7C81;
             }
             &.skin_2 {
-                background: #5A0000;
+                background: #a81b00;
             }
             &.active {
                 background-image: url(../images/icon_check.png);
@@ -4352,70 +4352,6 @@
                 padding-bottom: 0;
                 margin-top: 35px;
             }
-        }
-    }
-}
-
-.m-nav{
-        background: #1a54ad;
-        border-top:0.0625rem solid #3d6fbb;
-        .level-one{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 3.125rem;
-            li>a{
-               font-size: 1rem;
-               text-align: center;
-               width: 100%;
-               height: 100%;
-               display: block;
-               &:hover{
-                   color: #fff;
-               }
-            }
-            li{
-                position: relative;
-                cursor: pointer;
-                text-align: center;
-                min-width: 9.375rem;
-                height: 3.125rem;
-                line-height: 3.125rem;
-                &:hover,&.active{
-                    background: #03398c;
-                    .level-two{
-                        display: block;
-                    }
-                }
-            }
-        }
-        .level-two{
-            box-shadow: 0 0 10px rgb(0 0 0 / 10%);
-            background: rgba(255,255,255,0.8);
-            position: absolute;
-            top: 100%;
-            width: 100%;
-            border-top:0.0625rem solid #ffff;
-            display: none;
-            z-index: 2;
-            &:before{
-                content: '';
-                position: absolute;
-                box-shadow: 0 3px 15px rgb(0 0 0 / 5%);
-                border-left: transparent 6px solid;
-                border-right: transparent 6px solid;
-                border-bottom: #fff 8px solid;
-                top: -0.5rem;
-            }
-            a{
-                color: #333;
-                display: block;
-                &:hover,&.active{
-                    background: #1a54ad;
-                    color: #fff;
-                }
-            }
-
         }
     }
 }

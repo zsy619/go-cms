@@ -200,6 +200,7 @@
 
 .layui-laydate .layui-this {
     background-color: var(--main-primary)!important;
+   
 }
 
 .layui-laydate-content td.laydate-selected {
@@ -208,6 +209,7 @@
 }
 .layui-laydate .layui-this, .layui-laydate .layui-this>div{
     background-color: var(--main-primary)!important;
+    border-radius: 3px;
 }
 .layui-laydate-content .laydate-day-next, 
 .layui-laydate-content .laydate-day-prev{
@@ -222,6 +224,9 @@
 .laydate-day-mark{
     font-size: 14px;
     line-height: 39px;
+}
+.layui-laydate-content td>div:hover, .layui-laydate-list li:hover, .layui-laydate-shortcut>li:hover{
+    border-radius: 3px;
 }
 .laydate-day-mark::after{
     background-color: var(--main_light_primary);

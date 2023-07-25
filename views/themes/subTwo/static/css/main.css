@@ -183,7 +183,7 @@
       .header .theme-box .theme-item.skin_1 {
         background: #0B7C81; }
       .header .theme-box .theme-item.skin_2 {
-        background: #5A0000; }
+        background: #a81b00; }
       .header .theme-box .theme-item.active {
         background-image: url(../images/icon_check.png);
         background-repeat: no-repeat;
@@ -3401,11 +3401,5 @@
     .popup .tmp-resume-popup .tmp_resume .btn-bottom {
       padding-bottom: 0;
       margin-top: 35px; } }
-
-.w1200 {
-  margin: 0 auto;
-  max-width: 1600px;
-  padding: 0 50px;
-}
 
 /*# sourceMappingURL=main.css.map */
