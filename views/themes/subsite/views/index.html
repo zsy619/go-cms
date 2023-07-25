@@ -77,16 +77,7 @@
 		<div class="index-list">
 			<div class="lunbo-box">
 				<div class="layui-carousel" id="swiper">
-					<div carousel-item="">
-						<div class="slick-slide">
-							<a href="#"><img src="{{.siteStatic}}images/lunbo_img1.png" alt="" /></a>
-						</div>
-						<div class="slick-slide">
-							<a href="#"><img src="{{.siteStatic}}images/lunbo_img1.png" alt="" /></a>
-						</div>
-						<div class="slick-slide">
-							<a href="#"><img src="{{.siteStatic}}images/lunbo_img1.png" alt="" /></a>
-						</div>
+					<div carousel-item="" id="topSlideList">
 					</div>
 				</div>
 			</div>
@@ -722,49 +713,6 @@
 		{{TemplateTheme $.siteTheme "_footer.html" .}}
 
 		<script type="text/javascript">
-			$(function () {
-				// 首页新闻轮播图列表
-				HomeLbList();
-				// 首页动态置顶列表
-				HomeDtTopList();
-				// 首页公告置顶列表
-				HomeGgTopList();
-
-				// 首页政策文件、就业指导、职业规划、创业服务常用下载置顶列表
-				HomeZcTopList();
-				HomeJyzdTopList();
-				HomeZyghTopList();
-				HomeCyfwTopList();
-				HomeCyxzTopList();
-
-				// 友情链接
-				HomeYqljList();
-			})
-
-			function HomeLbList() {
-				var art = new Article();
-				art.get({
-					call_index: "subsite_xwgg_dt",
-					limit: 6,
-					is_slide: 1
-				}, function (){
-
-				}, function (res){
-					if (res.code == CodeSuccess) {
-						var len = res.data.length;
-						if(len > 0){
-							for (var i = 0; i < len; i++) {
-								var item = res.data[i];
-								var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
-								var html = '<div class="slick-slide"><a href="'+ url +'"><img src="'+ item.img_url2 +'" alt=""/><div class="carousel-opc"></div><span class="title">'+ item.title +'</span></a></div>';
-								$("#carouselList").append(html);
-							}
-						}
-					}
-				}, function (){
-
-				});
-			}
 
 			function HomeDtTopList(){
 				var art = new Article();
@@ -781,7 +729,6 @@
 							for (var i = 0; i < len; i++) {
 								var item = res.data[i];
 								var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
-								console.log(item)
 								var html = '<li><a href="' + url + '">'+item.title+'</a><span class="fr">' + moment(item.publish_time).format('YYYY-MM-DD') + '</span></li>';
 								$("#dtList").append(html);
 							}
@@ -978,19 +925,67 @@
 					laydate = layui.laydate,
 					laydateNote = layui.laydateNote,
 					form = layui.form;
-					
-				//改变下时间间隔、动画类型、高度
-				ins = carousel.render({
-					elem: '#swiper',
-					interval: 3000,
-					width: '100%',
-				});
-				
-				ins2 = carousel.render({
-					elem: '#swiper2',
-					interval: 3000,
-					width: '100%',
-				});
+
+				// 首页新闻轮播图列表
+				HomeLbList();
+				// 首页动态置顶列表
+				HomeDtTopList();
+				// 首页公告置顶列表
+				HomeGgTopList();
+
+				// 首页政策文件、就业指导、职业规划、创业服务常用下载置顶列表
+				HomeZcTopList();
+				HomeJyzdTopList();
+				HomeZyghTopList();
+				HomeCyfwTopList();
+				HomeCyxzTopList();
+
+				// 友情链接
+				HomeYqljList();
+
+				function HomeLbList() {
+					var art = new Article();
+					art.get({
+						call_index: "subsite_xwgg_dt",
+						limit: 6,
+						is_slide: 1
+					}, function (){
+
+					}, function (res){
+						if (res.code == CodeSuccess) {
+							var len = res.data.length;
+							if(len > 0){
+								for (var i = 0; i < len; i++) {
+									var item = res.data[i];
+									if(item.is_top){
+										var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
+										var html = '<div class="slick-slide"><a href="'+ url +'"><img src="'+ item.img_url2 +'" alt=""/></a></div>';
+										$("#topSlideList").append(html);
+									}else{
+										var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
+										var html = '<div class="slick-slide"><a href="'+ url +'"><img src="'+ item.img_url2 +'" alt=""/><div class="carousel-opc"></div><span class="title">'+ item.title +'</span></a></div>';
+										$("#carouselList").append(html);
+									}
+								}
+							}
+
+							//改变下时间间隔、动画类型、高度
+							ins = carousel.render({
+								elem: '#swiper',
+								interval: 3000,
+								width: '100%',
+							});
+
+							ins2 = carousel.render({
+								elem: '#swiper2',
+								interval: 3000,
+								width: '100%',
+							});
+						}
+					}, function (){
+
+					});
+				}
 
 				laydateNote({
 		          elem: '#calendar', //容器id,CLass
