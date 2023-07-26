@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>{{if eq .site.HomeTitle ""}}{{.site.Title}}{{else}}{{.site.HomeTitle}}{{end}}</title>
+		<script src="/views/themes/subVI/static/js/common/commonCss.js"></script>
+
+	</head>
+
+	<body class="theme6">
+		{{TemplateTheme $.siteTheme "_nav.html" .}}
+		<div class="index-list">
+			<div class="lunbo-box">
+				<div class="layui-carousel" id="swiper">
+					<div carousel-item="" id="topSlideList">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="body">
+			<div class="container">
+				<div class="index-list">
+					<div class="login-enter">
+						<div class="box bg-stu">
+							<a href="#">
+								<div class="fl">
+									<span class="icon">
+										<svg width="38" height="29" viewBox="0 0 38 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M22.3174 0.949717C26.0592 2.46318 32.6441 5.12667 36.1914 6.62206C39.0371 7.8687 37.9184 8.42533 36.9119 8.92615C36.7113 9.02596 36.5152 9.12356 36.3558 9.22395V15.3863L37.8223 17.0876L35.0124 19.5751L32.4499 17.0909L33.9986 15.3863V10.2414C25.9208 13.6035 23.5783 14.6981 21.803 15.5276C21.7558 15.5497 21.7089 15.5716 21.6623 15.5934C20.8933 15.9938 20.0463 16.2142 19.1831 16.2383C18.32 16.2624 17.4624 16.0897 16.6731 15.7327C14.809 15.048 6.54371 11.8484 2.22615 9.79428C-0.652489 8.39666 -0.83028 7.53071 2.22615 6.34254C4.37865 5.51608 7.12829 4.44065 9.77126 3.40694C12.1774 2.46585 14.4951 1.55935 16.1934 0.906755C18.304 0.0118006 19.4142 -0.420774 21.347 0.557151C21.6424 0.676683 21.9675 0.808171 22.3174 0.949717ZM16.0007 18.1786C17.9433 18.9818 20.1165 18.9818 22.0591 18.1786L22.0156 18.177C23.0016 17.766 24.1594 17.2216 25.4322 16.623C26.7464 16.0051 28.1832 15.3295 29.6804 14.6833V24.9137C26.82 27.5814 23.0712 29.0401 19.1947 28.9938C15.1148 29.1102 11.143 27.6472 8.07835 24.8992V15.3842C9.71978 16.0595 11.5126 16.6624 13.5414 17.3445C14.3244 17.6078 15.1426 17.8829 16.0007 18.1786Z"/>
+										</svg>
+									</span>
+
+									<span class="name">求职者&nbsp;&nbsp;EMPLOYEE</span>
+								</div>
+								<div>
+									<span class="s1">登录</span>
+									<span class="line">|</span>
+									<span class="s1">注册</span>
+								</div>
+							</a>
+						</div>
+						<div class="box bg-yrdw">
+							<a href="#">
+								<div class="fl">
+									<span class="icon">
+										<svg width="33" height="36" viewBox="0 0 33 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path fill="currentColor" d="M11.7529 35.919H4.32261V32.508L11.7529 31.968V35.919ZM11.7529 29.526L4.32261 30.24V27.012L11.7529 25.764V29.526ZM11.7529 23.115L4.32261 24.597V21.297L11.7529 19.344V23.115ZM11.7529 16.803L4.32261 18.846V15.402L11.7529 12.888V16.803ZM19.9932 35.883H13.8917V9.513L2.07881 13.407V36H0L0.0059989 12.258L15.7966 6.564L19.9932 9.114V35.883ZM32.997 35.871H23.5659V2.514L9.40115 7.287V5.829L24.9997 0L29.6883 4.083V33.729H33V35.871H32.997Z"/>
+										</svg>
+									</span>
+									<span class="name">用人单位&nbsp;&nbsp;EMPLOYER</span>
+								</div>
+								<div>
+									<span class="s1">登录</span>
+									<span class="line">|</span>
+									<span class="s1">注册</span>
+								</div>
+							</a>
+						</div>
+						<div class="box bg-teacher">
+							<a href="#">
+								<div class="fl">
+									<span class="icon">
+										<svg width="29" height="37" viewBox="0 0 29 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path fill="currentColor" d="M14.3308 0C15.0159 0 15.695 0.0800067 16.3682 0.24002C17.0414 0.400033 17.6733 0.615436 18.2639 0.886228C18.8544 1.15702 19.38 1.46474 19.8406 1.80938C20.3013 2.15403 20.6615 2.49867 20.9213 2.84331C21.5355 3.63107 21.9843 4.49884 22.2678 5.44661C22.5512 6.39438 22.752 7.29907 22.8701 8.16068C22.9882 9.14538 23.0473 10.1424 23.0473 11.1517C23.2126 11.2748 23.3426 11.4348 23.4371 11.6317C23.5315 11.8041 23.6083 12.0256 23.6674 12.2964C23.7264 12.5672 23.7323 12.8995 23.6851 13.2934C23.6378 13.8104 23.5374 14.2227 23.3839 14.5304C23.2304 14.8382 23.0591 15.0782 22.8701 15.2505C22.6575 15.4474 22.4331 15.5828 22.1969 15.6567C22.0788 16.0752 21.9607 16.4691 21.8426 16.8383C21.7245 17.1584 21.5886 17.4722 21.4351 17.7799C21.2816 18.0877 21.1103 18.3277 20.9213 18.5C20.4725 18.8693 20.1064 19.1831 19.8229 19.4416C19.5395 19.7001 19.3505 20.1371 19.256 20.7525C19.1851 21.1218 19.1615 21.4972 19.1851 21.8787C19.2087 22.2603 19.3091 22.6419 19.4863 23.0235C19.6635 23.405 19.9351 23.7681 20.3013 24.1128C20.6674 24.4574 21.1812 24.7651 21.8426 25.0359C22.4331 25.2821 23.0768 25.5037 23.7737 25.7006C24.4705 25.8975 25.1496 26.1252 25.8111 26.3837C26.4725 26.6422 27.0571 26.9622 27.565 27.3438C28.0728 27.7254 28.4331 28.2485 28.6457 28.9132C28.7638 29.3071 28.8524 29.7932 28.9114 30.3718C28.9705 30.9503 29 31.5349 29 32.1257C29 32.7166 28.9587 33.2705 28.876 33.7874C28.7933 34.3044 28.6693 34.6983 28.5039 34.9691C28.3858 35.1414 28.0492 35.3137 27.4941 35.486C26.939 35.6583 26.254 35.8245 25.439 35.9845C24.6241 36.1445 23.7146 36.2861 22.7107 36.4092C21.7068 36.5323 20.6969 36.6369 19.6812 36.7231C18.6654 36.8092 17.691 36.8769 16.758 36.9261C15.8249 36.9754 15.0159 37 14.3308 37C13.6458 37 12.8486 36.9754 11.9391 36.9261C11.0297 36.8769 10.0907 36.8092 9.12222 36.7231C8.15373 36.6369 7.19113 36.5384 6.23445 36.4276C5.27777 36.3169 4.40966 36.1999 3.63014 36.0768C2.85062 35.9538 2.18921 35.8307 1.64591 35.7076C1.10261 35.5845 0.76009 35.4614 0.618359 35.3383C0.38214 35.1414 0.199071 34.5383 0.069151 33.5289C-0.0607691 32.5196 -0.00761997 31.2149 0.228598 29.6148C0.346708 28.7039 0.69513 28.0085 1.27386 27.5284C1.8526 27.0484 2.52582 26.6668 3.29353 26.3837C4.06124 26.1006 4.85848 25.8483 5.68524 25.6267C6.51201 25.4052 7.24428 25.0852 7.88207 24.6667C8.37813 24.3466 8.75608 24.0389 9.01592 23.7435C9.27576 23.4481 9.46474 23.1527 9.58285 22.8573C9.70096 22.5619 9.76001 22.2542 9.76001 21.9341C9.76001 21.6141 9.7482 21.2572 9.72458 20.8633C9.67734 20.2971 9.48836 19.8478 9.15765 19.5155C8.82695 19.1831 8.46081 18.8446 8.05924 18.5C7.87026 18.3277 7.70491 18.0877 7.56318 17.7799C7.42145 17.4722 7.29153 17.1584 7.17342 16.8383C7.05531 16.4691 6.9372 16.0752 6.81909 15.6567C6.65374 15.6075 6.48839 15.5213 6.32303 15.3982C6.1813 15.2751 6.02776 15.1028 5.86241 14.8812C5.69705 14.6597 5.55532 14.3397 5.43721 13.9212C5.29548 13.5027 5.24233 13.1211 5.27777 12.7764C5.3132 12.4318 5.37816 12.1364 5.47265 11.8902C5.56713 11.6194 5.72068 11.3609 5.93327 11.1148C5.90965 10.1793 5.95689 9.24385 6.075 8.30838C6.16949 7.52063 6.34075 6.67132 6.58878 5.76048C6.83681 4.84963 7.20885 4.03726 7.70491 3.32335C8.15373 2.63407 8.65569 2.07402 9.2108 1.64321C9.76592 1.21241 10.3328 0.873919 10.9116 0.627745C11.4903 0.38157 12.069 0.215403 12.6478 0.129242C13.2265 0.0430805 13.7875 -2.40885e-08 14.3308 0Z"/>
+										</svg>
+									</span>
+									<span class="name">学校  &nbsp;&nbsp;SCHOOL</span>
+								</div>
+								<div>
+									<span class="s1">登录</span>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="index-list">
+					<div class="news-list tab-box col-6">
+						<div class="tab-head">
+							<ul class="clearfix">
+								<li class="active">新闻动态
+									<span class="en">EMPLOYMENT NEWS</span>
+								</li>
+							</ul>
+							<a href='{{UrlForCategory "subsite_xwgg_dt"}}' class="more">更多>></a>
+						</div>
+						<div class="tab-content">
+							<div class="inner-div active">
+								<ul class="new-list" id="dtList">
+								</ul>
+							</div>
+
+						</div>
+					</div>
+					<div class="tab-box calendar-box col-6">
+						<div class="tab-head tab-head">
+							<ul class="clearfix">
+								<li class="active">就业日历
+									<span class="en">EMPLOYMENT CALENDAR</span>
+								</li>
+							</ul>
+						</div>
+						<div class="tab-content">
+							<div class="active box">
+								<div class="layui-inline" id="calendar"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="index-list">
+					<div class="tab-box position-box app-more-hide">
+						<div class="tab-head">
+							<ul class="clearfix">
+								<li class="active">宣讲会</li>
+								<li>线上招聘会</li>
+								<li>线下招聘会</li>
+								<li>推荐单位</li>
+								<li>推荐职位</li>
+							</ul>
+						</div>
+						<div class="tab-content tab-content">
+							<div class="inner-div list zph-list active">
+								<ul class="clearfix">
+									<li>
+										<a href="#">
+											<div class="time">
+												<span class="day">22</span>
+												<span class="year">2023-12</span>
+											</div>
+											<div class="detail">
+												<p>
+													<span class="state">【已结束】</span>
+													<span class="name">中建六局建设发展有限公司2024届实习生招聘设发展有限公司2024届实习生招聘</span>
+												</p>
+												<p class="bot">
+													<span class="txt">花园校区文体活动中心东配楼三楼招聘厅t花园校区文体活动中心东配楼三楼招聘厅t</span>
+													<span class="date">15:00 - 17:00</span>
+												</p>
+											</div>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<div class="time">
+												<span class="day">22</span>
+												<span class="year">2023-12</span>
+											</div>
+											<div class="detail">
+												<p>
+													<span class="state">【已结束】</span>
+													<span class="name">中建六局建设发展有限公司2024届实习生招聘设发展有限公司2024届实习生招聘</span>
+												</p>
+												<p class="bot">
+													<span class="txt">花园校区文体活动中心东配楼三楼招聘厅t</span>
+													<span class="date">15:00 - 17:00</span>
+												</p>
+											</div>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<div class="time">
+												<span class="day">22</span>
+												<span class="year">2023-12</span>
+											</div>
+											<div class="detail">
+												<p>
+													<span class="state">【已结束】</span>
+													<span class="name">中建六局建设发展有限公司2024届实习生招聘设发展有限公司2024届实习生招聘</span>
+												</p>
+												<p class="bot">
+													<span class="txt">花园校区文体活动中心东配楼三楼招聘厅t</span>
+													<span class="date">15:00 - 17:00</span>
+												</p>
+											</div>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<div class="time">
+												<span class="day">22</span>
+												<span class="year">2023-12</span>
+											</div>
+											<div class="detail">
+												<p>
+													<span class="state">【已结束】</span>
+													<span class="name">中建六局建设发展有限公司2024届实习生招聘设发展有限公司2024届实习生招聘</span>
+												</p>
+												<p class="bot">
+													<span class="txt">花园校区文体活动中心东配楼三楼招聘厅t</span>
+													<span class="date">15:00 - 17:00</span>
+												</p>
+											</div>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<div class="time">
+												<span class="day">22</span>
+												<span class="year">2023-12</span>
+											</div>
+											<div class="detail">
+												<p>
+													<span class="state">【已结束】</span>
+													<span class="name">中建六局建设发展有限公司2024届实习生招聘设发展有限公司2024届实习生招聘</span>
+												</p>
+												<p class="bot">
+													<span class="txt">花园校区文体活动中心东配楼三楼招聘厅t</span>
+													<span class="date">15:00 - 17:00</span>
+												</p>
+											</div>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<div class="time">
+												<span class="day">22</span>
+												<span class="year">2023-12</span>
+											</div>
+											<div class="detail">
+												<p>
+													<span class="state">【已结束】</span>
+													<span class="name">中建六局建设发展有限公司2024届实习生招聘设发展有限公司2024届实习生招聘</span>
+												</p>
+												<p class="bot">
+													<span class="txt">花园校区文体活动中心东配楼三楼招聘厅t</span>
+													<span class="date">15:00 - 17:00</span>
+												</p>
+											</div>
+										</a>
+									</li>
+								</ul>
+								<a href="#" class="btn-more">查看更多 >></a>
+							</div>
+							
+						</div>
+					</div>
+					
+
+				</div>
+				<div class="index-list">
+					<div class="news-list tab-box col-6">
+						<div class="tab-head">
+							<ul class="clearfix">
+								<li class="active">就业政策
+									<span class="en">POLICIES REGULATIONS</span>
+								</li>
+							</ul>
+							<a href='{{UrlForCategory "subsite_jyfw_zcwj"}}' class="more">更多>></a>
+						</div>
+						<div class="tab-content">
+							<div class="inner-div active">
+								<ul class="new-list" id="zcwjList">
+								</ul>
+							</div>
+
+						</div>
+					</div>
+					<div class="news-list tab-box col-6">
+						<div class="tab-head">
+							<ul class="clearfix">
+								<li class="active">通知公告
+									<span class="en">NOTICE ANNOUNCEMENT</span>
+								</li>
+							</ul>
+							<a href='{{UrlForCategory "subsite_xwgg_gg"}}' class="more">更多>></a>
+						</div>
+						<div class="tab-content">
+							<div class="inner-div active">
+								<ul class="new-list" id="ggList">
+								</ul>
+							</div>
+
+						</div>
+					</div>
+				</div>
+				<div class="index-list">
+					<div class="tab-box link-box">
+						<div class="tab-head">
+							<ul class="clearfix">
+								<li class="active">友情链接</li>
+							</ul>
+						</div>
+						<div class="tab-content">
+							<div class="active box" id="yqljList">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		{{TemplateTheme $.siteTheme "_footer.html" .}}
+		<div class="nav-mask"></div>
+
+		<script type="text/javascript">
+			var ins;
+			layui.use(['carousel', 'form', 'laydate'], function() {
+				var carousel = layui.carousel,
+					laydate = layui.laydate,
+					form = layui.form;
+
+				// 首页新闻轮播图列表
+				HomeLbList();
+				// 首页公告置顶列表
+				HomeGgTopList();
+				// 首页动态置顶列表
+				HomeDtTopList();
+				// 政策文件
+				HomeZcTopList();
+				// 友情链接
+				HomeYqljList();
+
+				function HomeLbList() {
+					var art = new Article();
+					art.get({
+						call_index: "subsite_xwgg_dt",
+						limit: 3,
+						is_slide: 1,
+						is_top: 1
+					}, function () {
+
+					}, function (res) {
+						if (res.code == CodeSuccess) {
+							var len = res.data.length;
+							if (len > 0) {
+								for (var i = 0; i < len; i++) {
+									var item = res.data[i];
+									var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
+									var html = '<div class="slick-slide"><a href="' + url + '"><img src="' + item.img_url2 + '" alt=""/></a></div>';
+									$("#topSlideList").append(html);
+								}
+							}
+
+							//改变下时间间隔、动画类型、高度
+							ins = carousel.render({
+								elem: '#swiper',
+								interval: 3000,
+								width: '100%',
+							});
+						}
+					}, function () {
+
+					});
+				}
+
+				function HomeGgTopList() {
+					var art = new Article();
+					art.get({
+						call_index: "subsite_xwgg_gg",
+						limit: 6,
+						is_top: 1
+					}, function () {
+
+					}, function (res) {
+						if (res.code == CodeSuccess) {
+							var len = res.data.length;
+							if (len > 0) {
+								for (var i = 0; i < len; i++) {
+									var item = res.data[i];
+									var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
+									var html = '<li><a href="' + url + '">' + item.title + '</a>\n<span class="fr">' + moment(item.publish_time).format('YYYY-MM-DD') + '</span></li>';
+									$("#ggList").append(html);
+								}
+							}
+						}
+					}, function () {
+
+					});
+				}
+
+				function HomeDtTopList() {
+					var art = new Article();
+					art.get({
+						call_index: "subsite_xwgg_dt",
+						limit: 6,
+						is_top: 1
+					}, function () {
+
+					}, function (res) {
+						if (res.code == CodeSuccess) {
+							var len = res.data.length;
+							if (len > 0) {
+								for (var i = 0; i < len; i++) {
+									var item = res.data[i];
+									var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
+									var html = '<li><a href="' + url + '">' + item.title + '</a>\n<span class="fr">' + moment(item.publish_time).format('YYYY-MM-DD') + '</span></li>';
+									$("#dtList").append(html);
+								}
+							}
+						}
+					}, function () {
+
+					});
+				}
+
+				function HomeZcTopList(){
+					var art = new Article();
+					art.get({
+						call_index: "subsite_jyfw_zcwj",
+						limit: 4,
+						is_top: 1
+					}, function (){
+
+					}, function (res){
+						if (res.code == CodeSuccess) {
+							var len = res.data.length;
+							if(len > 0){
+								for (var i = 0; i < len; i++) {
+									var item = res.data[i];
+									var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
+									var html = '<li><a href="' + url + '">' + item.title + '</a>\n<span class="fr">' + moment(item.publish_time).format('YYYY-MM-DD') + '</span></li>';
+									$("#zcwjList").append(html);
+								}
+							}
+						}
+					}, function (){
+
+					});
+				}
+
+				function HomeYqljList() {
+					var link = new Link();
+					link.get({
+						call_index: "subsite_yqlj",
+						limit: 4
+					}, function () {
+
+					}, function (res) {
+						if (res.code == CodeSuccess) {
+							var len = res.data.length;
+							if (len > 0) {
+								for (var i = 0; i < len; i++) {
+									var item = res.data[i];
+									var html = '<a href="' + item.link_url + '" target="_blank"><img src="' + item.img_url2 + '" /></a>';
+									$("#yqljList").append(html);
+								}
+							}
+						}
+					}, function () {
+
+					});
+				}
+
+				laydate.render({
+					elem: '#calendar',
+					position: 'static',
+					mark: {
+						'2023-7-15': '',
+						'2023-7-16': '',
+						'2023-7-17': '',
+						'2023-7-18': ''
+					},
+					done: function(value, date, endDate) {
+						window.location.href = '活动日历-时间轴.html?date=' + value
+
+					}
+				});
+			})
+
+			$('.tab-box .tab-head ul li').click(function() {
+				var index = $(this).index();
+				var innerDiv = $($(this).parents('.tab-box').find('.inner-div')[index]);
+				console.log(innerDiv)
+				$(this).addClass('active').siblings().removeClass('active');
+				innerDiv.addClass('active').siblings().removeClass('active')
+			})
+		</script>
+		<script type="text/javascript">
+		</script>
+	</body>
+
+</html>

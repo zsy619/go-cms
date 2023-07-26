@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>{{if eq .site.HomeTitle ""}}{{.site.Title}}{{else}}{{.site.HomeTitle}}{{end}}</title>
+    <script src="/views/themes/subVI/static/js/common/commonCss.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="js/lib/html5shiv.min.js"></script>
+    <script src="js/lib/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+    {{TemplateTheme $.siteTheme "_nav.html" .}}
+    <div class="other-banner">
+        <img src="{{.siteStatic}}images/other_banner1.png" class="img">
+    </div>
+    <!-- main -->
+    <div class="body bg-white">
+
+        <div class="container show-margin" style="position: relative;">
+            <div class="listCon clearfix">
+                <div class="m-aside">
+                    <div class="top">{{.channel.Title}}</div>
+                    <ul class="data-list" id="categoryList">
+                    </ul>
+                </div>
+                <div class="right">
+                    {{TemplateTheme $.siteTheme "_nav_top_path.html" .}}
+                    <div class="subcon">
+                        <div class="list">
+                            <ul id="articleList">
+                            </ul>
+
+                        </div>
+                        <div id="pagination" class="pagination"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    {{TemplateTheme $.siteTheme "_footer.html" .}}
+
+    <script type="text/javascript">
+        var siteStatic = "{{.siteStatic}}";
+        var channelName = "{{.channelName}}";
+        var categoryName = "{{.categoryName}}";
+        var siteFlag = "{{.channel.SiteFlag}}";
+        var debug = "{{.debug}}";
+
+        layui.use(['form', 'element', 'laypage', 'layer'], function () {
+            var laypage = layui.laypage,
+                layer = layui.layer;
+
+            GetCategoryList();
+            GetArticleList(1, 10)
+
+            // 获取栏目列表
+            function GetCategoryList() {
+                var cate = new Category();
+                cate.get(
+                    {channel_name: channelName,},
+                    function (){
+
+                    }, function (res){
+                        if (res.code == CodeSuccess) {
+                            var len = res.data.length;
+                            if(len > 0){
+                                for (var i = 0; i < len; i++) {
+                                    var item = res.data[i];
+                                    var url = "/" + siteFlag + "/"+ item.channel_name +"/"+item.call_index;
+                                    var html;
+                                    if (item.call_index === categoryName){
+                                        html = '<li class="active"><a href="' + url + '">'+item.title+'</a></li>';
+                                    }else{
+                                        html = '<li><a href="' + url + '">'+item.title+'</a></li>';
+                                    }
+                                    $("#categoryList").append(html);
+                                }
+                            }
+                        }
+                    },function (){
+
+                    }
+                )
+            }
+
+            // 获取文章列表
+            function GetArticleList(page, limit){
+                var art = new Article();
+                art.paginate({
+                    limit: limit,
+                    page: page,
+                    call_index: categoryName,
+                }, function (){
+
+                }, function (res){
+                    if (res.code == CodeSuccess) {
+                        var len = res.data.length;
+                        if(len > 0){
+                            for (var i = 0; i < len; i++) {
+                                var item = res.data[i];
+                                var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
+                                var html = '<li><a href="' + url + '">'+item.title+'</a><span>' + moment(item.publish_time).format('YYYY-MM-DD') + '</span></li>';
+                                $("#articleList").append(html);
+                            }
+                        }
+                        $(".total").html("共" + res.count + "条");
+                        if (res.count == 0) {
+                            $(".list-ul").html($("#templateEmpty").html());
+                        }
+                        if (page === 1 && len > 0) {
+                            laypage.render({
+                                elem: 'pagination'
+                                , limit: 10
+                                , prev: '上页'
+                                , next: '下页'
+                                , limits: [10, 20, 30, 40, 50, 100]
+                                , count: res.count //数据总数，从服务端得到
+                                , jump: function (obj, first) {
+                                    if (!first) {
+                                        GetArticleList(obj.curr, obj.limit);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }, function (){
+
+                });
+            }
+        })
+
+    </script>
+</body>
+
+</html>
