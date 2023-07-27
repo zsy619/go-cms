@@ -7,16 +7,16 @@
     <meta name="renderer" content="webkit">
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
     <title>{{if eq .site.HomeTitle ""}}{{.site.Title}}{{else}}{{.site.HomeTitle}}{{end}}</title>
-    <script src="/views/themes/subVI/static/js/common/commonCss.js"></script>
+    <script src="/views/themes/subVIII/static/js/common/commonCss.js"></script>
     <script>
         var siteStatic = "{{.siteStatic}}";
         var categoryName = "{{.article.CategoryCallIndex}}";
     </script>
-
     <!--[if lt IE 9]>
     <script src="js/lib/html5shiv.min.js"></script>
     <script src="js/lib/respond.min.js"></script>
     <![endif]-->
+
 </head>
 
 <body>
@@ -76,13 +76,9 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
-    <!--<div class="empty">
-        <img src="images/icon_empty.png" alt="" />
-        <p>没有搜索到相关的内容</p>
-    </div>-->
-    <!-- footer -->
     {{TemplateTheme $.siteTheme "_footer.html" .}}
 
     <script>
@@ -127,6 +123,7 @@
             )
         }
     </script>
+
 </body>
 
 </html>

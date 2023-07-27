@@ -1,0 +1,35 @@
+<div class="subnav">
+  <span>位置：</span>
+  <a href="/">首页</a>
+  <span class="division">&gt;</span>
+  <a href="javascript:void(0)" class="last"></a>
+</div>
+<script src="/static/theme/common/static/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript">
+  $(function () {
+    console.log("categoryName:" + categoryName)
+    var cat = new Category();
+    cat.nav({
+      call_index: categoryName,
+      r: Math.random()
+    }, function () {
+      $(".subnav").html("");
+    }, function (res) {
+      $(".subnav").append('<span>位置：</span>');
+      $(".subnav").append('<a href="/">首页</a>&nbsp;&gt;');
+      if (res.code == CodeSuccess) {
+        var len = res.data.length;
+        console.log(res.data)
+        for (var i = 0; i < len; i++) {
+          if (i != len - 1) {
+            $(".subnav").append('&nbsp;<a href="javascript:void(0)">' + res.data[i].title + '</a>&nbsp;&gt;');
+          } else {
+            $(".subnav").append('&nbsp;<a href="javascript:void(0)" class="last">' + res.data[i].title + '</a>');
+          }
+        }
+      }
+    }, function () {
+
+    });
+  })
+</script>

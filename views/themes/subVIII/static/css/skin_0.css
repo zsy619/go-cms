@@ -1,0 +1,20 @@
+:root {
+  --main-primary:#285396;
+  --main_light_primary:#3975d2;
+  --main_deep_light_primary:#DDE9FF;
+  --main_nav_active: #103B7E;
+ 
+  --main_bg_login1:#337AB7;
+  --main_bg_login2:#7B93CB;
+  --main_bg_login3:#369DBB;
+  --main_aisde:rgba(40, 83, 150, .7);
+  --main_app-nav-bg:rgba(40, 83, 150, .95);
+  --main_light_blue: rgba(40, 83, 150, .7);
+  
+  --main_red: #f60;
+  --main_gray: #999;
+  --main_purple: #7b93cb;
+  --main_green: #369dbb; 
+}
+
+
