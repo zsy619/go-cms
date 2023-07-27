@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>{{if eq .site.HomeTitle ""}}{{.site.Title}}{{else}}{{.site.HomeTitle}}{{end}}</title>
+    <script src="/views/themes/subIX/static/js/common/commonCss.js"></script>
+    <!--[if lt IE 9]>
+    <script src="js/lib/html5shiv.min.js"></script>
+    <script src="js/lib/respond.min.js"></script>
+    <![endif]-->
+
+    <script>
+        var siteStatic = "{{.siteStatic}}";
+        var categoryName = "{{.article.CategoryCallIndex}}";
+    </script>
+</head>
+
+<body>
+    {{TemplateTheme $.siteTheme "_nav.html" .}}
+    <div class="other-banner">
+        <img src="{{.siteStatic}}images/other_banner1.png" class="img">
+    </div>
+    <!-- main -->
+    <div class="body bg-white">
+
+        <div class="container show-margin" style="position: relative;">
+            <div class="listCon clearfix">
+                <div class="m-aside">
+                    <div class="top">{{.article.ChannelTitle}}</div>
+                    <ul class="data-list" id="categoryList">
+                    </ul>
+                </div>
+                <div class="right">
+                    {{TemplateTheme $.siteTheme "_nav_top_path.html" .}}
+                    <div class="subcon">
+                        <div class="subcon-detail">
+                            <p class="title">{{.article.Title}}</p>
+                            <div class="sub-other">
+                                <span>分类：{{.article.CategoryTitle}}</span>
+                                <span>时间：{{dateformat .article.PublishTime "2006-01-02"}}</span>
+                                <span>浏览：{{if eq .article.Click 0}}1{{else}}{{.article.Click}}{{end}}</span>
+                            </div>
+                            <div class="content">
+                                {{str2html .article.Content}}
+                            </div>
+                            {{if gt (len .album) 0}}
+                            <div class="news-list" id="divImg">
+                                <ul>
+                                    {{range $index, $item := .album}}
+                                    <li>
+                                        <img data-original="{{$item.OriginalPath}}" title="{{$item.Title}}" src="{{$item.OriginalPath}}" />
+                                        <p class="title ellip">{{$item.Title}}</p>
+                                    </li>
+                                    {{end}}
+                                </ul>
+                            </div>
+                            {{end}}
+                            {{if gt (len .attach) 0}}
+                            <div class="fj-box mb40">
+                                <span class="label">附件：</span>
+                                <div>
+                                    {{range $index, $item := .attach}}
+                                    <p>
+                                        <img src="{{$.siteStatic}}images/icon-fujian.png" />
+                                        <a target="_blank" href="{{$item.OriginalPath}}">{{$item.Title}}</a>
+                                    </p>
+                                    {{end}}
+                                </div>
+                            </div>
+                            {{end}}
+                        </div>
+                        <!--<div class="empty-box">
+                            <div class="empty">
+                                <img src="images/icon_empty.png" alt="" />
+                                <p>没有搜索到相关的内容</p>
+                            </div>
+                        </div>-->
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- footer -->
+    {{TemplateTheme $.siteTheme "_footer.html" .}}
+
+    <script type="text/javascript">
+        var siteStatic = "{{.siteStatic}}";
+        var channelName = "{{.article.ChannelName}}";
+        var categoryName = "{{.article.CategoryCallIndex}}";
+        var debug = "{{.debug}}";
+
+        $(function () {
+            GetCategoryList();
+        })
+
+        // 获取栏目列表
+        function GetCategoryList() {
+            var cate = new Category();
+            cate.get(
+                {channel_name: channelName,},
+                function (){
+
+                }, function (res){
+                    if (res.code == CodeSuccess) {
+                        var len = res.data.length;
+                        if(len > 0){
+                            for (var i = 0; i < len; i++) {
+                                var item = res.data[i];
+                                console.log(item)
+                                var url = item.link_url;
+                                console.log(url)
+                                var html;
+                                if (item.call_index === categoryName){
+                                    html = '<li class="active"><a href="' + url + '">'+item.title+'</a></li>';
+                                }else{
+                                    html = '<li><a href="' + url + '">'+item.title+'</a></li>';
+                                }
+                                $("#categoryList").append(html);
+                            }
+                        }
+                    }
+                },function (){
+
+                }
+            )
+        }
+    </script>
+
+</body>
+
+</html>
