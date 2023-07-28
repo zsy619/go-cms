@@ -16,16 +16,7 @@
 		<div class="index-list">
 			<div class="lunbo-box">
 				<div class="layui-carousel" id="swiper">
-					<div carousel-item="">
-						<div class="slick-slide">
-							<a href="#"><img src="{{.siteStatic}}images/lunbo_img1.png" alt="" /></a>
-						</div>
-						<div class="slick-slide">
-							<a href="#"><img src="{{.siteStatic}}images/lunbo_img1.png" alt="" /></a>
-						</div>
-						<div class="slick-slide">
-							<a href="#"><img src="{{.siteStatic}}images/lunbo_img1.png" alt="" /></a>
-						</div>
+					<div carousel-item="" id="topSlideList">
 					</div>
 				</div>
 			</div>
@@ -39,26 +30,11 @@
 						<div class="left">
 							<div class="news-list tab-box">
 								<div class="tab-head">
-									<ul class="clearfix">
-										<li class="active">公告</li>
-										<li>就业指导</li>
-										<li>下载专区</li>
+									<ul class="clearfix" id="xwggList">
 									</ul>
-									<a id="topMore" href="" class="more">更多+</a>
+									<a id="xwggMore" href="" class="more">更多+</a>
 								</div>
-								<div class="tab-content">
-									<div class="inner-div active">
-										<ul class="new-list" id="ggList">
-										</ul>
-									</div>
-									<div class="inner-div">
-										<ul class="new-list" id="jyzdList">
-										</ul>
-									</div>
-									<div class="inner-div">
-										<ul class="new-list" id="cyxzList">
-										</ul>
-									</div>
+								<div class="tab-content" id="xwggContent">
 								</div>
 							</div>
 						</div>
@@ -688,134 +664,173 @@
 
 			<script type="text/javascript">
 				var siteFlag = "{{.siteTheme}}";
+				var ins;
+				var xwggList, jyfwList;
 
-				$(function () {
-					// 首页公告置顶列表
-					HomeGgTopList();
-					// 首页就业指导列表
-					HomeJyzdTopList();
-					// 首页下载中心列表
-					HomeCyxzTopList();
-					// 友情链接
-					HomeYqljList();
-				})
-
-				function HomeGgTopList() {
-					var art = new Article();
-					art.get({
-						call_index: "subsite_xwgg_gg",
-						limit: 6,
-						is_top: 1
-					}, function () {
-
-					}, function (res) {
-						if (res.code == CodeSuccess) {
-							var len = res.data.length;
-							if (len > 0) {
-								for (var i = 0; i < len; i++) {
-									var item = res.data[i];
-									var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
-									var html = '<li><a href="' + url + '">' + item.title + '</a><span class="fr">' + moment(item.publish_time).format('YYYY-MM-DD') + '</span></li>';
-									$("#ggList").append(html);
-								}
-							}
-						}
-					}, function () {
-
-					});
-				}
-
-				function HomeJyzdTopList() {
-					var art = new Article();
-					art.get({
-						call_index: "subsite_jyfw_jyzd",
-						limit: 6,
-						is_top: 1
-					}, function () {
-
-					}, function (res) {
-						if (res.code == CodeSuccess) {
-							var len = res.data.length;
-							if (len > 0) {
-								for (var i = 0; i < len; i++) {
-									var item = res.data[i];
-									var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
-									var html = '<li><a href="' + url + '">' + item.title + '</a><span class="fr">' + moment(item.publish_time).format('YYYY-MM-DD') + '</span></li>';
-									$("#jyzdList").append(html);
-								}
-							}
-						}
-					}, function () {
-
-					});
-				}
-
-				function HomeCyxzTopList() {
-					var art = new Article();
-					art.get({
-						call_index: "subsite_xzzx_cyxz",
-						limit: 6,
-						is_top: 1
-					}, function () {
-
-					}, function (res) {
-						if (res.code == CodeSuccess) {
-							var len = res.data.length;
-							if (len > 0) {
-								for (var i = 0; i < len; i++) {
-									var item = res.data[i];
-									var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
-									var html = '<li><a href="' + url + '">' + item.title + '</a><span class="fr">' + moment(item.publish_time).format('YYYY-MM-DD') + '</span></li>';
-									$("#cyxzList").append(html);
-								}
-							}
-						}
-					}, function () {
-
-					});
-				}
-
-				function HomeYqljList() {
-					var link = new Link();
-					link.get({
-						call_index: "subsite_yqlj",
-						limit: 4
-					}, function () {
-
-					}, function (res) {
-						if (res.code == CodeSuccess) {
-							var len = res.data.length;
-							if (len > 0) {
-								for (var i = 0; i < len; i++) {
-									var item = res.data[i];
-									var html = '<a href="' + item.link_url + '" target="_blank"><img src="' + item.img_url2 + '" /></a>';
-									$("#yqljList").append(html);
-								}
-							}
-						}
-					}, function () {
-
-					});
-				}
-
-				var ins, ins2;
 				layui.use(['carousel', 'form', 'laydate'], function() {
 					var carousel = layui.carousel,
 						laydate = layui.laydate,
 						form = layui.form;
 
-					//改变下时间间隔、动画类型、高度
-					ins = carousel.render({
-						elem: '#swiper',
-						interval: 3000,
-						width: '100%',
-					});
+					// 首页新闻轮播图列表
+					HomeLbList();
 
-					ins2 = carousel.render({
-						elem: '#swiper2',
-						interval: 3000,
-						width: '100%',
-					});
+					HomeXwggList();
+					HomeJyfwList();
+
+					// 友情链接
+					HomeYqljList();
+
+					function HomeLbList() {
+						var art = new Article();
+						art.get({
+							call_index: "subsite_xwgg_dt",
+							limit: 3,
+							is_slide: 1,
+							is_top: 1
+						}, function () {
+
+						}, function (res) {
+							if (res.code == CodeSuccess) {
+								var len = res.data.length;
+								if (len > 0) {
+									for (var i = 0; i < len; i++) {
+										var item = res.data[i];
+										var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
+										var html = '<div class="slick-slide">\n<a href="' + url + '">\n<img src="' + item.img_url2 + '" alt="" />\n<div class="carousel-opc"></div>\n<span class="title">' + item.title + '</span>\n</a>\n</div>';
+										$("#topSlideList").append(html);
+									}
+								}
+
+								//改变下时间间隔、动画类型、高度
+								ins = carousel.render({
+									elem: '#swiper',
+									interval: 3000,
+									width: '100%',
+								});
+							}
+						}, function () {
+
+						});
+					}
+
+					function HomeXwggList() {
+						var category = new Category()
+						category.get({
+							channel_name: "subsite_xwgg"
+						}, function () {
+
+						}, function (res) {
+							if (res.code == CodeSuccess) {
+								var len = res.data.length;
+								xwggList = res.data;
+								if (len > 0) {
+									for (var i = 0; i < len; i++) {
+										var item = res.data[i];
+										var html, content;
+										if (i === 0) {
+											html = '<li class="active">' + item.title + '</li>';
+											content = '<div class="inner-div active">\n<ul class="new-list" id="'+item.call_index+'">\n</ul>\n</div>';
+										} else {
+											html = '<li>' + item.title + '</li>';
+											content = '<div class="inner-div">\n<ul class="new-list" id="'+item.call_index+'">\n</ul>\n</div>';
+										}
+										$("#xwggList").append(html);
+										$("#xwggContent").append(content);
+										HomeTabList(item.call_index);
+									}
+									var url = "/" + siteFlag + "/" + res.data[0].channel_name + "/" + res.data[0].call_index;
+									$("#xwggMore").attr("href", url);
+								}
+							}
+						}, function () {
+
+						});
+					}
+
+					function HomeJyfwList() {
+						var category = new Category()
+						category.get({
+							channel_name: "subsite_jyfw"
+						}, function () {
+
+						}, function (res) {
+							if (res.code == CodeSuccess) {
+								var len = res.data.length;
+								jyfwList = res.data;
+								if (len > 0) {
+									for (var i = 0; i < len; i++) {
+										var item = res.data[i];
+										var html, content;
+										if (i === 0) {
+											html = '<li class="active">' + item.title + '</li>';
+											content = '<div class="inner-div active">\n<ul class="new-list" id="'+item.call_index+'">\n</ul>\n</div>';
+										} else {
+											html = '<li>' + item.title + '</li>';
+											content = '<div class="inner-div">\n<ul class="new-list" id="'+item.call_index+'">\n</ul>\n</div>';
+										}
+										$("#jyfwList").append(html);
+										$("#jyfwContent").append(content);
+										HomeTabList(item.call_index);
+									}
+									var url = "/" + siteFlag + "/" + res.data[0].channel_name + "/" + res.data[0].call_index;
+									$("#jyfwMore").attr("href", url);
+								}
+							}
+						}, function () {
+
+						});
+					}
+
+					function HomeTabList(callIndex) {
+						var art = new Article();
+						art.get({
+							call_index: callIndex,
+							limit: 6,
+							is_top: 1
+						}, function () {
+
+						}, function (res) {
+							if (res.code == CodeSuccess) {
+								var len = res.data.length;
+								if (len > 0) {
+									for (var i = 0; i < len; i++) {
+										var item = res.data[i];
+										var url = UrlForArticle(item.category_call_index, item.article_id, item.link_url);
+										var html = '<li><a href="' + url + '">' + item.title + '</a><span class="fr">' + moment(item.publish_time).format('YYYY-MM-DD') + '</span></li>';
+										// document.getElementById(id).append(html);
+										$("#"+callIndex).append(html);
+									}
+
+								}
+							}
+						}, function () {
+
+						});
+					}
+
+					function HomeYqljList() {
+						var link = new Link();
+						link.get({
+							call_index: "subsite_yqlj",
+							limit: 4
+						}, function () {
+
+						}, function (res) {
+							if (res.code == CodeSuccess) {
+								var len = res.data.length;
+								if (len > 0) {
+									for (var i = 0; i < len; i++) {
+										var item = res.data[i];
+										var html = '<a href="' + item.link_url + '" target="_blank"><img src="' + item.img_url2 + '" /></a>';
+										$("#yqljList").append(html);
+									}
+								}
+							}
+						}, function () {
+
+						});
+					}
 
 					laydate.render({
 						elem: '#calendar',
@@ -833,28 +848,25 @@
 					});
 				})
 
-				$('.tab-box .tab-head ul li').click(function() {
+				$(document).on('click', '.tab-box .tab-head ul li', function () {
 					var index = $(this).index();
 					var innerDiv = $($(this).parents('.tab-box').find('.inner-div')[index]);
-					console.log(innerDiv)
+
 					$(this).addClass('active').siblings().removeClass('active');
 					innerDiv.addClass('active').siblings().removeClass('active')
 
-					var ulId = $(this).parents('.tab-head').find('ul').attr("id");
-
-					if (ulId === "ggList") {
-						var url = "/" + siteFlag + "/subsite_xwgg/subsite_xwgg_gg";
-						$("#topMore").attr("href", url);
-					}
-
-					if (ulId === "jyzdList") {
-						var url = "/" + siteFlag + "/subsite_jyfw/subsite_jyfw_jyzd";
-						$("#topMore").attr("href", url);
-					}
-
-					if (ulId === "cyxzList") {
-						var url = "/" + siteFlag + "/subsite_xzzx/subsite_xzzx_cyxz";
-						$("#topMore").attr("href", url);
+					var aId = $(this).parents('.tab-head').find('a').attr("id");
+					var url;
+					if(aId === "xwggMore"){
+						url = xwggList[index].link_url === ""
+								? ("/" + siteFlag + "/"+ xwggList[index].channel_name +"/" + xwggList[index].call_index)
+								: xwggList[index].link_url;
+						$("#xwggMore").attr("href", url);
+					}else if(aId === "jyfwMore"){
+						url = jyfwList[index].link_url === ""
+								? ("/" + siteFlag + "/"+ jyfwList[index].channel_name +"/" + jyfwList[index].call_index)
+								: jyfwList[index].link_url;
+						$("#jyfwMore").attr("href", url);
 					}
 				})
 			</script>

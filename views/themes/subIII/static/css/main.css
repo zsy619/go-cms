@@ -3475,10 +3475,15 @@
     .theme3 .listCon .subcon {
       padding: 0 15px; }
       .theme3 .listCon .subcon .list {
+        padding-top: 10px;
         margin-top: 0; }
         .theme3 .listCon .subcon .list ul li {
-          height: 30px;
-          line-height: 30px; }
+          height: 40px;
+          line-height: 40px; }
+          .theme3 .listCon .subcon .list ul li a {
+            height: 40px; }
+          .theme3 .listCon .subcon .list ul li span {
+            font-size: 12px; }
     .theme3 .listCon .news-list ul li {
       width: 100%;
       border-right: 0; } }

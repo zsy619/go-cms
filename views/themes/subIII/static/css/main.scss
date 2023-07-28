@@ -4459,10 +4459,17 @@
             .subcon {
                 padding: 0 15px;
                 .list{
+                    padding-top: 10px;
                     margin-top: 0;
                     ul li{
-                        height: 30px;
-                        line-height: 30px;
+                        height: 40px;
+                        line-height: 40px;
+                        a{
+                            height: 40px;
+                        }
+                        span{
+                            font-size: 12px;
+                        }
                     }
                 }               
             }

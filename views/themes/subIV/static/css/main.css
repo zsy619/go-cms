@@ -876,12 +876,12 @@
 	margin-right: 50px;
 }
 
-.index-list .col-4 {
+.index-list .col-5 {
 	width: calc(24.7% - 6px);
 	float: left;
 }
 
-.index-list .col-4:nth-child(4n+4) {
+.index-list .col-5:nth-child(4n+4) {
 	margin-right: 0;
 }
 

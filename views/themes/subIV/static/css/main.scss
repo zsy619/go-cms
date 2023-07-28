@@ -719,10 +719,10 @@
             margin-right: 50px;
         }
     }
-    .col-4 {
-        width: calc(33% - 6px);
+    .col-5 {
+        width: calc(24.7% - 6px);
         float: left;
-        &:nth-child(3n+3) {
+        &:nth-child(4n+4) {
             margin-right: 0;
         }
     }
