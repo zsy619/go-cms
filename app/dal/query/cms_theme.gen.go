@@ -29,6 +29,7 @@ func newCmsTheme(db *gorm.DB, opts ...gen.DOOption) cmsTheme {
 	_cmsTheme.ALL = field.NewAsterisk(tableName)
 	_cmsTheme.ThemeID = field.NewInt64(tableName, "theme_id")
 	_cmsTheme.Name = field.NewString(tableName, "name")
+	_cmsTheme.Type = field.NewInt32(tableName, "type")
 	_cmsTheme.Title = field.NewString(tableName, "title")
 	_cmsTheme.IsDefault = field.NewBool(tableName, "is_default")
 	_cmsTheme.IsSystem = field.NewBool(tableName, "is_system")
@@ -56,6 +57,7 @@ type cmsTheme struct {
 	ALL        field.Asterisk
 	ThemeID    field.Int64  // 模板ID
 	Name       field.String // 主题名称
+	Type       field.Int32  // 类别(0系统；1高校)，根据业务需求添加
 	Title      field.String // 主题标题
 	IsDefault  field.Bool   // 是否默认主题
 	IsSystem   field.Bool   // 是否系统主题
@@ -89,6 +91,7 @@ func (c *cmsTheme) updateTableName(table string) *cmsTheme {
 	c.ALL = field.NewAsterisk(table)
 	c.ThemeID = field.NewInt64(table, "theme_id")
 	c.Name = field.NewString(table, "name")
+	c.Type = field.NewInt32(table, "type")
 	c.Title = field.NewString(table, "title")
 	c.IsDefault = field.NewBool(table, "is_default")
 	c.IsSystem = field.NewBool(table, "is_system")
@@ -128,9 +131,10 @@ func (c *cmsTheme) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *cmsTheme) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 17)
+	c.fieldMap = make(map[string]field.Expr, 18)
 	c.fieldMap["theme_id"] = c.ThemeID
 	c.fieldMap["name"] = c.Name
+	c.fieldMap["type"] = c.Type
 	c.fieldMap["title"] = c.Title
 	c.fieldMap["is_default"] = c.IsDefault
 	c.fieldMap["is_system"] = c.IsSystem
@@ -202,10 +206,6 @@ func (c cmsThemeDo) Select(conds ...field.Expr) *cmsThemeDo {
 
 func (c cmsThemeDo) Where(conds ...gen.Condition) *cmsThemeDo {
 	return c.withDO(c.DO.Where(conds...))
-}
-
-func (c cmsThemeDo) Exists(subquery interface{ UnderlyingDB() *gorm.DB }) *cmsThemeDo {
-	return c.Where(field.CompareSubQuery(field.ExistsOp, nil, subquery.UnderlyingDB()))
 }
 
 func (c cmsThemeDo) Order(conds ...field.Expr) *cmsThemeDo {

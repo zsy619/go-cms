@@ -196,10 +196,6 @@ func (c cmsAdminNoticeDo) Where(conds ...gen.Condition) *cmsAdminNoticeDo {
 	return c.withDO(c.DO.Where(conds...))
 }
 
-func (c cmsAdminNoticeDo) Exists(subquery interface{ UnderlyingDB() *gorm.DB }) *cmsAdminNoticeDo {
-	return c.Where(field.CompareSubQuery(field.ExistsOp, nil, subquery.UnderlyingDB()))
-}
-
 func (c cmsAdminNoticeDo) Order(conds ...field.Expr) *cmsAdminNoticeDo {
 	return c.withDO(c.DO.Order(conds...))
 }

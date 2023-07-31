@@ -8,10 +8,10 @@ const TableNameCmsAdminRoleValue = "cms_admin_role_value"
 
 // CmsAdminRoleValue mapped from table <cms_admin_role_value>
 type CmsAdminRoleValue struct {
-	ValueID int64  `gorm:"column:value_id;type:bigint;primaryKey;autoIncrement:true;comment:主键" json:"value_id" form:"value_id"` // 主键
-	RoleID  int64  `gorm:"column:role_id;type:bigint;not null;comment:角色" json:"role_id" form:"role_id"`                         // 角色
-	NavName string `gorm:"column:nav_name;type:varchar(128);comment:导航ID" json:"nav_name" form:"nav_name"`                       // 导航ID
-	Action  string `gorm:"column:action;type:varchar(128);comment:权限资源" json:"action" form:"action"`                             // 权限资源
+	ValueID int64  `gorm:"column:value_id;type:bigint;primaryKey;autoIncrement:true" json:"value_id" form:"value_id"` // 主键
+	RoleID  int64  `gorm:"column:role_id;type:bigint;not null" json:"role_id" form:"role_id"`                         // 角色
+	NavName string `gorm:"column:nav_name;type:varchar(128)" json:"nav_name" form:"nav_name"`                         // 导航ID
+	Action  string `gorm:"column:action;type:varchar(128)" json:"action" form:"action"`                               // 权限资源
 }
 
 // TableName CmsAdminRoleValue's table name

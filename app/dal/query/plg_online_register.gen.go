@@ -228,10 +228,6 @@ func (p plgOnlineRegisterDo) Where(conds ...gen.Condition) *plgOnlineRegisterDo 
 	return p.withDO(p.DO.Where(conds...))
 }
 
-func (p plgOnlineRegisterDo) Exists(subquery interface{ UnderlyingDB() *gorm.DB }) *plgOnlineRegisterDo {
-	return p.Where(field.CompareSubQuery(field.ExistsOp, nil, subquery.UnderlyingDB()))
-}
-
 func (p plgOnlineRegisterDo) Order(conds ...field.Expr) *plgOnlineRegisterDo {
 	return p.withDO(p.DO.Order(conds...))
 }

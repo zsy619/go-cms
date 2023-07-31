@@ -204,10 +204,6 @@ func (c cmsAdsCategoryDo) Where(conds ...gen.Condition) *cmsAdsCategoryDo {
 	return c.withDO(c.DO.Where(conds...))
 }
 
-func (c cmsAdsCategoryDo) Exists(subquery interface{ UnderlyingDB() *gorm.DB }) *cmsAdsCategoryDo {
-	return c.Where(field.CompareSubQuery(field.ExistsOp, nil, subquery.UnderlyingDB()))
-}
-
 func (c cmsAdsCategoryDo) Order(conds ...field.Expr) *cmsAdsCategoryDo {
 	return c.withDO(c.DO.Order(conds...))
 }

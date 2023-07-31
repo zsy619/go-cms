@@ -12,23 +12,24 @@ const TableNameCmsTheme = "cms_theme"
 
 // CmsTheme mapped from table <cms_theme>
 type CmsTheme struct {
-	ThemeID    int64     `gorm:"column:theme_id;type:bigint;primaryKey;autoIncrement:true;comment:模板ID" json:"theme_id" form:"theme_id"`        // 模板ID
-	Name       string    `gorm:"column:name;type:varchar(64);comment:主题名称" json:"name" form:"name"`                                             // 主题名称
-	Title      string    `gorm:"column:title;type:varchar(128);comment:主题标题" json:"title" form:"title"`                                         // 主题标题
-	IsDefault  bool      `gorm:"column:is_default;type:tinyint(1);comment:是否默认主题" json:"is_default" form:"is_default"`                          // 是否默认主题
-	IsSystem   bool      `gorm:"column:is_system;type:tinyint(1);comment:是否系统主题" json:"is_system" form:"is_system"`                             // 是否系统主题
-	Thumb      string    `gorm:"column:thumb;type:varchar(256);comment:主题预览图" json:"thumb" form:"thumb"`                                        // 主题预览图
-	Version    string    `gorm:"column:version;type:varchar(36);comment:版本" json:"version" form:"version"`                                      // 版本
-	Author     string    `gorm:"column:author;type:varchar(36);comment:作者" json:"author" form:"author"`                                         // 作者
-	Remark     string    `gorm:"column:remark;type:varchar(256);comment:主题描述" json:"remark" form:"remark"`                                      // 主题描述
-	SortID     int32     `gorm:"column:sort_id;type:int;comment:排序" json:"sort_id" form:"sort_id"`                                              // 排序
-	BelongTo   string    `gorm:"column:belong_to;type:varchar(64);comment:归属" json:"belong_to" form:"belong_to"`                                // 归属
-	CreateID   int32     `gorm:"column:create_id;type:int;comment:创建人ID" json:"create_id" form:"create_id"`                                     // 创建人ID
-	CreateName string    `gorm:"column:create_name;type:varchar(64);comment:创建人姓名" json:"create_name" form:"create_name"`                       // 创建人姓名
-	CreateTime time.Time `gorm:"column:create_time;type:datetime;default:CURRENT_TIMESTAMP;comment:创建时间" json:"create_time" form:"create_time"` // 创建时间
-	UpdateID   int32     `gorm:"column:update_id;type:int;comment:更新人ID" json:"update_id" form:"update_id"`                                     // 更新人ID
-	UpdateName string    `gorm:"column:update_name;type:varchar(64);comment:更新人姓名" json:"update_name" form:"update_name"`                       // 更新人姓名
-	UpdateTime time.Time `gorm:"column:update_time;type:datetime;comment:修改时间" json:"update_time" form:"update_time"`                           // 修改时间
+	ThemeID    int64     `gorm:"column:theme_id;type:bigint;primaryKey;autoIncrement:true" json:"theme_id" form:"theme_id"`        // 模板ID
+	Name       string    `gorm:"column:name;type:varchar(64)" json:"name" form:"name"`                                             // 主题名称
+	Type       int32     `gorm:"column:type;type:int" json:"type" form:"type"`                                                     // 类别(0系统；1高校)，根据业务需求添加
+	Title      string    `gorm:"column:title;type:varchar(128)" json:"title" form:"title"`                                         // 主题标题
+	IsDefault  bool      `gorm:"column:is_default;type:tinyint(1)" json:"is_default" form:"is_default"`                            // 是否默认主题
+	IsSystem   bool      `gorm:"column:is_system;type:tinyint(1)" json:"is_system" form:"is_system"`                               // 是否系统主题
+	Thumb      string    `gorm:"column:thumb;type:varchar(256)" json:"thumb" form:"thumb"`                                         // 主题预览图
+	Version    string    `gorm:"column:version;type:varchar(36)" json:"version" form:"version"`                                    // 版本
+	Author     string    `gorm:"column:author;type:varchar(36)" json:"author" form:"author"`                                       // 作者
+	Remark     string    `gorm:"column:remark;type:varchar(256)" json:"remark" form:"remark"`                                      // 主题描述
+	SortID     int32     `gorm:"column:sort_id;type:int" json:"sort_id" form:"sort_id"`                                            // 排序
+	BelongTo   string    `gorm:"column:belong_to;type:varchar(64)" json:"belong_to" form:"belong_to"`                              // 归属
+	CreateID   int32     `gorm:"column:create_id;type:int" json:"create_id" form:"create_id"`                                      // 创建人ID
+	CreateName string    `gorm:"column:create_name;type:varchar(64)" json:"create_name" form:"create_name"`                        // 创建人姓名
+	CreateTime time.Time `gorm:"column:create_time;type:datetime;default:CURRENT_TIMESTAMP" json:"create_time" form:"create_time"` // 创建时间
+	UpdateID   int32     `gorm:"column:update_id;type:int" json:"update_id" form:"update_id"`                                      // 更新人ID
+	UpdateName string    `gorm:"column:update_name;type:varchar(64)" json:"update_name" form:"update_name"`                        // 更新人姓名
+	UpdateTime time.Time `gorm:"column:update_time;type:datetime" json:"update_time" form:"update_time"`                           // 修改时间
 }
 
 // TableName CmsTheme's table name

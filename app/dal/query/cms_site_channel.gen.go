@@ -256,10 +256,6 @@ func (c cmsSiteChannelDo) Where(conds ...gen.Condition) *cmsSiteChannelDo {
 	return c.withDO(c.DO.Where(conds...))
 }
 
-func (c cmsSiteChannelDo) Exists(subquery interface{ UnderlyingDB() *gorm.DB }) *cmsSiteChannelDo {
-	return c.Where(field.CompareSubQuery(field.ExistsOp, nil, subquery.UnderlyingDB()))
-}
-
 func (c cmsSiteChannelDo) Order(conds ...field.Expr) *cmsSiteChannelDo {
 	return c.withDO(c.DO.Order(conds...))
 }

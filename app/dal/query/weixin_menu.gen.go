@@ -210,10 +210,6 @@ func (w weixinMenuDo) Where(conds ...gen.Condition) *weixinMenuDo {
 	return w.withDO(w.DO.Where(conds...))
 }
 
-func (w weixinMenuDo) Exists(subquery interface{ UnderlyingDB() *gorm.DB }) *weixinMenuDo {
-	return w.Where(field.CompareSubQuery(field.ExistsOp, nil, subquery.UnderlyingDB()))
-}
-
 func (w weixinMenuDo) Order(conds ...field.Expr) *weixinMenuDo {
 	return w.withDO(w.DO.Order(conds...))
 }

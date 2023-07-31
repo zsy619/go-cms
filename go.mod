@@ -10,15 +10,15 @@ require (
 	github.com/prometheus/client_golang v1.16.0
 	golang.org/x/net v0.12.0
 	gorm.io/driver/mysql v1.5.1
-	gorm.io/gen v0.3.23
+	gorm.io/gen v0.3.24-0.20230727090726-c4dd631a4944
 	gorm.io/gorm v1.25.2
-	gorm.io/plugin/dbresolver v1.4.1
+	gorm.io/plugin/dbresolver v1.4.2
 	haedu.gov.cn/tools v0.0.0-00010101000000-000000000000
 )
 
 require (
 	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.9.0 // indirect
-	github.com/chromedp/cdproto v0.0.0-20230713004731-6192861feb61 // indirect
+	github.com/chromedp/cdproto v0.0.0-20230722233645-dbf72f61037f // indirect
 	github.com/chromedp/chromedp v0.9.1 // indirect
 	github.com/chromedp/sysutil v1.0.0 // indirect
 	github.com/gobwas/httphead v0.1.0 // indirect
@@ -54,7 +54,7 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/prometheus/client_model v0.4.0 // indirect
 	github.com/prometheus/common v0.44.0 // indirect
-	github.com/prometheus/procfs v0.11.0 // indirect
+	github.com/prometheus/procfs v0.11.1 // indirect
 	github.com/satori/go.uuid v1.2.0
 	github.com/shiena/ansicolor v0.0.0-20230509054315-a9deabde6e02 // indirect
 	golang.org/x/crypto v0.11.0

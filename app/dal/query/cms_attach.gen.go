@@ -222,10 +222,6 @@ func (c cmsAttachDo) Where(conds ...gen.Condition) *cmsAttachDo {
 	return c.withDO(c.DO.Where(conds...))
 }
 
-func (c cmsAttachDo) Exists(subquery interface{ UnderlyingDB() *gorm.DB }) *cmsAttachDo {
-	return c.Where(field.CompareSubQuery(field.ExistsOp, nil, subquery.UnderlyingDB()))
-}
-
 func (c cmsAttachDo) Order(conds ...field.Expr) *cmsAttachDo {
 	return c.withDO(c.DO.Order(conds...))
 }

@@ -200,10 +200,6 @@ func (w weixinRequestRuleDo) Where(conds ...gen.Condition) *weixinRequestRuleDo 
 	return w.withDO(w.DO.Where(conds...))
 }
 
-func (w weixinRequestRuleDo) Exists(subquery interface{ UnderlyingDB() *gorm.DB }) *weixinRequestRuleDo {
-	return w.Where(field.CompareSubQuery(field.ExistsOp, nil, subquery.UnderlyingDB()))
-}
-
 func (w weixinRequestRuleDo) Order(conds ...field.Expr) *weixinRequestRuleDo {
 	return w.withDO(w.DO.Order(conds...))
 }

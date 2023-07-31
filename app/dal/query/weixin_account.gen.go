@@ -216,10 +216,6 @@ func (w weixinAccountDo) Where(conds ...gen.Condition) *weixinAccountDo {
 	return w.withDO(w.DO.Where(conds...))
 }
 
-func (w weixinAccountDo) Exists(subquery interface{ UnderlyingDB() *gorm.DB }) *weixinAccountDo {
-	return w.Where(field.CompareSubQuery(field.ExistsOp, nil, subquery.UnderlyingDB()))
-}
-
 func (w weixinAccountDo) Order(conds ...field.Expr) *weixinAccountDo {
 	return w.withDO(w.DO.Order(conds...))
 }

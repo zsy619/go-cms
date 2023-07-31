@@ -12,22 +12,22 @@ const TableNameCmsArticleComment = "cms_article_comment"
 
 // CmsArticleComment mapped from table <cms_article_comment>
 type CmsArticleComment struct {
-	CommentID    int64     `gorm:"column:comment_id;type:bigint;primaryKey;autoIncrement:true;comment:主键" json:"comment_id" form:"comment_id"` // 主键
-	ParentID     int64     `gorm:"column:parent_id;type:bigint;comment:父评论ID" json:"parent_id" form:"parent_id"`                               // 父评论ID
-	ArticleID    int64     `gorm:"column:article_id;type:bigint;comment:所属文章" json:"article_id" form:"article_id"`                             // 所属文章
-	SiteID       int64     `gorm:"column:site_id;type:bigint;comment:站点ID" json:"site_id" form:"site_id"`                                      // 站点ID
-	ChannelID    int64     `gorm:"column:channel_id;type:bigint;comment:频道ID" json:"channel_id" form:"channel_id"`                             // 频道ID
-	UserID       int64     `gorm:"column:user_id;type:bigint;comment:用户ID" json:"user_id" form:"user_id"`                                      // 用户ID
-	UserName     string    `gorm:"column:user_name;type:varchar(64);comment:用户名" json:"user_name" form:"user_name"`                            // 用户名
-	UserIP       string    `gorm:"column:user_ip;type:varchar(64);comment:用户IP" json:"user_ip" form:"user_ip"`                                 // 用户IP
-	Content      string    `gorm:"column:content;type:varchar(512);comment:评论内容" json:"content" form:"content"`                                // 评论内容
-	Status       int32     `gorm:"column:status;type:tinyint;comment:状态0草稿1提交2审核通过3审核未通过4驳回" json:"status" form:"status"`                      // 状态0草稿1提交2审核通过3审核未通过4驳回
-	IsLock       bool      `gorm:"column:is_lock;type:tinyint(1);comment:是否锁定" json:"is_lock" form:"is_lock"`                                  // 是否锁定
-	AddTime      time.Time `gorm:"column:add_time;type:datetime;default:CURRENT_TIMESTAMP;comment:发表时间" json:"add_time" form:"add_time"`       // 发表时间
-	IsReply      bool      `gorm:"column:is_reply;type:tinyint(1);comment:是否已答复" json:"is_reply" form:"is_reply"`                              // 是否已答复
-	ReplyUser    string    `gorm:"column:reply_user;type:varchar(64);comment:回复户名" json:"reply_user" form:"reply_user"`                        // 回复户名
-	ReplyContent string    `gorm:"column:reply_content;type:varchar(512);comment:答复内容" json:"reply_content" form:"reply_content"`              // 答复内容
-	ReplyTime    time.Time `gorm:"column:reply_time;type:datetime;default:CURRENT_TIMESTAMP;comment:回复时间" json:"reply_time" form:"reply_time"` // 回复时间
+	CommentID    int64     `gorm:"column:comment_id;type:bigint;primaryKey;autoIncrement:true" json:"comment_id" form:"comment_id"` // 主键
+	ParentID     int64     `gorm:"column:parent_id;type:bigint" json:"parent_id" form:"parent_id"`                                  // 父评论ID
+	ArticleID    int64     `gorm:"column:article_id;type:bigint" json:"article_id" form:"article_id"`                               // 所属文章
+	SiteID       int64     `gorm:"column:site_id;type:bigint" json:"site_id" form:"site_id"`                                        // 站点ID
+	ChannelID    int64     `gorm:"column:channel_id;type:bigint" json:"channel_id" form:"channel_id"`                               // 频道ID
+	UserID       int64     `gorm:"column:user_id;type:bigint" json:"user_id" form:"user_id"`                                        // 用户ID
+	UserName     string    `gorm:"column:user_name;type:varchar(64)" json:"user_name" form:"user_name"`                             // 用户名
+	UserIP       string    `gorm:"column:user_ip;type:varchar(64)" json:"user_ip" form:"user_ip"`                                   // 用户IP
+	Content      string    `gorm:"column:content;type:varchar(512)" json:"content" form:"content"`                                  // 评论内容
+	Status       int32     `gorm:"column:status;type:tinyint" json:"status" form:"status"`                                          // 状态0草稿1提交2审核通过3审核未通过4驳回
+	IsLock       bool      `gorm:"column:is_lock;type:tinyint(1)" json:"is_lock" form:"is_lock"`                                    // 是否锁定
+	AddTime      time.Time `gorm:"column:add_time;type:datetime;default:CURRENT_TIMESTAMP" json:"add_time" form:"add_time"`         // 发表时间
+	IsReply      bool      `gorm:"column:is_reply;type:tinyint(1)" json:"is_reply" form:"is_reply"`                                 // 是否已答复
+	ReplyUser    string    `gorm:"column:reply_user;type:varchar(64)" json:"reply_user" form:"reply_user"`                          // 回复户名
+	ReplyContent string    `gorm:"column:reply_content;type:varchar(512)" json:"reply_content" form:"reply_content"`                // 答复内容
+	ReplyTime    time.Time `gorm:"column:reply_time;type:datetime;default:CURRENT_TIMESTAMP" json:"reply_time" form:"reply_time"`   // 回复时间
 }
 
 // TableName CmsArticleComment's table name

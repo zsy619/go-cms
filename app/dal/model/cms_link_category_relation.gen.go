@@ -8,9 +8,9 @@ const TableNameCmsLinkCategoryRelation = "cms_link_category_relation"
 
 // CmsLinkCategoryRelation mapped from table <cms_link_category_relation>
 type CmsLinkCategoryRelation struct {
-	RelationID int64 `gorm:"column:relation_id;type:bigint;primaryKey;autoIncrement:true;comment:主键" json:"relation_id" form:"relation_id"` // 主键
-	CategoryID int64 `gorm:"column:category_id;type:bigint;comment:所属分类" json:"category_id" form:"category_id"`                             // 所属分类
-	LinkID     int64 `gorm:"column:link_id;type:bigint;comment:所属链接" json:"link_id" form:"link_id"`                                         // 所属链接
+	RelationID int64 `gorm:"column:relation_id;type:bigint;primaryKey;autoIncrement:true" json:"relation_id" form:"relation_id"` // 主键
+	CategoryID int64 `gorm:"column:category_id;type:bigint" json:"category_id" form:"category_id"`                               // 所属分类
+	LinkID     int64 `gorm:"column:link_id;type:bigint" json:"link_id" form:"link_id"`                                           // 所属链接
 }
 
 // TableName CmsLinkCategoryRelation's table name

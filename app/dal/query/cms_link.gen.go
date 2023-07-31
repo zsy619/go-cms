@@ -240,10 +240,6 @@ func (c cmsLinkDo) Where(conds ...gen.Condition) *cmsLinkDo {
 	return c.withDO(c.DO.Where(conds...))
 }
 
-func (c cmsLinkDo) Exists(subquery interface{ UnderlyingDB() *gorm.DB }) *cmsLinkDo {
-	return c.Where(field.CompareSubQuery(field.ExistsOp, nil, subquery.UnderlyingDB()))
-}
-
 func (c cmsLinkDo) Order(conds ...field.Expr) *cmsLinkDo {
 	return c.withDO(c.DO.Order(conds...))
 }

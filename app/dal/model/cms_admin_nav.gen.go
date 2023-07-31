@@ -12,27 +12,27 @@ const TableNameCmsAdminNav = "cms_admin_nav"
 
 // CmsAdminNav mapped from table <cms_admin_nav>
 type CmsAdminNav struct {
-	NavID      int64     `gorm:"column:nav_id;type:bigint;primaryKey;autoIncrement:true;comment:主键" json:"nav_id" form:"nav_id"`                // 主键
-	ParentID   int64     `gorm:"column:parent_id;type:bigint;comment:父节点" json:"parent_id" form:"parent_id"`                                    // 父节点
-	SiteID     int64     `gorm:"column:site_id;type:bigint;comment:站点ID" json:"site_id" form:"site_id"`                                         // 站点ID
-	ChannelID  int64     `gorm:"column:channel_id;type:bigint;comment:频道ID" json:"channel_id" form:"channel_id"`                                // 频道ID
-	Type       string    `gorm:"column:type;type:varchar(32);default:System;comment:导航类别" json:"type" form:"type"`                              // 导航类别
-	Name       string    `gorm:"column:name;type:varchar(128);comment:导航ID" json:"name" form:"name"`                                            // 导航ID
-	Title      string    `gorm:"column:title;type:varchar(128);comment:标题" json:"title" form:"title"`                                           // 标题
-	SubTitle   string    `gorm:"column:sub_title;type:varchar(128);comment:副标题" json:"sub_title" form:"sub_title"`                              // 副标题
-	IconURL    string    `gorm:"column:icon_url;type:varchar(128);comment:图标地址" json:"icon_url" form:"icon_url"`                                // 图标地址
-	LinkURL    string    `gorm:"column:link_url;type:varchar(256);comment:链接地址" json:"link_url" form:"link_url"`                                // 链接地址
-	IsHide     int32     `gorm:"column:is_hide;type:tinyint;comment:是否隐藏0显示1隐藏" json:"is_hide" form:"is_hide"`                                  // 是否隐藏0显示1隐藏
-	SortID     int32     `gorm:"column:sort_id;type:int;comment:排序" json:"sort_id" form:"sort_id"`                                              // 排序
-	Action     string    `gorm:"column:action;type:varchar(128);comment:权限资源" json:"action" form:"action"`                                      // 权限资源
-	IsSys      int32     `gorm:"column:is_sys;type:tinyint;comment:是否系统默认0否1是" json:"is_sys" form:"is_sys"`                                     // 是否系统默认0否1是
-	Remark     string    `gorm:"column:remark;type:varchar(256);comment:备注" json:"remark" form:"remark"`                                        // 备注
-	CreateID   int32     `gorm:"column:create_id;type:int;comment:创建人ID" json:"create_id" form:"create_id"`                                     // 创建人ID
-	CreateName string    `gorm:"column:create_name;type:varchar(64);comment:创建人姓名" json:"create_name" form:"create_name"`                       // 创建人姓名
-	CreateTime time.Time `gorm:"column:create_time;type:datetime;default:CURRENT_TIMESTAMP;comment:创建时间" json:"create_time" form:"create_time"` // 创建时间
-	UpdateID   int32     `gorm:"column:update_id;type:int;comment:更新人ID" json:"update_id" form:"update_id"`                                     // 更新人ID
-	UpdateName string    `gorm:"column:update_name;type:varchar(64);comment:更新人姓名" json:"update_name" form:"update_name"`                       // 更新人姓名
-	UpdateTime time.Time `gorm:"column:update_time;type:datetime;comment:修改时间" json:"update_time" form:"update_time"`                           // 修改时间
+	NavID      int64     `gorm:"column:nav_id;type:bigint;primaryKey;autoIncrement:true" json:"nav_id" form:"nav_id"`              // 主键
+	ParentID   int64     `gorm:"column:parent_id;type:bigint" json:"parent_id" form:"parent_id"`                                   // 父节点
+	SiteID     int64     `gorm:"column:site_id;type:bigint" json:"site_id" form:"site_id"`                                         // 站点ID
+	ChannelID  int64     `gorm:"column:channel_id;type:bigint" json:"channel_id" form:"channel_id"`                                // 频道ID
+	Type       string    `gorm:"column:type;type:varchar(32);default:System" json:"type" form:"type"`                              // 导航类别
+	Name       string    `gorm:"column:name;type:varchar(128)" json:"name" form:"name"`                                            // 导航ID
+	Title      string    `gorm:"column:title;type:varchar(128)" json:"title" form:"title"`                                         // 标题
+	SubTitle   string    `gorm:"column:sub_title;type:varchar(128)" json:"sub_title" form:"sub_title"`                             // 副标题
+	IconURL    string    `gorm:"column:icon_url;type:varchar(128)" json:"icon_url" form:"icon_url"`                                // 图标地址
+	LinkURL    string    `gorm:"column:link_url;type:varchar(256)" json:"link_url" form:"link_url"`                                // 链接地址
+	IsHide     int32     `gorm:"column:is_hide;type:tinyint" json:"is_hide" form:"is_hide"`                                        // 是否隐藏0显示1隐藏
+	SortID     int32     `gorm:"column:sort_id;type:int" json:"sort_id" form:"sort_id"`                                            // 排序
+	Action     string    `gorm:"column:action;type:varchar(128)" json:"action" form:"action"`                                      // 权限资源
+	IsSys      int32     `gorm:"column:is_sys;type:tinyint" json:"is_sys" form:"is_sys"`                                           // 是否系统默认0否1是
+	Remark     string    `gorm:"column:remark;type:varchar(256)" json:"remark" form:"remark"`                                      // 备注
+	CreateID   int32     `gorm:"column:create_id;type:int" json:"create_id" form:"create_id"`                                      // 创建人ID
+	CreateName string    `gorm:"column:create_name;type:varchar(64)" json:"create_name" form:"create_name"`                        // 创建人姓名
+	CreateTime time.Time `gorm:"column:create_time;type:datetime;default:CURRENT_TIMESTAMP" json:"create_time" form:"create_time"` // 创建时间
+	UpdateID   int32     `gorm:"column:update_id;type:int" json:"update_id" form:"update_id"`                                      // 更新人ID
+	UpdateName string    `gorm:"column:update_name;type:varchar(64)" json:"update_name" form:"update_name"`                        // 更新人姓名
+	UpdateTime time.Time `gorm:"column:update_time;type:datetime" json:"update_time" form:"update_time"`                           // 修改时间
 }
 
 // TableName CmsAdminNav's table name

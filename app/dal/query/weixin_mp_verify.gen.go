@@ -192,10 +192,6 @@ func (w weixinMpVerifyDo) Where(conds ...gen.Condition) *weixinMpVerifyDo {
 	return w.withDO(w.DO.Where(conds...))
 }
 
-func (w weixinMpVerifyDo) Exists(subquery interface{ UnderlyingDB() *gorm.DB }) *weixinMpVerifyDo {
-	return w.Where(field.CompareSubQuery(field.ExistsOp, nil, subquery.UnderlyingDB()))
-}
-
 func (w weixinMpVerifyDo) Order(conds ...field.Expr) *weixinMpVerifyDo {
 	return w.withDO(w.DO.Order(conds...))
 }

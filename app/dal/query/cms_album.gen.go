@@ -224,10 +224,6 @@ func (c cmsAlbumDo) Where(conds ...gen.Condition) *cmsAlbumDo {
 	return c.withDO(c.DO.Where(conds...))
 }
 
-func (c cmsAlbumDo) Exists(subquery interface{ UnderlyingDB() *gorm.DB }) *cmsAlbumDo {
-	return c.Where(field.CompareSubQuery(field.ExistsOp, nil, subquery.UnderlyingDB()))
-}
-
 func (c cmsAlbumDo) Order(conds ...field.Expr) *cmsAlbumDo {
 	return c.withDO(c.DO.Order(conds...))
 }

@@ -152,10 +152,6 @@ func (c cmsLinkCategoryRelationDo) Where(conds ...gen.Condition) *cmsLinkCategor
 	return c.withDO(c.DO.Where(conds...))
 }
 
-func (c cmsLinkCategoryRelationDo) Exists(subquery interface{ UnderlyingDB() *gorm.DB }) *cmsLinkCategoryRelationDo {
-	return c.Where(field.CompareSubQuery(field.ExistsOp, nil, subquery.UnderlyingDB()))
-}
-
 func (c cmsLinkCategoryRelationDo) Order(conds ...field.Expr) *cmsLinkCategoryRelationDo {
 	return c.withDO(c.DO.Order(conds...))
 }

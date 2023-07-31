@@ -184,10 +184,6 @@ func (w weixinResponseContentDo) Where(conds ...gen.Condition) *weixinResponseCo
 	return w.withDO(w.DO.Where(conds...))
 }
 
-func (w weixinResponseContentDo) Exists(subquery interface{ UnderlyingDB() *gorm.DB }) *weixinResponseContentDo {
-	return w.Where(field.CompareSubQuery(field.ExistsOp, nil, subquery.UnderlyingDB()))
-}
-
 func (w weixinResponseContentDo) Order(conds ...field.Expr) *weixinResponseContentDo {
 	return w.withDO(w.DO.Order(conds...))
 }

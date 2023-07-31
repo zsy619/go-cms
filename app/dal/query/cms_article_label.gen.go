@@ -192,10 +192,6 @@ func (c cmsArticleLabelDo) Where(conds ...gen.Condition) *cmsArticleLabelDo {
 	return c.withDO(c.DO.Where(conds...))
 }
 
-func (c cmsArticleLabelDo) Exists(subquery interface{ UnderlyingDB() *gorm.DB }) *cmsArticleLabelDo {
-	return c.Where(field.CompareSubQuery(field.ExistsOp, nil, subquery.UnderlyingDB()))
-}
-
 func (c cmsArticleLabelDo) Order(conds ...field.Expr) *cmsArticleLabelDo {
 	return c.withDO(c.DO.Order(conds...))
 }

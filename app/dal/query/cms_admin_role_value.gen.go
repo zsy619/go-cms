@@ -156,10 +156,6 @@ func (c cmsAdminRoleValueDo) Where(conds ...gen.Condition) *cmsAdminRoleValueDo 
 	return c.withDO(c.DO.Where(conds...))
 }
 
-func (c cmsAdminRoleValueDo) Exists(subquery interface{ UnderlyingDB() *gorm.DB }) *cmsAdminRoleValueDo {
-	return c.Where(field.CompareSubQuery(field.ExistsOp, nil, subquery.UnderlyingDB()))
-}
-
 func (c cmsAdminRoleValueDo) Order(conds ...field.Expr) *cmsAdminRoleValueDo {
 	return c.withDO(c.DO.Order(conds...))
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"gorm.io/gen"
+	"gorm.io/gen/field"
 	"haedu.gov.cn/cms/app/dal"
 )
 
@@ -30,6 +31,11 @@ func main() {
 		// 生成 gorm 标签的字段类型属性
 		FieldWithTypeTag: true, // generate with gorm column type tag
 	})
+
+	g.WithOpts(gen.FieldGORMTagReg(".", func(tag field.GormTag) field.GormTag {
+		tag.Remove("comment")
+		return tag
+	}))
 
 	g.UseDB(dal.CmsDatabase.DB)
 

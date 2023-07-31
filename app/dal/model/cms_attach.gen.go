@@ -12,27 +12,27 @@ const TableNameCmsAttach = "cms_attach"
 
 // CmsAttach mapped from table <cms_attach>
 type CmsAttach struct {
-	AttachID     int64     `gorm:"column:attach_id;type:bigint;primaryKey;autoIncrement:true;comment:主键" json:"attach_id" form:"attach_id"`       // 主键
-	TableName_   string    `gorm:"column:table_name;type:varchar(128);comment:关联表名" json:"table_name" form:"table_name"`                          // 关联表名
-	RecordID     int64     `gorm:"column:record_id;type:bigint;comment:关联记录ID" json:"record_id" form:"record_id"`                                 // 关联记录ID
-	TypeID       int32     `gorm:"column:type_id;type:int;comment:分类" json:"type_id" form:"type_id"`                                              // 分类
-	Title        string    `gorm:"column:title;type:varchar(128);comment:标题" json:"title" form:"title"`                                           // 标题
-	OriginalPath string    `gorm:"column:original_path;type:varchar(512);comment:原始地址" json:"original_path" form:"original_path"`                 // 原始地址
-	FilePath     string    `gorm:"column:file_path;type:varchar(512);comment:文件路径（带域名）" json:"file_path" form:"file_path"`                        // 文件路径（带域名）
-	FileSize     int64     `gorm:"column:file_size;type:bigint;comment:文件大小(字节)" json:"file_size" form:"file_size"`                               // 文件大小(字节)
-	FileMime     string    `gorm:"column:file_mime;type:varchar(256);comment:Mime类型" json:"file_mime" form:"file_mime"`                           // Mime类型
-	FileExt      string    `gorm:"column:file_ext;type:varchar(16);comment:文件扩展名" json:"file_ext" form:"file_ext"`                                // 文件扩展名
-	Point        int32     `gorm:"column:point;type:int;comment:下载所需积分" json:"point" form:"point"`                                                // 下载所需积分
-	Click        int32     `gorm:"column:click;type:int;comment:下载次数" json:"click" form:"click"`                                                  // 下载次数
-	SortID       int32     `gorm:"column:sort_id;type:int;comment:排序" json:"sort_id" form:"sort_id"`                                              // 排序
-	IsShow       int32     `gorm:"column:is_show;type:tinyint;comment:是否显示：1显示2隐藏" json:"is_show" form:"is_show"`                                 // 是否显示：1显示2隐藏
-	Remark       string    `gorm:"column:remark;type:varchar(256);comment:附件描述" json:"remark" form:"remark"`                                      // 附件描述
-	CreateID     int32     `gorm:"column:create_id;type:int;comment:创建人ID" json:"create_id" form:"create_id"`                                     // 创建人ID
-	CreateName   string    `gorm:"column:create_name;type:varchar(64);comment:创建人姓名" json:"create_name" form:"create_name"`                       // 创建人姓名
-	CreateTime   time.Time `gorm:"column:create_time;type:datetime;default:CURRENT_TIMESTAMP;comment:创建时间" json:"create_time" form:"create_time"` // 创建时间
-	UpdateID     int32     `gorm:"column:update_id;type:int;comment:更新人ID" json:"update_id" form:"update_id"`                                     // 更新人ID
-	UpdateName   string    `gorm:"column:update_name;type:varchar(64);comment:更新人姓名" json:"update_name" form:"update_name"`                       // 更新人姓名
-	UpdateTime   time.Time `gorm:"column:update_time;type:datetime;comment:修改时间" json:"update_time" form:"update_time"`                           // 修改时间
+	AttachID     int64     `gorm:"column:attach_id;type:bigint;primaryKey;autoIncrement:true" json:"attach_id" form:"attach_id"`     // 主键
+	TableName_   string    `gorm:"column:table_name;type:varchar(128)" json:"table_name" form:"table_name"`                          // 关联表名
+	RecordID     int64     `gorm:"column:record_id;type:bigint" json:"record_id" form:"record_id"`                                   // 关联记录ID
+	TypeID       int32     `gorm:"column:type_id;type:int" json:"type_id" form:"type_id"`                                            // 分类
+	Title        string    `gorm:"column:title;type:varchar(128)" json:"title" form:"title"`                                         // 标题
+	OriginalPath string    `gorm:"column:original_path;type:varchar(512)" json:"original_path" form:"original_path"`                 // 原始地址
+	FilePath     string    `gorm:"column:file_path;type:varchar(512)" json:"file_path" form:"file_path"`                             // 文件路径（带域名）
+	FileSize     int64     `gorm:"column:file_size;type:bigint" json:"file_size" form:"file_size"`                                   // 文件大小(字节)
+	FileMime     string    `gorm:"column:file_mime;type:varchar(256)" json:"file_mime" form:"file_mime"`                             // Mime类型
+	FileExt      string    `gorm:"column:file_ext;type:varchar(16)" json:"file_ext" form:"file_ext"`                                 // 文件扩展名
+	Point        int32     `gorm:"column:point;type:int" json:"point" form:"point"`                                                  // 下载所需积分
+	Click        int32     `gorm:"column:click;type:int" json:"click" form:"click"`                                                  // 下载次数
+	SortID       int32     `gorm:"column:sort_id;type:int" json:"sort_id" form:"sort_id"`                                            // 排序
+	IsShow       int32     `gorm:"column:is_show;type:tinyint" json:"is_show" form:"is_show"`                                        // 是否显示：1显示2隐藏
+	Remark       string    `gorm:"column:remark;type:varchar(256)" json:"remark" form:"remark"`                                      // 附件描述
+	CreateID     int32     `gorm:"column:create_id;type:int" json:"create_id" form:"create_id"`                                      // 创建人ID
+	CreateName   string    `gorm:"column:create_name;type:varchar(64)" json:"create_name" form:"create_name"`                        // 创建人姓名
+	CreateTime   time.Time `gorm:"column:create_time;type:datetime;default:CURRENT_TIMESTAMP" json:"create_time" form:"create_time"` // 创建时间
+	UpdateID     int32     `gorm:"column:update_id;type:int" json:"update_id" form:"update_id"`                                      // 更新人ID
+	UpdateName   string    `gorm:"column:update_name;type:varchar(64)" json:"update_name" form:"update_name"`                        // 更新人姓名
+	UpdateTime   time.Time `gorm:"column:update_time;type:datetime" json:"update_time" form:"update_time"`                           // 修改时间
 }
 
 // TableName CmsAttach's table name
