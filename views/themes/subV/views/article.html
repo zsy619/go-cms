@@ -76,6 +76,9 @@
     </div>
     {{TemplateTheme $.siteTheme "_footer.html" .}}
     <script type="text/javascript">
+        $(function () {
+            ArticleClick("{{.article.ArticleID}}");
+        })
     </script>
 </body>
 

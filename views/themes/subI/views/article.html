@@ -30,6 +30,11 @@
                 <div class="subcon">
                     <div class="subcon-detail">
                         <p class="title">{{.article.Title}}</p>
+                        <div class="sub-other">
+                            <span>分类：{{.article.CategoryTitle}}</span>
+                            <span>时间：{{dateformat .article.PublishTime "2006-01-02"}}</span>
+                            <span>浏览：{{if eq .article.Click 0}}1{{else}}{{.article.Click}}{{end}}</span>
+                        </div>
                         <div class="content">
                             <div id="cke_pastebin">{{str2html .article.Content}}</div>
                         </div>
@@ -66,7 +71,26 @@
 
     $(function () {
         GetCategoryList();
+        ArticleClick("{{.article.ArticleID}}");
     })
+
+    function postClick(){
+        $.ajax({
+            url: "/api/article/click?call_index={{.article.CategoryCallIndex}}&article_id={{.article.ArticleID}}&r=" + Math.random(),
+            dataType: "json",
+            type: "get",
+            beforeSend: function () {
+
+            },
+            success: function (res) {
+                console.log("点击率+1: "+res)
+            },
+            error: function () {
+            },
+            complete: function () {
+            }
+        });
+    }
 
     // 获取栏目列表
     function GetCategoryList() {

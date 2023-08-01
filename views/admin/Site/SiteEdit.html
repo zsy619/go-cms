@@ -262,6 +262,11 @@
                     },
                     { field: 'title', title: '主题' },
                     { field: 'name', title: '名称' },
+                    {
+                        title: '类型', templet: function (d) {
+                            return d.type == 0 ? "系统" : "高校";
+                        }
+                    },
                     { field: 'version', title: '版本' },
                     { field: 'author', title: '作者' },
                     { field: 'remark', title: '描述', },

@@ -43,21 +43,13 @@ func (c *BaseController) Prepare() {
 	// 根据域名获取站点信息
 	DefaultSite, _ = c.SiteByHost(c.Ctx.Request.Host)
 	if DefaultSite == nil {
-		c.Ctx.WriteString("未找到相关站点信息")
-		c.StopRun()
-	}
-	if DefaultSite.Template == "" {
-		c.Ctx.WriteString("请为该站点设置模板")
-		c.StopRun()
-	}
-	// 获取默认站点、模板
-	/*if DefaultSite == nil {
+		// 获取默认站点、模板
 		DefaultSite, _ = c.SiteDefault()
 		if DefaultSite.Template == "" {
 			c.Ctx.WriteString("请设置默认模板")
 			c.StopRun()
 		}
-	}*/
+	}
 	SiteTheme = DefaultSite.Template
 	SiteStatic = "/views/themes/" + SiteTheme + "/static/"
 	c.Data["siteTheme"] = SiteTheme

@@ -35,6 +35,12 @@ func (c *ThemeController) Upload() {
 	// 5、拷贝主题文件到主题目录，并入库
 	// 6、删除临时目录
 
+	typex, _ := c.GetInt("type", -1)
+	if typex == -1 {
+		c.uploadMsg(-1, "请传入模板类型")
+		return
+	}
+
 	// 1. 文件上传，保存到临时目录
 	file, header, err := c.GetFile("file")
 	if err != nil {
@@ -154,6 +160,7 @@ func (c *ThemeController) Upload() {
 		Thumb:     "thumb.png",
 		Version:   themConfig.Version,
 		Author:    xgeneric.IFF(themConfig.Author == "", "教育网", themConfig.Author),
+		Type:      int32(typex),
 	}
 	if err := service.ThemeSave(themeModel); err != nil {
 		c.uploadMsg(-1, err.Error())

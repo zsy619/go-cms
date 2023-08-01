@@ -1,3 +1,9 @@
+<style>
+    .uploadTempFile{
+        display: none;
+        padding:32px 42px;
+    }
+</style>
 <div class="layui-container-full">
     <div class="layui-tab layui-tab-brief layui-tab-card">
         <ul class="layui-tab-title">
@@ -9,12 +15,35 @@
                 <div class="layui-row" style="margin: 5px;">
                     <div class="layui-col-md12">
                         {{if .roleMap.IsHasAdd}}
-                        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal  save" id="upload"><i class="layui-icon layui-icon-upload"></i>上传模板文件</button>
+                        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal  save" id="uploadBtn"><i class="layui-icon layui-icon-upload"></i>上传模板文件</button>
                         {{end}}
                     </div>
                 </div>
-                <div class="layui-row">
+                <div style="padding-top: 20px; padding-left: 10px">系统模板</div>
+                <div class="layui-row" style="padding-top: 10px">
                     {{range $index,$item := .theme}}
+                        {{if eq $item.Type 0}}
+                            <div class="layui-col-md3" style="padding: 10px;">
+                                <img src='{{ ConcatStr "/views/themes/" $item.Name "/" $item.Thumb}}' width="100%" height="180">
+                                <p>主题:{{$item.Title}}</p>
+                                <div style="height: 1.5em; overflow: hidden;" title="{{$item.Remark}}">描述:{{$item.Remark}}</div>
+                                <p>版本:{{$item.Version}}</p>
+                                <p>作者:{{$item.Author}} </p>
+                                <p>
+                                    {{if eq $item.IsDefault true}}
+                                    <button type="button" disabled class="layui-btn layui-btn-warm">默认主题</button>
+                                    {{else}}
+                                    <button type="button" class="layui-btn layui-btn-normal" lay-event="normal" onclick="setDefault('{{$item.Name}}')">设置默认主题</button>
+                                    {{end}}
+                                </p>
+                            </div>
+                        {{end}}
+                    {{end}}
+                </div>
+                <div style="padding-top: 20px; padding-left: 10px">高校模板</div>
+                <div class="layui-row" style="padding-top: 10px">
+                    {{range $index,$item := .theme}}
+                    {{if eq $item.Type 1}}
                     <div class="layui-col-md3" style="padding: 10px;">
                         <img src='{{ ConcatStr "/views/themes/" $item.Name "/" $item.Thumb}}' width="100%" height="180">
                         <p>主题:{{$item.Title}}</p>
@@ -29,6 +58,7 @@
                             {{end}}
                         </p>
                     </div>
+                    {{end}}
                     {{end}}
                 </div>
             </div>
@@ -73,20 +103,37 @@
         </div>
     </div>
 </div>
-<script>
-    var csrf = getXsrfToken();
 
-    // 检查页面权限
-    /*rolePower("{{.roleId}}", "themes_index", function (roleMap){
-        if (roleMap != null && roleMap.isSuccess === true){
-            if (!roleMap.isHasAdd){
-                $("button[lay-event='upload']").remove();
-            }
-            if (!roleMap.isHasEdit){
-                $("button[lay-event='normal']").remove();
-            }
-        }
-    });*/
+<!-- 弹窗模板 -->
+<div id="popup">
+    <div class="layui-form uploadTempFile" id="uploadTempFile">
+        <div class="layui-form-item">
+            <label class="layui-form-label required">模板类型</label>
+            <div class="layui-input-block">
+                <select name="dropdown" lay-verify="required" lay-reqtext="请选择模板类型" autocomplete="off" id="dropdownSelect">
+                    <option value="-1">请选择</option>
+                    <option value="0">系统</option>
+                    <option value="1">高校</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">模板文件</label>
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" id="uploadChoose"><i class="layui-icon layui-icon-upload"></i>选择模板文件</button>
+            </div>
+        </div>
+        <div class="layui-form-item" style="padding-top: 20px">
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn layui-btn-normal" id="startUpload">提交</button>
+                <button type="cancel" class="layui-btn layui-btn-primary" id="dismissLayer">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var csrf = getXsrfToken();
 
     if ("{{.roleMap.IsHasEdit}}" === "false"){
         $("button[lay-event='normal']").remove();
@@ -94,31 +141,52 @@
 
     layui.use(['form', 'jquery', 'upload'], function () {
         form = layui.form,
-            upload = layui.upload,
+            upload = layui.upload;
             $ = layui.jquery;
 
+        $('#uploadBtn').click(function (){
+            layer.open({
+                type: 1,
+                title:'上传模板文件',
+                area:['500px','300px'],
+                content: $('#uploadTempFile'),
+            });
+        });
+
+        $('#dismissLayer').click(function (){
+            layer.close(layer.index);
+        });
+
         upload.render({
-            elem: '#upload'
-            , url: 'upload'
-            , headers: { "X-Xsrftoken": csrf }
-            , accept: 'file'
-            , exts: 'zip' //只允许上传 ZIP 文件
-            , before: function (obj) {
-                layer.msg('上传中', { icon: 16, time: 1 });
-            }
-            , done: function (res) {
+            elem: '#uploadChoose',
+            headers: { "X-Xsrftoken": csrf },
+            accept: 'file',
+            exts: 'zip',
+            auto: false,
+            bindAction: '#startUpload',
+            before: function (obj) {
+                var selectValue = $("select[name='dropdown']").val();
+                if(selectValue == "-1"){
+                    layer.msg('请选择模板类型');
+                    return false;
+                }else{
+                    this.url = 'upload?type='+ selectValue;
+                    layer.msg('上传中', { icon: 16, time: 1 });
+                }
+            },
+            done: function (res) {
                 //如果上传失败
                 if (res.code != 0) {
-                    return layer.msg(res.msg, { icon: 2 })
+                    return layer.msg(res.msg, { icon: 2 });
                 } else {
                     layer.open({
-                        content: '模板上传成功'
-                        , btn: ['确定']
-                        , yes: function (index, layero) {
-                            location.reload()
-                        }
-                        , cancel: function () {
-                            location.reload()
+                        content: '模板上传成功',
+                        btn: ['确定'],
+                        yes: function (index, layero) {
+                            location.reload();
+                        },
+                        cancel: function () {
+                            location.reload();
                         }
                     });
                 }
@@ -139,19 +207,18 @@
                 success: function (data) {
                     if (data.code == CodeSuccess) {
                         layer.open({
-                            content: '设置默认主题成功'
-                            , icon: 1
-                            , btn: ['确定']
-                            , yes: function (index, layero) {
+                            content: '设置默认主题成功',
+                            icon: 1,
+                            btn: ['确定'],
+                            yes: function (index, layero) {
                                 location.reload()
-                            }
-                            , cancel: function () {
+                            },
+                            cancel: function () {
                                 location.reload()
                             }
                         });
-
                     } else {
-                        layer.alert(data.msg, { icon: 2, title: '错误' })
+                        layer.alert(data.msg, { icon: 2, title: '错误' });
                         return true;
                     }
                 },
@@ -164,4 +231,5 @@
             });
         });
     }
+
 </script>
