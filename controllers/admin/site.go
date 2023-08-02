@@ -128,6 +128,11 @@ func (this *SiteController) Save() {
 	if err != nil {
 		result.SetResult(lib.CodeFatal, err.Error())
 	}
+	// 清除相关缓存
+	if site.IsDefault {
+		lib.SiteCache.Reset()
+		lib.SiteFindCache.Reset()
+	}
 	this.JSONData(result)
 }
 

@@ -81,7 +81,10 @@ func (this *CmsSite) SiteSave(mdl *model.CmsSite, domains []string, remarks []st
 	site, siteDo := query.CmsSiteDo()
 	if mdl.IsDefault {
 		if count, _ := siteDo.Where(site.IsDefault.Is(true), site.IsDeleted.Is(false), site.SiteID.Neq(mdl.SiteID)).Count(); count > 0 {
-			return errors.New("默认站点只能有一个，请修改后重试")
+			_, _ = siteDo.Where(site.IsDefault.Is(true)).UpdateColumns(map[string]interface{}{
+				site.IsDefault.ColumnName().String(): false,
+			})
+			// return errors.New("默认站点只能有一个，请修改后重试")
 		}
 	}
 	if count, _ := siteDo.Where(site.Name.Eq(mdl.Name), site.IsDeleted.Is(false), site.SiteID.Neq(mdl.SiteID)).Count(); count > 0 {
