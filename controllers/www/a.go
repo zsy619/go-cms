@@ -86,6 +86,8 @@ func init() {
 		web.Router(ApiPrefix+"/topic/get/new", &ApiTopicController{}, "*:GetNew")
 		web.Router(ApiPrefix+"/topic/click", &ApiTopicController{}, "*:Click")
 		web.Router(ApiPrefix+"/topic/article/paginate", &ApiTopicController{}, "*:ArticlePaginate")
+
+		web.Router(ApiPrefix+"/plg/online/register/save", &PlgOnlineRegisterController{}, "*:Save")
 	}
 
 	web.Router(ApiPrefix+"/cache/clear", &ApiCacheController{}, "*:Clear")
