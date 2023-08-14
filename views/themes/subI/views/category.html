@@ -38,7 +38,12 @@
     </div>
 </div>
 {{TemplateTheme $.siteTheme "_footer.html" .}}
-
+<script id="templateEmpty" type="text/template">
+    <div style="text-align: center; padding-bottom: 10rem; padding-top: 2rem">
+        <img src="{{.siteStatic}}images/state_img3.png" class="img"/>
+        <p class="tip">暂无数据</p>
+    </div>
+</script>
 <script type="text/javascript">
     var siteStatic = "{{.siteStatic}}";
     var channelName = "{{.channelName}}";
@@ -105,23 +110,21 @@
                     }
                     $(".total").html("共" + res.count + "条");
                     if (res.count == 0) {
-                        $(".list-ul").html($("#templateEmpty").html());
+                        $("#articleList").html($("#templateEmpty").html());
                     }
-                    if (page === 1 && len > 0) {
-                        laypage.render({
-                            elem: 'pagination'
-                            , limit: 10
-                            , prev: '上页'
-                            , next: '下页'
-                            , limits: [10, 20, 30, 40, 50, 100]
-                            , count: res.count //数据总数，从服务端得到
-                            , jump: function (obj, first) {
-                                if (!first) {
-                                    GetArticleList(obj.curr, obj.limit);
-                                }
+                    laypage.render({
+                        elem: 'pagination'
+                        , limit: 10
+                        , prev: '上页'
+                        , next: '下页'
+                        , limits: [10, 20, 30, 40, 50, 100]
+                        , count: res.count //数据总数，从服务端得到
+                        , jump: function (obj, first) {
+                            if (!first) {
+                                GetArticleList(obj.curr, obj.limit);
                             }
-                        });
-                    }
+                        }
+                    });
                 }
             }, function (){
 

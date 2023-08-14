@@ -37,36 +37,20 @@
       <li class="active">
         <a href="/">首&nbsp;&nbsp;&nbsp;&nbsp;页</a>
       </li>
-      <li>
-        <a href="#">学生</a>
-        <div class="subNav">
-          <a href='{{UrlForCategory "subsite_xs_xmtz"}}'>项目通知</a>
-          <a href='{{UrlForCategory "subsite_xs_zxyjxm"}}'>专项研究项目</a>
-        </div>
-      </li>
-      <li>
-        <a href="#">用人单位</a>
-      </li>
-      <li>
-        <a href="">创业天地 </a>
-        <div class="subNav">
-          <a href='{{UrlForCategory "subsite_jyfw_zcwj"}}'>政策文件</a>
-          <a href='{{UrlForCategory "subsite_jyfw_jyzd"}}'>就业指导</a>
-          <a href='{{UrlForCategory "subsite_jyfw_zygh"}}'>职业规划</a>
-          <a href='{{UrlForCategory "subsite_jyfw_cyfw"}}'>创业服务</a>
-        </div>
-      </li>
-      <li>
-        <a href='{{UrlForCategory "subsite_xzzx_cyxz"}}'>下载中心</a>
-      </li>
-      <li>
-        <a href="">关于我们</a>
-        <div class="subNav">
-          <a href="javascript:void(0)">企业白名单</a>
-          <a href="javascript:void(0)">产品白名单</a>
-        </div>
-      </li>
-
+      {{$menus := SiteMenu $.site.SiteID}}
+        {{range $index,$item := $menus}}
+          <li>
+            {{$url := eq $item.LinkURL ""}}
+            <a href='{{IIF $url "" $item.LinkURL}}'  {{if ne $item.Target "" }} target='{{$item.Target}}' {{end}}>{{$item.Title}}</a>
+            {{if $item.Children}}
+            <div class="subNav">
+              {{range $item.Children}}
+              <a href="{{.LinkURL}}" {{if ne $item.Target "" }}targent='{{$item.Target}}' {{end}}>{{.Title}}</a>
+              {{end}}
+            </div>
+            {{end}}
+          </li>
+      {{end}}
     </ul>
   </div>
 </div>
@@ -82,33 +66,20 @@
     <li>
       <a href="index.html">首页</a>
     </li>
+    {{$menus := SiteMenu $.site.SiteID}}
+    {{range $index,$item := $menus}}
     <li>
-      <a href="#">学生</a>
-      <i></i>
-      <div class="list">
-        <a href='{{UrlForCategory "subsite_xs_xmtz"}}'>项目通知</a>
-        <a href='{{UrlForCategory "subsite_xs_zxyjxm"}}'>专项研究项目</a>
+      {{$url := eq $item.LinkURL ""}}
+      <a href='{{IIF $url "" $item.LinkURL}}'  {{if ne $item.Target "" }} target='{{$item.Target}}' {{end}}>{{$item.Title}}</a>
+      {{if $item.Children}}
+      <div class="subNav">
+        {{range $item.Children}}
+        <a href="{{.LinkURL}}" {{if ne $item.Target "" }}targent='{{$item.Target}}' {{end}}>{{.Title}}</a>
+        {{end}}
       </div>
+      {{end}}
     </li>
-    <li>
-      <a href="#">就业单位</a>
-    </li>
-    <li>
-      <a href="">创业天地 </a>
-      <i></i>
-      <div class="list">
-        <a href='{{UrlForCategory "subsite_jyfw_zcwj"}}'>政策文件</a>
-        <a href='{{UrlForCategory "subsite_jyfw_jyzd"}}'>就业指导</a>
-        <a href='{{UrlForCategory "subsite_jyfw_zygh"}}'>职业规划</a>
-        <a href='{{UrlForCategory "subsite_jyfw_cyfw"}}'>创业服务</a>
-      </div>
-    </li>
-    <li>
-      <a href='{{UrlForCategory "subsite_xzzx_cyxz"}}'>下载中心</a>
-    </li>
-    <li>
-      <a href="">关于我们</a>
-    </li>
+    {{end}}
   </ul>
   <div class="close">×</div>
 </div>

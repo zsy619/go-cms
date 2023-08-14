@@ -21,36 +21,11 @@
                 <div class="subcon" style="background-color: #fff;">
                     <div class="list">
                         <ul id="articleList">
-                            <li>
-                                <div class="news">
-                                    <div class="fl">
-                                        <div class="top">19</div>
-                                        <div class="bottom">2023-12</div>
-                                    </div>
-                                    <div class="fr">
-                                        <a href="导航详情页.html">
-                                            <div class="tit">
-                                                国务院办公厅关于进一步支持大学生创新创业的指导意见
-                                            </div>
-                                            <div class="sub">
-                                                国务院办公厅关于进一步支持大学生创新创业的指导意见国办发〔2021〕35号
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                            </li>
                         </ul>
 
                     </div>
                     <div id="pagination" class="pagination"></div>
                 </div>
-                <!--<div class="subcon">
-                    <div class="list">
-                        <ul id="articleList">
-                        </ul>
-                    </div>
-                    <div id="pagination" class="pagination"></div>
-                </div>-->
             </div>
         </div>
 
@@ -59,6 +34,12 @@
 </div>
 <!-- footer -->
 {{TemplateTheme $.siteTheme "_footer.html" .}}
+<script id="templateEmpty" type="text/template">
+    <div style="text-align: center; padding-bottom: 10rem; padding-top: 2rem">
+        <img src="{{.siteStatic}}images/state_img3.png" class="img"/>
+        <p class="tip">暂无数据</p>
+    </div>
+</script>
 <script type="text/javascript">
     var siteStatic = "{{.siteStatic}}";
     var channelName = "{{.channelName}}";
@@ -113,23 +94,21 @@
                     }
                     $(".total").html("共" + res.count + "条");
                     if (res.count == 0) {
-                        $(".list-ul").html($("#templateEmpty").html());
+                        $("#articleList").html($("#templateEmpty").html());
                     }
-                    if (page === 1 && len > 0) {
-                        laypage.render({
-                            elem: 'pagination'
-                            , limit: 10
-                            , prev: '上页'
-                            , next: '下页'
-                            , limits: [10, 20, 30, 40, 50, 100]
-                            , count: res.count //数据总数，从服务端得到
-                            , jump: function (obj, first) {
-                                if (!first) {
-                                    GetArticleList(obj.curr, obj.limit);
-                                }
+                    laypage.render({
+                        elem: 'pagination'
+                        , limit: 10
+                        , prev: '上页'
+                        , next: '下页'
+                        , limits: [10, 20, 30, 40, 50, 100]
+                        , count: res.count //数据总数，从服务端得到
+                        , jump: function (obj, first) {
+                            if (!first) {
+                                GetArticleList(obj.curr, obj.limit);
                             }
-                        });
-                    }
+                        }
+                    });
                 }
             }, function (){
 
