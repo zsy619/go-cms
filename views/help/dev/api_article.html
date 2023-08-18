@@ -42,10 +42,11 @@
                         </tr>
                         <tr>
                             <td>
-                                <p>/api/category/get/:channel_name:string</p>
+                                <p>/api/category/get</p>
                             </td>
                             <td>
                                 {string} channel_name 频道名称
+                                {string} call_index 栏目别名
                             </td>
                             <td><a href="#category2">查看</a></td>
                             <td>获取栏目列表</td>
@@ -111,6 +112,7 @@
                                 {int64} channel_id 频道ID<br>
                                 {int64} category_id 栏目ID<br>
                                 {string} call_index 栏目别名<br>
+                                {string} keyword 关键词：按标题、摘要进行搜索<br>
                                 {int} is_top 是否置顶<br>
                                 {int} is_red 是否推荐<br>
                                 {int} is_hot 是否热门<br>
