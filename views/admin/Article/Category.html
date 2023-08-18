@@ -308,6 +308,7 @@
                             if (data.code == CodeSuccess) {
                                 layer.msg("删除成功", { icon: 1, time: 1000 }, function () {
                                     $('button[lay-filter="data-search-btn"]').click();
+                                    location.reload();
                                 });
                             } else {
                                 layer.msg(data.msg, { icon: 2, time: 1000 });
