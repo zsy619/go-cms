@@ -35,19 +35,19 @@ func (this *ApiArticleController) CategoryNav() {
 /**
  * @description: CategoryGet 获取栏目列表
  * @param {string} channel_name 频道名称
+ * @param {string} call_index 栏目别名
  * @return {*}
  */
 // @router /api/category/get [get]
-// @router /api/category/get/:channel_name:string [get]
 func (this *ApiArticleController) CategoryGet() {
 	channel_name := this.GetString("channel_name")
-	if channel_name == "" {
-		channel_name = this.Ctx.Input.Param(":channel_name")
+	call_index := this.GetString("call_index")
+
+	if channel_name == "" && call_index == "" {
+		this.JSONErrorOfData("频道编码或栏目编码不能为空", nil)
 	}
-	if channel_name == "" {
-		this.JSONErrorOfData("频道名称不能为空", nil)
-	}
-	outChannel, count, err := this.BaseController.CategoryGet(channel_name)
+
+	outChannel, count, err := this.BaseController.CategoryGet(channel_name, call_index)
 	if err != nil {
 		this.JSONPage(lib.CodeError, err.Error(), outChannel, count)
 	}

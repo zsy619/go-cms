@@ -149,10 +149,11 @@ func (this *BaseController) CategoryNav(channel_name string, channel_id int64, c
 /**
  * @description: CategoryGet 获取栏目列表
  * @param {string} channel_name 频道名称
+ * @param {string} call_index 栏目别名
  * @return {*}
  */
-func (this *BaseController) CategoryGet(channel_name string) ([]*bizmodel.ApiCategoryGetModel, int64, error) {
-	return biz.NewApiArticle().CategoryGet(channel_name)
+func (this *BaseController) CategoryGet(channel_name, call_index string) ([]*bizmodel.ApiCategoryGetModel, int64, error) {
+	return biz.NewApiArticle().CategoryGet(channel_name, call_index)
 }
 
 /**

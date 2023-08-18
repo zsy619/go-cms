@@ -122,9 +122,10 @@ func (this *ApiArticle) CategoryNav(channel_name string, channel_id int64, call_
 /**
  * @description: CategoryGet 获取栏目列表
  * @param {string} channel_name 频道名称
+ * @param {string} call_index 栏目别名
  * @return {*}
  */
-func (this *ApiArticle) CategoryGet(channel_name string) ([]*bizmodel.ApiCategoryGetModel, int64, error) {
+func (this *ApiArticle) CategoryGet(channel_name, call_index string) ([]*bizmodel.ApiCategoryGetModel, int64, error) {
 	cacheKey := fmt.Sprintf("ApiArticle_CategoryGet_%s", channel_name)
 	if found, item := lib.CategoryGetCache.Get(cacheKey); found {
 		list := item.([]*bizmodel.ApiCategoryGetModel)
@@ -133,8 +134,21 @@ func (this *ApiArticle) CategoryGet(channel_name string) ([]*bizmodel.ApiCategor
 	list := make([]*bizmodel.ApiCategoryGetModel, 0)
 	_, do := query.CmsArticleCategoryDo()
 	sqlSelect := "b.`name` as channel_name,b.title as channel_title,a.category_id,a.parent_id,a.site_id,a.channel_id,a.title,a.call_index,a.class_layer,a.link_url,a.img_url1,a.img_url2,a.sort_id,a.is_show,a.is_search,a.is_deleted"
-	sql := "SELECT " + sqlSelect + " FROM cms_article_category a LEFT JOIN cms_site_channel b ON a.channel_id=b.channel_id WHERE a.is_deleted=0 AND a.`status`=2 AND a.`is_show`=1 AND b.`name`=? ORDER BY a.sort_id"
-	err := do.UnderlyingDB().Raw(sql, channel_name).Scan(&list).Error
+	sql := ""
+	if channel_name != "" {
+		sql = "SELECT " + sqlSelect + " FROM cms_article_category a LEFT JOIN cms_site_channel b ON a.channel_id=b.channel_id WHERE a.is_deleted=0 AND a.`status`=2 AND a.`is_show`=1 " +
+			xgeneric.IFF(channel_name == "", "", " AND b.`name`='"+channel_name+"'") +
+			" ORDER BY a.sort_id"
+	} else {
+		sql = "SELECT " + sqlSelect + " FROM cms_article_category a" +
+			" LEFT JOIN cms_article_category c ON a.parent_id=c.category_id" +
+			" LEFT JOIN cms_site_channel b ON a.channel_id=b.channel_id" +
+			" WHERE a.is_deleted=0 AND a.`status`=2 AND a.`is_show`=1 " +
+			xgeneric.IFF(call_index == "", "", " AND c.`call_index`='"+call_index+"'") +
+			" ORDER BY a.sort_id"
+	}
+
+	err := do.UnderlyingDB().Raw(sql).Scan(&list).Error
 	if err != nil {
 		return nil, 0, err
 	}

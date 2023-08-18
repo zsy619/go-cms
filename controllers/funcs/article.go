@@ -99,7 +99,7 @@ func CategoryGet(channel_name string) []*bizmodel.ApiCategoryGetModel {
 	if channel_name == "" {
 		return []*bizmodel.ApiCategoryGetModel{}
 	}
-	find, _, err := biz.NewApiArticle().CategoryGet(channel_name)
+	find, _, err := biz.NewApiArticle().CategoryGet(channel_name, "")
 	if err != nil {
 		find = []*bizmodel.ApiCategoryGetModel{}
 	}
