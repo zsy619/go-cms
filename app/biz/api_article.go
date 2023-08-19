@@ -126,7 +126,7 @@ func (this *ApiArticle) CategoryNav(channel_name string, channel_id int64, call_
  * @return {*}
  */
 func (this *ApiArticle) CategoryGet(channel_name, call_index string) ([]*bizmodel.ApiCategoryGetModel, int64, error) {
-	cacheKey := fmt.Sprintf("ApiArticle_CategoryGet_%s", channel_name)
+	cacheKey := fmt.Sprintf("ApiArticle_CategoryGet_%s_%s", channel_name, call_index)
 	if found, item := lib.CategoryGetCache.Get(cacheKey); found {
 		list := item.([]*bizmodel.ApiCategoryGetModel)
 		return list, int64(len(list)), nil
