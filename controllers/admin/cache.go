@@ -14,15 +14,15 @@ func (this *CacheController) Index() {
 func (this *CacheController) GetList() {
 	items := []*lib.CacheItemModel{
 		// 导航相关缓存
-		{Key: lib.NavGetCache.Key, Len: lib.NavGetCache.Length(), Note: lib.NavGetCache.Note, Expired: lib.NavGetCache.Expired},
+		{Key: lib.NavGetCache.Key, Len: lib.NavGetCache.Length() + lib.NavGetByFlagCache.Length() + lib.NavCategoryGetCache.Length(), Note: lib.NavGetCache.Note, Expired: lib.NavGetCache.Expired},
 		// 站点相关缓存
-		{Key: lib.SiteCache.Key, Len: lib.SiteCache.Length(), Note: lib.SiteCache.Note, Expired: lib.SiteCache.Expired},
+		{Key: lib.SiteCache.Key, Len: lib.SiteCache.Length() + lib.SiteFindCache.Length(), Note: lib.SiteCache.Note, Expired: lib.SiteCache.Expired},
 		// 频道相关缓存
-		{Key: lib.ChannelCache.Key, Len: lib.ChannelCache.Length(), Note: lib.ChannelCache.Note, Expired: lib.ChannelCache.Expired},
+		{Key: lib.ChannelCache.Key, Len: lib.ChannelCache.Length() + lib.ChannelGetCache.Length(), Note: lib.ChannelCache.Note, Expired: lib.ChannelCache.Expired},
 		// 栏目相关缓存
-		{Key: lib.CategoryNavCache.Key, Len: lib.CategoryNavCache.Length(), Note: lib.CategoryNavCache.Note, Expired: lib.CategoryNavCache.Expired},
+		{Key: lib.CategoryNavCache.Key, Len: lib.CategoryNavCache.Length() + lib.CategoryGetCache.Length() + lib.CategoryFindCache.Length(), Note: lib.CategoryNavCache.Note, Expired: lib.CategoryNavCache.Expired},
 		// 内容相关缓存
-		{Key: lib.ArticleCache.Key, Len: lib.ArticleCache.Length(), Note: lib.ArticleCache.Note, Expired: lib.ArticleCache.Expired},
+		{Key: lib.ArticleCache.Key, Len: lib.ArticleCache.Length(), Note: lib.ArticleCache.Note + lib.ArticleGetNewCache.Note, Expired: lib.ArticleCache.Expired},
 		// 系统通知公告缓存
 		{Key: lib.NoticeCache.Key, Len: lib.NoticeCache.Length(), Note: lib.NoticeCache.Note, Expired: lib.NoticeCache.Expired},
 		// 广告缓存
@@ -30,11 +30,11 @@ func (this *CacheController) GetList() {
 		// 链接缓存
 		{Key: lib.LinkCache.Key, Len: lib.LinkCache.Length(), Note: lib.LinkCache.Note, Expired: lib.LinkCache.Expired},
 		// 标签缓存
-		{Key: lib.TagCache.Key, Len: lib.TagCache.Length(), Note: lib.TagCache.Note, Expired: lib.TagCache.Expired},
+		{Key: lib.TagCache.Key, Len: lib.TagCache.Length() + lib.TagFindCache.Length() + lib.TagArticleCache.Length(), Note: lib.TagCache.Note, Expired: lib.TagCache.Expired},
 		// 专题缓存
-		{Key: lib.TopicCache.Key, Len: lib.TopicCache.Length(), Note: lib.TopicCache.Note, Expired: lib.TopicCache.Expired},
+		{Key: lib.TopicCache.Key, Len: lib.TopicCache.Length() + lib.TopicFindCache.Length() + lib.TopicArticleCache.Length(), Note: lib.TopicCache.Note, Expired: lib.TopicCache.Expired},
 		// 微信缓存
-		{Key: lib.WechatAccountCache.Key, Len: lib.WechatAccountCache.Length(), Note: lib.WechatAccountCache.Note, Expired: lib.WechatAccountCache.Expired},
+		{Key: lib.WechatAccountCache.Key, Len: lib.WechatAccountCache.Length() + lib.WechatVerifyCache.Length(), Note: lib.WechatAccountCache.Note, Expired: lib.WechatAccountCache.Expired},
 
 		/*{Key: lib.CategoryNavCache.Key, Len: lib.CategoryNavCache.Length(), Note: lib.CategoryNavCache.Note, Expired: lib.CategoryNavCache.Expired},
 		{Key: lib.CategoryGetCache.Key, Len: lib.CategoryGetCache.Length(), Note: lib.CategoryGetCache.Note, Expired: lib.CategoryGetCache.Expired},
