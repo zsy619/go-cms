@@ -1,6 +1,6 @@
 <div class="layuimini-container">
-    <div class="layuimini-main">
-        <!-- <fieldset class="table-search-fieldset">
+	<div class="layuimini-main">
+		<!-- <fieldset class="table-search-fieldset">
             <legend>搜索信息</legend>
             <div style="margin: 10px 10px 10px 10px">
                 <form class="layui-form layui-form-pane" action="">
@@ -24,11 +24,11 @@
                 </form>
             </div>
         </fieldset> -->
-        <div class="layui-inline" style="display: none;">
-            <button type="submit" class="layui-btn layui-btn-primary layui-btn-radius" lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
-        </div>
-        <table class="layui-hide" id="tableContainer" lay-filter="currentTableFilter"></table>
-    </div>
+		<div class="layui-inline" style="display: none;">
+			<button type="submit" class="layui-btn layui-btn-primary layui-btn-radius" lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+		</div>
+		<table class="layui-hide" id="tableContainer" lay-filter="currentTableFilter"></table>
+	</div>
 </div>
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container layui-btn-group">
@@ -38,288 +38,290 @@
     </div>
 </script>
 <script>
-    var channelId = parseInt("{{.channelId}}");
-    layui.use(['form', 'table', 'layer', 'wangEditor', 'upload', 'treetable'], function () {
-        var form = layui.form;
-        var $ = layui.jquery,
-            layer = layui.layer,
-            wangEditor = layui.wangEditor;
-        var upload = layui.upload;
-        var treetable = layui.treetable;
-        var table = layui.table;
+	var channelId = parseInt("{{.channelId}}");
+	layui.use(['form', 'table', 'layer', 'wangEditor', 'upload', 'treetable'], function () {
+		var form = layui.form;
+		var $ = layui.jquery,
+			layer = layui.layer,
+			wangEditor = layui.wangEditor;
+		var upload = layui.upload;
+		var treetable = layui.treetable;
+		var table = layui.table;
 
-        layer.load(2);
-        treetable.render({
-            treeColIndex: 0,
-            treeSpid: 0,
-            treeIdName: 'category_id',
-            treePidName: 'parent_id',
-            elem: '#tableContainer',
-            url: '/admin/article/categoryfind?channelId=' + channelId,
-            toolbar: '#toolbarDemo',
-            height: "full",
-            defaultToolbar: ['filter', 'exports', 'print'],
-            cols: [[
-                // { type: "checkbox", width: 50 },
-                { field: 'category_id', width: 110, title: 'ID' },
-                {
-                    field: 'title', title: '类别标题', templet: function (d) {
-                        var label = '';
-                        switch (d.status) {
-                            case 2:
-                                label = '<span class="layui-badge-dot layui-bg-green"></span>';
-                                break;
-                            case 3:
-                                label = '<span class="layui-badge-dot"></span>';
-                                break;
-                            default:
-                                label = '<span class="layui-badge-dot layui-bg-black"></span>';
-                                break;
-                        }
-                        return label + "&nbsp;" + d.title;
-                    }
-                },
-                { field: 'call_index', minWidth: 150, title: '调用别名' },
-                { field: 'link_url', title: '外部链接', minWidth: 150 },
-                { field: 'tmpl_cat', title: '栏目模板' },
-                { field: 'tmpl_lst', title: '列表模板' },
-                { field: 'tmpl_dtl', title: '明细模板' },
-                {
-                    field: 'img_url1', title: '图片地址', width: 150, templet: function (d) {
-                        if (d.img_url1 != "") {
-                            return '<img src="' + d.img_url1 + '" style="max-width: 100px;max-height: 100px;" />';
-                        }
-                        return "";
-                    }
-                },
-                {
-                    field: 'status', title: '状态', width: 80, align: "center", templet: function (d) {
-                        var outText = d.status == 2 ? '<span class="layui-badge layui-bg-green">通过</span>' : (d.status == 3 ? '<span class="layui-badge">拒绝</span>' : '<span class="layui-badge layui-bg-gray">草稿</span>');
-                        return outText;
-                    }
-                },
-                {
-                    field: 'is_show', title: '显示', width: 80, align: "center", templet: function (d) {
-                        return d.is_show == 1 ? '√' : "×";
-                    }
-                },
-                {
-                    field: 'is_search', title: '检索', width: 80, align: "center", templet: function (d) {
-                        return d.is_search == 1 ? '√' : "×";
-                    }
-                },
-                {
-                    field: 'sort_id', width: 100, align: "center", title: '排序', templet: function (d) {
-                        return '<input type="number" name="sort_id" category_id="' + d.category_id + '" value="' + d.sort_id + '" class="layui-input" style="" />';
-                    }
-                },
-                { title: '操作', width: 210, align: "center", fixed: "right", templet: function (d){
-                        var htmlValue = "<div class=\"layui-btn-container layui-btn-group\">\n";
-                        if ("{{.roleMap}}" != null && "{{.roleMap.IsSuccess}}" === "true") {
-                            if ("{{.roleMap.IsHasEdit}}" === "true") {
-                                htmlValue += "<a class=\"layui-btn layui-btn-normal layui-btn-xs data-count-edit layui-btn-radius\" lay-event=\"edit\"><i class=\"layui-icon layui-icon-edit\"></i>编辑</a>\n";
-                            }
-                            if ("{{.roleMap.IsHasAdd}}" === "true") {
-                                htmlValue += "<a class=\"layui-btn layui-btn-primary layui-btn-xs data-count-add layui-btn-radius\" lay-event=\"add\"><i class=\"layui-icon layui-icon-add-circle\"></i>添加子类</a>\n";
-                            }
-                            if ("{{.roleMap.IsHasDelete}}" === "true") {
-                                htmlValue += "<a class=\"layui-btn layui-btn-xs layui-btn-danger data-count-delete layui-btn-radius\" lay-event=\"delete\"><i class=\"layui-icon layui-icon-close\"></i>删除</a>\n";
-                            }
-                        }
-                        htmlValue += "</div>";
-                        return htmlValue;
-                    } }
-            ]],
-            limits: [10, 15, 20, 25, 50, 100],
-            limit: 20,
-            page: false,
-            // skin: 'line',
-            even: true,
-            size: 'lg',
-            done: function () {
-                layer.closeAll('loading');
-                $(".layui-table-main tr").each(function (index, val) {
-                    $(".layui-table-fixed").each(function () {
-                        $($(this).find(".layui-table-body tbody tr")[index]).height($(val).height());
-                    });
-                });
-                $(".layui-table-header tr").each(function (index, val) {
-                    $(".layui-table-fixed").each(function () {
-                        $($(this).find(".layui-table-header thead tr")[index]).height($(val).height());
-                    });
-                });
-            },
-            before: function (){
-                if ("{{.roleMap}}" != null && "{{.roleMap.IsSuccess}}" === "true"){
-                    if ("{{.roleMap.IsHasAdd}}" === "false"){
-                        $("button[lay-event='add']").remove();
-                    }
-                    if ("{{.roleMap.IsHasEdit}}" === "false"){
-                        $("button[lay-event='save']").remove();
-                        $("button[lay-event='url']").remove();
-                    }
-                }
-            }
-        });
+		layer.load(2);
+		treetable.render({
+			treeColIndex: 0,
+			treeSpid: 0,
+			treeIdName: 'category_id',
+			treePidName: 'parent_id',
+			elem: '#tableContainer',
+			url: '/admin/article/categoryfind?channelId=' + channelId,
+			toolbar: '#toolbarDemo',
+			height: "full",
+			defaultToolbar: ['filter', 'exports', 'print'],
+			cols: [[
+				// { type: "checkbox", width: 50 },
+				{ field: 'category_id', width: 200, title: 'ID' },
+				{
+					field: 'title', title: '类别标题', templet: function (d) {
+						var label = '';
+						switch (d.status) {
+							case 2:
+								label = '<span class="layui-badge-dot layui-bg-green"></span>';
+								break;
+							case 3:
+								label = '<span class="layui-badge-dot"></span>';
+								break;
+							default:
+								label = '<span class="layui-badge-dot layui-bg-black"></span>';
+								break;
+						}
+						return label + "&nbsp;" + d.title;
+					}
+				},
+				{ field: 'call_index', minWidth: 150, title: '调用别名' },
+				{ field: 'link_url', title: '外部链接', minWidth: 150 },
+				{ field: 'tmpl_cat', title: '栏目模板' },
+				{ field: 'tmpl_lst', title: '列表模板' },
+				{ field: 'tmpl_dtl', title: '明细模板' },
+				{
+					field: 'img_url1', title: '图片地址', width: 150, templet: function (d) {
+						if (d.img_url1 != "") {
+							return '<img src="' + d.img_url1 + '" style="max-width: 100px;max-height: 100px;" />';
+						}
+						return "";
+					}
+				},
+				{
+					field: 'status', title: '状态', width: 80, align: "center", templet: function (d) {
+						var outText = d.status == 2 ? '<span class="layui-badge layui-bg-green">通过</span>' : (d.status == 3 ? '<span class="layui-badge">拒绝</span>' : '<span class="layui-badge layui-bg-gray">草稿</span>');
+						return outText;
+					}
+				},
+				{
+					field: 'is_show', title: '显示', width: 80, align: "center", templet: function (d) {
+						return d.is_show == 1 ? '√' : "×";
+					}
+				},
+				{
+					field: 'is_search', title: '检索', width: 80, align: "center", templet: function (d) {
+						return d.is_search == 1 ? '√' : "×";
+					}
+				},
+				{
+					field: 'sort_id', width: 100, align: "center", title: '排序', templet: function (d) {
+						return '<input type="number" name="sort_id" category_id="' + d.category_id + '" value="' + d.sort_id + '" class="layui-input" style="" />';
+					}
+				},
+				{
+					title: '操作', width: 210, align: "center", fixed: "right", templet: function (d) {
+						var htmlValue = "<div class=\"layui-btn-container layui-btn-group\">\n";
+						if ("{{.roleMap}}" != null && "{{.roleMap.IsSuccess}}" === "true") {
+							if ("{{.roleMap.IsHasEdit}}" === "true") {
+								htmlValue += "<a class=\"layui-btn layui-btn-normal layui-btn-xs data-count-edit layui-btn-radius\" lay-event=\"edit\"><i class=\"layui-icon layui-icon-edit\"></i>编辑</a>\n";
+							}
+							if ("{{.roleMap.IsHasAdd}}" === "true") {
+								htmlValue += "<a class=\"layui-btn layui-btn-primary layui-btn-xs data-count-add layui-btn-radius\" lay-event=\"add\"><i class=\"layui-icon layui-icon-add-circle\"></i>添加子类</a>\n";
+							}
+							if ("{{.roleMap.IsHasDelete}}" === "true") {
+								htmlValue += "<a class=\"layui-btn layui-btn-xs layui-btn-danger data-count-delete layui-btn-radius\" lay-event=\"delete\"><i class=\"layui-icon layui-icon-close\"></i>删除</a>\n";
+							}
+						}
+						htmlValue += "</div>";
+						return htmlValue;
+					}
+				}
+			]],
+			limits: [10, 15, 20, 25, 50, 100],
+			limit: 20,
+			page: false,
+			// skin: 'line',
+			even: true,
+			size: 'lg',
+			done: function () {
+				layer.closeAll('loading');
+				$(".layui-table-main tr").each(function (index, val) {
+					$(".layui-table-fixed").each(function () {
+						$($(this).find(".layui-table-body tbody tr")[index]).height($(val).height());
+					});
+				});
+				$(".layui-table-header tr").each(function (index, val) {
+					$(".layui-table-fixed").each(function () {
+						$($(this).find(".layui-table-header thead tr")[index]).height($(val).height());
+					});
+				});
+			},
+			before: function () {
+				if ("{{.roleMap}}" != null && "{{.roleMap.IsSuccess}}" === "true") {
+					if ("{{.roleMap.IsHasAdd}}" === "false") {
+						$("button[lay-event='add']").remove();
+					}
+					if ("{{.roleMap.IsHasEdit}}" === "false") {
+						$("button[lay-event='save']").remove();
+						$("button[lay-event='url']").remove();
+					}
+				}
+			}
+		});
 
-        // 监听搜索操作
-        form.on('submit(data-search-btn)', function (data) {
-            var result = JSON.stringify(data.field);
-            //执行搜索重载
-            table.reload('tableContainer', {
-                page: {
-                    curr: 1
-                }
-                , where: {
-                    // title: $("input[name='title']").val(),
-                    // callIndex: $("input[name='callIndex']").val(),
-                }
-            }, 'data');
+		// 监听搜索操作
+		form.on('submit(data-search-btn)', function (data) {
+			var result = JSON.stringify(data.field);
+			//执行搜索重载
+			table.reload('tableContainer', {
+				page: {
+					curr: 1
+				}
+				, where: {
+					// title: $("input[name='title']").val(),
+					// callIndex: $("input[name='callIndex']").val(),
+				}
+			}, 'data');
 
-            return false;
-        });
+			return false;
+		});
 
-        /**
-         * toolbar监听事件
-         */
-        table.on('toolbar(currentTableFilter)', function (obj) {
-            if (obj.event === 'add') {  // 监听添加操作
-                var index = layer.open({
-                    title: '添加',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin: true,
-                    shadeClose: true,
-                    area: ['100%', '100%'],
-                    content: 'CategoryEdit?channelId=' + channelId,
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-            } else if (obj.event === 'save') {  // 监听保存操作
-                var sorts = [];
-                $("input[name='sort_id']").each(function () {
-                    var sort = {
-                        category_id: parseInt($(this).attr("category_id")),
-                        sort_id: parseInt($(this).val())
-                    };
-                    sorts.push(sort);
-                });
-                $.ajax({
-                    type: "POST",
-                    url: "/admin/article/CategorySaveSortId", //提交的地址
-                    data: JSON.stringify(sorts),
-                    async: false,
-                    beforeSend: function () { //当一个Ajax请求开始时触发
-                        this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
-                    },
-                    error: function (request) {  //失败的话
-                    },
-                    success: function (data) {  //成功
-                        if (data.code == CodeSuccess) {
-                            layer.msg("提交成功", { icon: 1, time: 1000 }, function () {
-                                $('button[lay-filter="data-search-btn"]').click();
-                                location.reload();
-                            });
-                        } else {
-                            layer.msg(data.msg, { icon: 2, time: 1000 });
-                        }
-                    },
-                    complete: function () {
-                        layer.close(this.layerIndex);
-                    },
-                });
-            } else if (obj.event === 'url') {  // 
-                $.ajax({
-                    type: "POST",
-                    url: "/admin/article/CategoryAutoUrl?channelId=" + channelId, //提交的地址
-                    async: false,
-                    beforeSend: function () { //当一个Ajax请求开始时触发
-                        this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
-                    },
-                    error: function (request) {  //失败的话
-                    },
-                    success: function (data) {  //成功
-                        if (data.code == CodeSuccess) {
-                            layer.msg("生成外链成功", { icon: 1, time: 1000 }, function () {
-                                $('button[lay-filter="data-search-btn"]').click();
-                                location.reload();
-                            });
-                        } else {
-                            layer.msg(data.msg, { icon: 2, time: 1000 });
-                        }
-                    },
-                    complete: function () {
-                        layer.close(this.layerIndex);
-                    },
-                });
-            }
-        });
+		/**
+		 * toolbar监听事件
+		 */
+		table.on('toolbar(currentTableFilter)', function (obj) {
+			if (obj.event === 'add') {  // 监听添加操作
+				var index = layer.open({
+					title: '添加',
+					type: 2,
+					shade: 0.2,
+					maxmin: true,
+					shadeClose: true,
+					area: ['100%', '100%'],
+					content: 'CategoryEdit?channelId=' + channelId,
+				});
+				$(window).on("resize", function () {
+					layer.full(index);
+				});
+			} else if (obj.event === 'save') {  // 监听保存操作
+				var sorts = [];
+				$("input[name='sort_id']").each(function () {
+					var sort = {
+						category_id: parseInt($(this).attr("category_id")),
+						sort_id: parseInt($(this).val())
+					};
+					sorts.push(sort);
+				});
+				$.ajax({
+					type: "POST",
+					url: "/admin/article/CategorySaveSortId", //提交的地址
+					data: JSON.stringify(sorts),
+					async: false,
+					beforeSend: function () { //当一个Ajax请求开始时触发
+						this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+					},
+					error: function (request) {  //失败的话
+					},
+					success: function (data) {  //成功
+						if (data.code == CodeSuccess) {
+							layer.msg("提交成功", { icon: 1, time: 1000 }, function () {
+								$('button[lay-filter="data-search-btn"]').click();
+								location.reload();
+							});
+						} else {
+							layer.msg(data.msg, { icon: 2, time: 1000 });
+						}
+					},
+					complete: function () {
+						layer.close(this.layerIndex);
+					},
+				});
+			} else if (obj.event === 'url') {  // 
+				$.ajax({
+					type: "POST",
+					url: "/admin/article/CategoryAutoUrl?channelId=" + channelId, //提交的地址
+					async: false,
+					beforeSend: function () { //当一个Ajax请求开始时触发
+						this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+					},
+					error: function (request) {  //失败的话
+					},
+					success: function (data) {  //成功
+						if (data.code == CodeSuccess) {
+							layer.msg("生成外链成功", { icon: 1, time: 1000 }, function () {
+								$('button[lay-filter="data-search-btn"]').click();
+								location.reload();
+							});
+						} else {
+							layer.msg(data.msg, { icon: 2, time: 1000 });
+						}
+					},
+					complete: function () {
+						layer.close(this.layerIndex);
+					},
+				});
+			}
+		});
 
-        //监听表格复选框选择
-        table.on('checkbox(currentTableFilter)', function (obj) {
-        });
+		//监听表格复选框选择
+		table.on('checkbox(currentTableFilter)', function (obj) {
+		});
 
-        table.on('tool(currentTableFilter)', function (obj) {
-            var data = obj.data;
-            if (obj.event === 'edit') {
-                var index = layer.open({
-                    title: '编辑',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin: true,
-                    shadeClose: true,
-                    area: ['100%', '100%'],
-                    content: 'CategoryEdit?categoryId=' + data.category_id + '&channelId=' + channelId,
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-                return false;
-            } else if (obj.event === 'add') {
-                var index = layer.open({
-                    title: '添加',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin: true,
-                    shadeClose: true,
-                    area: ['100%', '100%'],
-                    content: 'CategoryEdit?parentId=' + data.category_id + '&channelId=' + channelId,
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-                return false;
-            } else if (obj.event === 'delete') {
-                layer.confirm('真的删除行么', function (index) {
-                    $.ajax({
-                        type: "POST",
-                        url: "/admin/article/CategoryDestory", //提交的地址
-                        data: {
-                            "categoryId": data.category_id
-                        },
-                        async: false,
-                        beforeSend: function () { //当一个Ajax请求开始时触发
-                            this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
-                        },
-                        error: function (request) {  //失败的话
-                        },
-                        success: function (data) {  //成功
-                            if (data.code == CodeSuccess) {
-                                layer.msg("删除成功", { icon: 1, time: 1000 }, function () {
-                                    $('button[lay-filter="data-search-btn"]').click();
-                                    location.reload();
-                                });
-                            } else {
-                                layer.msg(data.msg, { icon: 2, time: 1000 });
-                            }
-                        },
-                        complete: function () {
-                            layer.close(this.layerIndex);
-                        },
-                    });
-                });
-            }
-        });
-    });
+		table.on('tool(currentTableFilter)', function (obj) {
+			var data = obj.data;
+			if (obj.event === 'edit') {
+				var index = layer.open({
+					title: '编辑',
+					type: 2,
+					shade: 0.2,
+					maxmin: true,
+					shadeClose: true,
+					area: ['100%', '100%'],
+					content: 'CategoryEdit?categoryId=' + data.category_id + '&channelId=' + channelId,
+				});
+				$(window).on("resize", function () {
+					layer.full(index);
+				});
+				return false;
+			} else if (obj.event === 'add') {
+				var index = layer.open({
+					title: '添加',
+					type: 2,
+					shade: 0.2,
+					maxmin: true,
+					shadeClose: true,
+					area: ['100%', '100%'],
+					content: 'CategoryEdit?parentId=' + data.category_id + '&channelId=' + channelId,
+				});
+				$(window).on("resize", function () {
+					layer.full(index);
+				});
+				return false;
+			} else if (obj.event === 'delete') {
+				layer.confirm('真的删除行么', function (index) {
+					$.ajax({
+						type: "POST",
+						url: "/admin/article/CategoryDestory", //提交的地址
+						data: {
+							"categoryId": data.category_id
+						},
+						async: false,
+						beforeSend: function () { //当一个Ajax请求开始时触发
+							this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+						},
+						error: function (request) {  //失败的话
+						},
+						success: function (data) {  //成功
+							if (data.code == CodeSuccess) {
+								layer.msg("删除成功", { icon: 1, time: 1000 }, function () {
+									$('button[lay-filter="data-search-btn"]').click();
+									location.reload();
+								});
+							} else {
+								layer.msg(data.msg, { icon: 2, time: 1000 });
+							}
+						},
+						complete: function () {
+							layer.close(this.layerIndex);
+						},
+					});
+				});
+			}
+		});
+	});
 </script>
