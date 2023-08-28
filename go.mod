@@ -11,14 +11,14 @@ require (
 	golang.org/x/net v0.14.0
 	gorm.io/driver/mysql v1.5.1
 	gorm.io/gen v0.3.24-0.20230727090726-c4dd631a4944
-	gorm.io/gorm v1.25.3
-	gorm.io/plugin/dbresolver v1.4.6
+	gorm.io/gorm v1.25.4
+	gorm.io/plugin/dbresolver v1.4.7
 	haedu.gov.cn/tools v0.0.0-00010101000000-000000000000
 )
 
 require (
 	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.9.1 // indirect
-	github.com/chromedp/cdproto v0.0.0-20230816033919-17ee49f3eb4f // indirect
+	github.com/chromedp/cdproto v0.0.0-20230828023241-f357fd93b5d6 // indirect
 	github.com/chromedp/chromedp v0.9.2 // indirect
 	github.com/chromedp/sysutil v1.0.0 // indirect
 	github.com/gobwas/httphead v0.1.0 // indirect
