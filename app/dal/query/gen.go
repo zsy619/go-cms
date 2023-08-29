@@ -34,6 +34,7 @@ var (
 	CmsArticleComment          *cmsArticleComment
 	CmsArticleLabel            *cmsArticleLabel
 	CmsArticleLabelRelation    *cmsArticleLabelRelation
+	CmsArticleProperty         *cmsArticleProperty
 	CmsAttach                  *cmsAttach
 	CmsLink                    *cmsLink
 	CmsLinkCategory            *cmsLinkCategory
@@ -73,6 +74,7 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	CmsArticleComment = &Q.CmsArticleComment
 	CmsArticleLabel = &Q.CmsArticleLabel
 	CmsArticleLabelRelation = &Q.CmsArticleLabelRelation
+	CmsArticleProperty = &Q.CmsArticleProperty
 	CmsAttach = &Q.CmsAttach
 	CmsLink = &Q.CmsLink
 	CmsLinkCategory = &Q.CmsLinkCategory
@@ -113,6 +115,7 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		CmsArticleComment:          newCmsArticleComment(db, opts...),
 		CmsArticleLabel:            newCmsArticleLabel(db, opts...),
 		CmsArticleLabelRelation:    newCmsArticleLabelRelation(db, opts...),
+		CmsArticleProperty:         newCmsArticleProperty(db, opts...),
 		CmsAttach:                  newCmsAttach(db, opts...),
 		CmsLink:                    newCmsLink(db, opts...),
 		CmsLinkCategory:            newCmsLinkCategory(db, opts...),
@@ -154,6 +157,7 @@ type Query struct {
 	CmsArticleComment          cmsArticleComment
 	CmsArticleLabel            cmsArticleLabel
 	CmsArticleLabelRelation    cmsArticleLabelRelation
+	CmsArticleProperty         cmsArticleProperty
 	CmsAttach                  cmsAttach
 	CmsLink                    cmsLink
 	CmsLinkCategory            cmsLinkCategory
@@ -196,6 +200,7 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		CmsArticleComment:          q.CmsArticleComment.clone(db),
 		CmsArticleLabel:            q.CmsArticleLabel.clone(db),
 		CmsArticleLabelRelation:    q.CmsArticleLabelRelation.clone(db),
+		CmsArticleProperty:         q.CmsArticleProperty.clone(db),
 		CmsAttach:                  q.CmsAttach.clone(db),
 		CmsLink:                    q.CmsLink.clone(db),
 		CmsLinkCategory:            q.CmsLinkCategory.clone(db),
@@ -245,6 +250,7 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		CmsArticleComment:          q.CmsArticleComment.replaceDB(db),
 		CmsArticleLabel:            q.CmsArticleLabel.replaceDB(db),
 		CmsArticleLabelRelation:    q.CmsArticleLabelRelation.replaceDB(db),
+		CmsArticleProperty:         q.CmsArticleProperty.replaceDB(db),
 		CmsAttach:                  q.CmsAttach.replaceDB(db),
 		CmsLink:                    q.CmsLink.replaceDB(db),
 		CmsLinkCategory:            q.CmsLinkCategory.replaceDB(db),
@@ -284,6 +290,7 @@ type queryCtx struct {
 	CmsArticleComment          *cmsArticleCommentDo
 	CmsArticleLabel            *cmsArticleLabelDo
 	CmsArticleLabelRelation    *cmsArticleLabelRelationDo
+	CmsArticleProperty         *cmsArticlePropertyDo
 	CmsAttach                  *cmsAttachDo
 	CmsLink                    *cmsLinkDo
 	CmsLinkCategory            *cmsLinkCategoryDo
@@ -323,6 +330,7 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 		CmsArticleComment:          q.CmsArticleComment.WithContext(ctx),
 		CmsArticleLabel:            q.CmsArticleLabel.WithContext(ctx),
 		CmsArticleLabelRelation:    q.CmsArticleLabelRelation.WithContext(ctx),
+		CmsArticleProperty:         q.CmsArticleProperty.WithContext(ctx),
 		CmsAttach:                  q.CmsAttach.WithContext(ctx),
 		CmsLink:                    q.CmsLink.WithContext(ctx),
 		CmsLinkCategory:            q.CmsLinkCategory.WithContext(ctx),

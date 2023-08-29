@@ -116,6 +116,12 @@ func CmsArticleCommentDo() (cmsArticleComment, *cmsArticleCommentDo) {
 	return u, u.WithContext(defaultContext).Debug()
 }
 
+// CmsArticlePropertyDo
+func CmsArticlePropertyDo() (cmsArticleProperty, *cmsArticlePropertyDo) {
+	u := Use(dal.CmsDatabase.DB).CmsArticleProperty
+	return u, u.WithContext(defaultContext).Debug()
+}
+
 // CmsLinkCategoryDo
 func CmsLinkCategoryDo() (cmsLinkCategory, *cmsLinkCategoryDo) {
 	u := Use(dal.CmsDatabase.DB).CmsLinkCategory
