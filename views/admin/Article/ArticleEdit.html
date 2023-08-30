@@ -5,6 +5,7 @@
                 <li class="layui-this">基本信息</li>
                 <li>详细描述</li>
                 <li>SEO选项</li>
+                <li>自定义属性</li>
             </ul>
             <div class="layui-tab-content">
                 <div class="layui-tab-item layui-show">
@@ -201,6 +202,9 @@
                         </div>
                     </div>
                 </div>
+                <div class="layui-tab-item">
+                    <table class="layui-hide" style="width: 100%" id="propertyTableContainer" lay-filter="propertyCurrentTableFilter"></table>
+                </div>
             </div>
         </div>
         <div class="layui-form-item">
@@ -211,6 +215,11 @@
         </div>
     </form>
 </div>
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container layui-btn-group">
+        <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"><i class="layui-icon layui-icon-addition"></i>添加</button>
+    </div>
+</script>
 <script type="text/javascript" src="/static/admin/lib/ueditor-plus-v3.0.0/map.js"></script>
 <script>
     // KindEditor.ready(function (K) {
@@ -272,7 +281,9 @@
     //     });
     // });
 
-    layui.use(['form', 'layer', 'wangEditor', 'upload', 'laydate', 'tableSelect', 'treeSelect'], function () {
+    var channelId = parseInt("{{.mdl.ChannelID}}");
+    var articleId = parseInt("{{.mdl.ArticleID}}");
+    layui.use(['form', 'layer', 'wangEditor', 'upload', 'laydate', 'tableSelect', 'treeSelect', 'table'], function () {
         var form = layui.form;
         var $ = layui.jquery,
             layer = layui.layer,
@@ -281,6 +292,7 @@
         var upload = layui.upload;
         var laydate = layui.laydate;
         var treeSelect = layui.treeSelect;
+        var table = layui.table;
 
         tableSelect.render({
             elem: '#btnSelectTopic',
@@ -544,10 +556,30 @@
             $("#myEditor").val(ue.getContent());
             form.submit('frmEdit', function (data) {
                 data.field.content = UE.getEditor('editor').getContent();
+                var propertyList = table.cache['propertyTableContainer'];
+                $("input[name='titlex']").each(function (index, val) {
+                    propertyList[index].title = $(this).val()
+                });
+                $("input[name='call_indexx']").each(function (index, val) {
+                    propertyList[index].call_index = $(this).val()
+                });
+                $("input[name='valuex']").each(function (index, val) {
+                    propertyList[index].value = $(this).val()
+                });
+                $("input[name='sort_idx']").each(function (index, val) {
+                    propertyList[index].sort_id = parseInt($(this).val())
+                });
+                var resultList = []
+                for (let i = 0; i < propertyList.length; i++) {
+                    if(propertyList[i].title != ""){
+                        resultList.push(propertyList[i])
+                    }
+                }
+                var jsonStr = JSON.stringify(resultList);
                 $.ajax({
                     type: "POST", //提交的方法
                     url: "/admin/article/ArticleSave", //提交的地址
-                    data: $('#frmEdit').serialize(), // 序列化表单值
+                    data: $('#frmEdit').serialize()+'&propertyData='+jsonStr, // 序列化表单值
                     async: false,
                     beforeSend: function () { //当一个Ajax请求开始时触发
                         this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
@@ -573,6 +605,170 @@
                 });
             });
             return false;
+        });
+
+        // 自定义属性
+        var propertyTableData = [];
+        getPropertyTableData();
+
+        function getPropertyTableData(){
+            $.ajax({
+                type: "POST", //提交的方法
+                url: '/admin/article/PropertyPaginate?articleId=' + articleId, //提交的地址
+                async: false,
+                beforeSend: function () { //当一个Ajax请求开始时触发
+                },
+                error: function (request) {  //失败的话
+                },
+                success: function (data) {  //成功
+                    if (data.code == CodeSuccess) {
+                        propertyTableData = data.data;
+                        table.reload('propertyTableContainer', {
+                            data: propertyTableData,
+                        });
+                    }
+                },
+                complete: function () {
+                    layer.close(this.layerIndex);
+                },
+            });
+        }
+
+        table.render({
+            elem: '#propertyTableContainer',
+            // url: '/admin/article/PropertyPaginate?articleId=' + articleId,
+            toolbar: '#toolbarDemo',
+            defaultToolbar: ['filter', 'exports', 'print'],
+            cols: [[
+                { field: 'title', title: '属性标题',templet:function(d){
+                        return '<input name="titlex" value="' + d.title + '" class="layui-input" style="" />';
+                        // return '<input value="' + d.title + '" class="layui-input" style="" />';
+                    } },
+                { field: 'call_index', width: 150, title: '调用别名',templet:function(d){
+                        return '<input name="call_indexx" value="' + d.call_index + '" class="layui-input" style="" />';
+                        // return '<input value="' + d.call_index + '" class="layui-input" style="" />';
+                    } },
+                { field: 'value', title: '属性值',templet:function(d){
+                        return '<input name="valuex" value="' + d.value + '" class="layui-input" style="" />';
+                        // return '<input value="' + d.value + '" class="layui-input" style="" />';
+                    }  },
+                {
+                    field: 'sort_id', width: 100, align: "center", title: '排序', templet: function (d) {
+                        return '<input type="number" name="sort_idx" value="' + d.sort_id + '" class="layui-input" style="" />';
+                        // return '<input type="number" value="' + d.sort_id + '" class="layui-input" style="" />';
+                    }
+                },
+                { title: '操作', width: 150, align: "center", fixed: "right", templet: function (d){
+                        var htmlValue = "<div class=\"layui-btn-group\">\n";
+                        if ("{{.roleMap}}" != null && "{{.roleMap.IsSuccess}}" === "true") {
+                            if ("{{.roleMap.IsHasDelete}}" === "true") {
+                                htmlValue += "<a class=\"layui-btn layui-btn-xs layui-btn-danger data-count-delete layui-btn-radius\" lay-event=\"delete\"><i class=\"layui-icon layui-icon-close\"></i>删除</a>\n";
+                            }
+                        }
+                        htmlValue += "</div>";
+                        return htmlValue;
+                    } }
+            ]],
+            // limits: [10, 15, 20, 25, 50, 100],
+            // limit: 20,
+            page: false,
+            even: true,
+            size: 'lg',
+            done: function () {
+                $(".layui-table-main tr").each(function (index, val) {
+                    $(".layui-table-fixed").each(function () {
+                        $($(this).find(".layui-table-body tbody tr")[index]).height($(val).height());
+                    });
+                });
+                $(".layui-table-header tr").each(function (index, val) {
+                    $(".layui-table-fixed").each(function () {
+                        $($(this).find(".layui-table-header thead tr")[index]).height($(val).height());
+                    });
+                });
+            },
+            before: function (){
+                if ("{{.roleMap}}" != null && "{{.roleMap.IsSuccess}}" === "true"){
+                    if ("{{.roleMap.IsHasAdd}}" === "false"){
+                        $("button[lay-event='add']").remove();
+                    }
+                }
+            },
+            data: propertyTableData,
+        });
+
+        table.on('toolbar(propertyCurrentTableFilter)', function (obj) {
+            if (obj.event === 'add') {  // 监听添加操作
+                var tableBak = table.cache['propertyTableContainer'];
+                tableBak.push({
+                    article_id: articleId,
+                    belong_to: "",
+                    call_index: "",
+                    create_id: 0,
+                    create_name: "",
+                    create_time: "",
+                    is_deleted: false,
+                    parent_id: 0,
+                    property_id: 0,
+                    sort_id: 99,
+                    status: 0,
+                    title: "",
+                    update_id: 0,
+                    update_name: "",
+                    update_time: "",
+                    value: "",
+                });
+                table.reload('propertyTableContainer', {
+                    data: tableBak,
+                });
+            }
+        });
+
+        table.on('tool(propertyCurrentTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'delete') {
+                layer.confirm('真的删除这条数据么', function (index) {
+                    var rowIndex = $(obj.tr).attr('data-index');
+                    if(data.property_id <= 0){
+                        layer.close(index);
+                        var tableBak = table.cache['propertyTableContainer'];
+                        tableBak.splice(rowIndex, 1);
+                        table.reload('propertyTableContainer', {
+                            data: tableBak,
+                        });
+                    }else{
+                        $.ajax({
+                            type: "POST",
+                            url: "/admin/article/PropertyDestroy", //提交的地址
+                            data: {
+                                "propertyId": data.property_id
+                            },
+                            async: false,
+                            beforeSend: function () { //当一个Ajax请求开始时触发
+                                this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+                            },
+                            error: function (request) {  //失败的话
+                            },
+                            success: function (data) {  //成功
+                                if (data.code == CodeSuccess) {
+                                    layer.msg("删除成功", { icon: 1, time: 1000 }, function () {
+                                        var tableBak = table.cache['propertyTableContainer'];
+                                        tableBak.splice(rowIndex, 1);
+                                        table.reload('propertyTableContainer', {
+                                            data: tableBak,
+                                        });
+                                    });
+                                } else {
+                                    layer.msg(data.msg, { icon: 2, time: 1000 });
+                                }
+                            },
+                            complete: function () {
+                                layer.closeAll();
+                                layer.close(this.layerIndex);
+                            },
+                        });
+                    }
+                });
+            }
         });
     });
 </script>

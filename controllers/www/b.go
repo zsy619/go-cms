@@ -229,7 +229,7 @@ func (this *BaseController) ArticlePaginate(page, limit int, channel_id int64, c
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *BaseController) ArticleFind(call_index string, article_id int64) (*bizmodel.ApiArticleOneModel, []*bizmodel.ApiAlbumModel, []*bizmodel.ApiAttachModel, error) {
+func (this *BaseController) ArticleFind(call_index string, article_id int64) (*bizmodel.ApiArticleOneModel, []*bizmodel.ApiAlbumModel, []*bizmodel.ApiAttachModel, []*bizmodel.ApiPropertyModel, error) {
 	return biz.NewApiArticle().ArticleFind(call_index, article_id)
 }
 

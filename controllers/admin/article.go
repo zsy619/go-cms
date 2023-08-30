@@ -2,6 +2,7 @@ package admin
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -82,6 +83,7 @@ func (c *ArticleController) ArticleSave() {
 		logs.Error("ArticleSave", err.Error())
 		c.JSONError(err.Error())
 	}
+	propertyData := c.GetString("propertyData", "")
 	if mdl.ArticleID > 0 {
 		mdl.UpdateID = int32(GlobalAdminId)
 		mdl.UpdateName = GlobalAdminName
@@ -132,6 +134,39 @@ func (c *ArticleController) ArticleSave() {
 		logs.Error("ArticleSave", err.Error())
 		c.JSONError(err.Error())
 		return
+	}
+	// 保存自定义属性
+	if propertyData != "" {
+		var propertyList []vmodel.Article_PropertySaveModel
+		err := json.Unmarshal([]byte(propertyData), &propertyList)
+		if err != nil {
+			logs.Error("ArticleSave", err.Error())
+			c.JSONError(err.Error())
+		}
+		for i := 0; i < len(propertyList); i++ {
+			var item model.CmsArticleProperty
+			item.PropertyID = propertyList[i].PropertyID
+			item.ParentID = propertyList[i].ParentID
+			item.ArticleID = propertyList[i].ArticleID
+			item.Title = propertyList[i].Title
+			item.CallIndex = propertyList[i].CallIndex
+			item.Value = propertyList[i].Value
+			item.SortID = propertyList[i].SortID
+			item.Status = propertyList[i].Status
+			item.IsDeleted = propertyList[i].IsDeleted
+			item.BelongTo = propertyList[i].BelongTo
+			item.CreateID = propertyList[i].CreateID
+			item.CreateName = propertyList[i].CreateName
+			item.UpdateID = propertyList[i].UpdateID
+			item.UpdateName = propertyList[i].UpdateName
+
+			if err := biz.NewCmsArticle().PropertySave(&item); err != nil {
+				logs.Error("PropertySave", err.Error())
+				c.JSONError(err.Error())
+				return
+			}
+		}
+
 	}
 	c.JSONSuccess("保存成功", nil)
 }

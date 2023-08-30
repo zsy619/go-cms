@@ -35,7 +35,7 @@ func (c *ArticleController) Detail() {
 		c.Abort("404")
 	}
 	// 获取文章详情
-	articleModel, albumModel, attachModel, err := c.ArticleFind("", article_id)
+	articleModel, albumModel, attachModel, propertyModel, err := c.ArticleFind("", article_id)
 	if err != nil {
 		logs.Error("Detail:", err.Error())
 	}
@@ -44,6 +44,7 @@ func (c *ArticleController) Detail() {
 	c.Data["article"] = articleModel
 	c.Data["album"] = albumModel
 	c.Data["attach"] = attachModel
+	c.Data["property"] = propertyModel
 
 	if articleModel.Template == "" {
 		if articleModel.TmplDtl != "" {

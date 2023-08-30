@@ -43,3 +43,13 @@ type Comment_ChangeStatusModel struct {
 	CommentIds []int64 `json:"comment_ids"`
 	Status     int32   `json:"status"`
 }
+
+type Property_ChangeStatusModel struct {
+	PropertyIds []int64 `json:"property_ids"`
+	Status      int32   `json:"status"`
+}
+
+type Property_SaveSortIdModel struct {
+	PropertyId int64 `json:"property_id"`
+	SortId     int   `json:"sort_id"`
+}

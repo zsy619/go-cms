@@ -348,7 +348,7 @@ func (this *ApiArticle) ArticlePaginate(page, limit int, channel_id int64, chann
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *ApiArticle) ArticleFind(call_index string, article_id int64) (*bizmodel.ApiArticleOneModel, []*bizmodel.ApiAlbumModel, []*bizmodel.ApiAttachModel, error) {
+func (this *ApiArticle) ArticleFind(call_index string, article_id int64) (*bizmodel.ApiArticleOneModel, []*bizmodel.ApiAlbumModel, []*bizmodel.ApiAttachModel, []*bizmodel.ApiPropertyModel, error) {
 	mdl, do := query.CmsArticleDo()
 	if call_index != "" {
 		if article_id <= 0 {
@@ -363,7 +363,7 @@ func (this *ApiArticle) ArticleFind(call_index string, article_id int64) (*bizmo
 	list := &bizmodel.ApiArticleOneModel{}
 	if err := do.Debug().UnderlyingDB().Raw(sql, article_id).Scan(&list).Error; err != nil {
 		logs.Error("Get", err.Error())
-		return list, []*bizmodel.ApiAlbumModel{}, []*bizmodel.ApiAttachModel{}, err
+		return list, []*bizmodel.ApiAlbumModel{}, []*bizmodel.ApiAttachModel{}, []*bizmodel.ApiPropertyModel{}, err
 	}
 
 	albumMdl, alblumDo := query.CmsAlbumDo()
@@ -376,7 +376,14 @@ func (this *ApiArticle) ArticleFind(call_index string, article_id int64) (*bizmo
 	if err := attachDo.Where(attachMdl.TableName_.Eq("article"), attachMdl.RecordID.Eq(article_id), attachMdl.IsShow.Eq(1)).Order(attachMdl.SortID).Scan(&attachs); err != nil {
 		attachs = []*bizmodel.ApiAttachModel{}
 	}
-	return list, albums, attachs, nil
+
+	propertyMdl, propertyDo := query.CmsArticlePropertyDo()
+	propertys := []*bizmodel.ApiPropertyModel{}
+	if err := propertyDo.Where(propertyMdl.ArticleID.Eq(article_id), propertyMdl.IsDeleted.Is(false)).Order(propertyMdl.SortID).Scan(&propertys); err != nil {
+		propertys = []*bizmodel.ApiPropertyModel{}
+	}
+
+	return list, albums, attachs, propertys, nil
 }
 
 /**

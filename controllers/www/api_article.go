@@ -186,11 +186,12 @@ func (this *ApiArticleController) Paginate() {
 func (this *ApiArticleController) Find() {
 	article_id, _ := this.GetInt64("article_id", 0)
 	call_index := this.GetString("call_index")
-	aritcle, album, attatch, err := this.BaseController.ArticleFind(call_index, article_id)
+	aritcle, album, attatch, property, err := this.BaseController.ArticleFind(call_index, article_id)
 	result := bizmodel.ApiArticleModel{
-		Article: aritcle,
-		Album:   album,
-		Attach:  attatch,
+		Article:  aritcle,
+		Album:    album,
+		Attach:   attatch,
+		Property: property,
 	}
 	if err != nil {
 		logs.Error("", err.Error())

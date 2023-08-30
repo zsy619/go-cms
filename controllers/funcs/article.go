@@ -127,18 +127,20 @@ func CategoryFind(category_id int64, call_index string) *bizmodel.ApiCategoryFin
  * @return {*}
  */
 func ArticleFind(call_index string, article_id int64) *bizmodel.ApiArticleModel {
-	find1, find2, find3, err := biz.NewApiArticle().ArticleFind(call_index, article_id)
+	find1, find2, find3, find4, err := biz.NewApiArticle().ArticleFind(call_index, article_id)
 	if err != nil {
 		return &bizmodel.ApiArticleModel{
-			Article: &bizmodel.ApiArticleOneModel{},
-			Album:   []*bizmodel.ApiAlbumModel{},
-			Attach:  []*bizmodel.ApiAttachModel{},
+			Article:  &bizmodel.ApiArticleOneModel{},
+			Album:    []*bizmodel.ApiAlbumModel{},
+			Attach:   []*bizmodel.ApiAttachModel{},
+			Property: []*bizmodel.ApiPropertyModel{},
 		}
 	}
 	result := &bizmodel.ApiArticleModel{
-		Article: find1,
-		Album:   find2,
-		Attach:  find3,
+		Article:  find1,
+		Album:    find2,
+		Attach:   find3,
+		Property: find4,
 	}
 	return result
 }
