@@ -50,42 +50,42 @@
 
 
 UE.plugins["map"] = function () {
-    UE.commands["map"] = {
-        execCommand: function (cmd, obj) {
-            obj.html && this.execCommand("inserthtml", obj.html);
-        }
-    };
-    this.addListener("click", function (type, evt) {
-        var el = evt.target || evt.srcElement,
-            range = this.selection.getRange();
-        var tnode = domUtils.findParent(
-            el,
-            function (node) {
-                if (node.className && domUtils.hasClass(node, "ue_t")) {
-                    return node;
-                }
-            },
-            true
-        );
-        tnode && range.selectNode(tnode).shrinkBoundary().select();
-    });
-    this.addListener("keydown", function (type, evt) {
-        var range = this.selection.getRange();
-        if (!range.collapsed) {
-            if (!evt.ctrlKey && !evt.metaKey && !evt.shiftKey && !evt.altKey) {
-                var tnode = domUtils.findParent(
-                    range.startContainer,
-                    function (node) {
-                        if (node.className && domUtils.hasClass(node, "ue_t")) {
-                            return node;
-                        }
-                    },
-                    true
-                );
-                if (tnode) {
-                    domUtils.removeClasses(tnode, ["ue_t"]);
-                }
-            }
-        }
-    });
+	UE.commands["map"] = {
+		execCommand: function (cmd, obj) {
+			obj.html && this.execCommand("inserthtml", obj.html);
+		}
+	};
+	this.addListener("click", function (type, evt) {
+		var el = evt.target || evt.srcElement,
+			range = this.selection.getRange();
+		var tnode = UE.dom.domUtils.findParent(
+			el,
+			function (node) {
+				if (node.className && UE.dom.domUtils.hasClass(node, "ue_t")) {
+					return node;
+				}
+			},
+			true
+		);
+		tnode && range.selectNode(tnode).shrinkBoundary().select();
+	});
+	this.addListener("keydown", function (type, evt) {
+		var range = this.selection.getRange();
+		if (!range.collapsed) {
+			if (!evt.ctrlKey && !evt.metaKey && !evt.shiftKey && !evt.altKey) {
+				var tnode = UE.dom.domUtils.findParent(
+					range.startContainer,
+					function (node) {
+						if (node.className && UE.dom.domUtils.hasClass(node, "ue_t")) {
+							return node;
+						}
+					},
+					true
+				);
+				if (tnode) {
+					UE.dom.domUtils.removeClasses(tnode, ["ue_t"]);
+				}
+			}
+		}
+	});
 };
