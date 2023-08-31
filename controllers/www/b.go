@@ -303,3 +303,15 @@ func (this *BaseController) ArticleLike(call_index string, article_id int64) err
 func (this *BaseController) AlbumClick(article_id, ablum_id int64) error {
 	return biz.NewApiArticle().AlbumClick(article_id, ablum_id)
 }
+
+/**
+ * @description: Property 内容自定义属性
+ * @param {int64} parentId 父id
+ * @param {int64} articleId 文章id
+ * @param {string} callIndex 属性别名
+ * @param {string} title 属性名称
+ * @return {*}
+ */
+func (this *BaseController) Property(page, limit int, parentId, articleId int64, callIndex, title string) ([]*model.CmsArticleProperty, int64, error) {
+	return biz.NewApiArticle().Property(page, limit, parentId, articleId, callIndex, title)
+}

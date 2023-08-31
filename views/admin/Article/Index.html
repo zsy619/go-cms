@@ -82,7 +82,10 @@
 
         table.render({
             elem: '#tableContainer',
-            url: '/admin/article/ArticlePaginate?status=-1&channelId=' + channelId,
+            url: '/admin/article/ArticlePaginate?channelId='+channelId,
+            where: {
+                status: parseInt($("select[name='status']").val()),
+            },
             toolbar: '#toolbarDemo',
             height: "full-170",
             defaultToolbar: ['filter', 'exports', 'print'],

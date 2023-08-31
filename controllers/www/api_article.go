@@ -339,3 +339,27 @@ func (this *ApiArticleController) AlbumClick() {
 	}
 	this.JSONSuccess("", nil)
 }
+
+/**
+ * @description: Property 内容自定义属性
+ * @param {int64} parentId 父id
+ * @param {int64} articleId 文章id
+ * @param {string} callIndex 属性别名
+ * @param {string} title 属性名称
+ * @return {*}
+ */
+// @router /api/article/property [get]
+func (this *ApiArticleController) Property() {
+	page := 1
+	limit := 99999
+	parentId, _ := this.GetInt64("parentId")
+	articleId, _ := this.GetInt64("articleId")
+	callIndex := this.GetString("callIndex")
+	title := this.GetString("title")
+	property, count, err := this.BaseController.Property(page, limit, parentId, articleId, callIndex, title)
+	if err != nil {
+		logs.Error("Property", err.Error())
+		this.JSONPage(lib.CodeError, err.Error(), property, 0)
+	}
+	this.JSONPageSuccess(property, count)
+}

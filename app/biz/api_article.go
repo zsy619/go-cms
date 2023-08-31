@@ -533,3 +533,20 @@ func (this *ApiArticle) AlbumClick(article_id, ablum_id int64) error {
 	})
 	return err
 }
+
+func (this *ApiArticle) Property(page, limit int, parentId, articleId int64, callIndex, title string) ([]*model.CmsArticleProperty, int64, error) {
+	mdl, do := query.CmsArticlePropertyDo()
+	if parentId > 0 {
+		do = do.Where(mdl.ParentID.Eq(parentId))
+	}
+	if articleId > 0 {
+		do = do.Where(mdl.ArticleID.Eq(articleId))
+	}
+	if callIndex != "" {
+		do = do.Where(mdl.CallIndex.Like("%" + callIndex + "%"))
+	}
+	if title != "" {
+		do = do.Where(mdl.Title.Like("%" + title + "%"))
+	}
+	return do.Where(mdl.IsDeleted.Is(false)).Order(mdl.SortID).FindByPage((page-1)*limit, limit)
+}

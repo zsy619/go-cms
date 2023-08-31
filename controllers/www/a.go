@@ -76,6 +76,7 @@ func init() {
 		web.Router(ApiPrefix+"/article/like", &ApiArticleController{}, "*:Like")
 		web.Router(ApiPrefix+"/article/album/click", &ApiArticleController{}, "*:AlbumClick")
 		web.Router(ApiPrefix+"/article/prev_next", &ApiArticleController{}, "*:PrevNext")
+		web.Router(ApiPrefix+"/article/property", &ApiArticleController{}, "*:Property")
 
 		web.Router(ApiPrefix+"/tag/get", &ApiTagController{}, "*:Get")
 		web.Router(ApiPrefix+"/tag/get/new", &ApiTagController{}, "*:GetNew")
