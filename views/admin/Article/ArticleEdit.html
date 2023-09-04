@@ -611,14 +611,14 @@
 		var propertyTableData = [];
 
 		function tableReload(list){
-			table.reload('tableRefresh', {
+			table.reload('tableContainer', {
 				data: list,
 			});
 		}
 
 		table.render({
 			elem: '#tableContainer',
-			id: 'tableRefresh',
+			id: 'tableContainer',
 			// url: '/admin/article/PropertyPaginate?articleId=' + articleId,
 			toolbar: '#toolbarDemo',
 			defaultToolbar: ['filter', 'exports', 'print'],

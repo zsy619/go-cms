@@ -13,7 +13,7 @@ func (this *CmsArticle) PropertyPaginate(page, limit int, parentId, articleId in
 	if parentId > 0 {
 		do = do.Where(mdl.ParentID.Eq(parentId))
 	}
-	if articleId > 0 {
+	if articleId >= 0 {
 		do = do.Where(mdl.ArticleID.Eq(articleId))
 	}
 	if status >= 0 {

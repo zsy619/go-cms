@@ -539,7 +539,7 @@ func (this *ApiArticle) Property(page, limit int, parentId, articleId int64, cal
 	if parentId > 0 {
 		do = do.Where(mdl.ParentID.Eq(parentId))
 	}
-	if articleId > 0 {
+	if articleId >= 0 {
 		do = do.Where(mdl.ArticleID.Eq(articleId))
 	}
 	if callIndex != "" {
