@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+{{TemplateTheme $.siteTheme "_header.html" .}}
+<body>
+{{TemplateTheme $.siteTheme "_nav.html" .}}
+
+<!-- main -->
+<div class="body bg-white">
+
+    <div class="container show-margin" style="position: relative;">
+        <div class="listCon clearfix">
+            <div class="right" style="width: 100%;">
+                <div class="subnav">
+                    <span>位置：</span>
+                    <a href="/">首页</a>
+                    <span class="division">&gt;</span>
+                    <a href="javascript:void(0)" class="last">活动日历</a>
+                </div>
+                <div class="subcon">
+                    <div class="hdrl">
+                        <div class="left">
+                            <div class="calendar-box">
+                                <div class="layui-inline" id="calendar"></div>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <ul class="layui-timeline" id="dList">
+                            </ul>
+                        </div>
+                    </div>
+                    <div id="pagination" class="pagination"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!--<div class="empty">
+    <img src="images/icon_empty.png" alt="" />
+    <p>没有搜索到相关的内容</p>
+</div>-->
+<!-- footer -->
+{{TemplateTheme $.siteTheme "_footer.html" .}}
+<script id="templateEmpty" type="text/template">
+    <div style="text-align: center; padding-bottom: 10rem; padding-top: 2rem">
+        <img src="{{.siteStatic}}images/state_img3.png" class="img"/>
+        <p class="tip">暂无数据</p>
+    </div>
+</script>
+<script type="text/javascript">
+    layui.use(['laypage', 'laydate'], function() {
+        var laypage = layui.laypage;
+        var laydate = layui.laydate;
+        var curDate = getUrlParams()
+        console.log(curDate.date)
+
+        GetList(1, 10, -1)
+
+        function GetList(page, limit, type){
+            var jobfair = new JobFair();
+            jobfair.getJobFairList({
+                page_size: limit,
+                page: page,
+                type: type
+            }, function (){
+
+            }, function (res){
+                var len = res.list.length;
+                if(len > 0){
+                    $("#dList").html("");
+                    for (var i = 0; i < len; i++) {
+                        var item = res.list[i];
+                        var typeStr = item.type === 2? "线下招聘会": "线上招聘会";
+                        var startDate = item.starttime
+                        var endDate = item.endtime
+                        var startStrs = startDate.split(" ")
+                        var endStrs = endDate.split(" ")
+                        var timeStr = startStrs[1]+"-"+endStrs[1]
+                        var dateStr = startStrs[0].split("-")
+
+                        var html = '<li class="layui-timeline-item">\n' +
+                            '                                    <div class="timeline-time">\n' +
+                            '                                        <div class="timeline-time-date">'+dateStr[2]+'</div>\n' +
+                            '                                        <div class="timeline-time-year">'+dateStr[0]+'-'+dateStr[1]+'</div>\n' +
+                            '                                    </div>\n' +
+                            '                                    <i class="layui-icon layui-timeline-axis"></i>\n' +
+                            '                                    <div class="layui-timeline-content layui-text">\n' +
+                            '                                        <a href="/plugin/jobfair/detail?jId='+item.id+'"><h3 class="layui-timeline-title">'+item.name+'</h3></a>\n' +
+                            '                                        <p>'+typeStr+'</p>\n' +
+                            '                                        <p>'+item.place_name+'</p>\n' +
+                            '                                        <p>'+timeStr+'</p>\n' +
+                            '                                    </div>\n' +
+                            '                                </li>';
+                        $("#dList").append(html);
+                    }
+                }
+                $(".total").html("共" + res.total + "条");
+                if (res.total == 0) {
+                    $("#dList").html($("#templateEmpty").html());
+                }
+                laypage.render({
+                    elem: 'pagination'
+                    , limit: 10
+                    , prev: '上页'
+                    , next: '下页'
+                    , curr: res.page
+                    , limits: [10, 20, 30, 40, 50, 100]
+                    , count: res.total //数据总数，从服务端得到
+                    , jump: function (obj, first) {
+                        if (!first) {
+                            GetList(obj.curr, obj.limit, type);
+                        }
+                    }
+                });
+            }, function (){
+
+            });
+        }
+
+        laydate.render({
+            elem: '#calendar',
+            position: 'static',
+            value:curDate.date,
+            done: function(value, date, endDate) {
+                //window.location.href = '活动日历-时间轴.html?date='+value
+            }
+        });
+    })
+</script>
+</body>
+
+</html>

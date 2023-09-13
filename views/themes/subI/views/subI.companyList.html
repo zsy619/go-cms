@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+{{TemplateTheme $.siteTheme "_header.html" .}}
+<body>
+{{TemplateTheme $.siteTheme "_nav.html" .}}
+<!-- main -->
+<div class="body">
+
+    <div class="container show-margin" style="position: relative;">
+        <div class="subnav" style="padding-top: 10px; padding-bottom: 10px">
+            <img src="{{.siteStatic}}images/position.png" alt="" class="position">
+            <span>位置：</span>
+            <a href="/">首页</a>
+            <span class="division">&gt;</span>
+            <a href="javascript:void(0)" class="last">企业列表</a>
+        </div>
+
+        <div class="jobList flex">
+            <div class="job-flex">
+                <ul id="cList">
+                    <!--<li class="flex">
+                        <a class="logo-box flex" href="">
+                            <img src="../static/images/dw-logo-img1.jpg">
+                        </a>
+                        <div class="comp-desc column-flex">
+                            <a class="c-mid ellipsis"href="/">上勘集团厦门分公司</a>
+                            <p class="c-light">家具/家电<span class="f-line">|</span>民营/股份制企业</p>
+                        </div>
+                        <div class="job-desc column-flex">
+                            <h3>
+                                <a class="c-dark">销售代表/财务会计 /财务会计 /财务会计 /财务会计 </a>
+                            </h3>
+                            <p class="c-light">福建厦门</p>
+                        </div>
+                    </li>-->
+                </ul>
+                <div id="pagination" class="pagination"></div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<!-- footer -->
+{{TemplateTheme $.siteTheme "_footer.html" .}}
+<script id="templateEmpty" type="text/template">
+    <div style="text-align: center; padding-bottom: 10rem; padding-top: 2rem">
+        <img src="{{.siteStatic}}images/state_img3.png" class="img"/>
+        <p class="tip">暂无数据</p>
+    </div>
+</script>
+<script type="text/javascript">
+    var schoolUrl = "{{.site.Flag}}";
+
+    layui.use(['form', 'element', 'laypage', 'layer'], function () {
+        var laypage = layui.laypage,
+            layer = layui.layer;
+
+        GetJobList(1, 10)
+
+        // 获取文章列表
+        function GetJobList(page, limit){
+            var company = new Company();
+            company.getCompanyList({
+                limit: limit,
+                page: page,
+                schoolUrl: schoolUrl
+            }, function (){
+
+            }, function (res){
+                var len = res.company_list.length;
+                if(len > 0){
+                    $("#cList").html("");
+                    for (var i = 0; i < len; i++) {
+                        var item = res.company_list[i];
+                        var html = '<li class="flex">\n' +
+                            '                        <a class="logo-box flex" href="">\n' +
+                            '                            <img src="'+item.companyLogo+'">\n' +
+                            '                        </a>\n' +
+                            '                        <div class="comp-desc column-flex">\n' +
+                            '                            <a class="c-mid ellipsis"href="/plugin/company/detail?cId='+item.id+'">'+item.companyName+'</a>\n' +
+                            '                            <p class="c-light">'+item.industry+'<span class="f-line">|</span>'+item.companyType+'</p>\n' +
+                            '                        </div>\n' +
+                            '                        <div class="job-desc column-flex">\n' +
+                            '                            <h3>\n' +
+                            '                                <a class="c-dark">'+item.jobName+'</a>\n' +
+                            '                            </h3>\n' +
+                            '                            <p class="c-light">'+item.province+item.city+'</p>\n' +
+                            '                        </div>\n' +
+                            '                    </li>';
+                        $("#cList").append(html);
+                    }
+                }
+                $(".total").html("共" + res.total + "条");
+                if (res.total == 0) {
+                    $("#articleList").html($("#templateEmpty").html());
+                }
+                laypage.render({
+                    elem: 'pagination'
+                    , limit: 10
+                    , prev: '上页'
+                    , next: '下页'
+                    , limits: [10, 20, 30, 40, 50, 100]
+                    , curr: res.page
+                    , count: res.total //数据总数，从服务端得到
+                    , jump: function (obj, first) {
+                        if (!first) {
+                            GetJobList(obj.curr, obj.limit);
+                        }
+                    }
+                });
+            }, function (){
+
+            });
+        }
+    })
+</script>
+</body>
+
+</html>

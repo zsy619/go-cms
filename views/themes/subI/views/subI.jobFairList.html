@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+{{TemplateTheme $.siteTheme "_header.html" .}}
+
+<body>
+{{TemplateTheme $.siteTheme "_nav.html" .}}
+<!-- main -->
+<div class="body">
+    <div class="container show-margin" style="position: relative;">
+        <div class="listCon clearfix">
+            <div class="subnav">
+                <img src="{{.siteStatic}}images/position.png" alt="" class="position">
+                <span>位置：</span>
+                <a href="/">首页</a>
+                <span class="division">&gt;</span>
+                <a href="javascript:void(0)" class="last">招聘会列表</a>
+            </div>
+        </div>
+
+        <div class="search search-box">
+            <form>
+                <img src="{{.siteStatic}}images/search_btn.png" alt="" class="icon" />
+                <input type="text" class="search-ipt" placeholder="请输入职位或公司名称">
+                <button name="search">搜索</button>
+            </form>
+        </div>
+
+        <div class="search-choose">
+            <div class="search-nav clearfix">
+                <span class="hd fl">招聘会形式：</span>
+                <div class="bd">
+                    <ul class="work_type">
+                        <li class="search-item on">全部</li>
+                        <li class="search-item">线上招聘会</li>
+                        <li class="search-item">线下招聘会</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="search-result">
+            <div class="zphList">
+                <ul class="clearfix" id="airList">
+                </ul>
+                <div id="pagination" class="pagination"></div>
+            </div>
+            <div class="empty">
+                <img src="{{.siteStatic}}images/icon_empty.png" alt="" />
+                <p>没有搜索到相关的内容</p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- footer -->
+{{TemplateTheme $.siteTheme "_footer.html" .}}
+<script type="text/javascript">
+    var schoolUrl = "{{.site.Flag}}";
+
+    layui.use(['form', 'element', 'laypage', 'layer'], function () {
+        var laypage = layui.laypage,
+            layer = layui.layer;
+
+        GetList(1, 10, -1)
+
+        // 获取文章列表
+        function GetList(page, limit, type){
+            var jobfair = new JobFair();
+            jobfair.getJobFairList({
+                page_size: limit,
+                page: page,
+                type: type
+            }, function (){
+
+            }, function (res){
+                var len = res.list.length;
+                if(len > 0){
+                    $("#airList").html("");
+                    for (var i = 0; i < len; i++) {
+                        var item = res.list[i];
+                        var typeStr = item.type === 2? "线下招聘会": "线上招聘会";
+                        var html = '<li>\n' +
+                            '\t\t\t\t\t\t\t\t<a href="/plugin/jobfair/detail?jId='+item.id+'">\n' +
+                            '\t\t\t\t\t\t\t\t\t<img src="'+item.logopath+'" alt="" class="zph-img"/>\n' +
+                            '\t\t\t\t\t\t\t\t\t<div class="detail">\n' +
+                            '\t\t\t\t\t\t\t\t\t\t<div class="title">'+item.name+'</div>\n' +
+                            '\t\t\t\t\t\t\t\t\t\t<p class="type c-light">'+typeStr+'</p>\n' +
+                            '\t\t\t\t\t\t\t\t\t\t<p class="date c-light">'+item.starttime+'</p>\n' +
+                            '\t\t\t\t\t\t\t\t\t\t<p class="count">'+item.company_count+'家企业，'+item.job_count+'个岗位</p>\n' +
+                            '\t\t\t\t\t\t\t\t\t</div>\n' +
+                            '\t\t\t\t\t\t\t\t</a>\n' +
+                            '\t\t\t\t\t\t\t</li>';
+                        $("#airList").append(html);
+                    }
+                }
+                $(".total").html("共" + res.total + "条");
+                if (res.total == 0) {
+                    $("#articleList").html($("#templateEmpty").html());
+                }
+                laypage.render({
+                    elem: 'pagination'
+                    , limit: 10
+                    , prev: '上页'
+                    , next: '下页'
+                    , limits: [10, 20, 30, 40, 50, 100]
+                    , curr: res.page
+                    , count: res.total //数据总数，从服务端得到
+                    , jump: function (obj, first) {
+                        if (!first) {
+                            GetList(obj.curr, obj.limit, type);
+                        }
+                    }
+                });
+            }, function (){
+
+            });
+        }
+
+        $('.look-all').click(function(){
+            var prevEle = $(this).siblings('ul');
+            if(prevEle.hasClass('showLine')){
+                prevEle.removeClass('showLine');
+                $(this).find('em').attr('class', 'icon_up');
+            }else{
+                prevEle.addClass('showLine');
+                $(this).find('em').attr('class', 'icon_down');
+            }
+        })
+        $('.search-nav ul li').click(function(){
+            $(this).siblings('li').removeClass('on');
+            $(this).addClass('on');
+            var firstItem = $(this).parent().siblings('.search-item');
+            firstItem.removeClass('on')
+
+        })
+        $('.search-nav .search-item').click(function(){
+            $(this).addClass('on');
+            if($(this).parent()[0].nodeName !== 'UL'){
+                $(this).addClass('on');
+                $(this).siblings('ul').children('li').removeClass('on')
+            }
+        })
+    });
+
+</script>
+</body>
+
+</html>

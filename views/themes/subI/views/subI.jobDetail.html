@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+{{TemplateTheme $.siteTheme "_header.html" .}}
+<body>
+{{TemplateTheme $.siteTheme "_nav.html" .}}
+<!-- main -->
+<div class="body">
+    <div class="container show-margin" style="position: relative;">
+        <div class="listCon clearfix">
+            <div class="subnav">
+                <img src="{{.siteStatic}}images/position.png" alt="" class="position">
+                <span>位置：</span>
+                <a href="/">首页</a>
+                <span class="division">&gt;</span>
+                <a href="javascript:void(0)" class="last">职位详情</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container show-margin" style="position: relative;">
+        <div class="position-detail-header">
+            <div class="work-desc" id="d_job">
+            </div>
+
+            <div class="company-desc" id="d_company">
+            </div>
+        </div>
+        <div class="position-detail-box flex">
+            <div class="left">
+                <div class="detail-box">
+                    <div class="head">职位详情</div>
+                    <div class="inner" id="d_job_des">
+                    </div>
+                </div>
+                <div class="detail-box">
+                    <div class="head">工作地址</div>
+                    <div class="inner">
+                        <div class="address-box">
+                            <img src="{{.siteStatic}}images/icon_place.png" alt="" />
+                            <span class="addressVal " id="d_address"></span>
+                        </div>
+                        <div id="locationMap"></div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="right">
+                <div class="detail-box other-position-list">
+                    <div class="head">其他职位</div>
+                    <div class="inner">
+                        <ul class="clearfix">
+                            <li>
+                                <a href="2.1-职位详情.html" class="work-info">
+                                    <p>
+                                        <span class="name">外贸业务员</span>
+                                        <span class="price">4k-20k</span>
+                                    </p>
+                                    <p class="work-other">
+                                        学历不限 <em class="f-line">|</em> 浙江嘉兴
+                                    </p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="2.1-职位详情.html" class="work-info">
+                                    <p>
+                                        <span class="name">质量管理/测试工程师/质量检测员/测试员</span>
+                                        <span class="price">4k-20k</span>
+                                    </p>
+                                    <p class="work-other">
+                                        学历不限 <em class="f-line">|</em> 浙江嘉兴
+                                    </p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="2.1-职位详情.html" class="work-info">
+                                    <p>
+                                        <span class="name">地质勘查/选矿/采矿/生产计划/物料管理</span>
+                                        <span class="price">4k-20k</span>
+                                    </p>
+                                    <p class="work-other">
+                                        学历不限 <em class="f-line">|</em> 浙江嘉兴
+                                    </p>
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="empty">
+                            <img src="{{.siteStatic}}images/icon_empty.png" alt="" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="opc-no-click"></div>
+<div class="popup">
+    <!--定制专属简历范文-->
+    <div id="tmp_resume_modal" class="tmp-resume-popup">
+        <div class="tmp_resume">
+            <p><span>请选择你要投递的简历</span></p>
+            <div class="checkbox-box">
+                <ul>
+                    <li class="checked">
+                        <div class="fl">
+                            <span class="name">在线简历：王明-视觉设计</span>
+                            <span class="wsd resume-no-complete">完善度100%</span>
+                        </div>
+                        <div class="fr btn-box">
+                            <a href="">预览</a>
+                            <span class="divide">|</span>
+                            <a href="">修改</a>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="fl">
+                            <span class="name">在线简历：王明-视觉设计</span>
+                            <span class="wsd resume-no-complete">完善度20%</span>
+                        </div>
+                        <div class="fr btn-box">
+                            <div><a href="">预览</a></div>
+                            <span class="divide">|</span>
+                            <div><a href="">修改</a></div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="fl">
+                            <span class="name">在线简历：王明-视觉设计</span>
+                            <span class="wsd resume-complete">完善度20%</span>
+                        </div>
+                        <div class="fr btn-box">
+                            <div><a href="">预览</a></div>
+                            <span class="divide">|</span>
+                            <div><a href="">修改</a></div>
+                        </div>
+                    </li>
+                    <li class="fj-resume">
+                        <div class="fl">
+                            <span class="name">附件简历：附件二：河南省大中专智慧就业河南省大中专智慧就业河南省大中专智慧就业</span>
+
+                        </div>
+                        <div class="fr btn-box">
+                            <div><a href="">预览</a></div>
+
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="btn-bottom">
+
+                <button class="btn btn-primary">确认投递</button>
+                <button class="btn btn-default">取消投递</button>
+            </div>
+
+
+
+
+        </div>
+    </div>
+</div>
+
+<!-- footer -->
+{{TemplateTheme $.siteTheme "_footer.html" .}}
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak=Cy9sPCrjZ2AAGwMhN1nuoW04FD80hDzc"></script>
+<script type="text/javascript">
+    var jobId = "{{.jId}}"
+    layui.use(['form', 'element', 'laypage', 'layer'], function (){
+        var laypage = layui.laypage,
+            layer = layui.layer;
+
+        getJobDetail();
+
+        function getJobDetail(){
+            var job = new Job();
+            job.getJobDetail({
+                jid: jobId,
+            }, function (){
+
+            }, function (res){
+                if(res.success && res.data != null){
+                    var jobHtml = '<h2 id="d_title">'+res.data.jobName+'\n' +
+                        '                    <span class="salary" id="d_money">'+res.data.payMinx+'-'+res.data.payMaxx+'</span>\n' +
+                        '                </h2>\n' +
+                        '                <p>\n' +
+                        '                    '+res.data.workTypex+'<em class="f-line">|</em>'+res.data.degree+'\n' +
+                        '                    <em class="f-line">|</em> '+res.data.workProvince+res.data.workCity+'\n' +
+                        '                    <em class="f-line">|</em> 截止时间：'+res.data.enddate+'\n' +
+                        '                </p>\n' +
+                        '                <p class="jobtag">'+res.data.jobTag+'</p>\n' +
+                        '                <span class="btn btn-primary btn-deliver">投递</span>\n' +
+                        '                <span class="btn btn-primary">抱歉，本简历已限制投递</span>\n' +
+                        '                <img src="{{.siteStatic}}images/end.png" alt="" class="end"/>';
+                    $("#d_job").append(jobHtml);
+                    var companyHtml = '<a href="/plugin/company/detail?cId='+res.data.id+'" class="clearfix">\n' +
+                        '                    <div class="fl">\n' +
+                        '                        <h2>'+res.data.companyName+'</h2>\n' +
+                        '                        <p>'+res.data.industry+'\n' +
+                        '                            <em class="f-line">|</em> '+res.data.peoples+'\n' +
+                        '                        </p>\n' +
+                        '                    </div>\n' +
+                        '                    <div class="fr">\n' +
+                        '                        <img src="'+res.data.companyLogo+'" alt="" class="logo"/>\n' +
+                        '                    </div>\n' +
+                        '                </a>';
+                    $("#d_company").append(companyHtml);
+                    var detailHtml = '<p class="title">职位描述</p>\n' +
+                        '                        <div>\n' +
+                        '                            <pre class="f_des">'+res.data.jobDescript+'</pre>\n' +
+                        '                        </div>\n' +
+                        '                        <p class="title">任职要求</p>\n' +
+                        '                        <div>'+res.data.jobRequest+'</div>';
+                    $("#d_job_des").append(detailHtml);
+                    $("#d_address").text(res.data.workAddress);
+                }
+            }, function (){
+
+            });
+        }
+    });
+
+    // 地图
+    var map = new BMap.Map("locationMap");
+    map.enableScrollWheelZoom(true);
+    var point = new BMap.Point(116.404, 39.915);
+    map.centerAndZoom(point, 11);
+
+    var local = new BMap.LocalSearch(map, {
+//				renderOptions:{
+//					map: map,
+//					autoViewport: true
+//				}
+    });
+    local.setSearchCompleteCallback(function(result){
+        var poi = result.getPoi(0)
+        map.centerAndZoom(poi.point, 13);
+        // 创建标注，为要查询的地址对应的经纬度
+        var myIcon = new BMap.Icon("../static/images/mark.png", new BMap.Size(32, 32), {
+            anchor: new BMap.Size(10, 25),
+        });
+        var marker = new BMap.Marker(new BMap.Point(poi.point.lng, poi.point.lat),{
+            icon:myIcon,
+        });
+        map.addOverlay(marker);
+        //marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+    })
+    var keyWord = $('.addressVal').html();
+    local.search(keyWord)
+
+    // 初始化地图，设置中心点坐标和地图级别
+    $('.btn-deliver').click(function() {
+        layui.use('layer', function (layer) {
+            layer.open({
+                title: "",
+                type: 1,
+                closeBtn: 1,
+                area: ['560px','400px'],
+                content: $('#tmp_resume_modal')
+            });
+        });
+    })
+
+
+    $('.tmp-resume-popup .checkbox-box li').click(function(){
+        if($(this).hasClass('checked')){
+            $(this).removeClass('checked');
+        }else{
+            $(this).addClass('checked').siblings().removeClass('checked');
+        }
+    })
+</script>
+</body>
+
+</html>

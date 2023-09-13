@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+{{TemplateTheme $.siteTheme "_header.html" .}}
+
+<body>
+{{TemplateTheme $.siteTheme "_nav.html" .}}
+<!-- main -->
+<div class="body">
+    <div class="container show-margin" style="position: relative;">
+        <div class="listCon clearfix">
+            <div class="subnav">
+                <img src="{{.siteStatic}}images/position.png" alt="" class="position">
+                <span>位置：</span>
+                <a href="/">首页</a>
+                <span class="division">&gt;</span>
+                <a href="javascript:void(0)" class="last">宣讲会列表</a>
+            </div>
+        </div>
+
+        <div class="search-result">
+            <div class="zphList">
+                <ul class="clearfix" id="airList">
+                </ul>
+                <div id="pagination" class="pagination"></div>
+            </div>
+            <div class="empty">
+                <img src="{{.siteStatic}}images/icon_empty.png" alt="" />
+                <p>没有搜索到相关的内容</p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- footer -->
+{{TemplateTheme $.siteTheme "_footer.html" .}}
+<script type="text/javascript">
+    var schoolUrl = "{{.site.Flag}}";
+
+    layui.use(['form', 'element', 'laypage', 'layer'], function () {
+        var laypage = layui.laypage,
+            layer = layui.layer;
+
+        GetList(1, 10)
+
+        // 获取文章列表
+        function GetList(page, limit){
+            var air = new AirKeynote();
+            air.getAirKeynoteList({
+                limit: limit,
+                page: page,
+                type: -1,
+                schoolUrl: schoolUrl
+            }, function (){
+
+            }, function (res){
+                if(res.success){
+                    var len = res.list.length;
+                    if(len > 0){
+                        $("#airList").html("");
+                        for (var i = 0; i < len; i++) {
+                            var item = res.list[i];
+                            var typeStr = item.air_type === 1? "视频直播": "视频录播";
+                            var html = '<li>\n' +
+                                '                        <a href="3.2-招聘会详情.html">\n' +
+                                '                            <img src="'+item.cover_img+'" alt="" class="zph-img"/>\n' +
+                                '                            <div class="detail">\n' +
+                                '                                <div class="title">'+item.subject+'</div>\n' +
+                                '                                <p class="type c-light">'+typeStr+'</p>\n' +
+                                '                                <p class="date c-light">'+item.start_time+'</p>\n' +
+                                '                            </div></a></li>';
+                            $("#airList").append(html);
+                        }
+                    }
+                    $(".total").html("共" + res.total + "条");
+                    if (res.total == 0) {
+                        $("#articleList").html($("#templateEmpty").html());
+                    }
+                    laypage.render({
+                        elem: 'pagination'
+                        , limit: 10
+                        , prev: '上页'
+                        , next: '下页'
+                        , limits: [10, 20, 30, 40, 50, 100]
+                        , curr: res.page
+                        , count: res.total //数据总数，从服务端得到
+                        , jump: function (obj, first) {
+                            if (!first) {
+                                GetList(obj.curr, obj.limit);
+                            }
+                        }
+                    });
+                }
+            }, function (){
+
+            });
+        }
+
+        $('.look-all').click(function(){
+            var prevEle = $(this).siblings('ul');
+
+
+            if(prevEle.hasClass('showLine')){
+                prevEle.removeClass('showLine');
+                $(this).find('em').attr('class', 'icon_up');
+            }else{
+                prevEle.addClass('showLine');
+                $(this).find('em').attr('class', 'icon_down');
+            }
+        })
+        $('.search-nav ul li').click(function(){
+
+            $(this).siblings('li').removeClass('on');
+            $(this).addClass('on');
+            var firstItem = $(this).parent().siblings('.search-item');
+            firstItem.removeClass('on')
+
+        })
+        $('.search-nav .search-item').click(function(){
+            $(this).addClass('on');
+            if($(this).parent()[0].nodeName !== 'UL'){
+                $(this).addClass('on');
+                $(this).siblings('ul').children('li').removeClass('on')
+            }
+        })
+    });
+
+</script>
+</body>
+
+</html>

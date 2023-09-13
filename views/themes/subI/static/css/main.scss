@@ -1399,7 +1399,7 @@
         border: 0;
         float: left;
         .arr {
-            background: url(../images/icon_down.png) center center no-repeat;
+            background: url(../images/arrow_down.png) center center no-repeat;
             -webkit-background-size: 100% 100%;
             background-size: 100% 100%
         }
@@ -1466,6 +1466,86 @@
     form {
         width: 100%;
         margin: 0 auto;
+    }
+}
+.index-search{
+    width: 100%;
+    background: none;
+    margin: 30px 0;
+    height: auto;
+    .drop-filter{
+        margin-bottom: 0;
+        background: #fff;
+        border-radius: 0px;
+        border: 1px solid #fff;
+        margin-right: 0;
+        
+        .dropdownList{
+            left: 0;
+            width:120px;
+            top:39px;
+            &>ul li{
+                padding-left: 13px;
+                &.active{
+                    color: #0168d1;
+                }
+            }
+        }
+        .content{
+            color: #0168d1;
+        }
+    }
+    form{
+        width: 70%;
+        margin: 0 auto;
+        background: none;
+        border:0;
+    }
+    input{
+        background: #fff;
+        border: 1px solid #abb6cc;
+        padding-left: 12px;
+        width: calc(100% - 110px);
+        border-right: 0;
+        border-radius: 0;
+        height: 38px;
+    }
+    input:focus{
+        border: 1px solid #abb6cc;
+        border-right: 0;
+    }
+    button{        
+        background:var(--main-primary);
+    }
+    .btn-search{
+        border: 0;
+        cursor: pointer;
+        outline: none;
+        background-size: 45%;
+        color: #fff;
+        width: 100px;
+        height: 40px;
+        line-height: 32px;
+        border: 1px solid #e9eaeb;
+        margin-top: -1px;
+        background: var(--main-primary);
+    }
+    .hot-key{
+        color: #999;
+        width: 70%;
+        margin: 0 auto;
+        padding-left: 10px;
+        margin-top: 12px;
+        margin-bottom: 10px;
+        span{
+            cursor: pointer;
+            color: #333;
+            display: inline-block;
+            margin-right: 12px;
+            &:hover{
+                color: #0168D1;
+            }
+        }
     }
 }
 
@@ -1583,7 +1663,7 @@
                 text-align: center;
             }
             .btn-sure {
-                color: #0168D1;
+                color: var(--main-primary);
             }
         }
         .search-key {
@@ -1804,7 +1884,68 @@
         }
     }
 }
+.jobList {
+   background: #fff;
+    margin-bottom: 100px;
+}
 
+.job-flex {
+    width: 100%;
+    margin-top: 10px;
+    background: #fff;
+    ul {
+        
+        padding: 0 26px;
+        li {
+            position: relative;
+            border-bottom: 1px solid #f4f4f4;
+            padding: 30px;
+            .job-desc {
+                width: 604px;
+                a {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    font-size: 18px;
+                    letter-spacing: 0.6px;
+                    max-width: 100%;
+                    display: inline-block;
+                }
+                h3 span {
+                    margin-left: 13px;
+                    font-size: 18px;
+                    color: #ef6060;
+                    letter-spacing: 0.6px;
+                }
+            }
+            .comp-desc {
+                margin-left: 10px;
+                width: 378px;
+            }
+            .logo-box {
+                img {
+                    width: 80px;
+                    height: 80px;
+                }
+            }
+            p {
+                max-width: 310px;
+                font-size: 13px;
+                letter-spacing: 0.43px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            .f-line {
+                display: inline-block;
+                padding: 0 4px;
+            }
+            a {
+                font-size: 16px;
+            }
+        }
+    }
+}
 .hdrl {
     margin-top: 30px;
     .left {

@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+{{TemplateTheme $.siteTheme "_header.html" .}}
+
+<body>
+{{TemplateTheme $.siteTheme "_nav.html" .}}
+<!-- main -->
+<div class="body">
+    <div class="container show-margin" style="position: relative;">
+        <div class="listCon clearfix">
+            <div class="subnav">
+                <img src="{{.siteStatic}}images/position.png" alt="" class="position">
+                <span>位置：</span>
+                <a href="/">首页</a>
+                <span class="division">&gt;</span>
+                <a href="javascript:void(0)" class="last">招聘会详情</a>
+            </div>
+        </div>
+
+        <div class="zhp-detail-header" id="top_info">
+
+        </div>
+        <div class="zhp-detail-body">
+            <div class="layui-tab layui-tab-card">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">双选会详情</li>
+                    <li>用人单位职位列表</li>
+                    <li>
+                        <a href="3.3-操作手册-登录.html">操作手册</a>
+                    </li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item">
+                        <div class="zph-detail">
+                            <div>
+                                <p><span style="font-family: 宋体, SimSun; font-size: 18px;">&nbsp; </span><span style="font-family: 宋体, SimSun; font-size: 18px;">一、活动组织</span></p>
+                                <p><span style="font-family: 宋体, SimSun; font-size: 18px;">&nbsp; 主办单位：河南省教育厅</span></p>
+                                <p><span style="font-family: 宋体, SimSun; font-size: 18px;">&nbsp; 承办单位：河南省大中专学生就业服务中心 </span></p>
+                                <p><span style="font-family: 宋体, SimSun; font-size: 18px;">&nbsp; 二、参会对象</span></p>
+                                <p><span style="font-family: 宋体, SimSun; font-size: 18px;">&nbsp; 省内外用人单位、应往届高校毕业生。</span></p>
+                                <p><span style="font-family: 宋体, SimSun; font-size: 18px;">&nbsp; 三、<span style="font-family: 宋体, SimSun; font-size: 18px;">举办</span>时间</span></p>
+                                <p><span style="font-family: 宋体, SimSun; font-size: 18px;">&nbsp; 2021年11月1日-11月30日</span></p>
+                                <p><span style="font-family: 宋体, SimSun; font-size: 18px;">&nbsp; 四、参会须知</span></p>
+                                <p><span style="font-family: 宋体, SimSun; font-size: 18px;"></span></p>
+                                <p style="white-space: normal;"><span style="font-family: 宋体, SimSun; font-size: 18px;">&nbsp; 各用人单位登录河南省毕业生就业信息网网络双选会专区，根据《用人单位操作手册》流程填写注册信息，待审核通过后发布招聘岗位，并安排专人及时查阅学生投递简历，积极与毕业生进行双选交流。</span></p>
+                                <p style="white-space: normal;"><span style="font-family: 宋体, SimSun; font-size: 18px;">&nbsp; 本次网络双选会为公益活动，不收取用人单位和毕业生任何费用。</span><br></p>
+                                <p style="white-space: normal;"><span style="font-family: 宋体, SimSun; font-size: 18px;">&nbsp; 为保障网络双选会运行秩序和应聘毕业生的合法权益，本次活动拒绝传销招聘、虚假招聘、委托招聘，用人单位应严格遵守国家相关法律、法规，规范招聘行为，不得以任何形式向求职毕业生收取任何费用，不得以任何非正常渠道和方式与毕业生沟通或干扰其正常学习生活。</span><br></p>
+                                <p style="white-space: normal;"><span style="font-family: 宋体, SimSun; font-size: 18px;">&nbsp; 如用人单位扰乱招聘秩序或违反招聘承诺，主办方将其纳入失信单位黑名单，并取消招聘资格；如用人单位的行为涉嫌违法、违规，主办方将依据法律法规追究其责任。</span></p>
+                            </div>
+                            <div class="fj-box">
+										<span class="fj-num">
+						                    <img src="{{.siteStatic}}images/icon-fujian.png">附件0个
+						                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-tab-item layui-show">
+                        <div class="position-list">
+                            <div class="nav2">
+                                <div class="head">
+                                    双选会概况
+                                </div>
+                                <div class="inner">
+                                    <ul class="clearfix">
+                                        <li>
+                                            <span class="num" id="count_dw"></span>
+                                            <p>用人单位</p>
+                                        </li>
+                                        <li>
+                                            <span class="num" id="count_gw"></span>
+                                            <p>岗位</p>
+                                        </li>
+                                        <li>
+                                            <span class="num" id="count_rs"></span>
+                                            <p>需求人数</p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="nav2 chyrdw">
+                                <div class="head">参会用人单位</div>
+                                <div class="inner">
+                                    <div class="search search-box">
+                                        <form>
+                                            <img src="{{.siteStatic}}images/search_btn.png" alt="" class="icon">
+                                            <input type="text" class="search-ipt" placeholder="请输入职位或公司名称">
+                                            <button name="search">搜索</button>
+                                        </form>
+                                    </div>
+                                    <div class="result">
+                                        <div class="clearfix" id="company_job_list">
+                                        </div>
+                                        <div id="pagination"  class="pagination"></div>
+                                    </div>
+                                    <div class="search-result">
+                                        <div class="empty">
+                                            <img src="{{.siteStatic}}images/icon_empty.png" alt="">
+                                            <p>没有搜索到相关的内容</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="nav2 fj-wrapper">
+                                <div class="head">附件列表</div>
+                                <div class="inner">
+                                    <div class="fj-box">
+                                        <div class="fj-num">
+                                            <img src="{{.siteStatic}}images/icon-fujian.png" alt="" />附件8个
+                                        </div>
+                                        <div class="clearfix">
+                                            <ul>
+                                                <li>
+                                                    <a href="#">
+                                                        <img src="{{.siteStatic}}images/content_icon_file.png" alt="" class="fl"/>
+                                                        <div class="fl file-detail">
+                                                            <p class="name">4fa0f9de60b57d51739fdffaeafa8c31.png</p>
+                                                            <p class="file-size">8.52KB</p>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <img src="{{.siteStatic}}images/content_icon_file.png" alt="" class="fl"/>
+                                                        <div class="fl file-detail">
+                                                            <p class="name">4fa0f9de60b57d51739fdffaeafa8c31.png</p>
+                                                            <p class="file-size">8.52KB</p>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <img src="{{.siteStatic}}images/content_icon_file.png" alt="" class="fl"/>
+                                                        <div class="fl file-detail">
+                                                            <p class="name">4fa0f9de60b57d51739fdffaeafa8c31.png</p>
+                                                            <p class="file-size">8.52KB</p>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <img src="{{.siteStatic}}images/content_icon_file.png" alt="" class="fl"/>
+                                                        <div class="fl file-detail">
+                                                            <p class="name">4fa0f9de60b57d51739fdffaeafa8c31.png</p>
+                                                            <p class="file-size">8.52KB</p>
+                                                        </div>
+                                                    </a>
+                                                </li>
+
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="popup">
+    <div id="position_list_modal" class="position-list-popop">
+        <div class="position-list" >
+            <ul>
+                <li>
+                    <a href="#">
+                        <span class="job-name">华为5G网络优化储备中级工程师</span>
+                        <span class="address">河南郑州</span>
+                        <span class="type">全职</span>
+                        <span class="price">5k-9k</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="job-name">华为5G网络优化储备中级工程师</span>
+                        <span class="address">河南郑州</span>
+                        <span class="type">全职</span>
+                        <span class="price">5k-9k</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="job-name">华为5G网络优化储备中级工程师</span>
+                        <span class="address">河南郑州</span>
+                        <span class="type">全职</span>
+                        <span class="price">5k-9k</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="job-name">华为5G网络优化储备中级工程师</span>
+                        <span class="address">河南郑州</span>
+                        <span class="type">全职</span>
+                        <span class="price">5k-9k</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="job-name">华为5G网络优化储备中级工程师</span>
+                        <span class="address">河南郑州</span>
+                        <span class="type">全职</span>
+                        <span class="price">5k-9k</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="job-name">华为5G网络优化储备中级工程师</span>
+                        <span class="address">河南郑州</span>
+                        <span class="type">全职</span>
+                        <span class="price">5k-9k</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="job-name">华为5G网络优化储备中级工程师华为5G网络优化储备中级工程师</span>
+                        <span class="address">河南郑州</span>
+                        <span class="type">全职</span>
+                        <span class="price">15k-91k</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="job-name">华为5G网络优化储备中级工程师</span>
+                        <span class="address">河南郑州</span>
+                        <span class="type">全职</span>
+                        <span class="price">5k-9k</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="job-name">华为5G网络优化储备中级工程师</span>
+                        <span class="address">河南郑州</span>
+                        <span class="type">全职</span>
+                        <span class="price">5k-9k</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- footer -->
+{{TemplateTheme $.siteTheme "_footer.html" .}}
+<script id="templateEmpty" type="text/template">
+    <div style="text-align: center; padding-bottom: 10rem; padding-top: 2rem">
+        <img src="{{.siteStatic}}images/state_img3.png" class="img"/>
+        <p class="tip">暂无数据</p>
+    </div>
+</script>
+<script type="text/javascript">
+    var jobFairId = "{{.jId}}"
+
+    var loadDetailCount = function (){
+        var jobFair = new JobFair();
+        jobFair.getJobFairDetailCount({
+            id: jobFairId
+        }, function (){}, function (res){
+            if(res.success){
+                var data = res.zph;
+                $("#count_dw").text(res.companyCount+"家");
+                $("#count_gw").text(res.jobCount+"个");
+                $("#count_rs").text(res.peopleCount+"人");
+
+                var typeStr = data.type === 2? "线下招聘会": "线上招聘会";
+                var html = '<div class="fl">\n' +
+                    '                <img src="'+data.logoPath+'" alt="" class="logo" />\n' +
+                    '            </div>\n' +
+                    '            <div class="fl detail">\n' +
+                    '                <h2>'+data.name+'</h2>\n' +
+                    '                <p class="type c-light">'+typeStr+'</p>\n' +
+                    '                <p class="date c-light">'+data.startTimex+'至'+data.endTimex+'</p>\n' +
+                    '                <div class="btn-box">\n' +
+                    '                    <span class="btn btn-primary">用人单位报名</span>\n' +
+                    '                    <span class="btn btn-primary">学生报名</span>\n' +
+                    '                </div>\n' +
+                    '            </div>';
+                $("#top_info").append(html);
+            }
+        }, function (){});
+    }
+
+    layui.use(['form', 'laypage', 'element'], function() { //声明使用layUI的form
+        var form = layui.form;
+        var element = layui.element;
+        var laypage = layui.laypage;
+        form.render(); //刷新所有渲染效果，也可以单独熟悉某个效果
+
+        loadDetailCount();
+        loadDetailCompanyAndJob(1, 9);
+
+        function loadDetailCompanyAndJob (page, pageSize){
+            var jobFair = new JobFair();
+            jobFair.getJobFairDetail({
+                id: jobFairId,
+                page: page,
+                pageSize: pageSize
+            }, function (){}, function (res){
+                if(res.success && res.dataList.length > 0){
+                    $("#company_job_list").html("");
+                    var len = res.dataList.length;
+                    for (let i = 0; i < len; i++) {
+                        var item = res.dataList[i];
+                        var tag = "";
+                        if(page === 1 && i <3){
+                            tag = i+1+"展位";
+                        }
+                        var html
+                        if(tag === ""){
+                            html = '<div class="company-item">\n' +
+                                '                                                <div class="top">\n' +
+                                '                                                    <img src="'+item.companyLogo+'" alt="" class="fl logo" />\n' +
+                                '                                                    <div class="fl company-info">\n' +
+                                '                                                        <p class="company-name">'+item.companyName+'</p>\n' +
+                                '                                                        <p>'+item.peoples+'</p>\n' +
+                                '                                                        <p>'+item.companyType+'</p>\n' +
+                                '                                                        <p>'+item.industry+'</p>\n' +
+                                '                                                    </div>\n' +
+                                '                                                </div>\n' +
+                                '                                                <ul class="jobList clearfix" id="job_list_'+i+'">\n' +
+                                '                                                </ul>\n' +
+                                '                                                <div class="btn-all">全部职位</div>\n' +
+                                '                                            </div>';
+                        }else{
+                            html = '<div class="company-item">\n' +
+                                '                                                <div class="top">\n' +
+                                '                                                    <div class="place-num">'+tag+'</div>\n' +
+                                '                                                    <img src="'+item.companyLogo+'" alt="" class="fl logo" />\n' +
+                                '                                                    <div class="fl company-info">\n' +
+                                '                                                        <p class="company-name">'+item.companyName+'</p>\n' +
+                                '                                                        <p>'+item.peoples+'</p>\n' +
+                                '                                                        <p>'+item.companyType+'</p>\n' +
+                                '                                                        <p>'+item.industry+'</p>\n' +
+                                '                                                    </div>\n' +
+                                '                                                </div>\n' +
+                                '                                                <ul class="jobList clearfix" id="job_list_'+i+'">\n' +
+                                '                                                </ul>\n' +
+                                '                                                <div class="btn-all">全部职位</div>\n' +
+                                '                                            </div>';
+                        }
+                        $("#company_job_list").append(html);
+                        if(item.detail.length > 0){
+                            for (let j = 0; j < item.detail.length; j++) {
+                                var jobItem = item.detail[j];
+                                var jobHtml = '<li>\n' +
+                                    '                   <a href="/plugin/job/detail?jId='+jobItem.id_job+'">\n' +
+                                    '                         <span class="jobName">'+jobItem.jobName+'</span>\n' +
+                                    '                         <span class="address c-light">'+jobItem.workPlace+'</span>\n' +
+                                    '                         <span class="dateTime c-light">'+jobItem.workTypex+'</span>\n' +
+                                    '                         <span class="price">'+jobItem.payMinx+'-'+jobItem.payMaxx+'</span>\n' +
+                                    '                     </a>\n' +
+                                    '                 </li>';
+                                var jobListId ='#'+"job_list_"+i;
+                                $(jobListId).append(jobHtml);
+                            }
+                        }
+                    }
+                }
+                $(".total").html("共" + res.total + "条");
+                if (res.total == 0) {
+                    $("#company_job_list").html($("#templateEmpty").html());
+                }
+                laypage.render({
+                    elem: 'pagination'
+                    , limit: 9
+                    , prev: '上页'
+                    , next: '下页'
+                    , limits: [9, 18, 27, 45]
+                    , curr: res.page
+                    , count: res.total //数据总数，从服务端得到
+                    , jump: function (obj, first) {
+                        if (!first) {
+                            loadDetailCompanyAndJob(obj.curr, obj.limit);
+                        }
+                    }
+                });
+            }, function (){});
+        }
+
+    });
+    $('.btn-all').click(function() {
+        layui.use('layer', function (layer) {
+            layer.open({
+                title: "职位列表",
+                type: 1,
+                area: '538px',
+                content: $('#position_list_modal'),
+                btn: ['确定'],
+                yes: function(index, layero) {
+                    layer.close(index);
+                }
+            });
+        });
+    })
+
+</script>
+</body>
+
+</html>

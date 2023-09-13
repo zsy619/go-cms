@@ -534,6 +534,14 @@ func (this *ApiArticle) AlbumClick(article_id, ablum_id int64) error {
 	return err
 }
 
+/**
+ * @description: Property 自定义属性列表
+ * @param {int64} articleId 文章id
+ * @param {int64} parentId 父id
+ * @param {int64} callIndex 别名
+ * @param {int64} title 自定义属性名称
+ * @return {*}
+ */
 func (this *ApiArticle) Property(page, limit int, parentId, articleId int64, callIndex, title string) ([]*model.CmsArticleProperty, int64, error) {
 	mdl, do := query.CmsArticlePropertyDo()
 	if parentId > 0 {

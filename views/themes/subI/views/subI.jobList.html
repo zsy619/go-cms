@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+{{TemplateTheme $.siteTheme "_header.html" .}}
+<body>
+{{TemplateTheme $.siteTheme "_nav.html" .}}
+<!-- main -->
+<div class="body">
+    <div class="container show-margin" style="position: relative;">
+        <div class="subnav" style="padding-top: 10px; padding-bottom: 10px">
+            <img src="{{.siteStatic}}images/position.png" alt="" class="position">
+            <span>位置：</span>
+            <a href="/">首页</a>
+            <span class="division">&gt;</span>
+            <a href="javascript:void(0)" class="last">职位列表</a>
+        </div>
+
+        <div class="jobList show-margin">
+            <div class="job-flex">
+                <ul id="jobList">
+                </ul>
+                <div id="pagination" class="pagination"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- footer -->
+{{TemplateTheme $.siteTheme "_footer.html" .}}
+<script id="templateEmpty" type="text/template">
+    <div style="text-align: center; padding-bottom: 10rem; padding-top: 2rem">
+        <img src="{{.siteStatic}}images/state_img3.png" class="img"/>
+        <p class="tip">暂无数据</p>
+    </div>
+</script>
+<script type="text/javascript">
+    var schoolUrl = "{{.site.Flag}}";
+
+    layui.use(['form', 'element', 'laypage', 'layer'], function () {
+        var laypage = layui.laypage,
+            layer = layui.layer;
+
+        GetJobList(1, 10)
+
+        // 获取文章列表
+        function GetJobList(page, limit){
+            var job = new Job();
+            job.getJobList({
+                limit: limit,
+                page: page,
+                schoolUrl: schoolUrl
+            }, function (){
+
+            }, function (res){
+                var len = res.job_list.length;
+                if(len > 0){
+                    $("#jobList").html("");
+                    for (var i = 0; i < len; i++) {
+                        var item = res.job_list[i];
+                        var html = '<li class="flex">\n' +
+                            '                        <div class="job-desc column-flex">\n' +
+                            '                            <h3>\n' +
+                            '                                <a class="c-dark" href="/plugin/job/detail?jId='+item.id_job+'">'+item.jobName+'</a>\n' +
+                            '                                <span>'+item.payMinx+'-'+item.payMaxx+'</span>\n' +
+                            '                            </h3>\n' +
+                            '                            <p class="c-light">'+item.degree+'<span class="f-line">|</span>'+item.workProvince+item.workCity+'\n' +
+                            '                            </p>\n' +
+                            '                            <p class="c-light">'+item.jobTag+'</p>\n' +
+                            '                        </div>\n' +
+                            '                        <div class="comp-desc column-flex">\n' +
+                            '                            <a class="c-mid ellipsis" href="/plugin/company/detail?cId='+item.companyId+'">'+item.companyShort+'</a>\n' +
+                            '                            <p class="c-light">截止日期：'+item.enddate+'</p>\n' +
+                            '                            <p class="c-light">'+item.industry+'<span class="f-line">|</span>'+item.companyType+'</p>\n' +
+                            '                        </div>\n' +
+                            '                        <a class="logo-box flex" href="">\n' +
+                            '                            <img src="'+item.companyLogo+'">\n' +
+                            '                        </a>\n' +
+                            '                    </li>';
+                        $("#jobList").append(html);
+                    }
+                }
+                $(".total").html("共" + res.total + "条");
+                if (res.total == 0) {
+                    $("#articleList").html($("#templateEmpty").html());
+                }
+                laypage.render({
+                    elem: 'pagination'
+                    , limit: 10
+                    , prev: '上页'
+                    , next: '下页'
+                    , limits: [10, 20, 30, 40, 50, 100]
+                    , curr: res.page
+                    , count: res.total //数据总数，从服务端得到
+                    , jump: function (obj, first) {
+                        if (!first) {
+                            GetJobList(obj.curr, obj.limit);
+                        }
+                    }
+                });
+            }, function (){
+
+            });
+        }
+    });
+</script>
+</body>
+
+</html>

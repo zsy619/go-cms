@@ -6,3 +6,4 @@ document.write('<script src="/static/plugins/loading/app.min.js?r={{.time}}"></s
 document.write('<script src="/static/plugins/moment/moment.min.js?r={{.time}}"></script>');
 document.write('<script src="/static/const.min.js?r={{.time}}"></script>');
 document.write('<script src="/static/cms.min.js?r={{.time}}"></script>');
+document.write('<script src="/static/jobfair.js?r={{.time}}"></script>');
