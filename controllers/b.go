@@ -10,6 +10,7 @@ import (
 	"haedu.gov.cn/cms/app/lib"
 	"haedu.gov.cn/cms/global"
 	"haedu.gov.cn/tools/xphp"
+	"haedu.gov.cn/tools/xstring"
 )
 
 type BaseController struct {
@@ -17,6 +18,15 @@ type BaseController struct {
 
 	ControllerName string
 	ActionName     string
+}
+
+// GetSafeString 过滤敏感字符串
+func (c *BaseController) GetSafeString(key string, def ...string) string {
+	data := c.GetString(key, def...)
+	if data == "" {
+		return ""
+	}
+	return xstring.GetSafeString(data)
 }
 
 // 重定向
