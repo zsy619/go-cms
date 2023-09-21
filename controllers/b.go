@@ -9,6 +9,7 @@ import (
 	"github.com/beego/beego/v2/server/web"
 	"haedu.gov.cn/cms/app/lib"
 	"haedu.gov.cn/cms/global"
+	"haedu.gov.cn/tools/xgeneric"
 	"haedu.gov.cn/tools/xphp"
 	"haedu.gov.cn/tools/xstring"
 )
@@ -181,4 +182,308 @@ func (ctrl *BaseController) GetSafeString(key string, def ...string) string {
 		return ""
 	}
 	return xstring.GetSafeString(data)
+}
+
+func (ctrl *BaseController) GetSafeStringTuple2(key1, key2 string) (cnt xgeneric.Tuple2[string, string]) {
+	cnt.A = ctrl.GetSafeString(key1)
+	cnt.B = ctrl.GetSafeString(key2)
+	return
+}
+
+func (ctrl *BaseController) GetSafeStringTuple3(key1, key2, key3 string) (cnt xgeneric.Tuple3[string, string, string]) {
+	cnt.A = ctrl.GetSafeString(key1)
+	cnt.B = ctrl.GetSafeString(key2)
+	cnt.C = ctrl.GetSafeString(key3)
+	return
+}
+
+func (ctrl *BaseController) GetSafeStringTuple4(key1, key2, key3, key4 string) (cnt xgeneric.Tuple4[string, string, string, string]) {
+	cnt.A = ctrl.GetSafeString(key1)
+	cnt.B = ctrl.GetSafeString(key2)
+	cnt.C = ctrl.GetSafeString(key3)
+	cnt.D = ctrl.GetSafeString(key4)
+	return
+}
+
+func (ctrl *BaseController) GetSafeStringTuple5(key1, key2, key3, key4, key5 string) (cnt xgeneric.Tuple5[string, string, string, string, string]) {
+	cnt.A = ctrl.GetSafeString(key1)
+	cnt.B = ctrl.GetSafeString(key2)
+	cnt.C = ctrl.GetSafeString(key3)
+	cnt.D = ctrl.GetSafeString(key4)
+	cnt.E = ctrl.GetSafeString(key5)
+	return
+}
+
+func (ctrl *BaseController) GetSafeStringTuple6(key1, key2, key3, key4, key5, key6 string) (cnt xgeneric.Tuple6[string, string, string, string, string, string]) {
+	cnt.A = ctrl.GetSafeString(key1)
+	cnt.B = ctrl.GetSafeString(key2)
+	cnt.C = ctrl.GetSafeString(key3)
+	cnt.D = ctrl.GetSafeString(key4)
+	cnt.E = ctrl.GetSafeString(key5)
+	cnt.F = ctrl.GetSafeString(key6)
+	return
+}
+
+func (ctrl *BaseController) GetSafeStringTuple7(key1, key2, key3, key4, key5, key6, key7 string) (cnt xgeneric.Tuple7[string, string, string, string, string, string, string]) {
+	cnt.A = ctrl.GetSafeString(key1)
+	cnt.B = ctrl.GetSafeString(key2)
+	cnt.C = ctrl.GetSafeString(key3)
+	cnt.D = ctrl.GetSafeString(key4)
+	cnt.E = ctrl.GetSafeString(key5)
+	cnt.F = ctrl.GetSafeString(key6)
+	cnt.G = ctrl.GetSafeString(key7)
+	return
+}
+
+func (ctrl *BaseController) GetSafeStringTuple8(key1, key2, key3, key4, key5, key6, key7, key8 string) (cnt xgeneric.Tuple8[string, string, string, string, string, string, string, string]) {
+	cnt.A = ctrl.GetSafeString(key1)
+	cnt.B = ctrl.GetSafeString(key2)
+	cnt.C = ctrl.GetSafeString(key3)
+	cnt.D = ctrl.GetSafeString(key4)
+	cnt.E = ctrl.GetSafeString(key5)
+	cnt.F = ctrl.GetSafeString(key6)
+	cnt.G = ctrl.GetSafeString(key7)
+	cnt.H = ctrl.GetSafeString(key8)
+	return
+}
+
+func (ctrl *BaseController) GetSafeStringTuple9(key1, key2, key3, key4, key5, key6, key7, key8, key9 string) (cnt xgeneric.Tuple9[string, string, string, string, string, string, string, string, string]) {
+	cnt.A = ctrl.GetSafeString(key1)
+	cnt.B = ctrl.GetSafeString(key2)
+	cnt.C = ctrl.GetSafeString(key3)
+	cnt.D = ctrl.GetSafeString(key4)
+	cnt.E = ctrl.GetSafeString(key5)
+	cnt.F = ctrl.GetSafeString(key6)
+	cnt.G = ctrl.GetSafeString(key7)
+	cnt.H = ctrl.GetSafeString(key8)
+	cnt.I = ctrl.GetSafeString(key9)
+	return
+}
+
+func (ctrl *BaseController) GetInt64Tuple2(key1, key2 string) (cnt xgeneric.Tuple2[int64, int64]) {
+	cnt.A, _ = ctrl.GetInt64(key1)
+	cnt.B, _ = ctrl.GetInt64(key2)
+	return
+}
+
+func (ctrl *BaseController) GetInt64Tuple3(key1, key2, key3 string) (cnt xgeneric.Tuple3[int64, int64, int64]) {
+	cnt.A, _ = ctrl.GetInt64(key1)
+	cnt.B, _ = ctrl.GetInt64(key2)
+	cnt.C, _ = ctrl.GetInt64(key3)
+	return
+}
+
+func (ctrl *BaseController) GetInt64Tuple4(key1, key2, key3, key4 string) (cnt xgeneric.Tuple4[int64, int64, int64, int64]) {
+	cnt.A, _ = ctrl.GetInt64(key1)
+	cnt.B, _ = ctrl.GetInt64(key2)
+	cnt.C, _ = ctrl.GetInt64(key3)
+	cnt.D, _ = ctrl.GetInt64(key4)
+	return
+}
+
+func (ctrl *BaseController) GetInt64Tuple5(key1, key2, key3, key4, key5 string) (cnt xgeneric.Tuple5[int64, int64, int64, int64, int64]) {
+	cnt.A, _ = ctrl.GetInt64(key1)
+	cnt.B, _ = ctrl.GetInt64(key2)
+	cnt.C, _ = ctrl.GetInt64(key3)
+	cnt.D, _ = ctrl.GetInt64(key4)
+	cnt.E, _ = ctrl.GetInt64(key5)
+	return
+}
+
+func (ctrl *BaseController) GetInt64Tuple6(key1, key2, key3, key4, key5, key6 string) (cnt xgeneric.Tuple6[int64, int64, int64, int64, int64, int64]) {
+	cnt.A, _ = ctrl.GetInt64(key1)
+	cnt.B, _ = ctrl.GetInt64(key2)
+	cnt.C, _ = ctrl.GetInt64(key3)
+	cnt.D, _ = ctrl.GetInt64(key4)
+	cnt.E, _ = ctrl.GetInt64(key5)
+	cnt.F, _ = ctrl.GetInt64(key6)
+	return
+}
+
+func (ctrl *BaseController) GetInt64Tuple7(key1, key2, key3, key4, key5, key6, key7 string) (cnt xgeneric.Tuple7[int64, int64, int64, int64, int64, int64, int64]) {
+	cnt.A, _ = ctrl.GetInt64(key1)
+	cnt.B, _ = ctrl.GetInt64(key2)
+	cnt.C, _ = ctrl.GetInt64(key3)
+	cnt.D, _ = ctrl.GetInt64(key4)
+	cnt.E, _ = ctrl.GetInt64(key5)
+	cnt.F, _ = ctrl.GetInt64(key6)
+	cnt.G, _ = ctrl.GetInt64(key7)
+	return
+}
+
+func (ctrl *BaseController) GetInt64Tuple8(key1, key2, key3, key4, key5, key6, key7, key8 string) (cnt xgeneric.Tuple8[int64, int64, int64, int64, int64, int64, int64, int64]) {
+	cnt.A, _ = ctrl.GetInt64(key1)
+	cnt.B, _ = ctrl.GetInt64(key2)
+	cnt.C, _ = ctrl.GetInt64(key3)
+	cnt.D, _ = ctrl.GetInt64(key4)
+	cnt.E, _ = ctrl.GetInt64(key5)
+	cnt.F, _ = ctrl.GetInt64(key6)
+	cnt.G, _ = ctrl.GetInt64(key7)
+	cnt.H, _ = ctrl.GetInt64(key8)
+	return
+}
+
+func (ctrl *BaseController) GetInt64Tuple9(key1, key2, key3, key4, key5, key6, key7, key8, key9 string) (cnt xgeneric.Tuple9[int64, int64, int64, int64, int64, int64, int64, int64, int64]) {
+	cnt.A, _ = ctrl.GetInt64(key1)
+	cnt.B, _ = ctrl.GetInt64(key2)
+	cnt.C, _ = ctrl.GetInt64(key3)
+	cnt.D, _ = ctrl.GetInt64(key4)
+	cnt.E, _ = ctrl.GetInt64(key5)
+	cnt.F, _ = ctrl.GetInt64(key6)
+	cnt.G, _ = ctrl.GetInt64(key7)
+	cnt.H, _ = ctrl.GetInt64(key8)
+	cnt.I, _ = ctrl.GetInt64(key9)
+	return
+}
+
+func (ctrl *BaseController) GetIntTuple2(key1, key2 string) (cnt xgeneric.Tuple2[int, int]) {
+	cnt.A, _ = ctrl.GetInt(key1)
+	cnt.B, _ = ctrl.GetInt(key2)
+	return
+}
+
+func (ctrl *BaseController) GetIntTuple3(key1, key2, key3 string) (cnt xgeneric.Tuple3[int, int, int]) {
+	cnt.A, _ = ctrl.GetInt(key1)
+	cnt.B, _ = ctrl.GetInt(key2)
+	cnt.C, _ = ctrl.GetInt(key3)
+	return
+}
+
+func (ctrl *BaseController) GetIntTuple4(key1, key2, key3, key4 string) (cnt xgeneric.Tuple4[int, int, int, int]) {
+	cnt.A, _ = ctrl.GetInt(key1)
+	cnt.B, _ = ctrl.GetInt(key2)
+	cnt.C, _ = ctrl.GetInt(key3)
+	cnt.D, _ = ctrl.GetInt(key4)
+	return
+}
+
+func (ctrl *BaseController) GetIntTuple5(key1, key2, key3, key4, key5 string) (cnt xgeneric.Tuple5[int, int, int, int, int]) {
+	cnt.A, _ = ctrl.GetInt(key1)
+	cnt.B, _ = ctrl.GetInt(key2)
+	cnt.C, _ = ctrl.GetInt(key3)
+	cnt.D, _ = ctrl.GetInt(key4)
+	cnt.E, _ = ctrl.GetInt(key5)
+	return
+}
+
+func (ctrl *BaseController) GetIntTuple6(key1, key2, key3, key4, key5, key6 string) (cnt xgeneric.Tuple6[int, int, int, int, int, int]) {
+	cnt.A, _ = ctrl.GetInt(key1)
+	cnt.B, _ = ctrl.GetInt(key2)
+	cnt.C, _ = ctrl.GetInt(key3)
+	cnt.D, _ = ctrl.GetInt(key4)
+	cnt.E, _ = ctrl.GetInt(key5)
+	cnt.F, _ = ctrl.GetInt(key6)
+	return
+}
+
+func (ctrl *BaseController) GetIntTuple7(key1, key2, key3, key4, key5, key6, key7 string) (cnt xgeneric.Tuple7[int, int, int, int, int, int, int]) {
+	cnt.A, _ = ctrl.GetInt(key1)
+	cnt.B, _ = ctrl.GetInt(key2)
+	cnt.C, _ = ctrl.GetInt(key3)
+	cnt.D, _ = ctrl.GetInt(key4)
+	cnt.E, _ = ctrl.GetInt(key5)
+	cnt.F, _ = ctrl.GetInt(key6)
+	cnt.G, _ = ctrl.GetInt(key7)
+	return
+}
+
+func (ctrl *BaseController) GetIntTuple8(key1, key2, key3, key4, key5, key6, key7, key8 string) (cnt xgeneric.Tuple8[int, int, int, int, int, int, int, int]) {
+	cnt.A, _ = ctrl.GetInt(key1)
+	cnt.B, _ = ctrl.GetInt(key2)
+	cnt.C, _ = ctrl.GetInt(key3)
+	cnt.D, _ = ctrl.GetInt(key4)
+	cnt.E, _ = ctrl.GetInt(key5)
+	cnt.F, _ = ctrl.GetInt(key6)
+	cnt.G, _ = ctrl.GetInt(key7)
+	cnt.H, _ = ctrl.GetInt(key8)
+	return
+}
+
+func (ctrl *BaseController) GetIntTuple9(key1, key2, key3, key4, key5, key6, key7, key8, key9 string) (cnt xgeneric.Tuple9[int, int, int, int, int, int, int, int, int]) {
+	cnt.A, _ = ctrl.GetInt(key1)
+	cnt.B, _ = ctrl.GetInt(key2)
+	cnt.C, _ = ctrl.GetInt(key3)
+	cnt.D, _ = ctrl.GetInt(key4)
+	cnt.E, _ = ctrl.GetInt(key5)
+	cnt.F, _ = ctrl.GetInt(key6)
+	cnt.G, _ = ctrl.GetInt(key7)
+	cnt.H, _ = ctrl.GetInt(key8)
+	cnt.I, _ = ctrl.GetInt(key9)
+	return
+}
+
+func (ctrl *BaseController) GetInt32Tuple2(key1, key2 string) (cnt xgeneric.Tuple2[int32, int32]) {
+	cnt.A, _ = ctrl.GetInt32(key1)
+	cnt.B, _ = ctrl.GetInt32(key2)
+	return
+}
+
+func (ctrl *BaseController) GetInt32Tuple3(key1, key2, key3 string) (cnt xgeneric.Tuple3[int32, int32, int32]) {
+	cnt.A, _ = ctrl.GetInt32(key1)
+	cnt.B, _ = ctrl.GetInt32(key2)
+	cnt.C, _ = ctrl.GetInt32(key3)
+	return
+}
+
+func (ctrl *BaseController) GetInt32Tuple4(key1, key2, key3, key4 string) (cnt xgeneric.Tuple4[int32, int32, int32, int32]) {
+	cnt.A, _ = ctrl.GetInt32(key1)
+	cnt.B, _ = ctrl.GetInt32(key2)
+	cnt.C, _ = ctrl.GetInt32(key3)
+	cnt.D, _ = ctrl.GetInt32(key4)
+	return
+}
+
+func (ctrl *BaseController) GetInt32Tuple5(key1, key2, key3, key4, key5 string) (cnt xgeneric.Tuple5[int32, int32, int32, int32, int32]) {
+	cnt.A, _ = ctrl.GetInt32(key1)
+	cnt.B, _ = ctrl.GetInt32(key2)
+	cnt.C, _ = ctrl.GetInt32(key3)
+	cnt.D, _ = ctrl.GetInt32(key4)
+	cnt.E, _ = ctrl.GetInt32(key5)
+	return
+}
+
+func (ctrl *BaseController) GetInt32Tuple6(key1, key2, key3, key4, key5, key6 string) (cnt xgeneric.Tuple6[int32, int32, int32, int32, int32, int32]) {
+	cnt.A, _ = ctrl.GetInt32(key1)
+	cnt.B, _ = ctrl.GetInt32(key2)
+	cnt.C, _ = ctrl.GetInt32(key3)
+	cnt.D, _ = ctrl.GetInt32(key4)
+	cnt.E, _ = ctrl.GetInt32(key5)
+	cnt.F, _ = ctrl.GetInt32(key6)
+	return
+}
+
+func (ctrl *BaseController) GetInt32Tuple7(key1, key2, key3, key4, key5, key6, key7 string) (cnt xgeneric.Tuple7[int32, int32, int32, int32, int32, int32, int32]) {
+	cnt.A, _ = ctrl.GetInt32(key1)
+	cnt.B, _ = ctrl.GetInt32(key2)
+	cnt.C, _ = ctrl.GetInt32(key3)
+	cnt.D, _ = ctrl.GetInt32(key4)
+	cnt.E, _ = ctrl.GetInt32(key5)
+	cnt.F, _ = ctrl.GetInt32(key6)
+	cnt.G, _ = ctrl.GetInt32(key7)
+	return
+}
+
+func (ctrl *BaseController) GetInt32Tuple8(key1, key2, key3, key4, key5, key6, key7, key8 string) (cnt xgeneric.Tuple8[int32, int32, int32, int32, int32, int32, int32, int32]) {
+	cnt.A, _ = ctrl.GetInt32(key1)
+	cnt.B, _ = ctrl.GetInt32(key2)
+	cnt.C, _ = ctrl.GetInt32(key3)
+	cnt.D, _ = ctrl.GetInt32(key4)
+	cnt.E, _ = ctrl.GetInt32(key5)
+	cnt.F, _ = ctrl.GetInt32(key6)
+	cnt.G, _ = ctrl.GetInt32(key7)
+	cnt.H, _ = ctrl.GetInt32(key8)
+	return
+}
+
+func (ctrl *BaseController) GetInt32Tuple9(key1, key2, key3, key4, key5, key6, key7, key8, key9 string) (cnt xgeneric.Tuple9[int32, int32, int32, int32, int32, int32, int32, int32, int32]) {
+	cnt.A, _ = ctrl.GetInt32(key1)
+	cnt.B, _ = ctrl.GetInt32(key2)
+	cnt.C, _ = ctrl.GetInt32(key3)
+	cnt.D, _ = ctrl.GetInt32(key4)
+	cnt.E, _ = ctrl.GetInt32(key5)
+	cnt.F, _ = ctrl.GetInt32(key6)
+	cnt.G, _ = ctrl.GetInt32(key7)
+	cnt.H, _ = ctrl.GetInt32(key8)
+	cnt.I, _ = ctrl.GetInt32(key9)
+	return
 }
