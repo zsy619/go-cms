@@ -53,7 +53,7 @@ func (c *LoginController) AdminLoginVerify() {
 		Url:     "",
 	}
 
-	captcha := c.GetString("captcha")
+	captcha := c.GetSafeString("captcha")
 	if controllers.VerifyCode(captcha) == false {
 		result.Code = 1
 		result.Message = "验证码错误"
@@ -62,8 +62,8 @@ func (c *LoginController) AdminLoginVerify() {
 		return
 	}
 
-	username := c.GetString("username")
-	password := c.GetString("password")
+	username := c.GetSafeString("username")
+	password := c.GetSafeString("password")
 	fmt.Println(username, password, captcha)
 	adminDo := biz.NewCmsAdmin()
 	user, err := adminDo.Login(username, password, 0, biz.LoginAll)
@@ -104,7 +104,7 @@ func (this *LoginController) login(loginCasPath, loginPath string, kind string) 
 	// TOD：20220418 登录类型
 	xcache.SetDiskvString("cas_login", kind)
 	GlobalAuthFlag = kind
-	ticket := this.GetString("ticket")
+	ticket := this.GetSafeString("ticket")
 	fmt.Println("ticket: ", ticket)
 	if ticket == "" {
 		this.Redirect(loginCasPath, http.StatusFound)

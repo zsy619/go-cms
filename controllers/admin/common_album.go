@@ -12,7 +12,7 @@ import (
 
 // Album 相册管理
 func (c *CommonController) Album() {
-	tableName := c.GetString("tableName")
+	tableName := c.GetSafeString("tableName")
 	recordId, _ := c.GetInt64("recordId")
 	typeId, _ := c.GetInt32("typeId")
 	if tableName == "" || recordId <= 0 {
@@ -27,9 +27,9 @@ func (c *CommonController) Album() {
 
 func (c *CommonController) AlbumSearch() {
 	page, limit := c.GetPagingParameters()
-	tableName := c.GetString("tableName")
-	title := c.GetString("title")
-	ext := c.GetString("ext")
+	tableName := c.GetSafeString("tableName")
+	title := c.GetSafeString("title")
+	ext := c.GetSafeString("ext")
 	list, count, err := biz.NewCmsAlbum().AlbumSearch(page, limit, tableName, title, ext, GlobalAdminId, GlobalRoleType)
 	if err != nil {
 		logs.Error("AlbumSearch", err.Error())
@@ -38,7 +38,7 @@ func (c *CommonController) AlbumSearch() {
 }
 
 func (c *CommonController) AlbumPaginate() {
-	tableName := c.GetString("tableName")
+	tableName := c.GetSafeString("tableName")
 	recordId, _ := c.GetInt64("recordId")
 	typeId, _ := c.GetInt32("typeId")
 	list, count, err := biz.NewCmsAlbum().AlbumPaginate(1, 99999, tableName, recordId, typeId, GlobalAdminId, GlobalRoleType)

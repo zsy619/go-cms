@@ -12,7 +12,7 @@ import (
 
 // Attach 附件管理
 func (c *CommonController) Attach() {
-	tableName := c.GetString("tableName")
+	tableName := c.GetSafeString("tableName")
 	recordId, _ := c.GetInt64("recordId")
 	typeId, _ := c.GetInt32("typeId")
 	if tableName == "" || recordId <= 0 {
@@ -26,7 +26,7 @@ func (c *CommonController) Attach() {
 }
 
 func (c *CommonController) AttachPaginate() {
-	tableName := c.GetString("tableName")
+	tableName := c.GetSafeString("tableName")
 	recordId, _ := c.GetInt64("recordId")
 	typeId, _ := c.GetInt32("typeId")
 	list, count, err := biz.NewCmsAttach().AttachPaginate(1, 99999, tableName, recordId, typeId, GlobalAdminId, GlobalRoleType)

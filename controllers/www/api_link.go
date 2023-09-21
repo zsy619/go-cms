@@ -18,10 +18,10 @@ type ApiLinkController struct{ BaseController }
  */
 // @router /api/link/get [get]
 func (this *ApiLinkController) Get() {
-	site_flag := this.GetString("site_flag")
+	site_flag := this.GetSafeString("site_flag")
 	site_id, _ := this.GetInt64("site_id")
 	category_id, _ := this.GetInt64("category_id")
-	call_index := this.GetString("call_index")
+	call_index := this.GetSafeString("call_index")
 	limit, _ := this.GetInt("limit", 6)
 	out, len, err := this.BaseController.LinkGet(limit, site_id, site_flag, category_id, call_index)
 	if err != nil {
@@ -42,10 +42,10 @@ func (this *ApiLinkController) Get() {
  */
 // @router /api/link/get/new [get]
 func (this *ApiLinkController) GetNew() {
-	site_flag := this.GetString("site_flag")
+	site_flag := this.GetSafeString("site_flag")
 	site_id, _ := this.GetInt64("site_id")
 	category_id, _ := this.GetInt64("category_id")
-	call_index := this.GetString("call_index")
+	call_index := this.GetSafeString("call_index")
 	limit, _ := this.GetInt("limit", 6)
 	out, len, err := this.BaseController.LinkGetNew(limit, site_id, site_flag, category_id, call_index)
 	if err != nil {
@@ -68,9 +68,9 @@ func (this *ApiLinkController) GetNew() {
 // @router /api/link/paginate [get]
 func (this *ApiLinkController) Paginate() {
 	site_id, _ := this.GetInt64("site_id")
-	site_flag := this.GetString("site_flag")
+	site_flag := this.GetSafeString("site_flag")
 	category_id, _ := this.GetInt64("category_id")
-	call_index := this.GetString("call_index")
+	call_index := this.GetSafeString("call_index")
 	limit, _ := this.GetInt("limit", 12)
 	page, _ := this.GetInt("page", 1)
 	out, len, err := this.BaseController.LinkPaginate(page, limit, site_id, site_flag, category_id, call_index)

@@ -95,8 +95,8 @@ func (c *ThemeController) ThemeDestory() {
 // @router /admin/Theme/ThemePaginate [get]
 func (c *ThemeController) ThemePaginate() {
 	page, limit := c.GetPagingParameters()
-	title := c.GetString("title")
-	name := c.GetString("name")
+	title := c.GetSafeString("title")
+	name := c.GetSafeString("name")
 	list, count, _ := biz.NewCmsTheme().ThemePaginate(page, limit, name, title)
 	c.JSONPage(lib.CodeSuccess, "", list, count)
 }

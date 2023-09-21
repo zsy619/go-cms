@@ -27,8 +27,8 @@ func (c *AdminController) Index() {
 func (c *AdminController) AdminPaginate() {
 	page, limit := c.GetPagingParameters()
 	roleId, _ := c.GetInt64("roleId")
-	realName := c.GetString("realName")
-	userName := c.GetString("userName")
+	realName := c.GetSafeString("realName")
+	userName := c.GetSafeString("userName")
 	list, count, _ := biz.NewCmsAdmin().AdminPaginate(page, limit, roleId, realName, userName)
 	c.JSONPage(lib.CodeSuccess, "", list, count)
 }
@@ -90,7 +90,7 @@ func (c *AdminController) Log() {
 
 func (c *AdminController) LogPaginate() {
 	page, limit := c.GetPagingParameters()
-	userName := c.GetString("userName")
+	userName := c.GetSafeString("userName")
 	list, count, _ := biz.NewCmsAdmin().LogPaginate(page, limit, 0, userName)
 	c.JSONPage(lib.CodeSuccess, "", list, count)
 }
@@ -104,7 +104,7 @@ func (c *AdminController) Role() {
 
 func (c *AdminController) RolePaginate() {
 	page, limit := c.GetPagingParameters()
-	name := c.GetString("name")
+	name := c.GetSafeString("name")
 	list, count, _ := biz.NewCmsAdmin().RolePaginate(page, limit, name)
 	c.JSONPage(lib.CodeSuccess, "", list, count)
 }

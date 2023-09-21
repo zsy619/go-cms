@@ -62,8 +62,8 @@ func (c *ArticleController) PropertyPaginate() {
 	parentId, _ := c.GetInt64("parentId")
 	articleId, _ := c.GetInt64("articleId")
 	status, _ := c.GetInt32("status")
-	callIndex := c.GetString("callIndex")
-	title := c.GetString("title")
+	callIndex := c.GetSafeString("callIndex")
+	title := c.GetSafeString("title")
 
 	list, count, err := biz.NewCmsArticle().PropertyPaginate(page, limit, parentId, articleId, status, callIndex, title)
 	if err != nil {

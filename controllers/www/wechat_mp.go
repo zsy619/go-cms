@@ -45,10 +45,10 @@ func (this *WechatMpController) Signature() {
 	switch method {
 	case "GET":
 		{
-			timestamp := this.GetString("timestamp")
-			nonce := this.GetString("nonce")
-			signatureIn := this.GetString("signature")
-			echostr := this.GetString("echostr")
+			timestamp := this.GetSafeString("timestamp")
+			nonce := this.GetSafeString("nonce")
+			signatureIn := this.GetSafeString("signature")
+			echostr := this.GetSafeString("echostr")
 			verify := mp.NewTokenVerify(models.TokenParam{
 				Timestamp: timestamp,
 				Nonce:     nonce,

@@ -65,7 +65,7 @@ func (this *CacheController) GetList() {
 
 // Reset 重置缓存
 func (this *CacheController) Reset() {
-	cacheKey := this.GetString("cacheKey")
+	cacheKey := this.GetSafeString("cacheKey")
 	switch cacheKey {
 	case "CategoryNavCache":
 		lib.CategoryNavCache.Reset()

@@ -20,79 +20,70 @@ type BaseController struct {
 	ActionName     string
 }
 
-// GetSafeString 过滤敏感字符串
-func (c *BaseController) GetSafeString(key string, def ...string) string {
-	data := c.GetString(key, def...)
-	if data == "" {
-		return ""
-	}
-	return xstring.GetSafeString(data)
-}
-
 // 重定向
-func (c *BaseController) redirect(url string) {
-	c.Redirect(url, 302)
-	c.StopRun()
+func (ctrl *BaseController) redirect(url string) {
+	ctrl.Redirect(url, 302)
+	ctrl.StopRun()
 }
 
 // 是否POST提交
-func (c *BaseController) IsPost() bool {
-	return c.Ctx.Request.Method == "POST"
+func (ctrl *BaseController) IsPost() bool {
+	return ctrl.Ctx.Request.Method == "POST"
 }
 
 // GetPagingParameters 获取分页参数
-func (c *BaseController) GetPagingParameters() (page int, limit int) {
-	page, _ = c.GetInt("page", 1)
-	limit, _ = c.GetInt("limit", 10)
+func (ctrl *BaseController) GetPagingParameters() (page int, limit int) {
+	page, _ = ctrl.GetInt("page", 1)
+	limit, _ = ctrl.GetInt("limit", 10)
 	return
 }
 
-func (c *BaseController) Prepare() {
+func (ctrl *BaseController) Prepare() {
 	fmt.Println("BaseController Prepare")
-	controllerName, actionName := c.GetControllerAndAction()
-	c.ControllerName = controllerName[0 : len(controllerName)-10]
-	c.ActionName = actionName
+	controllerName, actionName := ctrl.GetControllerAndAction()
+	ctrl.ControllerName = controllerName[0 : len(controllerName)-10]
+	ctrl.ActionName = actionName
 
-	c.Data["version"], _ = web.AppConfig.String("version")
-	c.Data["siteName"], _ = web.AppConfig.String("site.name")
-	c.Data["curRoute"] = c.ControllerName + "." + c.ActionName
-	c.Data["curController"] = c.ControllerName
-	c.Data["curAction"] = c.ActionName
-	c.Data["time"] = xphp.Time()
-	c.Data["year"] = time.Now().Year()
-	c.Data["themePath"] = global.ThemePath
+	ctrl.Data["version"], _ = web.AppConfig.String("version")
+	ctrl.Data["siteName"], _ = web.AppConfig.String("site.name")
+	ctrl.Data["curRoute"] = ctrl.ControllerName + "." + ctrl.ActionName
+	ctrl.Data["curController"] = ctrl.ControllerName
+	ctrl.Data["curAction"] = ctrl.ActionName
+	ctrl.Data["time"] = xphp.Time()
+	ctrl.Data["year"] = time.Now().Year()
+	ctrl.Data["themePath"] = global.ThemePath
 }
 
-func (c *BaseController) Finish() {
+func (ctrl *BaseController) Finish() {
 	fmt.Println("BaseController Finish")
 }
 
 // 公共返回方法
-func (c *BaseController) JSON(code lib.CodeResult, message string, data interface{}) {
-	c.Data["json"] = &lib.JSONResponse{
+func (ctrl *BaseController) JSON(code lib.CodeResult, message string, data interface{}) {
+	ctrl.Data["json"] = &lib.JSONResponse{
 		Code:    code,
 		Message: message,
 		Data:    data,
 	}
-	_ = c.ServeJSON()
-	c.StopRun()
+	_ = ctrl.ServeJSON()
+	ctrl.StopRun()
 }
 
-func (c *BaseController) JSONSuccess(message string, data interface{}) {
-	c.JSON(lib.CodeSuccess, message, data)
+func (ctrl *BaseController) JSONSuccess(message string, data interface{}) {
+	ctrl.JSON(lib.CodeSuccess, message, data)
 }
 
-func (c *BaseController) JSONError(message string) {
-	c.JSON(lib.CodeError, message, nil)
+func (ctrl *BaseController) JSONError(message string) {
+	ctrl.JSON(lib.CodeError, message, nil)
 }
 
-func (c *BaseController) JSONErrorOfData(message string, data interface{}) {
-	c.JSON(lib.CodeError, message, data)
+func (ctrl *BaseController) JSONErrorOfData(message string, data interface{}) {
+	ctrl.JSON(lib.CodeError, message, data)
 }
 
 // JSONPage 返回分页信息
-func (c *BaseController) JSONPage(code lib.CodeResult, message string, data interface{}, count int64) {
-	c.Data["json"] = &lib.JSONResponsePage{
+func (ctrl *BaseController) JSONPage(code lib.CodeResult, message string, data interface{}, count int64) {
+	ctrl.Data["json"] = &lib.JSONResponsePage{
 		Count: count,
 		JSONResponse: lib.JSONResponse{
 			Code:    code,
@@ -100,60 +91,60 @@ func (c *BaseController) JSONPage(code lib.CodeResult, message string, data inte
 			Data:    data,
 		},
 	}
-	_ = c.ServeJSON()
-	c.StopRun()
+	_ = ctrl.ServeJSON()
+	ctrl.StopRun()
 }
 
 // JSONPageSuccess 返回分页信息
-func (c *BaseController) JSONPageSuccess(data interface{}, count int64) {
-	c.JSONPage(lib.CodeSuccess, "", data, count)
+func (ctrl *BaseController) JSONPageSuccess(data interface{}, count int64) {
+	ctrl.JSONPage(lib.CodeSuccess, "", data, count)
 }
 
 // JSONPageError 返回分页信息
-func (c *BaseController) JSONPageError(msg string, data interface{}, count int64) {
-	c.JSONPage(lib.CodeError, "", data, count)
+func (ctrl *BaseController) JSONPageError(msg string, data interface{}, count int64) {
+	ctrl.JSONPage(lib.CodeError, "", data, count)
 }
 
 // JSONData 公共返回方法
-func (c *BaseController) JSONData(data *lib.JSONResponse) {
-	c.Data["json"] = data
-	_ = c.ServeJSON()
-	c.StopRun()
+func (ctrl *BaseController) JSONData(data *lib.JSONResponse) {
+	ctrl.Data["json"] = data
+	_ = ctrl.ServeJSON()
+	ctrl.StopRun()
 }
 
 // 公共返回方法
-func (c *BaseController) OutStatus(code lib.CodeResult, message string, data interface{}) {
-	if c.Ctx.Input.IsAjax() {
-		c.JSON(code, message, data)
+func (ctrl *BaseController) OutStatus(code lib.CodeResult, message string, data interface{}) {
+	if ctrl.Ctx.Input.IsAjax() {
+		ctrl.JSON(code, message, data)
 	}
-	c.Abort("403")
+	ctrl.Abort("403")
 }
 
-func (c *BaseController) History(msg string, url string) {
+func (ctrl *BaseController) History(msg string, url string) {
 	if url == "" {
-		c.Ctx.WriteString("<script>alert('" + msg + "');window.history.go(-1);</script>")
-		c.StopRun()
+		ctrl.Ctx.WriteString("<script>alert('" + msg + "');window.history.go(-1);</script>")
+		ctrl.StopRun()
 	} else {
-		c.Redirect(url, 302)
+		ctrl.Redirect(url, 302)
 	}
 }
 
 // 获取用户IP地址
-func (c *BaseController) GetClientIp() string {
-	s := strings.Split(c.Ctx.Request.RemoteAddr, ":")
+func (ctrl *BaseController) GetClientIp() string {
+	s := strings.Split(ctrl.Ctx.Request.RemoteAddr, ":")
 	return s[0]
 }
 
-func (c *BaseController) GetSessionString(sName string) string {
-	fd := c.GetSession(sName)
+func (ctrl *BaseController) GetSessionString(sName string) string {
+	fd := ctrl.GetSession(sName)
 	if str, ok := fd.(string); ok && str != "" {
 		return str
 	}
 	return ""
 }
 
-func (c *BaseController) GetSessionBool(sName string) bool {
-	fd := c.GetSession(sName)
+func (ctrl *BaseController) GetSessionBool(sName string) bool {
+	fd := ctrl.GetSession(sName)
 	if str, ok := fd.(string); ok && str != "" {
 		rt, _ := strconv.ParseBool(str)
 		return rt
@@ -161,24 +152,33 @@ func (c *BaseController) GetSessionBool(sName string) bool {
 	return false
 }
 
-func (c *BaseController) GetSessionInt(sName string) int {
-	fd := c.GetSession(sName)
+func (ctrl *BaseController) GetSessionInt(sName string) int {
+	fd := ctrl.GetSession(sName)
 	if str, ok := fd.(int); ok {
 		return str
 	}
 	return 0
 }
 
-func (c *BaseController) SetSessionBool(sName string, value bool) {
+func (ctrl *BaseController) SetSessionBool(sName string, value bool) {
 	if value {
-		_ = c.SetSession(sName, "true")
+		_ = ctrl.SetSession(sName, "true")
 	} else {
-		_ = c.SetSession(sName, "false")
+		_ = ctrl.SetSession(sName, "false")
 	}
 }
 
-func (c *BaseController) SetDatas(datas map[string]interface{}) {
+func (ctrl *BaseController) SetDatas(datas map[string]interface{}) {
 	for k, v := range datas {
-		c.Data[k] = v
+		ctrl.Data[k] = v
 	}
+}
+
+// GetSafeString 获取安全字符串
+func (ctrl *BaseController) GetSafeString(key string, def ...string) string {
+	data := ctrl.GetString(key, def...)
+	if data == "" {
+		return ""
+	}
+	return xstring.GetSafeString(data)
 }

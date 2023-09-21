@@ -36,7 +36,7 @@ func (this *FileController) GetFileDataVm() {
 	}
 	runPath := filepath.Dir(runCommand)
 	fmt.Println("runPath---->", runPath)
-	path := this.GetString("path")
+	path := this.GetSafeString("path")
 	if path == "" {
 		path = "./Uploads"
 	}

@@ -143,8 +143,8 @@ func (c *WeixinMpVerifyController) Upload() {
 
 	// 生成唯一的文件名
 	filename := head.Filename
-	pth := c.GetString("path")
-	table := c.GetString("table")
+	pth := c.GetSafeString("path")
+	table := c.GetSafeString("table")
 	if pth == "" {
 		pth = "weixin/verify"
 	}

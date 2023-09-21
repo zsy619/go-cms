@@ -67,7 +67,7 @@ func (c *BaseController) Prepare() {
 	c.Data["year"] = time.Now().Year()
 	c.Data["controllerName"] = strings.ToLower(c.ControllerName)
 	c.Data["actionName"] = strings.ToLower(c.ActionName)
-	debug := c.GetString("debug")
+	debug := c.GetSafeString("debug")
 	c.Data["debug"] = debug
 }
 

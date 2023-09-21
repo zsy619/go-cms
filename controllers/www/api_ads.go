@@ -18,10 +18,10 @@ type ApiAdsController struct{ BaseController }
  */
 // @router /api/ads/get [get]
 func (this *ApiAdsController) Get() {
-	site_flag := this.GetString("site_flag")
+	site_flag := this.GetSafeString("site_flag")
 	site_id, _ := this.GetInt64("site_id")
 	category_id, _ := this.GetInt64("category_id")
-	call_index := this.GetString("call_index")
+	call_index := this.GetSafeString("call_index")
 	limit, _ := this.GetInt("limit", 6)
 	out, len, err := this.BaseController.AdsGet(limit, site_id, site_flag, category_id, call_index)
 	if err != nil {
@@ -42,10 +42,10 @@ func (this *ApiAdsController) Get() {
  */
 // @router /api/ads/get/new [get]
 func (this *ApiAdsController) GetNew() {
-	site_flag := this.GetString("site_flag")
+	site_flag := this.GetSafeString("site_flag")
 	site_id, _ := this.GetInt64("site_id")
 	category_id, _ := this.GetInt64("category_id")
-	call_index := this.GetString("call_index")
+	call_index := this.GetSafeString("call_index")
 	limit, _ := this.GetInt("limit", 6)
 	out, len, err := this.BaseController.AdsGetNew(limit, site_id, site_flag, category_id, call_index)
 	if err != nil {
@@ -68,9 +68,9 @@ func (this *ApiAdsController) GetNew() {
 // @router /api/ads/paginate [get]
 func (this *ApiAdsController) Paginate() {
 	site_id, _ := this.GetInt64("site_id")
-	site_flag := this.GetString("site_flag")
+	site_flag := this.GetSafeString("site_flag")
 	category_id, _ := this.GetInt64("category_id")
-	call_index := this.GetString("call_index")
+	call_index := this.GetSafeString("call_index")
 	limit, _ := this.GetInt("limit", 12)
 	page, _ := this.GetInt("page", 1)
 	out, len, err := this.BaseController.AdsPaginate(page, limit, site_id, site_flag, category_id, call_index)

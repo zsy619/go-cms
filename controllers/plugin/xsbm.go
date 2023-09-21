@@ -27,7 +27,7 @@ func (c *XsbmController) Index() {
 // Save 线上报名
 // @router /plugin/xsbm/save [post]
 func (c *XsbmController) Save() {
-	captcha := c.GetString("captcha")
+	captcha := c.GetSafeString("captcha")
 	if controllers.VerifyCode(captcha) == false {
 		c.JSONError("图形验证码错误")
 		return

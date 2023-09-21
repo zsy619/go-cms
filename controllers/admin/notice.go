@@ -55,7 +55,7 @@ func (c *NoticeController) NoticeHomePaginate() {
 // NoticePaginate 获取系统公告列表
 func (c *NoticeController) NoticePaginate() {
 	page, limit := c.GetPagingParameters()
-	title := c.GetString("title")
+	title := c.GetSafeString("title")
 	status, _ := c.GetInt32("status")
 	noticeList, count, err := biz.NewCmsAdminNotice().NoticePaginate(page, limit, title, status, GlobalAdminId, GlobalRoleType)
 	if err != nil {

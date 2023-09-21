@@ -116,7 +116,7 @@ func (this *ApiSiteController) Menu() {
 // @router /api/site/menu/flag [get]
 // @router /api/site/menu/flag/:site_flag:string [get]
 func (this *ApiSiteController) MenuFlag() {
-	site_flag := this.GetString("site_flag")
+	site_flag := this.GetSafeString("site_flag")
 	if site_flag == "" {
 		site_flag = this.Ctx.Input.Param(":site_flag")
 	}

@@ -38,8 +38,8 @@ func (c *ArticleController) ArticlePaginate() {
 	channelId, _ := c.GetInt64("channelId")
 	categoryId, _ := c.GetInt64("categoryId")
 	fmt.Println("categoryId", categoryId, "channelId", channelId)
-	title := c.GetString("title")
-	callIndex := c.GetString("callIndex")
+	title := c.GetSafeString("title")
+	callIndex := c.GetSafeString("callIndex")
 	status, _ := c.GetInt32("status")
 	list, count, err := biz.NewCmsArticle().ArticlePaginate(page, limit, channelId, categoryId, title, callIndex, status)
 	if err != nil {
@@ -83,7 +83,7 @@ func (c *ArticleController) ArticleSave() {
 		logs.Error("ArticleSave", err.Error())
 		c.JSONError(err.Error())
 	}
-	propertyData := c.GetString("propertyData", "")
+	propertyData := c.GetSafeString("propertyData", "")
 	if mdl.ArticleID > 0 {
 		mdl.UpdateID = int32(GlobalAdminId)
 		mdl.UpdateName = GlobalAdminName

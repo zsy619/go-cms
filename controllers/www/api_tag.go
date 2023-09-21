@@ -11,7 +11,7 @@ type ApiTagController struct{ BaseController }
 
 // @router /api/tag/get [get]
 func (this *ApiTagController) Get() {
-	site_flag := this.GetString("site_flag")
+	site_flag := this.GetSafeString("site_flag")
 	site_id, _ := this.GetInt64("site_id")
 	channel_id, _ := this.GetInt64("channel_id")
 	limit, _ := this.GetInt("limit", 6)
@@ -25,7 +25,7 @@ func (this *ApiTagController) Get() {
 
 // @router /api/tag/get/new [get]
 func (this *ApiTagController) GetNew() {
-	site_flag := this.GetString("site_flag")
+	site_flag := this.GetSafeString("site_flag")
 	site_id, _ := this.GetInt64("site_id")
 	channel_id, _ := this.GetInt64("channel_id")
 	limit, _ := this.GetInt("limit", 6)
@@ -75,11 +75,11 @@ func (this *ApiTagController) Click() {
 func (this *ApiTagController) ArticlePaginate() {
 	limit, _ := this.GetInt("limit", 6)
 	page, _ := this.GetInt("page", 1)
-	order_by := this.GetString("order_by", "sort_id")
-	call_index := this.GetString("call_index")
-	channel_name := this.GetString("channel_name")
-	keyword := this.GetString("keyword")
-	tag_name := this.GetString("tag_name")
+	order_by := this.GetSafeString("order_by", "sort_id")
+	call_index := this.GetSafeString("call_index")
+	channel_name := this.GetSafeString("channel_name")
+	keyword := this.GetSafeString("keyword")
+	tag_name := this.GetSafeString("tag_name")
 	channel_id, _ := this.GetInt64("channel_id", -1)
 	category_id, _ := this.GetInt64("category_id", -1)
 	is_top, _ := this.GetInt("is_top", -1)

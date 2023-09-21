@@ -19,9 +19,9 @@ type ApiArticleController struct{ BaseController }
  */
 // @router /api/category/nav [get]
 func (this *ApiArticleController) CategoryNav() {
-	channel_name := this.GetString("channel_name")
+	channel_name := this.GetSafeString("channel_name")
 	channel_id, _ := this.GetInt64("channel_id")
-	call_index := this.GetString("call_index")
+	call_index := this.GetSafeString("call_index")
 	category_id, _ := this.GetInt64("category_id")
 	article_id, _ := this.GetInt64("article_id")
 
@@ -40,8 +40,8 @@ func (this *ApiArticleController) CategoryNav() {
  */
 // @router /api/category/get [get]
 func (this *ApiArticleController) CategoryGet() {
-	channel_name := this.GetString("channel_name")
-	call_index := this.GetString("call_index")
+	channel_name := this.GetSafeString("channel_name")
+	call_index := this.GetSafeString("call_index")
 
 	if channel_name == "" && call_index == "" {
 		this.JSONErrorOfData("频道编码或栏目编码不能为空", nil)
@@ -63,7 +63,7 @@ func (this *ApiArticleController) CategoryGet() {
 // @router /api/category/find [get]
 func (this *ApiArticleController) CategoryFind() {
 	category_id, _ := this.GetInt64("category_id")
-	call_index := this.GetString("call_index")
+	call_index := this.GetSafeString("call_index")
 	outChannel, err := this.BaseController.CategoryFind(category_id, call_index)
 	if err != nil {
 		this.JSONPage(lib.CodeError, err.Error(), outChannel, 0)
@@ -88,9 +88,9 @@ func (this *ApiArticleController) CategoryFind() {
 // @router /api/article/get [get]
 func (this *ApiArticleController) Get() {
 	limit, _ := this.GetInt("limit", 6)
-	call_index := this.GetString("call_index")
-	channel_name := this.GetString("channel_name")
-	order_by := this.GetString("order_by", "")
+	call_index := this.GetSafeString("call_index")
+	channel_name := this.GetSafeString("channel_name")
+	order_by := this.GetSafeString("order_by", "")
 	channel_id, _ := this.GetInt64("channel_id", 0)
 	category_id, _ := this.GetInt64("category_id", 0)
 	is_top, _ := this.GetInt("is_top", 0)
@@ -121,9 +121,9 @@ func (this *ApiArticleController) Get() {
 // @router /api/article/get/new [get]
 func (this *ApiArticleController) GetNew() {
 	limit, _ := this.GetInt("limit", 6)
-	call_index := this.GetString("call_index")
-	channel_name := this.GetString("channel_name")
-	order_by := this.GetString("order_by", "")
+	call_index := this.GetSafeString("call_index")
+	channel_name := this.GetSafeString("channel_name")
+	order_by := this.GetSafeString("order_by", "")
 	channel_id, _ := this.GetInt64("channel_id", 0)
 	category_id, _ := this.GetInt64("category_id", 0)
 	is_top, _ := this.GetInt("is_top", 0)
@@ -158,10 +158,10 @@ func (this *ApiArticleController) GetNew() {
 func (this *ApiArticleController) Paginate() {
 	limit, _ := this.GetInt("limit", 6)
 	page, _ := this.GetInt("page", 1)
-	order_by := this.GetString("order_by", "")
-	call_index := this.GetString("call_index")
-	channel_name := this.GetString("channel_name")
-	keyword := this.GetString("keyword")
+	order_by := this.GetSafeString("order_by", "")
+	call_index := this.GetSafeString("call_index")
+	channel_name := this.GetSafeString("channel_name")
+	keyword := this.GetSafeString("keyword")
 	channel_id, _ := this.GetInt64("channel_id", -1)
 	category_id, _ := this.GetInt64("category_id", -1)
 	is_top, _ := this.GetInt("is_top", -1)
@@ -185,7 +185,7 @@ func (this *ApiArticleController) Paginate() {
 // @router /api/article/find [get]
 func (this *ApiArticleController) Find() {
 	article_id, _ := this.GetInt64("article_id", 0)
-	call_index := this.GetString("call_index")
+	call_index := this.GetSafeString("call_index")
 	aritcle, album, attatch, property, err := this.BaseController.ArticleFind(call_index, article_id)
 	result := bizmodel.ApiArticleModel{
 		Article:  aritcle,
@@ -211,7 +211,7 @@ func (this *ApiArticleController) Find() {
 func (this *ApiArticleController) PrevNext() {
 	article_id, _ := this.GetInt64("article_id", 0)
 	category_id, _ := this.GetInt64("category_id", 0)
-	call_index := this.GetString("call_index")
+	call_index := this.GetSafeString("call_index")
 	prev, next := this.BaseController.ArticlePrevNext(call_index, category_id, article_id)
 	result := struct {
 		Prev *bizmodel.ApiArticlePrevNextModel `json:"prev"`
@@ -239,7 +239,7 @@ func (this *ApiArticleController) PrevNext() {
 // @router /api/article/article [get]
 func (this *ApiArticleController) Article() {
 	article_id, _ := this.GetInt64("article_id", 0)
-	call_index := this.GetString("call_index")
+	call_index := this.GetSafeString("call_index")
 	article, err := this.BaseController.ArticleArticle(call_index, article_id)
 	if err != nil {
 		logs.Error("", err.Error())
@@ -257,7 +257,7 @@ func (this *ApiArticleController) Article() {
 // @router /api/article/album [get]
 func (this *ApiArticleController) Album() {
 	article_id, _ := this.GetInt64("article_id", 0)
-	call_index := this.GetString("call_index")
+	call_index := this.GetSafeString("call_index")
 	type_id, _ := this.GetInt32("type_id", 0)
 	album, err := this.BaseController.ArticleAlbum(call_index, article_id, type_id)
 	if err != nil {
@@ -276,7 +276,7 @@ func (this *ApiArticleController) Album() {
 // @router /api/article/attach [get]
 func (this *ApiArticleController) Attach() {
 	article_id, _ := this.GetInt64("article_id", 0)
-	call_index := this.GetString("call_index")
+	call_index := this.GetSafeString("call_index")
 	type_id, _ := this.GetInt32("type_id", 0)
 	attach, err := this.BaseController.ArticleAttach(call_index, article_id, type_id)
 	if err != nil {
@@ -295,7 +295,7 @@ func (this *ApiArticleController) Attach() {
 // @router /api/article/click [get]
 func (this *ApiArticleController) Click() {
 	article_id, _ := this.GetInt64("article_id", 0)
-	call_index := this.GetString("call_index")
+	call_index := this.GetSafeString("call_index")
 	err := this.BaseController.ArticleClick(call_index, article_id)
 	if err != nil {
 		logs.Error("Click", err.Error())
@@ -313,7 +313,7 @@ func (this *ApiArticleController) Click() {
 // @router /api/article/like [get]
 func (this *ApiArticleController) Like() {
 	article_id, _ := this.GetInt64("article_id", 0)
-	call_index := this.GetString("call_index")
+	call_index := this.GetSafeString("call_index")
 	err := this.BaseController.ArticleLike(call_index, article_id)
 	if err != nil {
 		logs.Error("Like", err.Error())
@@ -354,8 +354,8 @@ func (this *ApiArticleController) Property() {
 	limit := 99999
 	parentId, _ := this.GetInt64("parentId")
 	articleId, _ := this.GetInt64("articleId")
-	callIndex := this.GetString("callIndex")
-	title := this.GetString("title")
+	callIndex := this.GetSafeString("callIndex")
+	title := this.GetSafeString("title")
 	property, count, err := this.BaseController.Property(page, limit, parentId, articleId, callIndex, title)
 	if err != nil {
 		logs.Error("Property", err.Error())

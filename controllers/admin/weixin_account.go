@@ -12,7 +12,7 @@ import (
 
 func (c *WeixinController) AccountPaginate() {
 	page, limit := c.GetPagingParameters()
-	name := c.GetString("name")
+	name := c.GetSafeString("name")
 	status, _ := c.GetInt32("status")
 	list, count, err := biz.NewWeixinAccount().AccountPaginate(page, limit, name, status)
 	if err != nil {

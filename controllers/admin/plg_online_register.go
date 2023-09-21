@@ -24,11 +24,11 @@ func (this *PlgOnlineRegisterController) Index() {
 func (this *PlgOnlineRegisterController) Paginate() {
 	service := biz.NewPlgOnlineRegister()
 	page, limit := this.GetPagingParameters()
-	realName := this.GetString("realName")
-	special := this.GetString("special")
-	degree := this.GetString("degree")
-	tags := this.GetString("tags")
-	remark := this.GetString("remark")
+	realName := this.GetSafeString("realName")
+	special := this.GetSafeString("special")
+	degree := this.GetSafeString("degree")
+	tags := this.GetSafeString("tags")
+	remark := this.GetSafeString("remark")
 	isRead, _ := this.GetInt32("isRead")
 	list, total, err := service.Paginate(page, limit, realName, special, degree, tags, remark, isRead)
 	if err != nil {

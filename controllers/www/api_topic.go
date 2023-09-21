@@ -9,7 +9,7 @@ type ApiTopicController struct{ BaseController }
 
 // @router /api/topic/get [get]
 func (this *ApiTopicController) Get() {
-	site_flag := this.GetString("site_flag")
+	site_flag := this.GetSafeString("site_flag")
 	site_id, _ := this.GetInt64("site_id")
 	channel_id, _ := this.GetInt64("channel_id")
 	limit, _ := this.GetInt("limit", 6)
@@ -23,7 +23,7 @@ func (this *ApiTopicController) Get() {
 
 // @router /api/topic/get/new [get]
 func (this *ApiTopicController) GetNew() {
-	site_flag := this.GetString("site_flag")
+	site_flag := this.GetSafeString("site_flag")
 	site_id, _ := this.GetInt64("site_id")
 	channel_id, _ := this.GetInt64("channel_id")
 	limit, _ := this.GetInt("limit", 6)
@@ -74,12 +74,12 @@ func (this *ApiTopicController) ArticlePaginate() {
 	limit, _ := this.GetInt("limit", 6)
 	page, _ := this.GetInt("page", 1)
 	site_id, _ := this.GetInt64("site_id")
-	site_flag := this.GetString("site_flag")
-	order_by := this.GetString("order_by", "sort_id")
-	call_index := this.GetString("call_index")
-	channel_name := this.GetString("channel_name")
-	keyword := this.GetString("keyword")
-	topic_name := this.GetString("topic_name")
+	site_flag := this.GetSafeString("site_flag")
+	order_by := this.GetSafeString("order_by", "sort_id")
+	call_index := this.GetSafeString("call_index")
+	channel_name := this.GetSafeString("channel_name")
+	keyword := this.GetSafeString("keyword")
+	topic_name := this.GetSafeString("topic_name")
 	channel_id, _ := this.GetInt64("channel_id", -1)
 	category_id, _ := this.GetInt64("category_id", -1)
 	is_top, _ := this.GetInt("is_top", -1)

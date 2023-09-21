@@ -130,8 +130,8 @@ func (c *TagController) TagPaginate() {
 	page, limit := c.GetPagingParameters()
 	siteId, _ := c.GetInt64("siteId")
 	status, _ := c.GetInt32("status")
-	title := c.GetString("title")
-	name := c.GetString("name")
+	title := c.GetSafeString("title")
+	name := c.GetSafeString("name")
 	var siteIds []int64
 	if siteId > 0 {
 		siteIds = append(siteIds, siteId)

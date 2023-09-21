@@ -25,7 +25,7 @@ func (c *ThemeController) LoadFiles() {
 	}{
 		Code: 0,
 	}
-	theme := c.GetString("theme")
+	theme := c.GetSafeString("theme")
 	if theme == "" {
 		result.Code = -1
 		result.Msg = "主题名称不能为空"
@@ -62,8 +62,8 @@ func (c *ThemeController) LoadFilesType() {
 	}{
 		Code: 0,
 	}
-	theme := c.GetString("theme")
-	typex := c.GetString("type")
+	theme := c.GetSafeString("theme")
+	typex := c.GetSafeString("type")
 	if theme == "" {
 		result.Code = -1
 		result.Msg = "主题名称不能为空"
@@ -124,9 +124,9 @@ func (c *ThemeController) listFiles(dir string) ([]string, error) {
  * @return {*}
  */
 func (c *ThemeController) FileContent() {
-	theme := c.GetString("theme")
-	file := c.GetString("file")
-	typex := c.GetString("type")
+	theme := c.GetSafeString("theme")
+	file := c.GetSafeString("file")
+	typex := c.GetSafeString("type")
 	if theme == "" || file == "" || typex == "" {
 		c.JSONError("参数错误")
 		return
@@ -152,9 +152,9 @@ func (c *ThemeController) FileContent() {
  * @return {*}
  */
 func (c *ThemeController) FileAdd() {
-	theme := c.GetString("theme")
-	file := c.GetString("file")
-	typex := c.GetString("type")
+	theme := c.GetSafeString("theme")
+	file := c.GetSafeString("file")
+	typex := c.GetSafeString("type")
 	if theme == "" || file == "" || typex == "" {
 		c.JSONError("参数错误")
 		return
@@ -185,10 +185,10 @@ func (c *ThemeController) FileAdd() {
  * @return {*}
  */
 func (c *ThemeController) FileSave() {
-	theme := c.GetString("theme")
-	file := c.GetString("file")
-	typex := c.GetString("type")
-	content := c.GetString("content")
+	theme := c.GetSafeString("theme")
+	file := c.GetSafeString("file")
+	typex := c.GetSafeString("type")
+	content := c.GetSafeString("content")
 	if theme == "" || file == "" || typex == "" {
 		c.JSONError("参数错误")
 		return
@@ -216,9 +216,9 @@ func (c *ThemeController) FileSave() {
  * @return {*}
  */
 func (c *ThemeController) FileDelete() {
-	theme := c.GetString("theme")
-	file := c.GetString("file")
-	typex := c.GetString("type")
+	theme := c.GetSafeString("theme")
+	file := c.GetSafeString("file")
+	typex := c.GetSafeString("type")
 	if typex != "View" {
 		typex = "static/" + typex
 	} else {

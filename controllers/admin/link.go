@@ -127,8 +127,8 @@ func (c *LinkController) LinkPaginate() {
 	siteId, _ := c.GetInt64("siteId")
 	categoryId, _ := c.GetInt64("categoryId")
 	status, _ := c.GetInt32("status")
-	title := c.GetString("title")
-	callIndex := c.GetString("callIndex")
+	title := c.GetSafeString("title")
+	callIndex := c.GetSafeString("callIndex")
 
 	siteIds := biz.NewCmsLink().SiteIdsGet(siteId, GlobalRoleType, GlobalRoleId)
 	list, count, _ := biz.NewCmsLink().LinkPaginate(page, limit, -1, categoryId, title, callIndex, status, siteIds...)
@@ -210,8 +210,8 @@ func (c *LinkController) CategoryDestory() {
 func (c *LinkController) CategoryPaginate() {
 	page, limit := c.GetPagingParameters()
 	siteId, _ := c.GetInt64("siteId")
-	title := c.GetString("title")
-	callIndex := c.GetString("callIndex")
+	title := c.GetSafeString("title")
+	callIndex := c.GetSafeString("callIndex")
 
 	siteIds := biz.NewCmsLink().SiteIdsGet(siteId, GlobalRoleType, GlobalRoleId)
 	categoryList, count, _ := biz.NewCmsLink().CategoryPaginate(page, limit, -1, title, callIndex, siteIds...)

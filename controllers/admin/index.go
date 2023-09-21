@@ -61,9 +61,9 @@ func (c *IndexController) UserPassword() {
 // UserPasswordSave 修改密码
 // @router /admin/index/UserPasswordSave [post]
 func (c *IndexController) UserPasswordSave() {
-	oldPassword := c.GetString("old_password")
-	newPassword := c.GetString("new_password")
-	confirmPassword := c.GetString("again_password")
+	oldPassword := c.GetSafeString("old_password")
+	newPassword := c.GetSafeString("new_password")
+	confirmPassword := c.GetSafeString("again_password")
 	fmt.Println(oldPassword, newPassword, confirmPassword)
 
 	if newPassword != confirmPassword {

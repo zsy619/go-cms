@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -99,7 +98,7 @@ func (c *ThemeController) Upload() {
 		}
 		defer fileConfig.Close()
 
-		data, err := ioutil.ReadAll(fileConfig)
+		data, err := io.ReadAll(fileConfig)
 		if err != nil {
 			c.uploadMsg(-1, err.Error())
 			return
@@ -235,12 +234,12 @@ func (c *ThemeController) fileExists(path string) bool {
 }
 
 func (c *ThemeController) copyFile(src string, dest string) error {
-	input, err := ioutil.ReadFile(src)
+	input, err := os.ReadFile(src)
 	if err != nil {
 		return err
 	}
 
-	err = ioutil.WriteFile(dest, input, 0o644)
+	err = os.WriteFile(dest, input, 0o644)
 	if err != nil {
 		return err
 	}
@@ -263,7 +262,7 @@ func CopyDir(src string, dest string) error {
 		return err
 	}
 
-	entries, err := ioutil.ReadDir(src)
+	entries, err := os.ReadDir(src)
 	if err != nil {
 		return err
 	}

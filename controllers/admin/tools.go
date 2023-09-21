@@ -82,8 +82,8 @@ func (c *ToolsController) ImageUpload() {
 
 	// 生成唯一的文件名
 	filename := generateFilename(ext)
-	pth := c.GetString("path")
-	table := c.GetString("table")
+	pth := c.GetSafeString("path")
+	table := c.GetSafeString("table")
 	if pth == "" {
 		pth = "images"
 	}
@@ -190,8 +190,8 @@ func (c *ToolsController) Upload() {
 
 	// 生成唯一的文件名
 	filename := generateFilename(ext)
-	pth := c.GetString("path")
-	table := c.GetString("table")
+	pth := c.GetSafeString("path")
+	table := c.GetSafeString("table")
 	if pth == "" {
 		pth = "files"
 	}
@@ -289,7 +289,7 @@ func (c *ToolsController) KindEditorUpload() {
 		return
 	}
 	outPath := lib.C_LOCAL_DOMAIN_Backslash() + strings.ReplaceAll(targetPath, "\\", "/")
-	table := c.GetString("table")
+	table := c.GetSafeString("table")
 	if table == "" {
 		table = "images"
 	}
