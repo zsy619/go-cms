@@ -32,15 +32,6 @@ import (
 	"log"
 	"os"
 
-	_ "haedu.gov.cn/cms/controllers"
-
-	_ "haedu.gov.cn/cms/controllers/www"
-
-	_ "haedu.gov.cn/cms/controllers/admin"
-	_ "haedu.gov.cn/cms/controllers/funcs"
-
-	_ "haedu.gov.cn/cms/controllers/plugin"
-
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
 	"github.com/beego/beego/v2/server/web/filter/cors"
@@ -49,6 +40,11 @@ import (
 
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/controllers"
+	_ "haedu.gov.cn/cms/controllers"
+	_ "haedu.gov.cn/cms/controllers/admin"
+	_ "haedu.gov.cn/cms/controllers/funcs"
+	_ "haedu.gov.cn/cms/controllers/plugin"
+	_ "haedu.gov.cn/cms/controllers/www"
 )
 
 var globalSessions *session.Manager
@@ -208,6 +204,17 @@ func (p *Program) run() { // 此处编写具体的服务代码
 	// // mobile过滤器
 	// web.InsertFilter("/mobile/x/*", web.BeforeRouter, routers.FilterMobile)
 	// }
+
+	fmt.Println(`
+    ________  _____ ______   ________      
+    |\   ____\|\   _ \  _   \|\   ____\     
+    \ \  \___|\ \  \\\__\ \  \ \  \___|_    
+     \ \  \    \ \  \\|__| \  \ \_____  \   
+      \ \  \____\ \  \    \ \  \|____|\  \  
+       \ \_______\ \__\    \ \__\____\_\  \ 
+        \|_______|\|__|     \|__|\_________\
+                                \|_________|
+     `)
 
 	web.Run()
 }
