@@ -206,14 +206,22 @@ func (p *Program) run() { // 此处编写具体的服务代码
 	// }
 
 	fmt.Println(`
-    ________  _____ ______   ________      
-    |\   ____\|\   _ \  _   \|\   ____\     
-    \ \  \___|\ \  \\\__\ \  \ \  \___|_    
-     \ \  \    \ \  \\|__| \  \ \_____  \   
-      \ \  \____\ \  \    \ \  \|____|\  \  
-       \ \_______\ \__\    \ \__\____\_\  \ 
-        \|_______|\|__|     \|__|\_________\
-                                \|_________|
+    CCCCCCCCCCCCCMMMMMMMM               MMMMMMMM   SSSSSSSSSSSSSSS 
+    CCC::::::::::::CM:::::::M             M:::::::M SS:::::::::::::::S
+  CC:::::::::::::::CM::::::::M           M::::::::MS:::::SSSSSS::::::S
+ C:::::CCCCCCCC::::CM:::::::::M         M:::::::::MS:::::S     SSSSSSS
+C:::::C       CCCCCCM::::::::::M       M::::::::::MS:::::S            
+C:::::C              M:::::::::::M     M:::::::::::MS:::::S            
+C:::::C              M:::::::M::::M   M::::M:::::::M S::::SSSS         
+C:::::C              M::::::M M::::M M::::M M::::::M  SS::::::SSSSS    
+C:::::C              M::::::M  M::::M::::M  M::::::M    SSS::::::::SS  
+C:::::C              M::::::M   M:::::::M   M::::::M       SSSSSS::::S 
+C:::::C              M::::::M    M:::::M    M::::::M            S:::::S
+C:::::C       CCCCCCM::::::M     MMMMM     M::::::M            S:::::S
+ C:::::CCCCCCCC::::CM::::::M               M::::::MSSSSSSS     S:::::S
+  CC:::::::::::::::CM::::::M               M::::::MS::::::SSSSSS:::::S
+    CCC::::::::::::CM::::::M               M::::::MS:::::::::::::::SS 
+       CCCCCCCCCCCCCMMMMMMMM               MMMMMMMM SSSSSSSSSSSSSSS   
      `)
 
 	web.Run()
