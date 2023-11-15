@@ -2,7 +2,7 @@
 
 case $1 in 
 	start)
-		nohup ./cms 2>&1 >> /home/cms/logs/log.log 2>&1 /dev/null &
+		nohup ./cms 2>&1 >> /mooc/mooc/cms/logs/log.log 2> /dev/null &
 		echo "服务已启动..."
 		sleep 1
 	;;
@@ -14,7 +14,7 @@ case $1 in
 	restart)
 		killall cms
 		sleep 1
-		nohup ./cms 2>&1 >> /home/cms/logs/log.log 2>&1 /dev/null &
+		nohup ./cms 2>&1 >> /mooc/mooc/cms/logs/log.log 2> /dev/null &
 		echo "服务已重启..."
 		sleep 1
 	;;

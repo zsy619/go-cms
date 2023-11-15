@@ -41,10 +41,10 @@ func init() {
 		})
 		if err != nil {
 			fmt.Println(err.Error())
-			panic(err)
+			// panic(err)
+		} else {
+			AuthDatabase = NewDBWrapper(dbConnect)
 		}
-
-		AuthDatabase = NewDBWrapper(dbConnect)
 	}
 }
 

@@ -1,6 +1,10 @@
 package lib
 
-import "haedu.gov.cn/tools/xcache"
+import (
+	"fmt"
+
+	"haedu.gov.cn/tools/xcache"
+)
 
 type CacheItemModel struct {
 	Key     string `json:"key"`     // Key 缓存键
@@ -82,6 +86,7 @@ var (
 
 // init 初始化
 func init() {
+	fmt.Println("init 缓存初始化")
 	CategoryNavCache = NewCacheItemModel("CategoryNavCache", "栏目导航缓存", 60*100)
 	CategoryGetCache = NewCacheItemModel("CategoryGetCache", "栏目列表缓存", 60*100)
 	CategoryFindCache = NewCacheItemModel("CategoryFindCache", "栏目详情缓存", 60*100)

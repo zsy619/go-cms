@@ -1,7 +1,9 @@
 cms
+cmsx
 data
 logs
 Uploads
 Downloads
 app/lib/Uploads
 *.exe
+.vscode
