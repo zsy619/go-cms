@@ -168,12 +168,10 @@ func (p *Program) run() { // 此处编写具体的服务代码
 	// 通过 /js/资源路径  可以访问static/js目录的内容
 	web.SetStaticPath("/js", "static/js")
 
+	web.SetStaticPath("/Upload", "Upload")
 	web.SetStaticPath("/Uploads", "Uploads")
-	web.SetStaticPath("/Uploads", "uploads")
 	web.SetStaticPath("/Download", "Download")
-	web.SetStaticPath("/Download", "download")
 	web.SetStaticPath("/Downloads", "Downloads")
-	web.SetStaticPath("/Downloads", "downloads")
 	web.SetStaticPath("/Public", "Public")
 	web.SetStaticPath("/debug", "debug")
 
@@ -191,7 +189,6 @@ func (p *Program) run() { // 此处编写具体的服务代码
 	web.BConfig.EnableGzip = true                              // 是否开启 gzip 支持，默认为 false 不支持 gzip，一旦开启了 gzip，那么在模板输出的内容会进行 gzip 或者 zlib 压缩，根据用户的 Accept-Encoding 来判断。
 	web.BConfig.MaxMemory = 1 << 26                            // 文件上传默认内存缓存大小，默认值是 1 << 26(64M)。
 	web.BConfig.WebConfig.AutoRender = true                    // 是否模板自动渲染，默认值为 true，对于 API 类型的应用，应用需要把该选项设置为 false，不需要渲染模板。
-	web.BConfig.WebConfig.EnableDocs = true                    // 是否开启文档内置功能，默认是 false
 	web.BConfig.WebConfig.FlashName = "BEEGO_FLASH"            // Flash 数据设置时 Cookie 的名称，默认是 BEEGO_FLASH
 	web.BConfig.WebConfig.DirectoryIndex = true                // 是否开启静态目录的列表显示，默认不显示目录，返回 403 错误。
 
