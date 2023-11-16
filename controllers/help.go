@@ -4,10 +4,10 @@ import "fmt"
 
 type HelpController struct{ BaseController }
 
-func (this *HelpController) Index() {
-	this.Data["pageTitle"] = "帮助中心"
-	chn := this.Ctx.Input.Param(":chn")
-	page := this.Ctx.Input.Param(":page")
+func (ctrl *HelpController) Index() {
+	ctrl.Data["pageTitle"] = "帮助中心"
+	chn := ctrl.Ctx.Input.Param(":chn")
+	page := ctrl.Ctx.Input.Param(":page")
 	fmt.Println(chn, page)
 	tplName := "help/index.html"
 	if chn != "" && page != "" {
@@ -16,6 +16,6 @@ func (this *HelpController) Index() {
 	if chn != "" && page == "" {
 		tplName = fmt.Sprintf("help/%s/index.html", chn)
 	}
-	this.Layout = "help/layout.html"
-	this.TplName = tplName
+	ctrl.Layout = "help/layout.html"
+	ctrl.TplName = tplName
 }

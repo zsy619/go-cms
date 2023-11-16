@@ -2,13 +2,15 @@ package biz
 
 import (
 	"errors"
+	"time"
+
 	"github.com/beego/beego/v2/core/logs"
+
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
-	"time"
 )
 
-func (this *CmsArticle) PropertyPaginate(page, limit int, parentId, articleId int64, status int32, callIndex, title string) ([]*model.CmsArticleProperty, int64, error) {
+func (svc *CmsArticle) PropertyPaginate(page, limit int, parentId, articleId int64, status int32, callIndex, title string) ([]*model.CmsArticleProperty, int64, error) {
 	mdl, do := query.CmsArticlePropertyDo()
 	if parentId > 0 {
 		do = do.Where(mdl.ParentID.Eq(parentId))
@@ -28,12 +30,12 @@ func (this *CmsArticle) PropertyPaginate(page, limit int, parentId, articleId in
 	return do.Where(mdl.IsDeleted.Is(false)).Order(mdl.SortID).FindByPage((page-1)*limit, limit)
 }
 
-func (this *CmsArticle) PropertyFind(propertyId int64) (*model.CmsArticleProperty, error) {
+func (svc *CmsArticle) PropertyFind(propertyId int64) (*model.CmsArticleProperty, error) {
 	mdl, do := query.CmsArticlePropertyDo()
 	return do.Where(mdl.IsDeleted.Is(false)).Where(mdl.PropertyID.Eq(propertyId)).First()
 }
 
-func (this *CmsArticle) PropertySave(input *model.CmsArticleProperty) error {
+func (svc *CmsArticle) PropertySave(input *model.CmsArticleProperty) error {
 	mdl, do := query.CmsArticlePropertyDo()
 	if input.CallIndex != "" {
 		if count, _ := do.Where(mdl.PropertyID.Neq(input.PropertyID), mdl.CallIndex.Eq(input.CallIndex)).Count(); count > 0 {
@@ -66,7 +68,7 @@ func (this *CmsArticle) PropertySave(input *model.CmsArticleProperty) error {
 	return err
 }
 
-func (this *CmsArticle) PropertySaveSortId(PropertyId int64, sortId int32) error {
+func (svc *CmsArticle) PropertySaveSortId(PropertyId int64, sortId int32) error {
 	mdl, do := query.CmsArticlePropertyDo()
 	_, err := do.Where(mdl.PropertyID.Eq(PropertyId)).UpdateColumns(
 		map[string]interface{}{
@@ -77,7 +79,7 @@ func (this *CmsArticle) PropertySaveSortId(PropertyId int64, sortId int32) error
 	return err
 }
 
-func (this *CmsArticle) PropertyDestroy(PropertyId int64) error {
+func (svc *CmsArticle) PropertyDestroy(PropertyId int64) error {
 	mdl, do := query.CmsArticlePropertyDo()
 	if _, err := do.Where(mdl.PropertyID.Eq(PropertyId)).Delete(); err != nil {
 		return err
@@ -85,7 +87,7 @@ func (this *CmsArticle) PropertyDestroy(PropertyId int64) error {
 	return nil
 }
 
-func (this *CmsArticle) PropertyChangeStatus(PropertyId int64, status int32) error {
+func (svc *CmsArticle) PropertyChangeStatus(PropertyId int64, status int32) error {
 	mdl, do := query.CmsArticlePropertyDo()
 	_, err := do.Where(mdl.PropertyID.Eq(PropertyId)).UpdateColumns(
 		map[string]interface{}{

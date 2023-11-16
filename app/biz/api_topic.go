@@ -2,15 +2,16 @@ package biz
 
 import (
 	"fmt"
-	"haedu.gov.cn/cms/app/lib"
 	"strconv"
 	"time"
 
 	"github.com/beego/beego/v2/core/logs"
 	"gorm.io/gorm"
+	"haedu.gov.cn/tools/xgeneric"
+
 	"haedu.gov.cn/cms/app/biz/bizmodel"
 	"haedu.gov.cn/cms/app/dal/query"
-	"haedu.gov.cn/tools/xgeneric"
+	"haedu.gov.cn/cms/app/lib"
 )
 
 type ApiTopic struct{}
@@ -19,7 +20,7 @@ func NewApiTopic() *ApiTopic {
 	return &ApiTopic{}
 }
 
-func (this *ApiTopic) get(cackeKeyPrefix string, limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTopicModel, int64, error) {
+func (svc *ApiTopic) get(cackeKeyPrefix string, limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTopicModel, int64, error) {
 	if limit <= 0 {
 		limit = 10
 	}
@@ -65,8 +66,8 @@ func (this *ApiTopic) get(cackeKeyPrefix string, limit int, site_id int64, site_
  * @param {int64} channel_id 栏目ID
  * @return {*}
  */
-func (this *ApiTopic) Get(limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTopicModel, int64, error) {
-	return this.get("ApiTopic_Get", limit, site_id, site_flag, channel_id)
+func (svc *ApiTopic) Get(limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTopicModel, int64, error) {
+	return svc.get("ApiTopic_Get", limit, site_id, site_flag, channel_id)
 }
 
 /**
@@ -76,8 +77,8 @@ func (this *ApiTopic) Get(limit int, site_id int64, site_flag string, channel_id
  * @param {int64} channel_id 栏目ID
  * @return {*}
  */
-func (this *ApiTopic) GetNew(limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTopicModel, int64, error) {
-	return this.get("ApiTopic_GetNew", limit, site_id, site_flag, channel_id)
+func (svc *ApiTopic) GetNew(limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTopicModel, int64, error) {
+	return svc.get("ApiTopic_GetNew", limit, site_id, site_flag, channel_id)
 }
 
 /**
@@ -85,7 +86,7 @@ func (this *ApiTopic) GetNew(limit int, site_id int64, site_flag string, channel
  * @param {int64} topic_id 专题ID
  * @return {*}
  */
-func (this *ApiTopic) Click(topic_id int64) error {
+func (svc *ApiTopic) Click(topic_id int64) error {
 	mdl, do := query.CmsTopicDo()
 	_, err := do.Where(mdl.TopicID.Eq(topic_id), mdl.Status.Eq(int32(StatusPass))).Updates(map[string]interface{}{
 		mdl.Click.ColumnName().String():      gorm.Expr("click + ?", 1),
@@ -100,7 +101,7 @@ func (this *ApiTopic) Click(topic_id int64) error {
  * @param {string} name 专题名称
  * @return {*}
  */
-func (this *ApiTopic) Find(topic_id int64, name string) (*bizmodel.ApiTopicModel, error) {
+func (svc *ApiTopic) Find(topic_id int64, name string) (*bizmodel.ApiTopicModel, error) {
 	cacheKey := fmt.Sprintf("ApiTopic_Find_%d_%s", topic_id, name)
 	if found, item := lib.TopicFindCache.Get(cacheKey); found {
 		model := item.(*bizmodel.ApiTopicModel)
@@ -142,7 +143,7 @@ func (this *ApiTopic) Find(topic_id int64, name string) (*bizmodel.ApiTopicModel
  * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
  * @return {*}
  */
-func (this *ApiTopic) ArticlePaginate(page, limit int, topic_name string, site_id int64, site_flag string, channel_id int64, channel_name string, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide, is_search int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
+func (svc *ApiTopic) ArticlePaginate(page, limit int, topic_name string, site_id int64, site_flag string, channel_id int64, channel_name string, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide, is_search int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
 	order_by = xgeneric.IFF(order_by == "", "sort_id", order_by)
 	where := xgeneric.IFF(site_flag == "", "", " AND d.flag = '"+site_flag+"'") +
 		xgeneric.IFF(site_id <= 0, "", " AND d.site_id = "+strconv.FormatInt(site_id, 10)) +
@@ -183,7 +184,7 @@ func (this *ApiTopic) ArticlePaginate(page, limit int, topic_name string, site_i
 	return list, count, err
 }
 
-func (this *ApiTopic) ArtilceTop(limit int, topic_name string) ([]*bizmodel.ApiArticleListModel, int64, error) {
+func (svc *ApiTopic) ArtilceTop(limit int, topic_name string) ([]*bizmodel.ApiArticleListModel, int64, error) {
 	if limit <= 0 {
 		limit = 10
 	}

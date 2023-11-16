@@ -4,7 +4,7 @@ import (
 	"crypto/sha1"
 	"encoding/xml"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"sort"
 	"strings"
@@ -65,7 +65,7 @@ func (this *Request) IsValid(rw http.ResponseWriter, req *http.Request) bool {
 }
 
 func (this *Request) parseRequest(req *http.Request) error {
-	raw, err := ioutil.ReadAll(req.Body)
+	raw, err := io.ReadAll(req.Body)
 	if err != nil {
 		return err
 	}

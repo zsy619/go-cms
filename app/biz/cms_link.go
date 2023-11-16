@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"time"
 
-	"haedu.gov.cn/cms/global"
+	"haedu.gov.cn/tools/xgeneric"
 
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
-	"haedu.gov.cn/tools/xgeneric"
+	"haedu.gov.cn/cms/global"
 )
 
 type CmsLink struct{}
@@ -19,7 +19,7 @@ func NewCmsLink() *CmsLink {
 }
 
 // CategoryPaginate 分页查询
-func (this *CmsLink) CategoryPaginate(page, limit int, channelId int64, title, callIndex string, siteId ...int64) ([]*model.CmsLinkCategory, int64, error) {
+func (svc *CmsLink) CategoryPaginate(page, limit int, channelId int64, title, callIndex string, siteId ...int64) ([]*model.CmsLinkCategory, int64, error) {
 	mdl, do := query.CmsLinkCategoryDo()
 	if len(siteId) > 0 {
 		do = do.Where(mdl.SiteID.In(siteId...))
@@ -37,13 +37,13 @@ func (this *CmsLink) CategoryPaginate(page, limit int, channelId int64, title, c
 }
 
 // CategoryFind 获取
-func (this *CmsLink) CategoryFind(categoryId int64) (*model.CmsLinkCategory, error) {
+func (svc *CmsLink) CategoryFind(categoryId int64) (*model.CmsLinkCategory, error) {
 	mdl, do := query.CmsLinkCategoryDo()
 	return do.Where(mdl.CategoryID.Eq(categoryId)).First()
 }
 
 // CategorySave 保存或更新
-func (this *CmsLink) CategorySave(input *model.CmsLinkCategory) error {
+func (svc *CmsLink) CategorySave(input *model.CmsLinkCategory) error {
 	mdl, do := query.CmsLinkCategoryDo()
 	if input.CallIndex != "" {
 		if count, _ := do.Where(mdl.CategoryID.Neq(input.CategoryID), mdl.CallIndex.Eq(input.CallIndex)).Count(); count > 0 {
@@ -88,7 +88,7 @@ func (this *CmsLink) CategorySave(input *model.CmsLinkCategory) error {
 	return err
 }
 
-func (this *CmsLink) CategorySaveSortId(categoryId int64, sortId int32) error {
+func (svc *CmsLink) CategorySaveSortId(categoryId int64, sortId int32) error {
 	mdl, do := query.CmsLinkCategoryDo()
 	_, err := do.Where(mdl.CategoryID.Eq(categoryId)).UpdateColumns(
 		map[string]interface{}{
@@ -100,7 +100,7 @@ func (this *CmsLink) CategorySaveSortId(categoryId int64, sortId int32) error {
 }
 
 // LinkClone 克隆
-func (this *CmsLink) LinkClone(linkId int64) (int64, error) {
+func (svc *CmsLink) LinkClone(linkId int64) (int64, error) {
 	mdl, do := query.CmsLinkDo()
 	art, err := do.Where(mdl.LinkID.Eq(linkId)).First()
 	if err != nil {
@@ -115,7 +115,7 @@ func (this *CmsLink) LinkClone(linkId int64) (int64, error) {
 }
 
 // LinkChangeStatus 修改状态
-func (this *CmsLink) LinkChangeStatus(linkId int64, status int32) error {
+func (svc *CmsLink) LinkChangeStatus(linkId int64, status int32) error {
 	mdl, do := query.CmsLinkDo()
 	_, err := do.Where(mdl.LinkID.Eq(linkId)).UpdateColumns(
 		map[string]interface{}{
@@ -127,16 +127,16 @@ func (this *CmsLink) LinkChangeStatus(linkId int64, status int32) error {
 }
 
 // CategoryDestory 删除
-func (this *CmsLink) CategoryDestory(categoryId int64) error {
+func (svc *CmsLink) CategoryDestory(categoryId int64) error {
 	mdl, do := query.CmsLinkCategoryDo()
 	if _, err := do.Where(mdl.CategoryID.Eq(categoryId)).Delete(); err != nil {
 		return err
 	}
-	return this.LinkDestroyByCategoryId(categoryId)
+	return svc.LinkDestroyByCategoryId(categoryId)
 }
 
 // LinkDestroyByCategoryId 删除
-func (this *CmsLink) LinkDestroyByCategoryId(categoryId int64) error {
+func (svc *CmsLink) LinkDestroyByCategoryId(categoryId int64) error {
 	mdl, do := query.CmsLinkDo()
 	if _, err := do.Where(mdl.CategoryID.Eq(categoryId)).Delete(); err != nil {
 		return err
@@ -145,7 +145,7 @@ func (this *CmsLink) LinkDestroyByCategoryId(categoryId int64) error {
 }
 
 // LinkPaginate 分页查询
-func (this *CmsLink) LinkPaginate(page, limit int, channelId, categoryId int64, title, callIndex string, status int32, siteId ...int64) ([]*model.CmsLink, int64, error) {
+func (svc *CmsLink) LinkPaginate(page, limit int, channelId, categoryId int64, title, callIndex string, status int32, siteId ...int64) ([]*model.CmsLink, int64, error) {
 	mdl, do := query.CmsLinkDo()
 	if len(siteId) > 0 {
 		do = do.Where(mdl.SiteID.In(siteId...))
@@ -169,13 +169,13 @@ func (this *CmsLink) LinkPaginate(page, limit int, channelId, categoryId int64, 
 }
 
 // LinkFind 获取
-func (this *CmsLink) LinkFind(linkId int64) (*model.CmsLink, error) {
+func (svc *CmsLink) LinkFind(linkId int64) (*model.CmsLink, error) {
 	mdl, do := query.CmsLinkDo()
 	return do.Where(mdl.LinkID.Eq(linkId)).First()
 }
 
 // LinkSave 保存或更新
-func (this *CmsLink) LinkSave(input *model.CmsLink) error {
+func (svc *CmsLink) LinkSave(input *model.CmsLink) error {
 	mdl, do := query.CmsLinkDo()
 	if input.CallIndex != "" {
 		if count, _ := do.Where(mdl.LinkID.Neq(input.LinkID), mdl.CallIndex.Eq(input.CallIndex)).Count(); count > 0 {
@@ -219,7 +219,7 @@ func (this *CmsLink) LinkSave(input *model.CmsLink) error {
 }
 
 // LinkDestory 删除
-func (this *CmsLink) LinkDestory(linkId int64) error {
+func (svc *CmsLink) LinkDestory(linkId int64) error {
 	mdl, do := query.CmsLinkDo()
 	if _, err := do.Where(mdl.LinkID.Eq(linkId)).Delete(); err != nil {
 		return err
@@ -233,7 +233,7 @@ func (this *CmsLink) LinkDestory(linkId int64) error {
  * @param {int32} sortId
  * @return {*}
  */
-func (this *CmsLink) LinkSaveSortId(linkId int64, sortId int32) error {
+func (svc *CmsLink) LinkSaveSortId(linkId int64, sortId int32) error {
 	mdl, do := query.CmsLinkDo()
 	_, err := do.Where(mdl.LinkID.Eq(linkId)).UpdateColumns(
 		map[string]interface{}{
@@ -245,9 +245,9 @@ func (this *CmsLink) LinkSaveSortId(linkId int64, sortId int32) error {
 }
 
 // SiteCategoryGet 获取站点与分类
-func (this *CmsLink) SiteCategoryGet(roleId int64, roleType string) ([]*model.CmsSite, []*model.CmsLinkCategory, error) {
+func (svc *CmsLink) SiteCategoryGet(roleId int64, roleType string) ([]*model.CmsSite, []*model.CmsLinkCategory, error) {
 	if global.IsSuper(roleType) {
-		list, _, _ := this.CategoryPaginate(1, 99999, -1, "", "")
+		list, _, _ := svc.CategoryPaginate(1, 99999, -1, "", "")
 		siteList, _, _ := NewCmsSite().SitePaginate(1, 999999, "", "")
 		return siteList, list, nil
 	}
@@ -261,13 +261,13 @@ func (this *CmsLink) SiteCategoryGet(roleId int64, roleType string) ([]*model.Cm
 			item, _ := NewCmsSite().SiteOne(siteIdList[i].SiteID)
 			siteList = append(siteList, item)
 		}
-		categoryList, _, _ = this.CategoryPaginate(1, 99999, -1, "", "", siteIds...)
+		categoryList, _, _ = svc.CategoryPaginate(1, 99999, -1, "", "", siteIds...)
 	}
 	return siteList, categoryList, nil
 }
 
 // SiteIdsGet 根据传入的站点筛选条件、角色类型、角色ID获取站点ID集合
-func (this *CmsLink) SiteIdsGet(siteId int64, roleType string, roleId int64) []int64 {
+func (svc *CmsLink) SiteIdsGet(siteId int64, roleType string, roleId int64) []int64 {
 	var siteIds []int64
 	if siteId > 0 {
 		siteIds = append(siteIds, siteId)
@@ -282,7 +282,7 @@ func (this *CmsLink) SiteIdsGet(siteId int64, roleType string, roleId int64) []i
 	return siteIds
 }
 
-func (this *CmsLink) FindByDate(selectTime ...time.Time) []int64 {
+func (svc *CmsLink) FindByDate(selectTime ...time.Time) []int64 {
 	mdl, do := query.CmsLinkDo()
 	duration, _ := time.ParseDuration("24h")
 	var counts []int64

@@ -1,8 +1,9 @@
 package www
 
 import (
-	"haedu.gov.cn/cms/app/biz"
 	"haedu.gov.cn/tools/xstring"
+
+	"haedu.gov.cn/cms/app/biz"
 )
 
 // ChannelController 频道控制器
@@ -10,67 +11,67 @@ type ChannelController struct{ BaseController }
 
 // Channel 频道首页
 // @router /:flag/:name:string [get]
-func (this *ChannelController) Channel() {
-	siteFlag := this.Ctx.Input.Param(":flag")
-	channelName := this.Ctx.Input.Param(":name")
+func (ctrl *ChannelController) Channel() {
+	siteFlag := ctrl.Ctx.Input.Param(":flag")
+	channelName := ctrl.Ctx.Input.Param(":name")
 	if siteFlag == "" || channelName == "" {
-		this.Abort("404")
+		ctrl.Abort("404")
 	}
 	channelModel, err := biz.NewApiChannel().Find(channelName, 0)
 	if err != nil {
-		this.Ctx.WriteString(err.Error())
-		this.StopRun()
+		ctrl.Ctx.WriteString(err.Error())
+		ctrl.StopRun()
 	}
-	this.Data["channel"] = channelModel
-	this.Data["channelName"] = channelName
+	ctrl.Data["channel"] = channelModel
+	ctrl.Data["channelName"] = channelName
 	if channelModel.TmplChnl == "" {
-		this.TplName = this.GetView(DefaultSite.Template, "channel.html")
+		ctrl.TplName = ctrl.GetView(DefaultSite.Template, "channel.html")
 	} else {
-		if xstring.HasSuffix(channelModel.TmplChnl, ".html", ".htm", ".tpl") == false {
+		if !xstring.HasSuffix(channelModel.TmplChnl, ".html", ".htm", ".tpl") {
 			channelModel.TmplChnl += ".html"
 		}
-		this.TplName = this.GetView(DefaultSite.Template, channelModel.TmplChnl)
+		ctrl.TplName = ctrl.GetView(DefaultSite.Template, channelModel.TmplChnl)
 	}
 }
 
 // Category 频道分类
 // @router /:flag/:name:string/:category:string [get]
-func (this *ChannelController) Category() {
-	siteFlag := this.Ctx.Input.Param(":flag")
-	channelName := this.Ctx.Input.Param(":name")
-	categoryName := this.Ctx.Input.Param(":category")
+func (ctrl *ChannelController) Category() {
+	siteFlag := ctrl.Ctx.Input.Param(":flag")
+	channelName := ctrl.Ctx.Input.Param(":name")
+	categoryName := ctrl.Ctx.Input.Param(":category")
 	if siteFlag == "" || channelName == "" || categoryName == "" {
-		this.Abort("404")
+		ctrl.Abort("404")
 	}
 	channelModel, channelErr := biz.NewApiChannel().Find(channelName, 0)
 	if channelErr != nil {
-		this.Ctx.WriteString(channelErr.Error())
-		this.StopRun()
+		ctrl.Ctx.WriteString(channelErr.Error())
+		ctrl.StopRun()
 	}
 	categoryModel, categoryErr := biz.NewApiArticle().CategoryFind(0, categoryName)
 	if categoryErr != nil {
-		this.Ctx.WriteString(categoryErr.Error())
-		this.StopRun()
+		ctrl.Ctx.WriteString(categoryErr.Error())
+		ctrl.StopRun()
 	}
 	if categoryModel.ChannelID <= 0 {
-		this.Ctx.WriteString("分类不存在")
-		this.StopRun()
+		ctrl.Ctx.WriteString("分类不存在")
+		ctrl.StopRun()
 	}
 	if categoryModel.ChannelID != channelModel.ChannelID {
-		this.Ctx.WriteString("分类与频道不匹配")
-		this.StopRun()
+		ctrl.Ctx.WriteString("分类与频道不匹配")
+		ctrl.StopRun()
 	}
-	this.Data["channel"] = channelModel
-	this.Data["category"] = categoryModel
-	this.Data["channelName"] = channelName
-	this.Data["categoryName"] = categoryName
+	ctrl.Data["channel"] = channelModel
+	ctrl.Data["category"] = categoryModel
+	ctrl.Data["channelName"] = channelName
+	ctrl.Data["categoryName"] = categoryName
 
 	if categoryModel.TmplCat == "" {
-		this.TplName = this.GetView(DefaultSite.Template, "category.html")
+		ctrl.TplName = ctrl.GetView(DefaultSite.Template, "category.html")
 	} else {
-		if xstring.HasSuffix(categoryModel.TmplCat, ".html", ".htm", ".tpl") == false {
+		if !xstring.HasSuffix(categoryModel.TmplCat, ".html", ".htm", ".tpl") {
 			categoryModel.TmplCat += ".html"
 		}
-		this.TplName = this.GetView(DefaultSite.Template, categoryModel.TmplCat)
+		ctrl.TplName = ctrl.GetView(DefaultSite.Template, categoryModel.TmplCat)
 	}
 }

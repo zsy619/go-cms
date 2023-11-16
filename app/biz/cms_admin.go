@@ -3,14 +3,15 @@ package biz
 import (
 	"context"
 	"errors"
-	"haedu.gov.cn/cms/global"
 	"strconv"
 	"time"
 
 	"github.com/beego/beego/v2/core/logs"
+	"haedu.gov.cn/tools/xcrypto"
+
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
-	"haedu.gov.cn/tools/xcrypto"
+	"haedu.gov.cn/cms/global"
 )
 
 type LoginType int
@@ -32,7 +33,7 @@ func NewCmsAdmin() *CmsAdmin {
 }
 
 // Login 登录
-func (m *CmsAdmin) Login(userKey, password string, userType int, loginType LoginType) (*model.CmsAdmin, error) {
+func (svc *CmsAdmin) Login(userKey, password string, userType int, loginType LoginType) (*model.CmsAdmin, error) {
 	mdl, do := query.CmsAdminDo()
 	ctx := context.Background()
 	switch loginType {
@@ -88,7 +89,7 @@ func (m *CmsAdmin) Login(userKey, password string, userType int, loginType Login
 }
 
 // LoginLog 写入登录日志
-func (m *CmsAdmin) LoginLog(userId int64, userName string, method, path, queryx, statusCode, ip string) {
+func (*CmsAdmin) LoginLog(userId int64, userName string, method, path, queryx, statusCode, ip string) {
 	_, logDo := query.CmsAdminLogDo()
 	log := &model.CmsAdminLog{
 		UserID:     userId,
@@ -110,7 +111,7 @@ func (m *CmsAdmin) LoginLog(userId int64, userName string, method, path, queryx,
 	)
 }
 
-func (m *CmsAdmin) AdminPaginate(page, limit int, roleId int64, realName, userName string) ([]*model.CmsAdmin, int64, error) {
+func (*CmsAdmin) AdminPaginate(page, limit int, roleId int64, realName, userName string) ([]*model.CmsAdmin, int64, error) {
 	mdl, do := query.CmsAdminDo()
 	if roleId > 0 {
 		do = do.Where(mdl.RoleID.Eq(roleId))
@@ -125,7 +126,7 @@ func (m *CmsAdmin) AdminPaginate(page, limit int, roleId int64, realName, userNa
 }
 
 // AdminDestory 删除
-func (this *CmsAdmin) AdminDestory(userId int64) error {
+func (svc *CmsAdmin) AdminDestory(userId int64) error {
 	mdl, do := query.CmsAdminDo()
 	if _, err := do.Where(mdl.UserID.Eq(userId)).Delete(); err != nil {
 		return err
@@ -134,7 +135,7 @@ func (this *CmsAdmin) AdminDestory(userId int64) error {
 }
 
 // AdminSave 保存或更新
-func (this *CmsAdmin) AdminSave(input *model.CmsAdmin) error {
+func (svc *CmsAdmin) AdminSave(input *model.CmsAdmin) error {
 	mdl, do := query.CmsAdminDo()
 	if input.NickName != "" {
 		if count, _ := do.Where(mdl.UserID.Neq(input.UserID), mdl.NickName.Eq(input.NickName)).Count(); count > 0 {
@@ -210,7 +211,7 @@ func (this *CmsAdmin) AdminSave(input *model.CmsAdmin) error {
 	return err
 }
 
-func (this *CmsAdmin) AdminSaveSortId(userId int64, sortId int32) error {
+func (svc *CmsAdmin) AdminSaveSortId(userId int64, sortId int32) error {
 	mdl, do := query.CmsAdminDo()
 	_, err := do.Where(mdl.UserID.Eq(userId)).UpdateColumns(
 		map[string]interface{}{
@@ -222,7 +223,7 @@ func (this *CmsAdmin) AdminSaveSortId(userId int64, sortId int32) error {
 }
 
 // FindByAccount 根据账号查找
-func (this *CmsAdmin) FindByAccount(userName string) (*model.CmsAdmin, error) {
+func (svc *CmsAdmin) FindByAccount(userName string) (*model.CmsAdmin, error) {
 	mdl, do := query.CmsAdminDo()
 	return do.Where(mdl.UserName.Eq(userName)).First()
 }
@@ -251,7 +252,7 @@ func (m *CmsAdmin) RoleFind(roleId int64) (*model.CmsAdminRole, error) {
 }
 
 // RoleSave 保存或更新
-func (this *CmsAdmin) RoleSave(input *model.CmsAdminRole) error {
+func (svc *CmsAdmin) RoleSave(input *model.CmsAdminRole) error {
 	mdl, do := query.CmsAdminRoleDo()
 	if input.Name != "" {
 		if count, _ := do.Where(mdl.RoleID.Neq(input.RoleID), mdl.Name.Eq(input.Name)).Count(); count > 0 {
@@ -275,7 +276,7 @@ func (this *CmsAdmin) RoleSave(input *model.CmsAdminRole) error {
 	return err
 }
 
-func (this *CmsAdmin) RoleValSave(roleId int64, values map[string]string) error {
+func (svc *CmsAdmin) RoleValSave(roleId int64, values map[string]string) error {
 	mdl, do := query.CmsAdminRoleValueDo()
 	_, err := do.Where(mdl.RoleID.Eq(roleId)).Delete()
 	for k, v := range values {
@@ -289,13 +290,13 @@ func (this *CmsAdmin) RoleValSave(roleId int64, values map[string]string) error 
 }
 
 // RoleSiteFind 站点权限-根据roleId获取列表
-func (this *CmsAdmin) RoleSiteFind(roleId int64) ([]*model.CmsAdminRoleSite, int64, error) {
+func (svc *CmsAdmin) RoleSiteFind(roleId int64) ([]*model.CmsAdminRoleSite, int64, error) {
 	mdl, do := query.CmsAdminRoleSiteDo()
 	return do.Where(mdl.RoleID.Eq(roleId)).FindByPage(0, 99999)
 }
 
 // RoleSiteSave 站点权限-保存
-func (this *CmsAdmin) RoleSiteSave(roleId int64, values []string) error {
+func (svc *CmsAdmin) RoleSiteSave(roleId int64, values []string) error {
 	mdl, do := query.CmsAdminRoleSiteDo()
 	_, err := do.Where(mdl.RoleID.Eq(roleId)).Delete()
 	for i := 0; i < len(values); i++ {
@@ -309,7 +310,7 @@ func (this *CmsAdmin) RoleSiteSave(roleId int64, values []string) error {
 }
 
 // RoleDestory 删除
-func (this *CmsAdmin) RoleDestory(roleId int64) error {
+func (svc *CmsAdmin) RoleDestory(roleId int64) error {
 	adminMdl, adminDo := query.CmsAdminDo()
 	if count, _ := adminDo.Where(adminMdl.RoleID.Eq(roleId)).Count(); count > 0 {
 		return errors.New("该角色下有用户，无法删除")
@@ -329,7 +330,7 @@ func (this *CmsAdmin) RoleDestory(roleId int64) error {
 	return nil
 }
 
-func (this *CmsAdmin) RoleSaveSortId(roleId int64, sortId int32) error {
+func (svc *CmsAdmin) RoleSaveSortId(roleId int64, sortId int32) error {
 	mdl, do := query.CmsAdminRoleDo()
 	_, err := do.Where(mdl.RoleID.Eq(roleId)).UpdateColumns(
 		map[string]interface{}{
@@ -340,22 +341,22 @@ func (this *CmsAdmin) RoleSaveSortId(roleId int64, sortId int32) error {
 	return err
 }
 
-func (this *CmsAdmin) RoleValueFind(roleId int64) ([]*model.CmsAdminRoleValue, int64, error) {
+func (svc *CmsAdmin) RoleValueFind(roleId int64) ([]*model.CmsAdminRoleValue, int64, error) {
 	mdl, do := query.CmsAdminRoleValueDo()
 	return do.Where(mdl.RoleID.Eq(roleId)).FindByPage(0, 99999)
 }
 
-func (this *CmsAdmin) RolePower(roleId int64, navName string) (*model.CmsAdminRoleValue, error) {
+func (svc *CmsAdmin) RolePower(roleId int64, navName string) (*model.CmsAdminRoleValue, error) {
 	mdl, do := query.CmsAdminRoleValueDo()
 	return do.Where(mdl.RoleID.Eq(roleId), mdl.NavName.Eq(navName)).First()
 }
 
-func (this *CmsAdmin) NavFind(roleId int64) ([]*model.CmsAdminNav, int64, error) {
+func (svc *CmsAdmin) NavFind(roleId int64) ([]*model.CmsAdminNav, int64, error) {
 	mdl, do := query.CmsAdminNavDo()
 	return do.Order(mdl.SortID).FindByPage(0, 99999)
 }
 
-func (this *CmsAdmin) OneByUserId(userId int64) *model.CmsAdmin {
+func (svc *CmsAdmin) OneByUserId(userId int64) *model.CmsAdmin {
 	mdl, do := query.CmsAdminDo()
 	first, err := do.Where(mdl.UserID.Eq(userId)).First()
 	if err != nil {
@@ -364,7 +365,7 @@ func (this *CmsAdmin) OneByUserId(userId int64) *model.CmsAdmin {
 	return first
 }
 
-func (this *CmsAdmin) OneByUserName(userName string) *model.CmsAdmin {
+func (svc *CmsAdmin) OneByUserName(userName string) *model.CmsAdmin {
 	mdl, do := query.CmsAdminDo()
 	first, err := do.Where(mdl.UserName.Eq(userName)).First()
 	if err != nil {
@@ -373,7 +374,7 @@ func (this *CmsAdmin) OneByUserName(userName string) *model.CmsAdmin {
 	return first
 }
 
-func (this *CmsAdmin) ModifyPassword(userId int64, oldPassword, newPassword string) error {
+func (svc *CmsAdmin) ModifyPassword(userId int64, oldPassword, newPassword string) error {
 	mdl, do := query.CmsAdminDo()
 	admin, err := do.Where(mdl.UserID.Eq(userId)).First()
 	if err != nil {

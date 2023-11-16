@@ -14,7 +14,7 @@ func NewWeixinContent() *WeixinContent {
 }
 
 // ContentPaginate 分页
-func (this *WeixinContent) ContentPaginate(page, limit int, accountId int64) ([]*bizmodel.Weixin_ContentModel, int64, error) {
+func (svc *WeixinContent) ContentPaginate(page, limit int, accountId int64) ([]*bizmodel.Weixin_ContentModel, int64, error) {
 	_, do := query.WeixinResponseContentDo()
 	field := `a.*,b.name as account_name`
 	sqlCount := `SELECT Count(1) as count FROM FROM weixin_response_content a LEFT JOIN weixin_account b ON a.account_id=b.account_id`

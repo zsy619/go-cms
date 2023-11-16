@@ -2,31 +2,29 @@ package admin
 
 import (
 	"fmt"
-	"haedu.gov.cn/cms/controllers/admin/vmodel"
 	"time"
 
 	"haedu.gov.cn/cms/app/biz"
 	"haedu.gov.cn/cms/app/dal/query"
+	"haedu.gov.cn/cms/controllers/admin/vmodel"
 )
 
-type IndexController struct {
-	BaseController
+type IndexController struct{ BaseController }
+
+func (ctrl *IndexController) Index() {
+	ctrl.Data["userName"] = GlobalRealName
+	ctrl.displayNoLayout()
 }
 
-func (c *IndexController) Index() {
-	c.Data["userName"] = GlobalRealName
-	c.displayNoLayout()
-}
-
-func (c *IndexController) Welcome() {
-	c.Data["roleId"] = GlobalRoleId
-	c.Data["roleType"] = GlobalRoleType
+func (ctrl *IndexController) Welcome() {
+	ctrl.Data["roleId"] = GlobalRoleId
+	ctrl.Data["roleType"] = GlobalRoleType
 	noticeList, _ := biz.NewCmsAdminNotice().NoticeShow()
-	c.Data["noticeList"] = noticeList
-	c.display()
+	ctrl.Data["noticeList"] = noticeList
+	ctrl.display()
 }
 
-func (c *IndexController) Count() {
+func (ctrl *IndexController) Count() {
 	result := struct {
 		SiteCount     int64 `json:"site_count"`
 		ChannelCount  int64 `json:"channel_count"`
@@ -51,42 +49,42 @@ func (c *IndexController) Count() {
 	result.CategoryCount = categoryCount
 	result.ArticleCount = articleCount
 
-	c.JSONSuccess("success", result)
+	ctrl.JSONSuccess("success", result)
 }
 
-func (c *IndexController) UserPassword() {
-	c.display()
+func (ctrl *IndexController) UserPassword() {
+	ctrl.display()
 }
 
 // UserPasswordSave 修改密码
 // @router /admin/index/UserPasswordSave [post]
-func (c *IndexController) UserPasswordSave() {
-	oldPassword := c.GetSafeString("old_password")
-	newPassword := c.GetSafeString("new_password")
-	confirmPassword := c.GetSafeString("again_password")
+func (ctrl *IndexController) UserPasswordSave() {
+	oldPassword := ctrl.GetSafeString("old_password")
+	newPassword := ctrl.GetSafeString("new_password")
+	confirmPassword := ctrl.GetSafeString("again_password")
 	fmt.Println(oldPassword, newPassword, confirmPassword)
 
 	if newPassword != confirmPassword {
-		c.JSONError("两次输入的密码不一致")
+		ctrl.JSONError("两次输入的密码不一致")
 	}
 	// 检查密码是否符合规则
 	if psErr := CheckPasswordRole(newPassword); psErr != nil {
-		c.JSONError(psErr.Error())
+		ctrl.JSONError(psErr.Error())
 	}
 	err := biz.NewCmsAdmin().ModifyPassword(GlobalAdminId, oldPassword, newPassword)
 	if err != nil {
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 	}
 
-	c.JSONSuccess("修改成功", nil)
+	ctrl.JSONSuccess("修改成功", nil)
 }
 
-func (c *IndexController) UserSetting() {
-	c.display()
+func (ctrl *IndexController) UserSetting() {
+	ctrl.display()
 }
 
 // ReportFormsGet 获取首页报表数据
-func (c *IndexController) ReportFormsGet() {
+func (ctrl *IndexController) ReportFormsGet() {
 	currentDate := time.Now()
 	var times []time.Time
 	var showTimes []string
@@ -121,5 +119,5 @@ func (c *IndexController) ReportFormsGet() {
 	item.Type = "line"
 	mdl.Items = append(mdl.Items, item)
 
-	c.JSONSuccess("", mdl)
+	ctrl.JSONSuccess("", mdl)
 }

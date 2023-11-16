@@ -2,6 +2,7 @@ package www
 
 import (
 	"github.com/beego/beego/v2/core/logs"
+
 	"haedu.gov.cn/cms/app/lib"
 )
 
@@ -17,18 +18,18 @@ type ApiAdsController struct{ BaseController }
 * @return {*}
  */
 // @router /api/ads/get [get]
-func (this *ApiAdsController) Get() {
-	site_flag := this.GetSafeString("site_flag")
-	site_id, _ := this.GetInt64("site_id")
-	category_id, _ := this.GetInt64("category_id")
-	call_index := this.GetSafeString("call_index")
-	limit, _ := this.GetInt("limit", 6)
-	out, len, err := this.BaseController.AdsGet(limit, site_id, site_flag, category_id, call_index)
+func (ctrl *ApiAdsController) Get() {
+	site_flag := ctrl.GetSafeString("site_flag")
+	site_id, _ := ctrl.GetInt64("site_id")
+	category_id, _ := ctrl.GetInt64("category_id")
+	call_index := ctrl.GetSafeString("call_index")
+	limit, _ := ctrl.GetInt("limit", 6)
+	out, len, err := ctrl.BaseController.AdsGet(limit, site_id, site_flag, category_id, call_index)
 	if err != nil {
 		logs.Error("Get::", "callIndex", call_index, "err", err)
-		this.JSONPage(lib.CodeError, err.Error(), out, 0)
+		ctrl.JSONPage(lib.CodeError, err.Error(), out, 0)
 	}
-	this.JSONPageSuccess(out, len)
+	ctrl.JSONPageSuccess(out, len)
 }
 
 /**
@@ -41,18 +42,18 @@ func (this *ApiAdsController) Get() {
 * @return {*}
  */
 // @router /api/ads/get/new [get]
-func (this *ApiAdsController) GetNew() {
-	site_flag := this.GetSafeString("site_flag")
-	site_id, _ := this.GetInt64("site_id")
-	category_id, _ := this.GetInt64("category_id")
-	call_index := this.GetSafeString("call_index")
-	limit, _ := this.GetInt("limit", 6)
-	out, len, err := this.BaseController.AdsGetNew(limit, site_id, site_flag, category_id, call_index)
+func (ctrl *ApiAdsController) GetNew() {
+	site_flag := ctrl.GetSafeString("site_flag")
+	site_id, _ := ctrl.GetInt64("site_id")
+	category_id, _ := ctrl.GetInt64("category_id")
+	call_index := ctrl.GetSafeString("call_index")
+	limit, _ := ctrl.GetInt("limit", 6)
+	out, len, err := ctrl.BaseController.AdsGetNew(limit, site_id, site_flag, category_id, call_index)
 	if err != nil {
 		logs.Error("GetNew::", "callIndex", call_index, "err", err)
-		this.JSONPage(lib.CodeError, err.Error(), out, 0)
+		ctrl.JSONPage(lib.CodeError, err.Error(), out, 0)
 	}
-	this.JSONPageSuccess(out, len)
+	ctrl.JSONPageSuccess(out, len)
 }
 
 /**
@@ -66,19 +67,19 @@ func (this *ApiAdsController) GetNew() {
  * @return {*}
  */
 // @router /api/ads/paginate [get]
-func (this *ApiAdsController) Paginate() {
-	site_id, _ := this.GetInt64("site_id")
-	site_flag := this.GetSafeString("site_flag")
-	category_id, _ := this.GetInt64("category_id")
-	call_index := this.GetSafeString("call_index")
-	limit, _ := this.GetInt("limit", 12)
-	page, _ := this.GetInt("page", 1)
-	out, len, err := this.BaseController.AdsPaginate(page, limit, site_id, site_flag, category_id, call_index)
+func (ctrl *ApiAdsController) Paginate() {
+	site_id, _ := ctrl.GetInt64("site_id")
+	site_flag := ctrl.GetSafeString("site_flag")
+	category_id, _ := ctrl.GetInt64("category_id")
+	call_index := ctrl.GetSafeString("call_index")
+	limit, _ := ctrl.GetInt("limit", 12)
+	page, _ := ctrl.GetInt("page", 1)
+	out, len, err := ctrl.BaseController.AdsPaginate(page, limit, site_id, site_flag, category_id, call_index)
 	if err != nil {
 		logs.Error("Paginate::", "callIndex", call_index, "err", err)
-		this.JSONPage(lib.CodeError, err.Error(), out, len)
+		ctrl.JSONPage(lib.CodeError, err.Error(), out, len)
 	}
-	this.JSONPageSuccess(out, len)
+	ctrl.JSONPageSuccess(out, len)
 }
 
 /**
@@ -87,12 +88,12 @@ func (this *ApiAdsController) Paginate() {
  * @return {*}
  */
 // @router /api/ads/click [get]
-func (this *ApiAdsController) Click() {
-	ads_id, _ := this.GetInt64("ads_id", 0)
-	err := this.BaseController.AdsClick(ads_id)
+func (ctrl *ApiAdsController) Click() {
+	ads_id, _ := ctrl.GetInt64("ads_id", 0)
+	err := ctrl.BaseController.AdsClick(ads_id)
 	if err != nil {
 		logs.Error("Click", err.Error())
-		this.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 	}
-	this.JSONSuccess("", nil)
+	ctrl.JSONSuccess("", nil)
 }

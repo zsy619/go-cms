@@ -3,12 +3,13 @@ package biz
 import (
 	"errors"
 	"fmt"
-	"github.com/beego/beego/v2/core/logs"
-	"haedu.gov.cn/cms/app/lib"
 	"time"
+
+	"github.com/beego/beego/v2/core/logs"
 
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
+	"haedu.gov.cn/cms/app/lib"
 )
 
 type WeixinAccount struct{}
@@ -18,7 +19,7 @@ func NewWeixinAccount() *WeixinAccount {
 }
 
 // AccountPaginate 分页
-func (this *WeixinAccount) AccountPaginate(page, limit int, name string, status int32) ([]*model.WeixinAccount, int64, error) {
+func (svc *WeixinAccount) AccountPaginate(page, limit int, name string, status int32) ([]*model.WeixinAccount, int64, error) {
 	mdl, do := query.WeixinAccountDo()
 	if name != "" {
 		do = do.Where(mdl.Name.Like("%" + name + "%"))
@@ -30,12 +31,12 @@ func (this *WeixinAccount) AccountPaginate(page, limit int, name string, status 
 }
 
 // AccountFind 获取
-func (this *WeixinAccount) AccountFind(accountId int64) (*model.WeixinAccount, error) {
+func (svc *WeixinAccount) AccountFind(accountId int64) (*model.WeixinAccount, error) {
 	mdl, do := query.WeixinAccountDo()
 	return do.Where(mdl.AccountID.Eq(accountId)).First()
 }
 
-func (this *WeixinAccount) AccountFindCache(accountId int64) (*model.WeixinAccount, error) {
+func (svc *WeixinAccount) AccountFindCache(accountId int64) (*model.WeixinAccount, error) {
 	cacheKey := fmt.Sprintf("AccountFindCache_%d", accountId)
 	/*if ok, v := WeiXinCache.Get(cacheKey); ok {
 		return v.(*model.WeixinAccount), nil
@@ -56,7 +57,7 @@ func (this *WeixinAccount) AccountFindCache(accountId int64) (*model.WeixinAccou
 }
 
 // AccountSave 保存或更新
-func (this *WeixinAccount) AccountSave(input *model.WeixinAccount) error {
+func (svc *WeixinAccount) AccountSave(input *model.WeixinAccount) error {
 	mdl, do := query.WeixinAccountDo()
 	if input.Name != "" {
 		if count, _ := do.Where(mdl.AccountID.Neq(input.AccountID), mdl.Name.Eq(input.Name)).Count(); count > 0 {
@@ -99,7 +100,7 @@ func (this *WeixinAccount) AccountSave(input *model.WeixinAccount) error {
 }
 
 // AccountSaveSortId 修改排序
-func (this *WeixinAccount) AccountSaveSortId(accountId int64, sortId int32) error {
+func (svc *WeixinAccount) AccountSaveSortId(accountId int64, sortId int32) error {
 	mdl, do := query.WeixinAccountDo()
 	_, err := do.Where(mdl.AccountID.Eq(accountId)).UpdateColumns(
 		map[string]interface{}{
@@ -111,7 +112,7 @@ func (this *WeixinAccount) AccountSaveSortId(accountId int64, sortId int32) erro
 }
 
 // AccountDestory 删除
-func (this *WeixinAccount) AccountDestory(accountId int64) error {
+func (svc *WeixinAccount) AccountDestory(accountId int64) error {
 	mdl, do := query.WeixinAccountDo()
 	if _, err := do.Where(mdl.AccountID.Eq(accountId)).Delete(); err != nil {
 		return err
@@ -120,7 +121,7 @@ func (this *WeixinAccount) AccountDestory(accountId int64) error {
 }
 
 // AccountChangeStatus 修改状态
-func (this *WeixinAccount) AccountChangeStatus(accountId int64, status int32) error {
+func (svc *WeixinAccount) AccountChangeStatus(accountId int64, status int32) error {
 	mdl, do := query.WeixinAccountDo()
 	_, err := do.Where(mdl.AccountID.Eq(accountId)).UpdateColumns(
 		map[string]interface{}{

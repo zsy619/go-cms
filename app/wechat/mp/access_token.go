@@ -3,7 +3,7 @@ package mp
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"path"
 	"time"
@@ -46,7 +46,7 @@ func (this *AccessToken) Fresh() (string, error) {
 		return "", err
 	}
 	defer tmp.Close()
-	data, err := ioutil.ReadAll(tmp)
+	data, err := io.ReadAll(tmp)
 	if err != nil {
 		return "", err
 	}

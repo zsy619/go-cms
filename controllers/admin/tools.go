@@ -13,10 +13,11 @@ import (
 	"time"
 
 	"github.com/beego/beego/v2/core/logs"
+	"haedu.gov.cn/tools/xio"
+
 	"haedu.gov.cn/cms/app/biz"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/lib"
-	"haedu.gov.cn/tools/xio"
 )
 
 type UploadResult struct {
@@ -44,7 +45,7 @@ type WebUploadResult struct {
 type ToolsController struct{ BaseController }
 
 // @router admin/tools/ImageUpload [post]
-func (c *ToolsController) ImageUpload() {
+func (ctrl *ToolsController) ImageUpload() {
 	result := UploadResult{
 		Code: 1,
 		Msg:  "上传失败",
@@ -57,12 +58,12 @@ func (c *ToolsController) ImageUpload() {
 			Url2  string `json:"url2"`  // 文件绝对路径
 		}{},
 	}
-	file, head, err := c.GetFile("file")
+	file, head, err := ctrl.GetFile("file")
 	if err != nil {
 		result.Code = 1
 		result.Msg = "文件上传失败"
-		c.Data["json"] = result
-		c.ServeJSON()
+		ctrl.Data["json"] = result
+		ctrl.ServeJSON()
 		return
 	}
 	defer file.Close()
@@ -75,15 +76,15 @@ func (c *ToolsController) ImageUpload() {
 	if !strings.Contains(".jpg,.jpeg,.png,.gif,.bmp,.ico", ext) {
 		result.Code = 1
 		result.Msg = "不支持的文件类型"
-		c.Data["json"] = result
-		c.ServeJSON()
+		ctrl.Data["json"] = result
+		ctrl.ServeJSON()
 		return
 	}
 
 	// 生成唯一的文件名
 	filename := generateFilename(ext)
-	pth := c.GetSafeString("path")
-	table := c.GetSafeString("table")
+	pth := ctrl.GetSafeString("path")
+	table := ctrl.GetSafeString("table")
 	if pth == "" {
 		pth = "images"
 	}
@@ -96,15 +97,15 @@ func (c *ToolsController) ImageUpload() {
 		fmt.Println("err", err.Error())
 		result.Code = 1
 		result.Msg = err.Error()
-		c.Data["json"] = result
-		c.ServeJSON()
+		ctrl.Data["json"] = result
+		ctrl.ServeJSON()
 		return
 	}
-	if err := c.SaveToFile("file", uploadDir+filename); err != nil {
+	if err := ctrl.SaveToFile("file", uploadDir+filename); err != nil {
 		result.Code = 1
 		result.Msg = "文件上传失败"
-		c.Data["json"] = result
-		c.ServeJSON()
+		ctrl.Data["json"] = result
+		ctrl.ServeJSON()
 		return
 	}
 
@@ -139,14 +140,14 @@ func (c *ToolsController) ImageUpload() {
 	}
 
 	// 写入日志
-	biz.NewCmsAdmin().LoginLog(GlobalAdminId, GlobalAdminName, "ImageUpload", result.File.Url1, "", "OK", c.GetClientIp())
+	biz.NewCmsAdmin().LoginLog(GlobalAdminId, GlobalAdminName, "ImageUpload", result.File.Url1, "", "OK", ctrl.GetClientIp())
 
-	c.Data["json"] = result
-	c.ServeJSON()
+	ctrl.Data["json"] = result
+	ctrl.ServeJSON()
 }
 
 // @router admin/tools/Upload [post]
-func (c *ToolsController) Upload() {
+func (ctrl *ToolsController) Upload() {
 	result := UploadResult{
 		Code: 1,
 		Msg:  "上传失败",
@@ -159,20 +160,20 @@ func (c *ToolsController) Upload() {
 			Url2  string `json:"url2"`  // 文件绝对路径
 		}{},
 	}
-	file, head, err := c.GetFile("file")
+	file, head, err := ctrl.GetFile("file")
 	if err != nil {
 		result.Code = 1
 		result.Msg = "文件上传失败"
-		c.Data["json"] = result
-		c.ServeJSON()
+		ctrl.Data["json"] = result
+		ctrl.ServeJSON()
 		return
 	}
 	defer file.Close()
 	if isAllow := xio.IsAllowFile(head.Filename); !isAllow {
 		result.Code = 1
 		result.Msg = "不支持的文件类型"
-		c.Data["json"] = result
-		c.ServeJSON()
+		ctrl.Data["json"] = result
+		ctrl.ServeJSON()
 		return
 	}
 
@@ -183,15 +184,15 @@ func (c *ToolsController) Upload() {
 	// if !strings.Contains("jpg,jpeg,png,gif", ext) {
 	// 	result.Code = 1
 	// 	result.Msg = "不支持的文件类型"
-	// 	c.Data["json"] = result
-	// 	c.ServeJSON()
+	// 	ctrl.Data["json"] = result
+	// 	ctrl.ServeJSON()
 	// 	return
 	// }
 
 	// 生成唯一的文件名
 	filename := generateFilename(ext)
-	pth := c.GetSafeString("path")
-	table := c.GetSafeString("table")
+	pth := ctrl.GetSafeString("path")
+	table := ctrl.GetSafeString("table")
 	if pth == "" {
 		pth = "files"
 	}
@@ -204,15 +205,15 @@ func (c *ToolsController) Upload() {
 		fmt.Println("err", err.Error())
 		result.Code = 1
 		result.Msg = err.Error()
-		c.Data["json"] = result
-		c.ServeJSON()
+		ctrl.Data["json"] = result
+		ctrl.ServeJSON()
 		return
 	}
-	if err := c.SaveToFile("file", uploadDir+filename); err != nil {
+	if err := ctrl.SaveToFile("file", uploadDir+filename); err != nil {
 		result.Code = 1
 		result.Msg = "文件上传失败"
-		c.Data["json"] = result
-		c.ServeJSON()
+		ctrl.Data["json"] = result
+		ctrl.ServeJSON()
 		return
 	}
 
@@ -244,20 +245,20 @@ func (c *ToolsController) Upload() {
 		}
 	}
 	// 写入日志
-	biz.NewCmsAdmin().LoginLog(GlobalAdminId, GlobalAdminName, "UploadFile", result.File.Url1, "", "OK", c.GetClientIp())
+	biz.NewCmsAdmin().LoginLog(GlobalAdminId, GlobalAdminName, "UploadFile", result.File.Url1, "", "OK", ctrl.GetClientIp())
 
-	c.Data["json"] = result
-	c.ServeJSON()
+	ctrl.Data["json"] = result
+	ctrl.ServeJSON()
 }
 
 // kindeditor 图片上传
 // @router admin/tools/KindEditorUpload [post]
-func (c *ToolsController) KindEditorUpload() {
+func (ctrl *ToolsController) KindEditorUpload() {
 	// 获取上传文件
-	file, header, err := c.GetFile("imgFile")
+	file, header, err := ctrl.GetFile("imgFile")
 	if err != nil {
 		logs.Error(err)
-		fmt.Fprintln(c.Ctx.ResponseWriter, "{\"error\": 1, \"message\": \""+err.Error()+"\"}")
+		fmt.Fprintln(ctrl.Ctx.ResponseWriter, "{\"error\": 1, \"message\": \""+err.Error()+"\"}")
 		return
 	}
 	defer file.Close()
@@ -266,7 +267,7 @@ func (c *ToolsController) KindEditorUpload() {
 	targetDir := "Uploads/images/" + time.Now().Format("2006/01/")
 	if err := os.MkdirAll(targetDir, os.ModePerm); err != nil {
 		logs.Error(err)
-		fmt.Fprintln(c.Ctx.ResponseWriter, "{\"error\": 1, \"message\": \""+err.Error()+"\"}")
+		fmt.Fprintln(ctrl.Ctx.ResponseWriter, "{\"error\": 1, \"message\": \""+err.Error()+"\"}")
 		return
 	}
 	// 创建目标文件
@@ -276,7 +277,7 @@ func (c *ToolsController) KindEditorUpload() {
 	targetFile, err := os.OpenFile(targetPath, os.O_WRONLY|os.O_CREATE, os.ModePerm)
 	if err != nil {
 		log.Println(err)
-		fmt.Fprintln(c.Ctx.ResponseWriter, "{\"error\": 1, \"message\": \""+err.Error()+"\"}")
+		fmt.Fprintln(ctrl.Ctx.ResponseWriter, "{\"error\": 1, \"message\": \""+err.Error()+"\"}")
 		return
 	}
 	defer targetFile.Close()
@@ -285,11 +286,11 @@ func (c *ToolsController) KindEditorUpload() {
 	_, err = io.Copy(targetFile, file)
 	if err != nil {
 		log.Println(err)
-		fmt.Fprintln(c.Ctx.ResponseWriter, "{\"error\": 1, \"message\": \""+err.Error()+"\"}")
+		fmt.Fprintln(ctrl.Ctx.ResponseWriter, "{\"error\": 1, \"message\": \""+err.Error()+"\"}")
 		return
 	}
 	outPath := lib.C_LOCAL_DOMAIN_Backslash() + strings.ReplaceAll(targetPath, "\\", "/")
-	table := c.GetSafeString("table")
+	table := ctrl.GetSafeString("table")
 	if table == "" {
 		table = "images"
 	}
@@ -316,7 +317,7 @@ func (c *ToolsController) KindEditorUpload() {
 	}
 	// 返回上传结果
 	result := "{\"error\": 0, \"url\": \"" + outPath + "\"}"
-	fmt.Fprintln(c.Ctx.ResponseWriter, result)
+	fmt.Fprintln(ctrl.Ctx.ResponseWriter, result)
 }
 
 func generateFilename(ext string) string {

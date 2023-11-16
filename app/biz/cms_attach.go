@@ -1,14 +1,15 @@
 package biz
 
 import (
-	"haedu.gov.cn/cms/global"
 	"os"
 	"strings"
 	"time"
 
 	"github.com/beego/beego/v2/core/logs"
+
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
+	"haedu.gov.cn/cms/global"
 )
 
 type CmsAttach struct{}
@@ -18,7 +19,7 @@ func NewCmsAttach() *CmsAttach {
 }
 
 // AttachPaginate 获取
-func (this *CmsAttach) AttachPaginate(page, limit int, tableName string, recordId int64, typeId int32, adminId int64, roleType string) ([]*model.CmsAttach, int64, error) {
+func (svc *CmsAttach) AttachPaginate(page, limit int, tableName string, recordId int64, typeId int32, adminId int64, roleType string) ([]*model.CmsAttach, int64, error) {
 	mdl, do := query.CmsAttachDo()
 	if global.IsSuper(roleType) {
 		return do.Where(mdl.TableName_.Eq(tableName), mdl.RecordID.Eq(recordId), mdl.TypeID.Eq(typeId)).Order(mdl.SortID).FindByPage((page-1)*limit, limit)
@@ -28,7 +29,7 @@ func (this *CmsAttach) AttachPaginate(page, limit int, tableName string, recordI
 }
 
 // AttachSave 保存或更新
-func (this *CmsAttach) AttachSave(input *model.CmsAttach) error {
+func (svc *CmsAttach) AttachSave(input *model.CmsAttach) error {
 	mdl, do := query.CmsAttachDo()
 	var err error
 	input.UpdateTime = time.Now()
@@ -51,7 +52,7 @@ func (this *CmsAttach) AttachSave(input *model.CmsAttach) error {
 }
 
 // AttachDestory 删除
-func (this *CmsAttach) AttachDestory(attachId int64) error {
+func (svc *CmsAttach) AttachDestory(attachId int64) error {
 	mdl, do := query.CmsAttachDo()
 	if finder, err := do.Where(mdl.AttachID.Eq(attachId)).First(); err != nil {
 		return err
@@ -68,7 +69,7 @@ func (this *CmsAttach) AttachDestory(attachId int64) error {
 }
 
 // AttachSaveShow 保存排序
-func (this *CmsAttach) AttachSaveShow(attachId int64, show int32) error {
+func (svc *CmsAttach) AttachSaveShow(attachId int64, show int32) error {
 	mdl, do := query.CmsAttachDo()
 	_, err := do.Where(mdl.AttachID.Eq(attachId)).UpdateColumns(
 		map[string]interface{}{
@@ -80,7 +81,7 @@ func (this *CmsAttach) AttachSaveShow(attachId int64, show int32) error {
 }
 
 // AttachSaveInfo 保存
-func (this *CmsAttach) AttachSaveInfo(attachId int64, title string, point, click, sortId int32, remark string) error {
+func (svc *CmsAttach) AttachSaveInfo(attachId int64, title string, point, click, sortId int32, remark string) error {
 	mdl, do := query.CmsAttachDo()
 	_, err := do.Where(mdl.AttachID.Eq(attachId)).UpdateColumns(
 		map[string]interface{}{

@@ -14,7 +14,7 @@ import (
 * @param {string} call_index 链接分类标识
 * @return {*}
  */
-func (this *BaseController) LinkGet(limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiLinkModel, int64, error) {
+func (ctrl *BaseController) LinkGet(limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiLinkModel, int64, error) {
 	return biz.NewApiLink().Get(limit, site_id, site_flag, category_id, call_index)
 }
 
@@ -27,7 +27,7 @@ func (this *BaseController) LinkGet(limit int, site_id int64, site_flag string, 
 * @param {string} call_index 链接分类标识
 * @return {*}
  */
-func (this *BaseController) LinkGetNew(limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiLinkModel, int64, error) {
+func (ctrl *BaseController) LinkGetNew(limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiLinkModel, int64, error) {
 	return biz.NewApiLink().GetNew(limit, site_id, site_flag, category_id, call_index)
 }
 
@@ -41,7 +41,7 @@ func (this *BaseController) LinkGetNew(limit int, site_id int64, site_flag strin
  * @param {string} call_index 链接分类标识
  * @return {*}
  */
-func (this *BaseController) LinkPaginate(page, limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiLinkModel, int64, error) {
+func (ctrl *BaseController) LinkPaginate(page, limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiLinkModel, int64, error) {
 	return biz.NewApiLink().Paginate(page, limit, site_id, site_flag, category_id, call_index)
 }
 
@@ -50,6 +50,6 @@ func (this *BaseController) LinkPaginate(page, limit int, site_id int64, site_fl
  * @param {int64} link_id 链接ID
  * @return {*}
  */
-func (this *BaseController) LinkClick(link_id int64) error {
+func (ctrl *BaseController) LinkClick(link_id int64) error {
 	return biz.NewApiLink().Click(link_id)
 }

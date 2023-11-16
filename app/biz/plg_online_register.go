@@ -15,7 +15,7 @@ func NewPlgOnlineRegister() *PlgOnlineRegister {
 }
 
 // Paginate 分页查询
-func (this *PlgOnlineRegister) Paginate(page, limit int, realName, special, degree, tags, remark string, isRead int32) ([]*model.PlgOnlineRegister, int64, error) {
+func (svc *PlgOnlineRegister) Paginate(page, limit int, realName, special, degree, tags, remark string, isRead int32) ([]*model.PlgOnlineRegister, int64, error) {
 	mdl, do := query.PlgOnlineRegisterDo()
 	if realName != "" {
 		do.Where(mdl.RealName.Like("%" + realName + "%"))
@@ -42,13 +42,13 @@ func (this *PlgOnlineRegister) Paginate(page, limit int, realName, special, degr
 }
 
 // Find 获取
-func (this *PlgOnlineRegister) Find(registerId int64) (*model.PlgOnlineRegister, error) {
+func (svc *PlgOnlineRegister) Find(registerId int64) (*model.PlgOnlineRegister, error) {
 	mdl, do := query.PlgOnlineRegisterDo()
 	return do.Where(mdl.RegisterID.Eq(registerId)).First()
 }
 
 // ChangeRead 设置已读或未读
-func (this *PlgOnlineRegister) ChangeRead(registerId int64, isRead int32, updateId int32, updateName string) error {
+func (svc *PlgOnlineRegister) ChangeRead(registerId int64, isRead int32, updateId int32, updateName string) error {
 	mdl, do := query.PlgOnlineRegisterDo()
 	_, err := do.Where(mdl.RegisterID.Eq(registerId)).Updates(map[string]interface{}{
 		mdl.IsRead.ColumnName().String():     isRead,
@@ -60,7 +60,7 @@ func (this *PlgOnlineRegister) ChangeRead(registerId int64, isRead int32, update
 }
 
 // LinkSave 保存或更新
-func (this *PlgOnlineRegister) Save(input *model.PlgOnlineRegister) error {
+func (svc *PlgOnlineRegister) Save(input *model.PlgOnlineRegister) error {
 	mdl, do := query.PlgOnlineRegisterDo()
 	if input.Mobile != "" {
 		if count, _ := do.Where(mdl.Mobile.Eq(input.Mobile), mdl.RegisterID.Neq(input.RegisterID)).Count(); count > 0 {
@@ -95,7 +95,7 @@ func (this *PlgOnlineRegister) Save(input *model.PlgOnlineRegister) error {
 }
 
 // Destory 删除
-func (this *PlgOnlineRegister) Destory(registerId int64) error {
+func (svc *PlgOnlineRegister) Destory(registerId int64) error {
 	mdl, do := query.PlgOnlineRegisterDo()
 	if _, err := do.Where(mdl.RegisterID.Eq(registerId)).Delete(); err != nil {
 		return err

@@ -6,10 +6,11 @@ import (
 	"time"
 
 	"github.com/beego/beego/v2/core/logs"
+	"haedu.gov.cn/tools/xgeneric"
+
 	"haedu.gov.cn/cms/app/biz/bizmodel"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
-	"haedu.gov.cn/tools/xgeneric"
 )
 
 /**
@@ -37,7 +38,7 @@ func NewCmsArticle() *CmsArticle {
  * @param {int32} status 状态
  * @return {*}
  */
-func (this *CmsArticle) ArticlePaginate(page, limit int, channelId, categoryId int64, title, callIndex string, status int32) ([]*model.CmsArticle, int64, error) {
+func (svc *CmsArticle) ArticlePaginate(page, limit int, channelId, categoryId int64, title, callIndex string, status int32) ([]*model.CmsArticle, int64, error) {
 	mdl, do := query.CmsArticleDo()
 	if channelId > 0 {
 		do = do.Where(mdl.ChannelID.Eq(channelId))
@@ -62,7 +63,7 @@ func (this *CmsArticle) ArticlePaginate(page, limit int, channelId, categoryId i
  * @param {int64} articleId 文章ID
  * @return {*}
  */
-func (this *CmsArticle) ArticleFind(articleId int64) (*model.CmsArticle, error) {
+func (svc *CmsArticle) ArticleFind(articleId int64) (*model.CmsArticle, error) {
 	mdl, do := query.CmsArticleDo()
 	return do.Where(mdl.ArticleID.Eq(articleId)).First()
 }
@@ -72,7 +73,7 @@ func (this *CmsArticle) ArticleFind(articleId int64) (*model.CmsArticle, error) 
  * @param {*model.CmsArticle} input 文章
  * @return {*}
  */
-func (this *CmsArticle) ArticleSave(input *model.CmsArticle) error {
+func (svc *CmsArticle) ArticleSave(input *model.CmsArticle) error {
 	mdl, do := query.CmsArticleDo()
 	if input.CallIndex != "" {
 		if count, _ := do.Where(mdl.ArticleID.Neq(input.ArticleID), mdl.CallIndex.Eq(input.CallIndex)).Count(); count > 0 {
@@ -141,7 +142,7 @@ func (this *CmsArticle) ArticleSave(input *model.CmsArticle) error {
  * @param {int32} sortId 排序ID
  * @return {*}
  */
-func (this *CmsArticle) ArticleSaveSortId(articleId int64, sortId int32) error {
+func (svc *CmsArticle) ArticleSaveSortId(articleId int64, sortId int32) error {
 	mdl, do := query.CmsArticleDo()
 	_, err := do.Where(mdl.ArticleID.Eq(articleId)).UpdateColumns(
 		map[string]interface{}{
@@ -157,7 +158,7 @@ func (this *CmsArticle) ArticleSaveSortId(articleId int64, sortId int32) error {
  * @param {int64} articleId 文章ID
  * @return {*}
  */
-func (this *CmsArticle) ArticleDestory(articleId int64) error {
+func (svc *CmsArticle) ArticleDestory(articleId int64) error {
 	// // 删除附件
 	// {
 	// 	attachMdl, attachDo := query.CmsAttachDo()
@@ -214,7 +215,7 @@ func (this *CmsArticle) ArticleDestory(articleId int64) error {
  * @param {string} callIndex 别名
  * @return {*}
  */
-func (this *CmsArticle) CategoryPaginate(page, limit int, channelId int64, title, callIndex string) ([]*model.CmsArticleCategory, int64, error) {
+func (svc *CmsArticle) CategoryPaginate(page, limit int, channelId int64, title, callIndex string) ([]*model.CmsArticleCategory, int64, error) {
 	mdl, do := query.CmsArticleCategoryDo()
 	if channelId > 0 {
 		do = do.Where(mdl.ChannelID.Eq(channelId))
@@ -233,7 +234,7 @@ func (this *CmsArticle) CategoryPaginate(page, limit int, channelId int64, title
  * @param {int64} categoryId 分类ID
  * @return {*}
  */
-func (this *CmsArticle) CategoryFind(categoryId int64) (*model.CmsArticleCategory, error) {
+func (svc *CmsArticle) CategoryFind(categoryId int64) (*model.CmsArticleCategory, error) {
 	mdl, do := query.CmsArticleCategoryDo()
 	return do.Where(mdl.CategoryID.Eq(categoryId)).First()
 }
@@ -243,7 +244,7 @@ func (this *CmsArticle) CategoryFind(categoryId int64) (*model.CmsArticleCategor
  * @param {*model.CmsArticleCategory} input 分类
  * @return {*}
  */
-func (this *CmsArticle) CategorySave(input *model.CmsArticleCategory) error {
+func (svc *CmsArticle) CategorySave(input *model.CmsArticleCategory) error {
 	mdl, do := query.CmsArticleCategoryDo()
 	if input.CallIndex != "" {
 		if count, _ := do.Where(mdl.CategoryID.Neq(input.CategoryID), mdl.CallIndex.Eq(input.CallIndex)).Count(); count > 0 {
@@ -298,7 +299,7 @@ func (this *CmsArticle) CategorySave(input *model.CmsArticleCategory) error {
  * @param {int64} channelId 频道ID
  * @return {*}
  */
-func (this *CmsArticle) CategoryAutoUrl(channelId int64) error {
+func (svc *CmsArticle) CategoryAutoUrl(channelId int64) error {
 	mdl, do := query.CmsArticleCategoryDo()
 	categories, err := do.Where(mdl.ChannelID.Eq(channelId), mdl.LinkURL.Eq("")).Find()
 	if err != nil {
@@ -335,7 +336,7 @@ func (this *CmsArticle) CategoryAutoUrl(channelId int64) error {
  * @param {int32} sortId 排序
  * @return {*}
  */
-func (this *CmsArticle) CategorySaveSortId(categoryId int64, sortId int32) error {
+func (svc *CmsArticle) CategorySaveSortId(categoryId int64, sortId int32) error {
 	mdl, do := query.CmsArticleCategoryDo()
 	_, err := do.Where(mdl.CategoryID.Eq(categoryId)).UpdateColumns(
 		map[string]interface{}{
@@ -351,7 +352,7 @@ func (this *CmsArticle) CategorySaveSortId(categoryId int64, sortId int32) error
  * @param {int64} categoryId 分类ID
  * @return {*}
  */
-func (this *CmsArticle) CategoryDestory(categoryId int64) error {
+func (svc *CmsArticle) CategoryDestory(categoryId int64) error {
 	mdl, do := query.CmsArticleCategoryDo()
 	if count, _ := do.Where(mdl.ParentID.Eq(categoryId)).Count(); count > 0 {
 		return errors.New("请先删除子分类")
@@ -371,7 +372,7 @@ func (this *CmsArticle) CategoryDestory(categoryId int64) error {
  * @param {int64} articleId 文章ID
  * @return {*}
  */
-func (this *CmsArticle) ArticleClone(articleId int64) (int64, error) {
+func (svc *CmsArticle) ArticleClone(articleId int64) (int64, error) {
 	mdl, do := query.CmsArticleDo()
 	art, err := do.Where(mdl.ArticleID.Eq(articleId)).First()
 	if err != nil {
@@ -391,7 +392,7 @@ func (this *CmsArticle) ArticleClone(articleId int64) (int64, error) {
  * @param {int32} status 状态
  * @return {*}
  */
-func (this *CmsArticle) ArticleChangeStatus(articleId int64, status int32) error {
+func (svc *CmsArticle) ArticleChangeStatus(articleId int64, status int32) error {
 	mdl, do := query.CmsArticleDo()
 	_, err := do.Where(mdl.ArticleID.Eq(articleId)).UpdateColumns(
 		map[string]interface{}{
@@ -408,7 +409,7 @@ func (this *CmsArticle) ArticleChangeStatus(articleId int64, status int32) error
  * @param {int64} categoryId 分类ID
  * @return {*}
  */
-func (this *CmsArticle) CategoryTree(channelId, categoryId int64) ([]*bizmodel.TreeNode, error) {
+func (svc *CmsArticle) CategoryTree(channelId, categoryId int64) ([]*bizmodel.TreeNode, error) {
 	out := make([]*bizmodel.TreeNode, 0)
 	mdl, do := query.CmsArticleCategoryDo()
 	list, err := do.Where(mdl.ChannelID.Eq(channelId), mdl.ParentID.Eq(0)).Order(mdl.SortID).Find()
@@ -424,7 +425,7 @@ func (this *CmsArticle) CategoryTree(channelId, categoryId int64) ([]*bizmodel.T
 			Selected: item.CategoryID == categoryId,
 			Children: nil,
 		}
-		children, _ := this.CategoryTreeByParentId(item.CategoryID, categoryId)
+		children, _ := svc.CategoryTreeByParentId(item.CategoryID, categoryId)
 		if children != nil {
 			child.Children = children
 		}
@@ -439,7 +440,7 @@ func (this *CmsArticle) CategoryTree(channelId, categoryId int64) ([]*bizmodel.T
  * @param {int64} categoryId 分类ID
  * @return {*}
  */
-func (this *CmsArticle) CategoryTreeByParentId(parentId, categoryId int64) ([]*bizmodel.TreeNode, error) {
+func (svc *CmsArticle) CategoryTreeByParentId(parentId, categoryId int64) ([]*bizmodel.TreeNode, error) {
 	out := make([]*bizmodel.TreeNode, 0)
 	mdl, do := query.CmsArticleCategoryDo()
 	list, err := do.Where(mdl.ParentID.Eq(parentId)).Order(mdl.SortID).Find()
@@ -454,7 +455,7 @@ func (this *CmsArticle) CategoryTreeByParentId(parentId, categoryId int64) ([]*b
 			Selected: item.CategoryID == categoryId,
 			Children: nil,
 		}
-		children, _ := this.CategoryTreeByParentId(item.CategoryID, categoryId)
+		children, _ := svc.CategoryTreeByParentId(item.CategoryID, categoryId)
 		if children != nil {
 			child.Children = children
 		}
@@ -463,7 +464,7 @@ func (this *CmsArticle) CategoryTreeByParentId(parentId, categoryId int64) ([]*b
 	return out, nil
 }
 
-func (this *CmsArticle) FindByDate(selectTime ...time.Time) []int64 {
+func (svc *CmsArticle) FindByDate(selectTime ...time.Time) []int64 {
 	mdl, do := query.CmsArticleDo()
 	duration, _ := time.ParseDuration("24h")
 	var counts []int64

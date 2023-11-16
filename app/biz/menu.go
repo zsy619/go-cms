@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	linq "github.com/ahmetb/go-linq/v3"
+
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
 )
@@ -44,7 +45,7 @@ func NewMenu() *Menu {
  * @param {int64} adminId 管理员ID
  * @return {*}
  */
-func (this *Menu) MenuList(adminId int64) *MenuOuter {
+func (svc *Menu) MenuList(adminId int64) *MenuOuter {
 	outerMenu := &MenuOuter{
 		HomeInfo: HomeInfo{
 			Title: "首页",
@@ -101,7 +102,7 @@ ORDER BY a.sort_id`, role.RoleID)
 			Target: "_self",
 			Child:  []*MenuInfo{},
 		}
-		childMenuInfo, _ := this.ChildMenu(navs, parentNav.NavID)
+		childMenuInfo, _ := svc.ChildMenu(navs, parentNav.NavID)
 		if childMenuInfo != nil {
 			parentMenuInfo.Child = append(parentMenuInfo.Child, childMenuInfo...)
 		}
@@ -111,7 +112,7 @@ ORDER BY a.sort_id`, role.RoleID)
 	return outerMenu
 }
 
-func (this *Menu) ChildMenu(navs []*model.CmsAdminNav, parentId int64) ([]*MenuInfo, error) {
+func (svc *Menu) ChildMenu(navs []*model.CmsAdminNav, parentId int64) ([]*MenuInfo, error) {
 	if len(navs) == 0 {
 		return nil, nil
 	}
@@ -133,7 +134,7 @@ func (this *Menu) ChildMenu(navs []*model.CmsAdminNav, parentId int64) ([]*MenuI
 			Target: "_self",
 			Child:  []*MenuInfo{},
 		}
-		childMenuInfo.Child, _ = this.ChildMenu(navs, childNav.NavID)
+		childMenuInfo.Child, _ = svc.ChildMenu(navs, childNav.NavID)
 		outMenu = append(outMenu, childMenuInfo)
 	}
 	return outMenu, nil

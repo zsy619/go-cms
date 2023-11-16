@@ -4,37 +4,38 @@ import (
 	"strconv"
 
 	"github.com/beego/beego/v2/core/logs"
+
 	"haedu.gov.cn/cms/app/lib"
 )
 
 type ApiTagController struct{ BaseController }
 
 // @router /api/tag/get [get]
-func (this *ApiTagController) Get() {
-	site_flag := this.GetSafeString("site_flag")
-	site_id, _ := this.GetInt64("site_id")
-	channel_id, _ := this.GetInt64("channel_id")
-	limit, _ := this.GetInt("limit", 6)
-	out, len, err := this.BaseController.TagGet(limit, site_id, site_flag, channel_id)
+func (ctrl *ApiTagController) Get() {
+	site_flag := ctrl.GetSafeString("site_flag")
+	site_id, _ := ctrl.GetInt64("site_id")
+	channel_id, _ := ctrl.GetInt64("channel_id")
+	limit, _ := ctrl.GetInt("limit", 6)
+	out, len, err := ctrl.BaseController.TagGet(limit, site_id, site_flag, channel_id)
 	if err != nil {
 		logs.Error("Get::", err)
-		this.JSONPage(lib.CodeError, err.Error(), out, 0)
+		ctrl.JSONPage(lib.CodeError, err.Error(), out, 0)
 	}
-	this.JSONPageSuccess(out, len)
+	ctrl.JSONPageSuccess(out, len)
 }
 
 // @router /api/tag/get/new [get]
-func (this *ApiTagController) GetNew() {
-	site_flag := this.GetSafeString("site_flag")
-	site_id, _ := this.GetInt64("site_id")
-	channel_id, _ := this.GetInt64("channel_id")
-	limit, _ := this.GetInt("limit", 6)
-	out, len, err := this.BaseController.TagGetNew(limit, site_id, site_flag, channel_id)
+func (ctrl *ApiTagController) GetNew() {
+	site_flag := ctrl.GetSafeString("site_flag")
+	site_id, _ := ctrl.GetInt64("site_id")
+	channel_id, _ := ctrl.GetInt64("channel_id")
+	limit, _ := ctrl.GetInt("limit", 6)
+	out, len, err := ctrl.BaseController.TagGetNew(limit, site_id, site_flag, channel_id)
 	if err != nil {
 		logs.Error("GetNew::", err)
-		this.JSONErrorOfData(err.Error(), out)
+		ctrl.JSONErrorOfData(err.Error(), out)
 	}
-	this.JSONSuccess(strconv.FormatInt(len, 10), out)
+	ctrl.JSONSuccess(strconv.FormatInt(len, 10), out)
 }
 
 /**
@@ -43,14 +44,14 @@ func (this *ApiTagController) GetNew() {
  * @return {*}
  */
 // @router /api/tag/click [get]
-func (this *ApiTagController) Click() {
-	tag_id, _ := this.GetInt64("tag_id", 0)
-	err := this.BaseController.TagClick(tag_id)
+func (ctrl *ApiTagController) Click() {
+	tag_id, _ := ctrl.GetInt64("tag_id", 0)
+	err := ctrl.BaseController.TagClick(tag_id)
 	if err != nil {
 		logs.Error("Click", err.Error())
-		this.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 	}
-	this.JSONSuccess("", nil)
+	ctrl.JSONSuccess("", nil)
 }
 
 /**
@@ -72,24 +73,24 @@ func (this *ApiTagController) Click() {
  * @return {*}
  */
 // @router /api/tag/article/paginate [get]
-func (this *ApiTagController) ArticlePaginate() {
-	limit, _ := this.GetInt("limit", 6)
-	page, _ := this.GetInt("page", 1)
-	order_by := this.GetSafeString("order_by", "sort_id")
-	call_index := this.GetSafeString("call_index")
-	channel_name := this.GetSafeString("channel_name")
-	keyword := this.GetSafeString("keyword")
-	tag_name := this.GetSafeString("tag_name")
-	channel_id, _ := this.GetInt64("channel_id", -1)
-	category_id, _ := this.GetInt64("category_id", -1)
-	is_top, _ := this.GetInt("is_top", -1)
-	is_red, _ := this.GetInt("is_red", -1)
-	is_hot, _ := this.GetInt("is_hot", -1)
-	is_slide, _ := this.GetInt("is_slide", -1)
-	is_search, _ := this.GetInt("is_search", -1)
-	outArticle, count, err := this.BaseController.TagArticlePaginate(page, limit, tag_name, channel_id, channel_name, category_id, call_index, keyword, is_top, is_red, is_hot, is_slide, is_search, order_by)
+func (ctrl *ApiTagController) ArticlePaginate() {
+	limit, _ := ctrl.GetInt("limit", 6)
+	page, _ := ctrl.GetInt("page", 1)
+	order_by := ctrl.GetSafeString("order_by", "sort_id")
+	call_index := ctrl.GetSafeString("call_index")
+	channel_name := ctrl.GetSafeString("channel_name")
+	keyword := ctrl.GetSafeString("keyword")
+	tag_name := ctrl.GetSafeString("tag_name")
+	channel_id, _ := ctrl.GetInt64("channel_id", -1)
+	category_id, _ := ctrl.GetInt64("category_id", -1)
+	is_top, _ := ctrl.GetInt("is_top", -1)
+	is_red, _ := ctrl.GetInt("is_red", -1)
+	is_hot, _ := ctrl.GetInt("is_hot", -1)
+	is_slide, _ := ctrl.GetInt("is_slide", -1)
+	is_search, _ := ctrl.GetInt("is_search", -1)
+	outArticle, count, err := ctrl.BaseController.TagArticlePaginate(page, limit, tag_name, channel_id, channel_name, category_id, call_index, keyword, is_top, is_red, is_hot, is_slide, is_search, order_by)
 	if err != nil {
-		this.JSONPage(lib.CodeError, err.Error(), outArticle, count)
+		ctrl.JSONPage(lib.CodeError, err.Error(), outArticle, count)
 	}
-	this.JSONPageSuccess(outArticle, count)
+	ctrl.JSONPageSuccess(outArticle, count)
 }

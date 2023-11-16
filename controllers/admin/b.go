@@ -2,33 +2,31 @@ package admin
 
 import (
 	"fmt"
-	"github.com/beego/beego/v2/core/logs"
-	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/controllers/admin/vmodel"
-	"haedu.gov.cn/cms/global"
 	"html/template"
 	"regexp"
 	"strings"
 
-	"haedu.gov.cn/cms/app/dal/model"
+	"github.com/beego/beego/v2/core/logs"
 
+	"haedu.gov.cn/cms/app/biz"
+	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/controllers"
+	"haedu.gov.cn/cms/controllers/admin/vmodel"
+	"haedu.gov.cn/cms/global"
 )
 
-type BaseController struct {
-	controllers.BaseController
-}
+type BaseController struct{ controllers.BaseController }
 
-func (c *BaseController) Prepare() {
+func (ctrl *BaseController) Prepare() {
 	fmt.Println("Admin BaseController Prepare")
-	c.BaseController.Prepare()
-	c.EnableXSRF = true
-	c.XSRFExpire = 3600
-	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
-	c.Data["xsrf_token"] = c.XSRFToken()
+	ctrl.BaseController.Prepare()
+	ctrl.EnableXSRF = true
+	ctrl.XSRFExpire = 3600
+	ctrl.Data["xsrfdata"] = template.HTML(ctrl.XSRFFormHTML())
+	ctrl.Data["xsrf_token"] = ctrl.XSRFToken()
 
 	if GlobalAdminId == 0 {
-		user := c.GetSession("user").(*model.CmsAdmin)
+		user := ctrl.GetSession("user").(*model.CmsAdmin)
 		GlobalAdminId = user.UserID
 		GlobalUserType = int(user.UserType) // 1:管理员 2:学校
 		GlobalAdminName = user.UserName
@@ -36,45 +34,45 @@ func (c *BaseController) Prepare() {
 		GlobalRoleId = user.RoleID
 		GlobalRoleType = user.RoleType
 	}
-	c.Data["roleId"] = GlobalRoleId
+	ctrl.Data["roleId"] = GlobalRoleId
 }
 
-func (c *BaseController) Finish() {
+func (ctrl *BaseController) Finish() {
 	fmt.Println("Admin BaseController Finish")
 }
 
 // 渲染模版
-func (this *BaseController) display(tpl ...string) {
+func (ctrl *BaseController) display(tpl ...string) {
 	var tplname string
 	if len(tpl) > 0 {
 		tplname = tpl[0] + ".html"
 	} else {
-		tplname = "admin/" + this.ControllerName + "/" + this.ActionName + ".html"
+		tplname = "admin/" + ctrl.ControllerName + "/" + ctrl.ActionName + ".html"
 	}
-	this.Layout = "admin/layout/layout.html"
-	this.TplName = tplname
+	ctrl.Layout = "admin/layout/layout.html"
+	ctrl.TplName = tplname
 }
 
 // 渲染模版
-func (this *BaseController) displayNoLayout(tpl ...string) {
+func (ctrl *BaseController) displayNoLayout(tpl ...string) {
 	var tplname string
 	if len(tpl) > 0 {
 		tplname = tpl[0] + ".html"
 	} else {
-		tplname = "admin/" + this.ControllerName + "/" + this.ActionName + ".html"
+		tplname = "admin/" + ctrl.ControllerName + "/" + ctrl.ActionName + ".html"
 	}
-	this.TplName = tplname
+	ctrl.TplName = tplname
 }
 
 // 登录人ID
-func (this *BaseController) IsLogin() int64 {
-	id := this.GetSession(`adminId`)
+func (ctrl *BaseController) IsLogin() int64 {
+	id := ctrl.GetSession(`adminId`)
 	if id == nil {
 		return 0
 	} else {
-		switch id.(type) {
+		switch id := id.(type) {
 		case int64:
-			rt := id.(int64)
+			rt := id
 			return rt
 		default:
 			return 0
@@ -82,7 +80,7 @@ func (this *BaseController) IsLogin() int64 {
 	}
 }
 
-func (this *BaseController) RolePowerGet(navName string) vmodel.RoleAction {
+func (ctrl *BaseController) RolePowerGet(navName string) vmodel.RoleAction {
 	roleAction := vmodel.RoleAction{}
 	if global.IsSuper(GlobalRoleType) {
 		roleAction.IsSuccess = true

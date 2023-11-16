@@ -15,7 +15,7 @@ func NewCmsSiteDomainModel() *CmsSiteDomain {
 	return &CmsSiteDomain{}
 }
 
-func (this *CmsSiteDomain) Delete(ids string) {
+func (svc *CmsSiteDomain) Delete(ids string) {
 	if ids == "" {
 		return
 	}
@@ -32,7 +32,7 @@ func (this *CmsSiteDomain) Delete(ids string) {
 	}
 }
 
-func (this *CmsSiteDomain) List(siteID int64) []*model.CmsSiteDomain {
+func (svc *CmsSiteDomain) List(siteID int64) []*model.CmsSiteDomain {
 	domain, domainDo := query.CmsSiteDomainDo()
 	list, err := domainDo.Where(domain.SiteID.Eq(siteID)).Find()
 	if err != nil {
@@ -41,7 +41,7 @@ func (this *CmsSiteDomain) List(siteID int64) []*model.CmsSiteDomain {
 	return list
 }
 
-func (this *CmsSiteDomain) One(domainUrl string) *model.CmsSiteDomain {
+func (svc *CmsSiteDomain) One(domainUrl string) *model.CmsSiteDomain {
 	domain, domainDo := query.CmsSiteDomainDo()
 	mdl, err := domainDo.Where(domain.Domain.Eq(domainUrl)).First()
 	if err != nil {

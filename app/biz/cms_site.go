@@ -7,10 +7,11 @@ import (
 	"strings"
 	"time"
 
+	"haedu.gov.cn/tools/xgeneric"
+
 	"haedu.gov.cn/cms/app/biz/bizmodel"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
-	"haedu.gov.cn/tools/xgeneric"
 )
 
 type CmsSite struct{}
@@ -19,7 +20,7 @@ func NewCmsSite() *CmsSite {
 	return &CmsSite{}
 }
 
-func (this *CmsSite) SiteSaveSortId(siteId int64, sortId int32) error {
+func (svc *CmsSite) SiteSaveSortId(siteId int64, sortId int32) error {
 	site, siteDo := query.CmsSiteDo()
 	_, err := siteDo.Where(site.SiteID.Eq(siteId)).UpdateColumns(
 		map[string]interface{}{
@@ -38,7 +39,7 @@ func (this *CmsSite) SiteSaveSortId(siteId int64, sortId int32) error {
  * @param {string} title
  * @return {*}
  */
-func (this *CmsSite) SitePaginate(page, limit int, name string, title string) ([]*model.CmsSite, int64, error) {
+func (svc *CmsSite) SitePaginate(page, limit int, name string, title string) ([]*model.CmsSite, int64, error) {
 	site, siteDo := query.CmsSiteDo()
 	siteDo = siteDo.Where(site.IsDeleted.Is(false))
 	if name != "" {
@@ -50,7 +51,7 @@ func (this *CmsSite) SitePaginate(page, limit int, name string, title string) ([
 	return siteDo.Order(site.IsDefault.Desc(), site.SortID).FindByPage((page-1)*limit, limit)
 }
 
-func (this *CmsSite) SiteDelete(ids string) {
+func (svc *CmsSite) SiteDelete(ids string) {
 	if ids == "" {
 		return
 	}
@@ -65,12 +66,12 @@ func (this *CmsSite) SiteDelete(ids string) {
 	}
 }
 
-func (this *CmsSite) SiteOne(id int64) (*model.CmsSite, error) {
+func (svc *CmsSite) SiteOne(id int64) (*model.CmsSite, error) {
 	site, siteDo := query.CmsSiteDo()
 	return siteDo.Where(site.SiteID.Eq(id)).First()
 }
 
-func (this *CmsSite) SiteSave(mdl *model.CmsSite, domains []string, remarks []string) error {
+func (svc *CmsSite) SiteSave(mdl *model.CmsSite, domains []string, remarks []string) error {
 	if mdl.Title == "" {
 		return errors.New("站点名称不能为空")
 	}
@@ -164,7 +165,7 @@ func (this *CmsSite) SiteSave(mdl *model.CmsSite, domains []string, remarks []st
  * @param {string} title 频道标题
  * @return {*}
  */
-func (this *CmsSite) ChannelPaginate(page, limit int, siteId int64, name, title string) ([]*model.CmsSiteChannel, int64, error) {
+func (svc *CmsSite) ChannelPaginate(page, limit int, siteId int64, name, title string) ([]*model.CmsSiteChannel, int64, error) {
 	mdl, do := query.CmsSiteChannelDo()
 	if siteId > 0 {
 		do = do.Where(mdl.SiteID.Eq(siteId))
@@ -179,13 +180,13 @@ func (this *CmsSite) ChannelPaginate(page, limit int, siteId int64, name, title 
 }
 
 // ChannelFind 获取
-func (this *CmsSite) ChannelFind(channelId int64) (*model.CmsSiteChannel, error) {
+func (svc *CmsSite) ChannelFind(channelId int64) (*model.CmsSiteChannel, error) {
 	mdl, do := query.CmsSiteChannelDo()
 	return do.Where(mdl.ChannelID.Eq(channelId)).First()
 }
 
 // ChannelSave 保存或更新
-func (this *CmsSite) ChannelSave(input *model.CmsSiteChannel) error {
+func (svc *CmsSite) ChannelSave(input *model.CmsSiteChannel) error {
 	mdl, do := query.CmsSiteChannelDo()
 	if input.Name != "" {
 		if count, _ := do.Where(mdl.ChannelID.Neq(input.ChannelID), mdl.Name.Eq(input.Name)).Count(); count > 0 {
@@ -230,7 +231,7 @@ func (this *CmsSite) ChannelSave(input *model.CmsSiteChannel) error {
 		})
 	}
 	if err == nil {
-		_ = this.ChannelNav(input)
+		_ = svc.ChannelNav(input)
 	}
 	return err
 }
@@ -240,7 +241,7 @@ func (this *CmsSite) ChannelSave(input *model.CmsSiteChannel) error {
  * @param {*model.CmsSiteChannel} input 频道
  * @return {*}
  */
-func (this *CmsSite) ChannelNav(input *model.CmsSiteChannel) error {
+func (svc *CmsSite) ChannelNav(input *model.CmsSiteChannel) error {
 	dt, _ := time.Parse("2006-01-02 15:04:05", "2023-03-20 00:00:00")
 	// cms_admin_nav
 	var siteNavId int64
@@ -362,7 +363,7 @@ func (this *CmsSite) ChannelNav(input *model.CmsSiteChannel) error {
 	return nil
 }
 
-func (this *CmsSite) ChannelSaveSortId(channelId int64, sortId int32) error {
+func (svc *CmsSite) ChannelSaveSortId(channelId int64, sortId int32) error {
 	mdl, do := query.CmsSiteChannelDo()
 	_, err := do.Where(mdl.ChannelID.Eq(channelId)).UpdateColumns(
 		map[string]interface{}{
@@ -379,7 +380,7 @@ func (this *CmsSite) ChannelSaveSortId(channelId int64, sortId int32) error {
  * @param {int64} channelId 频道ID
  * @return {*}
  */
-func (this *CmsSite) ChannelDestory(siteId, channelId int64) error {
+func (svc *CmsSite) ChannelDestory(siteId, channelId int64) error {
 	mdl, do := query.CmsSiteChannelDo()
 	if count, _ := do.Where(mdl.ParentID.Eq(channelId)).Count(); count > 0 {
 		return errors.New("请先删除子分类")
@@ -397,7 +398,7 @@ func (this *CmsSite) ChannelDestory(siteId, channelId int64) error {
  * @param {int64} channelId 频道ID
  * @return {*}
  */
-func (this *CmsSite) ChannelTree(siteId, channelId int64) ([]*bizmodel.TreeNode, error) {
+func (svc *CmsSite) ChannelTree(siteId, channelId int64) ([]*bizmodel.TreeNode, error) {
 	out := make([]*bizmodel.TreeNode, 0)
 	mdl, do := query.CmsSiteChannelDo()
 	list, err := do.Where(mdl.SiteID.Eq(siteId), mdl.ParentID.Eq(0)).Order(mdl.SortID).Find()
@@ -413,7 +414,7 @@ func (this *CmsSite) ChannelTree(siteId, channelId int64) ([]*bizmodel.TreeNode,
 			Selected: item.ChannelID == channelId,
 			Children: nil,
 		}
-		children, _ := this.ChannelTreeByParentId(item.ChannelID, channelId)
+		children, _ := svc.ChannelTreeByParentId(item.ChannelID, channelId)
 		if children != nil {
 			child.Children = children
 		}
@@ -428,7 +429,7 @@ func (this *CmsSite) ChannelTree(siteId, channelId int64) ([]*bizmodel.TreeNode,
  * @param {int64} channelId 频道ID
  * @return {*}
  */
-func (this *CmsSite) ChannelTreeByParentId(parentId, channelId int64) ([]*bizmodel.TreeNode, error) {
+func (svc *CmsSite) ChannelTreeByParentId(parentId, channelId int64) ([]*bizmodel.TreeNode, error) {
 	out := make([]*bizmodel.TreeNode, 0)
 	mdl, do := query.CmsSiteChannelDo()
 	list, err := do.Where(mdl.ParentID.Eq(parentId)).Order(mdl.SortID).Find()
@@ -443,7 +444,7 @@ func (this *CmsSite) ChannelTreeByParentId(parentId, channelId int64) ([]*bizmod
 			Selected: item.ChannelID == channelId,
 			Children: nil,
 		}
-		children, _ := this.ChannelTreeByParentId(item.ChannelID, channelId)
+		children, _ := svc.ChannelTreeByParentId(item.ChannelID, channelId)
 		if children != nil {
 			child.Children = children
 		}

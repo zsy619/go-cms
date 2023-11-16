@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/beego/beego/v2/server/web"
+
 	"haedu.gov.cn/cms/app/biz"
 )
 
@@ -46,12 +47,12 @@ func InitWechatMpVerifyRouter() {
  * @description: 验证微信公众号文件
  * @return {*}
  */
-func (c *WechatMpVerifyController) Verify() {
+func (ctrl *WechatMpVerifyController) Verify() {
 	if list, err := biz.NewWeixinMpVerify().GetCache(); err != nil {
-		c.Ctx.WriteString(err.Error())
+		ctrl.Ctx.WriteString(err.Error())
 	} else {
 		if len(list) > 0 {
-			orpath := c.Ctx.Request.URL.Path
+			orpath := ctrl.Ctx.Request.URL.Path
 			for _, item := range list {
 				if item.Status != 2 {
 					continue
@@ -68,12 +69,12 @@ func (c *WechatMpVerifyController) Verify() {
 				if strings.HasSuffix(orpath, router) {
 					path := item.FilePath
 					fmt.Println(orpath, path)
-					c.Ctx.Request.Header.Set("Content-Type", "application/txt")
-					http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, path[1:])
-					c.StopRun()
+					ctrl.Ctx.Request.Header.Set("Content-Type", "application/txt")
+					http.ServeFile(ctrl.Ctx.ResponseWriter, ctrl.Ctx.Request, path[1:])
+					ctrl.StopRun()
 				}
 			}
 		}
 	}
-	c.Ctx.WriteString("not found")
+	ctrl.Ctx.WriteString("not found")
 }

@@ -2,12 +2,12 @@ package biz
 
 import (
 	"errors"
-	"haedu.gov.cn/cms/global"
+	"haedu.gov.cn/tools/xgeneric"
 	"time"
 
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
-	"haedu.gov.cn/tools/xgeneric"
+	"haedu.gov.cn/cms/global"
 )
 
 type CmsTopic struct{}
@@ -17,7 +17,7 @@ func NewCmsTopic() *CmsTopic {
 }
 
 // TopicClone 克隆
-func (this *CmsTopic) TopicClone(topicId int64) (int64, error) {
+func (svc *CmsTopic) TopicClone(topicId int64) (int64, error) {
 	mdl, do := query.CmsTopicDo()
 	art, err := do.Where(mdl.TopicID.Eq(topicId)).First()
 	if err != nil {
@@ -32,7 +32,7 @@ func (this *CmsTopic) TopicClone(topicId int64) (int64, error) {
 }
 
 // TopicChangeStatus 修改状态
-func (this *CmsTopic) TopicChangeStatus(topicId int64, status int32) error {
+func (svc *CmsTopic) TopicChangeStatus(topicId int64, status int32) error {
 	mdl, do := query.CmsTopicDo()
 	_, err := do.Where(mdl.TopicID.Eq(topicId)).UpdateColumns(
 		map[string]interface{}{
@@ -44,7 +44,7 @@ func (this *CmsTopic) TopicChangeStatus(topicId int64, status int32) error {
 }
 
 // TopicPaginate 分页查询
-func (this *CmsTopic) TopicPaginate(page, limit int, channelId int64, name, title string, status int32, siteId ...int64) ([]*model.CmsTopic, int64, error) {
+func (svc *CmsTopic) TopicPaginate(page, limit int, channelId int64, name, title string, status int32, siteId ...int64) ([]*model.CmsTopic, int64, error) {
 	mdl, do := query.CmsTopicDo()
 	if len(siteId) > 0 {
 		do = do.Where(mdl.SiteID.In(siteId...))
@@ -62,13 +62,13 @@ func (this *CmsTopic) TopicPaginate(page, limit int, channelId int64, name, titl
 }
 
 // TopicFind 获取
-func (this *CmsTopic) TopicFind(topicId int64) (*model.CmsTopic, error) {
+func (svc *CmsTopic) TopicFind(topicId int64) (*model.CmsTopic, error) {
 	mdl, do := query.CmsTopicDo()
 	return do.Where(mdl.TopicID.Eq(topicId)).First()
 }
 
 // TopicSave 保存或更新
-func (this *CmsTopic) TopicSave(input *model.CmsTopic) error {
+func (svc *CmsTopic) TopicSave(input *model.CmsTopic) error {
 	mdl, do := query.CmsTopicDo()
 	if input.Name != "" {
 		if count, _ := do.Where(mdl.TopicID.Neq(input.TopicID), mdl.SiteID.Eq(input.SiteID), mdl.Name.Eq(input.Name)).Count(); count > 0 {
@@ -108,7 +108,7 @@ func (this *CmsTopic) TopicSave(input *model.CmsTopic) error {
  * @param {int64} topicId ID
  * @return {*}
  */
-func (this *CmsTopic) TopicDestory(topicId int64) error {
+func (svc *CmsTopic) TopicDestory(topicId int64) error {
 	mdl, do := query.CmsTopicDo()
 	if _, err := do.Where(mdl.TopicID.Eq(topicId)).Delete(); err != nil {
 		return err
@@ -122,7 +122,7 @@ func (this *CmsTopic) TopicDestory(topicId int64) error {
  * @param {int32} sortId 排序
  * @return {*}
  */
-func (this *CmsTopic) TopicSaveSortId(topicId int64, sortId int32) error {
+func (svc *CmsTopic) TopicSaveSortId(topicId int64, sortId int32) error {
 	mdl, do := query.CmsTopicDo()
 	_, err := do.Where(mdl.TopicID.Eq(topicId)).UpdateColumns(
 		map[string]interface{}{
@@ -134,7 +134,7 @@ func (this *CmsTopic) TopicSaveSortId(topicId int64, sortId int32) error {
 }
 
 // SiteGet 获取站点
-func (this *CmsTopic) SiteGet(roleId int64, roleType string) ([]*model.CmsSite, error) {
+func (svc *CmsTopic) SiteGet(roleId int64, roleType string) ([]*model.CmsSite, error) {
 	if global.IsSuper(roleType) {
 		siteList, _, _ := NewCmsSite().SitePaginate(1, 999999, "", "")
 		return siteList, nil

@@ -2,15 +2,16 @@ package biz
 
 import (
 	"fmt"
-	"github.com/beego/beego/v2/core/logs"
-	"haedu.gov.cn/cms/app/lib"
 	"strconv"
 	"time"
 
+	"github.com/beego/beego/v2/core/logs"
 	"gorm.io/gorm"
+	"haedu.gov.cn/tools/xgeneric"
+
 	"haedu.gov.cn/cms/app/biz/bizmodel"
 	"haedu.gov.cn/cms/app/dal/query"
-	"haedu.gov.cn/tools/xgeneric"
+	"haedu.gov.cn/cms/app/lib"
 )
 
 type ApiLink struct{}
@@ -19,7 +20,7 @@ func NewApiLink() *ApiLink {
 	return &ApiLink{}
 }
 
-func (this *ApiLink) get(cackeKeyPrefix string, limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiLinkModel, int64, error) {
+func (svc *ApiLink) get(cackeKeyPrefix string, limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiLinkModel, int64, error) {
 	cacheKey := fmt.Sprintf("%s_%d_%d_%s_%d_%s", cackeKeyPrefix, limit, site_id, site_flag, category_id, call_index)
 	/*if found, item := ApiCache.Get(cacheKey); found {
 		links := item.([]*bizmodel.ApiLinkModel)
@@ -68,8 +69,8 @@ func (this *ApiLink) get(cackeKeyPrefix string, limit int, site_id int64, site_f
 * @param {string} call_index 链接分类标识
 * @return {*}
  */
-func (this *ApiLink) Get(limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiLinkModel, int64, error) {
-	return this.get("ApiLink_Get", limit, site_id, site_flag, category_id, call_index)
+func (svc *ApiLink) Get(limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiLinkModel, int64, error) {
+	return svc.get("ApiLink_Get", limit, site_id, site_flag, category_id, call_index)
 }
 
 /**
@@ -81,8 +82,8 @@ func (this *ApiLink) Get(limit int, site_id int64, site_flag string, category_id
 * @param {string} call_index 链接分类标识
 * @return {*}
  */
-func (this *ApiLink) GetNew(limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiLinkModel, int64, error) {
-	return this.get("ApiLink_GetNew", limit, site_id, site_flag, category_id, call_index)
+func (svc *ApiLink) GetNew(limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiLinkModel, int64, error) {
+	return svc.get("ApiLink_GetNew", limit, site_id, site_flag, category_id, call_index)
 }
 
 /**
@@ -95,7 +96,7 @@ func (this *ApiLink) GetNew(limit int, site_id int64, site_flag string, category
  * @param {string} call_index 链接分类标识
  * @return {*}
  */
-func (this *ApiLink) Paginate(page, limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiLinkModel, int64, error) {
+func (svc *ApiLink) Paginate(page, limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiLinkModel, int64, error) {
 	outLink := []*bizmodel.ApiLinkModel{}
 	where := " WHERE a.`status`=2" +
 		xgeneric.IFF(site_flag == "", "", " AND c.flag = '"+site_flag+"'") +
@@ -130,7 +131,7 @@ func (this *ApiLink) Paginate(page, limit int, site_id int64, site_flag string, 
  * @param {int64} link_id 链接ID
  * @return {*}
  */
-func (this *ApiLink) Click(link_id int64) error {
+func (svc *ApiLink) Click(link_id int64) error {
 	mdl, do := query.CmsLinkDo()
 	_, err := do.Where(mdl.LinkID.Eq(link_id), mdl.Status.Eq(2)).Updates(map[string]interface{}{
 		mdl.Click.ColumnName().String():      gorm.Expr("click + ?", 1),

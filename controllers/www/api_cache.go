@@ -5,8 +5,8 @@ import "haedu.gov.cn/cms/app/biz"
 type ApiCacheController struct{ BaseController }
 
 // @router /api/cache/clear [get]
-func (this *ApiCacheController) Clear() {
+func (ctrl *ApiCacheController) Clear() {
 	biz.CleanCahe()
 	DefaultSite = nil
-	this.JSONError("清除缓存成功")
+	ctrl.JSONError("清除缓存成功")
 }

@@ -3,9 +3,8 @@ package mp
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 )
 
@@ -38,7 +37,7 @@ func post(url string, bodyType string, body *bytes.Buffer) (*response, error) {
 		return nil, err
 	}
 	defer resp.Body.Close()
-	data, err := ioutil.ReadAll(resp.Body)
+	data, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +46,7 @@ func post(url string, bodyType string, body *bytes.Buffer) (*response, error) {
 		return nil, err
 	}
 	if rtn.ErrCode != 0 {
-		return nil, errors.New(fmt.Sprintf("%d %s", rtn.ErrCode, rtn.ErrMsg))
+		return nil, fmt.Errorf("%d %s", rtn.ErrCode, rtn.ErrMsg)
 	}
 	return &rtn, nil
 }
@@ -58,7 +57,7 @@ func get(url string) (*response, error) {
 		return nil, err
 	}
 	defer resp.Body.Close()
-	data, err := ioutil.ReadAll(resp.Body)
+	data, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +66,7 @@ func get(url string) (*response, error) {
 		return nil, err
 	}
 	if rtn.ErrCode != 0 {
-		return nil, errors.New(fmt.Sprintf("%d %s", rtn.ErrCode, rtn.ErrMsg))
+		return nil, fmt.Errorf("%d %s", rtn.ErrCode, rtn.ErrMsg)
 	}
 	return &rtn, nil
 }
@@ -84,7 +83,7 @@ func postjson(surl, jsonstr string) (b []byte, err error) {
 		return
 	}
 	defer r.Body.Close()
-	b, err = ioutil.ReadAll(r.Body)
+	b, err = io.ReadAll(r.Body)
 	return
 }
 
@@ -94,6 +93,6 @@ func getbytes(surl string) (b []byte, err error) {
 		return
 	}
 	defer resp.Body.Close()
-	b, err = ioutil.ReadAll(resp.Body)
+	b, err = io.ReadAll(resp.Body)
 	return
 }

@@ -15,7 +15,7 @@ func NewCmsTheme() *CmsTheme {
 }
 
 // ThemeClone 克隆
-func (this *CmsTheme) ThemeClone(themeId int64) (int64, error) {
+func (svc *CmsTheme) ThemeClone(themeId int64) (int64, error) {
 	mdl, do := query.CmsThemeDo()
 	art, err := do.Where(mdl.ThemeID.Eq(themeId)).First()
 	if err != nil {
@@ -29,7 +29,7 @@ func (this *CmsTheme) ThemeClone(themeId int64) (int64, error) {
 }
 
 // ThemePaginate 分页查询
-func (this *CmsTheme) ThemePaginate(page, limit int, name, title string) ([]*model.CmsTheme, int64, error) {
+func (svc *CmsTheme) ThemePaginate(page, limit int, name, title string) ([]*model.CmsTheme, int64, error) {
 	mdl, do := query.CmsThemeDo()
 	if name != "" {
 		do = do.Where(mdl.Name.Like("%" + name + "%"))
@@ -41,7 +41,7 @@ func (this *CmsTheme) ThemePaginate(page, limit int, name, title string) ([]*mod
 }
 
 // ThemeSetDefault 设置默认主题
-func (this *CmsTheme) ThemeSetDefault(name string) error {
+func (svc *CmsTheme) ThemeSetDefault(name string) error {
 	mdl, do := query.CmsThemeDo()
 	now := time.Now()
 	if _, err := do.Where(mdl.Name.Eq(name)).UpdateColumns(map[string]interface{}{
@@ -60,13 +60,13 @@ func (this *CmsTheme) ThemeSetDefault(name string) error {
 }
 
 // ThemeFind 获取
-func (this *CmsTheme) ThemeFind(themeId int64) (*model.CmsTheme, error) {
+func (svc *CmsTheme) ThemeFind(themeId int64) (*model.CmsTheme, error) {
 	mdl, do := query.CmsThemeDo()
 	return do.Where(mdl.ThemeID.Eq(themeId)).First()
 }
 
 // ThemeSave 保存或更新
-func (this *CmsTheme) ThemeSave(input *model.CmsTheme) error {
+func (svc *CmsTheme) ThemeSave(input *model.CmsTheme) error {
 	mdl, do := query.CmsThemeDo()
 	if input.Name != "" {
 		if count, _ := do.Where(mdl.ThemeID.Neq(input.ThemeID), mdl.Name.Eq(input.Name)).Count(); count > 0 {
@@ -99,7 +99,7 @@ func (this *CmsTheme) ThemeSave(input *model.CmsTheme) error {
  * @param {int64} ThemeId ID
  * @return {*}
  */
-func (this *CmsTheme) ThemeDestory(ThemeId int64) error {
+func (svc *CmsTheme) ThemeDestory(ThemeId int64) error {
 	mdl, do := query.CmsThemeDo()
 	if _, err := do.Where(mdl.ThemeID.Eq(ThemeId)).Delete(); err != nil {
 		return err
@@ -113,7 +113,7 @@ func (this *CmsTheme) ThemeDestory(ThemeId int64) error {
  * @param {int32} sortId 排序
  * @return {*}
  */
-func (this *CmsTheme) ThemeSaveSortId(ThemeId int64, sortId int32) error {
+func (svc *CmsTheme) ThemeSaveSortId(ThemeId int64, sortId int32) error {
 	mdl, do := query.CmsThemeDo()
 	_, err := do.Where(mdl.ThemeID.Eq(ThemeId)).UpdateColumns(
 		map[string]interface{}{
@@ -129,7 +129,7 @@ func (this *CmsTheme) ThemeSaveSortId(ThemeId int64, sortId int32) error {
  * @param {string} name 模板名称
  * @return {*}
  */
-func (this *CmsTheme) ThemeExists(name string) bool {
+func (svc *CmsTheme) ThemeExists(name string) bool {
 	mdl, do := query.CmsThemeDo()
 	if count, _ := do.Where(mdl.Name.Eq(name)).Count(); count > 0 {
 		return true

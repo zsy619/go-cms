@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/beego/beego/v2/core/logs"
+
 	"haedu.gov.cn/cms/app/biz"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/lib"
@@ -112,7 +113,7 @@ func (ue *UEditorController) Handle() {
 	// 		return
 	// 	}
 	// 	defer file.Close()
-	// 	fd, err := ioutil.ReadAll(file)
+	// 	fd, err := io.ReadAll(file)
 	// 	if err != nil {
 	// 		fmt.Println(err.Error())
 	// 		fmt.Fprintf(ue.Ctx.ResponseWriter, "读取文件失败 : %v", err)
@@ -234,7 +235,7 @@ func (ue *UEditorController) UploadFileX(op string, fieldName string, exts []str
 	}
 
 	json, _ := json.Marshal(ret_json)
-	fmt.Fprintf(ue.Ctx.ResponseWriter, string(json))
+	fmt.Fprint(ue.Ctx.ResponseWriter, string(json))
 }
 
 func (ue *UEditorController) ListFileX(dir string, exts []string) {

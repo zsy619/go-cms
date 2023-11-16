@@ -18,9 +18,7 @@ var (
 	SiteTheme   string                 // 站点模板
 )
 
-type BaseController struct {
-	controllers.BaseController
-}
+type BaseController struct{ controllers.BaseController }
 
 /**
  * @description: 获取视图地址
@@ -28,7 +26,7 @@ type BaseController struct {
  * @param {string} viewName view名称
  * @return {*}
  */
-func (c *BaseController) GetView(themeName, viewName string) string {
+func (ctrl *BaseController) GetView(themeName, viewName string) string {
 	return "themes/" + themeName + "/views/" + viewName
 }
 
@@ -36,46 +34,46 @@ func (c *BaseController) GetView(themeName, viewName string) string {
  * @description: Prepare
  * @return {*}
  */
-func (c *BaseController) Prepare() {
-	c.BaseController.Prepare()
+func (ctrl *BaseController) Prepare() {
+	ctrl.BaseController.Prepare()
 	fmt.Println("www BaseController Prepare")
 
 	// 根据域名获取站点信息
-	DefaultSite, _ = c.SiteByHost(c.Ctx.Request.Host)
+	DefaultSite, _ = ctrl.SiteByHost(ctrl.Ctx.Request.Host)
 	if DefaultSite == nil {
 		// 获取默认站点、模板
-		DefaultSite, _ = c.SiteDefault()
+		DefaultSite, _ = ctrl.SiteDefault()
 		if DefaultSite.Template == "" {
-			c.Ctx.WriteString("请设置默认模板")
-			c.StopRun()
+			ctrl.Ctx.WriteString("请设置默认模板")
+			ctrl.StopRun()
 		}
 	}
 	SiteTheme = DefaultSite.Template
 	SiteStatic = "/views/themes/" + SiteTheme + "/static/"
-	c.Data["siteTheme"] = SiteTheme
-	c.Data["siteStatic"] = SiteStatic
-	c.Data["siteImages"] = path.Join(SiteStatic, "images")
-	c.Data["siteJs"] = path.Join(SiteStatic, "js")
-	c.Data["siteCss"] = path.Join(SiteStatic, "css")
-	c.Data["siteViews"] = "themes/" + SiteTheme + "/views/"
+	ctrl.Data["siteTheme"] = SiteTheme
+	ctrl.Data["siteStatic"] = SiteStatic
+	ctrl.Data["siteImages"] = path.Join(SiteStatic, "images")
+	ctrl.Data["siteJs"] = path.Join(SiteStatic, "js")
+	ctrl.Data["siteCss"] = path.Join(SiteStatic, "css")
+	ctrl.Data["siteViews"] = "themes/" + SiteTheme + "/views/"
 
-	c.Data["site"] = DefaultSite
-	channel, _, _ := c.ChannelGet(DefaultSite.SiteID)
-	c.Data["channel"] = channel
+	ctrl.Data["site"] = DefaultSite
+	channel, _, _ := ctrl.ChannelGet(DefaultSite.SiteID)
+	ctrl.Data["channel"] = channel
 
-	c.Data["webroot"] = "/static/www/"
-	c.Data["year"] = time.Now().Year()
-	c.Data["controllerName"] = strings.ToLower(c.ControllerName)
-	c.Data["actionName"] = strings.ToLower(c.ActionName)
-	debug := c.GetSafeString("debug")
-	c.Data["debug"] = debug
+	ctrl.Data["webroot"] = "/static/www/"
+	ctrl.Data["year"] = time.Now().Year()
+	ctrl.Data["controllerName"] = strings.ToLower(ctrl.ControllerName)
+	ctrl.Data["actionName"] = strings.ToLower(ctrl.ActionName)
+	debug := ctrl.GetSafeString("debug")
+	ctrl.Data["debug"] = debug
 }
 
 /**
  * @description: 加载完毕
  * @return {*}
  */
-func (c *BaseController) Finish() {
+func (ctrl *BaseController) Finish() {
 	fmt.Println("www BaseController Finish")
 }
 
@@ -83,7 +81,7 @@ func (c *BaseController) Finish() {
  * @description: SiteDefault 获取默认站点信息
  * @return {*}
  */
-func (this *BaseController) SiteDefault() (*bizmodel.ApiSiteModel, error) {
+func (ctrl *BaseController) SiteDefault() (*bizmodel.ApiSiteModel, error) {
 	return biz.NewApiSite().Default()
 }
 
@@ -91,7 +89,7 @@ func (this *BaseController) SiteDefault() (*bizmodel.ApiSiteModel, error) {
  * @description: SiteByHost 根据域名获取站点信息
  * @return {*}
  */
-func (this *BaseController) SiteByHost(host string) (*bizmodel.ApiSiteModel, error) {
+func (ctrl *BaseController) SiteByHost(host string) (*bizmodel.ApiSiteModel, error) {
 	return biz.NewApiSite().FindByHost(host)
 }
 
@@ -100,7 +98,7 @@ func (this *BaseController) SiteByHost(host string) (*bizmodel.ApiSiteModel, err
  * @param {int64} site_id 站点ID
  * @return {*}
  */
-func (this *BaseController) SiteFind(site_id int64) (*model.CmsSite, error) {
+func (ctrl *BaseController) SiteFind(site_id int64) (*model.CmsSite, error) {
 	return biz.NewApiSite().Find(site_id)
 }
 
@@ -109,7 +107,7 @@ func (this *BaseController) SiteFind(site_id int64) (*model.CmsSite, error) {
  * @param {int64} site_id 站点ID
  * @return {*}
  */
-func (this *BaseController) ChannelGet(site_id int64) ([]*bizmodel.ApiChannelModel, int64, error) {
+func (ctrl *BaseController) ChannelGet(site_id int64) ([]*bizmodel.ApiChannelModel, int64, error) {
 	return biz.NewApiSite().ChannelGet(site_id)
 }
 
@@ -119,7 +117,7 @@ func (this *BaseController) ChannelGet(site_id int64) ([]*bizmodel.ApiChannelMod
  * @param {int64} channel_id 频道ID
  * @return {*}
  */
-func (this *BaseController) SiteMenu(site_id, channel_id int64) ([]*bizmodel.ApiNavModel, int64, error) {
+func (ctrl *BaseController) SiteMenu(site_id, channel_id int64) ([]*bizmodel.ApiNavModel, int64, error) {
 	return biz.NewApiSite().NavGet(site_id, channel_id)
 }
 
@@ -129,7 +127,7 @@ func (this *BaseController) SiteMenu(site_id, channel_id int64) ([]*bizmodel.Api
  * @param {int64} channel_id 频道ID
  * @return {*}
  */
-func (this *BaseController) SiteMenuFlag(site_flag string, channel_id int64) ([]*bizmodel.ApiNavModel, int64, error) {
+func (ctrl *BaseController) SiteMenuFlag(site_flag string, channel_id int64) ([]*bizmodel.ApiNavModel, int64, error) {
 	return biz.NewApiSite().NavGetByFlag(site_flag, channel_id)
 }
 
@@ -142,7 +140,7 @@ func (this *BaseController) SiteMenuFlag(site_flag string, channel_id int64) ([]
  * @param {int64} article_id 文章ID
  * @return {*}
  */
-func (this *BaseController) CategoryNav(channel_name string, channel_id int64, call_index string, category_id int64, article_id int64) ([]*bizmodel.ApiCategoryNav, error) {
+func (ctrl *BaseController) CategoryNav(channel_name string, channel_id int64, call_index string, category_id int64, article_id int64) ([]*bizmodel.ApiCategoryNav, error) {
 	return biz.NewApiArticle().CategoryNav(channel_name, channel_id, call_index, category_id, article_id)
 }
 
@@ -152,7 +150,7 @@ func (this *BaseController) CategoryNav(channel_name string, channel_id int64, c
  * @param {string} call_index 栏目别名
  * @return {*}
  */
-func (this *BaseController) CategoryGet(channel_name, call_index string) ([]*bizmodel.ApiCategoryGetModel, int64, error) {
+func (ctrl *BaseController) CategoryGet(channel_name, call_index string) ([]*bizmodel.ApiCategoryGetModel, int64, error) {
 	return biz.NewApiArticle().CategoryGet(channel_name, call_index)
 }
 
@@ -162,7 +160,7 @@ func (this *BaseController) CategoryGet(channel_name, call_index string) ([]*biz
  * @param {string} call_index 栏目别名
  * @return {*}
  */
-func (this *BaseController) CategoryFind(category_id int64, call_index string) (*bizmodel.ApiCategoryFindModel, error) {
+func (ctrl *BaseController) CategoryFind(category_id int64, call_index string) (*bizmodel.ApiCategoryFindModel, error) {
 	return biz.NewApiArticle().CategoryFind(category_id, call_index)
 }
 
@@ -180,7 +178,7 @@ func (this *BaseController) CategoryFind(category_id int64, call_index string) (
  * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
  * @return {*}
  */
-func (this *BaseController) ArticleGet(limit int, channel_id int64, channel_name string, category_id int64, call_index string, is_top, is_red, is_hot, is_slide int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
+func (ctrl *BaseController) ArticleGet(limit int, channel_id int64, channel_name string, category_id int64, call_index string, is_top, is_red, is_hot, is_slide int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
 	return biz.NewApiArticle().ArticleGet(limit, channel_id, channel_name, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
 }
 
@@ -198,7 +196,7 @@ func (this *BaseController) ArticleGet(limit int, channel_id int64, channel_name
  * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
  * @return {*}
  */
-func (this *BaseController) ArticleGetNew(limit int, channel_id int64, channel_name string, category_id int64, call_index string, is_top, is_red, is_hot, is_slide int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
+func (ctrl *BaseController) ArticleGetNew(limit int, channel_id int64, channel_name string, category_id int64, call_index string, is_top, is_red, is_hot, is_slide int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
 	return biz.NewApiArticle().ArticleGetNew(limit, channel_id, channel_name, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
 }
 
@@ -219,7 +217,7 @@ func (this *BaseController) ArticleGetNew(limit int, channel_id int64, channel_n
  * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
  * @return {*}
  */
-func (this *BaseController) ArticlePaginate(page, limit int, channel_id int64, channel_name string, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide, is_search int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
+func (ctrl *BaseController) ArticlePaginate(page, limit int, channel_id int64, channel_name string, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide, is_search int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
 	return biz.NewApiArticle().ArticlePaginate(page, limit, channel_id, channel_name, category_id, call_index, keyword, is_top, is_red, is_hot, is_slide, is_search, order_by)
 }
 
@@ -229,7 +227,7 @@ func (this *BaseController) ArticlePaginate(page, limit int, channel_id int64, c
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *BaseController) ArticleFind(call_index string, article_id int64) (*bizmodel.ApiArticleOneModel, []*bizmodel.ApiAlbumModel, []*bizmodel.ApiAttachModel, []*bizmodel.ApiPropertyModel, error) {
+func (ctrl *BaseController) ArticleFind(call_index string, article_id int64) (*bizmodel.ApiArticleOneModel, []*bizmodel.ApiAlbumModel, []*bizmodel.ApiAttachModel, []*bizmodel.ApiPropertyModel, error) {
 	return biz.NewApiArticle().ArticleFind(call_index, article_id)
 }
 
@@ -240,7 +238,7 @@ func (this *BaseController) ArticleFind(call_index string, article_id int64) (*b
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *BaseController) ArticlePrevNext(call_index string, category_id, article_id int64) (*bizmodel.ApiArticlePrevNextModel, *bizmodel.ApiArticlePrevNextModel) {
+func (ctrl *BaseController) ArticlePrevNext(call_index string, category_id, article_id int64) (*bizmodel.ApiArticlePrevNextModel, *bizmodel.ApiArticlePrevNextModel) {
 	return biz.NewApiArticle().PrevNext(call_index, category_id, article_id)
 }
 
@@ -250,7 +248,7 @@ func (this *BaseController) ArticlePrevNext(call_index string, category_id, arti
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *BaseController) ArticleArticle(call_index string, article_id int64) (*bizmodel.ApiArticleOneModel, error) {
+func (ctrl *BaseController) ArticleArticle(call_index string, article_id int64) (*bizmodel.ApiArticleOneModel, error) {
 	return biz.NewApiArticle().Article(call_index, article_id)
 }
 
@@ -261,7 +259,7 @@ func (this *BaseController) ArticleArticle(call_index string, article_id int64) 
  * @param {int32} type_id 分类
  * @return {*}
  */
-func (this *BaseController) ArticleAlbum(call_index string, article_id int64, type_id int32) ([]*bizmodel.ApiAlbumModel, error) {
+func (ctrl *BaseController) ArticleAlbum(call_index string, article_id int64, type_id int32) ([]*bizmodel.ApiAlbumModel, error) {
 	return biz.NewApiArticle().Album(call_index, article_id, type_id)
 }
 
@@ -272,7 +270,7 @@ func (this *BaseController) ArticleAlbum(call_index string, article_id int64, ty
  * @param {int32} type_id 分类
  * @return {*}
  */
-func (this *BaseController) ArticleAttach(call_index string, article_id int64, type_id int32) ([]*bizmodel.ApiAttachModel, error) {
+func (ctrl *BaseController) ArticleAttach(call_index string, article_id int64, type_id int32) ([]*bizmodel.ApiAttachModel, error) {
 	return biz.NewApiArticle().Attach(call_index, article_id, type_id)
 }
 
@@ -281,7 +279,7 @@ func (this *BaseController) ArticleAttach(call_index string, article_id int64, t
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *BaseController) ArticleClick(call_index string, article_id int64) error {
+func (ctrl *BaseController) ArticleClick(call_index string, article_id int64) error {
 	return biz.NewApiArticle().Click(call_index, article_id)
 }
 
@@ -290,7 +288,7 @@ func (this *BaseController) ArticleClick(call_index string, article_id int64) er
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *BaseController) ArticleLike(call_index string, article_id int64) error {
+func (ctrl *BaseController) ArticleLike(call_index string, article_id int64) error {
 	return biz.NewApiArticle().Like(call_index, article_id)
 }
 
@@ -300,7 +298,7 @@ func (this *BaseController) ArticleLike(call_index string, article_id int64) err
  * @param {int64} ablum_id 图片id
  * @return {*}
  */
-func (this *BaseController) AlbumClick(article_id, ablum_id int64) error {
+func (ctrl *BaseController) AlbumClick(article_id, ablum_id int64) error {
 	return biz.NewApiArticle().AlbumClick(article_id, ablum_id)
 }
 
@@ -312,6 +310,6 @@ func (this *BaseController) AlbumClick(article_id, ablum_id int64) error {
  * @param {string} title 属性名称
  * @return {*}
  */
-func (this *BaseController) Property(page, limit int, parentId, articleId int64, callIndex, title string) ([]*model.CmsArticleProperty, int64, error) {
+func (ctrl *BaseController) Property(page, limit int, parentId, articleId int64, callIndex, title string) ([]*model.CmsArticleProperty, int64, error) {
 	return biz.NewApiArticle().Property(page, limit, parentId, articleId, callIndex, title)
 }

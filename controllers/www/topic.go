@@ -7,25 +7,25 @@ type TopicController struct{ BaseController }
 
 // Index 专题首页
 // @router /:flag/topic/:name:string [get]
-func (this *TopicController) Index() {
-	flag := this.Ctx.Input.Param(":flag")
+func (ctrl *TopicController) Index() {
+	flag := ctrl.Ctx.Input.Param(":flag")
 	if flag == "" {
-		this.Ctx.WriteString("站点标识不能为空")
+		ctrl.Ctx.WriteString("站点标识不能为空")
 	}
-	name := this.Ctx.Input.Param(":name")
+	name := ctrl.Ctx.Input.Param(":name")
 	if name == "" {
-		this.Ctx.WriteString("专题名称不能为空")
+		ctrl.Ctx.WriteString("专题名称不能为空")
 	}
 	find, err := biz.NewApiTopic().Find(0, name)
 	if err != nil || find.Name == "" {
-		this.Ctx.WriteString("专题不存在")
-		this.StopRun()
+		ctrl.Ctx.WriteString("专题不存在")
+		ctrl.StopRun()
 	}
-	this.Data["flag"] = flag
-	this.Data["name"] = name
-	this.Data["topic"] = find
+	ctrl.Data["flag"] = flag
+	ctrl.Data["name"] = name
+	ctrl.Data["topic"] = find
 	if find.Template == "" {
 		find.Template = "topic.html"
 	}
-	this.TplName = this.GetView(SiteTheme, find.Template)
+	ctrl.TplName = ctrl.GetView(SiteTheme, find.Template)
 }

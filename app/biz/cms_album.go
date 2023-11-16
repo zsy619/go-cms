@@ -1,14 +1,15 @@
 package biz
 
 import (
-	"haedu.gov.cn/cms/global"
 	"os"
 	"strings"
 	"time"
 
 	"github.com/beego/beego/v2/core/logs"
+
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
+	"haedu.gov.cn/cms/global"
 )
 
 type CmsAlbum struct{}
@@ -18,7 +19,7 @@ func NewCmsAlbum() *CmsAlbum {
 }
 
 // AlbumPaginate 获取
-func (this *CmsAlbum) AlbumPaginate(page, limit int, tableName string, recordId int64, typeId int32, adminId int64, roleType string) ([]*model.CmsAlbum, int64, error) {
+func (svc *CmsAlbum) AlbumPaginate(page, limit int, tableName string, recordId int64, typeId int32, adminId int64, roleType string) ([]*model.CmsAlbum, int64, error) {
 	mdl, do := query.CmsAlbumDo()
 	if global.IsSuper(roleType) {
 		return do.Where(mdl.TableName_.Eq(tableName), mdl.RecordID.Eq(recordId), mdl.TypeID.Eq(typeId)).Order(mdl.SortID).FindByPage((page-1)*limit, limit)
@@ -27,7 +28,7 @@ func (this *CmsAlbum) AlbumPaginate(page, limit int, tableName string, recordId 
 	}
 }
 
-func (this *CmsAlbum) AlbumSearch(page, limit int, tableName, title, ext string, adminId int64, roleType string) ([]*model.CmsAlbum, int64, error) {
+func (svc *CmsAlbum) AlbumSearch(page, limit int, tableName, title, ext string, adminId int64, roleType string) ([]*model.CmsAlbum, int64, error) {
 	mdl, do := query.CmsAlbumDo()
 	if tableName != "" {
 		do = do.Where(mdl.TableName_.Eq(tableName))
@@ -47,7 +48,7 @@ func (this *CmsAlbum) AlbumSearch(page, limit int, tableName, title, ext string,
 }
 
 // AlbumSave 保存或更新
-func (this *CmsAlbum) AlbumSave(input *model.CmsAlbum) error {
+func (svc *CmsAlbum) AlbumSave(input *model.CmsAlbum) error {
 	mdl, do := query.CmsAlbumDo()
 	var err error
 	input.UpdateTime = time.Now()
@@ -77,7 +78,7 @@ func (this *CmsAlbum) AlbumSave(input *model.CmsAlbum) error {
 }
 
 // AlbumDestory 删除
-func (this *CmsAlbum) AlbumDestory(albumId int64) error {
+func (svc *CmsAlbum) AlbumDestory(albumId int64) error {
 	mdl, do := query.CmsAlbumDo()
 	if finder, err := do.Where(mdl.AlbumID.Eq(albumId)).First(); err != nil {
 		return err
@@ -94,7 +95,7 @@ func (this *CmsAlbum) AlbumDestory(albumId int64) error {
 }
 
 // AlbumSaveShow 保存排序
-func (this *CmsAlbum) AlbumSaveShow(albumId int64, show int32) error {
+func (svc *CmsAlbum) AlbumSaveShow(albumId int64, show int32) error {
 	mdl, do := query.CmsAlbumDo()
 	_, err := do.Where(mdl.AlbumID.Eq(albumId)).UpdateColumns(
 		map[string]interface{}{
@@ -106,7 +107,7 @@ func (this *CmsAlbum) AlbumSaveShow(albumId int64, show int32) error {
 }
 
 // AlbumSaveInfo 保存
-func (this *CmsAlbum) AlbumSaveInfo(albumId int64, title, linkUrl string, click, sortId int32, remark string) error {
+func (svc *CmsAlbum) AlbumSaveInfo(albumId int64, title, linkUrl string, click, sortId int32, remark string) error {
 	mdl, do := query.CmsAlbumDo()
 	_, err := do.Where(mdl.AlbumID.Eq(albumId)).UpdateColumns(
 		map[string]interface{}{

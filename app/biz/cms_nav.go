@@ -3,10 +3,11 @@ package biz
 import (
 	"errors"
 	"fmt"
+	"time"
+
 	"haedu.gov.cn/cms/app/biz/bizmodel"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
-	"time"
 )
 
 type CmsAdminNav struct{}
@@ -16,7 +17,7 @@ func NewCmsAdminNav() *CmsAdminNav {
 }
 
 // NavSaveSortId 更新排序
-func (this *CmsAdminNav) NavSaveSortId(navId int64, updateId int32, updateName string, sortId int32) error {
+func (svc *CmsAdminNav) NavSaveSortId(navId int64, updateId int32, updateName string, sortId int32) error {
 	mdl, do := query.CmsAdminNavDo()
 	_, err := do.Where(mdl.NavID.Eq(navId)).UpdateColumns(
 		map[string]interface{}{
@@ -30,14 +31,14 @@ func (this *CmsAdminNav) NavSaveSortId(navId int64, updateId int32, updateName s
 }
 
 // NavFind 通过nav_id获取详情
-func (this *CmsAdminNav) NavFind(navId int64) (*model.CmsAdminNav, error) {
+func (svc *CmsAdminNav) NavFind(navId int64) (*model.CmsAdminNav, error) {
 	mdl, do := query.CmsAdminNavDo()
 	return do.Where(mdl.NavID.Eq(navId)).First()
 }
 
 // NavDestroy 根据nav_id删除
-func (this *CmsAdminNav) NavDestroy(navId int64) error {
-	mdl, err := this.NavFind(navId)
+func (svc *CmsAdminNav) NavDestroy(navId int64) error {
+	mdl, err := svc.NavFind(navId)
 	if err != nil {
 		return err
 	}
@@ -64,7 +65,7 @@ func (this *CmsAdminNav) NavDestroy(navId int64) error {
 }
 
 // NavTree 获取树形结构列表
-func (this *CmsAdminNav) NavTree(navId int64) ([]*bizmodel.TreeNode, error) {
+func (svc *CmsAdminNav) NavTree(navId int64) ([]*bizmodel.TreeNode, error) {
 	out := make([]*bizmodel.TreeNode, 0)
 	navMdl, navDo := query.CmsAdminNavDo()
 	list, err := navDo.Where(navMdl.ParentID.Eq(0)).Order(navMdl.SortID).Find()
@@ -80,7 +81,7 @@ func (this *CmsAdminNav) NavTree(navId int64) ([]*bizmodel.TreeNode, error) {
 			Selected: item.NavID == navId,
 			Children: nil,
 		}
-		children, _ := this.NavTreeByParentId(item.NavID, navId)
+		children, _ := svc.NavTreeByParentId(item.NavID, navId)
 		if children != nil {
 			child.Children = children
 		}
@@ -90,7 +91,7 @@ func (this *CmsAdminNav) NavTree(navId int64) ([]*bizmodel.TreeNode, error) {
 }
 
 // NavTreeByParentId 根据父ID获取分类树
-func (this *CmsAdminNav) NavTreeByParentId(parentId, navId int64) ([]*bizmodel.TreeNode, error) {
+func (svc *CmsAdminNav) NavTreeByParentId(parentId, navId int64) ([]*bizmodel.TreeNode, error) {
 	out := make([]*bizmodel.TreeNode, 0)
 	navMdl, navDo := query.CmsAdminNavDo()
 	list, err := navDo.Where(navMdl.ParentID.Eq(parentId)).Order(navMdl.SortID).Find()
@@ -105,7 +106,7 @@ func (this *CmsAdminNav) NavTreeByParentId(parentId, navId int64) ([]*bizmodel.T
 			Selected: item.NavID == navId,
 			Children: nil,
 		}
-		children, _ := this.NavTreeByParentId(item.NavID, parentId)
+		children, _ := svc.NavTreeByParentId(item.NavID, parentId)
 		if children != nil {
 			child.Children = children
 		}
@@ -115,7 +116,7 @@ func (this *CmsAdminNav) NavTreeByParentId(parentId, navId int64) ([]*bizmodel.T
 }
 
 // NavSave 保存导航详情
-func (this *CmsAdminNav) NavSave(input *model.CmsAdminNav) error {
+func (svc *CmsAdminNav) NavSave(input *model.CmsAdminNav) error {
 	if input.ParentID < 0 {
 		return errors.New("归属节点不能为空")
 	}

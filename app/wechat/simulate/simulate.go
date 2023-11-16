@@ -9,7 +9,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
@@ -25,22 +24,22 @@ type WebWeChat struct {
 }
 
 func NewWebWeChat(email, password string) *WebWeChat {
-	w := new(WebWeChat)
-	w.email = email
-	w.password = password
-	return w
+	weChat := new(WebWeChat)
+	weChat.email = email
+	weChat.password = password
+	return weChat
 }
 
-func (w *WebWeChat) Login() bool {
-	if len(w.email) == 0 || len(w.password) == 0 {
+func (weChat *WebWeChat) Login() bool {
+	if len(weChat.email) == 0 || len(weChat.password) == 0 {
 		return false
 	}
 	login_url := "https://mp.weixin.qq.com/cgi-bin/login?lang=zh_CN"
 	h := md5.New()
-	h.Write([]byte(w.password))
+	h.Write([]byte(weChat.password))
 	password := hex.EncodeToString(h.Sum(nil))
 	fmt.Println(password)
-	post_arg := url.Values{"username": {w.email}, "pwd": {password}, "imgcode": {""}, "f": {"json"}}
+	post_arg := url.Values{"username": {weChat.email}, "pwd": {password}, "imgcode": {""}, "f": {"json"}}
 
 	body := strings.NewReader(post_arg.Encode())
 	fmt.Println(body)
@@ -54,7 +53,7 @@ func (w *WebWeChat) Login() bool {
 
 	client := new(http.Client)
 	resp, _ := client.Do(req)
-	data, err := ioutil.ReadAll(resp.Body)
+	data, err := io.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Println(err.Error())
 		return false
@@ -79,10 +78,10 @@ func (w *WebWeChat) Login() bool {
 	fmt.Println(m)
 
 	if m.ErrCode == 0 || m.ErrCode == 65201 || m.ErrCode == 65202 {
-		w.token = strings.Split(m.ErrMsg, "=")[3]
-		fmt.Printf("token:%v\n", w.token)
-		w.cookies = resp.Cookies()
-		fmt.Println(w.cookies)
+		weChat.token = strings.Split(m.ErrMsg, "=")[3]
+		fmt.Printf("token:%v\n", weChat.token)
+		weChat.cookies = resp.Cookies()
+		fmt.Println(weChat.cookies)
 		return true
 	}
 
@@ -120,7 +119,7 @@ func (w *WebWeChat) Login() bool {
 	return false
 }
 
-func (w *WebWeChat) SendTextMsg(fakeid string, content string) bool {
+func (weChat *WebWeChat) SendTextMsg(fakeid string, content string) bool {
 	send_url := "http://mp.weixin.qq.com/cgi-bin/singlesend"
 	referer_url := "https://mp.weixin.qq.com/cgi-bin/singlesendpage?t=message/send&action=index&tofakeid=%s&token=%s&lang=zh_CN"
 
@@ -129,19 +128,19 @@ func (w *WebWeChat) SendTextMsg(fakeid string, content string) bool {
 		"type":     {"1"},
 		"content":  {content},
 		"ajax":     {"1"},
-		"token":    {w.token},
+		"token":    {weChat.token},
 		"t":        {"ajax-response"},
 	}
 
 	req, _ := http.NewRequest("POST", send_url, strings.NewReader(post_arg.Encode()))
-	req.Header.Set("Referer", fmt.Sprintf(referer_url, fakeid, w.token))
-	for i := range w.cookies {
-		req.AddCookie(w.cookies[i])
+	req.Header.Set("Referer", fmt.Sprintf(referer_url, fakeid, weChat.token))
+	for i := range weChat.cookies {
+		req.AddCookie(weChat.cookies[i])
 	}
 
 	client := new(http.Client)
 	resp, _ := client.Do(req)
-	data, _ := ioutil.ReadAll(resp.Body)
+	data, _ := io.ReadAll(resp.Body)
 
 	doc := json.NewDecoder(strings.NewReader(string(data)))
 
@@ -158,30 +157,26 @@ func (w *WebWeChat) SendTextMsg(fakeid string, content string) bool {
 	}
 	fmt.Println(m.Msg)
 
-	if m.Msg == "ok" {
-		return true
-	}
-
-	return false
+	return m.Msg == "ok"
 }
 
-func (w *WebWeChat) GetFakeId() bool {
+func (weChat *WebWeChat) GetFakeId() bool {
 	msg_url := "https://mp.weixin.qq.com/cgi-bin/contactmanage?t=user/index&pagesize=10&pageidx=0&type=0&groupid=0&token=%s&lang=zh_CN"
 	referer_url := "https://mp.weixin.qq.com/cgi-bin/home?t=home/index&lang=zh_CN&token=%s"
 
-	req, _ := http.NewRequest("GET", fmt.Sprintf(msg_url, w.token), nil)
+	req, _ := http.NewRequest("GET", fmt.Sprintf(msg_url, weChat.token), nil)
 
-	req.Header.Set("Referer", fmt.Sprintf(referer_url, w.token))
+	req.Header.Set("Referer", fmt.Sprintf(referer_url, weChat.token))
 
-	for i := range w.cookies {
-		req.AddCookie(w.cookies[i])
+	for i := range weChat.cookies {
+		req.AddCookie(weChat.cookies[i])
 	}
 
 	client := new(http.Client)
 	resp, _ := client.Do(req)
-	data, _ := ioutil.ReadAll(resp.Body)
+	data, _ := io.ReadAll(resp.Body)
 
-	//fmt.Println(string(data))
+	// fmt.Println(string(data))
 	fmt.Println(string(data))
 	re := regexp.MustCompile(`(?s)(?U)contacts.+contacts`)
 	list := re.FindString(string(data))

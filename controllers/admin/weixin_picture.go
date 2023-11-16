@@ -2,29 +2,30 @@ package admin
 
 import (
 	"github.com/beego/beego/v2/core/logs"
+	"haedu.gov.cn/tools/xjson"
+
 	"haedu.gov.cn/cms/app/biz"
 	"haedu.gov.cn/cms/app/biz/bizmodel"
-	"haedu.gov.cn/tools/xjson"
 )
 
 // 图文回复
-func (c *WeixinController) Picture() {
+func (ctrl *WeixinController) Picture() {
 	list, _, _ := biz.NewWeixinAccount().AccountPaginate(1, 9999, "", -1)
-	c.Data["accountList"] = list
-	c.Data["request_type"] = 2
-	c.display()
+	ctrl.Data["accountList"] = list
+	ctrl.Data["request_type"] = 2
+	ctrl.display()
 }
 
 // PictureEdit 编辑图文回复
-func (c *WeixinController) PictureEdit() {
+func (ctrl *WeixinController) PictureEdit() {
 	{
 		list, _, _ := biz.NewWeixinAccount().AccountPaginate(1, 9999, "", -1)
-		c.Data["accountList"] = list
-		c.Data["request_type"] = 2
+		ctrl.Data["accountList"] = list
+		ctrl.Data["request_type"] = 2
 	}
 	{
-		ruleId, _ := c.GetInt64("rule_id")
-		c.Data["rule_id"] = ruleId
+		ruleId, _ := ctrl.GetInt64("rule_id")
+		ctrl.Data["rule_id"] = ruleId
 		finder, err := biz.NewWeixinRequest().RuleFind(ruleId)
 		if finder == nil || err != nil {
 			finder = &bizmodel.Weixin_RuleModel{
@@ -33,22 +34,22 @@ func (c *WeixinController) PictureEdit() {
 				Name:        "图文回复",
 			}
 		}
-		c.Data["mdl"] = finder
+		ctrl.Data["mdl"] = finder
 	}
-	c.display()
+	ctrl.display()
 }
 
 // PictureSave 保存图文回复
-func (c *WeixinController) PictureSave() {
+func (ctrl *WeixinController) PictureSave() {
 	mdl := bizmodel.Weixin_PictureModel{}
-	if err := xjson.Unmarshal(c.Ctx.Input.RequestBody, &mdl); err != nil {
+	if err := xjson.Unmarshal(ctrl.Ctx.Input.RequestBody, &mdl); err != nil {
 		logs.Error("PictureSave", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 	}
 	err := biz.NewWeixinRequest().PictureSave(&mdl)
 	if err != nil {
 		logs.Error("PictureSave", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 	}
-	c.JSONSuccess("保存成功", nil)
+	ctrl.JSONSuccess("保存成功", nil)
 }

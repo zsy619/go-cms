@@ -4,26 +4,27 @@ import (
 	"fmt"
 
 	"github.com/beego/beego/v2/core/logs"
+	"haedu.gov.cn/tools/xjson"
+
 	"haedu.gov.cn/cms/app/biz"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
-	"haedu.gov.cn/tools/xjson"
 )
 
-func (c *WeixinController) AccountPaginate() {
-	page, limit := c.GetPagingParameters()
-	name := c.GetSafeString("name")
-	status, _ := c.GetInt32("status")
+func (ctrl *WeixinController) AccountPaginate() {
+	page, limit := ctrl.GetPagingParameters()
+	name := ctrl.GetSafeString("name")
+	status, _ := ctrl.GetInt32("status")
 	list, count, err := biz.NewWeixinAccount().AccountPaginate(page, limit, name, status)
 	if err != nil {
 		logs.Error("AccountPaginate", err.Error())
 	}
-	c.JSONPageSuccess(list, count)
+	ctrl.JSONPageSuccess(list, count)
 }
 
-func (c *WeixinController) AccountEdit() {
-	accountId, _ := c.GetInt64("accountId")
-	clone, _ := c.GetInt("clone")
+func (ctrl *WeixinController) AccountEdit() {
+	accountId, _ := ctrl.GetInt64("accountId")
+	clone, _ := ctrl.GetInt("clone")
 	mdl, err := biz.NewWeixinAccount().AccountFind(accountId)
 	if err != nil {
 		mdl = &model.WeixinAccount{
@@ -34,15 +35,15 @@ func (c *WeixinController) AccountEdit() {
 	if clone == 1 {
 		mdl.AccountID = 0
 	}
-	c.Data["mdl"] = mdl
-	c.display()
+	ctrl.Data["mdl"] = mdl
+	ctrl.display()
 }
 
-func (c *WeixinController) AccountSave() {
+func (ctrl *WeixinController) AccountSave() {
 	mdl := model.WeixinAccount{}
-	if err := c.ParseForm(&mdl); err != nil {
+	if err := ctrl.ParseForm(&mdl); err != nil {
 		logs.Error("AccountSave", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 	}
 	if mdl.AccountID == 0 {
 		mdl.CreateID = int32(GlobalAdminId)
@@ -53,53 +54,53 @@ func (c *WeixinController) AccountSave() {
 	}
 	if err := biz.NewWeixinAccount().AccountSave(&mdl); err != nil {
 		logs.Error("AccountSave", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 		return
 	}
-	c.JSONSuccess("保存成功", nil)
+	ctrl.JSONSuccess("保存成功", nil)
 }
 
-func (c *WeixinController) AccountDestory() {
-	accountId, _ := c.GetInt64("accountId")
+func (ctrl *WeixinController) AccountDestory() {
+	accountId, _ := ctrl.GetInt64("accountId")
 	if err := biz.NewWeixinAccount().AccountDestory(accountId); err != nil {
 		logs.Error("AccountDestory", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 		return
 	}
-	c.JSONSuccess("删除成功", nil)
+	ctrl.JSONSuccess("删除成功", nil)
 }
 
-func (c *WeixinController) AccountChangeStatus() {
+func (ctrl *WeixinController) AccountChangeStatus() {
 	var mdl vmodel.Account_ChangeStatusModel
-	if err := xjson.Unmarshal(c.Ctx.Input.RequestBody, &mdl); err != nil {
+	if err := xjson.Unmarshal(ctrl.Ctx.Input.RequestBody, &mdl); err != nil {
 		logs.Error("AccountChangeStatus", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 		return
 	}
 	for _, accountId := range mdl.AccountIds {
 		if err := biz.NewWeixinAccount().AccountChangeStatus(accountId, mdl.Status); err != nil {
 			logs.Error("AccountChangeStatus", err.Error())
-			c.JSONError(err.Error())
+			ctrl.JSONError(err.Error())
 			return
 		}
 	}
-	c.JSONSuccess("更改状态成功", nil)
+	ctrl.JSONSuccess("更改状态成功", nil)
 }
 
-func (c *WeixinController) AccountSaveSortId() {
+func (ctrl *WeixinController) AccountSaveSortId() {
 	mdls := []vmodel.Account_SaveSortIdModel{}
-	data := c.Ctx.Input.RequestBody
+	data := ctrl.Ctx.Input.RequestBody
 	fmt.Println("AccountSaveSortId", string(data))
-	if err := xjson.Unmarshal(c.Ctx.Input.RequestBody, &mdls); err != nil {
+	if err := xjson.Unmarshal(ctrl.Ctx.Input.RequestBody, &mdls); err != nil {
 		logs.Error("AccountSaveSortId", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 	}
 	for _, mdl := range mdls {
 		if err := biz.NewWeixinAccount().AccountSaveSortId(mdl.AccountId, int32(mdl.SortId)); err != nil {
 			logs.Error("AccountSaveSortId", err.Error())
-			c.JSONError(err.Error())
+			ctrl.JSONError(err.Error())
 			return
 		}
 	}
-	c.JSONSuccess("保存成功", nil)
+	ctrl.JSONSuccess("保存成功", nil)
 }

@@ -24,7 +24,7 @@ func NewApiChannel() *ApiChannel {
  * @param {int64} channel_id 频道ID
  * @return {*}
  */
-func (this *ApiChannel) Find(name string, channel_id int64) (*bizmodel.ApiChannelModel, error) {
+func (svc *ApiChannel) Find(name string, channel_id int64) (*bizmodel.ApiChannelModel, error) {
 	if name == "" && channel_id <= 0 {
 		return nil, errors.New("参数错误")
 	}

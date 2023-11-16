@@ -5,29 +5,28 @@ import (
 	"time"
 
 	"github.com/beego/beego/v2/core/logs"
+	"haedu.gov.cn/tools/xjson"
+
 	"haedu.gov.cn/cms/app/biz"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
-	"haedu.gov.cn/tools/xjson"
 )
 
-type NoticeController struct {
-	BaseController
-}
+type NoticeController struct{ BaseController }
 
 // Index 系统公告管理
 // @router /admin/notice/index [get]
-func (c *NoticeController) Index() {
+func (ctrl *NoticeController) Index() {
 	// 获取角色权限
-	roleMap := c.RolePowerGet("notice")
-	c.Data["roleMap"] = roleMap
-	c.display()
+	roleMap := ctrl.RolePowerGet("notice")
+	ctrl.Data["roleMap"] = roleMap
+	ctrl.display()
 }
 
 // NoticeEdit 系统公告编辑
 // @router /admin/notice/NoticeEdit [get]
-func (c *NoticeController) NoticeEdit() {
-	noticeId, _ := c.GetInt64("noticeId")
+func (ctrl *NoticeController) NoticeEdit() {
+	noticeId, _ := ctrl.GetInt64("noticeId")
 	mdl, err := biz.NewCmsAdminNotice().NoticeFind(noticeId)
 	if err != nil {
 		mdl = &model.CmsAdminNotice{
@@ -36,93 +35,93 @@ func (c *NoticeController) NoticeEdit() {
 			PublishTime: time.Now(),
 		}
 	}
-	c.Data["mdl"] = mdl
+	ctrl.Data["mdl"] = mdl
 	// 获取角色权限
-	roleMap := c.RolePowerGet("notice")
-	c.Data["roleMap"] = roleMap
-	c.display()
+	roleMap := ctrl.RolePowerGet("notice")
+	ctrl.Data["roleMap"] = roleMap
+	ctrl.display()
 }
 
 // NoticeHomePaginate 首页系统公告列表
-func (c *NoticeController) NoticeHomePaginate() {
+func (ctrl *NoticeController) NoticeHomePaginate() {
 	noticeList, err := biz.NewCmsAdminNotice().NoticeShow()
 	if err != nil {
 		logs.Error("NoticeHomePaginate", err.Error())
 	}
-	c.JSONSuccess("", noticeList)
+	ctrl.JSONSuccess("", noticeList)
 }
 
 // NoticePaginate 获取系统公告列表
-func (c *NoticeController) NoticePaginate() {
-	page, limit := c.GetPagingParameters()
-	title := c.GetSafeString("title")
-	status, _ := c.GetInt32("status")
+func (ctrl *NoticeController) NoticePaginate() {
+	page, limit := ctrl.GetPagingParameters()
+	title := ctrl.GetSafeString("title")
+	status, _ := ctrl.GetInt32("status")
 	noticeList, count, err := biz.NewCmsAdminNotice().NoticePaginate(page, limit, title, status, GlobalAdminId, GlobalRoleType)
 	if err != nil {
 		logs.Error("NoticePaginate", err.Error())
 	}
-	c.JSONPageSuccess(noticeList, count)
+	ctrl.JSONPageSuccess(noticeList, count)
 }
 
 // NoticeSaveSortId 保存排序
 // @router /admin/notice/NoticeSaveSortId [post]
-func (c *NoticeController) NoticeSaveSortId() {
+func (ctrl *NoticeController) NoticeSaveSortId() {
 	mdls := []vmodel.Notice_SaveSortIdModel{}
-	data := c.Ctx.Input.RequestBody
+	data := ctrl.Ctx.Input.RequestBody
 	fmt.Println("NoticeSaveSortId", string(data))
-	if err := xjson.Unmarshal(c.Ctx.Input.RequestBody, &mdls); err != nil {
+	if err := xjson.Unmarshal(ctrl.Ctx.Input.RequestBody, &mdls); err != nil {
 		logs.Error("NoticeSaveSortId", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 	}
 	service := biz.NewCmsAdminNotice()
 	for _, mdl := range mdls {
 		if err := service.NoticeSaveSortId(mdl.NoticeId, int32(GlobalAdminId), GlobalAdminName, int32(mdl.SortId)); err != nil {
 			logs.Error("NoticeSaveSortId", err.Error())
-			c.JSONError(err.Error())
+			ctrl.JSONError(err.Error())
 			return
 		}
 	}
-	c.JSONSuccess("保存成功", nil)
+	ctrl.JSONSuccess("保存成功", nil)
 }
 
 // NoticeChangeStatus 更改状态
 // @router /admin/notice/NoticeChangeStatus [post]
-func (c *NoticeController) NoticeChangeStatus() {
+func (ctrl *NoticeController) NoticeChangeStatus() {
 	var mdl vmodel.Notice_ChangeStatusModel
-	if err := xjson.Unmarshal(c.Ctx.Input.RequestBody, &mdl); err != nil {
+	if err := xjson.Unmarshal(ctrl.Ctx.Input.RequestBody, &mdl); err != nil {
 		logs.Error("NoticeChangeStatus", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 		return
 	}
 	for _, noticeId := range mdl.NoticeIds {
 		if err := biz.NewCmsAdminNotice().NoticeChangeStatus(noticeId, int32(GlobalAdminId), GlobalAdminName, mdl.Status); err != nil {
 			logs.Error("NoticeChangeStatus", err.Error())
-			c.JSONError(err.Error())
+			ctrl.JSONError(err.Error())
 			return
 		}
 	}
-	c.JSONSuccess("更改状态成功", nil)
+	ctrl.JSONSuccess("更改状态成功", nil)
 }
 
 // NoticeDestroy 删除
 // @router /admin/notice/NoticeDestroy [post]
-func (c *NoticeController) NoticeDestroy() {
-	noticeId, _ := c.GetInt64("noticeId")
+func (ctrl *NoticeController) NoticeDestroy() {
+	noticeId, _ := ctrl.GetInt64("noticeId")
 	if err := biz.NewCmsAdminNotice().NoticeDestroy(noticeId); err != nil {
 		logs.Error("NoticeDestroy", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 		return
 	}
-	c.JSONSuccess("删除成功", nil)
+	ctrl.JSONSuccess("删除成功", nil)
 }
 
 // NoticeSave 保存
 // @router /admin/notice/NoticeSave [post]
-func (c *NoticeController) NoticeSave() {
+func (ctrl *NoticeController) NoticeSave() {
 	mdl := model.CmsAdminNotice{}
-	if err := c.ParseForm(&mdl); err != nil {
+	if err := ctrl.ParseForm(&mdl); err != nil {
 		logs.Error("NoticeSave", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 	}
 	if mdl.NoticeID > 0 {
 		mdl.UpdateID = int32(GlobalAdminId)
@@ -133,8 +132,8 @@ func (c *NoticeController) NoticeSave() {
 	}
 	if err := biz.NewCmsAdminNotice().NoticeSave(&mdl); err != nil {
 		logs.Error("NoticeSave", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 		return
 	}
-	c.JSONSuccess("保存成功", nil)
+	ctrl.JSONSuccess("保存成功", nil)
 }

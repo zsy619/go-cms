@@ -3,7 +3,7 @@ package utils
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 )
 
@@ -18,5 +18,5 @@ func HttpServicePost(xml, url string, isUseCert bool, timeout int) ([]byte, erro
 	if response.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("http get error : uri=%v , statusCode=%v", url, response.StatusCode)
 	}
-	return ioutil.ReadAll(response.Body)
+	return io.ReadAll(response.Body)
 }

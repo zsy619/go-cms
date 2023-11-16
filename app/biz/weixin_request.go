@@ -17,7 +17,7 @@ func NewWeixinRequest() *WeixinRequest {
 }
 
 // ContentFindSubscribeOrDefault 获取关注回复与默认回复
-func (w *WeixinRequest) ContentFindSubscribeOrDefault(accountId int64, requestType int32) (*bizmodel.Weixin_ContentSubscribeOrDefaultModel, error) {
+func (*WeixinRequest) ContentFindSubscribeOrDefault(accountId int64, requestType int32) (*bizmodel.Weixin_ContentSubscribeOrDefaultModel, error) {
 	_, ruleDo := query.WeixinRequestRuleDo()
 	// contentMdl, contentDo := query.WeixinRequestContentDo()
 	sql1 := fmt.Sprintf(`SELECT a.* FROM weixin_request_content a LEFT JOIN weixin_request_rule b ON a.rule_id=b.rule_id WHERE b.account_id=%d AND b.request_type=%d AND b.response_type=%d limit 1`, accountId, requestType, 1)
@@ -37,7 +37,7 @@ func (w *WeixinRequest) ContentFindSubscribeOrDefault(accountId int64, requestTy
 }
 
 // ContentSaveSubscribeOrDefault 保存关注回复与默认回复
-func (w *WeixinRequest) ContentSaveSubscribeOrDefault(input *bizmodel.Weixin_ContentSubscribeOrDefaultModel) error {
+func (*WeixinRequest) ContentSaveSubscribeOrDefault(input *bizmodel.Weixin_ContentSubscribeOrDefaultModel) error {
 	if input.AccountID <= 0 {
 		return errors.New("accountId is empty")
 	}
@@ -154,16 +154,16 @@ func (w *WeixinRequest) ContentSaveSubscribeOrDefault(input *bizmodel.Weixin_Con
 }
 
 // RulePictureFind 规则文本回复查询
-func (w *WeixinRequest) RulePictureFind(ruleId int64) ([]*model.WeixinRequestContent, error) {
+func (*WeixinRequest) RulePictureFind(ruleId int64) ([]*model.WeixinRequestContent, error) {
 	contentMdl, contentDo := query.WeixinRequestContentDo()
 	return contentDo.Where(contentMdl.RuleID.Eq(ruleId)).Order(contentMdl.SortID).Find()
 }
 
 // RulePaginate 规则分页查询
-func (w *WeixinRequest) RulePaginate(page, limit int, accountId int64, requestType int32) ([]*bizmodel.Weixin_RuleModel, int64, error) {
+func (*WeixinRequest) RulePaginate(page, limit int, accountId int64, requestType int32) ([]*bizmodel.Weixin_RuleModel, int64, error) {
 	_, ruleDo := query.WeixinRequestRuleDo()
 	field := `a.rule_id,a.account_id,a.name,a.keywords,a.request_type,a.is_like_query,a.is_default,a.sort_id,a.create_time,a.update_time,b.content_id,b.title,b.content,b.link_url,b.img_url,b.media_url,b.media_hd_url`
-	sqlCount := fmt.Sprintf(`SELECT COUNT(*) as Count FROM weixin_request_rule a LEFT JOIN weixin_request_content b ON a.rule_id=b.rule_id WHERE a.account_id=? AND a.request_type=?`)
+	sqlCount := `SELECT COUNT(*) as Count FROM weixin_request_rule a LEFT JOIN weixin_request_content b ON a.rule_id=b.rule_id WHERE a.account_id=? AND a.request_type=?`
 	sqlSearch := fmt.Sprintf(`SELECT %s FROM weixin_request_rule a LEFT JOIN weixin_request_content b ON a.rule_id=b.rule_id WHERE a.account_id=? AND a.request_type=? ORDER BY a.sort_id ASC`, field)
 	var count int64
 	if err := ruleDo.Debug().UnderlyingDB().Raw(sqlCount, accountId, requestType).Scan(&count).Error; err != nil {
@@ -179,10 +179,10 @@ func (w *WeixinRequest) RulePaginate(page, limit int, accountId int64, requestTy
 }
 
 // RulePaginateCount 规则汇总分页
-func (w *WeixinRequest) RulePaginateCount(page, limit int, accountId int64, requestType int32) ([]*bizmodel.Weixin_RuleCountModel, int64, error) {
+func (*WeixinRequest) RulePaginateCount(page, limit int, accountId int64, requestType int32) ([]*bizmodel.Weixin_RuleCountModel, int64, error) {
 	_, ruleDo := query.WeixinRequestRuleDo()
 	field := `a.rule_id,a.account_id,a.name,a.keywords,a.request_type,a.is_like_query,a.is_default,a.sort_id,a.create_time,a.update_time,(SELECT COUNT(1) AS count FROM weixin_request_content b WHERE b.rule_id=a.rule_id) AS count`
-	sqlCount := fmt.Sprintf(`SELECT COUNT(*) as Count FROM weixin_request_rule a WHERE a.account_id=? AND a.request_type=?`)
+	sqlCount := `SELECT COUNT(*) as Count FROM weixin_request_rule a WHERE a.account_id=? AND a.request_type=?`
 	sqlSearch := fmt.Sprintf(`SELECT %s FROM weixin_request_rule a WHERE a.account_id=? AND a.request_type=? ORDER BY a.sort_id ASC`, field)
 	var count int64
 	if err := ruleDo.Debug().UnderlyingDB().Raw(sqlCount, accountId, requestType).Scan(&count).Error; err != nil {
@@ -198,7 +198,7 @@ func (w *WeixinRequest) RulePaginateCount(page, limit int, accountId int64, requ
 }
 
 // RuleFind 规则查询
-func (w *WeixinRequest) RuleFind(ruleId int64) (*bizmodel.Weixin_RuleModel, error) {
+func (*WeixinRequest) RuleFind(ruleId int64) (*bizmodel.Weixin_RuleModel, error) {
 	field := `a.rule_id,a.account_id,a.name,a.keywords,a.request_type,a.is_like_query,a.is_default,a.sort_id,a.create_time,a.update_time,b.content_id,b.title,b.content,b.link_url,b.img_url,b.media_url,b.media_hd_url`
 	sqlSearch := fmt.Sprintf(`SELECT %s FROM weixin_request_rule a LEFT JOIN weixin_request_content b ON a.rule_id=b.rule_id WHERE a.rule_id=?`, field)
 	_, ruleDo := query.WeixinRequestRuleDo()
@@ -210,7 +210,7 @@ func (w *WeixinRequest) RuleFind(ruleId int64) (*bizmodel.Weixin_RuleModel, erro
 }
 
 // RuleSaveSortId 规则排序
-func (w *WeixinRequest) RuleSaveSortId(ruleId int64, sortId int32) error {
+func (*WeixinRequest) RuleSaveSortId(ruleId int64, sortId int32) error {
 	ruleMdl, ruleDo := query.WeixinRequestRuleDo()
 	_, err := ruleDo.Where(ruleMdl.RuleID.Eq(ruleId)).UpdateColumns(
 		map[string]interface{}{
@@ -222,7 +222,7 @@ func (w *WeixinRequest) RuleSaveSortId(ruleId int64, sortId int32) error {
 }
 
 // RuleDestory 规则删除
-func (w *WeixinRequest) RuleDestory(ruleId int64) error {
+func (*WeixinRequest) RuleDestory(ruleId int64) error {
 	ruleMdl, ruleDo := query.WeixinRequestRuleDo()
 	contentMdl, contentDo := query.WeixinRequestContentDo()
 	_, err := contentDo.Where(contentMdl.RuleID.Eq(ruleId)).Delete()
@@ -234,7 +234,7 @@ func (w *WeixinRequest) RuleDestory(ruleId int64) error {
 }
 
 // RuleSave 规则保存
-func (w *WeixinRequest) RuleSave(mdl *bizmodel.Weixin_RuleModel) error {
+func (*WeixinRequest) RuleSave(mdl *bizmodel.Weixin_RuleModel) error {
 	ruleMdl, ruleDo := query.WeixinRequestRuleDo()
 	contentMdl, contentDo := query.WeixinRequestContentDo()
 	if mdl.RuleID <= 0 {
@@ -301,7 +301,7 @@ func (w *WeixinRequest) RuleSave(mdl *bizmodel.Weixin_RuleModel) error {
 }
 
 // PictureSave 图片保存
-func (w *WeixinRequest) PictureSave(mdl *bizmodel.Weixin_PictureModel) error {
+func (*WeixinRequest) PictureSave(mdl *bizmodel.Weixin_PictureModel) error {
 	ruleMdl, ruleDo := query.WeixinRequestRuleDo()
 	if mdl.RuleID > 0 {
 		// 删除图片回复

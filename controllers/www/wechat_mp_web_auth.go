@@ -5,6 +5,7 @@ import (
 
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
+
 	"haedu.gov.cn/cms/app/biz"
 	"haedu.gov.cn/cms/app/wechat/models"
 	"haedu.gov.cn/cms/app/wechat/mp"
@@ -16,26 +17,24 @@ import (
 // 3、如果需要，开发者可以刷新网页授权access_token，避免过期
 // 4、通过网页授权access_token和openid获取用户基本信息（支持UnionID机制）
 // https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/Wechat_webpage_authorization.html#0
-type WechatMpWebAuthController struct {
-	web.Controller
-}
+type WechatMpWebAuthController struct{ web.Controller }
 
 // GET /wechat/mp/tooauth2
-func (this *WechatMpWebAuthController) ToOauth2() {
-	accountId, _ := this.GetInt64("accountId")
+func (ctrl *WechatMpWebAuthController) ToOauth2() {
+	accountId, _ := ctrl.GetInt64("accountId")
 	if accountId <= 0 {
-		this.Abort("500")
+		ctrl.Abort("500")
 		return
 	}
 	// 获取微信公众号配置
 	account, err := biz.NewWeixinAccount().AccountFindCache(accountId)
 	if err != nil {
 		logs.Error(err)
-		this.Abort("500")
+		ctrl.Abort("500")
 		return
 	}
 	fmt.Println(account)
-	from := this.GetString("from")
+	from := ctrl.GetString("from")
 	fmt.Println("from ----> ", from)
 	// redirect_uri := global.WebSite + `wechat/mp/redirect_uri`
 	// switch from {
@@ -57,7 +56,7 @@ func (this *WechatMpWebAuthController) ToOauth2() {
 		Token:          account.Token,
 	})
 	fmt.Println(oauth)
-	// oauth.Redirect(this.Ctx.ResponseWriter, this.Ctx.Request, redirect_uri, "snsapi_userinfo", "STATE")
+	// oauth.Redirect(ctrl.Ctx.ResponseWriter, ctrl.Ctx.Request, redirect_uri, "snsapi_userinfo", "STATE")
 
 	// url, err := GetRedirectURL(redirect_uri, "snsapi_userinfo", "STATE")
 	// if err != nil {

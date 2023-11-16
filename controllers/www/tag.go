@@ -6,25 +6,25 @@ type TagController struct{ BaseController }
 
 // Index 标签首页
 // @router /:flag/tag/:name:string [get]
-func (this *TagController) Index() {
-	flag := this.Ctx.Input.Param(":flag")
+func (ctrl *TagController) Index() {
+	flag := ctrl.Ctx.Input.Param(":flag")
 	if flag == "" {
-		this.Ctx.WriteString("站点标识不能为空")
+		ctrl.Ctx.WriteString("站点标识不能为空")
 	}
-	name := this.Ctx.Input.Param(":name")
+	name := ctrl.Ctx.Input.Param(":name")
 	if name == "" {
-		this.Ctx.WriteString("标签名称不能为空")
+		ctrl.Ctx.WriteString("标签名称不能为空")
 	}
 	find, err := biz.NewApiTag().Find(0, name)
 	if err != nil || find.Name == "" {
-		this.Ctx.WriteString("标签不存在")
-		this.StopRun()
+		ctrl.Ctx.WriteString("标签不存在")
+		ctrl.StopRun()
 	}
-	this.Data["flag"] = flag
-	this.Data["name"] = name
-	this.Data["topic"] = find
+	ctrl.Data["flag"] = flag
+	ctrl.Data["name"] = name
+	ctrl.Data["topic"] = find
 	if find.Template == "" {
 		find.Template = "tag.html"
 	}
-	this.TplName = this.GetView(SiteTheme, find.Template)
+	ctrl.TplName = ctrl.GetView(SiteTheme, find.Template)
 }

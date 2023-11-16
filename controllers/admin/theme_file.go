@@ -1,7 +1,7 @@
 package admin
 
 import (
-	"io/ioutil"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -14,7 +14,7 @@ import (
  * @description: 获取主题文件列表
  * @return {*}
  */
-func (c *ThemeController) LoadFiles() {
+func (ctrl *ThemeController) LoadFiles() {
 	result := struct {
 		Code   int      `json:"code"`
 		Msg    string   `json:"msg"`
@@ -25,12 +25,12 @@ func (c *ThemeController) LoadFiles() {
 	}{
 		Code: 0,
 	}
-	theme := c.GetSafeString("theme")
+	theme := ctrl.GetSafeString("theme")
 	if theme == "" {
 		result.Code = -1
 		result.Msg = "主题名称不能为空"
-		c.Data["json"] = result
-		c.ServeJSON()
+		ctrl.Data["json"] = result
+		ctrl.ServeJSON()
 		return
 	}
 	themeDir := filepath.Join("./views/themes/", theme)
@@ -39,19 +39,19 @@ func (c *ThemeController) LoadFiles() {
 	cssPath := filepath.Join(themeDir, "static", "css")
 	imagePath := filepath.Join(themeDir, "static", "images")
 
-	result.Views, _ = c.listFiles(viewPath)
-	result.Js, _ = c.listFiles(jsPath)
-	result.Css, _ = c.listFiles(cssPath)
-	result.Images, _ = c.listFiles(imagePath)
-	c.Data["json"] = result
-	c.ServeJSON()
+	result.Views, _ = ctrl.listFiles(viewPath)
+	result.Js, _ = ctrl.listFiles(jsPath)
+	result.Css, _ = ctrl.listFiles(cssPath)
+	result.Images, _ = ctrl.listFiles(imagePath)
+	ctrl.Data["json"] = result
+	ctrl.ServeJSON()
 }
 
 /**
  * @description: 根据类型获取主题文件列表
  * @return {*}
  */
-func (c *ThemeController) LoadFilesType() {
+func (ctrl *ThemeController) LoadFilesType() {
 	result := struct {
 		Code   int      `json:"code"`
 		Msg    string   `json:"msg"`
@@ -62,13 +62,13 @@ func (c *ThemeController) LoadFilesType() {
 	}{
 		Code: 0,
 	}
-	theme := c.GetSafeString("theme")
-	typex := c.GetSafeString("type")
+	theme := ctrl.GetSafeString("theme")
+	typex := ctrl.GetSafeString("type")
 	if theme == "" {
 		result.Code = -1
 		result.Msg = "主题名称不能为空"
-		c.Data["json"] = result
-		c.ServeJSON()
+		ctrl.Data["json"] = result
+		ctrl.ServeJSON()
 		return
 	}
 	themeDir := filepath.Join("./views/themes/", theme)
@@ -76,23 +76,19 @@ func (c *ThemeController) LoadFilesType() {
 	switch typex {
 	case "View":
 		viewPath := filepath.Join(themeDir, "views")
-		result.Views, _ = c.listFiles(viewPath)
-		break
+		result.Views, _ = ctrl.listFiles(viewPath)
 	case "js":
 		jsPath := filepath.Join(themeDir, "static", "js")
-		result.Js, _ = c.listFiles(jsPath)
-		break
+		result.Js, _ = ctrl.listFiles(jsPath)
 	case "css":
 		cssPath := filepath.Join(themeDir, "static", "css")
-		result.Css, _ = c.listFiles(cssPath)
-		break
+		result.Css, _ = ctrl.listFiles(cssPath)
 	default:
 		imagePath := filepath.Join(themeDir, "static", "images")
-		result.Images, _ = c.listFiles(imagePath)
-		break
+		result.Images, _ = ctrl.listFiles(imagePath)
 	}
-	c.Data["json"] = result
-	c.ServeJSON()
+	ctrl.Data["json"] = result
+	ctrl.ServeJSON()
 }
 
 /**
@@ -100,7 +96,7 @@ func (c *ThemeController) LoadFilesType() {
  * @param {string} dir 目录路径
  * @return {*}
  */
-func (c *ThemeController) listFiles(dir string) ([]string, error) {
+func (ctrl *ThemeController) listFiles(dir string) ([]string, error) {
 	var files []string
 
 	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
@@ -123,12 +119,12 @@ func (c *ThemeController) listFiles(dir string) ([]string, error) {
  * @description: 获取文件内容
  * @return {*}
  */
-func (c *ThemeController) FileContent() {
-	theme := c.GetSafeString("theme")
-	file := c.GetSafeString("file")
-	typex := c.GetSafeString("type")
+func (ctrl *ThemeController) FileContent() {
+	theme := ctrl.GetSafeString("theme")
+	file := ctrl.GetSafeString("file")
+	typex := ctrl.GetSafeString("type")
 	if theme == "" || file == "" || typex == "" {
-		c.JSONError("参数错误")
+		ctrl.JSONError("参数错误")
 		return
 	}
 	if typex != "View" {
@@ -138,25 +134,25 @@ func (c *ThemeController) FileContent() {
 	}
 	themeDir := filepath.Join("./views/themes/", theme)
 	filename := "./" + filepath.Join(themeDir, strings.ToLower(typex), file)
-	content, err := ioutil.ReadFile(filename)
+	content, err := os.ReadFile(filename)
 	if err != nil {
 		logs.Error(err.Error())
-		c.JSONError("读取文件失败")
+		ctrl.JSONError("读取文件失败")
 		return
 	}
-	c.JSONSuccess("", string(content))
+	ctrl.JSONSuccess("", string(content))
 }
 
 /**
  * @description: 创建文件
  * @return {*}
  */
-func (c *ThemeController) FileAdd() {
-	theme := c.GetSafeString("theme")
-	file := c.GetSafeString("file")
-	typex := c.GetSafeString("type")
+func (ctrl *ThemeController) FileAdd() {
+	theme := ctrl.GetSafeString("theme")
+	file := ctrl.GetSafeString("file")
+	typex := ctrl.GetSafeString("type")
 	if theme == "" || file == "" || typex == "" {
-		c.JSONError("参数错误")
+		ctrl.JSONError("参数错误")
 		return
 	}
 	if typex != "View" {
@@ -167,30 +163,30 @@ func (c *ThemeController) FileAdd() {
 	themeDir := filepath.Join("./views/themes/", theme)
 	filename := "./" + filepath.Join(themeDir, strings.ToLower(typex), file)
 	if xio.FileIsExisted(filename) {
-		c.JSONError("文件已存在")
+		ctrl.JSONError("文件已存在")
 		return
 	}
 	filex, err := os.Create(filename)
 	if err != nil {
 		logs.Error(err.Error())
-		c.JSONError("创建文件失败")
+		ctrl.JSONError("创建文件失败")
 		return
 	}
 	defer filex.Close()
-	c.JSONSuccess("创建文件成功", nil)
+	ctrl.JSONSuccess("创建文件成功", nil)
 }
 
 /**
  * @description: 保存文件内容
  * @return {*}
  */
-func (c *ThemeController) FileSave() {
-	theme := c.GetSafeString("theme")
-	file := c.GetSafeString("file")
-	typex := c.GetSafeString("type")
-	content := c.GetSafeString("content")
+func (ctrl *ThemeController) FileSave() {
+	theme := ctrl.GetSafeString("theme")
+	file := ctrl.GetSafeString("file")
+	typex := ctrl.GetSafeString("type")
+	content := ctrl.GetSafeString("content")
 	if theme == "" || file == "" || typex == "" {
-		c.JSONError("参数错误")
+		ctrl.JSONError("参数错误")
 		return
 	}
 	if typex != "View" {
@@ -201,24 +197,25 @@ func (c *ThemeController) FileSave() {
 	themeDir := filepath.Join("./views/themes/", theme)
 	filename := "./" + filepath.Join(themeDir, strings.ToLower(typex), file)
 	if !xio.IsFileExist(filename) {
+		fmt.Println("file not exists")
 	}
-	err := ioutil.WriteFile(filename, []byte(content), 0o644)
+	err := os.WriteFile(filename, []byte(content), 0o644)
 	if err != nil {
 		logs.Error(err.Error())
-		c.JSONError("保存文件失败")
+		ctrl.JSONError("保存文件失败")
 		return
 	}
-	c.JSONSuccess("保存文件成功", nil)
+	ctrl.JSONSuccess("保存文件成功", nil)
 }
 
 /**
  * @description: 删除文件
  * @return {*}
  */
-func (c *ThemeController) FileDelete() {
-	theme := c.GetSafeString("theme")
-	file := c.GetSafeString("file")
-	typex := c.GetSafeString("type")
+func (ctrl *ThemeController) FileDelete() {
+	theme := ctrl.GetSafeString("theme")
+	file := ctrl.GetSafeString("file")
+	typex := ctrl.GetSafeString("type")
 	if typex != "View" {
 		typex = "static/" + typex
 	} else {
@@ -229,8 +226,8 @@ func (c *ThemeController) FileDelete() {
 	err := os.Remove(filename)
 	if err != nil {
 		logs.Error(err.Error())
-		c.JSONError("删除文件失败")
+		ctrl.JSONError("删除文件失败")
 		return
 	}
-	c.JSONSuccess("删除文件成功", nil)
+	ctrl.JSONSuccess("删除文件成功", nil)
 }

@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"time"
 
-	"haedu.gov.cn/cms/global"
+	"haedu.gov.cn/tools/xgeneric"
 
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
-	"haedu.gov.cn/tools/xgeneric"
+	"haedu.gov.cn/cms/global"
 )
 
 type CmsAds struct{}
@@ -19,7 +19,7 @@ func NewCmsAds() *CmsAds {
 }
 
 // CategoryPaginate 分页查询
-func (this *CmsAds) CategoryPaginate(page, limit int, channelId int64, title, callIndex string, siteId ...int64) ([]*model.CmsAdsCategory, int64, error) {
+func (svc *CmsAds) CategoryPaginate(page, limit int, channelId int64, title, callIndex string, siteId ...int64) ([]*model.CmsAdsCategory, int64, error) {
 	mdl, do := query.CmsAdsCategoryDo()
 	if len(siteId) > 0 {
 		do = do.Where(mdl.SiteID.In(siteId...))
@@ -37,13 +37,13 @@ func (this *CmsAds) CategoryPaginate(page, limit int, channelId int64, title, ca
 }
 
 // CategoryFind 获取
-func (this *CmsAds) CategoryFind(categoryId int64) (*model.CmsAdsCategory, error) {
+func (svc *CmsAds) CategoryFind(categoryId int64) (*model.CmsAdsCategory, error) {
 	mdl, do := query.CmsAdsCategoryDo()
 	return do.Where(mdl.CategoryID.Eq(categoryId)).First()
 }
 
 // CategorySave 保存或更新
-func (this *CmsAds) CategorySave(input *model.CmsAdsCategory) error {
+func (svc *CmsAds) CategorySave(input *model.CmsAdsCategory) error {
 	mdl, do := query.CmsAdsCategoryDo()
 	if input.CallIndex != "" {
 		if count, _ := do.Where(mdl.CategoryID.Neq(input.CategoryID), mdl.CallIndex.Eq(input.CallIndex)).Count(); count > 0 {
@@ -81,7 +81,7 @@ func (this *CmsAds) CategorySave(input *model.CmsAdsCategory) error {
 	return err
 }
 
-func (this *CmsAds) CategorySaveSortId(categoryId int64, sortId int32) error {
+func (svc *CmsAds) CategorySaveSortId(categoryId int64, sortId int32) error {
 	mdl, do := query.CmsAdsCategoryDo()
 	_, err := do.Where(mdl.CategoryID.Eq(categoryId)).UpdateColumns(
 		map[string]interface{}{
@@ -93,7 +93,7 @@ func (this *CmsAds) CategorySaveSortId(categoryId int64, sortId int32) error {
 }
 
 // AdsClone 克隆
-func (this *CmsAds) AdsClone(adsId int64) (int64, error) {
+func (svc *CmsAds) AdsClone(adsId int64) (int64, error) {
 	mdl, do := query.CmsAdsDo()
 	art, err := do.Where(mdl.AdsID.Eq(adsId)).First()
 	if err != nil {
@@ -108,7 +108,7 @@ func (this *CmsAds) AdsClone(adsId int64) (int64, error) {
 }
 
 // AdsChangeStatus 修改状态
-func (this *CmsAds) AdsChangeStatus(adsId int64, status int32) error {
+func (svc *CmsAds) AdsChangeStatus(adsId int64, status int32) error {
 	mdl, do := query.CmsAdsDo()
 	_, err := do.Where(mdl.AdsID.Eq(adsId)).UpdateColumns(
 		map[string]interface{}{
@@ -120,16 +120,16 @@ func (this *CmsAds) AdsChangeStatus(adsId int64, status int32) error {
 }
 
 // CategoryDestory 删除
-func (this *CmsAds) CategoryDestory(categoryId int64) error {
+func (svc *CmsAds) CategoryDestory(categoryId int64) error {
 	mdl, do := query.CmsAdsCategoryDo()
 	if _, err := do.Where(mdl.CategoryID.Eq(categoryId)).Delete(); err != nil {
 		return err
 	}
-	return this.AdsDestroyByCategoryId(categoryId)
+	return svc.AdsDestroyByCategoryId(categoryId)
 }
 
 // AdsDestroyByCategoryId 删除
-func (this *CmsAds) AdsDestroyByCategoryId(categoryId int64) error {
+func (svc *CmsAds) AdsDestroyByCategoryId(categoryId int64) error {
 	mdl, do := query.CmsAdsDo()
 	if _, err := do.Where(mdl.CategoryID.Eq(categoryId)).Delete(); err != nil {
 		return err
@@ -138,7 +138,7 @@ func (this *CmsAds) AdsDestroyByCategoryId(categoryId int64) error {
 }
 
 // AdsPaginate 分页查询
-func (this *CmsAds) AdsPaginate(page, limit int, channelId, categoryId int64, title, callIndex string, status int32, siteId ...int64) ([]*model.CmsAds, int64, error) {
+func (svc *CmsAds) AdsPaginate(page, limit int, channelId, categoryId int64, title, callIndex string, status int32, siteId ...int64) ([]*model.CmsAds, int64, error) {
 	mdl, do := query.CmsAdsDo()
 	if len(siteId) > 0 {
 		do = do.Where(mdl.SiteID.In(siteId...))
@@ -162,13 +162,13 @@ func (this *CmsAds) AdsPaginate(page, limit int, channelId, categoryId int64, ti
 }
 
 // AdsFind 获取
-func (this *CmsAds) AdsFind(adsId int64) (*model.CmsAds, error) {
+func (svc *CmsAds) AdsFind(adsId int64) (*model.CmsAds, error) {
 	mdl, do := query.CmsAdsDo()
 	return do.Where(mdl.AdsID.Eq(adsId)).First()
 }
 
 // AdsSave 保存或更新
-func (this *CmsAds) AdsSave(input *model.CmsAds) error {
+func (svc *CmsAds) AdsSave(input *model.CmsAds) error {
 	mdl, do := query.CmsAdsDo()
 	if input.CallIndex != "" {
 		if count, _ := do.Where(mdl.AdsID.Neq(input.AdsID), mdl.CallIndex.Eq(input.CallIndex)).Count(); count > 0 {
@@ -218,7 +218,7 @@ func (this *CmsAds) AdsSave(input *model.CmsAds) error {
  * @param {int64} adsId 广告ID
  * @return {*}
  */
-func (this *CmsAds) AdsDestory(adsId int64) error {
+func (svc *CmsAds) AdsDestory(adsId int64) error {
 	mdl, do := query.CmsAdsDo()
 	if _, err := do.Where(mdl.AdsID.Eq(adsId)).Delete(); err != nil {
 		return err
@@ -232,7 +232,7 @@ func (this *CmsAds) AdsDestory(adsId int64) error {
  * @param {int32} sortId 排序
  * @return {*}
  */
-func (this *CmsAds) AdsSaveSortId(adsId int64, sortId int32) error {
+func (svc *CmsAds) AdsSaveSortId(adsId int64, sortId int32) error {
 	mdl, do := query.CmsAdsDo()
 	_, err := do.Where(mdl.AdsID.Eq(adsId)).UpdateColumns(
 		map[string]interface{}{
@@ -244,9 +244,9 @@ func (this *CmsAds) AdsSaveSortId(adsId int64, sortId int32) error {
 }
 
 // SiteCategoryGet 获取站点与分类
-func (this *CmsAds) SiteCategoryGet(roleId int64, roleType string) ([]*model.CmsSite, []*model.CmsAdsCategory, error) {
+func (svc *CmsAds) SiteCategoryGet(roleId int64, roleType string) ([]*model.CmsSite, []*model.CmsAdsCategory, error) {
 	if global.IsSuper(roleType) {
-		list, _, _ := this.CategoryPaginate(1, 99999, -1, "", "")
+		list, _, _ := svc.CategoryPaginate(1, 99999, -1, "", "")
 		siteList, _, _ := NewCmsSite().SitePaginate(1, 999999, "", "")
 		return siteList, list, nil
 	}
@@ -260,13 +260,13 @@ func (this *CmsAds) SiteCategoryGet(roleId int64, roleType string) ([]*model.Cms
 			item, _ := NewCmsSite().SiteOne(siteIdList[i].SiteID)
 			siteList = append(siteList, item)
 		}
-		categoryList, _, _ = this.CategoryPaginate(1, 99999, -1, "", "", siteIds...)
+		categoryList, _, _ = svc.CategoryPaginate(1, 99999, -1, "", "", siteIds...)
 	}
 	return siteList, categoryList, nil
 }
 
 // SiteIdsGet 根据传入的站点筛选条件、角色类型、角色ID获取站点ID集合
-func (this *CmsAds) SiteIdsGet(siteId int64, roleType string, roleId int64) []int64 {
+func (svc *CmsAds) SiteIdsGet(siteId int64, roleType string, roleId int64) []int64 {
 	var siteIds []int64
 	if siteId > 0 {
 		siteIds = append(siteIds, siteId)
@@ -281,7 +281,7 @@ func (this *CmsAds) SiteIdsGet(siteId int64, roleType string, roleId int64) []in
 	return siteIds
 }
 
-func (this *CmsAds) FindByDate(selectTime ...time.Time) []int64 {
+func (svc *CmsAds) FindByDate(selectTime ...time.Time) []int64 {
 	mdl, do := query.CmsAdsDo()
 	duration, _ := time.ParseDuration("24h")
 	var counts []int64

@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"mime/multipart"
 	"net/http"
 	"os"
@@ -27,7 +26,7 @@ func NewMessage(appId, appSecret string, refreshToken bool) *Message {
 		Request:     Request{Token: ""},
 		AccessToken: AccessToken{AppId: appId, AppSecret: appSecret},
 	}
-	//判定是否刷新token
+	// 判定是否刷新token
 	// 创建菜单需要刷新token
 	// 自动消息回复不需要刷新token
 	if refreshToken {
@@ -303,7 +302,7 @@ func (this *Message) DownloadMediaFile(mediaId, fileName string) error {
 			return err
 		}
 		defer resp.Body.Close()
-		data, err := ioutil.ReadAll(resp.Body)
+		data, err := io.ReadAll(resp.Body)
 		if err != nil {
 			if i < retryNum-1 {
 				continue
@@ -446,7 +445,7 @@ func (this *Message) GetCustomMenu() ([]Button, error) {
 			return nil, err
 		}
 		defer resp.Body.Close()
-		data, err := ioutil.ReadAll(resp.Body)
+		data, err := io.ReadAll(resp.Body)
 		if err != nil {
 			if i < retryNum-1 {
 				continue
@@ -524,7 +523,7 @@ func (this *Message) GetUserInfo(openId string) (UserInfo, error) {
 			return uinf, err
 		}
 		defer resp.Body.Close()
-		data, err := ioutil.ReadAll(resp.Body)
+		data, err := io.ReadAll(resp.Body)
 		if err != nil {
 			if i < retryNum-1 {
 				continue

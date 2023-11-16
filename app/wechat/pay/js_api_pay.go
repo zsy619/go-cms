@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/beego/beego/v2/core/logs"
+
 	"haedu.gov.cn/cms/app/wechat/models"
 	"haedu.gov.cn/cms/app/wechat/utils"
 )
@@ -43,18 +44,18 @@ func NewJsApiPay(totalFee int, appId, appSecret string, w http.ResponseWriter, r
 * 第二步：利用code去获取openid和access_token
 **/
 // 网页授权获取用户基本信息的全部过程
-func (this *JsApiPay) GetOpenidAndAccessToken() {
-	code := this.r.URL.Query().Get("code")
+func (jsApi *JsApiPay) GetOpenidAndAccessToken() {
+	code := jsApi.r.URL.Query().Get("code")
 	if len(code) > 0 {
-		this.GetOpenidAndAccessTokenFromCode(code)
+		jsApi.GetOpenidAndAccessTokenFromCode(code)
 	} else {
 		// 构造网页授权获取code的URL
-		host := this.r.URL.Host
-		path := this.r.URL.Path
+		host := jsApi.r.URL.Host
+		path := jsApi.r.URL.Path
 		redirect_uri := url.QueryEscape("http://" + host + path)
 		fmt.Println(redirect_uri)
 		// data := models.NewWxPayData()
-		// data.SetValue("appid", this.AppId)
+		// data.SetValue("appid", jsApi.AppId)
 		// data.SetValue("redirect_uri", redirect_uri)
 		// data.SetValue("response_type", "code")
 		// data.SetValue("scope", "snsapi_base")
@@ -64,7 +65,7 @@ func (this *JsApiPay) GetOpenidAndAccessToken() {
 		// 	fmt.Println(err.Error())
 		// }
 		// url = "https://open.weixin.qq.com/connect/oauth2/authorize?" + url
-		// http.Redirect(this.w, this.r, url, 302)
+		// http.Redirect(jsApi.w, jsApi.r, url, 302)
 	}
 }
 
@@ -86,11 +87,11 @@ func (this *JsApiPay) GetOpenidAndAccessToken() {
 // 通过code换取网页授权access_token和openid的返回数据
 // <param name="code"></param>
 // <exception cref="WxPayException"></exception>
-func (this *JsApiPay) GetOpenidAndAccessTokenFromCode(code string) error {
+func (jsApi *JsApiPay) GetOpenidAndAccessTokenFromCode(code string) error {
 	// 构造获取openid及access_token的url
 	data := models.NewWxPayData()
-	data.SetValue("appid", this.AppId)
-	data.SetValue("secret", this.AppSecret)
+	data.SetValue("appid", jsApi.AppId)
+	data.SetValue("secret", jsApi.AppSecret)
 	data.SetValue("code", code)
 	data.SetValue("grant_type", "authorization_code")
 	url, err := data.ToUrl()
@@ -109,8 +110,8 @@ func (this *JsApiPay) GetOpenidAndAccessTokenFromCode(code string) error {
 	if err != nil {
 		return err
 	}
-	this.OpenId = result.OpenId
-	this.AccessToken = result.AccessToken
+	jsApi.OpenId = result.OpenId
+	jsApi.AccessToken = result.AccessToken
 	return nil
 }
 
@@ -125,13 +126,13 @@ func (this *JsApiPay) GetOpenidAndAccessTokenFromCode(code string) error {
 // </summary>
 // <returns></returns>
 // <exception cref="WxPayException"></exception>
-func (this *JsApiPay) GetUnifiedOrderResult(orderNo string) (models.WxPayData, error) {
+func (jsApi *JsApiPay) GetUnifiedOrderResult(orderNo string) (models.WxPayData, error) {
 	// 统一下单
 	data := models.NewWxPayData()
 	data.SetValue("body", orderNo)                                   // 商品描述 商品简单描述，该字段请按照规范传递
 	data.SetValue("attach", orderNo)                                 // 附加数据 附加数据，在查询API和支付通知中原样返回，可作为自定义参数使用。
 	data.SetValue("out_trade_no", orderNo)                           // 商户订单号 商户系统内部订单号，要求32个字符内，只能是数字、大小写字母_-|* 且在同一个商户号下唯一。详见商户订单号
-	data.SetValue("total_fee", this.TotalFee)                        // 标价金额 订单总金额，单位为分
+	data.SetValue("total_fee", jsApi.TotalFee)                       // 标价金额 订单总金额，单位为分
 	data.SetValue("time_start", time.Now().Format("20060102150405")) // 交易起始时间 订单生成时间，格式为yyyyMMddHHmmss，如2009年12月25日9点10分10秒表示为20091225091010。
 	// 	订单失效时间，格式为yyyyMMddHHmmss，如2009年12月27日9点10分10秒表示为20091227091010。订单失效时间是针对订单号而言的，由于在请求支付的时候有一个必传参数prepay_id只有两小时的有效期，所以在重入时间超过2小时的时候需要重新请求下单接口获取新的prepay_id。
 	// 	time_expire只能第一次下单传值，不允许二次修改，二次修改系统将报错。如用户支付失败后，需再次支付，需更换原订单号重新下单。
@@ -145,7 +146,7 @@ func (this *JsApiPay) GetUnifiedOrderResult(orderNo string) (models.WxPayData, e
 
 	// trade_type=JSAPI时（即JSAPI支付），此参数必传，此参数为微信用户在商户对应appid下的唯一标识。openid如何获取，可参考【获取openid】。
 	// 企业号请使用【企业号OAuth2.0接口】获取企业号内成员userid，再调用【企业号userid转openid接口】进行转换
-	data.SetValue("openid", this.OpenId) // 用户标识
+	data.SetValue("openid", jsApi.OpenId) // 用户标识
 
 	xml, _ := data.ToXml()
 	logs.Debug("GetUnifiedOrderResult ", xml)
@@ -160,7 +161,7 @@ func (this *JsApiPay) GetUnifiedOrderResult(orderNo string) (models.WxPayData, e
 		return data, errors.New("UnifiedOrder response error!")
 	}
 
-	this.UnifiedOrderResult = *result
+	jsApi.UnifiedOrderResult = *result
 	return *result, nil
 }
 
@@ -184,16 +185,16 @@ func (this *JsApiPay) GetUnifiedOrderResult(orderNo string) (models.WxPayData, e
 // 从统一下单成功返回的数据中获取微信浏览器调起jsapi支付所需的参数
 // </summary>
 // <returns></returns>
-func (this *JsApiPay) GetJsApiParameters() (string, models.WxPayData) {
+func (jsApi *JsApiPay) GetJsApiParameters() (string, models.WxPayData) {
 	logs.Debug("JsApiPay::GetJsApiParam is processing...")
 
 	jsApiParam := models.NewWxPayData()
-	jsApiParam.SetValue("appId", this.UnifiedOrderResult.GetValue("appid"))
+	jsApiParam.SetValue("appId", jsApi.UnifiedOrderResult.GetValue("appid"))
 	jsApiParam.SetValue("timeStamp", utils.CurrentTimeStampString())
 	jsApiParam.SetValue("nonceStr", utils.GenerateNonceStr())
-	jsApiParam.SetValue("package", "prepay_id="+this.UnifiedOrderResult.GetValue("prepay_id").(string))
+	jsApiParam.SetValue("package", "prepay_id="+jsApi.UnifiedOrderResult.GetValue("prepay_id").(string))
 	jsApiParam.SetValue("signType", "MD5")
-	paySign, err := jsApiParam.MakeSign(this.Key)
+	paySign, err := jsApiParam.MakeSign(jsApi.Key)
 	if err != nil {
 		logs.Error(err.Error())
 	}

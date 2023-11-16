@@ -7,22 +7,23 @@ import (
 	"strings"
 
 	"github.com/beego/beego/v2/core/logs"
+	"haedu.gov.cn/tools/xio"
+	"haedu.gov.cn/tools/xjson"
+
 	"haedu.gov.cn/cms/app/biz"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/lib"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
 	"haedu.gov.cn/cms/controllers/www"
-	"haedu.gov.cn/tools/xio"
-	"haedu.gov.cn/tools/xjson"
 )
 
 type WeixinMpVerifyController struct{ BaseController }
 
 // @router /admin/weixin/verify [get]
-func (this *WeixinMpVerifyController) Index() {
+func (ctrl *WeixinMpVerifyController) Index() {
 	list, _, _ := biz.NewWeixinAccount().AccountPaginate(1, 9999, "", -1)
-	this.Data["accountList"] = list
-	this.display()
+	ctrl.Data["accountList"] = list
+	ctrl.display()
 }
 
 // @router /admin/weixin/verify/list [get]
@@ -36,12 +37,12 @@ func (c *WeixinMpVerifyController) List() {
 }
 
 // @router /admin/weixin/verify/edit [get]
-func (this *WeixinMpVerifyController) Edit() {
-	if this.IsPost() {
+func (ctrl *WeixinMpVerifyController) Edit() {
+	if ctrl.IsPost() {
 		mdl := model.WeixinMpVerify{}
-		if err := this.ParseForm(&mdl); err != nil {
+		if err := ctrl.ParseForm(&mdl); err != nil {
 			logs.Error("Edit", err.Error())
-			this.JSONError(err.Error())
+			ctrl.JSONError(err.Error())
 		}
 		if mdl.VerifyID <= 0 {
 			mdl.CreateID = int32(GlobalAdminId)
@@ -50,18 +51,18 @@ func (this *WeixinMpVerifyController) Edit() {
 		}
 		if err := biz.NewWeixinMpVerify().Save(&mdl); err != nil {
 			logs.Error("Edit", err.Error())
-			this.JSONError(err.Error())
+			ctrl.JSONError(err.Error())
 			return
 		}
-		this.JSONSuccess("保存成功", nil)
+		ctrl.JSONSuccess("保存成功", nil)
 	}
 	{
 		list, _, _ := biz.NewWeixinAccount().AccountPaginate(1, 9999, "", -1)
-		this.Data["accountList"] = list
+		ctrl.Data["accountList"] = list
 	}
 	{
-		verifyId, _ := this.GetInt64("verify_id")
-		this.Data["verify_id"] = verifyId
+		verifyId, _ := ctrl.GetInt64("verify_id")
+		ctrl.Data["verify_id"] = verifyId
 		finder, err := biz.NewWeixinMpVerify().Find(verifyId)
 		if finder == nil || err != nil {
 			finder = &model.WeixinMpVerify{
@@ -69,29 +70,29 @@ func (this *WeixinMpVerifyController) Edit() {
 				Path:   "/",
 			}
 		}
-		this.Data["mdl"] = finder
+		ctrl.Data["mdl"] = finder
 	}
-	this.display()
+	ctrl.display()
 }
 
 // @router /admin/weixin/verify/savesortid [post]
-func (this *WeixinMpVerifyController) SaveSortId() {
+func (ctrl *WeixinMpVerifyController) SaveSortId() {
 	mdls := []vmodel.Verify_SaveSortIdModel{}
-	data := this.Ctx.Input.RequestBody
+	data := ctrl.Ctx.Input.RequestBody
 	fmt.Println("SaveSortId", string(data))
-	if err := xjson.Unmarshal(this.Ctx.Input.RequestBody, &mdls); err != nil {
+	if err := xjson.Unmarshal(ctrl.Ctx.Input.RequestBody, &mdls); err != nil {
 		logs.Error("SaveSortId", err.Error())
-		this.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 		return
 	}
 	for _, mdl := range mdls {
 		if err := biz.NewWeixinMpVerify().SaveSortId(mdl.VerifyId, int32(mdl.SortId)); err != nil {
 			logs.Error("SaveSortId", err.Error())
-			this.JSONError(err.Error())
+			ctrl.JSONError(err.Error())
 			return
 		}
 	}
-	this.JSONSuccess("保存成功", nil)
+	ctrl.JSONSuccess("保存成功", nil)
 }
 
 // @router /admin/weixin/verify/destory [post]

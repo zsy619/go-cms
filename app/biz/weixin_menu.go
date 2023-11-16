@@ -15,7 +15,7 @@ func NewWeixinMenu() *WeixinMenu {
 }
 
 // MenuPaginate 分页
-func (this *WeixinMenu) MenuPaginate(page, limit int, accountId int64) ([]*model.WeixinMenu, int64, error) {
+func (svc *WeixinMenu) MenuPaginate(page, limit int, accountId int64) ([]*model.WeixinMenu, int64, error) {
 	mdl, do := query.WeixinMenuDo()
 	if accountId > 0 {
 		do = do.Where(mdl.AccountID.Eq(accountId))
@@ -24,19 +24,19 @@ func (this *WeixinMenu) MenuPaginate(page, limit int, accountId int64) ([]*model
 }
 
 // MenuFindByParentId 根据父级ID获取
-func (this *WeixinMenu) MenuFindByParentId(accountId, parentId int64) ([]*model.WeixinMenu, error) {
+func (svc *WeixinMenu) MenuFindByParentId(accountId, parentId int64) ([]*model.WeixinMenu, error) {
 	mdl, do := query.WeixinMenuDo()
 	return do.Where(mdl.AccountID.Eq(accountId), mdl.ParentID.Eq(parentId)).Order(mdl.SortID).Find()
 }
 
 // MenuFind 获取
-func (this *WeixinMenu) MenuFind(menuId int64) (*model.WeixinMenu, error) {
+func (svc *WeixinMenu) MenuFind(menuId int64) (*model.WeixinMenu, error) {
 	mdl, do := query.WeixinMenuDo()
 	return do.Where(mdl.MenuID.Eq(menuId)).First()
 }
 
 // MenuSave 保存或更新
-func (this *WeixinMenu) MenuSave(input *model.WeixinMenu) error {
+func (svc *WeixinMenu) MenuSave(input *model.WeixinMenu) error {
 	mdl, do := query.WeixinMenuDo()
 	if input.Name != "" {
 		if count, _ := do.Where(mdl.MenuID.Neq(input.MenuID), mdl.AccountID.Eq(input.AccountID), mdl.ParentID.Eq(input.ParentID), mdl.Name.Eq(input.Name)).Count(); count > 0 {
@@ -73,7 +73,7 @@ func (this *WeixinMenu) MenuSave(input *model.WeixinMenu) error {
 }
 
 // MenuSaveSortId 保存排序
-func (this *WeixinMenu) MenuSaveSortId(menuId int64, sortId int32) error {
+func (svc *WeixinMenu) MenuSaveSortId(menuId int64, sortId int32) error {
 	mdl, do := query.WeixinMenuDo()
 	_, err := do.Where(mdl.MenuID.Eq(menuId)).UpdateColumns(
 		map[string]interface{}{
@@ -85,7 +85,7 @@ func (this *WeixinMenu) MenuSaveSortId(menuId int64, sortId int32) error {
 }
 
 // MenuDestory 删除
-func (this *WeixinMenu) MenuDestory(menuId int64) error {
+func (svc *WeixinMenu) MenuDestory(menuId int64) error {
 	mdl, do := query.WeixinMenuDo()
 	if count, _ := do.Where(mdl.ParentID.Eq(menuId)).Count(); count > 0 {
 		return errors.New("请先删除子菜单")

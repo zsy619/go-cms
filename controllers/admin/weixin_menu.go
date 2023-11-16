@@ -4,33 +4,34 @@ import (
 	"fmt"
 
 	"github.com/beego/beego/v2/core/logs"
+	"haedu.gov.cn/tools/xjson"
+
 	"haedu.gov.cn/cms/app/biz"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/lib"
 	"haedu.gov.cn/cms/app/wechat/mp"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
-	"haedu.gov.cn/tools/xjson"
 )
 
-func (c *WeixinController) MenuFind() {
-	accountId, _ := c.GetInt64("accountId")
+func (ctrl *WeixinController) MenuFind() {
+	accountId, _ := ctrl.GetInt64("accountId")
 	list, count, err := biz.NewWeixinMenu().MenuPaginate(1, 99999, accountId)
 	if err != nil {
 		logs.Error("MenuFind", err.Error())
 	}
-	c.JSONPage(lib.CodeSuccess, "", list, count)
+	ctrl.JSONPage(lib.CodeSuccess, "", list, count)
 }
 
-func (c *WeixinController) MenuEdit() {
-	accountId, _ := c.GetInt64("accountId")
+func (ctrl *WeixinController) MenuEdit() {
+	accountId, _ := ctrl.GetInt64("accountId")
 	if accountId <= 0 {
-		c.Abort("404")
-		c.StopRun()
+		ctrl.Abort("404")
+		ctrl.StopRun()
 		return
 	}
-	c.Data["accountId"] = accountId
-	menuId, _ := c.GetInt64("menuId")
-	parentId, _ := c.GetInt64("parentId")
+	ctrl.Data["accountId"] = accountId
+	menuId, _ := ctrl.GetInt64("menuId")
+	parentId, _ := ctrl.GetInt64("parentId")
 	mdl, err := biz.NewWeixinMenu().MenuFind(menuId)
 	if err != nil {
 		mdl = &model.WeixinMenu{
@@ -40,15 +41,15 @@ func (c *WeixinController) MenuEdit() {
 			Type:      "view",
 		}
 	}
-	c.Data["mdl"] = mdl
-	c.display()
+	ctrl.Data["mdl"] = mdl
+	ctrl.display()
 }
 
-func (c *WeixinController) MenuSave() {
+func (ctrl *WeixinController) MenuSave() {
 	mdl := model.WeixinMenu{}
-	if err := c.ParseForm(&mdl); err != nil {
+	if err := ctrl.ParseForm(&mdl); err != nil {
 		logs.Error("MenuSave", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 	}
 	if mdl.MenuID == 0 {
 		mdl.CreateID = int32(GlobalAdminId)
@@ -59,48 +60,48 @@ func (c *WeixinController) MenuSave() {
 	}
 	if err := biz.NewWeixinMenu().MenuSave(&mdl); err != nil {
 		logs.Error("MenuSave", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 		return
 	}
-	c.JSONSuccess("保存成功", nil)
+	ctrl.JSONSuccess("保存成功", nil)
 }
 
-func (c *WeixinController) MenuSaveSortId() {
+func (ctrl *WeixinController) MenuSaveSortId() {
 	mdls := []vmodel.Menu_SaveSortIdModel{}
-	data := c.Ctx.Input.RequestBody
+	data := ctrl.Ctx.Input.RequestBody
 	fmt.Println("MenuSaveSortId", string(data))
-	if err := xjson.Unmarshal(c.Ctx.Input.RequestBody, &mdls); err != nil {
+	if err := xjson.Unmarshal(ctrl.Ctx.Input.RequestBody, &mdls); err != nil {
 		logs.Error("MenuSaveSortId", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 	}
 	for _, mdl := range mdls {
 		if err := biz.NewWeixinMenu().MenuSaveSortId(mdl.MenuId, int32(mdl.SortId)); err != nil {
 			logs.Error("MenuSaveSortId", err.Error())
-			c.JSONError(err.Error())
+			ctrl.JSONError(err.Error())
 			return
 		}
 	}
-	c.JSONSuccess("保存成功", nil)
+	ctrl.JSONSuccess("保存成功", nil)
 }
 
-func (c *WeixinController) MenuDestory() {
-	menuId, _ := c.GetInt64("menuId")
+func (ctrl *WeixinController) MenuDestory() {
+	menuId, _ := ctrl.GetInt64("menuId")
 	if err := biz.NewWeixinMenu().MenuDestory(menuId); err != nil {
 		logs.Error("MenuDestory", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 		return
 	}
-	c.JSONSuccess("删除成功", nil)
+	ctrl.JSONSuccess("删除成功", nil)
 }
 
 // MenuSync 同步菜单
 // @router /admin/weixin/menusync [post]
-func (c *WeixinController) MenuSync() {
-	accountId, _ := c.GetInt64("accountId")
+func (ctrl *WeixinController) MenuSync() {
+	accountId, _ := ctrl.GetInt64("accountId")
 	finder, err := biz.NewWeixinAccount().AccountFind(accountId)
 	if err != nil {
 		logs.Error("MenuSync", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 		return
 	}
 	fmt.Println("MenuSync", finder)
@@ -119,12 +120,12 @@ func (c *WeixinController) MenuSync() {
 			}
 			children, err := service.MenuFindByParentId(accountId, p.MenuID)
 			if err == nil && len(children) > 0 {
-				for _, c := range children {
+				for _, child := range children {
 					cbutton := mp.Button{
-						Name: c.Name,
-						Key:  c.Key,
-						Type: c.Type,
-						Url:  c.URL,
+						Name: child.Name,
+						Key:  child.Key,
+						Type: child.Type,
+						Url:  child.URL,
 					}
 					pbutton.SubButton = append(pbutton.SubButton, cbutton)
 				}
@@ -136,8 +137,8 @@ func (c *WeixinController) MenuSync() {
 	err = message.CreateCustomMenu(&pbuttons)
 	if err != nil {
 		logs.Error("MenuSync", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 		return
 	}
-	c.JSONSuccess("同步成功", nil)
+	ctrl.JSONSuccess("同步成功", nil)
 }

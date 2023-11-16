@@ -2,62 +2,64 @@ package admin
 
 import (
 	"fmt"
+
 	"github.com/beego/beego/v2/core/logs"
+	"haedu.gov.cn/tools/xcrypto"
+	"haedu.gov.cn/tools/xjson"
+	"haedu.gov.cn/tools/xstring"
+
 	"haedu.gov.cn/cms/app/biz"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/lib"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
 	"haedu.gov.cn/cms/global"
-	"haedu.gov.cn/tools/xcrypto"
-	"haedu.gov.cn/tools/xjson"
-	"haedu.gov.cn/tools/xstring"
 )
 
 type AdminController struct{ BaseController }
 
-func (c *AdminController) Index() {
+func (ctrl *AdminController) Index() {
 	roleList, _, _ := biz.NewCmsAdmin().RolePaginate(0, 99999, "")
-	c.Data["roleList"] = roleList
+	ctrl.Data["roleList"] = roleList
 	// 获取角色权限
-	roleMap := c.RolePowerGet("user_manager")
-	c.Data["roleMap"] = roleMap
-	c.display()
+	roleMap := ctrl.RolePowerGet("user_manager")
+	ctrl.Data["roleMap"] = roleMap
+	ctrl.display()
 }
 
-func (c *AdminController) AdminPaginate() {
-	page, limit := c.GetPagingParameters()
-	roleId, _ := c.GetInt64("roleId")
-	realName := c.GetSafeString("realName")
-	userName := c.GetSafeString("userName")
+func (ctrl *AdminController) AdminPaginate() {
+	page, limit := ctrl.GetPagingParameters()
+	roleId, _ := ctrl.GetInt64("roleId")
+	realName := ctrl.GetSafeString("realName")
+	userName := ctrl.GetSafeString("userName")
 	list, count, _ := biz.NewCmsAdmin().AdminPaginate(page, limit, roleId, realName, userName)
-	c.JSONPage(lib.CodeSuccess, "", list, count)
+	ctrl.JSONPage(lib.CodeSuccess, "", list, count)
 }
 
-func (c *AdminController) AdminEdit() {
+func (ctrl *AdminController) AdminEdit() {
 	roleList, _, _ := biz.NewCmsAdmin().RolePaginate(0, 99999, "")
-	c.Data["roleList"] = roleList
-	userId, _ := c.GetInt64("userId")
+	ctrl.Data["roleList"] = roleList
+	userId, _ := ctrl.GetInt64("userId")
 	mdl, err := biz.NewCmsAdmin().AdminFind(userId)
 	if err != nil {
 		mdl = &model.CmsAdmin{
 			SortID: 99,
 		}
 	}
-	c.Data["mdl"] = mdl
-	c.display()
+	ctrl.Data["mdl"] = mdl
+	ctrl.display()
 }
 
-func (c *AdminController) AdminSave() {
+func (ctrl *AdminController) AdminSave() {
 	mdl := model.CmsAdmin{}
-	if err := c.ParseForm(&mdl); err != nil {
+	if err := ctrl.ParseForm(&mdl); err != nil {
 		logs.Error("AdminSave", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 	}
 	// 默认加密sm4加密
 	if mdl.Password != "" {
 		// 检查密码是否符合规则
 		if psErr := CheckPasswordRole(mdl.Password); psErr != nil {
-			c.JSONError(psErr.Error())
+			ctrl.JSONError(psErr.Error())
 		}
 		// 加密后存储
 		key := global.ReverseLowerString(mdl.UserName)
@@ -68,66 +70,66 @@ func (c *AdminController) AdminSave() {
 	do := biz.NewCmsAdmin()
 	if err := do.AdminSave(&mdl); err != nil {
 		logs.Error("AdminSave", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 		return
 	}
-	c.JSONSuccess("保存成功", nil)
+	ctrl.JSONSuccess("保存成功", nil)
 }
 
-func (c *AdminController) AdminDestory() {
-	userId, _ := c.GetInt64("userId")
+func (ctrl *AdminController) AdminDestory() {
+	userId, _ := ctrl.GetInt64("userId")
 	if err := biz.NewCmsAdmin().AdminDestory(userId); err != nil {
 		logs.Error("AdminDestory", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 		return
 	}
-	c.JSONSuccess("删除成功", nil)
+	ctrl.JSONSuccess("删除成功", nil)
 }
 
-func (c *AdminController) Log() {
-	c.display()
+func (ctrl *AdminController) Log() {
+	ctrl.display()
 }
 
-func (c *AdminController) LogPaginate() {
-	page, limit := c.GetPagingParameters()
-	userName := c.GetSafeString("userName")
+func (ctrl *AdminController) LogPaginate() {
+	page, limit := ctrl.GetPagingParameters()
+	userName := ctrl.GetSafeString("userName")
 	list, count, _ := biz.NewCmsAdmin().LogPaginate(page, limit, 0, userName)
-	c.JSONPage(lib.CodeSuccess, "", list, count)
+	ctrl.JSONPage(lib.CodeSuccess, "", list, count)
 }
 
-func (c *AdminController) Role() {
+func (ctrl *AdminController) Role() {
 	// 获取角色权限
-	roleMap := c.RolePowerGet("user_role")
-	c.Data["roleMap"] = roleMap
-	c.display()
+	roleMap := ctrl.RolePowerGet("user_role")
+	ctrl.Data["roleMap"] = roleMap
+	ctrl.display()
 }
 
-func (c *AdminController) RolePaginate() {
-	page, limit := c.GetPagingParameters()
-	name := c.GetSafeString("name")
+func (ctrl *AdminController) RolePaginate() {
+	page, limit := ctrl.GetPagingParameters()
+	name := ctrl.GetSafeString("name")
 	list, count, _ := biz.NewCmsAdmin().RolePaginate(page, limit, name)
-	c.JSONPage(lib.CodeSuccess, "", list, count)
+	ctrl.JSONPage(lib.CodeSuccess, "", list, count)
 }
 
-func (c *AdminController) RoleEdit() {
-	roleId, _ := c.GetInt64("roleId")
+func (ctrl *AdminController) RoleEdit() {
+	roleId, _ := ctrl.GetInt64("roleId")
 	mdl, err := biz.NewCmsAdmin().RoleFind(roleId)
 	if err != nil {
 		mdl = &model.CmsAdminRole{
 			SortID: 99,
 		}
 	}
-	c.Data["mdl"] = mdl
-	c.display()
+	ctrl.Data["mdl"] = mdl
+	ctrl.display()
 }
 
-func (c *AdminController) RoleSave() {
+func (ctrl *AdminController) RoleSave() {
 	mdl := model.CmsAdminRole{}
-	if err := c.ParseForm(&mdl); err != nil {
+	if err := ctrl.ParseForm(&mdl); err != nil {
 		logs.Error("RoleSave", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 	}
-	actions := c.Ctx.Request.FormValue("action")
+	actions := ctrl.Ctx.Request.FormValue("action")
 	role_vals := map[string]string{}
 	if err := xjson.Unmarshal([]byte(actions), &role_vals); err != nil {
 		fmt.Println(err.Error())
@@ -135,78 +137,78 @@ func (c *AdminController) RoleSave() {
 	do := biz.NewCmsAdmin()
 	if err := do.RoleSave(&mdl); err != nil {
 		logs.Error("RoleSave", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 		return
 	}
 	if err := do.RoleValSave(mdl.RoleID, role_vals); err != nil {
 		logs.Error("RoleSave", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 		return
 	}
 
 	// 保存站点权限
-	var siteValue = c.Ctx.Request.FormValue("siteSelect")
-	var siteList = xstring.Split(siteValue, ",")
+	siteValue := ctrl.Ctx.Request.FormValue("siteSelect")
+	siteList := xstring.Split(siteValue, ",")
 	if err := do.RoleSiteSave(mdl.RoleID, siteList); err != nil {
 		logs.Error("RoleSave", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 		return
 	}
 
-	c.JSONSuccess("保存成功", nil)
+	ctrl.JSONSuccess("保存成功", nil)
 }
 
-func (c *AdminController) RoleSaveSortId() {
+func (ctrl *AdminController) RoleSaveSortId() {
 	mdls := []vmodel.Role_SaveSortIdModel{}
-	data := c.Ctx.Input.RequestBody
+	data := ctrl.Ctx.Input.RequestBody
 	fmt.Println("RoleSaveSortId", string(data))
-	if err := xjson.Unmarshal(c.Ctx.Input.RequestBody, &mdls); err != nil {
+	if err := xjson.Unmarshal(ctrl.Ctx.Input.RequestBody, &mdls); err != nil {
 		logs.Error("RoleSaveSortId", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 	}
 	for _, mdl := range mdls {
 		if err := biz.NewCmsAdmin().RoleSaveSortId(mdl.RoleId, int32(mdl.SortId)); err != nil {
 			logs.Error("RoleSaveSortId", err.Error())
-			c.JSONError(err.Error())
+			ctrl.JSONError(err.Error())
 			return
 		}
 	}
-	c.JSONSuccess("保存成功", nil)
+	ctrl.JSONSuccess("保存成功", nil)
 }
 
-func (c *AdminController) RoleDestory() {
-	roleId, _ := c.GetInt64("roleId")
+func (ctrl *AdminController) RoleDestory() {
+	roleId, _ := ctrl.GetInt64("roleId")
 	if err := biz.NewCmsAdmin().RoleDestory(roleId); err != nil {
 		logs.Error("RoleDestory", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 		return
 	}
-	c.JSONSuccess("删除成功", nil)
+	ctrl.JSONSuccess("删除成功", nil)
 }
 
-func (c *AdminController) NavFind() {
-	roleId, _ := c.GetInt64("roleId")
+func (ctrl *AdminController) NavFind() {
+	roleId, _ := ctrl.GetInt64("roleId")
 	list, count, err := biz.NewCmsAdmin().NavFind(roleId)
 	if err != nil {
 		logs.Error("NavFind", err.Error())
 	}
-	c.JSONPage(lib.CodeSuccess, "", list, count)
+	ctrl.JSONPage(lib.CodeSuccess, "", list, count)
 }
 
-func (c *AdminController) RoleValueFind() {
-	roleId, _ := c.GetInt64("roleId")
+func (ctrl *AdminController) RoleValueFind() {
+	roleId, _ := ctrl.GetInt64("roleId")
 	list, count, err := biz.NewCmsAdmin().RoleValueFind(roleId)
 	if err != nil {
 		logs.Error("RoleValueFind", err.Error())
 	}
-	c.JSONPage(lib.CodeSuccess, "", list, count)
+	ctrl.JSONPage(lib.CodeSuccess, "", list, count)
 }
 
-func (c *AdminController) RoleSiteFind() {
-	roleId, _ := c.GetInt64("roleId")
+func (ctrl *AdminController) RoleSiteFind() {
+	roleId, _ := ctrl.GetInt64("roleId")
 	list, count, err := biz.NewCmsAdmin().RoleSiteFind(roleId)
 	if err != nil {
 		logs.Error("RoleSiteFind", err.Error())
 	}
-	c.JSONPage(lib.CodeSuccess, "", list, count)
+	ctrl.JSONPage(lib.CodeSuccess, "", list, count)
 }

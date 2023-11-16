@@ -31,25 +31,25 @@ func NewDriver() *captcha.DriverString {
 }
 
 // 生成图形验证码
-func (controller *CaptchaController) GenerateHandler() {
+func (ctrl *CaptchaController) GenerateHandler() {
 	driver := NewDriver().ConvertFonts()
 	c := captcha.NewCaptcha(driver, store)
 	id, content, answer := c.Driver.GenerateIdQuestionAnswer()
 	fmt.Println(" ---> ", id, content, answer)
 	item, _ := c.Driver.DrawCaptcha(content)
 	_ = c.Store.Set(verifyId, answer)
-	_, _ = item.WriteTo(controller.Ctx.ResponseWriter)
+	_, _ = item.WriteTo(ctrl.Ctx.ResponseWriter)
 }
 
 // 验证
-func (controller *CaptchaController) VerifyHandle() {
-	code := controller.Ctx.Request.FormValue("code")
+func (ctrl *CaptchaController) VerifyHandle() {
+	code := ctrl.Ctx.Request.FormValue("code")
 	body := map[string]interface{}{"code": 1000, "msg": "failed"}
 	if store.Verify(verifyId, code, true) {
 		body = map[string]interface{}{"code": 1001, "msg": "ok"}
 	}
-	controller.Ctx.ResponseWriter.Header().Set("Content-Type", "application/json; charset=utf-8")
-	_ = json.NewEncoder(controller.Ctx.ResponseWriter).Encode(body)
+	ctrl.Ctx.ResponseWriter.Header().Set("Content-Type", "application/json; charset=utf-8")
+	_ = json.NewEncoder(ctrl.Ctx.ResponseWriter).Encode(body)
 }
 
 // VerifyCode 验证

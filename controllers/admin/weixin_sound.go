@@ -6,23 +6,23 @@ import (
 )
 
 // 语音回复
-func (c *WeixinController) Sound() {
+func (ctrl *WeixinController) Sound() {
 	list, _, _ := biz.NewWeixinAccount().AccountPaginate(1, 9999, "", -1)
-	c.Data["accountList"] = list
-	c.Data["request_type"] = 3
+	ctrl.Data["accountList"] = list
+	ctrl.Data["request_type"] = 3
 
-	c.display()
+	ctrl.display()
 }
 
-func (c *WeixinController) SoundEdit() {
+func (ctrl *WeixinController) SoundEdit() {
 	{
 		list, _, _ := biz.NewWeixinAccount().AccountPaginate(1, 9999, "", -1)
-		c.Data["accountList"] = list
-		c.Data["request_type"] = 3
+		ctrl.Data["accountList"] = list
+		ctrl.Data["request_type"] = 3
 	}
 	{
-		ruleId, _ := c.GetInt64("rule_id")
-		c.Data["rule_id"] = ruleId
+		ruleId, _ := ctrl.GetInt64("rule_id")
+		ctrl.Data["rule_id"] = ruleId
 		finder, err := biz.NewWeixinRequest().RuleFind(ruleId)
 		if finder == nil || err != nil {
 			finder = &bizmodel.Weixin_RuleModel{
@@ -31,7 +31,7 @@ func (c *WeixinController) SoundEdit() {
 				Name:        "语音回复",
 			}
 		}
-		c.Data["mdl"] = finder
+		ctrl.Data["mdl"] = finder
 	}
-	c.display()
+	ctrl.display()
 }

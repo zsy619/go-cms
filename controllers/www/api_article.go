@@ -2,6 +2,7 @@ package www
 
 import (
 	"github.com/beego/beego/v2/core/logs"
+
 	"haedu.gov.cn/cms/app/biz/bizmodel"
 	"haedu.gov.cn/cms/app/lib"
 )
@@ -18,18 +19,18 @@ type ApiArticleController struct{ BaseController }
  * @return {*}
  */
 // @router /api/category/nav [get]
-func (this *ApiArticleController) CategoryNav() {
-	channel_name := this.GetSafeString("channel_name")
-	channel_id, _ := this.GetInt64("channel_id")
-	call_index := this.GetSafeString("call_index")
-	category_id, _ := this.GetInt64("category_id")
-	article_id, _ := this.GetInt64("article_id")
+func (ctrl *ApiArticleController) CategoryNav() {
+	channel_name := ctrl.GetSafeString("channel_name")
+	channel_id, _ := ctrl.GetInt64("channel_id")
+	call_index := ctrl.GetSafeString("call_index")
+	category_id, _ := ctrl.GetInt64("category_id")
+	article_id, _ := ctrl.GetInt64("article_id")
 
-	outNav, err := this.BaseController.CategoryNav(channel_name, channel_id, call_index, category_id, article_id)
+	outNav, err := ctrl.BaseController.CategoryNav(channel_name, channel_id, call_index, category_id, article_id)
 	if err != nil {
-		this.JSONPage(lib.CodeError, err.Error(), outNav, 0)
+		ctrl.JSONPage(lib.CodeError, err.Error(), outNav, 0)
 	}
-	this.JSONPageSuccess(outNav, int64(len(outNav)))
+	ctrl.JSONPageSuccess(outNav, int64(len(outNav)))
 }
 
 /**
@@ -39,19 +40,19 @@ func (this *ApiArticleController) CategoryNav() {
  * @return {*}
  */
 // @router /api/category/get [get]
-func (this *ApiArticleController) CategoryGet() {
-	channel_name := this.GetSafeString("channel_name")
-	call_index := this.GetSafeString("call_index")
+func (ctrl *ApiArticleController) CategoryGet() {
+	channel_name := ctrl.GetSafeString("channel_name")
+	call_index := ctrl.GetSafeString("call_index")
 
 	if channel_name == "" && call_index == "" {
-		this.JSONErrorOfData("频道编码或栏目编码不能为空", nil)
+		ctrl.JSONErrorOfData("频道编码或栏目编码不能为空", nil)
 	}
 
-	outChannel, count, err := this.BaseController.CategoryGet(channel_name, call_index)
+	outChannel, count, err := ctrl.BaseController.CategoryGet(channel_name, call_index)
 	if err != nil {
-		this.JSONPage(lib.CodeError, err.Error(), outChannel, count)
+		ctrl.JSONPage(lib.CodeError, err.Error(), outChannel, count)
 	}
-	this.JSONPageSuccess(outChannel, count)
+	ctrl.JSONPageSuccess(outChannel, count)
 }
 
 /**
@@ -61,14 +62,14 @@ func (this *ApiArticleController) CategoryGet() {
  * @return {*}
  */
 // @router /api/category/find [get]
-func (this *ApiArticleController) CategoryFind() {
-	category_id, _ := this.GetInt64("category_id")
-	call_index := this.GetSafeString("call_index")
-	outChannel, err := this.BaseController.CategoryFind(category_id, call_index)
+func (ctrl *ApiArticleController) CategoryFind() {
+	category_id, _ := ctrl.GetInt64("category_id")
+	call_index := ctrl.GetSafeString("call_index")
+	outChannel, err := ctrl.BaseController.CategoryFind(category_id, call_index)
 	if err != nil {
-		this.JSONPage(lib.CodeError, err.Error(), outChannel, 0)
+		ctrl.JSONPage(lib.CodeError, err.Error(), outChannel, 0)
 	}
-	this.JSONPageSuccess(outChannel, 1)
+	ctrl.JSONPageSuccess(outChannel, 1)
 }
 
 /**
@@ -86,22 +87,22 @@ func (this *ApiArticleController) CategoryFind() {
  * @return {*}
  */
 // @router /api/article/get [get]
-func (this *ApiArticleController) Get() {
-	limit, _ := this.GetInt("limit", 6)
-	call_index := this.GetSafeString("call_index")
-	channel_name := this.GetSafeString("channel_name")
-	order_by := this.GetSafeString("order_by", "")
-	channel_id, _ := this.GetInt64("channel_id", 0)
-	category_id, _ := this.GetInt64("category_id", 0)
-	is_top, _ := this.GetInt("is_top", 0)
-	is_red, _ := this.GetInt("is_red", 0)
-	is_hot, _ := this.GetInt("is_hot", 0)
-	is_slide, _ := this.GetInt("is_slide", 0)
-	outArticle, count, err := this.BaseController.ArticleGet(limit, channel_id, channel_name, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
+func (ctrl *ApiArticleController) Get() {
+	limit, _ := ctrl.GetInt("limit", 6)
+	call_index := ctrl.GetSafeString("call_index")
+	channel_name := ctrl.GetSafeString("channel_name")
+	order_by := ctrl.GetSafeString("order_by", "")
+	channel_id, _ := ctrl.GetInt64("channel_id", 0)
+	category_id, _ := ctrl.GetInt64("category_id", 0)
+	is_top, _ := ctrl.GetInt("is_top", 0)
+	is_red, _ := ctrl.GetInt("is_red", 0)
+	is_hot, _ := ctrl.GetInt("is_hot", 0)
+	is_slide, _ := ctrl.GetInt("is_slide", 0)
+	outArticle, count, err := ctrl.BaseController.ArticleGet(limit, channel_id, channel_name, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
 	if err != nil {
-		this.JSONPage(lib.CodeError, err.Error(), outArticle, count)
+		ctrl.JSONPage(lib.CodeError, err.Error(), outArticle, count)
 	}
-	this.JSONPageSuccess(outArticle, count)
+	ctrl.JSONPageSuccess(outArticle, count)
 }
 
 /**
@@ -119,22 +120,22 @@ func (this *ApiArticleController) Get() {
  * @return {*}
  */
 // @router /api/article/get/new [get]
-func (this *ApiArticleController) GetNew() {
-	limit, _ := this.GetInt("limit", 6)
-	call_index := this.GetSafeString("call_index")
-	channel_name := this.GetSafeString("channel_name")
-	order_by := this.GetSafeString("order_by", "")
-	channel_id, _ := this.GetInt64("channel_id", 0)
-	category_id, _ := this.GetInt64("category_id", 0)
-	is_top, _ := this.GetInt("is_top", 0)
-	is_red, _ := this.GetInt("is_red", 0)
-	is_hot, _ := this.GetInt("is_hot", 0)
-	is_slide, _ := this.GetInt("is_slide", 0)
-	outArticle, count, err := this.BaseController.ArticleGetNew(limit, channel_id, channel_name, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
+func (ctrl *ApiArticleController) GetNew() {
+	limit, _ := ctrl.GetInt("limit", 6)
+	call_index := ctrl.GetSafeString("call_index")
+	channel_name := ctrl.GetSafeString("channel_name")
+	order_by := ctrl.GetSafeString("order_by", "")
+	channel_id, _ := ctrl.GetInt64("channel_id", 0)
+	category_id, _ := ctrl.GetInt64("category_id", 0)
+	is_top, _ := ctrl.GetInt("is_top", 0)
+	is_red, _ := ctrl.GetInt("is_red", 0)
+	is_hot, _ := ctrl.GetInt("is_hot", 0)
+	is_slide, _ := ctrl.GetInt("is_slide", 0)
+	outArticle, count, err := ctrl.BaseController.ArticleGetNew(limit, channel_id, channel_name, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
 	if err != nil {
-		this.JSONPage(lib.CodeError, err.Error(), outArticle, count)
+		ctrl.JSONPage(lib.CodeError, err.Error(), outArticle, count)
 	}
-	this.JSONPageSuccess(outArticle, count)
+	ctrl.JSONPageSuccess(outArticle, count)
 }
 
 /**
@@ -155,25 +156,25 @@ func (this *ApiArticleController) GetNew() {
  * @return {*}
  */
 // @router /api/article/paginate [get]
-func (this *ApiArticleController) Paginate() {
-	limit, _ := this.GetInt("limit", 6)
-	page, _ := this.GetInt("page", 1)
-	order_by := this.GetSafeString("order_by", "")
-	call_index := this.GetSafeString("call_index")
-	channel_name := this.GetSafeString("channel_name")
-	keyword := this.GetSafeString("keyword")
-	channel_id, _ := this.GetInt64("channel_id", -1)
-	category_id, _ := this.GetInt64("category_id", -1)
-	is_top, _ := this.GetInt("is_top", -1)
-	is_red, _ := this.GetInt("is_red", -1)
-	is_hot, _ := this.GetInt("is_hot", -1)
-	is_slide, _ := this.GetInt("is_slide", -1)
-	is_search, _ := this.GetInt("is_search", -1)
-	outArticle, count, err := this.BaseController.ArticlePaginate(page, limit, channel_id, channel_name, category_id, call_index, keyword, is_top, is_red, is_hot, is_slide, is_search, order_by)
+func (ctrl *ApiArticleController) Paginate() {
+	limit, _ := ctrl.GetInt("limit", 6)
+	page, _ := ctrl.GetInt("page", 1)
+	order_by := ctrl.GetSafeString("order_by", "")
+	call_index := ctrl.GetSafeString("call_index")
+	channel_name := ctrl.GetSafeString("channel_name")
+	keyword := ctrl.GetSafeString("keyword")
+	channel_id, _ := ctrl.GetInt64("channel_id", -1)
+	category_id, _ := ctrl.GetInt64("category_id", -1)
+	is_top, _ := ctrl.GetInt("is_top", -1)
+	is_red, _ := ctrl.GetInt("is_red", -1)
+	is_hot, _ := ctrl.GetInt("is_hot", -1)
+	is_slide, _ := ctrl.GetInt("is_slide", -1)
+	is_search, _ := ctrl.GetInt("is_search", -1)
+	outArticle, count, err := ctrl.BaseController.ArticlePaginate(page, limit, channel_id, channel_name, category_id, call_index, keyword, is_top, is_red, is_hot, is_slide, is_search, order_by)
 	if err != nil {
-		this.JSONPage(lib.CodeError, err.Error(), outArticle, count)
+		ctrl.JSONPage(lib.CodeError, err.Error(), outArticle, count)
 	}
-	this.JSONPageSuccess(outArticle, count)
+	ctrl.JSONPageSuccess(outArticle, count)
 }
 
 /**
@@ -183,10 +184,10 @@ func (this *ApiArticleController) Paginate() {
  * @return {*}
  */
 // @router /api/article/find [get]
-func (this *ApiArticleController) Find() {
-	article_id, _ := this.GetInt64("article_id", 0)
-	call_index := this.GetSafeString("call_index")
-	aritcle, album, attatch, property, err := this.BaseController.ArticleFind(call_index, article_id)
+func (ctrl *ApiArticleController) Find() {
+	article_id, _ := ctrl.GetInt64("article_id", 0)
+	call_index := ctrl.GetSafeString("call_index")
+	aritcle, album, attatch, property, err := ctrl.BaseController.ArticleFind(call_index, article_id)
 	result := bizmodel.ApiArticleModel{
 		Article:  aritcle,
 		Album:    album,
@@ -195,9 +196,9 @@ func (this *ApiArticleController) Find() {
 	}
 	if err != nil {
 		logs.Error("", err.Error())
-		this.JSONPage(lib.CodeError, err.Error(), result, 0)
+		ctrl.JSONPage(lib.CodeError, err.Error(), result, 0)
 	}
-	this.JSONPageSuccess(result, 1)
+	ctrl.JSONPageSuccess(result, 1)
 }
 
 /**
@@ -208,11 +209,11 @@ func (this *ApiArticleController) Find() {
  * @return {*}
  */
 // @router /api/article/prev_next [get]
-func (this *ApiArticleController) PrevNext() {
-	article_id, _ := this.GetInt64("article_id", 0)
-	category_id, _ := this.GetInt64("category_id", 0)
-	call_index := this.GetSafeString("call_index")
-	prev, next := this.BaseController.ArticlePrevNext(call_index, category_id, article_id)
+func (ctrl *ApiArticleController) PrevNext() {
+	article_id, _ := ctrl.GetInt64("article_id", 0)
+	category_id, _ := ctrl.GetInt64("category_id", 0)
+	call_index := ctrl.GetSafeString("call_index")
+	prev, next := ctrl.BaseController.ArticlePrevNext(call_index, category_id, article_id)
 	result := struct {
 		Prev *bizmodel.ApiArticlePrevNextModel `json:"prev"`
 		Next *bizmodel.ApiArticlePrevNextModel `json:"next"`
@@ -227,7 +228,7 @@ func (this *ApiArticleController) PrevNext() {
 	if result.Next.CategoryID > 0 {
 		count++
 	}
-	this.JSONPageSuccess(result, count)
+	ctrl.JSONPageSuccess(result, count)
 }
 
 /**
@@ -237,15 +238,15 @@ func (this *ApiArticleController) PrevNext() {
  * @return {*}
  */
 // @router /api/article/article [get]
-func (this *ApiArticleController) Article() {
-	article_id, _ := this.GetInt64("article_id", 0)
-	call_index := this.GetSafeString("call_index")
-	article, err := this.BaseController.ArticleArticle(call_index, article_id)
+func (ctrl *ApiArticleController) Article() {
+	article_id, _ := ctrl.GetInt64("article_id", 0)
+	call_index := ctrl.GetSafeString("call_index")
+	article, err := ctrl.BaseController.ArticleArticle(call_index, article_id)
 	if err != nil {
 		logs.Error("", err.Error())
-		this.JSONPage(lib.CodeError, err.Error(), article, 0)
+		ctrl.JSONPage(lib.CodeError, err.Error(), article, 0)
 	}
-	this.JSONPageSuccess(article, 1)
+	ctrl.JSONPageSuccess(article, 1)
 }
 
 /**
@@ -255,16 +256,16 @@ func (this *ApiArticleController) Article() {
  * @return {*}
  */
 // @router /api/article/album [get]
-func (this *ApiArticleController) Album() {
-	article_id, _ := this.GetInt64("article_id", 0)
-	call_index := this.GetSafeString("call_index")
-	type_id, _ := this.GetInt32("type_id", 0)
-	album, err := this.BaseController.ArticleAlbum(call_index, article_id, type_id)
+func (ctrl *ApiArticleController) Album() {
+	article_id, _ := ctrl.GetInt64("article_id", 0)
+	call_index := ctrl.GetSafeString("call_index")
+	type_id, _ := ctrl.GetInt32("type_id", 0)
+	album, err := ctrl.BaseController.ArticleAlbum(call_index, article_id, type_id)
 	if err != nil {
 		logs.Error("", err.Error())
-		this.JSONPage(lib.CodeError, err.Error(), album, 0)
+		ctrl.JSONPage(lib.CodeError, err.Error(), album, 0)
 	}
-	this.JSONPageSuccess(album, int64(len(album)))
+	ctrl.JSONPageSuccess(album, int64(len(album)))
 }
 
 /**
@@ -274,16 +275,16 @@ func (this *ApiArticleController) Album() {
  * @return {*}
  */
 // @router /api/article/attach [get]
-func (this *ApiArticleController) Attach() {
-	article_id, _ := this.GetInt64("article_id", 0)
-	call_index := this.GetSafeString("call_index")
-	type_id, _ := this.GetInt32("type_id", 0)
-	attach, err := this.BaseController.ArticleAttach(call_index, article_id, type_id)
+func (ctrl *ApiArticleController) Attach() {
+	article_id, _ := ctrl.GetInt64("article_id", 0)
+	call_index := ctrl.GetSafeString("call_index")
+	type_id, _ := ctrl.GetInt32("type_id", 0)
+	attach, err := ctrl.BaseController.ArticleAttach(call_index, article_id, type_id)
 	if err != nil {
 		logs.Error("", err.Error())
-		this.JSONPage(lib.CodeError, err.Error(), attach, 0)
+		ctrl.JSONPage(lib.CodeError, err.Error(), attach, 0)
 	}
-	this.JSONPageSuccess(attach, int64(len(attach)))
+	ctrl.JSONPageSuccess(attach, int64(len(attach)))
 }
 
 /**
@@ -293,15 +294,15 @@ func (this *ApiArticleController) Attach() {
  * @return {*}
  */
 // @router /api/article/click [get]
-func (this *ApiArticleController) Click() {
-	article_id, _ := this.GetInt64("article_id", 0)
-	call_index := this.GetSafeString("call_index")
-	err := this.BaseController.ArticleClick(call_index, article_id)
+func (ctrl *ApiArticleController) Click() {
+	article_id, _ := ctrl.GetInt64("article_id", 0)
+	call_index := ctrl.GetSafeString("call_index")
+	err := ctrl.BaseController.ArticleClick(call_index, article_id)
 	if err != nil {
 		logs.Error("Click", err.Error())
-		this.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 	}
-	this.JSONSuccess("", nil)
+	ctrl.JSONSuccess("", nil)
 }
 
 /**
@@ -311,15 +312,15 @@ func (this *ApiArticleController) Click() {
  * @return {*}
  */
 // @router /api/article/like [get]
-func (this *ApiArticleController) Like() {
-	article_id, _ := this.GetInt64("article_id", 0)
-	call_index := this.GetSafeString("call_index")
-	err := this.BaseController.ArticleLike(call_index, article_id)
+func (ctrl *ApiArticleController) Like() {
+	article_id, _ := ctrl.GetInt64("article_id", 0)
+	call_index := ctrl.GetSafeString("call_index")
+	err := ctrl.BaseController.ArticleLike(call_index, article_id)
 	if err != nil {
 		logs.Error("Like", err.Error())
-		this.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 	}
-	this.JSONSuccess("", nil)
+	ctrl.JSONSuccess("", nil)
 }
 
 /**
@@ -329,15 +330,15 @@ func (this *ApiArticleController) Like() {
  * @return {*}
  */
 // @router /api/article/album/click [get]
-func (this *ApiArticleController) AlbumClick() {
-	article_id, _ := this.GetInt64("article_id", 0)
-	ablum_id, _ := this.GetInt64("ablum_id", 0)
-	err := this.BaseController.AlbumClick(article_id, ablum_id)
+func (ctrl *ApiArticleController) AlbumClick() {
+	article_id, _ := ctrl.GetInt64("article_id", 0)
+	ablum_id, _ := ctrl.GetInt64("ablum_id", 0)
+	err := ctrl.BaseController.AlbumClick(article_id, ablum_id)
 	if err != nil {
 		logs.Error("AlbumClick", err.Error())
-		this.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 	}
-	this.JSONSuccess("", nil)
+	ctrl.JSONSuccess("", nil)
 }
 
 /**
@@ -349,17 +350,17 @@ func (this *ApiArticleController) AlbumClick() {
  * @return {*}
  */
 // @router /api/article/property [get]
-func (this *ApiArticleController) Property() {
+func (ctrl *ApiArticleController) Property() {
 	page := 1
 	limit := 99999
-	parentId, _ := this.GetInt64("parentId")
-	articleId, _ := this.GetInt64("articleId")
-	callIndex := this.GetSafeString("callIndex")
-	title := this.GetSafeString("title")
-	property, count, err := this.BaseController.Property(page, limit, parentId, articleId, callIndex, title)
+	parentId, _ := ctrl.GetInt64("parentId")
+	articleId, _ := ctrl.GetInt64("articleId")
+	callIndex := ctrl.GetSafeString("callIndex")
+	title := ctrl.GetSafeString("title")
+	property, count, err := ctrl.BaseController.Property(page, limit, parentId, articleId, callIndex, title)
 	if err != nil {
 		logs.Error("Property", err.Error())
-		this.JSONPage(lib.CodeError, err.Error(), property, 0)
+		ctrl.JSONPage(lib.CodeError, err.Error(), property, 0)
 	}
-	this.JSONPageSuccess(property, count)
+	ctrl.JSONPageSuccess(property, count)
 }

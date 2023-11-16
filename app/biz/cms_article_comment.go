@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"gorm.io/gen"
+
 	"haedu.gov.cn/cms/app/biz/bizmodel"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
@@ -20,7 +21,7 @@ import (
  * @param {int32} reply 回复
  * @return {*}
  */
-func (this *CmsArticle) CommentPaginate(page, limit int, siteId, channelId int64, status, lock, reply int32) ([]*bizmodel.ApiArticleCommentModel, int64, error) {
+func (svc *CmsArticle) CommentPaginate(page, limit int, siteId, channelId int64, status, lock, reply int32) ([]*bizmodel.ApiArticleCommentModel, int64, error) {
 	cmtMdl, cmtDo := query.CmsArticleCommentDo()
 	artMdl, _ := query.CmsArticleDo()
 	conds := []gen.Condition{}
@@ -55,7 +56,7 @@ func (this *CmsArticle) CommentPaginate(page, limit int, siteId, channelId int64
  * @param {int64} commentId 评论ID
  * @return {*}
  */
-func (this *CmsArticle) CommentDestory(commentId int64) error {
+func (svc *CmsArticle) CommentDestory(commentId int64) error {
 	cmtMdl, cmtDo := query.CmsArticleCommentDo()
 	if _, err := cmtDo.Where(cmtMdl.CommentID.Eq(commentId)).Delete(); err != nil {
 		return err
@@ -68,7 +69,7 @@ func (this *CmsArticle) CommentDestory(commentId int64) error {
  * @param {*model.CmsArticleComment} input 评论信息
  * @return {*}
  */
-func (this *CmsArticle) CommentEdit(input *model.CmsArticleComment) error {
+func (svc *CmsArticle) CommentEdit(input *model.CmsArticleComment) error {
 	mdl, do := query.CmsArticleCommentDo()
 	var err error
 	input.ReplyTime = time.Now()
@@ -88,7 +89,7 @@ func (this *CmsArticle) CommentEdit(input *model.CmsArticleComment) error {
  * @param {int64} commentId 评论ID
  * @return {*}
  */
-func (this *CmsArticle) CommentFind(commentId int64) (*model.CmsArticleComment, error) {
+func (svc *CmsArticle) CommentFind(commentId int64) (*model.CmsArticleComment, error) {
 	mdl, do := query.CmsArticleCommentDo()
 	return do.Where(mdl.CommentID.Eq(commentId)).First()
 }
@@ -99,7 +100,7 @@ func (this *CmsArticle) CommentFind(commentId int64) (*model.CmsArticleComment, 
  * @param {int32} status 状态
  * @return {*}
  */
-func (this *CmsArticle) CommentChangeStatus(commentId int64, status int32) error {
+func (svc *CmsArticle) CommentChangeStatus(commentId int64, status int32) error {
 	mdl, do := query.CmsArticleCommentDo()
 	_, err := do.Where(mdl.CommentID.Eq(commentId)).UpdateColumns(
 		map[string]interface{}{

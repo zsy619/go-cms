@@ -5,35 +5,34 @@ import (
 	"net/http"
 
 	"github.com/beego/beego/v2/core/logs"
+	"haedu.gov.cn/tools/xcache"
+	"haedu.gov.cn/tools/xcas"
+	"haedu.gov.cn/tools/xgeneric"
+
 	"haedu.gov.cn/cms/app/biz"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/lib"
 	"haedu.gov.cn/cms/controllers"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
-	"haedu.gov.cn/tools/xcache"
-	"haedu.gov.cn/tools/xcas"
-	"haedu.gov.cn/tools/xgeneric"
 )
 
-type LoginController struct {
-	controllers.BaseController
-}
+type LoginController struct{ controllers.BaseController }
 
 // AdminLogin 管理员登录
 // @router cms/admin/login [get]
-func (c *LoginController) AdminLogin() {
-	c.Data["captcha"] = "/captcha"
-	c.TplName = "admin/login/login.html"
+func (ctrl *LoginController) AdminLogin() {
+	ctrl.Data["captcha"] = "/captcha"
+	ctrl.TplName = "admin/login/login.html"
 }
 
-func (c *LoginController) SavaAdminState(user *model.CmsAdmin) {
-	c.SetSession("adminId", user.UserID)
-	c.SetSession("adminAccount", user.UserName)
-	c.SetSession("adminName", user.UserName)
-	c.SetSession("realName", user.RealName)
-	c.SetSession("adminState", 1)
-	c.SetSession("adminLevel", 1)
-	c.SetSession("user", user)
+func (ctrl *LoginController) SavaAdminState(user *model.CmsAdmin) {
+	ctrl.SetSession("adminId", user.UserID)
+	ctrl.SetSession("adminAccount", user.UserName)
+	ctrl.SetSession("adminName", user.UserName)
+	ctrl.SetSession("realName", user.RealName)
+	ctrl.SetSession("adminState", 1)
+	ctrl.SetSession("adminLevel", 1)
+	ctrl.SetSession("user", user)
 
 	GlobalAdminId = user.UserID
 	GlobalUserType = int(user.UserType) // 1:管理员 2:学校
@@ -46,24 +45,24 @@ func (c *LoginController) SavaAdminState(user *model.CmsAdmin) {
 
 // AdminLoginVerify 管理员登录验证
 // @router cms/admin/login/verify [post]
-func (c *LoginController) AdminLoginVerify() {
+func (ctrl *LoginController) AdminLoginVerify() {
 	result := vmodel.LoginResult{
 		Code:    0,
 		Message: "登陆完成，载入中...",
 		Url:     "",
 	}
 
-	captcha := c.GetSafeString("captcha")
-	if controllers.VerifyCode(captcha) == false {
+	captcha := ctrl.GetSafeString("captcha")
+	if !controllers.VerifyCode(captcha) {
 		result.Code = 1
 		result.Message = "验证码错误"
-		c.Data["json"] = &result
-		c.ServeJSON()
+		ctrl.Data["json"] = &result
+		ctrl.ServeJSON()
 		return
 	}
 
-	username := c.GetSafeString("username")
-	password := c.GetSafeString("password")
+	username := ctrl.GetSafeString("username")
+	password := ctrl.GetSafeString("password")
 	fmt.Println(username, password, captcha)
 	adminDo := biz.NewCmsAdmin()
 	user, err := adminDo.Login(username, password, 0, biz.LoginAll)
@@ -71,43 +70,43 @@ func (c *LoginController) AdminLoginVerify() {
 		fmt.Println("登录错误：", err.Error())
 		result.Code = 2
 		result.Message = "账号密码错误"
-		c.Data["json"] = &result
-		c.ServeJSON()
+		ctrl.Data["json"] = &result
+		ctrl.ServeJSON()
 		return
 	}
-	c.SavaAdminState(user)
-	adminDo.LoginLog(user.UserID, username, "AdminLoginVerify", "", "", "OK", c.GetClientIp())
+	ctrl.SavaAdminState(user)
+	adminDo.LoginLog(user.UserID, username, "AdminLoginVerify", "", "", "OK", ctrl.GetClientIp())
 	result.Url = "/admin/index"
-	c.Data["json"] = &result
-	c.ServeJSON()
+	ctrl.Data["json"] = &result
+	ctrl.ServeJSON()
 	return
 }
 
 // Logout 退出登录
 // @router cms/admin/logout [get]
-func (c *LoginController) Logout() {
-	c.DestroySession()
-	c.Redirect("/admin/login", 302)
+func (ctrl *LoginController) Logout() {
+	ctrl.DestroySession()
+	ctrl.Redirect("/admin/login", 302)
 }
 
 // School学校登录
-func (c *LoginController) School() {
-	c.login(lib.LoginCasPathOfSchool, lib.LoginPathOfSchool, "school")
+func (ctrl *LoginController) School() {
+	ctrl.login(lib.LoginCasPathOfSchool, lib.LoginPathOfSchool, "school")
 }
 
 // Admin 管理员登录
-func (c *LoginController) Admin() {
-	c.login(lib.LoginCasPathOfAdmin, lib.LoginPathOfAdmin, "admin")
+func (ctrl *LoginController) Admin() {
+	ctrl.login(lib.LoginCasPathOfAdmin, lib.LoginPathOfAdmin, "admin")
 }
 
-func (this *LoginController) login(loginCasPath, loginPath string, kind string) {
+func (ctrl *LoginController) login(loginCasPath, loginPath string, kind string) {
 	// TOD：20220418 登录类型
 	xcache.SetDiskvString("cas_login", kind)
 	GlobalAuthFlag = kind
-	ticket := this.GetSafeString("ticket")
+	ticket := ctrl.GetSafeString("ticket")
 	fmt.Println("ticket: ", ticket)
 	if ticket == "" {
-		this.Redirect(loginCasPath, http.StatusFound)
+		ctrl.Redirect(loginCasPath, http.StatusFound)
 		return
 	}
 	url := lib.CaseServiceValidatePath + "?service=" + loginPath + "&ticket=" + ticket
@@ -117,15 +116,15 @@ func (this *LoginController) login(loginCasPath, loginPath string, kind string) 
 	if err != nil {
 		logs.Error(err)
 		fmt.Println("err:", err)
-		this.Redirect(loginCasPath, http.StatusFound)
-		this.StopRun()
+		ctrl.Redirect(loginCasPath, http.StatusFound)
+		ctrl.StopRun()
 		return
 	}
 	// fmt.Println("--------------------------------------------------------:::", serviceResponse)
 	if serviceResponse.Failure != nil {
 		fmt.Println("error: ", serviceResponse.Failure.Message)
-		this.Ctx.ResponseWriter.Write([]byte(serviceResponse.Failure.Message))
-		this.StopRun()
+		ctrl.Ctx.ResponseWriter.Write([]byte(serviceResponse.Failure.Message))
+		ctrl.StopRun()
 	}
 	if serviceResponse.Success != nil {
 		// 类型检查
@@ -138,9 +137,9 @@ func (this *LoginController) login(loginCasPath, loginPath string, kind string) 
 				}
 			}
 			if kindx != kind {
-				this.Ctx.ResponseWriter.Write([]byte("invalid user type"))
+				ctrl.Ctx.ResponseWriter.Write([]byte("invalid user type"))
 				fmt.Println("invalid user type")
-				this.StopRun()
+				ctrl.StopRun()
 			}
 		}
 
@@ -166,22 +165,22 @@ func (this *LoginController) login(loginCasPath, loginPath string, kind string) 
 			err := userDo.AdminSave(user)
 			if err != nil {
 				fmt.Println("error: ", err.Error())
-				this.Ctx.ResponseWriter.Write([]byte("创建用户失败"))
-				this.StopRun()
+				ctrl.Ctx.ResponseWriter.Write([]byte("创建用户失败"))
+				ctrl.StopRun()
 			}
 		}
 		user, err = userDo.FindByAccount(account)
 		if err != nil {
-			this.Ctx.ResponseWriter.Write([]byte("未能获取用户信息"))
-			this.StopRun()
+			ctrl.Ctx.ResponseWriter.Write([]byte("未能获取用户信息"))
+			ctrl.StopRun()
 		}
 		fmt.Println("user: ", user)
 		// 保存登录状态
-		this.SavaAdminState(user)
-		userDo.LoginLog(user.UserID, account, "AdminLoginCase", "", "", "OK", this.GetClientIp())
+		ctrl.SavaAdminState(user)
+		userDo.LoginLog(user.UserID, account, "AdminLoginCase", "", "", "OK", ctrl.GetClientIp())
 		url = "/admin/index"
-		this.Redirect(url, http.StatusFound)
-		this.StopRun()
+		ctrl.Redirect(url, http.StatusFound)
+		ctrl.StopRun()
 		return
 	}
 }

@@ -2,15 +2,16 @@ package biz
 
 import (
 	"fmt"
-	"github.com/beego/beego/v2/core/logs"
-	"haedu.gov.cn/cms/app/lib"
 	"strconv"
 	"time"
 
+	"github.com/beego/beego/v2/core/logs"
 	"gorm.io/gorm"
+	"haedu.gov.cn/tools/xgeneric"
+
 	"haedu.gov.cn/cms/app/biz/bizmodel"
 	"haedu.gov.cn/cms/app/dal/query"
-	"haedu.gov.cn/tools/xgeneric"
+	"haedu.gov.cn/cms/app/lib"
 )
 
 type ApiAds struct{}
@@ -19,7 +20,7 @@ func NewApiAds() *ApiAds {
 	return &ApiAds{}
 }
 
-func (this *ApiAds) get(cackeKeyPrefix string, limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiAdsModel, int64, error) {
+func (svc *ApiAds) get(cackeKeyPrefix string, limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiAdsModel, int64, error) {
 	cacheKey := fmt.Sprintf("%s_%d_%d_%s_%d_%s", cackeKeyPrefix, limit, site_id, site_flag, category_id, call_index)
 	/*if found, item := ApiCache.Get(cacheKey); found {
 		list := item.([]*bizmodel.ApiAdsModel)
@@ -68,8 +69,8 @@ func (this *ApiAds) get(cackeKeyPrefix string, limit int, site_id int64, site_fl
 * @param {string} call_index 广告分类标识
 * @return {*}
  */
-func (this *ApiAds) Get(limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiAdsModel, int64, error) {
-	return this.get("ApiAds_Get", limit, site_id, site_flag, category_id, call_index)
+func (svc *ApiAds) Get(limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiAdsModel, int64, error) {
+	return svc.get("ApiAds_Get", limit, site_id, site_flag, category_id, call_index)
 }
 
 /**
@@ -81,8 +82,8 @@ func (this *ApiAds) Get(limit int, site_id int64, site_flag string, category_id 
 * @param {string} call_index 广告分类标识
 * @return {*}
  */
-func (this *ApiAds) GetNew(limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiAdsModel, int64, error) {
-	return this.get("ApiAds_GetNew", limit, site_id, site_flag, category_id, call_index)
+func (svc *ApiAds) GetNew(limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiAdsModel, int64, error) {
+	return svc.get("ApiAds_GetNew", limit, site_id, site_flag, category_id, call_index)
 }
 
 /**
@@ -95,7 +96,7 @@ func (this *ApiAds) GetNew(limit int, site_id int64, site_flag string, category_
  * @param {string} call_index 广告分类标识
  * @return {*}
  */
-func (this *ApiAds) Paginate(page, limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiAdsModel, int64, error) {
+func (svc *ApiAds) Paginate(page, limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiAdsModel, int64, error) {
 	list := []*bizmodel.ApiAdsModel{}
 	where := " WHERE a.`status`=2 and NOW() between a.begin_time and a.end_time" +
 		xgeneric.IFF(site_flag == "", "", " AND c.flag = '"+site_flag+"'") +
@@ -129,7 +130,7 @@ func (this *ApiAds) Paginate(page, limit int, site_id int64, site_flag string, c
  * @param {int64} ads_id 广告ID
  * @return {*}
  */
-func (this *ApiAds) Click(ads_id int64) error {
+func (svc *ApiAds) Click(ads_id int64) error {
 	mdl, do := query.CmsAdsDo()
 	_, err := do.Where(mdl.AdsID.Eq(ads_id), mdl.Status.Eq(int32(StatusPass))).Updates(map[string]interface{}{
 		mdl.Click.ColumnName().String():      gorm.Expr("click + ?", 1),

@@ -2,12 +2,13 @@ package biz
 
 import (
 	"errors"
-	"haedu.gov.cn/cms/global"
 	"time"
+
+	"haedu.gov.cn/tools/xgeneric"
 
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
-	"haedu.gov.cn/tools/xgeneric"
+	"haedu.gov.cn/cms/global"
 )
 
 type CmsTag struct{}
@@ -17,7 +18,7 @@ func NewCmsTag() *CmsTag {
 }
 
 // TagClone 克隆
-func (this *CmsTag) TagClone(tagId int64) (int64, error) {
+func (svc *CmsTag) TagClone(tagId int64) (int64, error) {
 	mdl, do := query.CmsTagDo()
 	art, err := do.Where(mdl.TagID.Eq(tagId)).First()
 	if err != nil {
@@ -32,7 +33,7 @@ func (this *CmsTag) TagClone(tagId int64) (int64, error) {
 }
 
 // TagChangeStatus 修改状态
-func (this *CmsTag) TagChangeStatus(tagId int64, status int32) error {
+func (svc *CmsTag) TagChangeStatus(tagId int64, status int32) error {
 	mdl, do := query.CmsTagDo()
 	_, err := do.Where(mdl.TagID.Eq(tagId)).UpdateColumns(
 		map[string]interface{}{
@@ -44,7 +45,7 @@ func (this *CmsTag) TagChangeStatus(tagId int64, status int32) error {
 }
 
 // TagPaginate 分页查询
-func (this *CmsTag) TagPaginate(page, limit int, channelId int64, name, title string, status int32, siteId ...int64) ([]*model.CmsTag, int64, error) {
+func (svc *CmsTag) TagPaginate(page, limit int, channelId int64, name, title string, status int32, siteId ...int64) ([]*model.CmsTag, int64, error) {
 	mdl, do := query.CmsTagDo()
 	if len(siteId) > 0 {
 		do = do.Where(mdl.SiteID.In(siteId...))
@@ -62,13 +63,13 @@ func (this *CmsTag) TagPaginate(page, limit int, channelId int64, name, title st
 }
 
 // TagFind 获取
-func (this *CmsTag) TagFind(tagId int64) (*model.CmsTag, error) {
+func (svc *CmsTag) TagFind(tagId int64) (*model.CmsTag, error) {
 	mdl, do := query.CmsTagDo()
 	return do.Where(mdl.TagID.Eq(tagId)).First()
 }
 
 // TagSave 保存或更新
-func (this *CmsTag) TagSave(input *model.CmsTag) error {
+func (svc *CmsTag) TagSave(input *model.CmsTag) error {
 	mdl, do := query.CmsTagDo()
 	if input.Name != "" {
 		if count, _ := do.Where(mdl.TagID.Neq(input.TagID), mdl.SiteID.Eq(input.SiteID), mdl.Name.Eq(input.Name)).Count(); count > 0 {
@@ -108,7 +109,7 @@ func (this *CmsTag) TagSave(input *model.CmsTag) error {
  * @param {int64} tagId ID
  * @return {*}
  */
-func (this *CmsTag) TagDestory(tagId int64) error {
+func (svc *CmsTag) TagDestory(tagId int64) error {
 	mdl, do := query.CmsTagDo()
 	if _, err := do.Where(mdl.TagID.Eq(tagId)).Delete(); err != nil {
 		return err
@@ -122,7 +123,7 @@ func (this *CmsTag) TagDestory(tagId int64) error {
  * @param {int32} sortId 排序
  * @return {*}
  */
-func (this *CmsTag) TagSaveSortId(tagId int64, sortId int32) error {
+func (svc *CmsTag) TagSaveSortId(tagId int64, sortId int32) error {
 	mdl, do := query.CmsTagDo()
 	_, err := do.Where(mdl.TagID.Eq(tagId)).UpdateColumns(
 		map[string]interface{}{
@@ -134,7 +135,7 @@ func (this *CmsTag) TagSaveSortId(tagId int64, sortId int32) error {
 }
 
 // SiteGet 获取站点
-func (this *CmsTag) SiteGet(roleId int64, roleType string) ([]*model.CmsSite, error) {
+func (svc *CmsTag) SiteGet(roleId int64, roleType string) ([]*model.CmsSite, error) {
 	if global.IsSuper(roleType) {
 		siteList, _, _ := NewCmsSite().SitePaginate(1, 999999, "", "")
 		return siteList, nil

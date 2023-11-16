@@ -6,12 +6,12 @@ import (
 
 type CacheController struct{ BaseController }
 
-func (this *CacheController) Index() {
-	this.display()
+func (ctrl *CacheController) Index() {
+	ctrl.display()
 }
 
 // GetList 获取缓存列表
-func (this *CacheController) GetList() {
+func (ctrl *CacheController) GetList() {
 	items := []*lib.CacheItemModel{
 		// 导航相关缓存
 		{Key: lib.NavGetCache.Key, Len: lib.NavGetCache.Length() + lib.NavGetByFlagCache.Length() + lib.NavCategoryGetCache.Length(), Note: lib.NavGetCache.Note, Expired: lib.NavGetCache.Expired},
@@ -60,12 +60,12 @@ func (this *CacheController) GetList() {
 		{Key: lib.WechatAccountCache.Key, Len: lib.WechatAccountCache.Length(), Note: lib.WechatAccountCache.Note, Expired: lib.WechatAccountCache.Expired},
 		{Key: lib.WechatVerifyCache.Key, Len: lib.WechatVerifyCache.Length(), Note: lib.WechatVerifyCache.Note, Expired: lib.WechatVerifyCache.Expired},*/
 	}
-	this.JSONPage(lib.CodeSuccess, "", items, int64(len(items)))
+	ctrl.JSONPage(lib.CodeSuccess, "", items, int64(len(items)))
 }
 
 // Reset 重置缓存
-func (this *CacheController) Reset() {
-	cacheKey := this.GetSafeString("cacheKey")
+func (ctrl *CacheController) Reset() {
+	cacheKey := ctrl.GetSafeString("cacheKey")
 	switch cacheKey {
 	case "CategoryNavCache":
 		lib.CategoryNavCache.Reset()
@@ -102,5 +102,5 @@ func (this *CacheController) Reset() {
 		lib.WechatAccountCache.Reset()
 		lib.WechatVerifyCache.Reset()
 	}
-	this.JSONSuccess("重置成功", nil)
+	ctrl.JSONSuccess("重置成功", nil)
 }

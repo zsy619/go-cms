@@ -5,62 +5,63 @@ import (
 	"time"
 
 	"github.com/beego/beego/v2/core/logs"
+	"haedu.gov.cn/tools/xjson"
+
 	"haedu.gov.cn/cms/app/biz"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
-	"haedu.gov.cn/tools/xjson"
 )
 
-func (c *ArticleController) Comment() {
-	channelId, _ := c.GetInt64("channelId")
+func (ctrl *ArticleController) Comment() {
+	channelId, _ := ctrl.GetInt64("channelId")
 	if channelId <= 0 {
-		c.Abort("404")
-		c.StopRun()
+		ctrl.Abort("404")
+		ctrl.StopRun()
 		return
 	}
-	c.Data["channelId"] = channelId
+	ctrl.Data["channelId"] = channelId
 	// 获取角色权限
-	roleMap := c.RolePowerGet("channel_" + strconv.FormatInt(channelId, 10) + "_comment")
-	c.Data["roleMap"] = roleMap
-	c.display()
+	roleMap := ctrl.RolePowerGet("channel_" + strconv.FormatInt(channelId, 10) + "_comment")
+	ctrl.Data["roleMap"] = roleMap
+	ctrl.display()
 }
 
-func (c *ArticleController) CommentPaginate() {
-	page, limit := c.GetPagingParameters()
-	channelId, _ := c.GetInt64("channelId")
-	siteId, _ := c.GetInt64("siteId")
-	status, _ := c.GetInt32("status")
-	lock, _ := c.GetInt32("lock")
-	reply, _ := c.GetInt32("reply")
+func (ctrl *ArticleController) CommentPaginate() {
+	page, limit := ctrl.GetPagingParameters()
+	channelId, _ := ctrl.GetInt64("channelId")
+	siteId, _ := ctrl.GetInt64("siteId")
+	status, _ := ctrl.GetInt32("status")
+	lock, _ := ctrl.GetInt32("lock")
+	reply, _ := ctrl.GetInt32("reply")
 	list, count, err := biz.NewCmsArticle().CommentPaginate(page, limit, siteId, channelId, status, lock, reply)
 	if err != nil {
 		logs.Error("CommentPaginate", err.Error())
 	}
-	c.JSONPageSuccess(list, count)
+	ctrl.JSONPageSuccess(list, count)
 }
 
-func (c *ArticleController) CommentEdit() {
-	if c.IsPost() {
+func (ctrl *ArticleController) CommentEdit() {
+	if ctrl.IsPost() {
 		mdl := model.CmsArticleComment{}
-		if err := c.ParseForm(&mdl); err != nil {
+		if err := ctrl.ParseForm(&mdl); err != nil {
 			logs.Error("CommentEdit", err.Error())
-			c.JSONError(err.Error())
+			ctrl.JSONError(err.Error())
 		}
 		if err := biz.NewCmsArticle().CommentEdit(&mdl); err != nil {
 			logs.Error("CommentEdit", err.Error())
-			c.JSONError(err.Error())
+			ctrl.JSONError(err.Error())
 			return
 		}
-		c.JSONSuccess("保存成功", nil)
+		ctrl.JSONSuccess("保存成功", nil)
 	}
-	channelId, _ := c.GetInt64("channelId")
+	channelId, _ := ctrl.GetInt64("channelId")
 	if channelId <= 0 {
-		c.Abort("404")
-		c.StopRun()
+		ctrl.Abort("404")
+		ctrl.StopRun()
 		return
 	}
-	commentId, _ := c.GetInt64("commentId")
-	clone, _ := c.GetInt("clone")
+	commentId, _ := ctrl.GetInt64("commentId")
+	clone, _ := ctrl.GetInt("clone")
 	mdl, err := biz.NewCmsArticle().CommentFind(commentId)
 	if err != nil {
 		mdl = &model.CmsArticleComment{
@@ -73,36 +74,36 @@ func (c *ArticleController) CommentEdit() {
 	if clone == 1 {
 		mdl.CommentID = 0
 	}
-	c.Data["mdl"] = mdl
+	ctrl.Data["mdl"] = mdl
 	// 获取角色权限
-	roleMap := c.RolePowerGet("channel_" + strconv.FormatInt(channelId, 10) + "_comment")
-	c.Data["roleMap"] = roleMap
-	c.display()
+	roleMap := ctrl.RolePowerGet("channel_" + strconv.FormatInt(channelId, 10) + "_comment")
+	ctrl.Data["roleMap"] = roleMap
+	ctrl.display()
 }
 
-func (c *ArticleController) CommentChangeStatus() {
+func (ctrl *ArticleController) CommentChangeStatus() {
 	var mdl vmodel.Comment_ChangeStatusModel
-	if err := xjson.Unmarshal(c.Ctx.Input.RequestBody, &mdl); err != nil {
+	if err := xjson.Unmarshal(ctrl.Ctx.Input.RequestBody, &mdl); err != nil {
 		logs.Error("ArticleChangeStatus", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 		return
 	}
 	for _, commentId := range mdl.CommentIds {
 		if err := biz.NewCmsArticle().CommentChangeStatus(commentId, mdl.Status); err != nil {
 			logs.Error("CommentChangeStatus", err.Error())
-			c.JSONError(err.Error())
+			ctrl.JSONError(err.Error())
 			return
 		}
 	}
-	c.JSONSuccess("更改状态成功", nil)
+	ctrl.JSONSuccess("更改状态成功", nil)
 }
 
-func (c *ArticleController) CommentDestory() {
-	commentId, _ := c.GetInt64("commentId")
+func (ctrl *ArticleController) CommentDestory() {
+	commentId, _ := ctrl.GetInt64("commentId")
 	if err := biz.NewCmsArticle().CommentDestory(commentId); err != nil {
 		logs.Error("CommentDestory", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 		return
 	}
-	c.JSONSuccess("删除成功", nil)
+	ctrl.JSONSuccess("删除成功", nil)
 }

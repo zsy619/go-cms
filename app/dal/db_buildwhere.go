@@ -16,9 +16,10 @@ import (
 func BuildWhere(db *gorm.DB, where interface{}) (*gorm.DB, error) {
 	var err error
 	t := reflect.TypeOf(where).Kind()
-	if t == reflect.Struct || t == reflect.Map {
+	switch t {
+	case reflect.Struct, reflect.Map:
 		db = db.Where(where)
-	} else if t == reflect.Slice {
+	case reflect.Slice:
 		for _, item := range where.([]interface{}) {
 			item := item.([]interface{})
 			column := item[0]
@@ -29,7 +30,7 @@ func BuildWhere(db *gorm.DB, where interface{}) (*gorm.DB, error) {
 				}
 				columnstr := column.(string)
 				// 拼接参数形式
-				if strings.Index(columnstr, "?") > -1 {
+				if strings.Contains(columnstr, "?") {
 					db = db.Where(column, item[1:]...)
 				} else {
 					cond := "and" // cond
@@ -58,10 +59,10 @@ func BuildWhere(db *gorm.DB, where interface{}) (*gorm.DB, error) {
 					   'not similar to', 'not ilike', '~~*', '!~~*',
 					*/
 
-					if strings.Index(" in notin ", _opt) > -1 {
+					if strings.Contains(" in notin ", _opt) {
 						// val 是数组类型
 						column = columnstr + " " + opt + " (?)"
-					} else if strings.Index(" = < > <= >= <> != <=> like likebinary notlike ilike rlike regexp notregexp", _opt) > -1 {
+					} else if strings.Contains(" = < > <= >= <> != <=> like likebinary notlike ilike rlike regexp notregexp", _opt) {
 						column = columnstr + " " + opt + " ?"
 					}
 
@@ -90,7 +91,7 @@ func BuildWhere(db *gorm.DB, where interface{}) (*gorm.DB, error) {
 				}
 			}
 		}
-	} else {
+	default:
 		return nil, errors.New("参数有误")
 	}
 	return db, nil

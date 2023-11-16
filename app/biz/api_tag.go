@@ -2,15 +2,16 @@ package biz
 
 import (
 	"fmt"
-	"haedu.gov.cn/cms/app/lib"
 	"strconv"
 	"time"
 
 	"github.com/beego/beego/v2/core/logs"
 	"gorm.io/gorm"
+	"haedu.gov.cn/tools/xgeneric"
+
 	"haedu.gov.cn/cms/app/biz/bizmodel"
 	"haedu.gov.cn/cms/app/dal/query"
-	"haedu.gov.cn/tools/xgeneric"
+	"haedu.gov.cn/cms/app/lib"
 )
 
 type ApiTag struct{}
@@ -19,7 +20,7 @@ func NewApiTag() *ApiTag {
 	return &ApiTag{}
 }
 
-func (this *ApiTag) get(cackeKeyPrefix string, limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTagModel, int64, error) {
+func (svc *ApiTag) get(cackeKeyPrefix string, limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTagModel, int64, error) {
 	if limit <= 0 {
 		limit = 10
 	}
@@ -71,8 +72,8 @@ func (this *ApiTag) get(cackeKeyPrefix string, limit int, site_id int64, site_fl
  * @param {int64} channel_id 栏目ID
  * @return {*}
  */
-func (this *ApiTag) Get(limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTagModel, int64, error) {
-	return this.get("ApiTag_Get", limit, site_id, site_flag, channel_id)
+func (svc *ApiTag) Get(limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTagModel, int64, error) {
+	return svc.get("ApiTag_Get", limit, site_id, site_flag, channel_id)
 }
 
 /**
@@ -83,8 +84,8 @@ func (this *ApiTag) Get(limit int, site_id int64, site_flag string, channel_id i
  * @param {int64} channelId 栏目ID
  * @return {*}
  */
-func (this *ApiTag) GetNew(limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTagModel, int64, error) {
-	return this.get("ApiTag_GetNew", limit, site_id, site_flag, channel_id)
+func (svc *ApiTag) GetNew(limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTagModel, int64, error) {
+	return svc.get("ApiTag_GetNew", limit, site_id, site_flag, channel_id)
 }
 
 /**
@@ -93,7 +94,7 @@ func (this *ApiTag) GetNew(limit int, site_id int64, site_flag string, channel_i
  * @param {string} name 标签名称
  * @return {*}
  */
-func (this *ApiTag) Find(tag_id int64, name string) (*bizmodel.ApiTagModel, error) {
+func (svc *ApiTag) Find(tag_id int64, name string) (*bizmodel.ApiTagModel, error) {
 	cacheKey := fmt.Sprintf("ApiTag_Find_%d_%s", tag_id, name)
 	if found, item := lib.TagFindCache.Get(cacheKey); found {
 		tag := item.(*bizmodel.ApiTagModel)
@@ -122,7 +123,7 @@ func (this *ApiTag) Find(tag_id int64, name string) (*bizmodel.ApiTagModel, erro
  * @param {int64} tag_id 标签ID
  * @return {*}
  */
-func (this *ApiTag) Click(tag_id int64) error {
+func (svc *ApiTag) Click(tag_id int64) error {
 	mdl, do := query.CmsTagDo()
 	_, err := do.Where(mdl.TagID.Eq(tag_id), mdl.Status.Eq(int32(StatusPass))).Updates(map[string]interface{}{
 		mdl.Click.ColumnName().String():      gorm.Expr("click + ?", 1),
@@ -149,7 +150,7 @@ func (this *ApiTag) Click(tag_id int64) error {
  * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
  * @return {*}
  */
-func (this *ApiTag) ArticlePaginate(page, limit int, tag_name string, channel_id int64, channel_name string, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide, is_search int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
+func (svc *ApiTag) ArticlePaginate(page, limit int, tag_name string, channel_id int64, channel_name string, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide, is_search int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
 	order_by = xgeneric.IFF(order_by == "", "sort_id", order_by)
 	where := xgeneric.IFF(channel_id <= 0, "", " And b.channel_id="+strconv.FormatInt(channel_id, 10)) +
 		xgeneric.IFF(channel_name == "", "", " And c.name='"+channel_name+"'") +
@@ -187,7 +188,7 @@ func (this *ApiTag) ArticlePaginate(page, limit int, tag_name string, channel_id
 	return list, count, err
 }
 
-func (this *ApiTag) ArtilceTop(limit int, tag_name string) ([]*bizmodel.ApiArticleListModel, int64, error) {
+func (svc *ApiTag) ArtilceTop(limit int, tag_name string) ([]*bizmodel.ApiArticleListModel, int64, error) {
 	if limit <= 0 {
 		limit = 10
 	}
@@ -197,7 +198,7 @@ func (this *ApiTag) ArtilceTop(limit int, tag_name string) ([]*bizmodel.ApiArtic
 		logs.Debug("ArticleTop[Cache]::", "cacheKey", cacheKey, "TagArticle", list)
 		return list, int64(len(list)), nil
 	}
-	list, _, err := this.ArticlePaginate(1, limit, tag_name, 0, "", 0, "", "", 0, 0, 0, 0, 0, "")
+	list, _, err := svc.ArticlePaginate(1, limit, tag_name, 0, "", 0, "", "", 0, 0, 0, 0, 0, "")
 	if err != nil {
 		return []*bizmodel.ApiArticleListModel{}, 0, err
 	}

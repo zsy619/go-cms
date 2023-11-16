@@ -3,12 +3,13 @@ package biz
 import (
 	"errors"
 	"fmt"
-	"github.com/beego/beego/v2/core/logs"
-	"haedu.gov.cn/cms/app/lib"
 	"time"
+
+	"github.com/beego/beego/v2/core/logs"
 
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
+	"haedu.gov.cn/cms/app/lib"
 )
 
 type WeixinMpVerify struct{}
@@ -17,7 +18,7 @@ func NewWeixinMpVerify() *WeixinMpVerify {
 	return &WeixinMpVerify{}
 }
 
-func (this *WeixinMpVerify) Get(accountId int64) ([]*model.WeixinMpVerify, error) {
+func (svc *WeixinMpVerify) Get(accountId int64) ([]*model.WeixinMpVerify, error) {
 	mdl, do := query.WeixinMpVerifyDo()
 	return do.Where(mdl.AccountID.Eq(accountId)).Order(mdl.SortID).Find()
 }
@@ -26,7 +27,7 @@ func (this *WeixinMpVerify) Get(accountId int64) ([]*model.WeixinMpVerify, error
  * @description: 获取缓存
  * @return {*}
  */
-func (this *WeixinMpVerify) GetCache() ([]*model.WeixinMpVerify, error) {
+func (svc *WeixinMpVerify) GetCache() ([]*model.WeixinMpVerify, error) {
 	cacheKey := fmt.Sprintf("%s_%d", "Weixin_Mp_Verify", 0)
 	/*if found, item := ApiCache.Get(cacheKey); found {
 		list := item.([]*model.WeixinMpVerify)
@@ -40,7 +41,7 @@ func (this *WeixinMpVerify) GetCache() ([]*model.WeixinMpVerify, error) {
 	}
 	mdl, do := query.WeixinMpVerifyDo()
 	list, err := do.Order(mdl.SortID).Find()
-	if list != nil && len(list) > 0 {
+	if len(list) > 0 {
 		// ApiCache.Set(cacheKey, list, 60*60*24)
 		lib.WechatVerifyCache.Set(cacheKey, list)
 	}
@@ -51,18 +52,18 @@ func (this *WeixinMpVerify) GetCache() ([]*model.WeixinMpVerify, error) {
  * @description: 刷新缓存
  * @return {*}
  */
-func (this *WeixinMpVerify) RefeshCache() {
+func (svc *WeixinMpVerify) RefeshCache() {
 	cacheKey := fmt.Sprintf("%s_%d", "Weixin_Mp_Verify", 0)
 	ApiCache.Delete(cacheKey)
-	_, _ = this.GetCache()
+	_, _ = svc.GetCache()
 }
 
-func (this *WeixinMpVerify) Find(verifyId int64) (*model.WeixinMpVerify, error) {
+func (svc *WeixinMpVerify) Find(verifyId int64) (*model.WeixinMpVerify, error) {
 	mdl, do := query.WeixinMpVerifyDo()
 	return do.Where(mdl.VerifyID.Eq(verifyId)).First()
 }
 
-func (this *WeixinMpVerify) Save(m *model.WeixinMpVerify) error {
+func (svc *WeixinMpVerify) Save(m *model.WeixinMpVerify) error {
 	if m == nil || m.AccountID <= 0 {
 		return errors.New("参数错误")
 	}
@@ -86,13 +87,13 @@ func (this *WeixinMpVerify) Save(m *model.WeixinMpVerify) error {
 	}
 }
 
-func (this *WeixinMpVerify) Destory(verifyId int64) error {
+func (svc *WeixinMpVerify) Destory(verifyId int64) error {
 	mdl, do := query.WeixinMpVerifyDo()
 	_, err := do.Where(mdl.VerifyID.Eq(verifyId)).Delete()
 	return err
 }
 
-func (this *WeixinMpVerify) SaveSortId(verifyId int64, sortId int32) error {
+func (svc *WeixinMpVerify) SaveSortId(verifyId int64, sortId int32) error {
 	mdl, do := query.WeixinMpVerifyDo()
 	_, err := do.Where(mdl.VerifyID.Eq(verifyId)).UpdateColumns(
 		map[string]interface{}{

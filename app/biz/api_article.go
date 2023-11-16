@@ -2,17 +2,18 @@ package biz
 
 import (
 	"fmt"
-	"haedu.gov.cn/cms/app/lib"
 	"strconv"
 	"time"
 
 	"github.com/beego/beego/v2/core/logs"
 	"gorm.io/gorm"
+	"haedu.gov.cn/tools/xgeneric"
+	"haedu.gov.cn/tools/xstring"
+
 	"haedu.gov.cn/cms/app/biz/bizmodel"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/dal/query"
-	"haedu.gov.cn/tools/xgeneric"
-	"haedu.gov.cn/tools/xstring"
+	"haedu.gov.cn/cms/app/lib"
 )
 
 // ApiArticle 文章
@@ -32,7 +33,7 @@ func NewApiArticle() *ApiArticle {
  * @param {int64} article_id 文章ID
  * @return {*}
  */
-func (this *ApiArticle) CategoryNav(channel_name string, channel_id int64, call_index string, category_id int64, article_id int64) ([]*bizmodel.ApiCategoryNav, error) {
+func (svc *ApiArticle) CategoryNav(channel_name string, channel_id int64, call_index string, category_id int64, article_id int64) ([]*bizmodel.ApiCategoryNav, error) {
 	if article_id > 0 && category_id <= 0 {
 		cacheKey := fmt.Sprintf("ApiArticle_CategoryNav_%d", article_id)
 		if found, item := lib.CategoryNavCache.Get(cacheKey); found {
@@ -125,7 +126,7 @@ func (this *ApiArticle) CategoryNav(channel_name string, channel_id int64, call_
  * @param {string} call_index 栏目别名
  * @return {*}
  */
-func (this *ApiArticle) CategoryGet(channel_name, call_index string) ([]*bizmodel.ApiCategoryGetModel, int64, error) {
+func (svc *ApiArticle) CategoryGet(channel_name, call_index string) ([]*bizmodel.ApiCategoryGetModel, int64, error) {
 	cacheKey := fmt.Sprintf("ApiArticle_CategoryGet_%s_%s", channel_name, call_index)
 	if found, item := lib.CategoryGetCache.Get(cacheKey); found {
 		list := item.([]*bizmodel.ApiCategoryGetModel)
@@ -164,7 +165,7 @@ func (this *ApiArticle) CategoryGet(channel_name, call_index string) ([]*bizmode
  * @param {string} call_index 栏目别名
  * @return {*}
  */
-func (this *ApiArticle) CategoryFind(category_id int64, call_index string) (*bizmodel.ApiCategoryFindModel, error) {
+func (svc *ApiArticle) CategoryFind(category_id int64, call_index string) (*bizmodel.ApiCategoryFindModel, error) {
 	cacheKey := fmt.Sprintf("ApiArticle_CategoryFind_%d_%s", category_id, call_index)
 	if found, item := lib.CategoryFindCache.Get(cacheKey); found {
 		return item.(*bizmodel.ApiCategoryFindModel), nil
@@ -206,7 +207,7 @@ func (this *ApiArticle) CategoryFind(category_id int64, call_index string) (*biz
  * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
  * @return {*}
  */
-func (this *ApiArticle) ArticleGet(limit int, channel_id int64, channel_name string, category_id int64, call_index string, is_top, is_red, is_hot, is_slide int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
+func (svc *ApiArticle) ArticleGet(limit int, channel_id int64, channel_name string, category_id int64, call_index string, is_top, is_red, is_hot, is_slide int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
 	order_by = xgeneric.IFF(order_by == "", "a.sort_id", order_by)
 	if limit <= 0 {
 		limit = 10
@@ -258,7 +259,7 @@ func (this *ApiArticle) ArticleGet(limit int, channel_id int64, channel_name str
  * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
  * @return {*}
  */
-func (this *ApiArticle) ArticleGetNew(limit int, channel_id int64, channel_name string, category_id int64, call_index string, is_top, is_red, is_hot, is_slide int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
+func (svc *ApiArticle) ArticleGetNew(limit int, channel_id int64, channel_name string, category_id int64, call_index string, is_top, is_red, is_hot, is_slide int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
 	order_by = xgeneric.IFF(order_by == "", "a.sort_id", order_by)
 	if limit <= 0 {
 		limit = 10
@@ -305,7 +306,7 @@ func (this *ApiArticle) ArticleGetNew(limit int, channel_id int64, channel_name 
  * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
  * @return {*}
  */
-func (this *ApiArticle) ArticlePaginate(page, limit int, channel_id int64, channel_name string, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide, is_search int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
+func (svc *ApiArticle) ArticlePaginate(page, limit int, channel_id int64, channel_name string, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide, is_search int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
 	order_by = xgeneric.IFF(order_by == "", "a.sort_id", order_by)
 	where := xgeneric.IFF(channel_id <= 0, "", " And b.channel_id="+strconv.FormatInt(channel_id, 10)) +
 		xgeneric.IFF(channel_name == "", "", " And c.name='"+channel_name+"'") +
@@ -348,7 +349,7 @@ func (this *ApiArticle) ArticlePaginate(page, limit int, channel_id int64, chann
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *ApiArticle) ArticleFind(call_index string, article_id int64) (*bizmodel.ApiArticleOneModel, []*bizmodel.ApiAlbumModel, []*bizmodel.ApiAttachModel, []*bizmodel.ApiPropertyModel, error) {
+func (svc *ApiArticle) ArticleFind(call_index string, article_id int64) (*bizmodel.ApiArticleOneModel, []*bizmodel.ApiAlbumModel, []*bizmodel.ApiAttachModel, []*bizmodel.ApiPropertyModel, error) {
 	mdl, do := query.CmsArticleDo()
 	if call_index != "" {
 		if article_id <= 0 {
@@ -393,7 +394,7 @@ func (this *ApiArticle) ArticleFind(call_index string, article_id int64) (*bizmo
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *ApiArticle) PrevNext(call_index string, category_id, article_id int64) (prev *bizmodel.ApiArticlePrevNextModel, next *bizmodel.ApiArticlePrevNextModel) {
+func (svc *ApiArticle) PrevNext(call_index string, category_id, article_id int64) (prev *bizmodel.ApiArticlePrevNextModel, next *bizmodel.ApiArticlePrevNextModel) {
 	_, do := query.CmsArticleDo()
 	field := `a.*` +
 		`,b.call_index as category_call_index,b.title as category_title,b.link_url as category_link_url,c.name as channel_name,c.title as channel_title,case when b.tmpl_dtl='' then c.tmpl_dtl else b.tmpl_dtl end tmpl_dtl`
@@ -424,7 +425,7 @@ func (this *ApiArticle) PrevNext(call_index string, category_id, article_id int6
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *ApiArticle) Article(call_index string, article_id int64) (*bizmodel.ApiArticleOneModel, error) {
+func (svc *ApiArticle) Article(call_index string, article_id int64) (*bizmodel.ApiArticleOneModel, error) {
 	_, do := query.CmsArticleDo()
 	field := `a.*,b.call_index as category_call_index,b.title as category_title,b.link_url as category_link_url,c.name as channel_name,c.title as channel_title,case when b.tmpl_dtl='' then c.tmpl_dtl else b.tmpl_dtl end tmpl_dtl`
 	sql := `SELECT ` + field + ` FROM cms_article a LEFT JOIN cms_article_category b ON a.category_id = b.category_id LEFT JOIN cms_site_channel c ON a.channel_id = c.channel_id`
@@ -452,7 +453,7 @@ func (this *ApiArticle) Article(call_index string, article_id int64) (*bizmodel.
  * @param {int32} type_id 分类
  * @return {*}
  */
-func (this *ApiArticle) Album(call_index string, article_id int64, type_id int32) ([]*bizmodel.ApiAlbumModel, error) {
+func (svc *ApiArticle) Album(call_index string, article_id int64, type_id int32) ([]*bizmodel.ApiAlbumModel, error) {
 	if call_index != "" {
 		article, articleDo := query.CmsArticleDo()
 		_ = articleDo.Where(article.CallIndex.Eq(call_index), article.Status.Eq(2)).Pluck(article.ArticleID, &article_id)
@@ -470,7 +471,7 @@ func (this *ApiArticle) Album(call_index string, article_id int64, type_id int32
  * @param {int32} type_id 分类
  * @return {*}
  */
-func (this *ApiArticle) Attach(call_index string, article_id int64, type_id int32) ([]*bizmodel.ApiAttachModel, error) {
+func (svc *ApiArticle) Attach(call_index string, article_id int64, type_id int32) ([]*bizmodel.ApiAttachModel, error) {
 	if call_index != "" {
 		article, articleDo := query.CmsArticleDo()
 		_ = articleDo.Where(article.CallIndex.Eq(call_index), article.Status.Eq(2)).Pluck(article.ArticleID, &article_id)
@@ -487,7 +488,7 @@ func (this *ApiArticle) Attach(call_index string, article_id int64, type_id int3
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *ApiArticle) Click(call_index string, article_id int64) error {
+func (svc *ApiArticle) Click(call_index string, article_id int64) error {
 	mdl, do := query.CmsArticleDo()
 	var err error
 	if call_index != "" {
@@ -510,7 +511,7 @@ func (this *ApiArticle) Click(call_index string, article_id int64) error {
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func (this *ApiArticle) Like(call_index string, article_id int64) error {
+func (svc *ApiArticle) Like(call_index string, article_id int64) error {
 	mdl, do := query.CmsArticleDo()
 	_, err := do.Where(mdl.ArticleID.Eq(article_id), mdl.Status.Eq(int32(StatusPass))).Updates(map[string]interface{}{
 		mdl.LikeCount.ColumnName().String():  gorm.Expr("like_count + ?", 1),
@@ -525,7 +526,7 @@ func (this *ApiArticle) Like(call_index string, article_id int64) error {
  * @param {int64} ablum_id 图片id
  * @return {*}
  */
-func (this *ApiArticle) AlbumClick(article_id, ablum_id int64) error {
+func (svc *ApiArticle) AlbumClick(article_id, ablum_id int64) error {
 	mdl, do := query.CmsAlbumDo()
 	_, err := do.Where(mdl.AlbumID.Eq(ablum_id), mdl.IsShow.Eq(1)).Updates(map[string]interface{}{
 		mdl.Click.ColumnName().String():      gorm.Expr("click + ?", 1),
@@ -542,7 +543,7 @@ func (this *ApiArticle) AlbumClick(article_id, ablum_id int64) error {
  * @param {int64} title 自定义属性名称
  * @return {*}
  */
-func (this *ApiArticle) Property(page, limit int, parentId, articleId int64, callIndex, title string) ([]*model.CmsArticleProperty, int64, error) {
+func (svc *ApiArticle) Property(page, limit int, parentId, articleId int64, callIndex, title string) ([]*model.CmsArticleProperty, int64, error) {
 	mdl, do := query.CmsArticlePropertyDo()
 	if parentId > 0 {
 		do = do.Where(mdl.ParentID.Eq(parentId))

@@ -1,6 +1,7 @@
 package mp
 
 import (
+	"fmt"
 	"sync"
 	"time"
 
@@ -27,6 +28,7 @@ func GlobalToken() models.RefreshToken {
 		}()
 	}
 	if seconds > 7100 { // 同步刷新token
+		fmt.Println("同步刷新token")
 	}
 	return _GlobalToken
 }

@@ -14,7 +14,7 @@ import (
 * @param {string} call_index 广告分类标识
 * @return {*}
  */
-func (this *BaseController) AdsGet(limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiAdsModel, int64, error) {
+func (ctrl *BaseController) AdsGet(limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiAdsModel, int64, error) {
 	return biz.NewApiAds().Get(limit, site_id, site_flag, category_id, call_index)
 }
 
@@ -27,7 +27,7 @@ func (this *BaseController) AdsGet(limit int, site_id int64, site_flag string, c
 * @param {string} call_index 广告分类标识
 * @return {*}
  */
-func (this *BaseController) AdsGetNew(limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiAdsModel, int64, error) {
+func (ctrl *BaseController) AdsGetNew(limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiAdsModel, int64, error) {
 	return biz.NewApiAds().GetNew(limit, site_id, site_flag, category_id, call_index)
 }
 
@@ -41,7 +41,7 @@ func (this *BaseController) AdsGetNew(limit int, site_id int64, site_flag string
  * @param {string} call_index 广告分类标识
  * @return {*}
  */
-func (this *BaseController) AdsPaginate(page, limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiAdsModel, int64, error) {
+func (ctrl *BaseController) AdsPaginate(page, limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiAdsModel, int64, error) {
 	return biz.NewApiAds().Paginate(page, limit, site_id, site_flag, category_id, call_index)
 }
 
@@ -50,6 +50,6 @@ func (this *BaseController) AdsPaginate(page, limit int, site_id int64, site_fla
  * @param {int64} ads_id 广告ID
  * @return {*}
  */
-func (this *BaseController) AdsClick(ads_id int64) error {
+func (ctrl *BaseController) AdsClick(ads_id int64) error {
 	return biz.NewApiAds().Click(ads_id)
 }

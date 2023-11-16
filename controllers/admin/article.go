@@ -10,53 +10,54 @@ import (
 
 	"github.com/beego/beego/v2/core/logs"
 	"golang.org/x/net/html"
+	"haedu.gov.cn/tools/xjson"
+
 	"haedu.gov.cn/cms/app/biz"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/lib"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
-	"haedu.gov.cn/tools/xjson"
 )
 
 type ArticleController struct{ BaseController }
 
-func (c *ArticleController) Index() {
-	channelId, _ := c.GetInt64("channelId")
+func (ctrl *ArticleController) Index() {
+	channelId, _ := ctrl.GetInt64("channelId")
 	if channelId <= 0 {
-		c.Abort("404")
-		c.StopRun()
+		ctrl.Abort("404")
+		ctrl.StopRun()
 		return
 	}
-	c.Data["channelId"] = channelId
+	ctrl.Data["channelId"] = channelId
 	// 获取角色权限
-	roleMap := c.RolePowerGet("channel_" + strconv.FormatInt(channelId, 10) + "_article")
-	c.Data["roleMap"] = roleMap
-	c.display()
+	roleMap := ctrl.RolePowerGet("channel_" + strconv.FormatInt(channelId, 10) + "_article")
+	ctrl.Data["roleMap"] = roleMap
+	ctrl.display()
 }
 
-func (c *ArticleController) ArticlePaginate() {
-	page, limit := c.GetPagingParameters()
-	channelId, _ := c.GetInt64("channelId")
-	categoryId, _ := c.GetInt64("categoryId")
+func (ctrl *ArticleController) ArticlePaginate() {
+	page, limit := ctrl.GetPagingParameters()
+	channelId, _ := ctrl.GetInt64("channelId")
+	categoryId, _ := ctrl.GetInt64("categoryId")
 	fmt.Println("categoryId", categoryId, "channelId", channelId)
-	title := c.GetSafeString("title")
-	callIndex := c.GetSafeString("callIndex")
-	status, _ := c.GetInt32("status")
+	title := ctrl.GetSafeString("title")
+	callIndex := ctrl.GetSafeString("callIndex")
+	status, _ := ctrl.GetInt32("status")
 	list, count, err := biz.NewCmsArticle().ArticlePaginate(page, limit, channelId, categoryId, title, callIndex, status)
 	if err != nil {
 		logs.Error("ArticlePaginate", err.Error())
 	}
-	c.JSONPageSuccess(list, count)
+	ctrl.JSONPageSuccess(list, count)
 }
 
-func (c *ArticleController) ArticleEdit() {
-	channelId, _ := c.GetInt64("channelId")
+func (ctrl *ArticleController) ArticleEdit() {
+	channelId, _ := ctrl.GetInt64("channelId")
 	if channelId <= 0 {
-		c.Abort("404")
-		c.StopRun()
+		ctrl.Abort("404")
+		ctrl.StopRun()
 		return
 	}
-	articleId, _ := c.GetInt64("articleId")
-	clone, _ := c.GetInt("clone")
+	articleId, _ := ctrl.GetInt64("articleId")
+	clone, _ := ctrl.GetInt("clone")
 	mdl, err := biz.NewCmsArticle().ArticleFind(articleId)
 	if err != nil {
 		mdl = &model.CmsArticle{
@@ -70,20 +71,20 @@ func (c *ArticleController) ArticleEdit() {
 	if clone == 1 {
 		mdl.ArticleID = 0
 	}
-	c.Data["mdl"] = mdl
+	ctrl.Data["mdl"] = mdl
 	// 获取角色权限
-	roleMap := c.RolePowerGet("channel_" + strconv.FormatInt(channelId, 10) + "_article")
-	c.Data["roleMap"] = roleMap
-	c.display()
+	roleMap := ctrl.RolePowerGet("channel_" + strconv.FormatInt(channelId, 10) + "_article")
+	ctrl.Data["roleMap"] = roleMap
+	ctrl.display()
 }
 
-func (c *ArticleController) ArticleSave() {
+func (ctrl *ArticleController) ArticleSave() {
 	mdl := model.CmsArticle{}
-	if err := c.ParseForm(&mdl); err != nil {
+	if err := ctrl.ParseForm(&mdl); err != nil {
 		logs.Error("ArticleSave", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 	}
-	propertyData := c.GetSafeString("propertyData", "")
+	propertyData := ctrl.GetSafeString("propertyData", "")
 	if mdl.ArticleID > 0 {
 		mdl.UpdateID = int32(GlobalAdminId)
 		mdl.UpdateName = GlobalAdminName
@@ -132,7 +133,7 @@ func (c *ArticleController) ArticleSave() {
 	}
 	if err := biz.NewCmsArticle().ArticleSave(&mdl); err != nil {
 		logs.Error("ArticleSave", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 		return
 	}
 	// 保存自定义属性
@@ -141,7 +142,7 @@ func (c *ArticleController) ArticleSave() {
 		err := json.Unmarshal([]byte(propertyData), &propertyList)
 		if err != nil {
 			logs.Error("ArticleSave", err.Error())
-			c.JSONError(err.Error())
+			ctrl.JSONError(err.Error())
 		}
 		for i := 0; i < len(propertyList); i++ {
 			var item model.CmsArticleProperty
@@ -162,103 +163,103 @@ func (c *ArticleController) ArticleSave() {
 
 			if err := biz.NewCmsArticle().PropertySave(&item); err != nil {
 				logs.Error("PropertySave", err.Error())
-				c.JSONError(err.Error())
+				ctrl.JSONError(err.Error())
 				return
 			}
 		}
 
 	}
-	c.JSONSuccess("保存成功", nil)
+	ctrl.JSONSuccess("保存成功", nil)
 }
 
-func (c *ArticleController) ArticleClone() {
-	articleId, _ := c.GetInt64("articleId")
+func (ctrl *ArticleController) ArticleClone() {
+	articleId, _ := ctrl.GetInt64("articleId")
 	if _, err := biz.NewCmsArticle().ArticleClone(articleId); err != nil {
 		logs.Error("ArticleClone", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 		return
 	}
-	c.JSONSuccess("复制成功", nil)
+	ctrl.JSONSuccess("复制成功", nil)
 }
 
-func (c *ArticleController) ArticleDestory() {
-	articleId, _ := c.GetInt64("articleId")
+func (ctrl *ArticleController) ArticleDestory() {
+	articleId, _ := ctrl.GetInt64("articleId")
 	if err := biz.NewCmsArticle().ArticleDestory(articleId); err != nil {
 		logs.Error("ArticleDestory", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 		return
 	}
-	c.JSONSuccess("删除成功", nil)
+	ctrl.JSONSuccess("删除成功", nil)
 }
 
-func (c *ArticleController) ArticleChangeStatus() {
+func (ctrl *ArticleController) ArticleChangeStatus() {
 	var mdl vmodel.Article_ChangeStatusModel
-	if err := xjson.Unmarshal(c.Ctx.Input.RequestBody, &mdl); err != nil {
+	if err := xjson.Unmarshal(ctrl.Ctx.Input.RequestBody, &mdl); err != nil {
 		logs.Error("ArticleChangeStatus", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 		return
 	}
 	for _, articleId := range mdl.ArticleIds {
 		if err := biz.NewCmsArticle().ArticleChangeStatus(articleId, mdl.Status); err != nil {
 			logs.Error("ArticleChangeStatus", err.Error())
-			c.JSONError(err.Error())
+			ctrl.JSONError(err.Error())
 			return
 		}
 	}
-	c.JSONSuccess("更改状态成功", nil)
+	ctrl.JSONSuccess("更改状态成功", nil)
 }
 
-func (c *ArticleController) ArticleSaveSortId() {
+func (ctrl *ArticleController) ArticleSaveSortId() {
 	mdls := []vmodel.Article_SaveSortIdModel{}
-	data := c.Ctx.Input.RequestBody
+	data := ctrl.Ctx.Input.RequestBody
 	fmt.Println("ArticleSaveSortId", string(data))
-	if err := xjson.Unmarshal(c.Ctx.Input.RequestBody, &mdls); err != nil {
+	if err := xjson.Unmarshal(ctrl.Ctx.Input.RequestBody, &mdls); err != nil {
 		logs.Error("ArticleSaveSortId", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 	}
 	for _, mdl := range mdls {
 		if err := biz.NewCmsArticle().ArticleSaveSortId(mdl.ArticleId, int32(mdl.SortId)); err != nil {
 			logs.Error("ArticleSaveSortId", err.Error())
-			c.JSONError(err.Error())
+			ctrl.JSONError(err.Error())
 			return
 		}
 	}
-	c.JSONSuccess("保存成功", nil)
+	ctrl.JSONSuccess("保存成功", nil)
 }
 
-func (c *ArticleController) Category() {
-	channelId, _ := c.GetInt64("channelId")
+func (ctrl *ArticleController) Category() {
+	channelId, _ := ctrl.GetInt64("channelId")
 	if channelId <= 0 {
-		c.Abort("404")
-		c.StopRun()
+		ctrl.Abort("404")
+		ctrl.StopRun()
 		return
 	}
-	c.Data["channelId"] = channelId
+	ctrl.Data["channelId"] = channelId
 	// 获取角色权限
-	roleMap := c.RolePowerGet("channel_" + strconv.FormatInt(channelId, 10) + "_category")
-	c.Data["roleMap"] = roleMap
-	c.display()
+	roleMap := ctrl.RolePowerGet("channel_" + strconv.FormatInt(channelId, 10) + "_category")
+	ctrl.Data["roleMap"] = roleMap
+	ctrl.display()
 }
 
-func (c *ArticleController) CategoryFind() {
-	channelId, _ := c.GetInt64("channelId")
+func (ctrl *ArticleController) CategoryFind() {
+	channelId, _ := ctrl.GetInt64("channelId")
 	list, count, err := biz.NewCmsArticle().CategoryPaginate(1, 99999, channelId, "", "")
 	if err != nil {
 		logs.Error("CategoryFind", err.Error())
 	}
-	c.JSONPage(lib.CodeSuccess, "", list, count)
+	ctrl.JSONPage(lib.CodeSuccess, "", list, count)
 }
 
-func (c *ArticleController) CategoryEdit() {
-	channelId, _ := c.GetInt64("channelId")
+func (ctrl *ArticleController) CategoryEdit() {
+	channelId, _ := ctrl.GetInt64("channelId")
 	if channelId <= 0 {
-		c.Abort("404")
-		c.StopRun()
+		ctrl.Abort("404")
+		ctrl.StopRun()
 		return
 	}
-	c.Data["channelId"] = channelId
-	categoryId, _ := c.GetInt64("categoryId")
-	parentId, _ := c.GetInt64("parentId")
+	ctrl.Data["channelId"] = channelId
+	categoryId, _ := ctrl.GetInt64("categoryId")
+	parentId, _ := ctrl.GetInt64("parentId")
 	mdl, err := biz.NewCmsArticle().CategoryFind(categoryId)
 	if err != nil {
 		mdl = &model.CmsArticleCategory{
@@ -269,85 +270,85 @@ func (c *ArticleController) CategoryEdit() {
 			SortID:    99,
 		}
 	}
-	c.Data["mdl"] = mdl
+	ctrl.Data["mdl"] = mdl
 	// 获取角色权限
-	roleMap := c.RolePowerGet("channel_" + strconv.FormatInt(channelId, 10) + "_category")
-	c.Data["roleMap"] = roleMap
-	c.display()
+	roleMap := ctrl.RolePowerGet("channel_" + strconv.FormatInt(channelId, 10) + "_category")
+	ctrl.Data["roleMap"] = roleMap
+	ctrl.display()
 }
 
-func (c *ArticleController) CategorySave() {
+func (ctrl *ArticleController) CategorySave() {
 	mdl := model.CmsArticleCategory{}
-	if err := c.ParseForm(&mdl); err != nil {
+	if err := ctrl.ParseForm(&mdl); err != nil {
 		logs.Error("CategorySave", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 	}
 	if err := biz.NewCmsArticle().CategorySave(&mdl); err != nil {
 		logs.Error("CategorySave", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 		return
 	}
-	c.JSONSuccess("保存成功", nil)
+	ctrl.JSONSuccess("保存成功", nil)
 }
 
-func (c *ArticleController) CategoryAutoUrl() {
-	channelId, _ := c.GetInt64("channelId")
+func (ctrl *ArticleController) CategoryAutoUrl() {
+	channelId, _ := ctrl.GetInt64("channelId")
 	if channelId <= 0 {
-		c.JSONError("频道参数错误")
+		ctrl.JSONError("频道参数错误")
 		return
 	}
 	if err := biz.NewCmsArticle().CategoryAutoUrl(channelId); err != nil {
 		logs.Error("CategoryAutoUrl", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 		return
 	}
-	c.JSONSuccess("保存成功", nil)
+	ctrl.JSONSuccess("保存成功", nil)
 }
 
-func (c *ArticleController) CategorySaveSortId() {
+func (ctrl *ArticleController) CategorySaveSortId() {
 	mdls := []vmodel.Category_SaveSortIdModel{}
-	data := c.Ctx.Input.RequestBody
+	data := ctrl.Ctx.Input.RequestBody
 	fmt.Println("CategorySaveSortId", string(data))
-	if err := xjson.Unmarshal(c.Ctx.Input.RequestBody, &mdls); err != nil {
+	if err := xjson.Unmarshal(ctrl.Ctx.Input.RequestBody, &mdls); err != nil {
 		logs.Error("CategorySaveSortId", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 	}
 	for _, mdl := range mdls {
 		if err := biz.NewCmsArticle().CategorySaveSortId(mdl.CategoryId, int32(mdl.SortId)); err != nil {
 			logs.Error("CategorySaveSortId", err.Error())
-			c.JSONError(err.Error())
+			ctrl.JSONError(err.Error())
 			return
 		}
 	}
 	// biz.Cache_ApiArticleCategoryFind = make(map[string][]map[string]interface{})
-	c.JSONSuccess("保存成功", nil)
+	ctrl.JSONSuccess("保存成功", nil)
 }
 
-func (c *ArticleController) CategoryDestory() {
-	categoryId, _ := c.GetInt64("categoryId")
+func (ctrl *ArticleController) CategoryDestory() {
+	categoryId, _ := ctrl.GetInt64("categoryId")
 	if err := biz.NewCmsArticle().CategoryDestory(categoryId); err != nil {
 		logs.Error("CategoryDestory", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 		return
 	}
-	c.JSONSuccess("删除成功", nil)
+	ctrl.JSONSuccess("删除成功", nil)
 }
 
-func (c *ArticleController) CategoryTree() {
-	channelId, _ := c.GetInt64("channelId")
+func (ctrl *ArticleController) CategoryTree() {
+	channelId, _ := ctrl.GetInt64("channelId")
 	if channelId <= 0 {
-		c.Abort("404")
-		c.StopRun()
+		ctrl.Abort("404")
+		ctrl.StopRun()
 		return
 	}
-	categoryId, _ := c.GetInt64("categoryId")
+	categoryId, _ := ctrl.GetInt64("categoryId")
 	tree, err := biz.NewCmsArticle().CategoryTree(channelId, categoryId)
 	if err != nil {
 		logs.Error("CategoryTree", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 		return
 	}
-	c.Data["json"] = tree
-	c.ServeJSON()
-	c.StopRun()
+	ctrl.Data["json"] = tree
+	ctrl.ServeJSON()
+	ctrl.StopRun()
 }

@@ -9,23 +9,24 @@ import (
 	"path/filepath"
 	"strings"
 
+	"haedu.gov.cn/tools/xgeneric"
+
 	"haedu.gov.cn/cms/app/biz"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
-	"haedu.gov.cn/tools/xgeneric"
 )
 
-func (c *ThemeController) uploadMsg(code int32, msg string) {
-	c.Data["json"] = map[string]interface{}{
+func (ctrl *ThemeController) uploadMsg(code int32, msg string) {
+	ctrl.Data["json"] = map[string]interface{}{
 		"code": code,
 		"msg":  msg,
 	}
-	c.ServeJSON()
+	ctrl.ServeJSON()
 }
 
 // Upload 上传
 // @router /admin/theme/upload [post]
-func (c *ThemeController) Upload() {
+func (ctrl *ThemeController) Upload() {
 	// 处理步骤
 	// 1、文件上传，保存到临时目录
 	// 2、解压上传的 ZIP 文件
@@ -34,29 +35,29 @@ func (c *ThemeController) Upload() {
 	// 5、拷贝主题文件到主题目录，并入库
 	// 6、删除临时目录
 
-	typex, _ := c.GetInt("type", -1)
+	typex, _ := ctrl.GetInt("type", -1)
 	if typex == -1 {
-		c.uploadMsg(-1, "请传入模板类型")
+		ctrl.uploadMsg(-1, "请传入模板类型")
 		return
 	}
 
 	// 1. 文件上传，保存到临时目录
-	file, header, err := c.GetFile("file")
+	file, header, err := ctrl.GetFile("file")
 	if err != nil {
-		c.uploadMsg(-1, err.Error())
+		ctrl.uploadMsg(-1, err.Error())
 		return
 	}
 	defer file.Close()
 
 	tmpDir := "./Uploads/temp" // 临时目录，配置在 beego 的配置文件中
 	if err := os.MkdirAll(tmpDir, os.ModePerm); err != nil {
-		c.uploadMsg(-1, err.Error())
+		ctrl.uploadMsg(-1, err.Error())
 		return
 	}
 	filePath := filepath.Join(tmpDir, header.Filename)
-	err = c.SaveToFile("file", filePath)
+	err = ctrl.SaveToFile("file", filePath)
 	if err != nil {
-		c.uploadMsg(-1, err.Error())
+		ctrl.uploadMsg(-1, err.Error())
 		return
 	}
 
@@ -64,28 +65,28 @@ func (c *ThemeController) Upload() {
 	srcDir := filepath.Join(tmpDir, themeName)
 
 	// 2. 解压上传的 ZIP 文件
-	if _, err := c.unzip(filePath, srcDir); err != nil {
-		c.uploadMsg(-1, err.Error())
+	if _, err := ctrl.unzip(filePath, srcDir); err != nil {
+		ctrl.uploadMsg(-1, err.Error())
 		return
 	}
 
 	// 3. 检测主题是否已经存在
 	themeDir := filepath.Join("./views/themes", themeName)
 	service := biz.NewCmsTheme()
-	if c.fileExists(themeDir) || service.ThemeExists(themeName) {
-		c.uploadMsg(-1, fmt.Sprintf("主题 %s 已经存在", themeName))
+	if ctrl.fileExists(themeDir) || service.ThemeExists(themeName) {
+		ctrl.uploadMsg(-1, fmt.Sprintf("主题 %s 已经存在", themeName))
 		return
 	}
 
 	// 4. 检测必要文件是否存在
 
-	if !c.fileExists(filepath.Join(srcDir, "thumb.png")) {
+	if !ctrl.fileExists(filepath.Join(srcDir, "thumb.png")) {
 		fmt.Println(filepath.Join(srcDir, "thumb.png"))
-		c.uploadMsg(-1, "缩略图 thumb.png 不存在")
+		ctrl.uploadMsg(-1, "缩略图 thumb.png 不存在")
 		return
 	}
-	if !c.fileExists(filepath.Join(srcDir, "config.json")) {
-		c.uploadMsg(-1, "配置文件 config.json 不存在")
+	if !ctrl.fileExists(filepath.Join(srcDir, "config.json")) {
+		ctrl.uploadMsg(-1, "配置文件 config.json 不存在")
 		return
 	}
 	themConfig := vmodel.ThemeConfig{}
@@ -93,47 +94,47 @@ func (c *ThemeController) Upload() {
 	{
 		fileConfig, err := os.Open(filepath.Join(srcDir, "config.json"))
 		if err != nil {
-			c.uploadMsg(-1, err.Error())
+			ctrl.uploadMsg(-1, err.Error())
 			return
 		}
 		defer fileConfig.Close()
 
 		data, err := io.ReadAll(fileConfig)
 		if err != nil {
-			c.uploadMsg(-1, err.Error())
+			ctrl.uploadMsg(-1, err.Error())
 			return
 		}
 		err = json.Unmarshal(data, &themConfig)
 		if err != nil {
-			c.uploadMsg(-1, err.Error())
+			ctrl.uploadMsg(-1, err.Error())
 			return
 		}
 		if themConfig.Name == "" {
-			c.uploadMsg(-1, "config.json 中的 name 字段不能为空")
+			ctrl.uploadMsg(-1, "config.json 中的 name 字段不能为空")
 			return
 		}
 		if themConfig.Name != themeName {
-			c.uploadMsg(-1, "config.json 中的 name 字段必须与主题文件名相同")
+			ctrl.uploadMsg(-1, "config.json 中的 name 字段必须与主题文件名相同")
 			return
 		}
 	}
 	viewFiles := map[string]string{
 		"index.html": "首页", "channel.html": "频道", "category.html": "栏目", "article.html": "文章详情", "search.html": "搜索页",
-		"tag.html": "标签", "topic.html": "专题",
+		"tag.html": "标签", "topictrl.html": "专题",
 	}
 	for k, v := range viewFiles {
-		if !c.fileExists(filepath.Join(srcDir, "views", k)) {
-			c.uploadMsg(-1, fmt.Sprintf("views目录下必要文件 %s %s 不存在", v, k))
+		if !ctrl.fileExists(filepath.Join(srcDir, "views", k)) {
+			ctrl.uploadMsg(-1, fmt.Sprintf("views目录下必要文件 %s %s 不存在", v, k))
 			return
 		}
 	}
 	staticDir := filepath.Join(srcDir, "static")
-	if !c.fileExists(staticDir) {
+	if !ctrl.fileExists(staticDir) {
 		os.MkdirAll(srcDir, os.ModePerm)
 	}
 	staticFiles := map[string]string{"css": "样式", "js": "脚本", "images": "图片"}
 	for k := range staticFiles {
-		if !c.fileExists(filepath.Join(staticDir, k)) {
+		if !ctrl.fileExists(filepath.Join(staticDir, k)) {
 			os.MkdirAll(filepath.Join(staticDir, k), os.ModePerm)
 		}
 	}
@@ -141,11 +142,11 @@ func (c *ThemeController) Upload() {
 	// 5. 拷贝主题文件到主题目录，并入库
 	err = os.MkdirAll(themeDir, os.ModePerm)
 	if err != nil {
-		c.uploadMsg(-1, err.Error())
+		ctrl.uploadMsg(-1, err.Error())
 		return
 	}
 	if err := CopyDir(srcDir, themeDir); err != nil {
-		c.uploadMsg(-1, err.Error())
+		ctrl.uploadMsg(-1, err.Error())
 		return
 	}
 
@@ -162,30 +163,30 @@ func (c *ThemeController) Upload() {
 		Type:      int32(typex),
 	}
 	if err := service.ThemeSave(themeModel); err != nil {
-		c.uploadMsg(-1, err.Error())
+		ctrl.uploadMsg(-1, err.Error())
 		return
 	}
 
 	// 写入日志
-	biz.NewCmsAdmin().LoginLog(GlobalAdminId, GlobalAdminName, "ThemeUpload", "", "", "OK", c.GetClientIp())
+	biz.NewCmsAdmin().LoginLog(GlobalAdminId, GlobalAdminName, "ThemeUpload", "", "", "OK", ctrl.GetClientIp())
 
 	// 6. 删除临时目录
 	err = os.RemoveAll(tmpDir)
 	if err != nil {
-		c.uploadMsg(-1, err.Error())
+		ctrl.uploadMsg(-1, err.Error())
 		return
 	}
 
 	// 返回上传成功的信息
-	c.Data["json"] = map[string]interface{}{
+	ctrl.Data["json"] = map[string]interface{}{
 		"code": 0,
 		"msg":  "上传成功",
 	}
-	c.ServeJSON()
+	ctrl.ServeJSON()
 }
 
 // 解压 ZIP 文件
-func (c *ThemeController) unzip(src string, dest string) ([]string, error) {
+func (ctrl *ThemeController) unzip(src string, dest string) ([]string, error) {
 	var files []string
 
 	r, err := zip.OpenReader(src)
@@ -228,12 +229,12 @@ func (c *ThemeController) unzip(src string, dest string) ([]string, error) {
 	return files, nil
 }
 
-func (c *ThemeController) fileExists(path string) bool {
+func (ctrl *ThemeController) fileExists(path string) bool {
 	_, err := os.Stat(path)
 	return err == nil
 }
 
-func (c *ThemeController) copyFile(src string, dest string) error {
+func (ctrl *ThemeController) copyFile(src string, dest string) error {
 	input, err := os.ReadFile(src)
 	if err != nil {
 		return err

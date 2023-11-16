@@ -17,7 +17,7 @@ func NewCmsAdminNotice() *CmsAdminNotice {
 }
 
 // NoticePaginate 获取系统公告列表
-func (this *CmsAdminNotice) NoticePaginate(page, limit int, title string, status int32, adminId int64, roleType string) ([]*model.CmsAdminNotice, int64, error) {
+func (svc *CmsAdminNotice) NoticePaginate(page, limit int, title string, status int32, adminId int64, roleType string) ([]*model.CmsAdminNotice, int64, error) {
 	mdl, do := query.CmsAdminNoticeDo()
 	if title != "" {
 		do = do.Where(mdl.Title.Like("%" + title + "%"))
@@ -34,19 +34,19 @@ func (this *CmsAdminNotice) NoticePaginate(page, limit int, title string, status
 }
 
 // NoticeShow 首页展示系统公告列表
-func (this *CmsAdminNotice) NoticeShow() ([]*model.CmsAdminNotice, error) {
+func (svc *CmsAdminNotice) NoticeShow() ([]*model.CmsAdminNotice, error) {
 	mdl, do := query.CmsAdminNoticeDo()
 	return do.Where(mdl.Status.Eq(2)).Order(mdl.IsTop.Desc(), mdl.CreateTime.Desc()).Limit(6).Find()
 }
 
 // NoticeFind 通过notice_id获取详情
-func (this *CmsAdminNotice) NoticeFind(noticeId int64) (*model.CmsAdminNotice, error) {
+func (svc *CmsAdminNotice) NoticeFind(noticeId int64) (*model.CmsAdminNotice, error) {
 	mdl, do := query.CmsAdminNoticeDo()
 	return do.Where(mdl.NoticeID.Eq(noticeId)).First()
 }
 
 // NoticeDestroy 根据notice_id删除
-func (this *CmsAdminNotice) NoticeDestroy(noticeId int64) error {
+func (svc *CmsAdminNotice) NoticeDestroy(noticeId int64) error {
 	mdl, do := query.CmsAdminNoticeDo()
 	if _, err := do.Where(mdl.NoticeID.Eq(noticeId)).Delete(); err != nil {
 		return err
@@ -55,7 +55,7 @@ func (this *CmsAdminNotice) NoticeDestroy(noticeId int64) error {
 }
 
 // NoticeSave 保存
-func (this *CmsAdminNotice) NoticeSave(input *model.CmsAdminNotice) error {
+func (svc *CmsAdminNotice) NoticeSave(input *model.CmsAdminNotice) error {
 	if input.Title == "" {
 		return errors.New("标题不能为空")
 	}
@@ -89,7 +89,7 @@ func (this *CmsAdminNotice) NoticeSave(input *model.CmsAdminNotice) error {
 }
 
 // NoticeSaveSortId 更新排序
-func (this *CmsAdminNotice) NoticeSaveSortId(noticeId int64, updateId int32, updateName string, sortId int32) error {
+func (svc *CmsAdminNotice) NoticeSaveSortId(noticeId int64, updateId int32, updateName string, sortId int32) error {
 	mdl, do := query.CmsAdminNoticeDo()
 	_, err := do.Where(mdl.NoticeID.Eq(noticeId)).UpdateColumns(
 		map[string]interface{}{
@@ -103,7 +103,7 @@ func (this *CmsAdminNotice) NoticeSaveSortId(noticeId int64, updateId int32, upd
 }
 
 // NoticeChangeStatus 更新审核状态
-func (this *CmsAdminNotice) NoticeChangeStatus(noticeId int64, updateId int32, updateName string, status int32) error {
+func (svc *CmsAdminNotice) NoticeChangeStatus(noticeId int64, updateId int32, updateName string, status int32) error {
 	mdl, do := query.CmsAdminNoticeDo()
 	_, err := do.Where(mdl.NoticeID.Eq(noticeId)).UpdateColumns(
 		map[string]interface{}{

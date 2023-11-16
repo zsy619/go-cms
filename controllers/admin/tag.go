@@ -2,34 +2,35 @@ package admin
 
 import (
 	"fmt"
-	"haedu.gov.cn/cms/global"
 
 	"github.com/beego/beego/v2/core/logs"
+	"haedu.gov.cn/tools/xjson"
+
 	"haedu.gov.cn/cms/app/biz"
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/app/lib"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
-	"haedu.gov.cn/tools/xjson"
+	"haedu.gov.cn/cms/global"
 )
 
 type TagController struct{ BaseController }
 
 // Index 标签管理
 // @router /admin/tag/index [get]
-func (c *TagController) Index() {
+func (ctrl *TagController) Index() {
 	siteList, _ := biz.NewCmsTag().SiteGet(GlobalRoleId, GlobalRoleType)
-	c.Data["site"] = siteList
+	ctrl.Data["site"] = siteList
 	// 获取角色权限
-	roleMap := c.RolePowerGet("tag")
-	c.Data["roleMap"] = roleMap
-	c.display()
+	roleMap := ctrl.RolePowerGet("tag")
+	ctrl.Data["roleMap"] = roleMap
+	ctrl.display()
 }
 
 // TagEdit 编辑
 // @router /admin/tag/TagEdit [get]
-func (c *TagController) TagEdit() {
-	tagId, _ := c.GetInt64("tagId")
-	clone, _ := c.GetInt("clone")
+func (ctrl *TagController) TagEdit() {
+	tagId, _ := ctrl.GetInt64("tagId")
+	clone, _ := ctrl.GetInt("clone")
 	mdl, err := biz.NewCmsTag().TagFind(tagId)
 	if err != nil {
 		mdl = &model.CmsTag{
@@ -40,22 +41,22 @@ func (c *TagController) TagEdit() {
 	if clone == 1 {
 		mdl.TagID = 0
 	}
-	c.Data["mdl"] = mdl
+	ctrl.Data["mdl"] = mdl
 	siteList, _ := biz.NewCmsTag().SiteGet(GlobalRoleId, GlobalRoleType)
-	c.Data["site"] = siteList
+	ctrl.Data["site"] = siteList
 	// 获取角色权限
-	roleMap := c.RolePowerGet("tag")
-	c.Data["roleMap"] = roleMap
-	c.display()
+	roleMap := ctrl.RolePowerGet("tag")
+	ctrl.Data["roleMap"] = roleMap
+	ctrl.display()
 }
 
 // tagSave 保存
 // @router /admin/tag/tagSave [post]
-func (c *TagController) TagSave() {
+func (ctrl *TagController) TagSave() {
 	mdl := model.CmsTag{}
-	if err := c.ParseForm(&mdl); err != nil {
+	if err := ctrl.ParseForm(&mdl); err != nil {
 		logs.Error("TagSave", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 	}
 	if mdl.TagID <= 0 {
 		mdl.CreateID = int32(GlobalAdminId)
@@ -66,72 +67,72 @@ func (c *TagController) TagSave() {
 	}
 	if err := biz.NewCmsTag().TagSave(&mdl); err != nil {
 		logs.Error("TagSave", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 		return
 	}
-	c.JSONSuccess("保存成功", nil)
+	ctrl.JSONSuccess("保存成功", nil)
 }
 
 // tagSaveSortId 保存排序
 // @router /admin/tag/tagSaveSortId [post]
-func (c *TagController) TagSaveSortId() {
+func (ctrl *TagController) TagSaveSortId() {
 	mdls := []vmodel.Tag_SaveSortIdModel{}
-	data := c.Ctx.Input.RequestBody
+	data := ctrl.Ctx.Input.RequestBody
 	fmt.Println("TagSaveSortId", string(data))
-	if err := xjson.Unmarshal(c.Ctx.Input.RequestBody, &mdls); err != nil {
+	if err := xjson.Unmarshal(ctrl.Ctx.Input.RequestBody, &mdls); err != nil {
 		logs.Error("TagSaveSortId", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 	}
 	service := biz.NewCmsTag()
 	for _, mdl := range mdls {
 		if err := service.TagSaveSortId(mdl.TagId, int32(mdl.SortId)); err != nil {
 			logs.Error("TagSaveSortId", err.Error())
-			c.JSONError(err.Error())
+			ctrl.JSONError(err.Error())
 			return
 		}
 	}
-	c.JSONSuccess("保存成功", nil)
+	ctrl.JSONSuccess("保存成功", nil)
 }
 
 // tagDestory 删除
 // @router /admin/tag/tagDestory [post]
-func (c *TagController) TagDestory() {
-	tagId, _ := c.GetInt64("tagId")
+func (ctrl *TagController) TagDestory() {
+	tagId, _ := ctrl.GetInt64("tagId")
 	if err := biz.NewCmsTag().TagDestory(tagId); err != nil {
 		logs.Error("TagDestory", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 		return
 	}
-	c.JSONSuccess("删除成功", nil)
+	ctrl.JSONSuccess("删除成功", nil)
 }
 
 // tagChangeStatus 更改状态
 // @router /admin/tag/tagChangeStatus [post]
-func (c *TagController) TagChangeStatus() {
+func (ctrl *TagController) TagChangeStatus() {
 	var mdl vmodel.Tag_ChangeStatusModel
-	if err := xjson.Unmarshal(c.Ctx.Input.RequestBody, &mdl); err != nil {
+	if err := xjson.Unmarshal(ctrl.Ctx.Input.RequestBody, &mdl); err != nil {
 		logs.Error("TagChangeStatus", err.Error())
-		c.JSONError(err.Error())
+		ctrl.JSONError(err.Error())
 		return
 	}
 	for _, tagId := range mdl.TagIds {
 		if err := biz.NewCmsTag().TagChangeStatus(tagId, mdl.Status); err != nil {
 			logs.Error("TagChangeStatus", err.Error())
-			c.JSONError(err.Error())
+			ctrl.JSONError(err.Error())
 			return
 		}
 	}
-	c.JSONSuccess("更改状态成功", nil)
+	ctrl.JSONSuccess("更改状态成功", nil)
 }
 
 // tagPaginate 列表
 // @router /admin/tag/tagPaginate [get]
-func (c *TagController) TagPaginate() {
-	page, limit := c.GetPagingParameters()
-	siteId, _ := c.GetInt64("siteId")
-	status, _ := c.GetInt32("status")
-	title := c.GetSafeString("title")
-	name := c.GetSafeString("name")
+func (ctrl *TagController) TagPaginate() {
+	page, limit := ctrl.GetPagingParameters()
+	siteId, _ := ctrl.GetInt64("siteId")
+	status, _ := ctrl.GetInt32("status")
+	title := ctrl.GetSafeString("title")
+	name := ctrl.GetSafeString("name")
 	var siteIds []int64
 	if siteId > 0 {
 		siteIds = append(siteIds, siteId)
@@ -144,5 +145,5 @@ func (c *TagController) TagPaginate() {
 		}
 	}
 	list, count, _ := biz.NewCmsTag().TagPaginate(page, limit, -1, name, title, status, siteIds...)
-	c.JSONPage(lib.CodeSuccess, "", list, count)
+	ctrl.JSONPage(lib.CodeSuccess, "", list, count)
 }
