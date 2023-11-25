@@ -38,9 +38,9 @@ type JSONResponse struct {
 }
 
 // SetResult 返回参数赋值
-func (this *JSONResponse) SetResult(code CodeResult, message string) {
-	this.Code = code
-	this.Message = message
+func (rep *JSONResponse) SetResult(code CodeResult, message string) {
+	rep.Code = code
+	rep.Message = message
 }
 
 func NewJSONResponse(code CodeResult, message string) *JSONResponse {

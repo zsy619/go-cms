@@ -26,36 +26,36 @@ func NewCacheItemModel(key string, note string, expired int64) *CacheItemModel {
 }
 
 // Set 设置缓存
-func (this *CacheItemModel) Set(cacheKey interface{}, data interface{}, expired ...int64) bool {
+func (cache *CacheItemModel) Set(cacheKey interface{}, data interface{}, expired ...int64) bool {
 	var _expired int64
 	if len(expired) > 0 {
 		_expired = expired[0]
 	} else {
-		_expired = this.Expired
+		_expired = cache.Expired
 	}
-	return this.cache.Set(cacheKey, data, _expired)
+	return cache.cache.Set(cacheKey, data, _expired)
 }
 
 // Get 获取缓存
-func (this *CacheItemModel) Get(cacheKey interface{}) (bool, interface{}) {
-	return this.cache.Get(cacheKey)
+func (cache *CacheItemModel) Get(cacheKey interface{}) (bool, interface{}) {
+	return cache.cache.Get(cacheKey)
 }
 
 // Remove 删除缓存
-func (this *CacheItemModel) Remove(cacheKey interface{}) {
-	this.cache.Remove(cacheKey)
+func (cache *CacheItemModel) Remove(cacheKey interface{}) {
+	cache.cache.Remove(cacheKey)
 }
 
 // Length 获取缓存长度
-func (this *CacheItemModel) Length() int {
-	return this.cache.Length()
+func (cache *CacheItemModel) Length() int {
+	return cache.cache.Length()
 }
 
 // Reset 重置缓存
-func (this *CacheItemModel) Reset() {
-	this.cache.Clear()
-	this.cache.Close()
-	this.cache = xcache.NewExpiredMap()
+func (cache *CacheItemModel) Reset() {
+	cache.cache.Clear()
+	cache.cache.Close()
+	cache.cache = xcache.NewExpiredMap()
 }
 
 var (
