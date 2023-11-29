@@ -19,29 +19,29 @@ type AccessToken struct {
 }
 
 // get fresh access_token string
-func (this *AccessToken) Fresh() (string, error) {
-	if this.TmpName == "" {
-		this.TmpName = this.AppId + "-accesstoken.tmp"
+func (tkn *AccessToken) Fresh() (string, error) {
+	if tkn.TmpName == "" {
+		tkn.TmpName = tkn.AppId + "-accesstoken.tmp"
 	}
-	if this.LckName == "" {
-		this.LckName = this.TmpName + ".lck"
+	if tkn.LckName == "" {
+		tkn.LckName = tkn.TmpName + ".lck"
 	}
 	for {
-		if this.locked() {
+		if tkn.locked() {
 			time.Sleep(time.Second)
 			continue
 		}
 		break
 	}
-	fi, err := os.Stat(this.TmpName)
+	fi, err := os.Stat(tkn.TmpName)
 	if err != nil && !os.IsExist(err) {
-		return this.fetchAndStore()
+		return tkn.fetchAndStore()
 	}
 	expires := fi.ModTime().Add(2 * time.Hour).Unix()
 	if expires <= time.Now().Unix() {
-		return this.fetchAndStore()
+		return tkn.fetchAndStore()
 	}
-	tmp, err := os.Open(this.TmpName)
+	tmp, err := os.Open(tkn.TmpName)
 	if err != nil {
 		return "", err
 	}
@@ -53,24 +53,24 @@ func (this *AccessToken) Fresh() (string, error) {
 	return string(data), nil
 }
 
-func (this *AccessToken) fetchAndStore() (string, error) {
-	if err := this.lock(); err != nil {
+func (tkn *AccessToken) fetchAndStore() (string, error) {
+	if err := tkn.lock(); err != nil {
 		return "", err
 	}
-	defer this.unlock()
-	token, err := this.fetch()
+	defer tkn.unlock()
+	token, err := tkn.fetch()
 	if err != nil {
 		return "", err
 	}
 	logs.Debug(token)
-	if err := this.store(token); err != nil {
+	if err := tkn.store(token); err != nil {
 		return "", err
 	}
 	return token, nil
 }
 
-func (this *AccessToken) store(token string) error {
-	path := path.Dir(this.TmpName)
+func (tkn *AccessToken) store(token string) error {
+	path := path.Dir(tkn.TmpName)
 	fi, err := os.Stat(path)
 	if os.IsNotExist(err) {
 		if err := os.MkdirAll(path, os.ModePerm); err != nil {
@@ -80,7 +80,7 @@ func (this *AccessToken) store(token string) error {
 	if !fi.IsDir() {
 		return errors.New("path is not a directory")
 	}
-	tmp, err := os.OpenFile(this.TmpName, os.O_WRONLY|os.O_CREATE, os.ModePerm)
+	tmp, err := os.OpenFile(tkn.TmpName, os.O_WRONLY|os.O_CREATE, os.ModePerm)
 	if err != nil {
 		return err
 	}
@@ -91,11 +91,11 @@ func (this *AccessToken) store(token string) error {
 	return nil
 }
 
-func (this *AccessToken) fetch() (string, error) {
+func (tkn *AccessToken) fetch() (string, error) {
 	rtn, err := get(fmt.Sprintf("%stoken?grant_type=client_credential&appid=%s&secret=%s",
 		UrlPrefix,
-		this.AppId,
-		this.AppSecret,
+		tkn.AppId,
+		tkn.AppSecret,
 	))
 	if err != nil {
 		return "", err
@@ -103,12 +103,12 @@ func (this *AccessToken) fetch() (string, error) {
 	return rtn.AccessToken, nil
 }
 
-func (this *AccessToken) unlock() error {
-	return os.Remove(this.LckName)
+func (tkn *AccessToken) unlock() error {
+	return os.Remove(tkn.LckName)
 }
 
-func (this *AccessToken) lock() error {
-	path := path.Dir(this.LckName)
+func (tkn *AccessToken) lock() error {
+	path := path.Dir(tkn.LckName)
 	fi, err := os.Stat(path)
 	if os.IsNotExist(err) {
 		if err := os.MkdirAll(path, os.ModePerm); err != nil {
@@ -118,7 +118,7 @@ func (this *AccessToken) lock() error {
 	if !fi.IsDir() {
 		return errors.New("path is not a directory")
 	}
-	lck, err := os.Create(this.LckName)
+	lck, err := os.Create(tkn.LckName)
 	if err != nil {
 		return err
 	}
@@ -126,7 +126,7 @@ func (this *AccessToken) lock() error {
 	return nil
 }
 
-func (this *AccessToken) locked() bool {
-	_, err := os.Stat(this.LckName)
+func (tkn *AccessToken) locked() bool {
+	_, err := os.Stat(tkn.LckName)
 	return !os.IsNotExist(err)
 }

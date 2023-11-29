@@ -192,6 +192,7 @@ func (svc *CmsLink) LinkSave(input *model.CmsLink) error {
 		siteId := int64(0)
 		catMdl, catDo := query.CmsLinkCategoryDo()
 		if err := catDo.Where(catMdl.CategoryID.Eq(input.CategoryID)).Pluck(catMdl.SiteID, &siteId); err != nil {
+			fmt.Println(err.Error())
 		}
 		_, err = do.Where(mdl.LinkID.Eq(input.LinkID)).Updates(map[string]interface{}{
 			mdl.SiteID.ColumnName().String():     siteId,

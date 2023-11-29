@@ -129,7 +129,7 @@ func (c *WeixinMpVerifyController) Upload() {
 		return
 	}
 	defer file.Close()
-	if isAllow := xio.IsAllowFile(head.Filename); !isAllow {
+	if isAllow := xio.IsText(head.Filename); !isAllow {
 		result.Code = 1
 		result.Msg = "不支持的文件类型"
 		c.Data["json"] = result

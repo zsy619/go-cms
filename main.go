@@ -40,7 +40,6 @@ import (
 
 	"haedu.gov.cn/cms/app/dal/model"
 	"haedu.gov.cn/cms/controllers"
-	_ "haedu.gov.cn/cms/controllers"
 	_ "haedu.gov.cn/cms/controllers/admin"
 	_ "haedu.gov.cn/cms/controllers/funcs"
 	_ "haedu.gov.cn/cms/controllers/plugin"

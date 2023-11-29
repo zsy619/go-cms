@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"encoding/xml"
-	"errors"
 	"fmt"
 	"io"
 	"mime/multipart"
@@ -37,59 +36,59 @@ func NewMessage(appId, appSecret string, refreshToken bool) *Message {
 }
 
 // reply text message
-func (this *Message) ReplyTextMsg(rw http.ResponseWriter, content string) error {
+func (message *Message) ReplyTextMsg(rw http.ResponseWriter, content string) error {
 	var msg textMsg
 	msg.MsgType = "text"
 	msg.Content = content
-	return this.replyMsg(rw, &msg)
+	return message.replyMsg(rw, &msg)
 }
 
 // reply image message
-func (this *Message) ReplyImageMsg(rw http.ResponseWriter, mediaId string) error {
+func (message *Message) ReplyImageMsg(rw http.ResponseWriter, mediaId string) error {
 	var msg imageMsg
 	msg.MsgType = "image"
 	msg.Image.MediaId = mediaId
-	return this.replyMsg(rw, &msg)
+	return message.replyMsg(rw, &msg)
 }
 
 // reply voice message
-func (this *Message) ReplyVoiceMsg(rw http.ResponseWriter, mediaId string) error {
+func (message *Message) ReplyVoiceMsg(rw http.ResponseWriter, mediaId string) error {
 	var msg voiceMsg
 	msg.MsgType = "voice"
 	msg.Voice.MediaId = mediaId
-	return this.replyMsg(rw, &msg)
+	return message.replyMsg(rw, &msg)
 }
 
 // reply video message
-func (this *Message) ReplyVideoMsg(rw http.ResponseWriter, video *Video) error {
+func (message *Message) ReplyVideoMsg(rw http.ResponseWriter, video *Video) error {
 	var msg videoMsg
 	msg.MsgType = "video"
 	msg.Video = video
-	return this.replyMsg(rw, &msg)
+	return message.replyMsg(rw, &msg)
 }
 
 // reply music message
-func (this *Message) ReplyMusicMsg(rw http.ResponseWriter, music *Music) error {
+func (message *Message) ReplyMusicMsg(rw http.ResponseWriter, music *Music) error {
 	var msg musicMsg
 	msg.MsgType = "music"
 	msg.Music = music
-	return this.replyMsg(rw, &msg)
+	return message.replyMsg(rw, &msg)
 }
 
 // reply news  message
-func (this *Message) ReplyNewsMsg(rw http.ResponseWriter, articles *[]Article) error {
+func (message *Message) ReplyNewsMsg(rw http.ResponseWriter, articles *[]Article) error {
 	var msg newsMsg
 	msg.MsgType = "news"
 	msg.ArticleCount = len(*articles)
 	msg.Articles.Item = articles
-	return this.replyMsg(rw, &msg)
+	return message.replyMsg(rw, &msg)
 }
 
 // reply message
-func (this *Message) replyMsg(rw http.ResponseWriter, msg interface{}) error {
+func (message *Message) replyMsg(rw http.ResponseWriter, msg interface{}) error {
 	v := reflect.ValueOf(msg).Elem()
-	v.FieldByName("ToUserName").SetString(this.Request.FromUserName)
-	v.FieldByName("FromUserName").SetString(this.Request.ToUserName)
+	v.FieldByName("ToUserName").SetString(message.Request.FromUserName)
+	v.FieldByName("FromUserName").SetString(message.Request.ToUserName)
 	v.FieldByName("CreateTime").SetInt(time.Now().Unix())
 	data, err := xml.Marshal(msg)
 	if err != nil {
@@ -102,55 +101,55 @@ func (this *Message) replyMsg(rw http.ResponseWriter, msg interface{}) error {
 }
 
 // send text message
-func (this *Message) SendTextMsg(touser string, content string) error {
+func (message *Message) SendTextMsg(touser string, content string) error {
 	var msg textMsg
 	msg.MsgType = "text"
 	msg.Text.Content = content
-	return this.sendMsg(touser, &msg)
+	return message.sendMsg(touser, &msg)
 }
 
 // send image message
-func (this *Message) SendImageMsg(touser string, mediaId string) error {
+func (message *Message) SendImageMsg(touser string, mediaId string) error {
 	var msg imageMsg
 	msg.MsgType = "image"
 	msg.Image.MediaId = mediaId
-	return this.sendMsg(touser, &msg)
+	return message.sendMsg(touser, &msg)
 }
 
 // send voice message
-func (this *Message) SendVoiceMsg(touser string, mediaId string) error {
+func (message *Message) SendVoiceMsg(touser string, mediaId string) error {
 	var msg voiceMsg
 	msg.MsgType = "voice"
 	msg.Voice.MediaId = mediaId
-	return this.sendMsg(touser, &msg)
+	return message.sendMsg(touser, &msg)
 }
 
 // send video message
-func (this *Message) SendVideoMsg(touser string, video *Video) error {
+func (message *Message) SendVideoMsg(touser string, video *Video) error {
 	var msg videoMsg
 	msg.MsgType = "video"
 	msg.Video = video
-	return this.sendMsg(touser, &msg)
+	return message.sendMsg(touser, &msg)
 }
 
 // send music message
-func (this *Message) SendMusicMsg(touser string, music *Music) error {
+func (message *Message) SendMusicMsg(touser string, music *Music) error {
 	var msg musicMsg
 	msg.MsgType = "music"
 	msg.Music = music
-	return this.sendMsg(touser, &msg)
+	return message.sendMsg(touser, &msg)
 }
 
 // send news message
-func (this *Message) SendNewsMsg(touser string, articles *[]Article) error {
+func (message *Message) SendNewsMsg(touser string, articles *[]Article) error {
 	var msg newsMsg
 	msg.MsgType = "news"
 	msg.Articles.Item = articles
-	return this.sendMsg(touser, &msg)
+	return message.sendMsg(touser, &msg)
 }
 
 // send message
-func (this *Message) sendMsg(touser string, msg interface{}) error {
+func (message *Message) sendMsg(touser string, msg interface{}) error {
 	v := reflect.ValueOf(msg).Elem()
 	v.FieldByName("ToUserName").SetString(touser)
 	data, err := json.Marshal(msg)
@@ -162,7 +161,7 @@ func (this *Message) sendMsg(touser string, msg interface{}) error {
 	logs.Debug("sendMsg  ", string(data))
 	// retry
 	for i := 0; i < retryNum; i++ {
-		token := this.Request.Token
+		token := message.Request.Token
 		logs.Debug("sendMsg  ", url+token)
 		if err != nil {
 			logs.Error("sendMsg  ", err.Error())
@@ -184,26 +183,26 @@ func (this *Message) sendMsg(touser string, msg interface{}) error {
 }
 
 // 向全部用户群发图文消息
-func (this *Message) sendNewsToALl(mediaId string) error {
+func (message *Message) sendNewsToALl(mediaId string) error {
 	var news newsGroupMsg
 	news.MsgType = "mpnews"
 	news.Filter.IsToAll = true
 	news.Mpnews.MediaId = mediaId
-	return this.sendGroupMsg(news)
+	return message.sendGroupMsg(news)
 }
 
 // 向特定GroupId用户群发图文消息
-func (this *Message) sendNewsToGroup(groupId string, mediaId string) error {
+func (message *Message) sendNewsToGroup(groupId string, mediaId string) error {
 	var news newsGroupMsg
 	news.MsgType = "mpnews"
 	news.Filter.IsToAll = false
 	news.Filter.GroupId = groupId
 	news.Mpnews.MediaId = mediaId
-	return this.sendGroupMsg(news)
+	return message.sendGroupMsg(news)
 }
 
 // 群发消息
-func (this *Message) sendGroupMsg(msg interface{}) error {
+func (message *Message) sendGroupMsg(msg interface{}) error {
 	url := fmt.Sprintf("%smessage/mass/sendall?access_token=", UrlPrefix)
 	data, err := json.Marshal(msg)
 	if err != nil {
@@ -212,7 +211,7 @@ func (this *Message) sendGroupMsg(msg interface{}) error {
 	buf := bytes.NewBuffer(data)
 	// retry
 	for i := 0; i < retryNum; i++ {
-		token := this.Request.Token
+		token := message.Request.Token
 		if err != nil {
 			if i < retryNum-1 {
 				continue
@@ -231,28 +230,28 @@ func (this *Message) sendGroupMsg(msg interface{}) error {
 }
 
 // get qrcode url
-func (this *Message) GetQRCodeURL(ticket string) string {
+func (message *Message) GetQRCodeURL(ticket string) string {
 	return "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=" + ticket
 }
 
 // create permanent qrcode
-func (this *Message) CreateQRScene(sceneId int64) (string, error) {
+func (message *Message) CreateQRScene(sceneId int64) (string, error) {
 	var inf qrScene
 	inf.ActionName = "QR_SCENE"
 	inf.ActionInfo.Scene.SceneId = sceneId
-	return this.createQRCode(&inf)
+	return message.createQRCode(&inf)
 }
 
 // create temporary qrcode
-func (this *Message) CreateQRLimitScene(expireSeconds, sceneId int64) (string, error) {
+func (message *Message) CreateQRLimitScene(expireSeconds, sceneId int64) (string, error) {
 	var inf qrScene
 	inf.ExpireSeconds = expireSeconds
 	inf.ActionName = "QR_LIMIT_SCENE"
 	inf.ActionInfo.Scene.SceneId = sceneId
-	return this.createQRCode(&inf)
+	return message.createQRCode(&inf)
 }
 
-func (this *Message) createQRCode(inf *qrScene) (string, error) {
+func (message *Message) createQRCode(inf *qrScene) (string, error) {
 	data, err := json.Marshal(inf)
 	if err != nil {
 		return "", err
@@ -262,7 +261,7 @@ func (this *Message) createQRCode(inf *qrScene) (string, error) {
 	ticket := ""
 	// retry
 	for i := 0; i < retryNum; i++ {
-		token := this.Request.Token
+		token := message.Request.Token
 		if err != nil {
 			if i < retryNum-1 {
 				continue
@@ -283,11 +282,11 @@ func (this *Message) createQRCode(inf *qrScene) (string, error) {
 }
 
 // download media to file
-func (this *Message) DownloadMediaFile(mediaId, fileName string) error {
+func (message *Message) DownloadMediaFile(mediaId, fileName string) error {
 	url := fmt.Sprintf("%sget?media_id=%s&access_token=", MediaUrlPrefix, mediaId)
 	// retry
 	for i := 0; i < retryNum; i++ {
-		token := this.Request.Token
+		token := message.Request.Token
 		// if err != nil {
 		// 	if i < retryNum-1 {
 		// 		continue
@@ -321,7 +320,7 @@ func (this *Message) DownloadMediaFile(mediaId, fileName string) error {
 			if i < retryNum-1 {
 				continue
 			}
-			return errors.New(fmt.Sprintf("%d %s", rtn.ErrCode, rtn.ErrMsg))
+			return fmt.Errorf("%d %s", rtn.ErrCode, rtn.ErrMsg)
 		}
 		// media
 		f, err := os.OpenFile(fileName, os.O_WRONLY|os.O_CREATE, os.ModePerm)
@@ -344,7 +343,7 @@ func (this *Message) DownloadMediaFile(mediaId, fileName string) error {
 }
 
 // upload media to file
-func (this *Message) UploadMediaFile(mediaType, fileName string) (string, error) {
+func (message *Message) UploadMediaFile(mediaType, fileName string) (string, error) {
 	var buf bytes.Buffer
 	bw := multipart.NewWriter(&buf)
 	defer bw.Close()
@@ -367,7 +366,7 @@ func (this *Message) UploadMediaFile(mediaType, fileName string) (string, error)
 	mediaId := ""
 	// retry
 	for i := 0; i < retryNum; i++ {
-		token := this.Request.Token
+		token := message.Request.Token
 		if err != nil {
 			if i < retryNum-1 {
 				continue
@@ -388,7 +387,7 @@ func (this *Message) UploadMediaFile(mediaType, fileName string) (string, error)
 }
 
 // create custom menu
-func (this *Message) CreateCustomMenu(btn *[]Button) error {
+func (message *Message) CreateCustomMenu(btn *[]Button) error {
 	var menu struct {
 		Button *[]Button `json:"button"`
 	}
@@ -402,7 +401,7 @@ func (this *Message) CreateCustomMenu(btn *[]Button) error {
 	url := fmt.Sprintf("%smenu/create?access_token=", UrlPrefix)
 	// retry
 	for i := 0; i < retryNum; i++ {
-		token := this.Request.Token
+		token := message.Request.Token
 		if err != nil {
 			if i < retryNum-1 {
 				continue
@@ -421,7 +420,7 @@ func (this *Message) CreateCustomMenu(btn *[]Button) error {
 }
 
 // get custom menu
-func (this *Message) GetCustomMenu() ([]Button, error) {
+func (message *Message) GetCustomMenu() ([]Button, error) {
 	var menu struct {
 		Menu struct {
 			Button []Button `json:"button"`
@@ -430,7 +429,7 @@ func (this *Message) GetCustomMenu() ([]Button, error) {
 	url := fmt.Sprintf("%smenu/get?access_token=", UrlPrefix)
 	// retry
 	for i := 0; i < retryNum; i++ {
-		token := this.Request.Token
+		token := message.Request.Token
 		// if err != nil {
 		// 	if i < retryNum-1 {
 		// 		continue
@@ -465,7 +464,7 @@ func (this *Message) GetCustomMenu() ([]Button, error) {
 			if i < retryNum-1 {
 				continue
 			}
-			return nil, errors.New(fmt.Sprintf("%d %s", rtn.ErrCode, rtn.ErrMsg))
+			return nil, fmt.Errorf("%d %s", rtn.ErrCode, rtn.ErrMsg)
 		}
 		// no
 		if err := json.Unmarshal(data, &menu); err != nil {
@@ -480,11 +479,11 @@ func (this *Message) GetCustomMenu() ([]Button, error) {
 }
 
 // delete custom menu
-func (this *Message) DeleteCustomMenu() error {
+func (message *Message) DeleteCustomMenu() error {
 	url := UrlPrefix + "menu/delete?access_token="
 	// retry
 	for i := 0; i < retryNum; i++ {
-		token := this.Request.Token
+		token := message.Request.Token
 		// if err != nil {
 		// 	if i < retryNum-1 {
 		// 		continue
@@ -503,12 +502,12 @@ func (this *Message) DeleteCustomMenu() error {
 }
 
 // get user info
-func (this *Message) GetUserInfo(openId string) (UserInfo, error) {
+func (message *Message) GetUserInfo(openId string) (UserInfo, error) {
 	var uinf UserInfo
 	url := fmt.Sprintf("%suser/info?lang=zh_CN&openid=%s&access_token=", UrlPrefix, openId)
 	// retry
 	for i := 0; i < retryNum; i++ {
-		token := this.Request.Token
+		token := message.Request.Token
 		// if err != nil {
 		// 	if i < retryNum-1 {
 		// 		continue
@@ -543,7 +542,7 @@ func (this *Message) GetUserInfo(openId string) (UserInfo, error) {
 			if i < retryNum-1 {
 				continue
 			}
-			return uinf, errors.New(fmt.Sprintf("%d %s", rtn.ErrCode, rtn.ErrMsg))
+			return uinf, fmt.Errorf("%d %s", rtn.ErrCode, rtn.ErrMsg)
 		}
 		// no
 		if err := json.Unmarshal(data, &uinf); err != nil {

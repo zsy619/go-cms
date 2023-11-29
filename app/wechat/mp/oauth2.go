@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/beego/beego/v2/core/logs"
+
 	"haedu.gov.cn/cms/app/wechat/models"
 	"haedu.gov.cn/cms/app/wechat/utils"
 )
@@ -113,7 +114,7 @@ func (oauth *OAuth2) GetGlobalUserAccessToken(code string) (string, string, erro
 func (oauth *OAuth2) RefreshToken() {
 	GlobalLock.Lock()
 	defer GlobalLock.Unlock()
-	if GlobalRunning == false {
+	if !GlobalRunning {
 		GlobalRunning = true
 		oauth.RefreshGlobalAccessToken(GlobalToken().RefreshToken) // 刷新token
 	}
@@ -143,19 +144,20 @@ func (oauth *OAuth2) RefreshAccessToken(refreshToken string) (result models.ResA
 
 func (oauth *OAuth2) RefreshGlobalAccessToken(refreshToken string) {
 	go func(oauth *OAuth2) {
-		expiresIn := 7100                        // 刷新周期，提前100秒刷新
-		lastTime := time.Now()                   // 最后一次刷新时间
+		expiresIn := 7100      // 刷新周期，提前100秒刷新
+		lastTime := time.Now() // 最后一次刷新时间
+		fmt.Println("RefreshGlobalAccessToken --> ", refreshToken, lastTime)
 		if len(GlobalToken().AccessToken) == 0 { // 立即刷新
 			expiresIn = 60
 		}
 	NEW_TICK_DURATION:
 		duration := time.Duration(expiresIn) * time.Second
-		tick := time.Tick(duration)
+		tick := time.NewTicker(duration)
 		lastTime = time.Now() // 设置下次获取时间
 
 		for {
 			select {
-			case <-tick:
+			case <-tick.C:
 				logs.Debug("RefreshGlobalAccessToken --> 上次获取时间：", lastTime, " 开始获取AccessToken. ", time.Now())
 				result, err := oauth.RefreshAccessToken(GlobalToken().RefreshToken)
 				if err != nil {

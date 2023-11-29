@@ -185,6 +185,7 @@ func (svc *CmsAds) AdsSave(input *model.CmsAds) error {
 		siteId := int64(0)
 		catMdl, catDo := query.CmsLinkCategoryDo()
 		if err := catDo.Where(catMdl.CategoryID.Eq(input.CategoryID)).Pluck(catMdl.SiteID, &siteId); err != nil {
+			fmt.Println(err.Error())
 		}
 		_, err = do.Where(mdl.AdsID.Eq(input.AdsID)).Updates(map[string]interface{}{
 			mdl.SiteID.ColumnName().String():     siteId,

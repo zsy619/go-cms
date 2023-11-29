@@ -45,8 +45,8 @@ type Request struct {
 }
 
 // validate request
-func (this *Request) IsValid(rw http.ResponseWriter, req *http.Request) bool {
-	// if !this.checkSignature(req) {
+func (request *Request) IsValid(rw http.ResponseWriter, req *http.Request) bool {
+	// if !request.checkSignature(req) {
 	// 	rw.WriteHeader(http.StatusUnauthorized)
 	// 	rw.Write([]byte(http.StatusText(http.StatusUnauthorized)))
 	// 	return false
@@ -56,7 +56,7 @@ func (this *Request) IsValid(rw http.ResponseWriter, req *http.Request) bool {
 	// 	rw.Write([]byte(req.FormValue("echostr")))
 	// 	return false
 	// }
-	if err := this.parseRequest(req); err != nil {
+	if err := request.parseRequest(req); err != nil {
 		rw.WriteHeader(http.StatusBadRequest)
 		rw.Write([]byte(err.Error()))
 		return false
@@ -64,22 +64,22 @@ func (this *Request) IsValid(rw http.ResponseWriter, req *http.Request) bool {
 	return true
 }
 
-func (this *Request) parseRequest(req *http.Request) error {
+func (request *Request) parseRequest(req *http.Request) error {
 	raw, err := io.ReadAll(req.Body)
 	if err != nil {
 		return err
 	}
 	defer req.Body.Close()
 	logs.Debug("WeChat Event --> ", string(raw))
-	if err := xml.Unmarshal(raw, this); err != nil {
+	if err := xml.Unmarshal(raw, request); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (this *Request) checkSignature(req *http.Request) bool {
+func (request *Request) checkSignature(req *http.Request) bool {
 	ss := sort.StringSlice{
-		this.Token,
+		request.Token,
 		req.FormValue("timestamp"),
 		req.FormValue("nonce"),
 	}

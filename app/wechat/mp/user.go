@@ -26,8 +26,8 @@ func NewUser(appId, appSecret string, refreshToken bool) *User {
 	return message
 }
 
-func (this *User) CreateTag(tagname string) (tagid int, err error) {
-	surl := UrlPrefix + "tags/create?access_token=" + this.Request.Token
+func (usr *User) CreateTag(tagname string) (tagid int, err error) {
+	surl := UrlPrefix + "tags/create?access_token=" + usr.Request.Token
 	var p struct {
 		Tag struct {
 			Name string `json:"name"`
@@ -60,12 +60,12 @@ func (this *User) CreateTag(tagname string) (tagid int, err error) {
 	return
 }
 
-//获取公众号已创建的标签
-func (this *User) GetTag() (tags []Tag, err error) {
+// 获取公众号已创建的标签
+func (usr *User) GetTag() (tags []Tag, err error) {
 	if err != nil {
 		return
 	}
-	surl := UrlPrefix + "tags/get?access_token=" + this.Request.Token
+	surl := UrlPrefix + "tags/get?access_token=" + usr.Request.Token
 	b, err := getbytes(surl)
 	if err != nil {
 		return
@@ -85,10 +85,10 @@ func (this *User) GetTag() (tags []Tag, err error) {
 	return
 }
 
-//编辑标签
+// 编辑标签
 // https://developers.weixin.qq.com/doc/offiaccount/User_Management/User_Tag_Management.html
-func (this *User) UpdateTag(tagid int, tagname string) (err error) {
-	surl := UrlPrefix + "tags/update?access_token=" + this.Request.Token
+func (usr *User) UpdateTag(tagid int, tagname string) (err error) {
+	surl := UrlPrefix + "tags/update?access_token=" + usr.Request.Token
 	var p struct {
 		Tag struct {
 			Id   int    `json:"id"`
@@ -115,9 +115,9 @@ func (this *User) UpdateTag(tagid int, tagname string) (err error) {
 	return
 }
 
-//删除标签
-func (this *User) DelTag(tagid int) (err error) {
-	surl := UrlPrefix + "tags/delete?access_token=" + this.Request.Token
+// 删除标签
+func (usr *User) DelTag(tagid int) (err error) {
+	surl := UrlPrefix + "tags/delete?access_token=" + usr.Request.Token
 	var p struct {
 		Tag struct {
 			Id int `json:"id"`
@@ -147,8 +147,8 @@ func (this *User) DelTag(tagid int) (err error) {
 /*
 tagid 标签id, nextopenid 第一个拉取的OPENID，不填默认从头开始拉取
 */
-func (this *User) GetUserByTag(tagid int, nextopenid string) (useropenid []string, lastopenid string, err error) {
-	surl := "https://api.weixin.qq.com/cgi-bin/user/tag/get?access_token=" + this.Request.Token
+func (usr *User) GetUserByTag(tagid int, nextopenid string) (useropenid []string, lastopenid string, err error) {
+	surl := "https://api.weixin.qq.com/cgi-bin/user/tag/get?access_token=" + usr.Request.Token
 	logs.Debug(surl)
 	var p struct {
 		TagId      int    `json:"tagid"`
@@ -186,9 +186,9 @@ func (this *User) GetUserByTag(tagid int, nextopenid string) (useropenid []strin
 	return
 }
 
-//批量为用户打标签
-func (this *User) BatchTagToUsers(useropenids []string, tagid int) (err error) {
-	surl := "https://api.weixin.qq.com/cgi-bin/tags/members/batchtagging?access_token=" + this.Request.Token
+// 批量为用户打标签
+func (usr *User) BatchTagToUsers(useropenids []string, tagid int) (err error) {
+	surl := "https://api.weixin.qq.com/cgi-bin/tags/members/batchtagging?access_token=" + usr.Request.Token
 	var p struct {
 		OpenIds []string `json:"openid_list"`
 		TagId   int      `json:"tagid"`
@@ -213,9 +213,9 @@ func (this *User) BatchTagToUsers(useropenids []string, tagid int) (err error) {
 	return
 }
 
-//批量为用户取消标签
-func (this *User) BatchCancelTag(useropenid []string, tagid int) (err error) {
-	surl := "https://api.weixin.qq.com/cgi-bin/tags/members/batchuntagging?access_token=" + this.Request.Token
+// 批量为用户取消标签
+func (usr *User) BatchCancelTag(useropenid []string, tagid int) (err error) {
+	surl := "https://api.weixin.qq.com/cgi-bin/tags/members/batchuntagging?access_token=" + usr.Request.Token
 	var p struct {
 		OpenIds []string `json:"openid_list"`
 		TagId   int      `json:"tagid"`
@@ -240,9 +240,9 @@ func (this *User) BatchCancelTag(useropenid []string, tagid int) (err error) {
 	return
 }
 
-//获取用户身上的标签列表
-func (this *User) GetTagsByUser(useropenid string) (tagids []int, err error) {
-	surl := "https://api.weixin.qq.com/cgi-bin/tags/getidlist?access_token=" + this.Request.Token
+// 获取用户身上的标签列表
+func (usr *User) GetTagsByUser(useropenid string) (tagids []int, err error) {
+	surl := "https://api.weixin.qq.com/cgi-bin/tags/getidlist?access_token=" + usr.Request.Token
 	var p struct {
 		OpenId string `json:"openid"`
 	}
@@ -270,9 +270,9 @@ func (this *User) GetTagsByUser(useropenid string) (tagids []int, err error) {
 	return
 }
 
-//设置用户备注名
-func (this *User) SetRemark(useropenid string, remark string) (err error) {
-	surl := "https://api.weixin.qq.com/cgi-bin/user/info/updateremark?access_token=" + this.Request.Token
+// 设置用户备注名
+func (usr *User) SetRemark(useropenid string, remark string) (err error) {
+	surl := "https://api.weixin.qq.com/cgi-bin/user/info/updateremark?access_token=" + usr.Request.Token
 	var p struct {
 		OpenId string `json:"openid"`
 		Remark string `json:"remark"`
@@ -297,10 +297,10 @@ func (this *User) SetRemark(useropenid string, remark string) (err error) {
 	return
 }
 
-//获取用户基本信息（包括UnionID机制）
+// 获取用户基本信息（包括UnionID机制）
 // 参考：https://developers.weixin.qq.com/doc/offiaccount/User_Management/Get_users_basic_information_UnionID.html#UinonId
-func (this *User) GetUserInfo(openid string) (user UserInfo, err error) {
-	surl := "https://api.weixin.qq.com/cgi-bin/user/info?access_token=" + this.Request.Token + "&openid=" + openid + "&lang=zh_CN "
+func (usr *User) GetUserInfo(openid string) (user UserInfo, err error) {
+	surl := "https://api.weixin.qq.com/cgi-bin/user/info?access_token=" + usr.Request.Token + "&openid=" + openid + "&lang=zh_CN "
 	b, err := getbytes(surl)
 	if err != nil {
 		return
@@ -317,8 +317,8 @@ func (this *User) GetUserInfo(openid string) (user UserInfo, err error) {
 
 // 批量获取用户基本信息
 // 开发者可通过该接口来批量获取用户基本信息。最多支持一次拉取100条。
-func (this *User) BatchGetUserInfo(input UserListRequest) (users UserListReponse, err error) {
-	surl := "https://api.weixin.qq.com/cgi-bin/user/info/batchget?access_token=" + this.Request.Token
+func (usr *User) BatchGetUserInfo(input UserListRequest) (users UserListReponse, err error) {
+	surl := "https://api.weixin.qq.com/cgi-bin/user/info/batchget?access_token=" + usr.Request.Token
 	str, err := json.Marshal(input)
 	if err != nil {
 		return
@@ -341,8 +341,8 @@ nextopenid 第一个拉取的OPENID，填空默认从头开始拉取
 当公众号关注者数量超过10000时，可通过填写next_openid的值，从而多次拉取列表的方式来满足需求。
 参考：https://developers.weixin.qq.com/doc/offiaccount/User_Management/Getting_a_User_List.html
 */
-func (this *User) GetFans(nextopenid string) (fans Fans, err error) {
-	surl := "https://api.weixin.qq.com/cgi-bin/user/get?access_token=" + this.Request.Token
+func (usr *User) GetFans(nextopenid string) (fans Fans, err error) {
+	surl := "https://api.weixin.qq.com/cgi-bin/user/get?access_token=" + usr.Request.Token
 	if len(nextopenid) > 0 {
 		surl += "&next_openid=" + nextopenid
 	}

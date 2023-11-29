@@ -54,7 +54,7 @@ func (ctrl *ArticleController) Detail() {
 	if articleModel.Template == "" {
 		ctrl.TplName = ctrl.GetView(DefaultSite.Template, "article.html")
 	} else {
-		if xstring.HasSuffix(articleModel.Template, ".html", ".htm", ".tpl") == false {
+		if !xstring.HasSuffix(articleModel.Template, ".html", ".htm", ".tpl") {
 			articleModel.Template += ".html"
 		}
 		ctrl.TplName = ctrl.GetView(DefaultSite.Template, articleModel.Template)
