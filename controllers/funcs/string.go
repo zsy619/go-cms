@@ -1,6 +1,11 @@
 package funcs
 
-import "strings"
+import (
+	"strings"
+
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
+)
 
 /**
  * @description: 字符串拼接
@@ -64,7 +69,8 @@ func StrCheck(x, y string) bool {
  * @return {*}
  */
 func UcWords(str string) string {
-	return strings.Title(str)
+	caser := cases.Title(language.English)
+	return caser.String(str)
 }
 
 /**

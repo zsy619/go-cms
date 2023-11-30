@@ -50,9 +50,7 @@ var (
 func init() {
 	CasEnabled, _ = web.AppConfig.Bool("cas.enabled")
 	CasHost, _ = web.AppConfig.String("cas.url")
-	if strings.HasSuffix(CasHost, "/") {
-		CasHost = CasHost[:len(CasHost)-1]
-	}
+	CasHost = strings.TrimSuffix(CasHost, "/")
 	CasLoginPath = CasHost + xcas.CASLoginURI
 	CasLogoutPath = CasHost + xcas.CASLogoutURI
 	CasValidatePath = CasHost + xcas.CASValidateURI

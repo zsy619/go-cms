@@ -79,7 +79,6 @@ func (ctrl *LoginController) AdminLoginVerify() {
 	result.Url = "/admin/index"
 	ctrl.Data["json"] = &result
 	ctrl.ServeJSON()
-	return
 }
 
 // Logout 退出登录
