@@ -11,6 +11,6 @@ func NewWxPayException(message string) WxPayException {
 	return result
 }
 
-func (this WxPayException) Error() string {
-	return this.Message
+func (wpe WxPayException) Error() string {
+	return wpe.Message
 }

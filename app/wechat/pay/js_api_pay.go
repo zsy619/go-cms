@@ -158,7 +158,7 @@ func (jsApi *JsApiPay) GetUnifiedOrderResult(orderNo string) (models.WxPayData, 
 	}
 	logs.Info("GetUnifiedOrderResult ", result)
 	if !result.IsSet("appid") || !result.IsSet("prepay_id") || result.GetValue("prepay_id").(string) == "" {
-		return data, errors.New("UnifiedOrder response error!")
+		return data, errors.New("unifiedOrder response error")
 	}
 
 	jsApi.UnifiedOrderResult = *result

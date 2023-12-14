@@ -124,14 +124,9 @@ func (dw *DBExtension) getListCore(result interface{}, order string, limit, offs
 
 // Update All Fields
 func (dw *DBExtension) SaveOne(value TableNameAble) error {
-	tableNameAble, ok := value.(TableNameAble)
-	if !ok {
-		return errors.New("value doesn't implement TableNameAble")
-	}
-
 	var err error
 	if err = dw.Save(value).Error; err != nil {
-		dw.logger.LogErrorc("mysql", err, fmt.Sprintf("Failed to save %s, the value is %+v", tableNameAble.TableName(), value))
+		dw.logger.LogErrorc("mysql", err, fmt.Sprintf("Failed to save %s, the value is %+v", value.TableName(), value))
 	}
 	return err
 }
@@ -200,7 +195,6 @@ func (dw *DBExtension) GetOne(result interface{}, query interface{}, args ...int
 
 func (dw *DBExtension) ExecSql(result interface{}, sql string, args ...interface{}) error {
 	err := dw.Raw(sql, args...).Scan(result).Error
-
 	if err != nil {
 		dw.logger.LogErrorc("mysql", err, fmt.Sprintf("failed to execute sql %s, args are %+v", sql, args))
 	}

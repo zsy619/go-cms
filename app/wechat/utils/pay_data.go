@@ -39,6 +39,7 @@ func (data PayData) SetFloat(key string, val float64) {
 func (data PayData) SetBoolean(key string, val bool) {
 	data.Set(key, strconv.FormatBool(val))
 }
+
 func (data PayData) SetDate(key string, val time.Time) {
 	loc, _ := time.LoadLocation(DATE_TIMEZONE)
 	data.Set(key, val.In(loc).Format(DATE_TIME_FORMAT))
@@ -75,23 +76,20 @@ func (data PayData) ToMap() map[string]string {
 }
 
 func (data PayData) IsNil() bool {
-	if data == nil || len(data) == 0 {
-		return true
-	}
-	return false
+	return len(data) == 0
 }
 
-//CurrentTimeStampMS get current time with millisecond
+// CurrentTimeStampMS get current time with millisecond
 func CurrentTimeStampMS() int64 {
 	return time.Now().UnixNano() / time.Millisecond.Nanoseconds()
 }
 
-//CurrentTimeStampNS get current time with nanoseconds
+// CurrentTimeStampNS get current time with nanoseconds
 func CurrentTimeStampNS() int64 {
 	return time.Now().UnixNano()
 }
 
-//CurrentTimeStamp get current time with unix
+// CurrentTimeStamp get current time with unix
 func CurrentTimeStamp() int64 {
 	return time.Now().Unix()
 }
