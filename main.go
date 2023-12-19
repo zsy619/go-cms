@@ -38,7 +38,7 @@ import (
 	"github.com/beego/beego/v2/server/web/session"
 	"github.com/kardianos/service"
 
-	"haedu.gov.cn/cms/app/dal/model"
+	"haedu.gov.cn/cms/app/cms/domain"
 	"haedu.gov.cn/cms/controllers"
 	_ "haedu.gov.cn/cms/controllers/admin"
 	_ "haedu.gov.cn/cms/controllers/funcs"
@@ -176,7 +176,7 @@ func (p *Program) run() { // 此处编写具体的服务代码
 
 	web.ErrorController(&controllers.ErrorController{})
 
-	gob.Register(&model.CmsAdmin{})
+	gob.Register(&domain.CmsAdmin{})
 
 	// https://beego.me/docs/mvc/controller/config.md
 	web.BConfig.RouterCaseSensitive = false                    // 是否路由忽略大小写匹配，默认是 true，区分大小写

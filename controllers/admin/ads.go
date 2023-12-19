@@ -7,8 +7,8 @@ import (
 	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/tools/xjson"
 
-	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/dal/model"
+	"haedu.gov.cn/cms/app/cms/domain"
+	"haedu.gov.cn/cms/app/cms/service"
 	"haedu.gov.cn/cms/app/lib"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
 )
@@ -18,7 +18,7 @@ type AdsController struct{ BaseController }
 // Index 广告管理
 // @router /admin/ads/index [get]
 func (ctrl *AdsController) Index() {
-	siteList, categoryList, _ := biz.NewCmsAds().SiteCategoryGet(GlobalRoleId, GlobalRoleType)
+	siteList, categoryList, _ := service.NewCmsAds().SiteCategoryGet(GlobalRoleId, GlobalRoleType)
 	ctrl.Data["categoryList"] = categoryList
 	ctrl.Data["siteList"] = siteList
 	// 获取角色权限
@@ -32,9 +32,9 @@ func (ctrl *AdsController) Index() {
 func (ctrl *AdsController) AdsEdit() {
 	adsId, _ := ctrl.GetInt64("adsId")
 	clone, _ := ctrl.GetInt("clone")
-	mdl, err := biz.NewCmsAds().AdsFind(adsId)
+	mdl, err := service.NewCmsAds().AdsFind(adsId)
 	if err != nil {
-		mdl = &model.CmsAds{
+		mdl = &domain.CmsAds{
 			SortID:    99,
 			BeginTime: time.Now(),
 			EndTime:   time.Now().AddDate(0, 0, 7),
@@ -46,7 +46,7 @@ func (ctrl *AdsController) AdsEdit() {
 		mdl.AdsID = 0
 	}
 	ctrl.Data["mdl"] = mdl
-	_, categoryList, _ := biz.NewCmsAds().SiteCategoryGet(GlobalRoleId, GlobalRoleType)
+	_, categoryList, _ := service.NewCmsAds().SiteCategoryGet(GlobalRoleId, GlobalRoleType)
 	ctrl.Data["categoryList"] = categoryList
 	// 获取角色权限
 	roleMap := ctrl.RolePowerGet("ads_index")
@@ -57,7 +57,7 @@ func (ctrl *AdsController) AdsEdit() {
 // AdsSave 广告保存
 // @router /admin/ads/adsSave [post]
 func (ctrl *AdsController) AdsSave() {
-	mdl := model.CmsAds{}
+	mdl := domain.CmsAds{}
 	if err := ctrl.ParseForm(&mdl); err != nil {
 		logs.Error("AdsSave", err.Error())
 		ctrl.JSONError(err.Error())
@@ -69,7 +69,7 @@ func (ctrl *AdsController) AdsSave() {
 		mdl.UpdateID = int32(GlobalAdminId)
 		mdl.UpdateName = GlobalAdminName
 	}
-	if err := biz.NewCmsAds().AdsSave(&mdl); err != nil {
+	if err := service.NewCmsAds().AdsSave(&mdl); err != nil {
 		logs.Error("AdsSave", err.Error())
 		ctrl.JSONError(err.Error())
 		return
@@ -87,7 +87,7 @@ func (ctrl *AdsController) AdsSaveSortId() {
 		logs.Error("AdsSaveSortId", err.Error())
 		ctrl.JSONError(err.Error())
 	}
-	service := biz.NewCmsAds()
+	service := service.NewCmsAds()
 	for _, mdl := range mdls {
 		if err := service.AdsSaveSortId(mdl.AdsId, int32(mdl.SortId)); err != nil {
 			logs.Error("AdsSaveSortId", err.Error())
@@ -102,7 +102,7 @@ func (ctrl *AdsController) AdsSaveSortId() {
 // @router /admin/ads/AdsDestory [post]
 func (ctrl *AdsController) AdsDestory() {
 	adsId, _ := ctrl.GetInt64("adsId")
-	if err := biz.NewCmsAds().AdsDestory(adsId); err != nil {
+	if err := service.NewCmsAds().AdsDestory(adsId); err != nil {
 		logs.Error("AdsDestory", err.Error())
 		ctrl.JSONError(err.Error())
 		return
@@ -120,7 +120,7 @@ func (ctrl *AdsController) AdsChangeStatus() {
 		return
 	}
 	for _, adsId := range mdl.AdsIds {
-		if err := biz.NewCmsAds().AdsChangeStatus(adsId, mdl.Status); err != nil {
+		if err := service.NewCmsAds().AdsChangeStatus(adsId, mdl.Status); err != nil {
 			logs.Error("AdsChangeStatus", err.Error())
 			ctrl.JSONError(err.Error())
 			return
@@ -139,15 +139,15 @@ func (ctrl *AdsController) AdsPaginate() {
 	title := ctrl.GetSafeString("title")
 	callIndex := ctrl.GetSafeString("callIndex")
 
-	siteIds := biz.NewCmsAds().SiteIdsGet(siteId, GlobalRoleType, GlobalRoleId)
-	list, count, _ := biz.NewCmsAds().AdsPaginate(page, limit, -1, categoryId, title, callIndex, status, siteIds...)
+	siteIds := service.NewCmsAds().SiteIdsGet(siteId, GlobalRoleType, GlobalRoleId)
+	list, count, _ := service.NewCmsAds().AdsPaginate(page, limit, -1, categoryId, title, callIndex, status, siteIds...)
 	ctrl.JSONPage(lib.CodeSuccess, "", list, count)
 }
 
 // Category 链接分类
 // @router /admin/ads/category [get]
 func (ctrl *AdsController) Category() {
-	siteList, _, _ := biz.NewCmsAds().SiteCategoryGet(GlobalRoleId, GlobalRoleType)
+	siteList, _, _ := service.NewCmsAds().SiteCategoryGet(GlobalRoleId, GlobalRoleType)
 	ctrl.Data["siteList"] = siteList
 	// 获取角色权限
 	roleMap := ctrl.RolePowerGet("ads_category")
@@ -157,25 +157,25 @@ func (ctrl *AdsController) Category() {
 
 func (ctrl *AdsController) CategoryEdit() {
 	categoryId, _ := ctrl.GetInt64("categoryId")
-	mdl, err := biz.NewCmsAds().CategoryFind(categoryId)
+	mdl, err := service.NewCmsAds().CategoryFind(categoryId)
 	if err != nil {
-		mdl = &model.CmsAdsCategory{
+		mdl = &domain.CmsAdsCategory{
 			SortID: 99,
 		}
 	}
 	ctrl.Data["mdl"] = mdl
-	siteList, _, _ := biz.NewCmsAds().SiteCategoryGet(GlobalRoleId, GlobalRoleType)
+	siteList, _, _ := service.NewCmsAds().SiteCategoryGet(GlobalRoleId, GlobalRoleType)
 	ctrl.Data["siteList"] = siteList
 	ctrl.display()
 }
 
 func (ctrl *AdsController) CategorySave() {
-	mdl := model.CmsAdsCategory{}
+	mdl := domain.CmsAdsCategory{}
 	if err := ctrl.ParseForm(&mdl); err != nil {
 		logs.Error("CategorySave", err.Error())
 		ctrl.JSONError(err.Error())
 	}
-	if err := biz.NewCmsAds().CategorySave(&mdl); err != nil {
+	if err := service.NewCmsAds().CategorySave(&mdl); err != nil {
 		logs.Error("CategorySave", err.Error())
 		ctrl.JSONError(err.Error())
 		return
@@ -192,7 +192,7 @@ func (ctrl *AdsController) CategorySaveSortId() {
 		ctrl.JSONError(err.Error())
 	}
 	for _, mdl := range mdls {
-		if err := biz.NewCmsAds().CategorySaveSortId(mdl.CategoryId, int32(mdl.SortId)); err != nil {
+		if err := service.NewCmsAds().CategorySaveSortId(mdl.CategoryId, int32(mdl.SortId)); err != nil {
 			logs.Error("CategorySaveSortId", err.Error())
 			ctrl.JSONError(err.Error())
 			return
@@ -203,7 +203,7 @@ func (ctrl *AdsController) CategorySaveSortId() {
 
 func (ctrl *AdsController) CategoryDestory() {
 	categoryId, _ := ctrl.GetInt64("categoryId")
-	if err := biz.NewCmsAds().CategoryDestory(categoryId); err != nil {
+	if err := service.NewCmsAds().CategoryDestory(categoryId); err != nil {
 		logs.Error("CategoryDestory", err.Error())
 		ctrl.JSONError(err.Error())
 		return
@@ -219,7 +219,7 @@ func (ctrl *AdsController) CategoryPaginate() {
 	title := ctrl.GetSafeString("title")
 	callIndex := ctrl.GetSafeString("callIndex")
 
-	siteIds := biz.NewCmsAds().SiteIdsGet(siteId, GlobalRoleType, GlobalRoleId)
-	categoryList, count, _ := biz.NewCmsAds().CategoryPaginate(page, limit, -1, title, callIndex, siteIds...)
+	siteIds := service.NewCmsAds().SiteIdsGet(siteId, GlobalRoleType, GlobalRoleId)
+	categoryList, count, _ := service.NewCmsAds().CategoryPaginate(page, limit, -1, title, callIndex, siteIds...)
 	ctrl.JSONPage(lib.CodeSuccess, "", categoryList, count)
 }

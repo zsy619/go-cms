@@ -7,7 +7,7 @@ import (
 
 	"github.com/beego/beego/v2/core/logs"
 
-	"haedu.gov.cn/cms/app/biz"
+	"haedu.gov.cn/cms/app/cms/service"
 	"haedu.gov.cn/cms/app/lib"
 )
 
@@ -39,12 +39,12 @@ func (ctrl *ApiSiteController) FindDomain() {
 	reg := regexp.MustCompile(patt)
 	preUrl := reg.FindString(url)
 	// 查询站点表获取对应站点ID
-	domainMdl := biz.NewCmsSiteDomainModel().One(preUrl)
+	domainMdl := service.NewCmsSiteDomainModel().One(preUrl)
 	if domainMdl == nil || domainMdl.SiteID > 0 {
 		ctrl.JSONError("获取数据失败")
 	}
 	// 获取站点信息
-	siteMdl, err := biz.NewCmsSite().SiteOne(domainMdl.SiteID)
+	siteMdl, err := service.NewCmsSite().SiteOne(domainMdl.SiteID)
 	if err != nil {
 		ctrl.JSONError("获取数据失败")
 	}

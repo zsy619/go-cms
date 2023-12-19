@@ -1,8 +1,8 @@
 package www
 
 import (
-	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/biz/bizmodel"
+	"haedu.gov.cn/cms/app/cms/service"
+	service_model "haedu.gov.cn/cms/app/cms/service/model"
 )
 
 /**
@@ -13,8 +13,8 @@ import (
  * @param {int64} channel_id 栏目ID
  * @return {*}
  */
-func (ctrl *BaseController) TopicGet(limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTopicModel, int64, error) {
-	return biz.NewApiTopic().Get(limit, site_id, site_flag, channel_id)
+func (ctrl *BaseController) TopicGet(limit int, site_id int64, site_flag string, channel_id int64) ([]*service_model.ApiTopicModel, int64, error) {
+	return service.NewApiTopic().Get(limit, site_id, site_flag, channel_id)
 }
 
 /**
@@ -25,8 +25,8 @@ func (ctrl *BaseController) TopicGet(limit int, site_id int64, site_flag string,
  * @param {int64} channel_id 栏目ID
  * @return {*}
  */
-func (ctrl *BaseController) TopicGetNew(limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTopicModel, int64, error) {
-	return biz.NewApiTopic().GetNew(limit, site_id, site_flag, channel_id)
+func (ctrl *BaseController) TopicGetNew(limit int, site_id int64, site_flag string, channel_id int64) ([]*service_model.ApiTopicModel, int64, error) {
+	return service.NewApiTopic().GetNew(limit, site_id, site_flag, channel_id)
 }
 
 /**
@@ -35,7 +35,7 @@ func (ctrl *BaseController) TopicGetNew(limit int, site_id int64, site_flag stri
  * @return {*}
  */
 func (ctrl *BaseController) TopicClick(Topic_id int64) error {
-	return biz.NewApiTopic().Click(Topic_id)
+	return service.NewApiTopic().Click(Topic_id)
 }
 
 /**
@@ -56,6 +56,6 @@ func (ctrl *BaseController) TopicClick(Topic_id int64) error {
  * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
  * @return {*}
  */
-func (ctrl *BaseController) TopicArticlePaginate(page, limit int, topic_name string, site_id int64, site_flag string, channel_id int64, channel_name string, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide, is_search int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
-	return biz.NewApiTopic().ArticlePaginate(page, limit, topic_name, site_id, site_flag, channel_id, channel_name, category_id, call_index, keyword, is_top, is_red, is_hot, is_slide, is_search, order_by)
+func (ctrl *BaseController) TopicArticlePaginate(page, limit int, topic_name string, site_id int64, site_flag string, channel_id int64, channel_name string, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide, is_search int, order_by string) ([]*service_model.ApiArticleListModel, int64, error) {
+	return service.NewApiTopic().ArticlePaginate(page, limit, topic_name, site_id, site_flag, channel_id, channel_name, category_id, call_index, keyword, is_top, is_red, is_hot, is_slide, is_search, order_by)
 }

@@ -7,8 +7,8 @@ import (
 	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/tools/xjson"
 
-	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/dal/model"
+	"haedu.gov.cn/cms/app/cms/domain"
+	"haedu.gov.cn/cms/app/cms/service"
 	"haedu.gov.cn/cms/app/lib"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
 )
@@ -31,7 +31,7 @@ func (ctrl *SiteController) SiteData() {
 	title := ctrl.GetString("title", "")
 	page, _ := ctrl.GetInt("page")
 	limit, _ := ctrl.GetInt("limit")
-	service := biz.NewCmsSite()
+	service := service.NewCmsSite()
 	list, count, _ := service.SitePaginate(page, limit, name, title)
 	ctrl.JSONPage(lib.CodeSuccess, "", list, count)
 }
@@ -39,7 +39,7 @@ func (ctrl *SiteController) SiteData() {
 // Channel 站点栏目管理
 // @router /admin/site/channel [get]
 func (ctrl *SiteController) Channel() {
-	service := biz.NewCmsSite()
+	service := service.NewCmsSite()
 	list, _, _ := service.SitePaginate(1, 999999, "", "")
 	ctrl.Data["siteList"] = list
 	// 获取角色权限
@@ -56,8 +56,8 @@ func (ctrl *SiteController) Delete() {
 		ctrl.JSONError("参数丢失")
 		return
 	}
-	service := biz.NewCmsSite()
-	service.SiteDelete(ids)
+	siteService := service.NewCmsSite()
+	siteService.SiteDelete(ids)
 	data := lib.NewJSONResponse(lib.CodeSuccess, "")
 	ctrl.JSONData(data)
 }
@@ -66,20 +66,20 @@ func (ctrl *SiteController) Delete() {
 // @router admin/site/edit [get]
 func (ctrl *SiteController) SiteEdit() {
 	id, _ := ctrl.GetInt64("id", 0)
-	site := &model.CmsSite{}
-	var list []*model.CmsSiteDomain
+	site := &domain.CmsSite{}
+	var list []*domain.CmsSiteDomain
 	if id != 0 {
-		service := biz.NewCmsSite()
-		domainService := biz.NewCmsSiteDomainModel()
-		site, _ = service.SiteOne(id)
+		siteService := service.NewCmsSite()
+		domainService := service.NewCmsSiteDomainModel()
+		site, _ = siteService.SiteOne(id)
 		list = domainService.List(id)
 	} else {
-		site = &model.CmsSite{
+		site = &domain.CmsSite{
 			SortID: 99,
 		}
 	}
 	if len(list) == 0 {
-		list = append(list, &model.CmsSiteDomain{})
+		list = append(list, &domain.CmsSiteDomain{})
 	}
 	ctrl.Data["listSize"] = len(list) - 1
 	ctrl.Data["domainList"] = list
@@ -90,10 +90,10 @@ func (ctrl *SiteController) SiteEdit() {
 // SiteEdit 站点列表数据
 // @router admin/site/save [post]
 func (ctrl *SiteController) Save() {
-	service := biz.NewCmsSite()
-	adminSerice := biz.NewCmsAdmin()
+	siteService := service.NewCmsSite()
+	adminSerice := service.NewCmsAdmin()
 
-	site := model.CmsSite{}
+	site := domain.CmsSite{}
 	result := lib.NewJSONResponse(lib.CodeSuccess, "保存成功")
 	if err := ctrl.ParseForm(&site); err != nil {
 		logs.Error("Save", err)
@@ -125,7 +125,7 @@ func (ctrl *SiteController) Save() {
 		site.UpdateID = int32(ctrl.IsLogin())
 		site.UpdateName = user.RealName
 	}
-	err := service.SiteSave(&site, domains, remarks)
+	err := siteService.SiteSave(&site, domains, remarks)
 	if err != nil {
 		result.SetResult(lib.CodeFatal, err.Error())
 	}
@@ -146,7 +146,7 @@ func (ctrl *SiteController) SiteSaveSortId() {
 		ctrl.JSONError(err.Error())
 	}
 	for _, mdl := range mdls {
-		if err := biz.NewCmsSite().SiteSaveSortId(mdl.SiteId, mdl.SortId); err != nil {
+		if err := service.NewCmsSite().SiteSaveSortId(mdl.SiteId, mdl.SortId); err != nil {
 			logs.Error("SiteSaveSortId", err.Error())
 			ctrl.JSONError(err.Error())
 			return
@@ -159,7 +159,7 @@ func (ctrl *SiteController) SiteSaveSortId() {
 
 func (ctrl *SiteController) ChannelFind() {
 	siteId, _ := ctrl.GetInt64("siteId")
-	list, count, err := biz.NewCmsSite().ChannelPaginate(1, 99999, siteId, "", "")
+	list, count, err := service.NewCmsSite().ChannelPaginate(1, 99999, siteId, "", "")
 	if err != nil {
 		logs.Error("ChannelFind", err.Error())
 	}
@@ -167,15 +167,15 @@ func (ctrl *SiteController) ChannelFind() {
 }
 
 func (ctrl *SiteController) ChannelEdit() {
-	service := biz.NewCmsSite()
+	siteService := service.NewCmsSite()
 	// list, _, _ := service.SitePaginate(1, 999999, "", "")
 	// ctrl.Data["siteList"] = list
 	channelId, _ := ctrl.GetInt64("channelId")
 	parentId, _ := ctrl.GetInt64("parentId")
 	siteId, _ := ctrl.GetInt64("siteId")
-	mdl, err := service.ChannelFind(channelId)
+	mdl, err := siteService.ChannelFind(channelId)
 	if err != nil {
-		mdl = &model.CmsSiteChannel{
+		mdl = &domain.CmsSiteChannel{
 			ParentID: parentId,
 			SiteID:   siteId,
 			SortID:   99,
@@ -189,12 +189,12 @@ func (ctrl *SiteController) ChannelEdit() {
 }
 
 func (ctrl *SiteController) ChannelSave() {
-	mdl := model.CmsSiteChannel{}
+	mdl := domain.CmsSiteChannel{}
 	if err := ctrl.ParseForm(&mdl); err != nil {
 		logs.Error("ChannelSave", err.Error())
 		ctrl.JSONError(err.Error())
 	}
-	if err := biz.NewCmsSite().ChannelSave(&mdl); err != nil {
+	if err := service.NewCmsSite().ChannelSave(&mdl); err != nil {
 		logs.Error("ChannelSave", err.Error())
 		ctrl.JSONError(err.Error())
 		return
@@ -211,7 +211,7 @@ func (ctrl *SiteController) ChannelSaveSortId() {
 		ctrl.JSONError(err.Error())
 	}
 	for _, mdl := range mdls {
-		if err := biz.NewCmsSite().ChannelSaveSortId(mdl.ChannelID, mdl.SortId); err != nil {
+		if err := service.NewCmsSite().ChannelSaveSortId(mdl.ChannelID, mdl.SortId); err != nil {
 			logs.Error("ChannelSaveSortId", err.Error())
 			ctrl.JSONError(err.Error())
 			return
@@ -223,7 +223,7 @@ func (ctrl *SiteController) ChannelSaveSortId() {
 func (ctrl *SiteController) ChannelDestory() {
 	channelId, _ := ctrl.GetInt64("channelId")
 	siteId, _ := ctrl.GetInt64("siteId")
-	if err := biz.NewCmsSite().ChannelDestory(siteId, channelId); err != nil {
+	if err := service.NewCmsSite().ChannelDestory(siteId, channelId); err != nil {
 		logs.Error("ChannelDestory", err.Error())
 		ctrl.JSONError(err.Error())
 		return
@@ -239,7 +239,7 @@ func (ctrl *SiteController) ChannelTree() {
 		return
 	}
 	ChannelId, _ := ctrl.GetInt64("ChannelId")
-	tree, err := biz.NewCmsSite().ChannelTree(channelId, ChannelId)
+	tree, err := service.NewCmsSite().ChannelTree(channelId, ChannelId)
 	if err != nil {
 		logs.Error("ChannelTree", err.Error())
 		ctrl.JSONError(err.Error())

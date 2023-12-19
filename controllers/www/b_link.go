@@ -1,8 +1,8 @@
 package www
 
 import (
-	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/biz/bizmodel"
+	"haedu.gov.cn/cms/app/cms/service"
+	service_model "haedu.gov.cn/cms/app/cms/service/model"
 )
 
 /**
@@ -14,8 +14,8 @@ import (
 * @param {string} call_index 链接分类标识
 * @return {*}
  */
-func (ctrl *BaseController) LinkGet(limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiLinkModel, int64, error) {
-	return biz.NewApiLink().Get(limit, site_id, site_flag, category_id, call_index)
+func (ctrl *BaseController) LinkGet(limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*service_model.ApiLinkModel, int64, error) {
+	return service.NewApiLink().Get(limit, site_id, site_flag, category_id, call_index)
 }
 
 /**
@@ -27,8 +27,8 @@ func (ctrl *BaseController) LinkGet(limit int, site_id int64, site_flag string, 
 * @param {string} call_index 链接分类标识
 * @return {*}
  */
-func (ctrl *BaseController) LinkGetNew(limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiLinkModel, int64, error) {
-	return biz.NewApiLink().GetNew(limit, site_id, site_flag, category_id, call_index)
+func (ctrl *BaseController) LinkGetNew(limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*service_model.ApiLinkModel, int64, error) {
+	return service.NewApiLink().GetNew(limit, site_id, site_flag, category_id, call_index)
 }
 
 /**
@@ -41,8 +41,8 @@ func (ctrl *BaseController) LinkGetNew(limit int, site_id int64, site_flag strin
  * @param {string} call_index 链接分类标识
  * @return {*}
  */
-func (ctrl *BaseController) LinkPaginate(page, limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*bizmodel.ApiLinkModel, int64, error) {
-	return biz.NewApiLink().Paginate(page, limit, site_id, site_flag, category_id, call_index)
+func (ctrl *BaseController) LinkPaginate(page, limit int, site_id int64, site_flag string, category_id int64, call_index string) ([]*service_model.ApiLinkModel, int64, error) {
+	return service.NewApiLink().Paginate(page, limit, site_id, site_flag, category_id, call_index)
 }
 
 /**
@@ -51,5 +51,5 @@ func (ctrl *BaseController) LinkPaginate(page, limit int, site_id int64, site_fl
  * @return {*}
  */
 func (ctrl *BaseController) LinkClick(link_id int64) error {
-	return biz.NewApiLink().Click(link_id)
+	return service.NewApiLink().Click(link_id)
 }

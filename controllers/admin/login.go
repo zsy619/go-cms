@@ -9,8 +9,8 @@ import (
 	"haedu.gov.cn/tools/xcas"
 	"haedu.gov.cn/tools/xgeneric"
 
-	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/dal/model"
+	"haedu.gov.cn/cms/app/cms/domain"
+	"haedu.gov.cn/cms/app/cms/service"
 	"haedu.gov.cn/cms/app/lib"
 	"haedu.gov.cn/cms/controllers"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
@@ -25,7 +25,7 @@ func (ctrl *LoginController) AdminLogin() {
 	ctrl.TplName = "admin/login/login.html"
 }
 
-func (ctrl *LoginController) SavaAdminState(user *model.CmsAdmin) {
+func (ctrl *LoginController) SavaAdminState(user *domain.CmsAdmin) {
 	ctrl.SetSession("adminId", user.UserID)
 	ctrl.SetSession("adminAccount", user.UserName)
 	ctrl.SetSession("adminName", user.UserName)
@@ -64,8 +64,8 @@ func (ctrl *LoginController) AdminLoginVerify() {
 	username := ctrl.GetSafeString("username")
 	password := ctrl.GetSafeString("password")
 	fmt.Println(username, password, captcha)
-	adminDo := biz.NewCmsAdmin()
-	user, err := adminDo.Login(username, password, 0, biz.LoginAll)
+	adminDo := service.NewCmsAdmin()
+	user, err := adminDo.Login(username, password, 0, service.LoginAll)
 	if err != nil {
 		fmt.Println("登录错误：", err.Error())
 		result.Code = 2
@@ -144,12 +144,12 @@ func (ctrl *LoginController) login(loginCasPath, loginPath string, kind string) 
 
 		account := serviceResponse.Success.User
 		// 判断用户是否存在，不存在则创建
-		userDo := biz.NewCmsAdmin()
+		userDo := service.NewCmsAdmin()
 		user, err := userDo.FindByAccount(account)
 		if user == nil || user.UserName == "" || err != nil {
 			fmt.Println("error: ", err.Error())
 			// 创建用户
-			user = &model.CmsAdmin{
+			user = &domain.CmsAdmin{
 				UserName:   account,
 				NickName:   account,
 				RealName:   account,

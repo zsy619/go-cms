@@ -6,8 +6,8 @@ import (
 	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/tools/xjson"
 
-	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/dal/model"
+	"haedu.gov.cn/cms/app/cms/domain"
+	"haedu.gov.cn/cms/app/cms/service"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
 )
 
@@ -31,7 +31,7 @@ func (ctrl *CommonController) AlbumSearch() {
 	tableName := ctrl.GetSafeString("tableName")
 	title := ctrl.GetSafeString("title")
 	ext := ctrl.GetSafeString("ext")
-	list, count, err := biz.NewCmsAlbum().AlbumSearch(page, limit, tableName, title, ext, GlobalAdminId, GlobalRoleType)
+	list, count, err := service.NewCmsAlbum().AlbumSearch(page, limit, tableName, title, ext, GlobalAdminId, GlobalRoleType)
 	if err != nil {
 		logs.Error("AlbumSearch", err.Error())
 	}
@@ -42,7 +42,7 @@ func (ctrl *CommonController) AlbumPaginate() {
 	tableName := ctrl.GetSafeString("tableName")
 	recordId, _ := ctrl.GetInt64("recordId")
 	typeId, _ := ctrl.GetInt32("typeId")
-	list, count, err := biz.NewCmsAlbum().AlbumPaginate(1, 99999, tableName, recordId, typeId, GlobalAdminId, GlobalRoleType)
+	list, count, err := service.NewCmsAlbum().AlbumPaginate(1, 99999, tableName, recordId, typeId, GlobalAdminId, GlobalRoleType)
 	if err != nil {
 		logs.Error("AlbumPaginate", err.Error())
 	}
@@ -50,13 +50,13 @@ func (ctrl *CommonController) AlbumPaginate() {
 }
 
 func (ctrl *CommonController) AlbumSave() {
-	mdl := model.CmsAlbum{}
+	mdl := domain.CmsAlbum{}
 	if err := ctrl.ParseForm(&mdl); err != nil {
 		logs.Error("AlbumSave", err.Error())
 		ctrl.JSONError(err.Error())
 	}
 	mdl.CreateID = int32(GlobalAdminId)
-	if err := biz.NewCmsAlbum().AlbumSave(&mdl); err != nil {
+	if err := service.NewCmsAlbum().AlbumSave(&mdl); err != nil {
 		logs.Error("AlbumSave", err.Error())
 		ctrl.JSONError(err.Error())
 		return
@@ -73,7 +73,7 @@ func (ctrl *CommonController) AlbumSaveShow() {
 		ctrl.JSONError(err.Error())
 	}
 	for _, mdl := range mdls.AlbumIds {
-		if err := biz.NewCmsAlbum().AlbumSaveShow(mdl, mdls.Show); err != nil {
+		if err := service.NewCmsAlbum().AlbumSaveShow(mdl, mdls.Show); err != nil {
 			logs.Error("AlbumSaveShow", err.Error())
 			ctrl.JSONError(err.Error())
 			return
@@ -90,7 +90,7 @@ func (ctrl *CommonController) AlbumSaveBatch() {
 		logs.Error("AlbumSaveBatch", err.Error())
 		ctrl.JSONError(err.Error())
 	}
-	service := biz.NewCmsAlbum()
+	service := service.NewCmsAlbum()
 	for _, mdl := range mdls {
 		if err := service.AlbumSaveInfo(mdl.AlbumID, mdl.Title, mdl.LinkURL, mdl.Click, mdl.SortID, mdl.Remark); err != nil {
 			logs.Error("AlbumSaveBatch", err.Error())
@@ -103,7 +103,7 @@ func (ctrl *CommonController) AlbumSaveBatch() {
 
 func (ctrl *CommonController) AlbumDestory() {
 	albumId, _ := ctrl.GetInt64("albumId")
-	if err := biz.NewCmsAlbum().AlbumDestory(albumId); err != nil {
+	if err := service.NewCmsAlbum().AlbumDestory(albumId); err != nil {
 		logs.Error("AlbumDestory", err.Error())
 		ctrl.JSONError(err.Error())
 		return

@@ -3,8 +3,8 @@ package plugin
 import (
 	"github.com/beego/beego/v2/core/logs"
 
-	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/dal/model"
+	"haedu.gov.cn/cms/app/cms/domain"
+	"haedu.gov.cn/cms/app/cms/service"
 	"haedu.gov.cn/cms/controllers"
 	"haedu.gov.cn/cms/controllers/www"
 )
@@ -15,7 +15,7 @@ type XsbmController struct{ www.BaseController }
 // @router /plugin/xsbm/index
 func (ctrl *XsbmController) Index() {
 	channelName := "zsjy"
-	channelModel, err := biz.NewApiChannel().Find(channelName, 0)
+	channelModel, err := service.NewApiChannel().Find(channelName, 0)
 	if err != nil {
 		ctrl.Ctx.WriteString(err.Error())
 		ctrl.StopRun()
@@ -34,14 +34,14 @@ func (ctrl *XsbmController) Save() {
 		return
 	}
 
-	mdl := model.PlgOnlineRegister{}
+	mdl := domain.PlgOnlineRegister{}
 	if err := ctrl.ParseForm(&mdl); err != nil {
 		logs.Error("Save", err.Error())
 		ctrl.JSONError(err.Error())
 	}
 	mdl.IP = ctrl.Ctx.Input.IP()
 
-	if err := biz.NewPlgOnlineRegister().Save(&mdl); err != nil {
+	if err := service.NewPlgOnlineRegister().Save(&mdl); err != nil {
 		logs.Error("Save", err.Error())
 		ctrl.JSONError(err.Error())
 		return

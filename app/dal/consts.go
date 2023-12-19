@@ -18,7 +18,7 @@ var (
 func init() {
 	// cms数据库
 	{
-		dsn := getDbConn("cms", "cms")
+		dsn := GetDbConn("cms", "cms")
 		dbConnect, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 			NamingStrategy: schema.NamingStrategy{
 				SingularTable: true,
@@ -33,7 +33,7 @@ func init() {
 	}
 	// 认证数据库
 	{
-		dsn := getDbConn("auth", "un2co_yunzhipin")
+		dsn := GetDbConn("auth", "un2co_yunzhipin")
 		dbConnect, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 			NamingStrategy: schema.NamingStrategy{
 				SingularTable: true,
@@ -48,7 +48,7 @@ func init() {
 	}
 }
 
-func getDbConn(prefix string, defaultDb string) string {
+func GetDbConn(prefix string, defaultDb string) string {
 	if prefix == "" {
 		prefix = "db"
 	}

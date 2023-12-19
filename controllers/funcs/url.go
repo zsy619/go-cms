@@ -3,7 +3,7 @@ package funcs
 import (
 	"fmt"
 
-	"haedu.gov.cn/cms/app/biz"
+	"haedu.gov.cn/cms/app/cms/service"
 )
 
 /**
@@ -40,7 +40,7 @@ func UrlForArticle(call_index string, article_id int64, url string) string {
  * @return {*}
  */
 func UrlForCategoryExtend(flag, name, call_index string) string {
-	find, err := biz.NewApiArticle().CategoryFind(0, call_index)
+	find, err := service.NewApiArticle().CategoryFind(0, call_index)
 	if err != nil {
 		return ""
 	}
@@ -56,7 +56,7 @@ func UrlForCategoryExtend(flag, name, call_index string) string {
  * @return {*}
  */
 func UrlForCategory(call_index string) string {
-	find, err := biz.NewApiArticle().CategoryFind(0, call_index)
+	find, err := service.NewApiArticle().CategoryFind(0, call_index)
 	if err != nil {
 		return ""
 	}
@@ -72,7 +72,7 @@ func UrlForCategory(call_index string) string {
  * @return {*}
  */
 func UrlForChannel(name string) string {
-	find, err := biz.NewApiChannel().Find(name, 0)
+	find, err := service.NewApiChannel().Find(name, 0)
 	if err != nil {
 		return ""
 	}
@@ -88,7 +88,7 @@ func UrlForChannel(name string) string {
  * @return {*}
  */
 func UrlForTopic(name string) string {
-	find, _ := biz.NewApiTopic().Find(0, name)
+	find, _ := service.NewApiTopic().Find(0, name)
 	if find.Name != "" {
 		return ""
 	}
@@ -101,7 +101,7 @@ func UrlForTopic(name string) string {
  * @return {*}
  */
 func UrlForTag(name string) string {
-	find, _ := biz.NewApiTag().Find(0, name)
+	find, _ := service.NewApiTag().Find(0, name)
 	if find.Name != "" {
 		return ""
 	}

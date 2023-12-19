@@ -1,8 +1,8 @@
 package funcs
 
 import (
-	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/biz/bizmodel"
+	"haedu.gov.cn/cms/app/cms/service"
+	service_model "haedu.gov.cn/cms/app/cms/service/model"
 )
 
 /**
@@ -19,13 +19,13 @@ import (
  * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
  * @return {*}
  */
-func ArticleNewExtend(limit int, channel_id int64, channel_name string, category_id int64, call_index string, is_top, is_red, is_hot, is_slide int, order_by string) []*bizmodel.ApiArticleListModel {
+func ArticleNewExtend(limit int, channel_id int64, channel_name string, category_id int64, call_index string, is_top, is_red, is_hot, is_slide int, order_by string) []*service_model.ApiArticleListModel {
 	if limit <= 0 {
 		limit = 6
 	}
-	find, _, err := biz.NewApiArticle().ArticleGetNew(limit, channel_id, channel_name, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
+	find, _, err := service.NewApiArticle().ArticleGetNew(limit, channel_id, channel_name, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
 	if err != nil {
-		find = []*bizmodel.ApiArticleListModel{}
+		find = []*service_model.ApiArticleListModel{}
 	}
 	return find
 }
@@ -35,7 +35,7 @@ func ArticleNewExtend(limit int, channel_id int64, channel_name string, category
  * @param {int} limit 获取数量，小于等于0时按6条处理
  * @return {*}
  */
-func ArticleNew(limit int) []*bizmodel.ApiArticleListModel {
+func ArticleNew(limit int) []*service_model.ApiArticleListModel {
 	return ArticleNewExtend(limit, 0, "", 0, "", 0, 0, 0, 0, "")
 }
 
@@ -53,13 +53,13 @@ func ArticleNew(limit int) []*bizmodel.ApiArticleListModel {
  * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
  * @return {*}
  */
-func ArticleTopExtend(limit int, channel_id int64, channel_name string, category_id int64, call_index string, is_top, is_red, is_hot, is_slide int, order_by string) []*bizmodel.ApiArticleListModel {
+func ArticleTopExtend(limit int, channel_id int64, channel_name string, category_id int64, call_index string, is_top, is_red, is_hot, is_slide int, order_by string) []*service_model.ApiArticleListModel {
 	if limit <= 0 {
 		limit = 6
 	}
-	find, _, err := biz.NewApiArticle().ArticleGet(limit, channel_id, channel_name, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
+	find, _, err := service.NewApiArticle().ArticleGet(limit, channel_id, channel_name, category_id, call_index, is_top, is_red, is_hot, is_slide, order_by)
 	if err != nil {
-		find = []*bizmodel.ApiArticleListModel{}
+		find = []*service_model.ApiArticleListModel{}
 	}
 	return find
 }
@@ -69,7 +69,7 @@ func ArticleTopExtend(limit int, channel_id int64, channel_name string, category
  * @param {int} limit 获取数量，小于等于0时按6条处理
  * @return {*}
  */
-func ArticleTop(limit int) []*bizmodel.ApiArticleListModel {
+func ArticleTop(limit int) []*service_model.ApiArticleListModel {
 	return ArticleTopExtend(limit, 0, "", 0, "", 0, 0, 0, 0, "")
 }
 
@@ -82,10 +82,10 @@ func ArticleTop(limit int) []*bizmodel.ApiArticleListModel {
  * @param {int64} article_id 文章ID
  * @return {*}
  */
-func CategoryNav(channel_name string, channel_id int64, call_index string, category_id int64, article_id int64) []*bizmodel.ApiCategoryNav {
-	find, err := biz.NewApiArticle().CategoryNav(channel_name, channel_id, call_index, category_id, article_id)
+func CategoryNav(channel_name string, channel_id int64, call_index string, category_id int64, article_id int64) []*service_model.ApiCategoryNav {
+	find, err := service.NewApiArticle().CategoryNav(channel_name, channel_id, call_index, category_id, article_id)
 	if err != nil {
-		find = []*bizmodel.ApiCategoryNav{}
+		find = []*service_model.ApiCategoryNav{}
 	}
 	return find
 }
@@ -95,13 +95,13 @@ func CategoryNav(channel_name string, channel_id int64, call_index string, categ
  * @param {string} channel_name 频道名称
  * @return {*}
  */
-func CategoryGet(channel_name string) []*bizmodel.ApiCategoryGetModel {
+func CategoryGet(channel_name string) []*service_model.ApiCategoryGetModel {
 	if channel_name == "" {
-		return []*bizmodel.ApiCategoryGetModel{}
+		return []*service_model.ApiCategoryGetModel{}
 	}
-	find, _, err := biz.NewApiArticle().CategoryGet(channel_name, "")
+	find, _, err := service.NewApiArticle().CategoryGet(channel_name, "")
 	if err != nil {
-		find = []*bizmodel.ApiCategoryGetModel{}
+		find = []*service_model.ApiCategoryGetModel{}
 	}
 	return find
 }
@@ -112,10 +112,10 @@ func CategoryGet(channel_name string) []*bizmodel.ApiCategoryGetModel {
  * @param {string} call_index 栏目别名
  * @return {*}
  */
-func CategoryFind(category_id int64, call_index string) *bizmodel.ApiCategoryFindModel {
-	find, err := biz.NewApiArticle().CategoryFind(category_id, call_index)
+func CategoryFind(category_id int64, call_index string) *service_model.ApiCategoryFindModel {
+	find, err := service.NewApiArticle().CategoryFind(category_id, call_index)
 	if err != nil {
-		find = &bizmodel.ApiCategoryFindModel{}
+		find = &service_model.ApiCategoryFindModel{}
 	}
 	return find
 }
@@ -126,17 +126,17 @@ func CategoryFind(category_id int64, call_index string) *bizmodel.ApiCategoryFin
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func ArticleFind(call_index string, article_id int64) *bizmodel.ApiArticleModel {
-	find1, find2, find3, find4, err := biz.NewApiArticle().ArticleFind(call_index, article_id)
+func ArticleFind(call_index string, article_id int64) *service_model.ApiArticleModel {
+	find1, find2, find3, find4, err := service.NewApiArticle().ArticleFind(call_index, article_id)
 	if err != nil {
-		return &bizmodel.ApiArticleModel{
-			Article:  &bizmodel.ApiArticleOneModel{},
-			Album:    []*bizmodel.ApiAlbumModel{},
-			Attach:   []*bizmodel.ApiAttachModel{},
-			Property: []*bizmodel.ApiPropertyModel{},
+		return &service_model.ApiArticleModel{
+			Article:  &service_model.ApiArticleOneModel{},
+			Album:    []*service_model.ApiAlbumModel{},
+			Attach:   []*service_model.ApiAttachModel{},
+			Property: []*service_model.ApiPropertyModel{},
 		}
 	}
-	result := &bizmodel.ApiArticleModel{
+	result := &service_model.ApiArticleModel{
 		Article:  find1,
 		Album:    find2,
 		Attach:   find3,
@@ -152,12 +152,12 @@ func ArticleFind(call_index string, article_id int64) *bizmodel.ApiArticleModel 
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func ArticlePrevNext(call_index string, category_id, article_id int64) *bizmodel.ApiArticlePrevNext {
-	result := &bizmodel.ApiArticlePrevNext{
-		Prev: &bizmodel.ApiArticlePrevNextModel{},
-		Next: &bizmodel.ApiArticlePrevNextModel{},
+func ArticlePrevNext(call_index string, category_id, article_id int64) *service_model.ApiArticlePrevNext {
+	result := &service_model.ApiArticlePrevNext{
+		Prev: &service_model.ApiArticlePrevNextModel{},
+		Next: &service_model.ApiArticlePrevNextModel{},
 	}
-	prev, next := biz.NewApiArticle().PrevNext(call_index, category_id, article_id)
+	prev, next := service.NewApiArticle().PrevNext(call_index, category_id, article_id)
 	if prev != nil {
 		result.Prev = prev
 	}
@@ -174,10 +174,10 @@ func ArticlePrevNext(call_index string, category_id, article_id int64) *bizmodel
  * @param {int64} article_id 文章id
  * @return {*}
  */
-func ArticleArticle(call_index string, article_id int64) *bizmodel.ApiArticleOneModel {
-	find, err := biz.NewApiArticle().Article(call_index, article_id)
+func ArticleArticle(call_index string, article_id int64) *service_model.ApiArticleOneModel {
+	find, err := service.NewApiArticle().Article(call_index, article_id)
 	if err != nil {
-		find = &bizmodel.ApiArticleOneModel{}
+		find = &service_model.ApiArticleOneModel{}
 	}
 	return find
 }
@@ -189,10 +189,10 @@ func ArticleArticle(call_index string, article_id int64) *bizmodel.ApiArticleOne
  * @param {int32} type_id 分类
  * @return {*}
  */
-func ArticleAlbum(call_index string, article_id int64, type_id int32) []*bizmodel.ApiAlbumModel {
-	find, err := biz.NewApiArticle().Album(call_index, article_id, type_id)
+func ArticleAlbum(call_index string, article_id int64, type_id int32) []*service_model.ApiAlbumModel {
+	find, err := service.NewApiArticle().Album(call_index, article_id, type_id)
 	if err != nil {
-		find = []*bizmodel.ApiAlbumModel{}
+		find = []*service_model.ApiAlbumModel{}
 	}
 	return find
 }
@@ -204,10 +204,10 @@ func ArticleAlbum(call_index string, article_id int64, type_id int32) []*bizmode
  * @param {int32} type_id 分类
  * @return {*}
  */
-func ArticleAttach(call_index string, article_id int64, type_id int32) []*bizmodel.ApiAttachModel {
-	find, err := biz.NewApiArticle().Attach(call_index, article_id, type_id)
+func ArticleAttach(call_index string, article_id int64, type_id int32) []*service_model.ApiAttachModel {
+	find, err := service.NewApiArticle().Attach(call_index, article_id, type_id)
 	if err != nil {
-		find = []*bizmodel.ApiAttachModel{}
+		find = []*service_model.ApiAttachModel{}
 	}
 	return find
 }

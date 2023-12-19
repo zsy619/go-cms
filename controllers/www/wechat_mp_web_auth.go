@@ -6,7 +6,7 @@ import (
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
 
-	"haedu.gov.cn/cms/app/biz"
+	"haedu.gov.cn/cms/app/cms/service"
 	"haedu.gov.cn/cms/app/wechat/models"
 	"haedu.gov.cn/cms/app/wechat/mp"
 )
@@ -27,7 +27,7 @@ func (ctrl *WechatMpWebAuthController) ToOauth2() {
 		return
 	}
 	// 获取微信公众号配置
-	account, err := biz.NewWeixinAccount().AccountFindCache(accountId)
+	account, err := service.NewWeixinAccount().AccountFindCache(accountId)
 	if err != nil {
 		logs.Error(err)
 		ctrl.Abort("500")

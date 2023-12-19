@@ -8,8 +8,8 @@ import (
 
 	"github.com/beego/beego/v2/core/logs"
 
-	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/dal/model"
+	"haedu.gov.cn/cms/app/cms/domain"
+	"haedu.gov.cn/cms/app/cms/service"
 	"haedu.gov.cn/cms/controllers"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
 	"haedu.gov.cn/cms/global"
@@ -26,7 +26,7 @@ func (ctrl *BaseController) Prepare() {
 	ctrl.Data["xsrf_token"] = ctrl.XSRFToken()
 
 	if GlobalAdminId == 0 {
-		user := ctrl.GetSession("user").(*model.CmsAdmin)
+		user := ctrl.GetSession("user").(*domain.CmsAdmin)
 		GlobalAdminId = user.UserID
 		GlobalUserType = int(user.UserType) // 1:管理员 2:学校
 		GlobalAdminName = user.UserName
@@ -93,7 +93,7 @@ func (ctrl *BaseController) RolePowerGet(navName string) vmodel.RoleAction {
 		roleAction.IsHasAttach = true
 		roleAction.IsHasAlbum = true
 	} else {
-		mdl, err := biz.NewCmsAdmin().RolePower(GlobalRoleId, navName)
+		mdl, err := service.NewCmsAdmin().RolePower(GlobalRoleId, navName)
 		if err != nil {
 			logs.Error("RoleValueFind", err.Error())
 		}

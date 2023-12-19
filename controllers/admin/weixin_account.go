@@ -6,8 +6,8 @@ import (
 	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/tools/xjson"
 
-	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/dal/model"
+	"haedu.gov.cn/cms/app/cms/domain"
+	"haedu.gov.cn/cms/app/cms/service"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
 )
 
@@ -15,7 +15,7 @@ func (ctrl *WeixinController) AccountPaginate() {
 	page, limit := ctrl.GetPagingParameters()
 	name := ctrl.GetSafeString("name")
 	status, _ := ctrl.GetInt32("status")
-	list, count, err := biz.NewWeixinAccount().AccountPaginate(page, limit, name, status)
+	list, count, err := service.NewWeixinAccount().AccountPaginate(page, limit, name, status)
 	if err != nil {
 		logs.Error("AccountPaginate", err.Error())
 	}
@@ -25,9 +25,9 @@ func (ctrl *WeixinController) AccountPaginate() {
 func (ctrl *WeixinController) AccountEdit() {
 	accountId, _ := ctrl.GetInt64("accountId")
 	clone, _ := ctrl.GetInt("clone")
-	mdl, err := biz.NewWeixinAccount().AccountFind(accountId)
+	mdl, err := service.NewWeixinAccount().AccountFind(accountId)
 	if err != nil {
-		mdl = &model.WeixinAccount{
+		mdl = &domain.WeixinAccount{
 			SortID: 99,
 		}
 	}
@@ -40,7 +40,7 @@ func (ctrl *WeixinController) AccountEdit() {
 }
 
 func (ctrl *WeixinController) AccountSave() {
-	mdl := model.WeixinAccount{}
+	mdl := domain.WeixinAccount{}
 	if err := ctrl.ParseForm(&mdl); err != nil {
 		logs.Error("AccountSave", err.Error())
 		ctrl.JSONError(err.Error())
@@ -52,7 +52,7 @@ func (ctrl *WeixinController) AccountSave() {
 		mdl.UpdateID = int32(GlobalAdminId)
 		mdl.UpdateName = GlobalAdminName
 	}
-	if err := biz.NewWeixinAccount().AccountSave(&mdl); err != nil {
+	if err := service.NewWeixinAccount().AccountSave(&mdl); err != nil {
 		logs.Error("AccountSave", err.Error())
 		ctrl.JSONError(err.Error())
 		return
@@ -62,7 +62,7 @@ func (ctrl *WeixinController) AccountSave() {
 
 func (ctrl *WeixinController) AccountDestory() {
 	accountId, _ := ctrl.GetInt64("accountId")
-	if err := biz.NewWeixinAccount().AccountDestory(accountId); err != nil {
+	if err := service.NewWeixinAccount().AccountDestory(accountId); err != nil {
 		logs.Error("AccountDestory", err.Error())
 		ctrl.JSONError(err.Error())
 		return
@@ -78,7 +78,7 @@ func (ctrl *WeixinController) AccountChangeStatus() {
 		return
 	}
 	for _, accountId := range mdl.AccountIds {
-		if err := biz.NewWeixinAccount().AccountChangeStatus(accountId, mdl.Status); err != nil {
+		if err := service.NewWeixinAccount().AccountChangeStatus(accountId, mdl.Status); err != nil {
 			logs.Error("AccountChangeStatus", err.Error())
 			ctrl.JSONError(err.Error())
 			return
@@ -96,7 +96,7 @@ func (ctrl *WeixinController) AccountSaveSortId() {
 		ctrl.JSONError(err.Error())
 	}
 	for _, mdl := range mdls {
-		if err := biz.NewWeixinAccount().AccountSaveSortId(mdl.AccountId, int32(mdl.SortId)); err != nil {
+		if err := service.NewWeixinAccount().AccountSaveSortId(mdl.AccountId, int32(mdl.SortId)); err != nil {
 			logs.Error("AccountSaveSortId", err.Error())
 			ctrl.JSONError(err.Error())
 			return

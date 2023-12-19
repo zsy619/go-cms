@@ -1,8 +1,8 @@
 package funcs
 
 import (
-	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/biz/bizmodel"
+	"haedu.gov.cn/cms/app/cms/service"
+	service_model "haedu.gov.cn/cms/app/cms/service/model"
 )
 
 /**
@@ -13,13 +13,13 @@ import (
  * @param {int64} channel_id 栏目ID
  * @return {*}
  */
-func TagNewExtend(limit int, site_id int64, site_flag string, channel_id int64) []*bizmodel.ApiTagModel {
+func TagNewExtend(limit int, site_id int64, site_flag string, channel_id int64) []*service_model.ApiTagModel {
 	if limit <= 0 {
 		limit = 6
 	}
-	find, _, _ := biz.NewApiTag().GetNew(limit, site_id, site_flag, channel_id)
+	find, _, _ := service.NewApiTag().GetNew(limit, site_id, site_flag, channel_id)
 	if find == nil {
-		return []*bizmodel.ApiTagModel{}
+		return []*service_model.ApiTagModel{}
 	}
 	return find
 }
@@ -29,7 +29,7 @@ func TagNewExtend(limit int, site_id int64, site_flag string, channel_id int64) 
  * @param {int} limit
  * @return {*}
  */
-func TagNew(limit int) []*bizmodel.ApiTagModel {
+func TagNew(limit int) []*service_model.ApiTagModel {
 	return TagNewExtend(limit, 0, "", 0)
 }
 
@@ -41,13 +41,13 @@ func TagNew(limit int) []*bizmodel.ApiTagModel {
  * @param {int64} channel_id 栏目ID
  * @return {*}
  */
-func TagTopExtend(limit int, site_id int64, site_flag string, channel_id int64) []*bizmodel.ApiTagModel {
+func TagTopExtend(limit int, site_id int64, site_flag string, channel_id int64) []*service_model.ApiTagModel {
 	if limit <= 0 {
 		limit = 6
 	}
-	find, _, _ := biz.NewApiTag().Get(limit, site_id, site_flag, channel_id)
+	find, _, _ := service.NewApiTag().Get(limit, site_id, site_flag, channel_id)
 	if find == nil {
-		return []*bizmodel.ApiTagModel{}
+		return []*service_model.ApiTagModel{}
 	}
 	return find
 }
@@ -57,7 +57,7 @@ func TagTopExtend(limit int, site_id int64, site_flag string, channel_id int64) 
  * @param {int} limit 获取数量，小于等于0时按6条处理
  * @return {*}
  */
-func TagTop(limit int) []*bizmodel.ApiTagModel {
+func TagTop(limit int) []*service_model.ApiTagModel {
 	return TagTopExtend(limit, 0, "", 0)
 }
 
@@ -67,13 +67,13 @@ func TagTop(limit int) []*bizmodel.ApiTagModel {
  * @param {string} tag_name
  * @return {*}
  */
-func TagArtilceTop(limit int, tag_name string) []*bizmodel.ApiArticleListModel {
+func TagArtilceTop(limit int, tag_name string) []*service_model.ApiArticleListModel {
 	if limit <= 0 {
 		limit = 6
 	}
-	list, _, err := biz.NewApiTag().ArtilceTop(limit, tag_name)
+	list, _, err := service.NewApiTag().ArtilceTop(limit, tag_name)
 	if err != nil {
-		return []*bizmodel.ApiArticleListModel{}
+		return []*service_model.ApiArticleListModel{}
 	}
 	return list
 }

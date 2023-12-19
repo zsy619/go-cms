@@ -8,8 +8,8 @@ import (
 	"haedu.gov.cn/tools/xjson"
 	"haedu.gov.cn/tools/xstring"
 
-	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/dal/model"
+	"haedu.gov.cn/cms/app/cms/domain"
+	"haedu.gov.cn/cms/app/cms/service"
 	"haedu.gov.cn/cms/app/lib"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
 	"haedu.gov.cn/cms/global"
@@ -18,7 +18,7 @@ import (
 type AdminController struct{ BaseController }
 
 func (ctrl *AdminController) Index() {
-	roleList, _, _ := biz.NewCmsAdmin().RolePaginate(0, 99999, "")
+	roleList, _, _ := service.NewCmsAdmin().RolePaginate(0, 99999, "")
 	ctrl.Data["roleList"] = roleList
 	// 获取角色权限
 	roleMap := ctrl.RolePowerGet("user_manager")
@@ -31,17 +31,17 @@ func (ctrl *AdminController) AdminPaginate() {
 	roleId, _ := ctrl.GetInt64("roleId")
 	realName := ctrl.GetSafeString("realName")
 	userName := ctrl.GetSafeString("userName")
-	list, count, _ := biz.NewCmsAdmin().AdminPaginate(page, limit, roleId, realName, userName)
+	list, count, _ := service.NewCmsAdmin().AdminPaginate(page, limit, roleId, realName, userName)
 	ctrl.JSONPage(lib.CodeSuccess, "", list, count)
 }
 
 func (ctrl *AdminController) AdminEdit() {
-	roleList, _, _ := biz.NewCmsAdmin().RolePaginate(0, 99999, "")
+	roleList, _, _ := service.NewCmsAdmin().RolePaginate(0, 99999, "")
 	ctrl.Data["roleList"] = roleList
 	userId, _ := ctrl.GetInt64("userId")
-	mdl, err := biz.NewCmsAdmin().AdminFind(userId)
+	mdl, err := service.NewCmsAdmin().AdminFind(userId)
 	if err != nil {
-		mdl = &model.CmsAdmin{
+		mdl = &domain.CmsAdmin{
 			SortID: 99,
 		}
 	}
@@ -50,7 +50,7 @@ func (ctrl *AdminController) AdminEdit() {
 }
 
 func (ctrl *AdminController) AdminSave() {
-	mdl := model.CmsAdmin{}
+	mdl := domain.CmsAdmin{}
 	if err := ctrl.ParseForm(&mdl); err != nil {
 		logs.Error("AdminSave", err.Error())
 		ctrl.JSONError(err.Error())
@@ -67,7 +67,7 @@ func (ctrl *AdminController) AdminSave() {
 		mdl.PasswordFormat = 1
 		mdl.Password, _ = xcrypto.Sm4Encrypt(mdl.Password, key)
 	}
-	do := biz.NewCmsAdmin()
+	do := service.NewCmsAdmin()
 	if err := do.AdminSave(&mdl); err != nil {
 		logs.Error("AdminSave", err.Error())
 		ctrl.JSONError(err.Error())
@@ -78,7 +78,7 @@ func (ctrl *AdminController) AdminSave() {
 
 func (ctrl *AdminController) AdminDestory() {
 	userId, _ := ctrl.GetInt64("userId")
-	if err := biz.NewCmsAdmin().AdminDestory(userId); err != nil {
+	if err := service.NewCmsAdmin().AdminDestory(userId); err != nil {
 		logs.Error("AdminDestory", err.Error())
 		ctrl.JSONError(err.Error())
 		return
@@ -93,7 +93,7 @@ func (ctrl *AdminController) Log() {
 func (ctrl *AdminController) LogPaginate() {
 	page, limit := ctrl.GetPagingParameters()
 	userName := ctrl.GetSafeString("userName")
-	list, count, _ := biz.NewCmsAdmin().LogPaginate(page, limit, 0, userName)
+	list, count, _ := service.NewCmsAdmin().LogPaginate(page, limit, 0, userName)
 	ctrl.JSONPage(lib.CodeSuccess, "", list, count)
 }
 
@@ -107,15 +107,15 @@ func (ctrl *AdminController) Role() {
 func (ctrl *AdminController) RolePaginate() {
 	page, limit := ctrl.GetPagingParameters()
 	name := ctrl.GetSafeString("name")
-	list, count, _ := biz.NewCmsAdmin().RolePaginate(page, limit, name)
+	list, count, _ := service.NewCmsAdmin().RolePaginate(page, limit, name)
 	ctrl.JSONPage(lib.CodeSuccess, "", list, count)
 }
 
 func (ctrl *AdminController) RoleEdit() {
 	roleId, _ := ctrl.GetInt64("roleId")
-	mdl, err := biz.NewCmsAdmin().RoleFind(roleId)
+	mdl, err := service.NewCmsAdmin().RoleFind(roleId)
 	if err != nil {
-		mdl = &model.CmsAdminRole{
+		mdl = &domain.CmsAdminRole{
 			SortID: 99,
 		}
 	}
@@ -124,7 +124,7 @@ func (ctrl *AdminController) RoleEdit() {
 }
 
 func (ctrl *AdminController) RoleSave() {
-	mdl := model.CmsAdminRole{}
+	mdl := domain.CmsAdminRole{}
 	if err := ctrl.ParseForm(&mdl); err != nil {
 		logs.Error("RoleSave", err.Error())
 		ctrl.JSONError(err.Error())
@@ -134,7 +134,7 @@ func (ctrl *AdminController) RoleSave() {
 	if err := xjson.Unmarshal([]byte(actions), &role_vals); err != nil {
 		fmt.Println(err.Error())
 	}
-	do := biz.NewCmsAdmin()
+	do := service.NewCmsAdmin()
 	if err := do.RoleSave(&mdl); err != nil {
 		logs.Error("RoleSave", err.Error())
 		ctrl.JSONError(err.Error())
@@ -167,7 +167,7 @@ func (ctrl *AdminController) RoleSaveSortId() {
 		ctrl.JSONError(err.Error())
 	}
 	for _, mdl := range mdls {
-		if err := biz.NewCmsAdmin().RoleSaveSortId(mdl.RoleId, int32(mdl.SortId)); err != nil {
+		if err := service.NewCmsAdmin().RoleSaveSortId(mdl.RoleId, int32(mdl.SortId)); err != nil {
 			logs.Error("RoleSaveSortId", err.Error())
 			ctrl.JSONError(err.Error())
 			return
@@ -178,7 +178,7 @@ func (ctrl *AdminController) RoleSaveSortId() {
 
 func (ctrl *AdminController) RoleDestory() {
 	roleId, _ := ctrl.GetInt64("roleId")
-	if err := biz.NewCmsAdmin().RoleDestory(roleId); err != nil {
+	if err := service.NewCmsAdmin().RoleDestory(roleId); err != nil {
 		logs.Error("RoleDestory", err.Error())
 		ctrl.JSONError(err.Error())
 		return
@@ -188,7 +188,7 @@ func (ctrl *AdminController) RoleDestory() {
 
 func (ctrl *AdminController) NavFind() {
 	roleId, _ := ctrl.GetInt64("roleId")
-	list, count, err := biz.NewCmsAdmin().NavFind(roleId)
+	list, count, err := service.NewCmsAdmin().NavFind(roleId)
 	if err != nil {
 		logs.Error("NavFind", err.Error())
 	}
@@ -197,7 +197,7 @@ func (ctrl *AdminController) NavFind() {
 
 func (ctrl *AdminController) RoleValueFind() {
 	roleId, _ := ctrl.GetInt64("roleId")
-	list, count, err := biz.NewCmsAdmin().RoleValueFind(roleId)
+	list, count, err := service.NewCmsAdmin().RoleValueFind(roleId)
 	if err != nil {
 		logs.Error("RoleValueFind", err.Error())
 	}
@@ -206,7 +206,7 @@ func (ctrl *AdminController) RoleValueFind() {
 
 func (ctrl *AdminController) RoleSiteFind() {
 	roleId, _ := ctrl.GetInt64("roleId")
-	list, count, err := biz.NewCmsAdmin().RoleSiteFind(roleId)
+	list, count, err := service.NewCmsAdmin().RoleSiteFind(roleId)
 	if err != nil {
 		logs.Error("RoleSiteFind", err.Error())
 	}

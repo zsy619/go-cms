@@ -1,8 +1,8 @@
 package funcs
 
 import (
-	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/biz/bizmodel"
+	"haedu.gov.cn/cms/app/cms/service"
+	service_model "haedu.gov.cn/cms/app/cms/service/model"
 )
 
 /**
@@ -13,13 +13,13 @@ import (
  * @param {int64} channel_id 栏目ID
  * @return {*}
  */
-func TopicNewExtend(limit int, site_id int64, site_flag string, channel_id int64) []*bizmodel.ApiTopicModel {
+func TopicNewExtend(limit int, site_id int64, site_flag string, channel_id int64) []*service_model.ApiTopicModel {
 	if limit <= 0 {
 		limit = 6
 	}
-	find, _, _ := biz.NewApiTopic().GetNew(limit, site_id, site_flag, channel_id)
+	find, _, _ := service.NewApiTopic().GetNew(limit, site_id, site_flag, channel_id)
 	if find == nil {
-		return []*bizmodel.ApiTopicModel{}
+		return []*service_model.ApiTopicModel{}
 	}
 	return find
 }
@@ -29,7 +29,7 @@ func TopicNewExtend(limit int, site_id int64, site_flag string, channel_id int64
  * @param {int} limit 获取数量，小于等于0时按6条处理
  * @return {*}
  */
-func TopicNew(limit int) []*bizmodel.ApiTopicModel {
+func TopicNew(limit int) []*service_model.ApiTopicModel {
 	return TopicNewExtend(limit, 0, "", 0)
 }
 
@@ -41,13 +41,13 @@ func TopicNew(limit int) []*bizmodel.ApiTopicModel {
  * @param {int64} channel_id 栏目ID
  * @return {*}
  */
-func TopicTopExtend(limit int, site_id int64, site_flag string, channel_id int64) []*bizmodel.ApiTopicModel {
+func TopicTopExtend(limit int, site_id int64, site_flag string, channel_id int64) []*service_model.ApiTopicModel {
 	if limit <= 0 {
 		limit = 6
 	}
-	find, _, _ := biz.NewApiTopic().Get(limit, site_id, site_flag, channel_id)
+	find, _, _ := service.NewApiTopic().Get(limit, site_id, site_flag, channel_id)
 	if find == nil {
-		return []*bizmodel.ApiTopicModel{}
+		return []*service_model.ApiTopicModel{}
 	}
 	return find
 }
@@ -57,7 +57,7 @@ func TopicTopExtend(limit int, site_id int64, site_flag string, channel_id int64
  * @param {int} limit 获取数量，小于等于0时按6条处理
  * @return {*}
  */
-func TopicTop(limit int) []*bizmodel.ApiTopicModel {
+func TopicTop(limit int) []*service_model.ApiTopicModel {
 	return TopicTopExtend(limit, 0, "", 0)
 }
 
@@ -67,10 +67,10 @@ func TopicTop(limit int) []*bizmodel.ApiTopicModel {
  * @param {string} topic_name
  * @return {*}
  */
-func TopicArtilceTop(limit int, topic_name string) []*bizmodel.ApiArticleListModel {
-	list, _, err := biz.NewApiTopic().ArtilceTop(limit, topic_name)
+func TopicArtilceTop(limit int, topic_name string) []*service_model.ApiArticleListModel {
+	list, _, err := service.NewApiTopic().ArtilceTop(limit, topic_name)
 	if err != nil {
-		return []*bizmodel.ApiArticleListModel{}
+		return []*service_model.ApiArticleListModel{}
 	}
 	return list
 }

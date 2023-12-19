@@ -7,7 +7,7 @@ import (
 
 	"github.com/beego/beego/v2/server/web"
 
-	"haedu.gov.cn/cms/app/biz"
+	"haedu.gov.cn/cms/app/cms/service"
 )
 
 type WechatMpVerifyController struct{ web.Controller }
@@ -17,7 +17,7 @@ type WechatMpVerifyController struct{ web.Controller }
  * @return {*}
  */
 func InitWechatMpVerifyRouter() {
-	if list, err := biz.NewWeixinMpVerify().GetCache(); err != nil {
+	if list, err := service.NewWeixinMpVerify().GetCache(); err != nil {
 		fmt.Println("InitMpVerifyRouter--->", err.Error())
 	} else {
 		if len(list) > 0 {
@@ -48,7 +48,7 @@ func InitWechatMpVerifyRouter() {
  * @return {*}
  */
 func (ctrl *WechatMpVerifyController) Verify() {
-	if list, err := biz.NewWeixinMpVerify().GetCache(); err != nil {
+	if list, err := service.NewWeixinMpVerify().GetCache(); err != nil {
 		ctrl.Ctx.WriteString(err.Error())
 	} else {
 		if len(list) > 0 {

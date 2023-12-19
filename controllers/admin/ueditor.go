@@ -11,8 +11,8 @@ import (
 
 	"github.com/beego/beego/v2/core/logs"
 
-	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/dal/model"
+	"haedu.gov.cn/cms/app/cms/domain"
+	"haedu.gov.cn/cms/app/cms/service"
 	"haedu.gov.cn/cms/app/lib"
 )
 
@@ -196,7 +196,7 @@ func (ue *UEditorController) UploadFileX(op string, fieldName string, exts []str
 	// 保存到数据库
 	{
 		if op == "images" {
-			mdl := model.CmsAlbum{
+			mdl := domain.CmsAlbum{
 				TableName_:   op,
 				RecordID:     0,
 				TypeID:       0,
@@ -211,11 +211,11 @@ func (ue *UEditorController) UploadFileX(op string, fieldName string, exts []str
 				IsShow:       1,
 				CreateID:     int32(GlobalAdminId),
 			}
-			if err := biz.NewCmsAlbum().AlbumSave(&mdl); err != nil {
+			if err := service.NewCmsAlbum().AlbumSave(&mdl); err != nil {
 				logs.Error("UploadFileX AlbumSave", err.Error())
 			}
 		} else {
-			mdl := model.CmsAttach{
+			mdl := domain.CmsAttach{
 				TableName_:   op,
 				RecordID:     0,
 				TypeID:       0,
@@ -228,7 +228,7 @@ func (ue *UEditorController) UploadFileX(op string, fieldName string, exts []str
 				IsShow:       1,
 				CreateID:     int32(GlobalAdminId),
 			}
-			if err := biz.NewCmsAttach().AttachSave(&mdl); err != nil {
+			if err := service.NewCmsAttach().AttachSave(&mdl); err != nil {
 				logs.Error("UploadFileX AttachSave", err.Error())
 			}
 		}

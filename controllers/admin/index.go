@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/dal/query"
+	"haedu.gov.cn/cms/app/cms/mapper"
+	"haedu.gov.cn/cms/app/cms/service"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
 )
 
@@ -19,7 +19,7 @@ func (ctrl *IndexController) Index() {
 func (ctrl *IndexController) Welcome() {
 	ctrl.Data["roleId"] = GlobalRoleId
 	ctrl.Data["roleType"] = GlobalRoleType
-	noticeList, _ := biz.NewCmsAdminNotice().NoticeShow()
+	noticeList, _ := service.NewCmsAdminNotice().NoticeShow()
 	ctrl.Data["noticeList"] = noticeList
 	ctrl.display()
 }
@@ -32,16 +32,16 @@ func (ctrl *IndexController) Count() {
 		ArticleCount  int64 `json:"article_count"`
 	}{}
 
-	_, siteDo := query.CmsSiteDo()
+	_, siteDo := mapper.CmsSiteDo()
 	siteCount, _ := siteDo.Count()
 
-	_, channelDo := query.CmsSiteChannelDo()
+	_, channelDo := mapper.CmsSiteChannelDo()
 	channelCount, _ := channelDo.Count()
 
-	categoryMdl, categoryDo := query.CmsArticleCategoryDo()
+	categoryMdl, categoryDo := mapper.CmsArticleCategoryDo()
 	categoryCount, _ := categoryDo.Where(categoryMdl.Status.Eq(2)).Count()
 
-	articleMdl, articleDo := query.CmsArticleDo()
+	articleMdl, articleDo := mapper.CmsArticleDo()
 	articleCount, _ := articleDo.Where(articleMdl.Status.Eq(2)).Count()
 
 	result.SiteCount = siteCount
@@ -71,7 +71,7 @@ func (ctrl *IndexController) UserPasswordSave() {
 	if psErr := CheckPasswordRole(newPassword); psErr != nil {
 		ctrl.JSONError(psErr.Error())
 	}
-	err := biz.NewCmsAdmin().ModifyPassword(GlobalAdminId, oldPassword, newPassword)
+	err := service.NewCmsAdmin().ModifyPassword(GlobalAdminId, oldPassword, newPassword)
 	if err != nil {
 		ctrl.JSONError(err.Error())
 	}
@@ -95,9 +95,9 @@ func (ctrl *IndexController) ReportFormsGet() {
 		times = append(times, yesTime)
 		showTimes = append(showTimes, yesTime.Format("01-02"))
 	}
-	linkCounts := biz.NewCmsLink().FindByDate(times...)
-	adsCounts := biz.NewCmsAds().FindByDate(times...)
-	articleCounts := biz.NewCmsArticle().FindByDate(times...)
+	linkCounts := service.NewCmsLink().FindByDate(times...)
+	adsCounts := service.NewCmsAds().FindByDate(times...)
+	articleCounts := service.NewCmsArticle().FindByDate(times...)
 
 	mdl := vmodel.ReportFormsModel{}
 	mdl.Dates = showTimes

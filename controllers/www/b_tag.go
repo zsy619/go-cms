@@ -1,8 +1,8 @@
 package www
 
 import (
-	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/biz/bizmodel"
+	"haedu.gov.cn/cms/app/cms/service"
+	service_model "haedu.gov.cn/cms/app/cms/service/model"
 )
 
 /**
@@ -13,8 +13,8 @@ import (
  * @param {int64} channel_id 栏目ID
  * @return {*}
  */
-func (ctrl *BaseController) TagGet(limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTagModel, int64, error) {
-	return biz.NewApiTag().Get(limit, site_id, site_flag, channel_id)
+func (ctrl *BaseController) TagGet(limit int, site_id int64, site_flag string, channel_id int64) ([]*service_model.ApiTagModel, int64, error) {
+	return service.NewApiTag().Get(limit, site_id, site_flag, channel_id)
 }
 
 /**
@@ -25,8 +25,8 @@ func (ctrl *BaseController) TagGet(limit int, site_id int64, site_flag string, c
  * @param {int64} channel_id 栏目ID
  * @return {*}
  */
-func (ctrl *BaseController) TagGetNew(limit int, site_id int64, site_flag string, channel_id int64) ([]*bizmodel.ApiTagModel, int64, error) {
-	return biz.NewApiTag().GetNew(limit, site_id, site_flag, channel_id)
+func (ctrl *BaseController) TagGetNew(limit int, site_id int64, site_flag string, channel_id int64) ([]*service_model.ApiTagModel, int64, error) {
+	return service.NewApiTag().GetNew(limit, site_id, site_flag, channel_id)
 }
 
 /**
@@ -35,7 +35,7 @@ func (ctrl *BaseController) TagGetNew(limit int, site_id int64, site_flag string
  * @return {*}
  */
 func (ctrl *BaseController) TagClick(tag_id int64) error {
-	return biz.NewApiTag().Click(tag_id)
+	return service.NewApiTag().Click(tag_id)
 }
 
 /**
@@ -56,6 +56,6 @@ func (ctrl *BaseController) TagClick(tag_id int64) error {
  * @param {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
  * @return {*}
  */
-func (ctrl *BaseController) TagArticlePaginate(page, limit int, tag_name string, channel_id int64, channel_name string, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide, is_search int, order_by string) ([]*bizmodel.ApiArticleListModel, int64, error) {
-	return biz.NewApiTag().ArticlePaginate(page, limit, tag_name, channel_id, channel_name, category_id, call_index, keyword, is_top, is_red, is_hot, is_slide, is_search, order_by)
+func (ctrl *BaseController) TagArticlePaginate(page, limit int, tag_name string, channel_id int64, channel_name string, category_id int64, call_index string, keyword string, is_top, is_red, is_hot, is_slide, is_search int, order_by string) ([]*service_model.ApiArticleListModel, int64, error) {
+	return service.NewApiTag().ArticlePaginate(page, limit, tag_name, channel_id, channel_name, category_id, call_index, keyword, is_top, is_red, is_hot, is_slide, is_search, order_by)
 }

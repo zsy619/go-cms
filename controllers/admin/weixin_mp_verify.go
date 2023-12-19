@@ -10,8 +10,8 @@ import (
 	"haedu.gov.cn/tools/xio"
 	"haedu.gov.cn/tools/xjson"
 
-	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/dal/model"
+	"haedu.gov.cn/cms/app/cms/domain"
+	"haedu.gov.cn/cms/app/cms/service"
 	"haedu.gov.cn/cms/app/lib"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
 	"haedu.gov.cn/cms/controllers/www"
@@ -21,7 +21,7 @@ type WeixinMpVerifyController struct{ BaseController }
 
 // @router /admin/weixin/verify [get]
 func (ctrl *WeixinMpVerifyController) Index() {
-	list, _, _ := biz.NewWeixinAccount().AccountPaginate(1, 9999, "", -1)
+	list, _, _ := service.NewWeixinAccount().AccountPaginate(1, 9999, "", -1)
 	ctrl.Data["accountList"] = list
 	ctrl.display()
 }
@@ -29,7 +29,7 @@ func (ctrl *WeixinMpVerifyController) Index() {
 // @router /admin/weixin/verify/list [get]
 func (c *WeixinMpVerifyController) List() {
 	accountId, _ := c.GetInt64("account_id")
-	list, err := biz.NewWeixinMpVerify().Get(accountId)
+	list, err := service.NewWeixinMpVerify().Get(accountId)
 	if err != nil {
 		logs.Error("List", err.Error())
 	}
@@ -39,7 +39,7 @@ func (c *WeixinMpVerifyController) List() {
 // @router /admin/weixin/verify/edit [get]
 func (ctrl *WeixinMpVerifyController) Edit() {
 	if ctrl.IsPost() {
-		mdl := model.WeixinMpVerify{}
+		mdl := domain.WeixinMpVerify{}
 		if err := ctrl.ParseForm(&mdl); err != nil {
 			logs.Error("Edit", err.Error())
 			ctrl.JSONError(err.Error())
@@ -49,7 +49,7 @@ func (ctrl *WeixinMpVerifyController) Edit() {
 		} else {
 			mdl.UpdateID = int32(GlobalAdminId)
 		}
-		if err := biz.NewWeixinMpVerify().Save(&mdl); err != nil {
+		if err := service.NewWeixinMpVerify().Save(&mdl); err != nil {
 			logs.Error("Edit", err.Error())
 			ctrl.JSONError(err.Error())
 			return
@@ -57,15 +57,15 @@ func (ctrl *WeixinMpVerifyController) Edit() {
 		ctrl.JSONSuccess("保存成功", nil)
 	}
 	{
-		list, _, _ := biz.NewWeixinAccount().AccountPaginate(1, 9999, "", -1)
+		list, _, _ := service.NewWeixinAccount().AccountPaginate(1, 9999, "", -1)
 		ctrl.Data["accountList"] = list
 	}
 	{
 		verifyId, _ := ctrl.GetInt64("verify_id")
 		ctrl.Data["verify_id"] = verifyId
-		finder, err := biz.NewWeixinMpVerify().Find(verifyId)
+		finder, err := service.NewWeixinMpVerify().Find(verifyId)
 		if finder == nil || err != nil {
-			finder = &model.WeixinMpVerify{
+			finder = &domain.WeixinMpVerify{
 				SortID: 99,
 				Path:   "/",
 			}
@@ -86,7 +86,7 @@ func (ctrl *WeixinMpVerifyController) SaveSortId() {
 		return
 	}
 	for _, mdl := range mdls {
-		if err := biz.NewWeixinMpVerify().SaveSortId(mdl.VerifyId, int32(mdl.SortId)); err != nil {
+		if err := service.NewWeixinMpVerify().SaveSortId(mdl.VerifyId, int32(mdl.SortId)); err != nil {
 			logs.Error("SaveSortId", err.Error())
 			ctrl.JSONError(err.Error())
 			return
@@ -98,7 +98,7 @@ func (ctrl *WeixinMpVerifyController) SaveSortId() {
 // @router /admin/weixin/verify/destory [post]
 func (c *WeixinMpVerifyController) Destory() {
 	verifyId, _ := c.GetInt64("verify_id")
-	if err := biz.NewWeixinMpVerify().Destory(verifyId); err != nil {
+	if err := service.NewWeixinMpVerify().Destory(verifyId); err != nil {
 		logs.Error("Destory", err.Error())
 		c.JSONError(err.Error())
 		return
@@ -180,7 +180,7 @@ func (c *WeixinMpVerifyController) Upload() {
 
 	// 保存到数据库
 	{
-		mdl := model.CmsAttach{
+		mdl := domain.CmsAttach{
 			TableName_:   table,
 			RecordID:     0,
 			TypeID:       0,
@@ -193,7 +193,7 @@ func (c *WeixinMpVerifyController) Upload() {
 			IsShow:       1,
 			CreateID:     int32(GlobalAdminId),
 		}
-		if err := biz.NewCmsAttach().AttachSave(&mdl); err != nil {
+		if err := service.NewCmsAttach().AttachSave(&mdl); err != nil {
 			logs.Error("Upload AttachSave", err.Error())
 		}
 	}
@@ -208,7 +208,7 @@ func (c *WeixinMpVerifyController) Upload() {
  */
 // @router /admin/weixin/verify/refrshcache [post]
 func (c *WeixinMpVerifyController) RefrshCache() {
-	biz.NewWeixinMpVerify().RefeshCache()
+	service.NewWeixinMpVerify().RefeshCache()
 	www.InitWechatMpVerifyRouter()
 	c.JSONSuccess("重置成功", nil)
 }

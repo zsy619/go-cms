@@ -3,13 +3,13 @@ package admin
 import (
 	"github.com/beego/beego/v2/core/logs"
 
-	"haedu.gov.cn/cms/app/biz"
+	"haedu.gov.cn/cms/app/cms/service"
 )
 
 // Response 消息记录
 func (ctrl *WeixinController) Response() {
 	{
-		list, _, _ := biz.NewWeixinAccount().AccountPaginate(1, 9999, "", -1)
+		list, _, _ := service.NewWeixinAccount().AccountPaginate(1, 9999, "", -1)
 		ctrl.Data["accountList"] = list
 	}
 	ctrl.display()
@@ -19,7 +19,7 @@ func (ctrl *WeixinController) Response() {
 func (ctrl *WeixinController) ContentPaginate() {
 	page, limit := ctrl.GetPagingParameters()
 	accountId, _ := ctrl.GetInt64("account_id")
-	list, total, err := biz.NewWeixinContent().ContentPaginate(page, limit, accountId)
+	list, total, err := service.NewWeixinContent().ContentPaginate(page, limit, accountId)
 	if err != nil {
 		logs.Error("ContentPaginate", err.Error())
 		ctrl.JSONPageError(err.Error(), list, total)

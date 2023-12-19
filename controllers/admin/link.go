@@ -6,8 +6,8 @@ import (
 	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/tools/xjson"
 
-	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/dal/model"
+	"haedu.gov.cn/cms/app/cms/domain"
+	"haedu.gov.cn/cms/app/cms/service"
 	"haedu.gov.cn/cms/app/lib"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
 )
@@ -18,7 +18,7 @@ type LinkController struct{ BaseController }
 // @router /admin/link/index [get]
 func (ctrl *LinkController) Index() {
 	// 根据站点权限查询站点列表
-	siteList, categoryList, _ := biz.NewCmsLink().SiteCategoryGet(GlobalRoleId, GlobalRoleType)
+	siteList, categoryList, _ := service.NewCmsLink().SiteCategoryGet(GlobalRoleId, GlobalRoleType)
 	ctrl.Data["categoryList"] = categoryList
 	ctrl.Data["siteList"] = siteList
 	// 获取角色权限
@@ -31,9 +31,9 @@ func (ctrl *LinkController) LinkEdit() {
 	siteId, _ := ctrl.GetInt64("siteId")
 	linkId, _ := ctrl.GetInt64("linkId")
 	clone, _ := ctrl.GetInt("clone")
-	mdl, err := biz.NewCmsLink().LinkFind(linkId)
+	mdl, err := service.NewCmsLink().LinkFind(linkId)
 	if err != nil {
-		mdl = &model.CmsLink{
+		mdl = &domain.CmsLink{
 			SortID: 99,
 			Target: "_blank",
 			SiteID: siteId,
@@ -44,7 +44,7 @@ func (ctrl *LinkController) LinkEdit() {
 		mdl.LinkID = 0
 	}
 	ctrl.Data["mdl"] = mdl
-	_, categoryList, _ := biz.NewCmsLink().SiteCategoryGet(GlobalRoleId, GlobalRoleType)
+	_, categoryList, _ := service.NewCmsLink().SiteCategoryGet(GlobalRoleId, GlobalRoleType)
 	ctrl.Data["categoryList"] = categoryList
 	// 获取角色权限
 	roleMap := ctrl.RolePowerGet("links_index")
@@ -53,7 +53,7 @@ func (ctrl *LinkController) LinkEdit() {
 }
 
 func (ctrl *LinkController) LinkSave() {
-	mdl := model.CmsLink{}
+	mdl := domain.CmsLink{}
 	if err := ctrl.ParseForm(&mdl); err != nil {
 		logs.Error("LinkSave", err.Error())
 		ctrl.JSONError(err.Error())
@@ -65,7 +65,7 @@ func (ctrl *LinkController) LinkSave() {
 		mdl.UpdateID = int32(GlobalAdminId)
 		mdl.UpdateName = GlobalAdminName
 	}
-	if err := biz.NewCmsLink().LinkSave(&mdl); err != nil {
+	if err := service.NewCmsLink().LinkSave(&mdl); err != nil {
 		logs.Error("LinkSave", err.Error())
 		ctrl.JSONError(err.Error())
 		return
@@ -82,7 +82,7 @@ func (ctrl *LinkController) LinkSaveSortId() {
 		logs.Error("LinkSaveSortId", err.Error())
 		ctrl.JSONError(err.Error())
 	}
-	service := biz.NewCmsLink()
+	service := service.NewCmsLink()
 	for _, mdl := range mdls {
 		if err := service.LinkSaveSortId(mdl.LinkId, int32(mdl.SortId)); err != nil {
 			logs.Error("LinkSaveSortId", err.Error())
@@ -96,7 +96,7 @@ func (ctrl *LinkController) LinkSaveSortId() {
 
 func (ctrl *LinkController) LinkDestory() {
 	linkId, _ := ctrl.GetInt64("linkId")
-	if err := biz.NewCmsLink().LinkDestory(linkId); err != nil {
+	if err := service.NewCmsLink().LinkDestory(linkId); err != nil {
 		logs.Error("LinkDestory", err.Error())
 		ctrl.JSONError(err.Error())
 		return
@@ -112,7 +112,7 @@ func (ctrl *LinkController) LinkChangeStatus() {
 		return
 	}
 	for _, linkid := range mdl.LinkIds {
-		if err := biz.NewCmsLink().LinkChangeStatus(linkid, mdl.Status); err != nil {
+		if err := service.NewCmsLink().LinkChangeStatus(linkid, mdl.Status); err != nil {
 			logs.Error("LinkChangeStatus", err.Error())
 			ctrl.JSONError(err.Error())
 			return
@@ -131,8 +131,8 @@ func (ctrl *LinkController) LinkPaginate() {
 	title := ctrl.GetSafeString("title")
 	callIndex := ctrl.GetSafeString("callIndex")
 
-	siteIds := biz.NewCmsLink().SiteIdsGet(siteId, GlobalRoleType, GlobalRoleId)
-	list, count, _ := biz.NewCmsLink().LinkPaginate(page, limit, -1, categoryId, title, callIndex, status, siteIds...)
+	siteIds := service.NewCmsLink().SiteIdsGet(siteId, GlobalRoleType, GlobalRoleId)
+	list, count, _ := service.NewCmsLink().LinkPaginate(page, limit, -1, categoryId, title, callIndex, status, siteIds...)
 	ctrl.JSONPage(lib.CodeSuccess, "", list, count)
 }
 
@@ -140,7 +140,7 @@ func (ctrl *LinkController) LinkPaginate() {
 // @router /admin/link/category [get]
 func (ctrl *LinkController) Category() {
 	// 根据站点权限查询站点列表
-	siteList, _, _ := biz.NewCmsLink().SiteCategoryGet(GlobalRoleId, GlobalRoleType)
+	siteList, _, _ := service.NewCmsLink().SiteCategoryGet(GlobalRoleId, GlobalRoleType)
 	ctrl.Data["siteList"] = siteList
 	// 获取角色权限
 	roleMap := ctrl.RolePowerGet("links_category")
@@ -151,26 +151,26 @@ func (ctrl *LinkController) Category() {
 func (ctrl *LinkController) CategoryEdit() {
 	siteId, _ := ctrl.GetInt64("siteId")
 	categoryId, _ := ctrl.GetInt64("categoryId")
-	mdl, err := biz.NewCmsLink().CategoryFind(categoryId)
+	mdl, err := service.NewCmsLink().CategoryFind(categoryId)
 	if err != nil {
-		mdl = &model.CmsLinkCategory{
+		mdl = &domain.CmsLinkCategory{
 			SortID: 99,
 			SiteID: siteId,
 		}
 	}
 	ctrl.Data["mdl"] = mdl
-	siteList, _, _ := biz.NewCmsLink().SiteCategoryGet(GlobalRoleId, GlobalRoleType)
+	siteList, _, _ := service.NewCmsLink().SiteCategoryGet(GlobalRoleId, GlobalRoleType)
 	ctrl.Data["siteList"] = siteList
 	ctrl.display()
 }
 
 func (ctrl *LinkController) CategorySave() {
-	mdl := model.CmsLinkCategory{}
+	mdl := domain.CmsLinkCategory{}
 	if err := ctrl.ParseForm(&mdl); err != nil {
 		logs.Error("CategorySave", err.Error())
 		ctrl.JSONError(err.Error())
 	}
-	if err := biz.NewCmsLink().CategorySave(&mdl); err != nil {
+	if err := service.NewCmsLink().CategorySave(&mdl); err != nil {
 		logs.Error("CategorySave", err.Error())
 		ctrl.JSONError(err.Error())
 		return
@@ -187,7 +187,7 @@ func (ctrl *LinkController) CategorySaveSortId() {
 		ctrl.JSONError(err.Error())
 	}
 	for _, mdl := range mdls {
-		if err := biz.NewCmsLink().CategorySaveSortId(mdl.CategoryId, int32(mdl.SortId)); err != nil {
+		if err := service.NewCmsLink().CategorySaveSortId(mdl.CategoryId, int32(mdl.SortId)); err != nil {
 			logs.Error("CategorySaveSortId", err.Error())
 			ctrl.JSONError(err.Error())
 			return
@@ -198,7 +198,7 @@ func (ctrl *LinkController) CategorySaveSortId() {
 
 func (ctrl *LinkController) CategoryDestory() {
 	categoryId, _ := ctrl.GetInt64("categoryId")
-	if err := biz.NewCmsLink().CategoryDestory(categoryId); err != nil {
+	if err := service.NewCmsLink().CategoryDestory(categoryId); err != nil {
 		logs.Error("CategoryDestory", err.Error())
 		ctrl.JSONError(err.Error())
 		return
@@ -214,7 +214,7 @@ func (ctrl *LinkController) CategoryPaginate() {
 	title := ctrl.GetSafeString("title")
 	callIndex := ctrl.GetSafeString("callIndex")
 
-	siteIds := biz.NewCmsLink().SiteIdsGet(siteId, GlobalRoleType, GlobalRoleId)
-	categoryList, count, _ := biz.NewCmsLink().CategoryPaginate(page, limit, -1, title, callIndex, siteIds...)
+	siteIds := service.NewCmsLink().SiteIdsGet(siteId, GlobalRoleType, GlobalRoleId)
+	categoryList, count, _ := service.NewCmsLink().CategoryPaginate(page, limit, -1, title, callIndex, siteIds...)
 	ctrl.JSONPage(lib.CodeSuccess, "", categoryList, count)
 }

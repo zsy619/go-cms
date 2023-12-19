@@ -15,8 +15,8 @@ import (
 	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/tools/xio"
 
-	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/dal/model"
+	"haedu.gov.cn/cms/app/cms/domain"
+	"haedu.gov.cn/cms/app/cms/service"
 	"haedu.gov.cn/cms/app/lib"
 )
 
@@ -119,7 +119,7 @@ func (ctrl *ToolsController) ImageUpload() {
 
 	// 保存到数据库
 	{
-		mdl := model.CmsAlbum{
+		mdl := domain.CmsAlbum{
 			TableName_:   table,
 			RecordID:     0,
 			TypeID:       0,
@@ -134,13 +134,13 @@ func (ctrl *ToolsController) ImageUpload() {
 			IsShow:       1,
 			CreateID:     int32(GlobalAdminId),
 		}
-		if err := biz.NewCmsAlbum().AlbumSave(&mdl); err != nil {
+		if err := service.NewCmsAlbum().AlbumSave(&mdl); err != nil {
 			logs.Error("ImageUpload AlbumSave", err.Error())
 		}
 	}
 
 	// 写入日志
-	biz.NewCmsAdmin().LoginLog(GlobalAdminId, GlobalAdminName, "ImageUpload", result.File.Url1, "", "OK", ctrl.GetClientIp())
+	service.NewCmsAdmin().LoginLog(GlobalAdminId, GlobalAdminName, "ImageUpload", result.File.Url1, "", "OK", ctrl.GetClientIp())
 
 	ctrl.Data["json"] = result
 	ctrl.ServeJSON()
@@ -227,7 +227,7 @@ func (ctrl *ToolsController) Upload() {
 
 	// 保存到数据库
 	{
-		mdl := model.CmsAttach{
+		mdl := domain.CmsAttach{
 			TableName_:   table,
 			RecordID:     0,
 			TypeID:       0,
@@ -240,12 +240,12 @@ func (ctrl *ToolsController) Upload() {
 			IsShow:       1,
 			CreateID:     int32(GlobalAdminId),
 		}
-		if err := biz.NewCmsAttach().AttachSave(&mdl); err != nil {
+		if err := service.NewCmsAttach().AttachSave(&mdl); err != nil {
 			logs.Error("Upload AttachSave", err.Error())
 		}
 	}
 	// 写入日志
-	biz.NewCmsAdmin().LoginLog(GlobalAdminId, GlobalAdminName, "UploadFile", result.File.Url1, "", "OK", ctrl.GetClientIp())
+	service.NewCmsAdmin().LoginLog(GlobalAdminId, GlobalAdminName, "UploadFile", result.File.Url1, "", "OK", ctrl.GetClientIp())
 
 	ctrl.Data["json"] = result
 	ctrl.ServeJSON()
@@ -296,7 +296,7 @@ func (ctrl *ToolsController) KindEditorUpload() {
 	}
 	// 保存到数据库
 	{
-		mdl := model.CmsAlbum{
+		mdl := domain.CmsAlbum{
 			TableName_:   table,
 			RecordID:     0,
 			TypeID:       0,
@@ -311,7 +311,7 @@ func (ctrl *ToolsController) KindEditorUpload() {
 			IsShow:       1,
 			CreateID:     int32(GlobalAdminId),
 		}
-		if err := biz.NewCmsAlbum().AlbumSave(&mdl); err != nil {
+		if err := service.NewCmsAlbum().AlbumSave(&mdl); err != nil {
 			logs.Error("KindEditorUpload AlbumSave", err.Error())
 		}
 	}

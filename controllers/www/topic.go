@@ -1,6 +1,6 @@
 package www
 
-import "haedu.gov.cn/cms/app/biz"
+import "haedu.gov.cn/cms/app/cms/service"
 
 // TopicController 专题控制器
 type TopicController struct{ BaseController }
@@ -16,7 +16,7 @@ func (ctrl *TopicController) Index() {
 	if name == "" {
 		ctrl.Ctx.WriteString("专题名称不能为空")
 	}
-	find, err := biz.NewApiTopic().Find(0, name)
+	find, err := service.NewApiTopic().Find(0, name)
 	if err != nil || find.Name == "" {
 		ctrl.Ctx.WriteString("专题不存在")
 		ctrl.StopRun()

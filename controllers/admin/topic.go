@@ -6,8 +6,8 @@ import (
 	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/tools/xjson"
 
-	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/dal/model"
+	"haedu.gov.cn/cms/app/cms/domain"
+	"haedu.gov.cn/cms/app/cms/service"
 	"haedu.gov.cn/cms/app/lib"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
 	"haedu.gov.cn/cms/global"
@@ -18,7 +18,7 @@ type TopicController struct{ BaseController }
 // Index 标签管理
 // @router /admin/Topic/index [get]
 func (ctrl *TopicController) Index() {
-	siteList, _ := biz.NewCmsTopic().SiteGet(GlobalRoleId, GlobalRoleType)
+	siteList, _ := service.NewCmsTopic().SiteGet(GlobalRoleId, GlobalRoleType)
 	ctrl.Data["site"] = siteList
 	// 获取角色权限
 	roleMap := ctrl.RolePowerGet("topic")
@@ -31,9 +31,9 @@ func (ctrl *TopicController) Index() {
 func (ctrl *TopicController) TopicEdit() {
 	topicId, _ := ctrl.GetInt64("topicId")
 	clone, _ := ctrl.GetInt("clone")
-	mdl, err := biz.NewCmsTopic().TopicFind(topicId)
+	mdl, err := service.NewCmsTopic().TopicFind(topicId)
 	if err != nil {
-		mdl = &model.CmsTopic{
+		mdl = &domain.CmsTopic{
 			SortID: 99,
 		}
 	}
@@ -42,7 +42,7 @@ func (ctrl *TopicController) TopicEdit() {
 		mdl.TopicID = 0
 	}
 	ctrl.Data["mdl"] = mdl
-	siteList, _ := biz.NewCmsTopic().SiteGet(GlobalRoleId, GlobalRoleType)
+	siteList, _ := service.NewCmsTopic().SiteGet(GlobalRoleId, GlobalRoleType)
 	ctrl.Data["site"] = siteList
 	// 获取角色权限
 	roleMap := ctrl.RolePowerGet("topic")
@@ -53,7 +53,7 @@ func (ctrl *TopicController) TopicEdit() {
 // TopicSave 保存
 // @router /admin/Topic/TopicSave [post]
 func (ctrl *TopicController) TopicSave() {
-	mdl := model.CmsTopic{}
+	mdl := domain.CmsTopic{}
 	if err := ctrl.ParseForm(&mdl); err != nil {
 		logs.Error("TopicSave", err.Error())
 		ctrl.JSONError(err.Error())
@@ -65,7 +65,7 @@ func (ctrl *TopicController) TopicSave() {
 		mdl.UpdateID = int32(GlobalAdminId)
 		mdl.UpdateName = GlobalAdminName
 	}
-	if err := biz.NewCmsTopic().TopicSave(&mdl); err != nil {
+	if err := service.NewCmsTopic().TopicSave(&mdl); err != nil {
 		logs.Error("TopicSave", err.Error())
 		ctrl.JSONError(err.Error())
 		return
@@ -83,7 +83,7 @@ func (ctrl *TopicController) TopicSaveSortId() {
 		logs.Error("TopicSaveSortId", err.Error())
 		ctrl.JSONError(err.Error())
 	}
-	service := biz.NewCmsTopic()
+	service := service.NewCmsTopic()
 	for _, mdl := range mdls {
 		if err := service.TopicSaveSortId(mdl.TopicId, int32(mdl.SortId)); err != nil {
 			logs.Error("TopicSaveSortId", err.Error())
@@ -98,7 +98,7 @@ func (ctrl *TopicController) TopicSaveSortId() {
 // @router /admin/Topic/TopicDestory [post]
 func (ctrl *TopicController) TopicDestory() {
 	topicId, _ := ctrl.GetInt64("topicId")
-	if err := biz.NewCmsTopic().TopicDestory(topicId); err != nil {
+	if err := service.NewCmsTopic().TopicDestory(topicId); err != nil {
 		logs.Error("TopicDestory", err.Error())
 		ctrl.JSONError(err.Error())
 		return
@@ -116,7 +116,7 @@ func (ctrl *TopicController) TopicChangeStatus() {
 		return
 	}
 	for _, topicId := range mdl.TopicIds {
-		if err := biz.NewCmsTopic().TopicChangeStatus(topicId, mdl.Status); err != nil {
+		if err := service.NewCmsTopic().TopicChangeStatus(topicId, mdl.Status); err != nil {
 			logs.Error("TopicChangeStatus", err.Error())
 			ctrl.JSONError(err.Error())
 			return
@@ -138,12 +138,12 @@ func (ctrl *TopicController) TopicPaginate() {
 		siteIds = append(siteIds, siteId)
 	} else {
 		if !global.IsSuper(GlobalRoleType) {
-			siteIdList, _, _ := biz.NewCmsAdmin().RoleSiteFind(GlobalRoleId)
+			siteIdList, _, _ := service.NewCmsAdmin().RoleSiteFind(GlobalRoleId)
 			for _, item := range siteIdList {
 				siteIds = append(siteIds, item.SiteID)
 			}
 		}
 	}
-	list, count, _ := biz.NewCmsTopic().TopicPaginate(page, limit, -1, name, title, status, siteIds...)
+	list, count, _ := service.NewCmsTopic().TopicPaginate(page, limit, -1, name, title, status, siteIds...)
 	ctrl.JSONPage(lib.CodeSuccess, "", list, count)
 }

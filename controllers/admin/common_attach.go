@@ -6,8 +6,8 @@ import (
 	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/tools/xjson"
 
-	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/dal/model"
+	"haedu.gov.cn/cms/app/cms/domain"
+	"haedu.gov.cn/cms/app/cms/service"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
 )
 
@@ -30,7 +30,7 @@ func (ctrl *CommonController) AttachPaginate() {
 	tableName := ctrl.GetSafeString("tableName")
 	recordId, _ := ctrl.GetInt64("recordId")
 	typeId, _ := ctrl.GetInt32("typeId")
-	list, count, err := biz.NewCmsAttach().AttachPaginate(1, 99999, tableName, recordId, typeId, GlobalAdminId, GlobalRoleType)
+	list, count, err := service.NewCmsAttach().AttachPaginate(1, 99999, tableName, recordId, typeId, GlobalAdminId, GlobalRoleType)
 	if err != nil {
 		logs.Error("AttachPaginate", err.Error())
 	}
@@ -38,13 +38,13 @@ func (ctrl *CommonController) AttachPaginate() {
 }
 
 func (ctrl *CommonController) AttachSave() {
-	mdl := model.CmsAttach{}
+	mdl := domain.CmsAttach{}
 	if err := ctrl.ParseForm(&mdl); err != nil {
 		logs.Error("AttachSave", err.Error())
 		ctrl.JSONError(err.Error())
 	}
 	mdl.CreateID = int32(GlobalAdminId)
-	if err := biz.NewCmsAttach().AttachSave(&mdl); err != nil {
+	if err := service.NewCmsAttach().AttachSave(&mdl); err != nil {
 		logs.Error("AttachSave", err.Error())
 		ctrl.JSONError(err.Error())
 		return
@@ -61,7 +61,7 @@ func (ctrl *CommonController) AttachSaveShow() {
 		ctrl.JSONError(err.Error())
 	}
 	for _, mdl := range mdls.AttachIds {
-		if err := biz.NewCmsAttach().AttachSaveShow(mdl, mdls.Show); err != nil {
+		if err := service.NewCmsAttach().AttachSaveShow(mdl, mdls.Show); err != nil {
 			logs.Error("AttachSaveShow", err.Error())
 			ctrl.JSONError(err.Error())
 			return
@@ -78,7 +78,7 @@ func (ctrl *CommonController) AttachSaveBatch() {
 		logs.Error("AttachSaveBatch", err.Error())
 		ctrl.JSONError(err.Error())
 	}
-	service := biz.NewCmsAttach()
+	service := service.NewCmsAttach()
 	for _, mdl := range mdls {
 		if err := service.AttachSaveInfo(mdl.AttachID, mdl.Title, mdl.Point, mdl.Click, mdl.SortID, mdl.Remark); err != nil {
 			logs.Error("AttachSaveBatch", err.Error())
@@ -91,7 +91,7 @@ func (ctrl *CommonController) AttachSaveBatch() {
 
 func (ctrl *CommonController) AttachDestory() {
 	attachId, _ := ctrl.GetInt64("attachId")
-	if err := biz.NewCmsAttach().AttachDestory(attachId); err != nil {
+	if err := service.NewCmsAttach().AttachDestory(attachId); err != nil {
 		logs.Error("AttachDestory", err.Error())
 		ctrl.JSONError(err.Error())
 		return

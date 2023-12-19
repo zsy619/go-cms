@@ -1,8 +1,8 @@
 package funcs
 
 import (
-	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/biz/bizmodel"
+	"haedu.gov.cn/cms/app/cms/service"
+	service_model "haedu.gov.cn/cms/app/cms/service/model"
 )
 
 /**
@@ -14,13 +14,13 @@ import (
 * @param {string} call_index 广告分类标识
 * @return {*}
  */
-func AdsNewExtend(limit int, site_id int64, site_flag string, category_id int64, call_index string) []*bizmodel.ApiAdsModel {
+func AdsNewExtend(limit int, site_id int64, site_flag string, category_id int64, call_index string) []*service_model.ApiAdsModel {
 	if limit <= 0 {
 		limit = 6
 	}
-	find, _, err := biz.NewApiAds().GetNew(limit, site_id, site_flag, category_id, call_index)
+	find, _, err := service.NewApiAds().GetNew(limit, site_id, site_flag, category_id, call_index)
 	if err != nil {
-		find = []*bizmodel.ApiAdsModel{}
+		find = []*service_model.ApiAdsModel{}
 	}
 	return find
 }
@@ -30,7 +30,7 @@ func AdsNewExtend(limit int, site_id int64, site_flag string, category_id int64,
  * @param {int} limit
  * @return {*}
  */
-func AdsNew(limit int) []*bizmodel.ApiAdsModel {
+func AdsNew(limit int) []*service_model.ApiAdsModel {
 	if limit <= 0 {
 		limit = 6
 	}
@@ -46,13 +46,13 @@ func AdsNew(limit int) []*bizmodel.ApiAdsModel {
 * @param {string} call_index 广告分类标识
 * @return {*}
  */
-func AdsTopExtend(limit int, site_id int64, site_flag string, category_id int64, call_index string) []*bizmodel.ApiAdsModel {
+func AdsTopExtend(limit int, site_id int64, site_flag string, category_id int64, call_index string) []*service_model.ApiAdsModel {
 	if limit <= 0 {
 		limit = 6
 	}
-	find, _, err := biz.NewApiAds().Get(limit, site_id, site_flag, category_id, call_index)
+	find, _, err := service.NewApiAds().Get(limit, site_id, site_flag, category_id, call_index)
 	if err != nil {
-		find = []*bizmodel.ApiAdsModel{}
+		find = []*service_model.ApiAdsModel{}
 	}
 	return find
 }
@@ -62,7 +62,7 @@ func AdsTopExtend(limit int, site_id int64, site_flag string, category_id int64,
  * @param {int} limit 获取数量,小于等于0时按6条处理
  * @return {*}
  */
-func AdsTop(limit int) []*bizmodel.ApiAdsModel {
+func AdsTop(limit int) []*service_model.ApiAdsModel {
 	if limit <= 0 {
 		limit = 6
 	}

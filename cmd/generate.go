@@ -3,14 +3,15 @@ package main
 import (
 	"gorm.io/gen"
 	"gorm.io/gen/field"
+
 	"haedu.gov.cn/cms/app/dal"
 )
 
 // 参考：https://blog.csdn.net/Jeffid/article/details/126898000
 func main() {
 	g := gen.NewGenerator(gen.Config{
-		OutPath:      "./app/dal/query",
-		ModelPkgPath: "./app/dal/model", // 默认情况下会跟随OutPath参数，在同目录下生成model目录
+		OutPath:      "./app/cms/mapper",
+		ModelPkgPath: "./app/cms/domain", // 默认情况下会跟随OutPath参数，在同目录下生成model目录
 		Mode:         gen.WithDefaultQuery,
 		WithUnitTest: false,
 

@@ -11,8 +11,8 @@ import (
 
 	"haedu.gov.cn/tools/xgeneric"
 
-	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/dal/model"
+	"haedu.gov.cn/cms/app/cms/domain"
+	"haedu.gov.cn/cms/app/cms/service"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
 )
 
@@ -72,8 +72,8 @@ func (ctrl *ThemeController) Upload() {
 
 	// 3. 检测主题是否已经存在
 	themeDir := filepath.Join("./views/themes", themeName)
-	service := biz.NewCmsTheme()
-	if ctrl.fileExists(themeDir) || service.ThemeExists(themeName) {
+	themeService := service.NewCmsTheme()
+	if ctrl.fileExists(themeDir) || themeService.ThemeExists(themeName) {
 		ctrl.uploadMsg(-1, fmt.Sprintf("主题 %s 已经存在", themeName))
 		return
 	}
@@ -151,7 +151,7 @@ func (ctrl *ThemeController) Upload() {
 	}
 
 	// TODO: 入库操作
-	themeModel := &model.CmsTheme{
+	themeModel := &domain.CmsTheme{
 		Name:      themeName,
 		Title:     themConfig.Title,
 		Remark:    themConfig.Description,
@@ -162,13 +162,13 @@ func (ctrl *ThemeController) Upload() {
 		Author:    xgeneric.IFF(themConfig.Author == "", "教育网", themConfig.Author),
 		Type:      int32(typex),
 	}
-	if err := service.ThemeSave(themeModel); err != nil {
+	if err := themeService.ThemeSave(themeModel); err != nil {
 		ctrl.uploadMsg(-1, err.Error())
 		return
 	}
 
 	// 写入日志
-	biz.NewCmsAdmin().LoginLog(GlobalAdminId, GlobalAdminName, "ThemeUpload", "", "", "OK", ctrl.GetClientIp())
+	service.NewCmsAdmin().LoginLog(GlobalAdminId, GlobalAdminName, "ThemeUpload", "", "", "OK", ctrl.GetClientIp())
 
 	// 6. 删除临时目录
 	err = os.RemoveAll(tmpDir)

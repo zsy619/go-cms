@@ -7,8 +7,8 @@ import (
 	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/tools/xjson"
 
-	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/dal/model"
+	"haedu.gov.cn/cms/app/cms/domain"
+	"haedu.gov.cn/cms/app/cms/service"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
 )
 
@@ -33,7 +33,7 @@ func (ctrl *ArticleController) CommentPaginate() {
 	status, _ := ctrl.GetInt32("status")
 	lock, _ := ctrl.GetInt32("lock")
 	reply, _ := ctrl.GetInt32("reply")
-	list, count, err := biz.NewCmsArticle().CommentPaginate(page, limit, siteId, channelId, status, lock, reply)
+	list, count, err := service.NewCmsArticle().CommentPaginate(page, limit, siteId, channelId, status, lock, reply)
 	if err != nil {
 		logs.Error("CommentPaginate", err.Error())
 	}
@@ -42,12 +42,12 @@ func (ctrl *ArticleController) CommentPaginate() {
 
 func (ctrl *ArticleController) CommentEdit() {
 	if ctrl.IsPost() {
-		mdl := model.CmsArticleComment{}
+		mdl := domain.CmsArticleComment{}
 		if err := ctrl.ParseForm(&mdl); err != nil {
 			logs.Error("CommentEdit", err.Error())
 			ctrl.JSONError(err.Error())
 		}
-		if err := biz.NewCmsArticle().CommentEdit(&mdl); err != nil {
+		if err := service.NewCmsArticle().CommentEdit(&mdl); err != nil {
 			logs.Error("CommentEdit", err.Error())
 			ctrl.JSONError(err.Error())
 			return
@@ -62,9 +62,9 @@ func (ctrl *ArticleController) CommentEdit() {
 	}
 	commentId, _ := ctrl.GetInt64("commentId")
 	clone, _ := ctrl.GetInt("clone")
-	mdl, err := biz.NewCmsArticle().CommentFind(commentId)
+	mdl, err := service.NewCmsArticle().CommentFind(commentId)
 	if err != nil {
-		mdl = &model.CmsArticleComment{
+		mdl = &domain.CmsArticleComment{
 			ChannelID: channelId,
 			ReplyUser: GlobalAdminName,
 			ReplyTime: time.Now(),
@@ -89,7 +89,7 @@ func (ctrl *ArticleController) CommentChangeStatus() {
 		return
 	}
 	for _, commentId := range mdl.CommentIds {
-		if err := biz.NewCmsArticle().CommentChangeStatus(commentId, mdl.Status); err != nil {
+		if err := service.NewCmsArticle().CommentChangeStatus(commentId, mdl.Status); err != nil {
 			logs.Error("CommentChangeStatus", err.Error())
 			ctrl.JSONError(err.Error())
 			return
@@ -100,7 +100,7 @@ func (ctrl *ArticleController) CommentChangeStatus() {
 
 func (ctrl *ArticleController) CommentDestory() {
 	commentId, _ := ctrl.GetInt64("commentId")
-	if err := biz.NewCmsArticle().CommentDestory(commentId); err != nil {
+	if err := service.NewCmsArticle().CommentDestory(commentId); err != nil {
 		logs.Error("CommentDestory", err.Error())
 		ctrl.JSONError(err.Error())
 		return

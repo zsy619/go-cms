@@ -1,13 +1,13 @@
 package admin
 
-import "haedu.gov.cn/cms/app/biz"
+import "haedu.gov.cn/cms/app/cms/service"
 
 type MenuController struct{ BaseController }
 
 // MenuList 登录者导航
 // @router /admin/menu/MenuList [get]
 func (ctrl *MenuController) MenuList() {
-	menuServicee := biz.NewMenu()
+	menuServicee := service.NewMenu()
 	menuList := menuServicee.MenuList(GlobalAdminId)
 	ctrl.Data["json"] = menuList
 	ctrl.ServeJSON()

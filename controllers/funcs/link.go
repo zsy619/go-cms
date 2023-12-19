@@ -1,8 +1,8 @@
 package funcs
 
 import (
-	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/biz/bizmodel"
+	"haedu.gov.cn/cms/app/cms/service"
+	service_model "haedu.gov.cn/cms/app/cms/service/model"
 )
 
 /**
@@ -14,13 +14,13 @@ import (
 * @param {string} call_index 链接分类标识
 * @return {*}
  */
-func LinkNewExtend(limit int, site_id int64, site_flag string, category_id int64, call_index string) []*bizmodel.ApiLinkModel {
+func LinkNewExtend(limit int, site_id int64, site_flag string, category_id int64, call_index string) []*service_model.ApiLinkModel {
 	if limit <= 0 {
 		limit = 6
 	}
-	find, _, err := biz.NewApiLink().GetNew(limit, site_id, site_flag, category_id, call_index)
+	find, _, err := service.NewApiLink().GetNew(limit, site_id, site_flag, category_id, call_index)
 	if err != nil {
-		find = []*bizmodel.ApiLinkModel{}
+		find = []*service_model.ApiLinkModel{}
 	}
 	return find
 }
@@ -30,7 +30,7 @@ func LinkNewExtend(limit int, site_id int64, site_flag string, category_id int64
  * @param {int} limit 获取数量，小于等于0时按6条处理
  * @return {*}
  */
-func LinkNew(limit int) []*bizmodel.ApiLinkModel {
+func LinkNew(limit int) []*service_model.ApiLinkModel {
 	if limit <= 0 {
 		limit = 6
 	}
@@ -46,13 +46,13 @@ func LinkNew(limit int) []*bizmodel.ApiLinkModel {
 * @param {string} call_index 链接分类标识
 * @return {*}
  */
-func LinkTopExtend(limit int, site_id int64, site_flag string, category_id int64, call_index string) []*bizmodel.ApiLinkModel {
+func LinkTopExtend(limit int, site_id int64, site_flag string, category_id int64, call_index string) []*service_model.ApiLinkModel {
 	if limit <= 0 {
 		limit = 6
 	}
-	find, _, err := biz.NewApiLink().Get(limit, site_id, site_flag, category_id, call_index)
+	find, _, err := service.NewApiLink().Get(limit, site_id, site_flag, category_id, call_index)
 	if err != nil {
-		find = []*bizmodel.ApiLinkModel{}
+		find = []*service_model.ApiLinkModel{}
 	}
 	return find
 }
@@ -62,7 +62,7 @@ func LinkTopExtend(limit int, site_id int64, site_flag string, category_id int64
  * @param {int} limit 获取数量，小于等于0时按6条处理
  * @return {*}
  */
-func LinkTop(limit int) []*bizmodel.ApiLinkModel {
+func LinkTop(limit int) []*service_model.ApiLinkModel {
 	if limit <= 0 {
 		limit = 6
 	}

@@ -3,7 +3,7 @@ package www
 import (
 	"github.com/beego/beego/v2/core/logs"
 
-	"haedu.gov.cn/cms/app/biz/bizmodel"
+	service_model "haedu.gov.cn/cms/app/cms/service/model"
 	"haedu.gov.cn/cms/app/lib"
 )
 
@@ -188,7 +188,7 @@ func (ctrl *ApiArticleController) Find() {
 	article_id, _ := ctrl.GetInt64("article_id", 0)
 	call_index := ctrl.GetSafeString("call_index")
 	aritcle, album, attatch, property, err := ctrl.BaseController.ArticleFind(call_index, article_id)
-	result := bizmodel.ApiArticleModel{
+	result := service_model.ApiArticleModel{
 		Article:  aritcle,
 		Album:    album,
 		Attach:   attatch,
@@ -215,8 +215,8 @@ func (ctrl *ApiArticleController) PrevNext() {
 	call_index := ctrl.GetSafeString("call_index")
 	prev, next := ctrl.BaseController.ArticlePrevNext(call_index, category_id, article_id)
 	result := struct {
-		Prev *bizmodel.ApiArticlePrevNextModel `json:"prev"`
-		Next *bizmodel.ApiArticlePrevNextModel `json:"next"`
+		Prev *service_model.ApiArticlePrevNextModel `json:"prev"`
+		Next *service_model.ApiArticlePrevNextModel `json:"next"`
 	}{
 		Prev: prev,
 		Next: next,

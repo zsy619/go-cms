@@ -1,6 +1,6 @@
 package www
 
-import "haedu.gov.cn/cms/app/biz"
+import "haedu.gov.cn/cms/app/cms/service"
 
 type TagController struct{ BaseController }
 
@@ -15,7 +15,7 @@ func (ctrl *TagController) Index() {
 	if name == "" {
 		ctrl.Ctx.WriteString("标签名称不能为空")
 	}
-	find, err := biz.NewApiTag().Find(0, name)
+	find, err := service.NewApiTag().Find(0, name)
 	if err != nil || find.Name == "" {
 		ctrl.Ctx.WriteString("标签不存在")
 		ctrl.StopRun()

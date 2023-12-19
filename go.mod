@@ -16,6 +16,8 @@ require (
 	haedu.gov.cn/tools v0.0.0-00010101000000-000000000000
 )
 
+require github.com/holiman/uint256 v1.2.4 // indirect
+
 require (
 	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.9.2 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
@@ -25,7 +27,7 @@ require (
 	github.com/chromedp/cdproto v0.0.0-20231205062650-00455a960d61 // indirect
 	github.com/chromedp/chromedp v0.9.3 // indirect
 	github.com/chromedp/sysutil v1.0.0 // indirect
-	github.com/ethereum/go-ethereum v1.13.5 // indirect
+	github.com/ethereum/go-ethereum v1.13.6 // indirect
 	github.com/g3n/engine v0.2.0 // indirect
 	github.com/go-sql-driver/mysql v1.7.1 // indirect
 	github.com/gobwas/httphead v0.1.0 // indirect
@@ -53,7 +55,7 @@ require (
 	github.com/satori/go.uuid v1.2.0
 	github.com/shiena/ansicolor v0.0.0-20230509054315-a9deabde6e02 // indirect
 	github.com/tjfoc/gmsm v1.4.1 // indirect
-	golang.org/x/crypto v0.16.0
+	golang.org/x/crypto v0.17.0
 	golang.org/x/image v0.14.0 // indirect
 	golang.org/x/mod v0.14.0 // indirect
 	golang.org/x/sys v0.15.0 // indirect

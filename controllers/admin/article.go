@@ -12,8 +12,8 @@ import (
 	"golang.org/x/net/html"
 	"haedu.gov.cn/tools/xjson"
 
-	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/dal/model"
+	"haedu.gov.cn/cms/app/cms/domain"
+	"haedu.gov.cn/cms/app/cms/service"
 	"haedu.gov.cn/cms/app/lib"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
 )
@@ -42,7 +42,7 @@ func (ctrl *ArticleController) ArticlePaginate() {
 	title := ctrl.GetSafeString("title")
 	callIndex := ctrl.GetSafeString("callIndex")
 	status, _ := ctrl.GetInt32("status")
-	list, count, err := biz.NewCmsArticle().ArticlePaginate(page, limit, channelId, categoryId, title, callIndex, status)
+	list, count, err := service.NewCmsArticle().ArticlePaginate(page, limit, channelId, categoryId, title, callIndex, status)
 	if err != nil {
 		logs.Error("ArticlePaginate", err.Error())
 	}
@@ -58,9 +58,9 @@ func (ctrl *ArticleController) ArticleEdit() {
 	}
 	articleId, _ := ctrl.GetInt64("articleId")
 	clone, _ := ctrl.GetInt("clone")
-	mdl, err := biz.NewCmsArticle().ArticleFind(articleId)
+	mdl, err := service.NewCmsArticle().ArticleFind(articleId)
 	if err != nil {
-		mdl = &model.CmsArticle{
+		mdl = &domain.CmsArticle{
 			SortID:      99,
 			Author:      GlobalAdminName,
 			ChannelID:   channelId,
@@ -79,7 +79,7 @@ func (ctrl *ArticleController) ArticleEdit() {
 }
 
 func (ctrl *ArticleController) ArticleSave() {
-	mdl := model.CmsArticle{}
+	mdl := domain.CmsArticle{}
 	if err := ctrl.ParseForm(&mdl); err != nil {
 		logs.Error("ArticleSave", err.Error())
 		ctrl.JSONError(err.Error())
@@ -131,7 +131,7 @@ func (ctrl *ArticleController) ArticleSave() {
 	if mdl.Tags != "" {
 		mdl.Tags = strings.ReplaceAll(mdl.Tags, "，", ",")
 	}
-	if err := biz.NewCmsArticle().ArticleSave(&mdl); err != nil {
+	if err := service.NewCmsArticle().ArticleSave(&mdl); err != nil {
 		logs.Error("ArticleSave", err.Error())
 		ctrl.JSONError(err.Error())
 		return
@@ -145,7 +145,7 @@ func (ctrl *ArticleController) ArticleSave() {
 			ctrl.JSONError(err.Error())
 		}
 		for i := 0; i < len(propertyList); i++ {
-			var item model.CmsArticleProperty
+			var item domain.CmsArticleProperty
 			item.PropertyID = propertyList[i].PropertyID
 			item.ParentID = propertyList[i].ParentID
 			item.ArticleID = propertyList[i].ArticleID
@@ -161,7 +161,7 @@ func (ctrl *ArticleController) ArticleSave() {
 			item.UpdateID = propertyList[i].UpdateID
 			item.UpdateName = propertyList[i].UpdateName
 
-			if err := biz.NewCmsArticle().PropertySave(&item); err != nil {
+			if err := service.NewCmsArticle().PropertySave(&item); err != nil {
 				logs.Error("PropertySave", err.Error())
 				ctrl.JSONError(err.Error())
 				return
@@ -174,7 +174,7 @@ func (ctrl *ArticleController) ArticleSave() {
 
 func (ctrl *ArticleController) ArticleClone() {
 	articleId, _ := ctrl.GetInt64("articleId")
-	if _, err := biz.NewCmsArticle().ArticleClone(articleId); err != nil {
+	if _, err := service.NewCmsArticle().ArticleClone(articleId); err != nil {
 		logs.Error("ArticleClone", err.Error())
 		ctrl.JSONError(err.Error())
 		return
@@ -184,7 +184,7 @@ func (ctrl *ArticleController) ArticleClone() {
 
 func (ctrl *ArticleController) ArticleDestory() {
 	articleId, _ := ctrl.GetInt64("articleId")
-	if err := biz.NewCmsArticle().ArticleDestory(articleId); err != nil {
+	if err := service.NewCmsArticle().ArticleDestory(articleId); err != nil {
 		logs.Error("ArticleDestory", err.Error())
 		ctrl.JSONError(err.Error())
 		return
@@ -200,7 +200,7 @@ func (ctrl *ArticleController) ArticleChangeStatus() {
 		return
 	}
 	for _, articleId := range mdl.ArticleIds {
-		if err := biz.NewCmsArticle().ArticleChangeStatus(articleId, mdl.Status); err != nil {
+		if err := service.NewCmsArticle().ArticleChangeStatus(articleId, mdl.Status); err != nil {
 			logs.Error("ArticleChangeStatus", err.Error())
 			ctrl.JSONError(err.Error())
 			return
@@ -218,7 +218,7 @@ func (ctrl *ArticleController) ArticleSaveSortId() {
 		ctrl.JSONError(err.Error())
 	}
 	for _, mdl := range mdls {
-		if err := biz.NewCmsArticle().ArticleSaveSortId(mdl.ArticleId, int32(mdl.SortId)); err != nil {
+		if err := service.NewCmsArticle().ArticleSaveSortId(mdl.ArticleId, int32(mdl.SortId)); err != nil {
 			logs.Error("ArticleSaveSortId", err.Error())
 			ctrl.JSONError(err.Error())
 			return
@@ -243,7 +243,7 @@ func (ctrl *ArticleController) Category() {
 
 func (ctrl *ArticleController) CategoryFind() {
 	channelId, _ := ctrl.GetInt64("channelId")
-	list, count, err := biz.NewCmsArticle().CategoryPaginate(1, 99999, channelId, "", "")
+	list, count, err := service.NewCmsArticle().CategoryPaginate(1, 99999, channelId, "", "")
 	if err != nil {
 		logs.Error("CategoryFind", err.Error())
 	}
@@ -260,9 +260,9 @@ func (ctrl *ArticleController) CategoryEdit() {
 	ctrl.Data["channelId"] = channelId
 	categoryId, _ := ctrl.GetInt64("categoryId")
 	parentId, _ := ctrl.GetInt64("parentId")
-	mdl, err := biz.NewCmsArticle().CategoryFind(categoryId)
+	mdl, err := service.NewCmsArticle().CategoryFind(categoryId)
 	if err != nil {
-		mdl = &model.CmsArticleCategory{
+		mdl = &domain.CmsArticleCategory{
 			IsShow:    true,
 			IsSearch:  true,
 			ParentID:  parentId,
@@ -278,12 +278,12 @@ func (ctrl *ArticleController) CategoryEdit() {
 }
 
 func (ctrl *ArticleController) CategorySave() {
-	mdl := model.CmsArticleCategory{}
+	mdl := domain.CmsArticleCategory{}
 	if err := ctrl.ParseForm(&mdl); err != nil {
 		logs.Error("CategorySave", err.Error())
 		ctrl.JSONError(err.Error())
 	}
-	if err := biz.NewCmsArticle().CategorySave(&mdl); err != nil {
+	if err := service.NewCmsArticle().CategorySave(&mdl); err != nil {
 		logs.Error("CategorySave", err.Error())
 		ctrl.JSONError(err.Error())
 		return
@@ -297,7 +297,7 @@ func (ctrl *ArticleController) CategoryAutoUrl() {
 		ctrl.JSONError("频道参数错误")
 		return
 	}
-	if err := biz.NewCmsArticle().CategoryAutoUrl(channelId); err != nil {
+	if err := service.NewCmsArticle().CategoryAutoUrl(channelId); err != nil {
 		logs.Error("CategoryAutoUrl", err.Error())
 		ctrl.JSONError(err.Error())
 		return
@@ -314,7 +314,7 @@ func (ctrl *ArticleController) CategorySaveSortId() {
 		ctrl.JSONError(err.Error())
 	}
 	for _, mdl := range mdls {
-		if err := biz.NewCmsArticle().CategorySaveSortId(mdl.CategoryId, int32(mdl.SortId)); err != nil {
+		if err := service.NewCmsArticle().CategorySaveSortId(mdl.CategoryId, int32(mdl.SortId)); err != nil {
 			logs.Error("CategorySaveSortId", err.Error())
 			ctrl.JSONError(err.Error())
 			return
@@ -326,7 +326,7 @@ func (ctrl *ArticleController) CategorySaveSortId() {
 
 func (ctrl *ArticleController) CategoryDestory() {
 	categoryId, _ := ctrl.GetInt64("categoryId")
-	if err := biz.NewCmsArticle().CategoryDestory(categoryId); err != nil {
+	if err := service.NewCmsArticle().CategoryDestory(categoryId); err != nil {
 		logs.Error("CategoryDestory", err.Error())
 		ctrl.JSONError(err.Error())
 		return
@@ -342,7 +342,7 @@ func (ctrl *ArticleController) CategoryTree() {
 		return
 	}
 	categoryId, _ := ctrl.GetInt64("categoryId")
-	tree, err := biz.NewCmsArticle().CategoryTree(channelId, categoryId)
+	tree, err := service.NewCmsArticle().CategoryTree(channelId, categoryId)
 	if err != nil {
 		logs.Error("CategoryTree", err.Error())
 		ctrl.JSONError(err.Error())

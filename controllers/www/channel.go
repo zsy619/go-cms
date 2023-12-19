@@ -3,7 +3,7 @@ package www
 import (
 	"haedu.gov.cn/tools/xstring"
 
-	"haedu.gov.cn/cms/app/biz"
+	"haedu.gov.cn/cms/app/cms/service"
 )
 
 // ChannelController 频道控制器
@@ -17,7 +17,7 @@ func (ctrl *ChannelController) Channel() {
 	if siteFlag == "" || channelName == "" {
 		ctrl.Abort("404")
 	}
-	channelModel, err := biz.NewApiChannel().Find(channelName, 0)
+	channelModel, err := service.NewApiChannel().Find(channelName, 0)
 	if err != nil {
 		ctrl.Ctx.WriteString(err.Error())
 		ctrl.StopRun()
@@ -43,12 +43,12 @@ func (ctrl *ChannelController) Category() {
 	if siteFlag == "" || channelName == "" || categoryName == "" {
 		ctrl.Abort("404")
 	}
-	channelModel, channelErr := biz.NewApiChannel().Find(channelName, 0)
+	channelModel, channelErr := service.NewApiChannel().Find(channelName, 0)
 	if channelErr != nil {
 		ctrl.Ctx.WriteString(channelErr.Error())
 		ctrl.StopRun()
 	}
-	categoryModel, categoryErr := biz.NewApiArticle().CategoryFind(0, categoryName)
+	categoryModel, categoryErr := service.NewApiArticle().CategoryFind(0, categoryName)
 	if categoryErr != nil {
 		ctrl.Ctx.WriteString(categoryErr.Error())
 		ctrl.StopRun()

@@ -7,8 +7,8 @@ import (
 	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/tools/xjson"
 
-	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/dal/model"
+	"haedu.gov.cn/cms/app/cms/domain"
+	"haedu.gov.cn/cms/app/cms/service"
 	"haedu.gov.cn/cms/app/lib"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
 )
@@ -23,7 +23,7 @@ func (ctrl *PlgOnlineRegisterController) Index() {
 
 // @router /admin/plg/register/paginate [get]
 func (ctrl *PlgOnlineRegisterController) Paginate() {
-	service := biz.NewPlgOnlineRegister()
+	service := service.NewPlgOnlineRegister()
 	page, limit := ctrl.GetPagingParameters()
 	realName := ctrl.GetSafeString("realName")
 	special := ctrl.GetSafeString("special")
@@ -41,11 +41,11 @@ func (ctrl *PlgOnlineRegisterController) Paginate() {
 // @router /admin/plg/register/edit [get]
 func (ctrl *PlgOnlineRegisterController) Edit() {
 	registerId, _ := ctrl.GetInt64("registerId")
-	service := biz.NewPlgOnlineRegister()
+	service := service.NewPlgOnlineRegister()
 	mdl, err := service.Find(registerId)
 	if err != nil {
 		logs.Error(err.Error())
-		mdl = &model.PlgOnlineRegister{
+		mdl = &domain.PlgOnlineRegister{
 			CreateTime: time.Now(),
 			IP:         ctrl.Ctx.Input.IP(),
 		}
@@ -59,7 +59,7 @@ func (ctrl *PlgOnlineRegisterController) Edit() {
 
 // @router /admin/plg/register/save [post]
 func (ctrl *PlgOnlineRegisterController) Save() {
-	mdl := model.PlgOnlineRegister{}
+	mdl := domain.PlgOnlineRegister{}
 	if err := ctrl.ParseForm(&mdl); err != nil {
 		logs.Error("Save", err.Error())
 		ctrl.JSONError(err.Error())
@@ -69,7 +69,7 @@ func (ctrl *PlgOnlineRegisterController) Save() {
 	mdl.CreateName = GlobalAdminName
 	mdl.UpdateID = int32(GlobalAdminId)
 	mdl.UpdateName = GlobalAdminName
-	if err := biz.NewPlgOnlineRegister().Save(&mdl); err != nil {
+	if err := service.NewPlgOnlineRegister().Save(&mdl); err != nil {
 		logs.Error("Save", err.Error())
 		ctrl.JSONError(err.Error())
 		return
@@ -80,7 +80,7 @@ func (ctrl *PlgOnlineRegisterController) Save() {
 // @router /admin/plg/register/destory [post]
 func (ctrl *PlgOnlineRegisterController) Destory() {
 	registerId, _ := ctrl.GetInt64("registerId")
-	if err := biz.NewPlgOnlineRegister().Destory(registerId); err != nil {
+	if err := service.NewPlgOnlineRegister().Destory(registerId); err != nil {
 		logs.Error("Destory", err.Error())
 		ctrl.JSONError(err.Error())
 		return
@@ -97,7 +97,7 @@ func (ctrl *PlgOnlineRegisterController) ChangeRead() {
 		return
 	}
 	for _, registerId := range mdl.RegisterIds {
-		if err := biz.NewPlgOnlineRegister().ChangeRead(registerId, mdl.IsRead, int32(GlobalAdminId), GlobalAdminName); err != nil {
+		if err := service.NewPlgOnlineRegister().ChangeRead(registerId, mdl.IsRead, int32(GlobalAdminId), GlobalAdminName); err != nil {
 			logs.Error("ChangeRead", err.Error())
 			ctrl.JSONError(err.Error())
 			return

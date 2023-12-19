@@ -6,8 +6,8 @@ import (
 	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/tools/xjson"
 
-	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/dal/model"
+	"haedu.gov.cn/cms/app/cms/domain"
+	"haedu.gov.cn/cms/app/cms/service"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
 )
 
@@ -27,9 +27,9 @@ func (ctrl *NavController) Index() {
 // @router /admin/nav/NavEdit [get]
 func (ctrl *NavController) NavEdit() {
 	navId, _ := ctrl.GetInt64("navId")
-	mdl, err := biz.NewCmsAdminNav().NavFind(navId)
+	mdl, err := service.NewCmsAdminNav().NavFind(navId)
 	if err != nil {
-		mdl = &model.CmsAdminNav{
+		mdl = &domain.CmsAdminNav{
 			SortID:     99,
 			CreateName: GlobalAdminName,
 			Type:       "System",
@@ -53,7 +53,7 @@ func (ctrl *NavController) NavSaveSortId() {
 		logs.Error("NavSaveSortId", err.Error())
 		ctrl.JSONError(err.Error())
 	}
-	service := biz.NewCmsAdminNav()
+	service := service.NewCmsAdminNav()
 	for _, mdl := range mdls {
 		if err := service.NavSaveSortId(mdl.NavId, int32(GlobalAdminId), GlobalAdminName, int32(mdl.SortId)); err != nil {
 			logs.Error("NavSaveSortId", err.Error())
@@ -68,7 +68,7 @@ func (ctrl *NavController) NavSaveSortId() {
 // @router /admin/nav/NavDestroy [post]
 func (ctrl *NavController) NavDestroy() {
 	navId, _ := ctrl.GetInt64("navId")
-	if err := biz.NewCmsAdminNav().NavDestroy(navId); err != nil {
+	if err := service.NewCmsAdminNav().NavDestroy(navId); err != nil {
 		logs.Error("NavDestroy", err.Error())
 		ctrl.JSONError(err.Error())
 		return
@@ -80,7 +80,7 @@ func (ctrl *NavController) NavDestroy() {
 // @router /admin/nav/NavTree [post]
 func (ctrl *NavController) NavTree() {
 	navId, _ := ctrl.GetInt64("navId")
-	tree, err := biz.NewCmsAdminNav().NavTree(navId)
+	tree, err := service.NewCmsAdminNav().NavTree(navId)
 	if err != nil {
 		logs.Error("NavTree", err.Error())
 		ctrl.JSONError(err.Error())
@@ -94,7 +94,7 @@ func (ctrl *NavController) NavTree() {
 // NavSave 保存导航详情
 // @router /admin/nav/NavSave [post]
 func (ctrl *NavController) NavSave() {
-	mdl := model.CmsAdminNav{}
+	mdl := domain.CmsAdminNav{}
 	if err := ctrl.ParseForm(&mdl); err != nil {
 		logs.Error("NavSave", err.Error())
 		ctrl.JSONError(err.Error())
@@ -106,7 +106,7 @@ func (ctrl *NavController) NavSave() {
 		mdl.CreateID = int32(GlobalAdminId)
 		mdl.CreateName = GlobalAdminName
 	}
-	if err := biz.NewCmsAdminNav().NavSave(&mdl); err != nil {
+	if err := service.NewCmsAdminNav().NavSave(&mdl); err != nil {
 		logs.Error("NavSave", err.Error())
 		ctrl.JSONError(err.Error())
 		return

@@ -6,8 +6,8 @@ import (
 	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/tools/xjson"
 
-	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/dal/model"
+	"haedu.gov.cn/cms/app/cms/domain"
+	"haedu.gov.cn/cms/app/cms/service"
 	"haedu.gov.cn/cms/app/lib"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
 )
@@ -17,7 +17,7 @@ type ThemeController struct{ BaseController }
 // Index 管理
 // @router /admin/Theme/index [get]
 func (ctrl *ThemeController) Index() {
-	list, _, _ := biz.NewCmsTheme().ThemePaginate(1, 9999, "", "")
+	list, _, _ := service.NewCmsTheme().ThemePaginate(1, 9999, "", "")
 	ctrl.Data["theme"] = list
 	// 获取角色权限
 	roleMap := ctrl.RolePowerGet("themes_index")
@@ -28,7 +28,7 @@ func (ctrl *ThemeController) Index() {
 // ThemeEdit 编辑
 // @router /admin/Theme/Edit [get]
 func (ctrl *ThemeController) Edit() {
-	list, _, _ := biz.NewCmsTheme().ThemePaginate(1, 9999, "", "")
+	list, _, _ := service.NewCmsTheme().ThemePaginate(1, 9999, "", "")
 	ctrl.Data["theme"] = list
 	// 获取角色权限
 	roleMap := ctrl.RolePowerGet("themes_index")
@@ -39,7 +39,7 @@ func (ctrl *ThemeController) Edit() {
 // ThemeSave 保存
 // @router /admin/Theme/ThemeSave [post]
 func (ctrl *ThemeController) ThemeSave() {
-	mdl := model.CmsTheme{}
+	mdl := domain.CmsTheme{}
 	if err := ctrl.ParseForm(&mdl); err != nil {
 		logs.Error("ThemeSave", err.Error())
 		ctrl.JSONError(err.Error())
@@ -51,7 +51,7 @@ func (ctrl *ThemeController) ThemeSave() {
 		mdl.UpdateID = int32(GlobalAdminId)
 		mdl.UpdateName = GlobalAdminName
 	}
-	if err := biz.NewCmsTheme().ThemeSave(&mdl); err != nil {
+	if err := service.NewCmsTheme().ThemeSave(&mdl); err != nil {
 		logs.Error("ThemeSave", err.Error())
 		ctrl.JSONError(err.Error())
 		return
@@ -69,7 +69,7 @@ func (ctrl *ThemeController) ThemeSaveSortId() {
 		logs.Error("ThemeSaveSortId", err.Error())
 		ctrl.JSONError(err.Error())
 	}
-	service := biz.NewCmsTheme()
+	service := service.NewCmsTheme()
 	for _, mdl := range mdls {
 		if err := service.ThemeSaveSortId(mdl.ThemeId, int32(mdl.SortId)); err != nil {
 			logs.Error("ThemeSaveSortId", err.Error())
@@ -84,7 +84,7 @@ func (ctrl *ThemeController) ThemeSaveSortId() {
 // @router /admin/Theme/ThemeDestory [post]
 func (ctrl *ThemeController) ThemeDestory() {
 	ThemeId, _ := ctrl.GetInt64("ThemeId")
-	if err := biz.NewCmsTheme().ThemeDestory(ThemeId); err != nil {
+	if err := service.NewCmsTheme().ThemeDestory(ThemeId); err != nil {
 		logs.Error("ThemeDestory", err.Error())
 		ctrl.JSONError(err.Error())
 		return
@@ -98,7 +98,7 @@ func (ctrl *ThemeController) ThemePaginate() {
 	page, limit := ctrl.GetPagingParameters()
 	title := ctrl.GetSafeString("title")
 	name := ctrl.GetSafeString("name")
-	list, count, _ := biz.NewCmsTheme().ThemePaginate(page, limit, name, title)
+	list, count, _ := service.NewCmsTheme().ThemePaginate(page, limit, name, title)
 	ctrl.JSONPage(lib.CodeSuccess, "", list, count)
 }
 
@@ -115,7 +115,7 @@ func (ctrl *ThemeController) SetDefault() {
 	if mdl.Name == "" {
 		ctrl.JSONError("参数错误")
 	}
-	err := biz.NewCmsTheme().ThemeSetDefault(mdl.Name)
+	err := service.NewCmsTheme().ThemeSetDefault(mdl.Name)
 	if err != nil {
 		ctrl.JSONError(err.Error())
 	}

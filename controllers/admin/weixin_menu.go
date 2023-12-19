@@ -6,8 +6,8 @@ import (
 	"github.com/beego/beego/v2/core/logs"
 	"haedu.gov.cn/tools/xjson"
 
-	"haedu.gov.cn/cms/app/biz"
-	"haedu.gov.cn/cms/app/dal/model"
+	"haedu.gov.cn/cms/app/cms/domain"
+	"haedu.gov.cn/cms/app/cms/service"
 	"haedu.gov.cn/cms/app/lib"
 	"haedu.gov.cn/cms/app/wechat/mp"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
@@ -15,7 +15,7 @@ import (
 
 func (ctrl *WeixinController) MenuFind() {
 	accountId, _ := ctrl.GetInt64("accountId")
-	list, count, err := biz.NewWeixinMenu().MenuPaginate(1, 99999, accountId)
+	list, count, err := service.NewWeixinMenu().MenuPaginate(1, 99999, accountId)
 	if err != nil {
 		logs.Error("MenuFind", err.Error())
 	}
@@ -32,9 +32,9 @@ func (ctrl *WeixinController) MenuEdit() {
 	ctrl.Data["accountId"] = accountId
 	menuId, _ := ctrl.GetInt64("menuId")
 	parentId, _ := ctrl.GetInt64("parentId")
-	mdl, err := biz.NewWeixinMenu().MenuFind(menuId)
+	mdl, err := service.NewWeixinMenu().MenuFind(menuId)
 	if err != nil {
-		mdl = &model.WeixinMenu{
+		mdl = &domain.WeixinMenu{
 			AccountID: accountId,
 			ParentID:  parentId,
 			SortID:    99,
@@ -46,7 +46,7 @@ func (ctrl *WeixinController) MenuEdit() {
 }
 
 func (ctrl *WeixinController) MenuSave() {
-	mdl := model.WeixinMenu{}
+	mdl := domain.WeixinMenu{}
 	if err := ctrl.ParseForm(&mdl); err != nil {
 		logs.Error("MenuSave", err.Error())
 		ctrl.JSONError(err.Error())
@@ -58,7 +58,7 @@ func (ctrl *WeixinController) MenuSave() {
 		mdl.UpdateID = int32(GlobalAdminId)
 		mdl.UpdateName = GlobalAdminName
 	}
-	if err := biz.NewWeixinMenu().MenuSave(&mdl); err != nil {
+	if err := service.NewWeixinMenu().MenuSave(&mdl); err != nil {
 		logs.Error("MenuSave", err.Error())
 		ctrl.JSONError(err.Error())
 		return
@@ -75,7 +75,7 @@ func (ctrl *WeixinController) MenuSaveSortId() {
 		ctrl.JSONError(err.Error())
 	}
 	for _, mdl := range mdls {
-		if err := biz.NewWeixinMenu().MenuSaveSortId(mdl.MenuId, int32(mdl.SortId)); err != nil {
+		if err := service.NewWeixinMenu().MenuSaveSortId(mdl.MenuId, int32(mdl.SortId)); err != nil {
 			logs.Error("MenuSaveSortId", err.Error())
 			ctrl.JSONError(err.Error())
 			return
@@ -86,7 +86,7 @@ func (ctrl *WeixinController) MenuSaveSortId() {
 
 func (ctrl *WeixinController) MenuDestory() {
 	menuId, _ := ctrl.GetInt64("menuId")
-	if err := biz.NewWeixinMenu().MenuDestory(menuId); err != nil {
+	if err := service.NewWeixinMenu().MenuDestory(menuId); err != nil {
 		logs.Error("MenuDestory", err.Error())
 		ctrl.JSONError(err.Error())
 		return
@@ -98,7 +98,7 @@ func (ctrl *WeixinController) MenuDestory() {
 // @router /admin/weixin/menusync [post]
 func (ctrl *WeixinController) MenuSync() {
 	accountId, _ := ctrl.GetInt64("accountId")
-	finder, err := biz.NewWeixinAccount().AccountFind(accountId)
+	finder, err := service.NewWeixinAccount().AccountFind(accountId)
 	if err != nil {
 		logs.Error("MenuSync", err.Error())
 		ctrl.JSONError(err.Error())
@@ -107,7 +107,7 @@ func (ctrl *WeixinController) MenuSync() {
 	fmt.Println("MenuSync", finder)
 	message := mp.NewMessage(finder.AppID, finder.AppSecret, true)
 	pbuttons := []mp.Button{}
-	service := biz.NewWeixinMenu()
+	service := service.NewWeixinMenu()
 	parents, err := service.MenuFindByParentId(accountId, 0)
 	if err == nil {
 		for _, p := range parents {
