@@ -6,7 +6,7 @@ import (
 	"github.com/beego/beego/v2/core/logs"
 
 	"haedu.gov.cn/cms/app/cms/service"
-	"haedu.gov.cn/cms/app/lib"
+	lib "haedu.gov.cn/cms/app/tool"
 	"haedu.gov.cn/cms/app/wechat/models"
 	"haedu.gov.cn/cms/app/wechat/mp"
 )

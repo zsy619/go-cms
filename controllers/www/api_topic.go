@@ -3,7 +3,7 @@ package www
 import (
 	"github.com/beego/beego/v2/core/logs"
 
-	"haedu.gov.cn/cms/app/lib"
+	lib "haedu.gov.cn/cms/app/tool"
 )
 
 type ApiTopicController struct{ BaseController }

@@ -1,4 +1,4 @@
-package lib
+package tool
 
 type CodeResult int
 

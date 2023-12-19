@@ -8,7 +8,7 @@ import (
 
 	"haedu.gov.cn/cms/app/cms/domain"
 	"haedu.gov.cn/cms/app/cms/service"
-	"haedu.gov.cn/cms/app/lib"
+	lib "haedu.gov.cn/cms/app/tool"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
 	"haedu.gov.cn/cms/global"
 )

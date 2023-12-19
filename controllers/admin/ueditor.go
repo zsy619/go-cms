@@ -13,7 +13,7 @@ import (
 
 	"haedu.gov.cn/cms/app/cms/domain"
 	"haedu.gov.cn/cms/app/cms/service"
-	"haedu.gov.cn/cms/app/lib"
+	lib "haedu.gov.cn/cms/app/tool"
 )
 
 var UEditorConfig = map[string]interface{}{

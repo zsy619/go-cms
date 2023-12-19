@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/beego/beego/v2/server/web"
-	"haedu.gov.cn/cms/app/lib"
+	lib "haedu.gov.cn/cms/app/tool"
 	"haedu.gov.cn/cms/global"
 	"haedu.gov.cn/tools/xgeneric"
 	"haedu.gov.cn/tools/xphp"

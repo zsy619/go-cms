@@ -13,7 +13,7 @@ import (
 	"haedu.gov.cn/cms/app/cms/domain"
 	"haedu.gov.cn/cms/app/cms/mapper"
 	service_model "haedu.gov.cn/cms/app/cms/service/model"
-	"haedu.gov.cn/cms/app/lib"
+	lib "haedu.gov.cn/cms/app/tool"
 )
 
 // ApiArticle 文章

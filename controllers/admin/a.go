@@ -5,7 +5,7 @@ import (
 
 	"github.com/beego/beego/v2/server/web"
 
-	"haedu.gov.cn/cms/app/lib"
+	lib "haedu.gov.cn/cms/app/tool"
 )
 
 var (
