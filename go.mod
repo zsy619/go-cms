@@ -1,17 +1,17 @@
 module haedu.gov.cn/cms
 
-go 1.21
+go 1.22
 
 require (
 	github.com/ahmetb/go-linq/v3 v3.2.0
-	github.com/beego/beego/v2 v2.2.0
+	github.com/beego/beego/v2 v2.2.1
 	github.com/kardianos/service v1.2.2
 	github.com/mojocn/base64Captcha v1.3.6
-	github.com/prometheus/client_golang v1.19.0
-	golang.org/x/net v0.24.0
+	github.com/prometheus/client_golang v1.19.1
+	golang.org/x/net v0.25.0
 	gorm.io/driver/mysql v1.5.6
 	gorm.io/gen v0.3.26
-	gorm.io/gorm v1.25.9
+	gorm.io/gorm v1.25.10
 	gorm.io/plugin/dbresolver v1.5.1
 	haedu.gov.cn/tools v0.0.0-00010101000000-000000000000
 )
@@ -28,15 +28,15 @@ require (
 	github.com/bitly/go-simplejson v0.5.1
 	github.com/cespare/xxhash v1.1.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
-	github.com/chromedp/cdproto v0.0.0-20240421230201-ab917191657d // indirect
+	github.com/chromedp/cdproto v0.0.0-20240519224452-66462be74baa // indirect
 	github.com/chromedp/chromedp v0.9.5 // indirect
 	github.com/chromedp/sysutil v1.0.0 // indirect
-	github.com/ethereum/go-ethereum v1.13.15 // indirect
+	github.com/ethereum/go-ethereum v1.14.3 // indirect
 	github.com/g3n/engine v0.2.0 // indirect
 	github.com/go-sql-driver/mysql v1.8.1 // indirect
 	github.com/gobwas/httphead v0.1.0 // indirect
 	github.com/gobwas/pool v0.2.1 // indirect
-	github.com/gobwas/ws v1.3.2 // indirect
+	github.com/gobwas/ws v1.4.0 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/golang/glog v1.2.1 // indirect
 	github.com/google/btree v1.1.2 // indirect
@@ -53,17 +53,17 @@ require (
 	github.com/peterbourgon/diskv v2.0.1+incompatible // indirect
 	github.com/prometheus/client_model v0.6.1 // indirect
 	github.com/prometheus/common v0.53.0 // indirect
-	github.com/prometheus/procfs v0.14.0 // indirect
+	github.com/prometheus/procfs v0.15.0 // indirect
 	github.com/satori/go.uuid v1.2.0
 	github.com/shiena/ansicolor v0.0.0-20230509054315-a9deabde6e02 // indirect
 	github.com/tjfoc/gmsm v1.4.1 // indirect
-	golang.org/x/crypto v0.22.0
-	golang.org/x/image v0.15.0 // indirect
+	golang.org/x/crypto v0.23.0
+	golang.org/x/image v0.16.0 // indirect
 	golang.org/x/mod v0.17.0 // indirect
-	golang.org/x/sys v0.19.0 // indirect
-	golang.org/x/text v0.14.0
-	golang.org/x/tools v0.20.0 // indirect
-	google.golang.org/protobuf v1.33.0 // indirect
+	golang.org/x/sys v0.20.0 // indirect
+	golang.org/x/text v0.15.0
+	golang.org/x/tools v0.21.0 // indirect
+	google.golang.org/protobuf v1.34.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	gorm.io/datatypes v1.2.0 // indirect

@@ -7,3 +7,4 @@ Downloads
 app/lib/Uploads
 *.exe
 .vscode
+releases/
