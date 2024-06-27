@@ -12,13 +12,14 @@ require (
 	gorm.io/driver/mysql v1.5.7
 	gorm.io/gen v0.3.26
 	gorm.io/gorm v1.25.10
-	gorm.io/plugin/dbresolver v1.5.1
+	gorm.io/plugin/dbresolver v1.5.2
 	haedu.gov.cn/tools v0.0.0-00010101000000-000000000000
 )
 
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/holiman/uint256 v1.2.4 // indirect
+	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	golang.org/x/sync v0.7.0 // indirect
 )
 
@@ -28,7 +29,7 @@ require (
 	github.com/bitly/go-simplejson v0.5.1
 	github.com/cespare/xxhash v1.1.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
-	github.com/chromedp/cdproto v0.0.0-20240602235142-49d0e97b7881 // indirect
+	github.com/chromedp/cdproto v0.0.0-20240626232640-f933b107c653 // indirect
 	github.com/chromedp/chromedp v0.9.5 // indirect
 	github.com/chromedp/sysutil v1.0.0 // indirect
 	github.com/ethereum/go-ethereum v1.14.5 // indirect
@@ -52,13 +53,13 @@ require (
 	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
 	github.com/peterbourgon/diskv v2.0.1+incompatible // indirect
 	github.com/prometheus/client_model v0.6.1 // indirect
-	github.com/prometheus/common v0.54.0 // indirect
+	github.com/prometheus/common v0.55.0 // indirect
 	github.com/prometheus/procfs v0.15.1 // indirect
 	github.com/satori/go.uuid v1.2.0
 	github.com/shiena/ansicolor v0.0.0-20230509054315-a9deabde6e02 // indirect
 	github.com/tjfoc/gmsm v1.4.1 // indirect
 	golang.org/x/crypto v0.24.0
-	golang.org/x/image v0.17.0 // indirect
+	golang.org/x/image v0.18.0 // indirect
 	golang.org/x/mod v0.18.0 // indirect
 	golang.org/x/sys v0.21.0 // indirect
 	golang.org/x/text v0.16.0
@@ -66,7 +67,7 @@ require (
 	google.golang.org/protobuf v1.34.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	gorm.io/datatypes v1.2.0 // indirect
+	gorm.io/datatypes v1.2.1 // indirect
 	gorm.io/hints v1.1.2 // indirect
 )
 
