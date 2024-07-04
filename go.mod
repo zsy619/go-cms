@@ -4,7 +4,7 @@ go 1.22
 
 require (
 	github.com/ahmetb/go-linq/v3 v3.2.0
-	github.com/beego/beego/v2 v2.2.1
+	github.com/beego/beego/v2 v2.2.2
 	github.com/kardianos/service v1.2.2
 	github.com/mojocn/base64Captcha v1.3.6
 	github.com/prometheus/client_golang v1.19.1
@@ -24,7 +24,7 @@ require (
 )
 
 require (
-	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.9.2 // indirect
+	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.9.3 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bitly/go-simplejson v0.5.1
 	github.com/cespare/xxhash v1.1.0 // indirect
@@ -32,7 +32,7 @@ require (
 	github.com/chromedp/cdproto v0.0.0-20240626232640-f933b107c653 // indirect
 	github.com/chromedp/chromedp v0.9.5 // indirect
 	github.com/chromedp/sysutil v1.0.0 // indirect
-	github.com/ethereum/go-ethereum v1.14.5 // indirect
+	github.com/ethereum/go-ethereum v1.14.6 // indirect
 	github.com/g3n/engine v0.2.0 // indirect
 	github.com/go-sql-driver/mysql v1.8.1 // indirect
 	github.com/gobwas/httphead v0.1.0 // indirect
