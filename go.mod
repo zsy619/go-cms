@@ -1,6 +1,6 @@
 module haedu.gov.cn/cms
 
-go 1.22
+go 1.23
 
 require (
 	github.com/ahmetb/go-linq/v3 v3.2.0
@@ -21,9 +21,6 @@ require (
 	github.com/holiman/uint256 v1.3.1 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	golang.org/x/sync v0.8.0 // indirect
-)
-
-require (
 	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.9.3 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bitly/go-simplejson v0.5.1

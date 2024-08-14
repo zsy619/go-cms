@@ -1,235 +1,233 @@
 <style>
-    .uploadTempFile{
-        display: none;
-        padding:32px 42px;
-    }
+	.uploadTempFile {
+		display: none;
+		padding: 32px 42px;
+	}
 </style>
 <div class="layui-container-full">
-    <div class="layui-tab layui-tab-brief layui-tab-card">
-        <ul class="layui-tab-title">
-            <li class="layui-this">模板信息</li>
-            <li>模板说明</li>
-        </ul>
-        <div class="layui-tab-content">
-            <div class="layui-tab-item layui-show">
-                <div class="layui-row" style="margin: 5px;">
-                    <div class="layui-col-md12">
-                        {{if .roleMap.IsHasAdd}}
-                        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal  save" id="uploadBtn"><i class="layui-icon layui-icon-upload"></i>上传模板文件</button>
-                        {{end}}
-                    </div>
-                </div>
-                <div style="padding-top: 20px; padding-left: 10px">系统模板</div>
-                <div class="layui-row" style="padding-top: 10px">
-                    {{range $index,$item := .theme}}
-                        {{if eq $item.Type 0}}
-                            <div class="layui-col-md3" style="padding: 10px;">
-                                <img src='{{ ConcatStr "/views/themes/" $item.Name "/" $item.Thumb}}' width="100%" height="180">
-                                <p>主题:{{$item.Title}}</p>
-                                <div style="height: 1.5em; overflow: hidden;" title="{{$item.Remark}}">描述:{{$item.Remark}}</div>
-                                <p>版本:{{$item.Version}}</p>
-                                <p>作者:{{$item.Author}} </p>
-                                <p>
-                                    {{if eq $item.IsDefault true}}
-                                    <button type="button" disabled class="layui-btn layui-btn-warm">默认主题</button>
-                                    {{else}}
-                                    <button type="button" class="layui-btn layui-btn-normal" lay-event="normal" onclick="setDefault('{{$item.Name}}')">设置默认主题</button>
-                                    {{end}}
-                                </p>
-                            </div>
-                        {{end}}
-                    {{end}}
-                </div>
-                <div style="padding-top: 20px; padding-left: 10px">高校模板</div>
-                <div class="layui-row" style="padding-top: 10px">
-                    {{range $index,$item := .theme}}
-                    {{if eq $item.Type 1}}
-                    <div class="layui-col-md3" style="padding: 10px;">
-                        <img src='{{ ConcatStr "/views/themes/" $item.Name "/" $item.Thumb}}' width="100%" height="180">
-                        <p>主题:{{$item.Title}}</p>
-                        <div style="height: 1.5em; overflow: hidden;" title="{{$item.Remark}}">描述:{{$item.Remark}}</div>
-                        <p>版本:{{$item.Version}}</p>
-                        <p>作者:{{$item.Author}} </p>
-                        <p>
-                            {{if eq $item.IsDefault true}}
-                            <button type="button" disabled class="layui-btn layui-btn-warm">默认主题</button>
-                            {{else}}
-                            <button type="button" class="layui-btn layui-btn-normal" lay-event="normal" onclick="setDefault('{{$item.Name}}')">设置默认主题</button>
-                            {{end}}
-                        </p>
-                    </div>
-                    {{end}}
-                    {{end}}
-                </div>
-            </div>
-            <div class="layui-tab-item">
-                <div class="layui-row">
-                    <div class="layui-col-md12">
-                        <blockquote class="layui-elem-quote">
-                            <i class="fa fa-exclamation-circle"></i> 模板文件必须为zip格式，否则无法上传
-                        </blockquote>
-                    </div>
-                    <div class="layui-col-md12">
-                        <blockquote style="margin: 5px;">
-                            主题目录结构说明：<br>
-                            views目录 为模板文件，可以自定义，必须包含index.html、channel.html、category.html、article.html、search.html、tag.html、topic.html<br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;首页 index.html<br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;频道页 channel.html<br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;栏目页 category.html<br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;文章页 article.html<br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;搜索页 search.html<br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;标签页 tag.html<br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;专题页 topic.html<br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;其他模板文件可以自建<br>
-                            static目录 静态文件目录，包含以下目录：<br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;js目录 为js文件，可以自定义子文件<br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;css目录 为css文件，可以自定义子文件<br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;images目录 为模板图片，可以自定义子文件<br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;其他目录如fonts、plugins等，可以自定义<br>
-                            config.json 为主题配置文件，可以自定义，但是必须包含name、title、remark、author、version，格式如下：<br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name": "default",<br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"title": "默认模板",<br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"description": "系统内置默认模板",<br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"author": "教育网",<br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"mail": "haedu@163.com",<br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"version": "1.0.0"<br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
-                            thumb.png 为主题预览图，必须有<br>
-                        </blockquote>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="layui-tab layui-tab-brief layui-tab-card">
+		<ul class="layui-tab-title">
+			<li class="layui-this">模板信息</li>
+			<li>模板说明</li>
+		</ul>
+		<div class="layui-tab-content">
+			<div class="layui-tab-item layui-show">
+				<div class="layui-row" style="margin: 5px;">
+					<div class="layui-col-md12">
+						{{if .roleMap.IsHasAdd}}
+						<button type="button" class="layui-btn layui-btn-sm layui-btn-normal  save" id="uploadBtn"><i class="layui-icon layui-icon-upload"></i>上传模板文件</button>
+						{{end}}
+					</div>
+				</div>
+				<div style="padding-top: 20px; padding-left: 10px">系统模板</div>
+				<div class="layui-row" style="padding-top: 10px">
+					{{range $index,$item := .theme}}
+					{{if eq $item.Type 0}}
+					<div class="layui-col-md3" style="padding: 10px;">
+						<img src='{{ ConcatStr "/views/themes/" $item.Name "/" $item.Thumb}}' width="100%" height="180">
+						<p>主题:{{$item.Title}}</p>
+						<div style="height: 1.5em; overflow: hidden;" title="{{$item.Remark}}">描述:{{$item.Remark}}</div>
+						<p>版本:{{$item.Version}}</p>
+						<p>作者:{{$item.Author}} </p>
+						<p>
+							{{if eq $item.IsDefault true}}
+							<button type="button" disabled class="layui-btn layui-btn-warm">默认主题</button>
+							{{else}}
+							<button type="button" class="layui-btn layui-btn-normal" lay-event="normal" onclick="setDefault('{{$item.Name}}')">设置默认主题</button>
+							{{end}}
+						</p>
+					</div>
+					{{end}}
+					{{end}}
+				</div>
+				<div style="padding-top: 20px; padding-left: 10px">高校模板</div>
+				<div class="layui-row" style="padding-top: 10px">
+					{{range $index,$item := .theme}}
+					{{if eq $item.Type 1}}
+					<div class="layui-col-md3" style="padding: 10px;">
+						<img src='{{ ConcatStr "/views/themes/" $item.Name "/" $item.Thumb}}' width="100%" height="180">
+						<p>主题:{{$item.Title}}</p>
+						<div style="height: 1.5em; overflow: hidden;" title="{{$item.Remark}}">描述:{{$item.Remark}}</div>
+						<p>版本:{{$item.Version}}</p>
+						<p>作者:{{$item.Author}} </p>
+						<p>
+							{{if eq $item.IsDefault true}}
+							<button type="button" disabled class="layui-btn layui-btn-warm">默认主题</button>
+							{{else}}
+							<button type="button" class="layui-btn layui-btn-normal" lay-event="normal" onclick="setDefault('{{$item.Name}}')">设置默认主题</button>
+							{{end}}
+						</p>
+					</div>
+					{{end}}
+					{{end}}
+				</div>
+			</div>
+			<div class="layui-tab-item">
+				<div class="layui-row">
+					<div class="layui-col-md12">
+						<blockquote class="layui-elem-quote">
+							<i class="fa fa-exclamation-circle"></i> 模板文件必须为zip格式，否则无法上传
+						</blockquote>
+					</div>
+					<div class="layui-col-md12">
+						<blockquote style="margin: 5px;">
+							主题目录结构说明：<br>
+							views目录 为模板文件，可以自定义，必须包含index.html、channel.html、category.html、article.html、search.html、tag.html、topic.html<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;首页 index.html<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;频道页 channel.html<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;栏目页 category.html<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;文章页 article.html<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;搜索页 search.html<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;标签页 tag.html<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;专题页 topic.html<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;其他模板文件可以自建<br>
+							static目录 静态文件目录，包含以下目录：<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;js目录 为js文件，可以自定义子文件<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;css目录 为css文件，可以自定义子文件<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;images目录 为模板图片，可以自定义子文件<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;其他目录如fonts、plugins等，可以自定义<br>
+							config.json 为主题配置文件，可以自定义，但是必须包含name、title、remark、author、version，格式如下：<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name": "default",<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"title": "默认模板",<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"description": "系统内置默认模板",<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"author": "教育网",<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"mail": "haedu@163.com",<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"version": "1.0.0"<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+							thumb.png 为主题预览图，必须有<br>
+						</blockquote>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
-
 <!-- 弹窗模板 -->
 <div id="popup">
-    <div class="layui-form uploadTempFile" id="uploadTempFile">
-        <div class="layui-form-item">
-            <label class="layui-form-label required">模板类型</label>
-            <div class="layui-input-block">
-                <select name="dropdown" lay-verify="required" lay-reqtext="请选择模板类型" autocomplete="off" id="dropdownSelect">
-                    <option value="-1">请选择</option>
-                    <option value="0">系统</option>
-                    <option value="1">高校</option>
-                </select>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">模板文件</label>
-            <div class="layui-input-block">
-                <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" id="uploadChoose"><i class="layui-icon layui-icon-upload"></i>选择模板文件</button>
-            </div>
-        </div>
-        <div class="layui-form-item" style="padding-top: 20px">
-            <div class="layui-input-block">
-                <button type="button" class="layui-btn layui-btn-normal" id="startUpload">提交</button>
-                <button type="cancel" class="layui-btn layui-btn-primary" id="dismissLayer">取消</button>
-            </div>
-        </div>
-    </div>
+	<div class="layui-form uploadTempFile" id="uploadTempFile">
+		<div class="layui-form-item">
+			<label class="layui-form-label required">模板类型</label>
+			<div class="layui-input-block">
+				<select name="dropdown" lay-verify="required" lay-reqtext="请选择模板类型" autocomplete="off" id="dropdownSelect">
+					<option value="-1">请选择</option>
+					<option value="0">系统</option>
+					<option value="1">高校</option>
+				</select>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">模板文件</label>
+			<div class="layui-input-block">
+				<button type="button" class="layui-btn layui-btn-sm layui-btn-normal" id="uploadChoose"><i class="layui-icon layui-icon-upload"></i>选择模板文件</button>
+			</div>
+		</div>
+		<div class="layui-form-item" style="padding-top: 20px">
+			<div class="layui-input-block">
+				<button type="button" class="layui-btn layui-btn-normal" id="startUpload">提交</button>
+				<button type="cancel" class="layui-btn layui-btn-primary" id="dismissLayer">取消</button>
+			</div>
+		</div>
+	</div>
 </div>
-
 <script type="text/javascript">
-    var csrf = getXsrfToken();
+	var csrf = getXsrfToken();
 
-    if ("{{.roleMap.IsHasEdit}}" === "false"){
-        $("button[lay-event='normal']").remove();
-    }
+	if ("{{.roleMap.IsHasEdit}}" === "false") {
+		$("button[lay-event='normal']").remove();
+	}
 
-    layui.use(['form', 'jquery', 'upload'], function () {
-        form = layui.form,
-            upload = layui.upload;
-            $ = layui.jquery;
+	layui.use(['form', 'jquery', 'upload'], function () {
+		form = layui.form,
+			upload = layui.upload;
+		$ = layui.jquery;
 
-        $('#uploadBtn').click(function (){
-            layer.open({
-                type: 1,
-                title:'上传模板文件',
-                area:['500px','300px'],
-                content: $('#uploadTempFile'),
-            });
-        });
+		$('#uploadBtn').click(function () {
+			layer.open({
+				type: 1,
+				title: '上传模板文件',
+				area: ['500px', '300px'],
+				content: $('#uploadTempFile'),
+			});
+		});
 
-        $('#dismissLayer').click(function (){
-            layer.close(layer.index);
-        });
+		$('#dismissLayer').click(function () {
+			layer.close(layer.index);
+		});
 
-        upload.render({
-            elem: '#uploadChoose',
-            headers: { "X-Xsrftoken": csrf },
-            accept: 'file',
-            exts: 'zip',
-            auto: false,
-            bindAction: '#startUpload',
-            before: function (obj) {
-                var selectValue = $("select[name='dropdown']").val();
-                if(selectValue == "-1"){
-                    layer.msg('请选择模板类型');
-                    return false;
-                }else{
-                    this.url = 'upload?type='+ selectValue;
-                    layer.msg('上传中', { icon: 16, time: 1 });
-                }
-            },
-            done: function (res) {
-                //如果上传失败
-                if (res.code != 0) {
-                    return layer.msg(res.msg, { icon: 2 });
-                } else {
-                    layer.open({
-                        content: '模板上传成功',
-                        btn: ['确定'],
-                        yes: function (index, layero) {
-                            location.reload();
-                        },
-                        cancel: function () {
-                            location.reload();
-                        }
-                    });
-                }
-            }
-        });
-    });
+		upload.render({
+			elem: '#uploadChoose',
+			headers: { "X-Xsrftoken": csrf },
+			accept: 'file',
+			exts: 'zip',
+			auto: false,
+			bindAction: '#startUpload',
+			before: function (obj) {
+				var selectValue = $("select[name='dropdown']").val();
+				if (selectValue == "-1") {
+					layer.msg('请选择模板类型');
+					return false;
+				} else {
+					this.url = 'upload?type=' + selectValue;
+					layer.msg('上传中', { icon: 16, time: 1 });
+				}
+			},
+			done: function (res) {
+				//如果上传失败
+				if (res.code != 0) {
+					return layer.msg(res.msg, { icon: 2 });
+				} else {
+					layer.open({
+						content: '模板上传成功',
+						btn: ['确定'],
+						yes: function (index, layero) {
+							location.reload();
+						},
+						cancel: function () {
+							location.reload();
+						}
+					});
+				}
+			}
+		});
+	});
 
-    function setDefault(package) {
-        layer.confirm('确定要将【' + package + '】设置为默认主题?<br>如果主题模板中有函数不正确，程序将报错，届时您需要修复模板中的错误，前台才能正确显示！', function (index) {
-            var data = { "name": package }
-            $.ajax({
-                url: "setDefault",
-                headers: { "X-Xsrftoken": csrf },
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                data: JSON.stringify(data),
-                success: function (data) {
-                    if (data.code == CodeSuccess) {
-                        layer.open({
-                            content: '设置默认主题成功',
-                            icon: 1,
-                            btn: ['确定'],
-                            yes: function (index, layero) {
-                                location.reload()
-                            },
-                            cancel: function () {
-                                location.reload()
-                            }
-                        });
-                    } else {
-                        layer.alert(data.msg, { icon: 2, title: '错误' });
-                        return true;
-                    }
-                },
-                beforeSend: function () {
-                    layer.load();
-                },
-                complete: function () {
-                    layer.closeAll('loading');
-                }
-            });
-        });
-    }
+	function setDefault(package) {
+		layer.confirm('确定要将【' + package + '】设置为默认主题?<br>如果主题模板中有函数不正确，程序将报错，届时您需要修复模板中的错误，前台才能正确显示！', function (index) {
+			var data = { "name": package }
+			$.ajax({
+				url: "setDefault",
+				headers: { "X-Xsrftoken": csrf },
+				type: "POST",
+				contentType: "application/json; charset=utf-8",
+				dataType: "json",
+				data: JSON.stringify(data),
+				success: function (data) {
+					if (data.code == CodeSuccess) {
+						layer.open({
+							content: '设置默认主题成功',
+							icon: 1,
+							btn: ['确定'],
+							yes: function (index, layero) {
+								location.reload()
+							},
+							cancel: function () {
+								location.reload()
+							}
+						});
+					} else {
+						layer.alert(data.msg, { icon: 2, title: '错误' });
+						return true;
+					}
+				},
+				beforeSend: function () {
+					layer.load();
+				},
+				complete: function () {
+					layer.closeAll('loading');
+				}
+			});
+		});
+	}
 
 </script>
