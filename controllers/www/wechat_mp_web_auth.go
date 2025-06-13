@@ -2,6 +2,7 @@ package www
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
@@ -19,6 +20,12 @@ import (
 // https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/Wechat_webpage_authorization.html#0
 type WechatMpWebAuthController struct{ web.Controller }
 
+func (ctrl *WechatMpWebAuthController) GetStringTrim(key string, def ...string) string {
+	outStr := ctrl.GetString(key, def...)
+	outStr = strings.TrimSpace(outStr)
+	return outStr
+}
+
 // GET /wechat/mp/tooauth2
 func (ctrl *WechatMpWebAuthController) ToOauth2() {
 	accountId, _ := ctrl.GetInt64("accountId")
@@ -34,7 +41,7 @@ func (ctrl *WechatMpWebAuthController) ToOauth2() {
 		return
 	}
 	fmt.Println(account)
-	from := ctrl.GetString("from")
+	from := ctrl.GetStringTrim("from")
 	fmt.Println("from ----> ", from)
 	// redirect_uri := global.WebSite + `wechat/mp/redirect_uri`
 	// switch from {
@@ -82,8 +89,8 @@ func (c *WechatMpWebAuthController) RedirectUri() {
 	// 10015	公众号未授权第三方平台，请检查授权状态
 	// 10016	不支持微信开放平台的Appid，请使用公众号Appid
 
-	code := c.GetString("code")
-	state := c.GetString("state")
+	code := c.GetStringTrim("code")
+	state := c.GetStringTrim("state")
 	logs.Debug("code --> ", code, " state --> ", state)
 
 	oauth := mp.NewOAuth2(&models.MpConfig{

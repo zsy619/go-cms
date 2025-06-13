@@ -7,11 +7,12 @@ import (
 	"time"
 
 	"github.com/beego/beego/v2/server/web"
-	lib "haedu.gov.cn/cms/app/tool"
-	"haedu.gov.cn/cms/global"
 	"haedu.gov.cn/tools/xgeneric"
 	"haedu.gov.cn/tools/xphp"
 	"haedu.gov.cn/tools/xstring"
+
+	lib "haedu.gov.cn/cms/app/tool"
+	"haedu.gov.cn/cms/global"
 )
 
 type BaseController struct {
@@ -19,6 +20,12 @@ type BaseController struct {
 
 	ControllerName string
 	ActionName     string
+}
+
+func (ctrl *BaseController) GetStringTrim(key string, def ...string) string {
+	outStr := ctrl.GetString(key, def...)
+	outStr = strings.TrimSpace(outStr)
+	return outStr
 }
 
 // 重定向
@@ -177,7 +184,7 @@ func (ctrl *BaseController) SetDatas(datas map[string]interface{}) {
 
 // GetSafeString 获取安全字符串
 func (ctrl *BaseController) GetSafeString(key string, def ...string) string {
-	data := ctrl.GetString(key, def...)
+	data := ctrl.GetStringTrim(key, def...)
 	if data == "" {
 		return ""
 	}

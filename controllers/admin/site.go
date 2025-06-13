@@ -27,8 +27,8 @@ func (ctrl *SiteController) Index() {
 // SiteData 站点列表数据
 // @router /admin/site/data [get]
 func (ctrl *SiteController) SiteData() {
-	name := ctrl.GetString("name", "")
-	title := ctrl.GetString("title", "")
+	name := ctrl.GetStringTrim("name", "")
+	title := ctrl.GetStringTrim("title", "")
 	page, _ := ctrl.GetInt("page")
 	limit, _ := ctrl.GetInt("limit")
 	service := service.NewCmsSite()
@@ -51,7 +51,7 @@ func (ctrl *SiteController) Channel() {
 // SiteData 站点列表数据
 // @router /admin/site/delete [get]
 func (ctrl *SiteController) Delete() {
-	ids := ctrl.GetString("ids", "")
+	ids := ctrl.GetStringTrim("ids", "")
 	if ids == "" {
 		ctrl.JSONError("参数丢失")
 		return
