@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/beego/beego/v2/core/logs"
-	"haedu.gov.cn/tools/xstring"
+	"github.com/zsy619/tools/xstring"
 )
 
 // ArticleController 文章控制器

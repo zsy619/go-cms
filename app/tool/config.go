@@ -4,8 +4,8 @@ import (
 	"strings"
 
 	"github.com/beego/beego/v2/server/web"
-	"haedu.gov.cn/tools/xcas"
-	"haedu.gov.cn/tools/xgeneric"
+	"github.com/zsy619/tools/xcas"
+	"github.com/zsy619/tools/xgeneric"
 )
 
 const (

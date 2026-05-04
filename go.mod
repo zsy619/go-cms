@@ -1,6 +1,6 @@
 module haedu.gov.cn/cms
 
-go 1.24
+go 1.25
 
 require (
 	github.com/ahmetb/go-linq/v3 v3.2.0
@@ -13,7 +13,7 @@ require (
 	gorm.io/gen v0.3.27
 	gorm.io/gorm v1.30.0
 	gorm.io/plugin/dbresolver v1.6.0
-	haedu.gov.cn/tools v0.0.0-00010101000000-000000000000
+	github.com/zsy619/tools v1.2.3
 )
 
 require (
@@ -68,4 +68,4 @@ require (
 	gorm.io/hints v1.1.2 // indirect
 )
 
-replace haedu.gov.cn/tools => ../tools
+replace github.com/zsy619/tools => ../tools

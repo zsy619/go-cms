@@ -5,9 +5,9 @@ import (
 	"net/http"
 
 	"github.com/beego/beego/v2/core/logs"
-	"haedu.gov.cn/tools/xcache"
-	"haedu.gov.cn/tools/xcas"
-	"haedu.gov.cn/tools/xgeneric"
+	"github.com/zsy619/tools/xcache"
+	"github.com/zsy619/tools/xcas"
+	"github.com/zsy619/tools/xgeneric"
 
 	"haedu.gov.cn/cms/app/cms/domain"
 	"haedu.gov.cn/cms/app/cms/service"

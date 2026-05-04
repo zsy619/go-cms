@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	"github.com/beego/beego/v2/core/logs"
-	"haedu.gov.cn/tools/xcrypto"
-	"haedu.gov.cn/tools/xjson"
-	"haedu.gov.cn/tools/xstring"
+	"github.com/zsy619/tools/xcrypto"
+	"github.com/zsy619/tools/xjson"
+	"github.com/zsy619/tools/xstring"
 
 	"haedu.gov.cn/cms/app/cms/domain"
 	"haedu.gov.cn/cms/app/cms/service"

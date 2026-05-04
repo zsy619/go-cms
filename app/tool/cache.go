@@ -3,7 +3,7 @@ package tool
 import (
 	"fmt"
 
-	"haedu.gov.cn/tools/xcache"
+	"github.com/zsy619/tools/xcache"
 )
 
 type CacheItemModel struct {

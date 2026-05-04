@@ -1,8 +1,9 @@
 package global
 
 import (
-	"haedu.gov.cn/tools/xstring"
 	"strings"
+
+	"github.com/zsy619/tools/xstring"
 )
 
 func IsSuper(roleType string) bool {

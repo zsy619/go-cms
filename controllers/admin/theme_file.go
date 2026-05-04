@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/beego/beego/v2/core/logs"
-	"haedu.gov.cn/tools/xio"
+	"github.com/zsy619/tools/xio"
 )
 
 /**

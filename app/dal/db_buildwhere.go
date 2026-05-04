@@ -5,8 +5,8 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/zsy619/tools/xdatabase"
 	"gorm.io/gorm"
-	"haedu.gov.cn/tools/xdatabase"
 )
 
 // https://github.com/qicmsg/go_vcard/blob/master/app/models/entity/Gorm.go

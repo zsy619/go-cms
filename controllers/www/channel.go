@@ -1,7 +1,7 @@
 package www
 
 import (
-	"haedu.gov.cn/tools/xstring"
+	"github.com/zsy619/tools/xstring"
 
 	"haedu.gov.cn/cms/app/cms/service"
 )

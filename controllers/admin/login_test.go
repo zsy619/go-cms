@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"haedu.gov.cn/tools/xcrypto"
+	"github.com/zsy619/tools/xcrypto"
 
 	"haedu.gov.cn/cms/global"
 )
