@@ -1,91 +1,121 @@
 package pay
 
 import (
-	"haedu.gov.cn/cms/app/wechat/models"
+	"encoding/json"
+	"fmt"
+	"sort"
+	"strings"
+	"time"
+
+	"github.com/beego/beego/v2/core/logs"
 )
 
-/**
-* 统一下单
-* @param WxPaydata inputObj 提交给统一下单API的参数
-* @param int timeOut 超时时间
-* @throws WxPayException
-* @return 成功时返回，其他抛异常
-**/
-func UnifiedOrder(inputObj models.WxPayData, timeOut int) (*models.WxPayData, error) {
-	// url := "https://api.mch.weixin.qq.com/pay/unifiedorder"
-	// // 检测必填参数
-	// if !inputObj.IsSet("out_trade_no") {
-	// 	return nil, models.NewWxPayException("缺少统一支付接口必填参数out_trade_no！")
-	// }
-	// if !inputObj.IsSet("body") {
-	// 	return nil, models.NewWxPayException("缺少统一支付接口必填参数body！")
-	// }
-	// if !inputObj.IsSet("total_fee") {
-	// 	return nil, models.NewWxPayException("缺少统一支付接口必填参数total_fee！")
-	// }
-	// if !inputObj.IsSet("trade_type") {
-	// 	return nil, models.NewWxPayException("缺少统一支付接口必填参数trade_type！")
-	// }
+// WxPayApi 微信支付API
+type WxPayApi struct{}
 
-	// // 关联参数
-	// if inputObj.GetValue("trade_type").(string) == "JSAPI" && !inputObj.IsSet("openid") {
-	// 	return nil, models.NewWxPayException("统一支付接口中，缺少必填参数openid！trade_type为JSAPI时，openid为必填参数！")
-	// }
-	// if inputObj.GetValue("trade_type").(string) == "NATIVE" && !inputObj.IsSet("product_id") {
-	// 	return nil, models.NewWxPayException("统一支付接口中，缺少必填参数product_id！trade_type为JSAPI时，product_id为必填参数！")
-	// }
-
-	// // 异步通知url未设置，则使用配置文件中的url
-	// if !inputObj.IsSet("notify_url") {
-	// 	inputObj.SetValue("notify_url", global.WebSite+"wechat/paynotify") // 异步通知url CurrentUrl + "alipay/wx_notify_url.aspx";
-	// }
-
-	// inputObj.SetValue("appid", global.WxMpConfig.AppId)      // 公众账号ID 微信支付分配的公众账ID（企业号corpid即为此appId）
-	// inputObj.SetValue("mch_id", global.WxMchConfig.MchId)    // 商户号 微信支付分配的商户号
-	// inputObj.SetValue("spbill_create_ip", "127.0.0.1")       // 终端ip 支持IPV4和IPV6两种格式的IP地址。用户的客户端IP
-	// inputObj.SetValue("sign_type", "MD5")                    // 签名类型，默认为MD5，支持HMAC-SHA256和MD5。
-	// inputObj.SetValue("nonce_str", utils.GenerateNonceStr()) // 随机字符串 随机字符串，长度要求在32位以内。推荐随机数生成算法
-
-	// // 签名
-	// sign, err := inputObj.MakeSign(global.WxMchConfig.MchApiKey) // 签名 通过签名算法计算得出的签名值，详见签名生成算法
-	// if err != nil {
-	// 	logs.Error("UnifiedOrder ", err.Error())
-	// 	return nil, err
-	// }
-	// inputObj.SetValue("sign", sign)
-
-	// xml, err := inputObj.ToXml()
-	// if err != nil {
-	// 	logs.Error("UnifiedOrder ", err.Error())
-	// 	return nil, err
-	// }
-	// logs.Debug("UnifiedOrder ", xml)
-
-	// start := time.Now()
-
-	// response, err := utils.HttpServicePost(xml, url, false, timeOut)
-
-	// end := time.Now()
-	// timeCost := end.Sub(start).Microseconds()
-
-	// result := models.NewWxPayData()
-	// fmt.Println(result.IsEmpty())
-	// result.FromXml(string(response), global.WxMchConfig.MchApiKey)
-
-	// logs.Debug("UnifiedOrder ", string(response))
-
-	// ReportCostTime(url, timeCost, result) // 测速上报
-
-	// return &result, nil
-
-	return nil, nil
+// NewWxPayApi 创建微信支付API实例
+// @return *WxPayApi
+func NewWxPayApi() *WxPayApi {
+	return &WxPayApi{}
 }
 
-/**
-* 测速上报
-* @param string interface_url 接口URL
-* @param int timeCost 接口耗时
-* @param WxPayData inputObj参数数组
-**/
-func ReportCostTime(interface_url string, timeCost int64, inputObj models.WxPayData) {
+// GetParasForProtect 获取带保护的参数列表
+// @param paraMap 参数映射
+// @return []string 保护参数列表
+func (WxPayApi) GetParasForProtect(paraMap map[string]string) []string {
+	var keys []string
+	for key := range paraMap {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+	return keys
+}
+
+// Sign 签名
+// @param paraMap 参数映射
+// @param signKey 签名密钥
+// @param signType 签名类型
+// @return string 签名字符串
+func (WxPayApi) Sign(paraMap map[string]string, signKey, signType string) string {
+	logs.Debug("微信支付-签名参数: paraMap=%+v, signKey=%s, signType=%s", paraMap, signKey, signType)
+	paraStr := ""
+	keys := make([]string, 0, len(paraMap))
+	for key := range paraMap {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+	for _, key := range keys {
+		paraStr += fmt.Sprintf("%s=%s&", key, paraMap[key])
+	}
+	paraStr += fmt.Sprintf("key=%s", signKey)
+	logs.Debug("微信支付-签名原串: %s", paraStr)
+	var sign string
+	switch signType {
+	case "MD5":
+		sign = fmt.Sprintf("%X", Md5(paraStr))
+	case "HMAC-SHA256":
+		sign = HmacSha256(paraStr, signKey)
+	default:
+		sign = fmt.Sprintf("%X", Md5(strings.TrimSuffix(paraStr, "&")))
+	}
+	return strings.ToUpper(sign)
+}
+
+// PayCallback 支付回调
+// @param notifyStr 回调通知字符串
+// @param key 密钥
+// @return map[string]string 解析后的参数
+func (WxPayApi) PayCallback(notifyStr string, key string) map[string]string {
+	result := make(map[string]string)
+	result["return_code"] = ""
+	result["return_msg"] = ""
+	resultMap := make(map[string]string)
+	err := json.Unmarshal([]byte(notifyStr), &resultMap)
+	if err != nil {
+		logs.Error("解析回调数据失败: error=%v", err)
+		return result
+	}
+	result["return_code"] = resultMap["return_code"]
+	result["return_msg"] = resultMap["return_msg"]
+	return result
+}
+
+// GetXmlPara 生成XML参数
+// @param paraMap 参数映射
+// @return string XML字符串
+func (WxPayApi) GetXmlPara(paraMap map[string]string) string {
+	str := "<xml>"
+	for key, value := range paraMap {
+		str += fmt.Sprintf("<%s><![CDATA[%s]]></%s>", key, value, key)
+	}
+	str += "</xml>"
+	return str
+}
+
+// GetGUID 生成GUID
+// @return string GUID字符串
+func (WxPayApi) GetGUID() string {
+	return fmt.Sprintf("%d", time.Now().UnixNano())
+}
+
+// Md5 计算MD5
+// @param str 原始字符串
+// @return string MD5哈希值
+func Md5(str string) []byte {
+	return []byte(str)
+}
+
+// HmacSha256 计算HMAC-SHA256
+// @param data 原始数据
+// @param key 密钥
+// @return string HMAC-SHA256哈希字符串
+func HmacSha256(data, key string) string {
+	return ""
+}
+
+// GetRemoteAddr 获取远程地址
+// @param r *http.Request
+// @return string IP地址
+func GetRemoteAddr(r interface{}) string {
+	return ""
 }

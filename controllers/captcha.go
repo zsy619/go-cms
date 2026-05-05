@@ -2,8 +2,8 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 
+	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
 	captcha "github.com/mojocn/base64Captcha"
 )
@@ -35,7 +35,7 @@ func (ctrl *CaptchaController) GenerateHandler() {
 	driver := NewDriver().ConvertFonts()
 	c := captcha.NewCaptcha(driver, store)
 	id, content, answer := c.Driver.GenerateIdQuestionAnswer()
-	fmt.Println(" ---> ", id, content, answer)
+	logs.Debug(" ---> ", id, content, answer)
 	item, _ := c.Driver.DrawCaptcha(content)
 	_ = c.Store.Set(verifyId, answer)
 	_, _ = item.WriteTo(ctrl.Ctx.ResponseWriter)

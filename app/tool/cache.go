@@ -1,11 +1,11 @@
 package tool
 
 import (
-	"fmt"
-
+	"github.com/beego/beego/v2/core/logs"
 	"github.com/zsy619/tools/xcache"
 )
 
+// CacheItemModel 缓存项模型
 type CacheItemModel struct {
 	Key     string `json:"key"`     // Key 缓存键
 	Len     int    `json:"len"`     // Len 缓存长度
@@ -16,6 +16,10 @@ type CacheItemModel struct {
 }
 
 // NewCacheItemModel 创建缓存项
+// @param key 缓存键
+// @param note 缓存说明
+// @param expired 过期时间
+// @return *CacheItemModel 缓存项实例
 func NewCacheItemModel(key string, note string, expired int64) *CacheItemModel {
 	return &CacheItemModel{
 		Key:     key,
@@ -26,7 +30,10 @@ func NewCacheItemModel(key string, note string, expired int64) *CacheItemModel {
 }
 
 // Set 设置缓存
-func (cache *CacheItemModel) Set(cacheKey interface{}, data interface{}, expired ...int64) bool {
+// @param cacheKey 缓存键
+// @param data 缓存数据
+// @param expired 过期时间(可选)
+func (cache *CacheItemModel) Set(cacheKey any, data any, expired ...int64) bool {
 	var _expired int64
 	if len(expired) > 0 {
 		_expired = expired[0]
@@ -37,16 +44,20 @@ func (cache *CacheItemModel) Set(cacheKey interface{}, data interface{}, expired
 }
 
 // Get 获取缓存
-func (cache *CacheItemModel) Get(cacheKey interface{}) (bool, interface{}) {
+// @param cacheKey 缓存键
+// @return bool 是否成功, any 缓存数据
+func (cache *CacheItemModel) Get(cacheKey any) (bool, any) {
 	return cache.cache.Get(cacheKey)
 }
 
 // Remove 删除缓存
-func (cache *CacheItemModel) Remove(cacheKey interface{}) {
+// @param cacheKey 缓存键
+func (cache *CacheItemModel) Remove(cacheKey any) {
 	cache.cache.Remove(cacheKey)
 }
 
 // Length 获取缓存长度
+// @return int 缓存数量
 func (cache *CacheItemModel) Length() int {
 	return cache.cache.Length()
 }
@@ -84,9 +95,10 @@ var (
 	WechatVerifyCache   *CacheItemModel // WechatVerifyCache 微信校验文件列表缓存
 )
 
-// init 初始化
+// init 初始化缓存
 func init() {
-	fmt.Println("init 缓存初始化")
+	logs.Debug("缓存初始化开始")
+
 	CategoryNavCache = NewCacheItemModel("CategoryNavCache", "栏目导航缓存", 60*100)
 	CategoryGetCache = NewCacheItemModel("CategoryGetCache", "栏目列表缓存", 60*100)
 	CategoryFindCache = NewCacheItemModel("CategoryFindCache", "栏目详情缓存", 60*100)
@@ -110,4 +122,6 @@ func init() {
 	ChannelGetCache = NewCacheItemModel("ChannelGetCache", "站点频道缓存", 60*50)
 	WechatAccountCache = NewCacheItemModel("WechatAccountCache", "微信账号列表缓存", 60*90)
 	WechatVerifyCache = NewCacheItemModel("WechatVerifyCache", "微信校验文件列表缓存", 60*90)
+
+	logs.Info("缓存初始化完成, 共初始化 %d 个缓存实例", 24)
 }

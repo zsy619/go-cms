@@ -1,10 +1,10 @@
 package funcs
 
 import (
-	"fmt"
 	"html/template"
 	"sync"
 
+	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
 )
 
@@ -19,7 +19,7 @@ var (
  * @return {*}
  */
 func init() {
-	fmt.Println("初始化模板函数-------->开始")
+	logs.Debug("初始化模板函数-------->开始")
 
 	funcs = make(map[string]any)
 	{
@@ -163,7 +163,7 @@ func init() {
 		_ = web.AddFuncMap(k, v)
 	}
 
-	fmt.Println("初始化模板函数-------->结束")
+	logs.Debug("初始化模板函数-------->结束")
 }
 
 /**

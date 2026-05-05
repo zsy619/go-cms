@@ -78,7 +78,7 @@ func (ctrl *BaseController) Finish() {
 // @param code 状态码
 // @param message 消息
 // @param data 数据
-func (ctrl *BaseController) JSON(code lib.CodeResult, message string, data interface{}) {
+func (ctrl *BaseController) JSON(code lib.CodeResult, message string, data any) {
 	ctrl.Data["json"] = &lib.JSONResponse{
 		Code:    code,
 		Message: message,
@@ -91,7 +91,7 @@ func (ctrl *BaseController) JSON(code lib.CodeResult, message string, data inter
 // JSONSuccess 成功返回
 // @param message 消息
 // @param data 数据
-func (ctrl *BaseController) JSONSuccess(message string, data interface{}) {
+func (ctrl *BaseController) JSONSuccess(message string, data any) {
 	ctrl.JSON(lib.CodeSuccess, message, data)
 }
 
@@ -104,7 +104,7 @@ func (ctrl *BaseController) JSONError(message string) {
 // JSONErrorOfData 带数据的错误返回
 // @param message 错误消息
 // @param data 数据
-func (ctrl *BaseController) JSONErrorOfData(message string, data interface{}) {
+func (ctrl *BaseController) JSONErrorOfData(message string, data any) {
 	ctrl.JSON(lib.CodeError, message, data)
 }
 
@@ -113,7 +113,7 @@ func (ctrl *BaseController) JSONErrorOfData(message string, data interface{}) {
 // @param message 消息
 // @param data 数据列表
 // @param count 总数
-func (ctrl *BaseController) JSONPage(code lib.CodeResult, message string, data interface{}, count int64) {
+func (ctrl *BaseController) JSONPage(code lib.CodeResult, message string, data any, count int64) {
 	ctrl.Data["json"] = &lib.JSONResponsePage{
 		Count: count,
 		JSONResponse: lib.JSONResponse{
@@ -129,7 +129,7 @@ func (ctrl *BaseController) JSONPage(code lib.CodeResult, message string, data i
 // JSONPageSuccess 分页成功返回
 // @param data 数据列表
 // @param count 总数
-func (ctrl *BaseController) JSONPageSuccess(data interface{}, count int64) {
+func (ctrl *BaseController) JSONPageSuccess(data any, count int64) {
 	ctrl.JSONPage(lib.CodeSuccess, "", data, count)
 }
 
@@ -137,7 +137,7 @@ func (ctrl *BaseController) JSONPageSuccess(data interface{}, count int64) {
 // @param msg 错误消息
 // @param data 数据
 // @param count 总数
-func (ctrl *BaseController) JSONPageError(msg string, data interface{}, count int64) {
+func (ctrl *BaseController) JSONPageError(msg string, data any, count int64) {
 	ctrl.JSONPage(lib.CodeError, "", data, count)
 }
 
@@ -153,7 +153,7 @@ func (ctrl *BaseController) JSONData(data *lib.JSONResponse) {
 // @param code 状态码
 // @param message 消息
 // @param data 数据
-func (ctrl *BaseController) OutStatus(code lib.CodeResult, message string, data interface{}) {
+func (ctrl *BaseController) OutStatus(code lib.CodeResult, message string, data any) {
 	if ctrl.Ctx.Input.IsAjax() {
 		ctrl.JSON(code, message, data)
 	}
@@ -226,7 +226,7 @@ func (ctrl *BaseController) SetSessionBool(sName string, value bool) {
 
 // SetDatas 批量设置模板数据
 // @param datas 数据字典
-func (ctrl *BaseController) SetDatas(datas map[string]interface{}) {
+func (ctrl *BaseController) SetDatas(datas map[string]any) {
 	for k, v := range datas {
 		ctrl.Data[k] = v
 	}
@@ -245,6 +245,9 @@ func (ctrl *BaseController) GetSafeString(key string, def ...string) string {
 }
 
 // GetSafeStringTuple2 获取2个安全字符串参数
+// @param key1 第一个参数键名
+// @param key2 第二个参数键名
+// @return Tuple2[string, string] 两个字符串值
 func (ctrl *BaseController) GetSafeStringTuple2(key1, key2 string) (cnt xgeneric.Tuple2[string, string]) {
 	cnt.A = ctrl.GetSafeString(key1)
 	cnt.B = ctrl.GetSafeString(key2)
@@ -252,6 +255,10 @@ func (ctrl *BaseController) GetSafeStringTuple2(key1, key2 string) (cnt xgeneric
 }
 
 // GetSafeStringTuple3 获取3个安全字符串参数
+// @param key1 第一个参数键名
+// @param key2 第二个参数键名
+// @param key3 第三个参数键名
+// @return Tuple3[string, string, string] 三个字符串值
 func (ctrl *BaseController) GetSafeStringTuple3(key1, key2, key3 string) (cnt xgeneric.Tuple3[string, string, string]) {
 	cnt.A = ctrl.GetSafeString(key1)
 	cnt.B = ctrl.GetSafeString(key2)
@@ -260,6 +267,11 @@ func (ctrl *BaseController) GetSafeStringTuple3(key1, key2, key3 string) (cnt xg
 }
 
 // GetSafeStringTuple4 获取4个安全字符串参数
+// @param key1 第一个参数键名
+// @param key2 第二个参数键名
+// @param key3 第三个参数键名
+// @param key4 第四个参数键名
+// @return Tuple4[string, string, string, string] 四个字符串值
 func (ctrl *BaseController) GetSafeStringTuple4(key1, key2, key3, key4 string) (cnt xgeneric.Tuple4[string, string, string, string]) {
 	cnt.A = ctrl.GetSafeString(key1)
 	cnt.B = ctrl.GetSafeString(key2)
@@ -269,6 +281,12 @@ func (ctrl *BaseController) GetSafeStringTuple4(key1, key2, key3, key4 string) (
 }
 
 // GetSafeStringTuple5 获取5个安全字符串参数
+// @param key1 第一个参数键名
+// @param key2 第二个参数键名
+// @param key3 第三个参数键名
+// @param key4 第四个参数键名
+// @param key5 第五个参数键名
+// @return Tuple5[string, string, string, string, string] 五个字符串值
 func (ctrl *BaseController) GetSafeStringTuple5(key1, key2, key3, key4, key5 string) (cnt xgeneric.Tuple5[string, string, string, string, string]) {
 	cnt.A = ctrl.GetSafeString(key1)
 	cnt.B = ctrl.GetSafeString(key2)
@@ -279,6 +297,13 @@ func (ctrl *BaseController) GetSafeStringTuple5(key1, key2, key3, key4, key5 str
 }
 
 // GetSafeStringTuple6 获取6个安全字符串参数
+// @param key1 第一个参数键名
+// @param key2 第二个参数键名
+// @param key3 第三个参数键名
+// @param key4 第四个参数键名
+// @param key5 第五个参数键名
+// @param key6 第六个参数键名
+// @return Tuple6[string, string, string, string, string, string] 六个字符串值
 func (ctrl *BaseController) GetSafeStringTuple6(key1, key2, key3, key4, key5, key6 string) (cnt xgeneric.Tuple6[string, string, string, string, string, string]) {
 	cnt.A = ctrl.GetSafeString(key1)
 	cnt.B = ctrl.GetSafeString(key2)
@@ -290,6 +315,14 @@ func (ctrl *BaseController) GetSafeStringTuple6(key1, key2, key3, key4, key5, ke
 }
 
 // GetSafeStringTuple7 获取7个安全字符串参数
+// @param key1 第一个参数键名
+// @param key2 第二个参数键名
+// @param key3 第三个参数键名
+// @param key4 第四个参数键名
+// @param key5 第五个参数键名
+// @param key6 第六个参数键名
+// @param key7 第七个参数键名
+// @return Tuple7[string, string, string, string, string, string, string] 七个字符串值
 func (ctrl *BaseController) GetSafeStringTuple7(key1, key2, key3, key4, key5, key6, key7 string) (cnt xgeneric.Tuple7[string, string, string, string, string, string, string]) {
 	cnt.A = ctrl.GetSafeString(key1)
 	cnt.B = ctrl.GetSafeString(key2)
@@ -302,6 +335,15 @@ func (ctrl *BaseController) GetSafeStringTuple7(key1, key2, key3, key4, key5, ke
 }
 
 // GetSafeStringTuple8 获取8个安全字符串参数
+// @param key1 第一个参数键名
+// @param key2 第二个参数键名
+// @param key3 第三个参数键名
+// @param key4 第四个参数键名
+// @param key5 第五个参数键名
+// @param key6 第六个参数键名
+// @param key7 第七个参数键名
+// @param key8 第八个参数键名
+// @return Tuple8[string, string, string, string, string, string, string, string] 八个字符串值
 func (ctrl *BaseController) GetSafeStringTuple8(key1, key2, key3, key4, key5, key6, key7, key8 string) (cnt xgeneric.Tuple8[string, string, string, string, string, string, string, string]) {
 	cnt.A = ctrl.GetSafeString(key1)
 	cnt.B = ctrl.GetSafeString(key2)
@@ -315,6 +357,16 @@ func (ctrl *BaseController) GetSafeStringTuple8(key1, key2, key3, key4, key5, ke
 }
 
 // GetSafeStringTuple9 获取9个安全字符串参数
+// @param key1 第一个参数键名
+// @param key2 第二个参数键名
+// @param key3 第三个参数键名
+// @param key4 第四个参数键名
+// @param key5 第五个参数键名
+// @param key6 第六个参数键名
+// @param key7 第七个参数键名
+// @param key8 第八个参数键名
+// @param key9 第九个参数键名
+// @return Tuple9[string, string, string, string, string, string, string, string, string] 九个字符串值
 func (ctrl *BaseController) GetSafeStringTuple9(key1, key2, key3, key4, key5, key6, key7, key8, key9 string) (cnt xgeneric.Tuple9[string, string, string, string, string, string, string, string, string]) {
 	cnt.A = ctrl.GetSafeString(key1)
 	cnt.B = ctrl.GetSafeString(key2)
@@ -329,6 +381,9 @@ func (ctrl *BaseController) GetSafeStringTuple9(key1, key2, key3, key4, key5, ke
 }
 
 // GetInt64Tuple2 获取2个int64参数
+// @param key1 第一个参数键名
+// @param key2 第二个参数键名
+// @return Tuple2[int64, int64] 两个int64值
 func (ctrl *BaseController) GetInt64Tuple2(key1, key2 string) (cnt xgeneric.Tuple2[int64, int64]) {
 	cnt.A, _ = ctrl.GetInt64(key1)
 	cnt.B, _ = ctrl.GetInt64(key2)
@@ -336,6 +391,10 @@ func (ctrl *BaseController) GetInt64Tuple2(key1, key2 string) (cnt xgeneric.Tupl
 }
 
 // GetInt64Tuple3 获取3个int64参数
+// @param key1 第一个参数键名
+// @param key2 第二个参数键名
+// @param key3 第三个参数键名
+// @return Tuple3[int64, int64, int64] 三个int64值
 func (ctrl *BaseController) GetInt64Tuple3(key1, key2, key3 string) (cnt xgeneric.Tuple3[int64, int64, int64]) {
 	cnt.A, _ = ctrl.GetInt64(key1)
 	cnt.B, _ = ctrl.GetInt64(key2)
@@ -344,6 +403,11 @@ func (ctrl *BaseController) GetInt64Tuple3(key1, key2, key3 string) (cnt xgeneri
 }
 
 // GetInt64Tuple4 获取4个int64参数
+// @param key1 第一个参数键名
+// @param key2 第二个参数键名
+// @param key3 第三个参数键名
+// @param key4 第四个参数键名
+// @return Tuple4[int64, int64, int64, int64] 四个int64值
 func (ctrl *BaseController) GetInt64Tuple4(key1, key2, key3, key4 string) (cnt xgeneric.Tuple4[int64, int64, int64, int64]) {
 	cnt.A, _ = ctrl.GetInt64(key1)
 	cnt.B, _ = ctrl.GetInt64(key2)
@@ -353,6 +417,12 @@ func (ctrl *BaseController) GetInt64Tuple4(key1, key2, key3, key4 string) (cnt x
 }
 
 // GetInt64Tuple5 获取5个int64参数
+// @param key1 第一个参数键名
+// @param key2 第二个参数键名
+// @param key3 第三个参数键名
+// @param key4 第四个参数键名
+// @param key5 第五个参数键名
+// @return Tuple5[int64, int64, int64, int64, int64] 五个int64值
 func (ctrl *BaseController) GetInt64Tuple5(key1, key2, key3, key4, key5 string) (cnt xgeneric.Tuple5[int64, int64, int64, int64, int64]) {
 	cnt.A, _ = ctrl.GetInt64(key1)
 	cnt.B, _ = ctrl.GetInt64(key2)
@@ -363,6 +433,13 @@ func (ctrl *BaseController) GetInt64Tuple5(key1, key2, key3, key4, key5 string) 
 }
 
 // GetInt64Tuple6 获取6个int64参数
+// @param key1 第一个参数键名
+// @param key2 第二个参数键名
+// @param key3 第三个参数键名
+// @param key4 第四个参数键名
+// @param key5 第五个参数键名
+// @param key6 第六个参数键名
+// @return Tuple6[int64, int64, int64, int64, int64, int64] 六个int64值
 func (ctrl *BaseController) GetInt64Tuple6(key1, key2, key3, key4, key5, key6 string) (cnt xgeneric.Tuple6[int64, int64, int64, int64, int64, int64]) {
 	cnt.A, _ = ctrl.GetInt64(key1)
 	cnt.B, _ = ctrl.GetInt64(key2)
@@ -374,6 +451,14 @@ func (ctrl *BaseController) GetInt64Tuple6(key1, key2, key3, key4, key5, key6 st
 }
 
 // GetInt64Tuple7 获取7个int64参数
+// @param key1 第一个参数键名
+// @param key2 第二个参数键名
+// @param key3 第三个参数键名
+// @param key4 第四个参数键名
+// @param key5 第五个参数键名
+// @param key6 第六个参数键名
+// @param key7 第七个参数键名
+// @return Tuple7[int64, int64, int64, int64, int64, int64, int64] 七个int64值
 func (ctrl *BaseController) GetInt64Tuple7(key1, key2, key3, key4, key5, key6, key7 string) (cnt xgeneric.Tuple7[int64, int64, int64, int64, int64, int64, int64]) {
 	cnt.A, _ = ctrl.GetInt64(key1)
 	cnt.B, _ = ctrl.GetInt64(key2)
@@ -386,6 +471,15 @@ func (ctrl *BaseController) GetInt64Tuple7(key1, key2, key3, key4, key5, key6, k
 }
 
 // GetInt64Tuple8 获取8个int64参数
+// @param key1 第一个参数键名
+// @param key2 第二个参数键名
+// @param key3 第三个参数键名
+// @param key4 第四个参数键名
+// @param key5 第五个参数键名
+// @param key6 第六个参数键名
+// @param key7 第七个参数键名
+// @param key8 第八个参数键名
+// @return Tuple8[int64, int64, int64, int64, int64, int64, int64, int64] 八个int64值
 func (ctrl *BaseController) GetInt64Tuple8(key1, key2, key3, key4, key5, key6, key7, key8 string) (cnt xgeneric.Tuple8[int64, int64, int64, int64, int64, int64, int64, int64]) {
 	cnt.A, _ = ctrl.GetInt64(key1)
 	cnt.B, _ = ctrl.GetInt64(key2)
@@ -399,6 +493,16 @@ func (ctrl *BaseController) GetInt64Tuple8(key1, key2, key3, key4, key5, key6, k
 }
 
 // GetInt64Tuple9 获取9个int64参数
+// @param key1 第一个参数键名
+// @param key2 第二个参数键名
+// @param key3 第三个参数键名
+// @param key4 第四个参数键名
+// @param key5 第五个参数键名
+// @param key6 第六个参数键名
+// @param key7 第七个参数键名
+// @param key8 第八个参数键名
+// @param key9 第九个参数键名
+// @return Tuple9[int64, int64, int64, int64, int64, int64, int64, int64, int64] 九个int64值
 func (ctrl *BaseController) GetInt64Tuple9(key1, key2, key3, key4, key5, key6, key7, key8, key9 string) (cnt xgeneric.Tuple9[int64, int64, int64, int64, int64, int64, int64, int64, int64]) {
 	cnt.A, _ = ctrl.GetInt64(key1)
 	cnt.B, _ = ctrl.GetInt64(key2)
@@ -413,6 +517,9 @@ func (ctrl *BaseController) GetInt64Tuple9(key1, key2, key3, key4, key5, key6, k
 }
 
 // GetIntTuple2 获取2个int参数
+// @param key1 第一个参数键名
+// @param key2 第二个参数键名
+// @return Tuple2[int, int] 两个int值
 func (ctrl *BaseController) GetIntTuple2(key1, key2 string) (cnt xgeneric.Tuple2[int, int]) {
 	cnt.A, _ = ctrl.GetInt(key1)
 	cnt.B, _ = ctrl.GetInt(key2)
@@ -420,6 +527,10 @@ func (ctrl *BaseController) GetIntTuple2(key1, key2 string) (cnt xgeneric.Tuple2
 }
 
 // GetIntTuple3 获取3个int参数
+// @param key1 第一个参数键名
+// @param key2 第二个参数键名
+// @param key3 第三个参数键名
+// @return Tuple3[int, int, int] 三个int值
 func (ctrl *BaseController) GetIntTuple3(key1, key2, key3 string) (cnt xgeneric.Tuple3[int, int, int]) {
 	cnt.A, _ = ctrl.GetInt(key1)
 	cnt.B, _ = ctrl.GetInt(key2)
@@ -428,6 +539,11 @@ func (ctrl *BaseController) GetIntTuple3(key1, key2, key3 string) (cnt xgeneric.
 }
 
 // GetIntTuple4 获取4个int参数
+// @param key1 第一个参数键名
+// @param key2 第二个参数键名
+// @param key3 第三个参数键名
+// @param key4 第四个参数键名
+// @return Tuple4[int, int, int, int] 四个int值
 func (ctrl *BaseController) GetIntTuple4(key1, key2, key3, key4 string) (cnt xgeneric.Tuple4[int, int, int, int]) {
 	cnt.A, _ = ctrl.GetInt(key1)
 	cnt.B, _ = ctrl.GetInt(key2)
@@ -437,6 +553,12 @@ func (ctrl *BaseController) GetIntTuple4(key1, key2, key3, key4 string) (cnt xge
 }
 
 // GetIntTuple5 获取5个int参数
+// @param key1 第一个参数键名
+// @param key2 第二个参数键名
+// @param key3 第三个参数键名
+// @param key4 第四个参数键名
+// @param key5 第五个参数键名
+// @return Tuple5[int, int, int, int, int] 五个int值
 func (ctrl *BaseController) GetIntTuple5(key1, key2, key3, key4, key5 string) (cnt xgeneric.Tuple5[int, int, int, int, int]) {
 	cnt.A, _ = ctrl.GetInt(key1)
 	cnt.B, _ = ctrl.GetInt(key2)
@@ -447,6 +569,13 @@ func (ctrl *BaseController) GetIntTuple5(key1, key2, key3, key4, key5 string) (c
 }
 
 // GetIntTuple6 获取6个int参数
+// @param key1 第一个参数键名
+// @param key2 第二个参数键名
+// @param key3 第三个参数键名
+// @param key4 第四个参数键名
+// @param key5 第五个参数键名
+// @param key6 第六个参数键名
+// @return Tuple6[int, int, int, int, int, int] 六个int值
 func (ctrl *BaseController) GetIntTuple6(key1, key2, key3, key4, key5, key6 string) (cnt xgeneric.Tuple6[int, int, int, int, int, int]) {
 	cnt.A, _ = ctrl.GetInt(key1)
 	cnt.B, _ = ctrl.GetInt(key2)
@@ -458,6 +587,14 @@ func (ctrl *BaseController) GetIntTuple6(key1, key2, key3, key4, key5, key6 stri
 }
 
 // GetIntTuple7 获取7个int参数
+// @param key1 第一个参数键名
+// @param key2 第二个参数键名
+// @param key3 第三个参数键名
+// @param key4 第四个参数键名
+// @param key5 第五个参数键名
+// @param key6 第六个参数键名
+// @param key7 第七个参数键名
+// @return Tuple7[int, int, int, int, int, int, int] 七个int值
 func (ctrl *BaseController) GetIntTuple7(key1, key2, key3, key4, key5, key6, key7 string) (cnt xgeneric.Tuple7[int, int, int, int, int, int, int]) {
 	cnt.A, _ = ctrl.GetInt(key1)
 	cnt.B, _ = ctrl.GetInt(key2)
@@ -470,6 +607,15 @@ func (ctrl *BaseController) GetIntTuple7(key1, key2, key3, key4, key5, key6, key
 }
 
 // GetIntTuple8 获取8个int参数
+// @param key1 第一个参数键名
+// @param key2 第二个参数键名
+// @param key3 第三个参数键名
+// @param key4 第四个参数键名
+// @param key5 第五个参数键名
+// @param key6 第六个参数键名
+// @param key7 第七个参数键名
+// @param key8 第八个参数键名
+// @return Tuple8[int, int, int, int, int, int, int, int] 八个int值
 func (ctrl *BaseController) GetIntTuple8(key1, key2, key3, key4, key5, key6, key7, key8 string) (cnt xgeneric.Tuple8[int, int, int, int, int, int, int, int]) {
 	cnt.A, _ = ctrl.GetInt(key1)
 	cnt.B, _ = ctrl.GetInt(key2)
@@ -483,6 +629,16 @@ func (ctrl *BaseController) GetIntTuple8(key1, key2, key3, key4, key5, key6, key
 }
 
 // GetIntTuple9 获取9个int参数
+// @param key1 第一个参数键名
+// @param key2 第二个参数键名
+// @param key3 第三个参数键名
+// @param key4 第四个参数键名
+// @param key5 第五个参数键名
+// @param key6 第六个参数键名
+// @param key7 第七个参数键名
+// @param key8 第八个参数键名
+// @param key9 第九个参数键名
+// @return Tuple9[int, int, int, int, int, int, int, int, int] 九个int值
 func (ctrl *BaseController) GetIntTuple9(key1, key2, key3, key4, key5, key6, key7, key8, key9 string) (cnt xgeneric.Tuple9[int, int, int, int, int, int, int, int, int]) {
 	cnt.A, _ = ctrl.GetInt(key1)
 	cnt.B, _ = ctrl.GetInt(key2)
@@ -497,6 +653,9 @@ func (ctrl *BaseController) GetIntTuple9(key1, key2, key3, key4, key5, key6, key
 }
 
 // GetInt32Tuple2 获取2个int32参数
+// @param key1 第一个参数键名
+// @param key2 第二个参数键名
+// @return Tuple2[int32, int32] 两个int32值
 func (ctrl *BaseController) GetInt32Tuple2(key1, key2 string) (cnt xgeneric.Tuple2[int32, int32]) {
 	cnt.A, _ = ctrl.GetInt32(key1)
 	cnt.B, _ = ctrl.GetInt32(key2)
@@ -504,6 +663,10 @@ func (ctrl *BaseController) GetInt32Tuple2(key1, key2 string) (cnt xgeneric.Tupl
 }
 
 // GetInt32Tuple3 获取3个int32参数
+// @param key1 第一个参数键名
+// @param key2 第二个参数键名
+// @param key3 第三个参数键名
+// @return Tuple3[int32, int32, int32] 三个int32值
 func (ctrl *BaseController) GetInt32Tuple3(key1, key2, key3 string) (cnt xgeneric.Tuple3[int32, int32, int32]) {
 	cnt.A, _ = ctrl.GetInt32(key1)
 	cnt.B, _ = ctrl.GetInt32(key2)
@@ -512,6 +675,11 @@ func (ctrl *BaseController) GetInt32Tuple3(key1, key2, key3 string) (cnt xgeneri
 }
 
 // GetInt32Tuple4 获取4个int32参数
+// @param key1 第一个参数键名
+// @param key2 第二个参数键名
+// @param key3 第三个参数键名
+// @param key4 第四个参数键名
+// @return Tuple4[int32, int32, int32, int32] 四个int32值
 func (ctrl *BaseController) GetInt32Tuple4(key1, key2, key3, key4 string) (cnt xgeneric.Tuple4[int32, int32, int32, int32]) {
 	cnt.A, _ = ctrl.GetInt32(key1)
 	cnt.B, _ = ctrl.GetInt32(key2)
@@ -521,6 +689,12 @@ func (ctrl *BaseController) GetInt32Tuple4(key1, key2, key3, key4 string) (cnt x
 }
 
 // GetInt32Tuple5 获取5个int32参数
+// @param key1 第一个参数键名
+// @param key2 第二个参数键名
+// @param key3 第三个参数键名
+// @param key4 第四个参数键名
+// @param key5 第五个参数键名
+// @return Tuple5[int32, int32, int32, int32, int32] 五个int32值
 func (ctrl *BaseController) GetInt32Tuple5(key1, key2, key3, key4, key5 string) (cnt xgeneric.Tuple5[int32, int32, int32, int32, int32]) {
 	cnt.A, _ = ctrl.GetInt32(key1)
 	cnt.B, _ = ctrl.GetInt32(key2)
@@ -531,6 +705,13 @@ func (ctrl *BaseController) GetInt32Tuple5(key1, key2, key3, key4, key5 string) 
 }
 
 // GetInt32Tuple6 获取6个int32参数
+// @param key1 第一个参数键名
+// @param key2 第二个参数键名
+// @param key3 第三个参数键名
+// @param key4 第四个参数键名
+// @param key5 第五个参数键名
+// @param key6 第六个参数键名
+// @return Tuple6[int32, int32, int32, int32, int32, int32] 六个int32值
 func (ctrl *BaseController) GetInt32Tuple6(key1, key2, key3, key4, key5, key6 string) (cnt xgeneric.Tuple6[int32, int32, int32, int32, int32, int32]) {
 	cnt.A, _ = ctrl.GetInt32(key1)
 	cnt.B, _ = ctrl.GetInt32(key2)
@@ -542,6 +723,14 @@ func (ctrl *BaseController) GetInt32Tuple6(key1, key2, key3, key4, key5, key6 st
 }
 
 // GetInt32Tuple7 获取7个int32参数
+// @param key1 第一个参数键名
+// @param key2 第二个参数键名
+// @param key3 第三个参数键名
+// @param key4 第四个参数键名
+// @param key5 第五个参数键名
+// @param key6 第六个参数键名
+// @param key7 第七个参数键名
+// @return Tuple7[int32, int32, int32, int32, int32, int32, int32] 七个int32值
 func (ctrl *BaseController) GetInt32Tuple7(key1, key2, key3, key4, key5, key6, key7 string) (cnt xgeneric.Tuple7[int32, int32, int32, int32, int32, int32, int32]) {
 	cnt.A, _ = ctrl.GetInt32(key1)
 	cnt.B, _ = ctrl.GetInt32(key2)
@@ -554,6 +743,15 @@ func (ctrl *BaseController) GetInt32Tuple7(key1, key2, key3, key4, key5, key6, k
 }
 
 // GetInt32Tuple8 获取8个int32参数
+// @param key1 第一个参数键名
+// @param key2 第二个参数键名
+// @param key3 第三个参数键名
+// @param key4 第四个参数键名
+// @param key5 第五个参数键名
+// @param key6 第六个参数键名
+// @param key7 第七个参数键名
+// @param key8 第八个参数键名
+// @return Tuple8[int32, int32, int32, int32, int32, int32, int32, int32] 八个int32值
 func (ctrl *BaseController) GetInt32Tuple8(key1, key2, key3, key4, key5, key6, key7, key8 string) (cnt xgeneric.Tuple8[int32, int32, int32, int32, int32, int32, int32, int32]) {
 	cnt.A, _ = ctrl.GetInt32(key1)
 	cnt.B, _ = ctrl.GetInt32(key2)
@@ -567,6 +765,16 @@ func (ctrl *BaseController) GetInt32Tuple8(key1, key2, key3, key4, key5, key6, k
 }
 
 // GetInt32Tuple9 获取9个int32参数
+// @param key1 第一个参数键名
+// @param key2 第二个参数键名
+// @param key3 第三个参数键名
+// @param key4 第四个参数键名
+// @param key5 第五个参数键名
+// @param key6 第六个参数键名
+// @param key7 第七个参数键名
+// @param key8 第八个参数键名
+// @param key9 第九个参数键名
+// @return Tuple9[int32, int32, int32, int32, int32, int32, int32, int32, int32] 九个int32值
 func (ctrl *BaseController) GetInt32Tuple9(key1, key2, key3, key4, key5, key6, key7, key8, key9 string) (cnt xgeneric.Tuple9[int32, int32, int32, int32, int32, int32, int32, int32, int32]) {
 	cnt.A, _ = ctrl.GetInt32(key1)
 	cnt.B, _ = ctrl.GetInt32(key2)

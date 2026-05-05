@@ -1,8 +1,6 @@
 package www
 
 import (
-	"fmt"
-
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/zsy619/tools/xstring"
 )
@@ -13,31 +11,26 @@ type ArticleController struct{ BaseController }
 // Index 文章首页
 // @router /:flag:string/:name:string/:call_index:string/:article_id:int64 [get]
 func (ctrl *ArticleController) Index() {
-	flag := ctrl.Ctx.Input.Param(":flag")             // 频道名称
-	name := ctrl.Ctx.Input.Param(":name")             // 频道名称
-	call_index := ctrl.Ctx.Input.Param(":call_index") // 栏目别名
-	article_id := ctrl.Ctx.Input.Param(":article_id") // 文章ID
-	fmt.Println("flag:", flag)
-	fmt.Println("name:", name)
-	fmt.Println("call_index:", call_index)
-	fmt.Println("article_id:", article_id)
+	flag := ctrl.Ctx.Input.Param(":flag")
+	name := ctrl.Ctx.Input.Param(":name")
+	call_index := ctrl.Ctx.Input.Param(":call_index")
+	article_id := ctrl.Ctx.Input.Param(":article_id")
+	logs.Debug("Article Index: flag=%s, name=%s, call_index=%s, article_id=%s", flag, name, call_index, article_id)
 }
 
 // Detail 文章详情
 // @router /article/:call_index:string/:article_id:int64 [get]
 func (ctrl *ArticleController) Detail() {
-	call_index := ctrl.Ctx.Input.Param(":call_index") // 栏目别名
-	fmt.Println("call_index:", call_index)
-	particle_id := ctrl.Ctx.Input.Param(":article_id") // 获取路由参数
-	fmt.Println("particle_id:", particle_id)
+	call_index := ctrl.Ctx.Input.Param(":call_index")
+	particle_id := ctrl.Ctx.Input.Param(":article_id")
+	logs.Debug("Article Detail: call_index=%s, particle_id=%s", call_index, particle_id)
 	article_id := xstring.ToInt64(particle_id)
 	if article_id <= 0 {
 		ctrl.Abort("404")
 	}
-	// 获取文章详情
 	articleModel, albumModel, attachModel, propertyModel, err := ctrl.ArticleFind("", article_id)
 	if err != nil {
-		logs.Error("Detail:", err.Error())
+		logs.Error("获取文章详情失败: articleId=%d, error=%v", article_id, err)
 	}
 	ctrl.Data["article_id"] = article_id
 	ctrl.Data["title"] = articleModel.Title
@@ -64,7 +57,7 @@ func (ctrl *ArticleController) Detail() {
 // Search 文章搜索
 // @router /article/search/:keyword [get]
 func (ctrl *ArticleController) Search() {
-	keyword := ctrl.Ctx.Input.Param(":keyword") // 获取路由参数
+	keyword := ctrl.Ctx.Input.Param(":keyword")
 	ctrl.Data["keyword"] = keyword
 	ctrl.TplName = ctrl.GetView(DefaultSite.Template, "search.html")
 }

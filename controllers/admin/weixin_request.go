@@ -1,8 +1,6 @@
 package admin
 
 import (
-	"fmt"
-
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/zsy619/tools/xgeneric"
 	"github.com/zsy619/tools/xjson"
@@ -93,7 +91,7 @@ func (ctrl *WeixinController) RulePaginateCount() {
 func (ctrl *WeixinController) RuleSaveSortId() {
 	mdls := []vmodel.Rule_SaveSortIdModel{}
 	data := ctrl.Ctx.Input.RequestBody
-	fmt.Println("SiteSaveSortId", string(data))
+	logs.Debug("SiteSaveSortId", string(data))
 	if err := xjson.Unmarshal(ctrl.Ctx.Input.RequestBody, &mdls); err != nil {
 		logs.Error("SiteSaveSortId", err.Error())
 		ctrl.JSONError(err.Error())

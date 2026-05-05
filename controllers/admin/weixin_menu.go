@@ -1,8 +1,6 @@
 package admin
 
 import (
-	"fmt"
-
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/zsy619/tools/xjson"
 
@@ -69,7 +67,7 @@ func (ctrl *WeixinController) MenuSave() {
 func (ctrl *WeixinController) MenuSaveSortId() {
 	mdls := []vmodel.Menu_SaveSortIdModel{}
 	data := ctrl.Ctx.Input.RequestBody
-	fmt.Println("MenuSaveSortId", string(data))
+	logs.Debug("MenuSaveSortId", string(data))
 	if err := xjson.Unmarshal(ctrl.Ctx.Input.RequestBody, &mdls); err != nil {
 		logs.Error("MenuSaveSortId", err.Error())
 		ctrl.JSONError(err.Error())
@@ -104,7 +102,7 @@ func (ctrl *WeixinController) MenuSync() {
 		ctrl.JSONError(err.Error())
 		return
 	}
-	fmt.Println("MenuSync", finder)
+	logs.Debug("MenuSync", finder)
 	message := mp.NewMessage(finder.AppID, finder.AppSecret, true)
 	pbuttons := []mp.Button{}
 	service := service.NewWeixinMenu()

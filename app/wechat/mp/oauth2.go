@@ -146,7 +146,7 @@ func (oauth *OAuth2) RefreshGlobalAccessToken(refreshToken string) {
 	go func(oauth *OAuth2) {
 		expiresIn := 7100      // 刷新周期，提前100秒刷新
 		lastTime := time.Now() // 最后一次刷新时间
-		fmt.Println("RefreshGlobalAccessToken --> ", refreshToken, lastTime)
+		logs.Debug("RefreshGlobalAccessToken --> ", refreshToken, lastTime)
 		if len(GlobalToken().AccessToken) == 0 { // 立即刷新
 			expiresIn = 60
 		}

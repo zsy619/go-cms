@@ -1,9 +1,9 @@
 package admin
 
 import (
-	"fmt"
 	"testing"
 
+	"github.com/beego/beego/v2/core/logs"
 	"github.com/zsy619/tools/xcrypto"
 
 	"haedu.gov.cn/cms/global"
@@ -15,7 +15,7 @@ func Test_CreatePassword(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	} else {
-		fmt.Println(password)
+		logs.Debug(password)
 	}
 }
 
@@ -26,6 +26,6 @@ func Test_Password(t *testing.T) {
 		t.Fatal(err)
 	} else {
 		// Admin@2023
-		fmt.Println(password)
+		logs.Debug(password)
 	}
 }

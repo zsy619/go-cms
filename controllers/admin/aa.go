@@ -1,8 +1,7 @@
 package admin
 
 import (
-	"fmt"
-
+	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
 
 	lib "haedu.gov.cn/cms/app/tool"
@@ -25,7 +24,7 @@ const (
 )
 
 func init() {
-	fmt.Println("admin 开始注册路由")
+	logs.Debug("admin 开始注册路由")
 
 	loginNs := web.NewNamespace("cms",
 		web.NSNamespace("admin",
@@ -95,5 +94,5 @@ func init() {
 	web.Router(lib.Url_School_Login, &LoginController{}, "*:School")
 	web.Router(lib.Url_Admin_Login, &LoginController{}, "*:Admin")
 
-	fmt.Println("admin 结束注册路由")
+	logs.Debug("admin 结束注册路由")
 }

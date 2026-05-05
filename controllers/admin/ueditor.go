@@ -98,7 +98,7 @@ func (ue *UEditorController) Handle() {
 	if op == "" {
 		op = ue.Ctx.Input.Query("action")
 	}
-	fmt.Println("upload-------->", op)
+	logs.Debug("upload-------->", op)
 	switch op {
 	case "showPost":
 		body := ue.Ctx.Input.RequestBody
@@ -108,7 +108,7 @@ func (ue *UEditorController) Handle() {
 	// 	// 返回配置信息
 	// 	file, err := os.Open("./static/admin/lib/ueditor-plus-v3.0.0/ueditor.config.js")
 	// 	if err != nil {
-	// 		fmt.Println(err.Error())
+	// 		logs.Debug(err.Error())
 	// 		fmt.Fprintf(ue.Ctx.ResponseWriter, "打开文件错误 : %v", err)
 	// 		return
 	// 	}
@@ -164,7 +164,7 @@ func (ue *UEditorController) Handle() {
 func (ue *UEditorController) UploadFileX(op string, fieldName string, exts []string, extsMsg, filePath string) {
 	file, h, err := ue.Ctx.Request.FormFile("file")
 	if err != nil {
-		fmt.Println(err.Error())
+		logs.Debug(err.Error())
 		ue.JSONError(err.Error())
 	}
 	defer file.Close()
@@ -259,7 +259,7 @@ func (ue *UEditorController) ListFileX(dir string, exts []string) {
 		}
 		if !info.IsDir() && ue.isExtFile(path, exts) {
 			if count >= startIndex && count < endIndex {
-				fmt.Println(path)
+				logs.Debug(path)
 				result.List = append(result.List, struct {
 					Url   string `json:"url"`
 					Mtime int64  `json:"mtime"`
@@ -273,7 +273,7 @@ func (ue *UEditorController) ListFileX(dir string, exts []string) {
 		return nil
 	})
 	if err != nil {
-		fmt.Println(err)
+		logs.Debug(err)
 	}
 	result.State = "SUCCESS"
 	result.Start = startIndex

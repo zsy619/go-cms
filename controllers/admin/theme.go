@@ -1,8 +1,6 @@
 package admin
 
 import (
-	"fmt"
-
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/zsy619/tools/xjson"
 
@@ -64,7 +62,7 @@ func (ctrl *ThemeController) ThemeSave() {
 func (ctrl *ThemeController) ThemeSaveSortId() {
 	mdls := []vmodel.Theme_SaveSortIdModel{}
 	data := ctrl.Ctx.Input.RequestBody
-	fmt.Println("ThemeSaveSortId", string(data))
+	logs.Debug("ThemeSaveSortId", string(data))
 	if err := xjson.Unmarshal(ctrl.Ctx.Input.RequestBody, &mdls); err != nil {
 		logs.Error("ThemeSaveSortId", err.Error())
 		ctrl.JSONError(err.Error())

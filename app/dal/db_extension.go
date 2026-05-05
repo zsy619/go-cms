@@ -43,31 +43,31 @@ func (dw *DBExtension) SetLogger(logger DBLogger) {
 	dw.logger = logger
 }
 
-type UpdateAttrs map[string]interface{}
+type UpdateAttrs map[string]any
 
 func NewUpdateAttrs(tableName string) UpdateAttrs {
-	attrMap := make(map[string]interface{})
+	attrMap := make(map[string]any)
 	attrMap[table_name] = tableName
 	return attrMap
 }
 
-func (dw *DBExtension) GetList(result interface{}, query interface{}, args ...interface{}) error {
+func (dw *DBExtension) GetList(result any, query any, args ...any) error {
 	return dw.getListCore(result, "", 0, 0, query, args)
 }
 
-func (dw *DBExtension) GetOrderedList(result interface{}, order string, query interface{}, args ...interface{}) error {
+func (dw *DBExtension) GetOrderedList(result any, order string, query any, args ...any) error {
 	return dw.getListCore(result, order, 0, 0, query, args)
 }
 
-func (dw *DBExtension) GetFirstNRecords(result interface{}, order string, limit int, query interface{}, args ...interface{}) error {
+func (dw *DBExtension) GetFirstNRecords(result any, order string, limit int, query any, args ...any) error {
 	return dw.getListCore(result, order, limit, 0, query, args)
 }
 
-func (dw *DBExtension) GetPageRangeList(result interface{}, order string, limit, offset int, query interface{}, args ...interface{}) error {
+func (dw *DBExtension) GetPageRangeList(result any, order string, limit, offset int, query any, args ...any) error {
 	return dw.getListCore(result, order, limit, offset, query, args)
 }
 
-func (dw *DBExtension) getListCore(result interface{}, order string, limit, offset int, query interface{}, args []interface{}) error {
+func (dw *DBExtension) getListCore(result any, order string, limit, offset int, query any, args []any) error {
 	var (
 		tableNameAble TableNameAble
 		ok            bool
@@ -132,7 +132,7 @@ func (dw *DBExtension) SaveOne(value TableNameAble) error {
 }
 
 // Update selected Fields, if attrs is an object, it will ignore default value field; if attrs is map, it will ignore unchanged field.
-func (dw *DBExtension) Update(attrs interface{}, query interface{}, args ...interface{}) error {
+func (dw *DBExtension) Update(attrs any, query any, args ...any) error {
 	var (
 		tableNameAble TableNameAble
 		ok            bool
@@ -166,7 +166,7 @@ func (dw *DBExtension) Update(attrs interface{}, query interface{}, args ...inte
 	return err
 }
 
-func (dw *DBExtension) GetOne(result interface{}, query interface{}, args ...interface{}) (found bool, err error) {
+func (dw *DBExtension) GetOne(result any, query any, args ...any) (found bool, err error) {
 	var (
 		tableNameAble TableNameAble
 		ok            bool
@@ -193,7 +193,7 @@ func (dw *DBExtension) GetOne(result interface{}, query interface{}, args ...int
 	return true, nil
 }
 
-func (dw *DBExtension) ExecSql(result interface{}, sql string, args ...interface{}) error {
+func (dw *DBExtension) ExecSql(result any, sql string, args ...any) error {
 	err := dw.Raw(sql, args...).Scan(result).Error
 	if err != nil {
 		dw.logger.LogErrorc("mysql", err, fmt.Sprintf("failed to execute sql %s, args are %+v", sql, args))
@@ -202,15 +202,15 @@ func (dw *DBExtension) ExecSql(result interface{}, sql string, args ...interface
 	return err
 }
 
-func (dw *DBExtension) Count(count *int64, query interface{}) error {
+func (dw *DBExtension) Count(count *int64, query any) error {
 	return dw.countCore(count, "", query)
 }
 
-func (dw *DBExtension) CountBy(count *int64, byField string, query interface{}) error {
+func (dw *DBExtension) CountBy(count *int64, byField string, query any) error {
 	return dw.countCore(count, byField, query)
 }
 
-func (dw *DBExtension) countCore(count *int64, byField string, query interface{}) error {
+func (dw *DBExtension) countCore(count *int64, byField string, query any) error {
 	tableNameAble, ok := query.(TableNameAble)
 
 	if !ok {

@@ -1,8 +1,6 @@
 package admin
 
 import (
-	"fmt"
-
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/zsy619/tools/xjson"
 
@@ -48,7 +46,7 @@ func (ctrl *NavController) NavEdit() {
 func (ctrl *NavController) NavSaveSortId() {
 	mdls := []vmodel.Nav_SaveSortIdModel{}
 	data := ctrl.Ctx.Input.RequestBody
-	fmt.Println("NavSaveSortId", string(data))
+	logs.Debug("NavSaveSortId", string(data))
 	if err := xjson.Unmarshal(ctrl.Ctx.Input.RequestBody, &mdls); err != nil {
 		logs.Error("NavSaveSortId", err.Error())
 		ctrl.JSONError(err.Error())

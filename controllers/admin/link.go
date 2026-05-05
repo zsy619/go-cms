@@ -1,8 +1,6 @@
 package admin
 
 import (
-	"fmt"
-
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/zsy619/tools/xjson"
 
@@ -77,7 +75,7 @@ func (ctrl *LinkController) LinkSave() {
 func (ctrl *LinkController) LinkSaveSortId() {
 	mdls := []vmodel.Link_SaveSortIdModel{}
 	data := ctrl.Ctx.Input.RequestBody
-	fmt.Println("LinkSaveSortId", string(data))
+	logs.Debug("LinkSaveSortId", string(data))
 	if err := xjson.Unmarshal(ctrl.Ctx.Input.RequestBody, &mdls); err != nil {
 		logs.Error("LinkSaveSortId", err.Error())
 		ctrl.JSONError(err.Error())
@@ -181,7 +179,7 @@ func (ctrl *LinkController) CategorySave() {
 func (ctrl *LinkController) CategorySaveSortId() {
 	mdls := []vmodel.Category_SaveSortIdModel{}
 	data := ctrl.Ctx.Input.RequestBody
-	fmt.Println("CategorySaveSortId", string(data))
+	logs.Debug("CategorySaveSortId", string(data))
 	if err := xjson.Unmarshal(ctrl.Ctx.Input.RequestBody, &mdls); err != nil {
 		logs.Error("CategorySaveSortId", err.Error())
 		ctrl.JSONError(err.Error())

@@ -1,7 +1,6 @@
 package admin
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/beego/beego/v2/core/logs"
@@ -68,7 +67,7 @@ func (ctrl *NoticeController) NoticePaginate() {
 func (ctrl *NoticeController) NoticeSaveSortId() {
 	mdls := []vmodel.Notice_SaveSortIdModel{}
 	data := ctrl.Ctx.Input.RequestBody
-	fmt.Println("NoticeSaveSortId", string(data))
+	logs.Debug("NoticeSaveSortId", string(data))
 	if err := xjson.Unmarshal(ctrl.Ctx.Input.RequestBody, &mdls); err != nil {
 		logs.Error("NoticeSaveSortId", err.Error())
 		ctrl.JSONError(err.Error())

@@ -1,8 +1,6 @@
 package admin
 
 import (
-	"fmt"
-
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/zsy619/tools/xjson"
 
@@ -67,7 +65,7 @@ func (ctrl *CommonController) AlbumSave() {
 func (ctrl *CommonController) AlbumSaveShow() {
 	mdls := vmodel.Article_AlbumSaveShowModel{}
 	data := ctrl.Ctx.Input.RequestBody
-	fmt.Println("AlbumSaveShow", string(data))
+	logs.Debug("AlbumSaveShow", string(data))
 	if err := xjson.Unmarshal(ctrl.Ctx.Input.RequestBody, &mdls); err != nil {
 		logs.Error("AlbumSaveShow", err.Error())
 		ctrl.JSONError(err.Error())
@@ -85,7 +83,7 @@ func (ctrl *CommonController) AlbumSaveShow() {
 func (ctrl *CommonController) AlbumSaveBatch() {
 	mdls := []vmodel.Article_AlbumSaveBatchdModel{}
 	data := ctrl.Ctx.Input.RequestBody
-	fmt.Println("AlbumSaveBatch", string(data))
+	logs.Debug("AlbumSaveBatch", string(data))
 	if err := xjson.Unmarshal(ctrl.Ctx.Input.RequestBody, &mdls); err != nil {
 		logs.Error("AlbumSaveBatch", err.Error())
 		ctrl.JSONError(err.Error())

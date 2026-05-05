@@ -32,9 +32,9 @@ const (
 
 // JSONResponse 返回统一的格式
 type JSONResponse struct {
-	Code    CodeResult  `json:"code"`
-	Message string      `json:"msg"`
-	Data    interface{} `json:"data"`
+	Code    CodeResult `json:"code"`
+	Message string    `json:"msg"`
+	Data    any       `json:"data"`
 }
 
 // SetResult 返回参数赋值
@@ -50,7 +50,7 @@ func NewJSONResponse(code CodeResult, message string) *JSONResponse {
 	}
 }
 
-func NewJSONDataResponse(code CodeResult, message string, data interface{}) *JSONResponse {
+func NewJSONDataResponse(code CodeResult, message string, data any) *JSONResponse {
 	return &JSONResponse{
 		Code:    code,
 		Message: message,
@@ -59,9 +59,9 @@ func NewJSONDataResponse(code CodeResult, message string, data interface{}) *JSO
 }
 
 type JSONResponseApi struct {
-	Code    CodeResult  `json:"code"`
-	Message string      `json:"msg"`
-	Data    interface{} `json:"data"`
+	Code    CodeResult `json:"code"`
+	Message string    `json:"msg"`
+	Data    any       `json:"data"`
 }
 
 // JSONUploadFile 文件上传

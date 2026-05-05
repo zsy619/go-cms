@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/beego/beego/v2/core/logs"
 	"github.com/zsy619/tools/xgeneric"
 
 	"haedu.gov.cn/cms/app/cms/domain"
@@ -81,7 +82,7 @@ func (ctrl *ThemeController) Upload() {
 	// 4. 检测必要文件是否存在
 
 	if !ctrl.fileExists(filepath.Join(srcDir, "thumb.png")) {
-		fmt.Println(filepath.Join(srcDir, "thumb.png"))
+		logs.Debug(filepath.Join(srcDir, "thumb.png"))
 		ctrl.uploadMsg(-1, "缩略图 thumb.png 不存在")
 		return
 	}

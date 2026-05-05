@@ -1,8 +1,6 @@
 package admin
 
 import (
-	"fmt"
-
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/zsy619/tools/xjson"
 
@@ -55,7 +53,7 @@ func (ctrl *CommonController) AttachSave() {
 func (ctrl *CommonController) AttachSaveShow() {
 	mdls := vmodel.Article_AttachSaveShowModel{}
 	data := ctrl.Ctx.Input.RequestBody
-	fmt.Println("AttachSaveShow", string(data))
+	logs.Debug("AttachSaveShow", string(data))
 	if err := xjson.Unmarshal(ctrl.Ctx.Input.RequestBody, &mdls); err != nil {
 		logs.Error("AttachSaveShow", err.Error())
 		ctrl.JSONError(err.Error())
@@ -73,7 +71,7 @@ func (ctrl *CommonController) AttachSaveShow() {
 func (ctrl *CommonController) AttachSaveBatch() {
 	mdls := []vmodel.Article_AttachSaveBatchdModel{}
 	data := ctrl.Ctx.Input.RequestBody
-	fmt.Println("AttachSaveBatch", string(data))
+	logs.Debug("AttachSaveBatch", string(data))
 	if err := xjson.Unmarshal(ctrl.Ctx.Input.RequestBody, &mdls); err != nil {
 		logs.Error("AttachSaveBatch", err.Error())
 		ctrl.JSONError(err.Error())

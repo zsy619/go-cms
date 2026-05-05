@@ -1,8 +1,6 @@
 package admin
 
 import (
-	"fmt"
-
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/zsy619/tools/xjson"
 
@@ -78,7 +76,7 @@ func (ctrl *TopicController) TopicSave() {
 func (ctrl *TopicController) TopicSaveSortId() {
 	mdls := []vmodel.Topic_SaveSortIdModel{}
 	data := ctrl.Ctx.Input.RequestBody
-	fmt.Println("TopicSaveSortId", string(data))
+	logs.Debug("TopicSaveSortId", string(data))
 	if err := xjson.Unmarshal(ctrl.Ctx.Input.RequestBody, &mdls); err != nil {
 		logs.Error("TopicSaveSortId", err.Error())
 		ctrl.JSONError(err.Error())

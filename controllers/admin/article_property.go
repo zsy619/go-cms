@@ -1,7 +1,6 @@
 package admin
 
 import (
-	"fmt"
 	"strconv"
 	"time"
 
@@ -104,7 +103,7 @@ func (ctrl *ArticleController) PropertyChangeStatus() {
 func (ctrl *ArticleController) PropertySaveSortId() {
 	mdls := []vmodel.Property_SaveSortIdModel{}
 	data := ctrl.Ctx.Input.RequestBody
-	fmt.Println("PropertySaveSortId", string(data))
+	logs.Debug("PropertySaveSortId", string(data))
 	if err := xjson.Unmarshal(ctrl.Ctx.Input.RequestBody, &mdls); err != nil {
 		logs.Error("PropertySaveSortId", err.Error())
 		ctrl.JSONError(err.Error())

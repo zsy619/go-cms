@@ -1,8 +1,7 @@
 package www
 
 import (
-	"fmt"
-
+	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
 )
 
@@ -13,7 +12,7 @@ const (
 )
 
 func init() {
-	fmt.Println("www 开始注册路由")
+	logs.Debug("www 开始注册路由")
 
 	web.AutoPrefix("/", &IndexController{})
 
@@ -97,7 +96,7 @@ func init() {
 
 	web.Router("/sse", &SSEController{}, "*:Message")
 
-	fmt.Println("www 结束注册路由")
+	logs.Debug("www 结束注册路由")
 
 	InitWechatMpVerifyRouter()
 }

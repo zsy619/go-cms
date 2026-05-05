@@ -1,8 +1,6 @@
 package admin
 
 import (
-	"fmt"
-
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/zsy619/tools/xjson"
 
@@ -90,7 +88,7 @@ func (ctrl *WeixinController) AccountChangeStatus() {
 func (ctrl *WeixinController) AccountSaveSortId() {
 	mdls := []vmodel.Account_SaveSortIdModel{}
 	data := ctrl.Ctx.Input.RequestBody
-	fmt.Println("AccountSaveSortId", string(data))
+	logs.Debug("AccountSaveSortId", string(data))
 	if err := xjson.Unmarshal(ctrl.Ctx.Input.RequestBody, &mdls); err != nil {
 		logs.Error("AccountSaveSortId", err.Error())
 		ctrl.JSONError(err.Error())

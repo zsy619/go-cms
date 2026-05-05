@@ -11,14 +11,14 @@ import (
 
 // BuildWhere 构建动态查询条件
 // 支持结构体、Map和Slice三种形式的查询条件
-func BuildWhere(db *gorm.DB, where interface{}) (*gorm.DB, error) {
+func BuildWhere(db *gorm.DB, where any) (*gorm.DB, error) {
 	t := reflect.TypeOf(where).Kind()
 	switch t {
 	case reflect.Struct, reflect.Map:
 		db = db.Where(where)
 	case reflect.Slice:
-		for _, item := range where.([]interface{}) {
-			item := item.([]interface{})
+		for _, item := range where.([]any) {
+			item := item.([]any)
 			column := item[0]
 			if reflect.TypeOf(column).Kind() == reflect.String {
 				count := len(item)
@@ -74,7 +74,7 @@ func BuildWhere(db *gorm.DB, where interface{}) (*gorm.DB, error) {
 
 // BuildQueryList 构建分页查询
 // wheres: 查询条件, columns: 选择列, orderBy: 排序, page: 页码, rows: 每页数量
-func BuildQueryList(db *gorm.DB, wheres interface{}, columns interface{}, orderBy interface{}, page, rows int) (*gorm.DB, error) {
+func BuildQueryList(db *gorm.DB, wheres any, columns any, orderBy any, page, rows int) (*gorm.DB, error) {
 	var err error
 	db, err = BuildWhere(db, wheres)
 	if err != nil {

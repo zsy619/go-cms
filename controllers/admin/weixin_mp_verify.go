@@ -1,7 +1,6 @@
 package admin
 
 import (
-	"fmt"
 	"os"
 	"path"
 	"strings"
@@ -79,7 +78,7 @@ func (ctrl *WeixinMpVerifyController) Edit() {
 func (ctrl *WeixinMpVerifyController) SaveSortId() {
 	mdls := []vmodel.Verify_SaveSortIdModel{}
 	data := ctrl.Ctx.Input.RequestBody
-	fmt.Println("SaveSortId", string(data))
+	logs.Debug("SaveSortId", string(data))
 	if err := xjson.Unmarshal(ctrl.Ctx.Input.RequestBody, &mdls); err != nil {
 		logs.Error("SaveSortId", err.Error())
 		ctrl.JSONError(err.Error())
@@ -155,7 +154,7 @@ func (c *WeixinMpVerifyController) Upload() {
 	// 保存上传的文件到指定目录
 	uploadDir := "Uploads/" + pth + "/"
 	if err := os.MkdirAll(uploadDir, os.ModePerm); err != nil {
-		fmt.Println("err", err.Error())
+		logs.Debug("err", err.Error())
 		result.Code = 1
 		result.Msg = err.Error()
 		c.Data["json"] = result

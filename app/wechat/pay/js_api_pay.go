@@ -207,3 +207,16 @@ func (jsApi *JsApiPay) GetJsApiParameters() (string, models.WxPayData) {
 	logs.Debug("Get jsApiParam : " + parameters)
 	return parameters, jsApiParam
 }
+
+// UnifiedOrder 调用微信统一下单接口
+func UnifiedOrder(data models.WxPayData, timeout int) (*models.WxPayData, error) {
+	xmlStr, _ := data.ToXml()
+	logs.Debug("UnifiedOrder request: ", xmlStr)
+
+	result := &models.WxPayData{}
+	result.SetValue("return_code", "FAIL")
+	result.SetValue("return_msg", "UnifiedOrder function not implemented")
+
+	_ = timeout
+	return result, errors.New("UnifiedOrder function not implemented")
+}

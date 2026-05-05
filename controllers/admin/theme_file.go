@@ -1,7 +1,6 @@
 package admin
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -197,7 +196,7 @@ func (ctrl *ThemeController) FileSave() {
 	themeDir := filepath.Join("./views/themes/", theme)
 	filename := "./" + filepath.Join(themeDir, strings.ToLower(typex), file)
 	if !xio.IsFileExist(filename) {
-		fmt.Println("file not exists")
+		logs.Debug("file not exists")
 	}
 	err := os.WriteFile(filename, []byte(content), 0o644)
 	if err != nil {

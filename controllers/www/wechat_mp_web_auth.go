@@ -1,7 +1,6 @@
 package www
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/beego/beego/v2/core/logs"
@@ -40,9 +39,9 @@ func (ctrl *WechatMpWebAuthController) ToOauth2() {
 		ctrl.Abort("500")
 		return
 	}
-	fmt.Println(account)
+	logs.Debug(account)
 	from := ctrl.GetStringTrim("from")
-	fmt.Println("from ----> ", from)
+	logs.Debug("from ----> ", from)
 	// redirect_uri := global.WebSite + `wechat/mp/redirect_uri`
 	// switch from {
 	// case "bind":
@@ -62,7 +61,7 @@ func (ctrl *WechatMpWebAuthController) ToOauth2() {
 		EncodingAesKey: account.AppAesKey,
 		Token:          account.Token,
 	})
-	fmt.Println(oauth)
+	logs.Debug(oauth)
 	// oauth.Redirect(ctrl.Ctx.ResponseWriter, ctrl.Ctx.Request, redirect_uri, "snsapi_userinfo", "STATE")
 
 	// url, err := GetRedirectURL(redirect_uri, "snsapi_userinfo", "STATE")
@@ -111,7 +110,7 @@ func (c *WechatMpWebAuthController) RedirectUri() {
 	if err != nil {
 		return
 	}
-	fmt.Println("获取用户信息：", userInfo)
+	logs.Debug("获取用户信息：", userInfo)
 	c.Data["userinfo"] = userInfo
 	c.Ctx.WriteString(userInfo.Nickname + ` --> ` + userInfo.OpenId)
 }

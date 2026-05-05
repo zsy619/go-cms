@@ -1,8 +1,6 @@
 package admin
 
 import (
-	"fmt"
-
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/zsy619/tools/xcrypto"
 	"github.com/zsy619/tools/xjson"
@@ -132,7 +130,7 @@ func (ctrl *AdminController) RoleSave() {
 	actions := ctrl.Ctx.Request.FormValue("action")
 	role_vals := map[string]string{}
 	if err := xjson.Unmarshal([]byte(actions), &role_vals); err != nil {
-		fmt.Println(err.Error())
+		logs.Debug(err.Error())
 	}
 	do := service.NewCmsAdmin()
 	if err := do.RoleSave(&mdl); err != nil {
@@ -161,7 +159,7 @@ func (ctrl *AdminController) RoleSave() {
 func (ctrl *AdminController) RoleSaveSortId() {
 	mdls := []vmodel.Role_SaveSortIdModel{}
 	data := ctrl.Ctx.Input.RequestBody
-	fmt.Println("RoleSaveSortId", string(data))
+	logs.Debug("RoleSaveSortId", string(data))
 	if err := xjson.Unmarshal(ctrl.Ctx.Input.RequestBody, &mdls); err != nil {
 		logs.Error("RoleSaveSortId", err.Error())
 		ctrl.JSONError(err.Error())

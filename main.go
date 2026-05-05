@@ -81,7 +81,7 @@ func init() {
 
 	err := os.MkdirAll("./logs", os.ModePerm)
 	if err != nil {
-		fmt.Println(err.Error())
+		logs.Debug(err.Error())
 	}
 	err = logs.SetLogger(logs.AdapterFile, `{"filename":"logs/project.log","level":7,"maxlines":0,"maxsize":0,"daily":true,"maxdays":10,"color":true}`)
 	if err != nil {
@@ -126,14 +126,14 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println("安装成功")
+		logs.Debug("安装成功")
 	}
 	if cmd == "uninstall" {
 		err = s.Uninstall()
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println("卸载成功")
+		logs.Debug("卸载成功")
 	}
 }
 

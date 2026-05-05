@@ -2,7 +2,6 @@ package funcs
 
 import (
 	"bytes"
-	"fmt"
 	"html/template"
 	"path"
 
@@ -10,70 +9,58 @@ import (
 	"github.com/beego/beego/v2/server/web"
 )
 
-/**
- * @description: 根据theme加载模板
- * @param {string} theme 主题名称，如defalut、h5、pc等，对应views/themes目录下的文件夹，区分大小写
- * @param {string} file 模板文件名称，如index.html、list.html等，对应views/themes/主题名称/views目录下的文件
- * @param {map[interface{}]interface{}} b 模板变量
- * @return {*}
- */
-func TemplateTheme(theme, file string, b map[interface{}]interface{}) template.HTML {
+// TemplateTheme 根据theme加载模板
+// @param theme 主题名称，如defalut、h5、pc等，对应views/themes目录下的文件夹，区分大小写
+// @param file 模板文件名称，如index.html、list.html等，对应views/themes/主题名称/views目录下的文件
+// @param b 模板变量
+// @return template.HTML 渲染后的HTML
+func TemplateTheme(theme, file string, b map[any]any) template.HTML {
 	url := path.Join("./views/themes", theme, "views", file)
-	fmt.Println("TemplateTheme url ---->", url)
+	logs.Debug("TemplateTheme url: %s", url)
 	tmpl := template.New(file)
 	InitFuncs(tmpl)
 	tmplResult, err := tmpl.ParseFiles(url)
 	if err != nil {
-		fmt.Println("TemplateTheme---1>", err.Error())
-		logs.Error(err)
+		logs.Error("TemplateTheme解析失败: url=%s, error=%v", url, err)
 		return ""
 	}
-	// tmpl.Execute(os.Stdout, b)
 	buf := &bytes.Buffer{}
 	err = tmplResult.Execute(buf, b)
 	if err != nil {
-		fmt.Println("TemplateTheme---2>", err.Error())
-		logs.Error(err)
+		logs.Error("TemplateTheme执行失败: url=%s, error=%v", url, err)
 		return ""
 	}
 	return web.Str2html(buf.String())
 }
 
-/**
- * @description: 根据views目录加载模板
- * @param {string} views views目录路径，如themes/default/views
- * @param {string} file 模板文件名称，如index.html、list.html等，对应views/themes/主题名称/views目录下的文件
- * @param {map[interface{}]interface{}} b 模板变量
- * @return {*}
- */
-func TemplateView(views, file string, b map[interface{}]interface{}) template.HTML {
+// TemplateView 根据views目录加载模板
+// @param views views目录路径，如themes/default/views
+// @param file 模板文件名称，如index.html、list.html等，对应views/themes/主题名称/views目录下的文件
+// @param b 模板变量
+// @return template.HTML 渲染后的HTML
+func TemplateView(views, file string, b map[any]any) template.HTML {
 	url := path.Join(views, "views", file)
-	fmt.Println("TemplateView url ---->", url)
+	logs.Debug("TemplateView url: %s", url)
 	tmpl := template.New(file)
 	InitFuncs(tmpl)
 	tmplResult, err := tmpl.ParseFiles(url)
 	if err != nil {
-		fmt.Println("TemplateView---1>", err.Error())
-		logs.Error(err)
+		logs.Error("TemplateView解析失败: url=%s, error=%v", url, err)
 		return ""
 	}
-	// tmpl.Execute(os.Stdout, b)
 	buf := &bytes.Buffer{}
 	err = tmplResult.Execute(buf, b)
 	if err != nil {
-		fmt.Println("TemplateView---2>", err.Error())
-		logs.Error(err)
+		logs.Error("TemplateView执行失败: url=%s, error=%v", url, err)
 		return ""
 	}
 	return web.Str2html(buf.String())
 }
 
-/**
- * @description: 获取模板路径
- * @param {string} theme 主题名称，如defalut、h5、pc等，对应views/themes目录下的文件夹，区分大小写
- * @param {string} file 视图名称 如index.html、list.html等，对应views/themes/主题名称/views目录下的文件
- * @return {*}
- */
+// UrlForView 获取模板路径
+// @param theme 主题名称，如defalut、h5、pc等，对应views/themes目录下的文件夹，区分大小写
+// @param file 视图名称 如index.html、list.html等，对应views/themes/主题名称/views目录下的文件
+// @return string 模板路径
 func UrlForView(theme, file string) string {
 	return path.Join("themes", theme, "views", file)
 }

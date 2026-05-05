@@ -1,12 +1,13 @@
 package admin
 
 import (
-	"fmt"
 	"math/rand"
 	"os"
 	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/beego/beego/v2/core/logs"
 )
 
 type FileController struct{ BaseController }
@@ -31,10 +32,10 @@ func (ctrl *FileController) CreateRandomStr(length int) string {
 func (ctrl *FileController) GetFileDataVm() {
 	runCommand, err := os.Executable()
 	if err != nil {
-		fmt.Println(err)
+		logs.Debug(err)
 	}
 	runPath := filepath.Dir(runCommand)
-	fmt.Println("runPath---->", runPath)
+	logs.Debug("runPath---->", runPath)
 	path := ctrl.GetSafeString("path")
 	if path == "" {
 		path = "./Uploads"
@@ -47,13 +48,13 @@ func (ctrl *FileController) GetFileDataVm() {
 
 	infos, _ := os.ReadDir(path)
 	for _, info := range infos {
-		fmt.Printf("Name:%-30s IsDir:%v\n", info.Name(), info.IsDir())
+		logs.Debug("Name:%-30s IsDir:%v", info.Name(), info.IsDir())
 		fs, err := filepath.Abs(info.Name())
 		if err != nil {
-			fmt.Println(err)
+			logs.Debug(err)
 			continue
 		}
-		fmt.Println("fs---->", fs)
+		logs.Debug("fs---->", fs)
 		if info.IsDir() {
 			rs.Images = append(rs.Images, map[string]interface{}{
 				"thumb": "",

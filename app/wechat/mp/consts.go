@@ -1,9 +1,10 @@
 package mp
 
 import (
-	"fmt"
 	"sync"
 	"time"
+
+	"github.com/beego/beego/v2/core/logs"
 
 	"haedu.gov.cn/cms/app/wechat/models"
 )
@@ -19,21 +20,23 @@ var (
 	_GlobalTokenGetTime = time.Now()
 )
 
-// 获取token
+// GlobalToken 获取token
+// @return models.RefreshToken token信息
 func GlobalToken() models.RefreshToken {
 	now := time.Now()
 	seconds := now.Sub(_GlobalTokenGetTime).Seconds()
-	if seconds > 7000 && seconds <= 7100 { // 异步刷新token
+	if seconds > 7000 && seconds <= 7100 {
 		go func() {
 		}()
 	}
-	if seconds > 7100 { // 同步刷新token
-		fmt.Println("同步刷新token")
+	if seconds > 7100 {
+		logs.Debug("同步刷新token")
 	}
 	return _GlobalToken
 }
 
-// 设置token
+// SetGlobalToken 设置token
+// @param token models.RefreshToken token信息
 func SetGlobalToken(token models.RefreshToken) {
 	GlobalLock.Lock()
 	defer GlobalLock.Unlock()
@@ -62,7 +65,7 @@ const (
 	EventView        = "VIEW"
 	// media types
 	MediaTypeImage      = "image"
-	MediaTypeVoice      = "voice"      //
+	MediaTypeVoice      = "voice"
 	MediaTypeVideo      = "video"      // 视频消息
 	MediaTypeShortVideo = "shortvideo" // 小视频消息
 	MediaTypeThumb      = "thumb"

@@ -1,8 +1,6 @@
 package admin
 
 import (
-	"fmt"
-
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/zsy619/tools/xjson"
 
@@ -78,7 +76,7 @@ func (ctrl *TagController) TagSave() {
 func (ctrl *TagController) TagSaveSortId() {
 	mdls := []vmodel.Tag_SaveSortIdModel{}
 	data := ctrl.Ctx.Input.RequestBody
-	fmt.Println("TagSaveSortId", string(data))
+	logs.Debug("TagSaveSortId", string(data))
 	if err := xjson.Unmarshal(ctrl.Ctx.Input.RequestBody, &mdls); err != nil {
 		logs.Error("TagSaveSortId", err.Error())
 		ctrl.JSONError(err.Error())

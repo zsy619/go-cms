@@ -94,7 +94,7 @@ func (ctrl *ToolsController) ImageUpload() {
 	// 保存上传的文件到指定目录
 	uploadDir := "Uploads/" + pth + "/" + time.Now().Format("2006/01/")
 	if err := os.MkdirAll(uploadDir, os.ModePerm); err != nil {
-		fmt.Println("err", err.Error())
+		logs.Debug("err", err.Error())
 		result.Code = 1
 		result.Msg = err.Error()
 		ctrl.Data["json"] = result
@@ -202,7 +202,7 @@ func (ctrl *ToolsController) Upload() {
 	// 保存上传的文件到指定目录
 	uploadDir := "Uploads/" + pth + "/" + time.Now().Format("2006/01/")
 	if err := os.MkdirAll(uploadDir, os.ModePerm); err != nil {
-		fmt.Println("err", err.Error())
+		logs.Debug("err", err.Error())
 		result.Code = 1
 		result.Msg = err.Error()
 		ctrl.Data["json"] = result
