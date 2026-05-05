@@ -1,7 +1,7 @@
 package service
 
 import (
-	"haedu.gov.cn/tools/xcache"
+	"github.com/zsy619/tools/xcache"
 )
 
 // ApiCache 缓存

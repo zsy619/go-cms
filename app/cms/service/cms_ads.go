@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"haedu.gov.cn/tools/xgeneric"
+	"github.com/zsy619/tools/xgeneric"
 
 	"haedu.gov.cn/cms/app/cms/domain"
 	"haedu.gov.cn/cms/app/cms/mapper"

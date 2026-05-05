@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/beego/beego/v2/core/logs"
+	"github.com/zsy619/tools/xgeneric"
 	"gorm.io/gorm"
-	"haedu.gov.cn/tools/xgeneric"
 
 	"haedu.gov.cn/cms/app/cms/mapper"
 	service_model "haedu.gov.cn/cms/app/cms/service/model"

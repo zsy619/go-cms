@@ -8,3 +8,4 @@ app/lib/Uploads
 *.exe
 .vscode
 cms*
+tmp/*

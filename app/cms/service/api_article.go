@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/beego/beego/v2/core/logs"
+	"github.com/zsy619/tools/xgeneric"
+	"github.com/zsy619/tools/xstring"
 	"gorm.io/gorm"
-	"haedu.gov.cn/tools/xgeneric"
-	"haedu.gov.cn/tools/xstring"
 
 	"haedu.gov.cn/cms/app/cms/domain"
 	"haedu.gov.cn/cms/app/cms/mapper"
