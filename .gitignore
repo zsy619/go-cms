@@ -9,3 +9,4 @@ app/lib/Uploads
 .vscode
 cms*
 tmp/*
+tmp/build-errors.log

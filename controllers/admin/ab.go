@@ -15,10 +15,13 @@ import (
 	"haedu.gov.cn/cms/global"
 )
 
+// BaseController 后台管理基础控制器
+// 继承自controllers.BaseController,提供后台管理的公共功能
 type BaseController struct{ controllers.BaseController }
 
+// Prepare 后台控制器前置处理
+// 功能: 初始化XSRF防护,加载用户Session,设置权限数据
 func (ctrl *BaseController) Prepare() {
-	fmt.Println("Admin BaseController Prepare")
 	ctrl.BaseController.Prepare()
 	ctrl.EnableXSRF = true
 	ctrl.XSRFExpire = 3600
@@ -28,20 +31,23 @@ func (ctrl *BaseController) Prepare() {
 	if GlobalAdminId == 0 {
 		user := ctrl.GetSession("user").(*domain.CmsAdmin)
 		GlobalAdminId = user.UserID
-		GlobalUserType = int(user.UserType) // 1:管理员 2:学校
+		GlobalUserType = int(user.UserType)
 		GlobalAdminName = user.UserName
 		GlobalRealName = user.RealName
 		GlobalRoleId = user.RoleID
 		GlobalRoleType = user.RoleType
+		logs.Debug("后台用户Session初始化: adminId=%d, roleType=%s", GlobalAdminId, GlobalRoleType)
 	}
 	ctrl.Data["roleId"] = GlobalRoleId
 }
 
+// Finish 后台控制器后置处理
 func (ctrl *BaseController) Finish() {
-	fmt.Println("Admin BaseController Finish")
+	// 预留后置处理逻辑
 }
 
-// 渲染模版
+// display 渲染带后台布局的模板
+// @param tpl 模板路径(可选,默认使用 controller/action.html)
 func (ctrl *BaseController) display(tpl ...string) {
 	var tplname string
 	if len(tpl) > 0 {
@@ -53,7 +59,7 @@ func (ctrl *BaseController) display(tpl ...string) {
 	ctrl.TplName = tplname
 }
 
-// 渲染模版
+// displayNoLayout 渲染不带布局的模板(用于特殊页面)
 func (ctrl *BaseController) displayNoLayout(tpl ...string) {
 	var tplname string
 	if len(tpl) > 0 {
@@ -64,7 +70,8 @@ func (ctrl *BaseController) displayNoLayout(tpl ...string) {
 	ctrl.TplName = tplname
 }
 
-// 登录人ID
+// IsLogin 检查用户是否已登录
+// @return int64 登录用户ID,未登录返回0
 func (ctrl *BaseController) IsLogin() int64 {
 	id := ctrl.GetSession(`adminId`)
 	if id == nil {
@@ -80,6 +87,9 @@ func (ctrl *BaseController) IsLogin() int64 {
 	}
 }
 
+// RolePowerGet 获取当前用户在指定导航的操作权限
+// @param navName 导航名称,如"article_index"
+// @return vmodel.RoleAction 权限操作对象
 func (ctrl *BaseController) RolePowerGet(navName string) vmodel.RoleAction {
 	roleAction := vmodel.RoleAction{}
 	if global.IsSuper(GlobalRoleType) {
@@ -95,32 +105,27 @@ func (ctrl *BaseController) RolePowerGet(navName string) vmodel.RoleAction {
 	} else {
 		mdl, err := service.NewCmsAdmin().RolePower(GlobalRoleId, navName)
 		if err != nil {
-			logs.Error("RoleValueFind", err.Error())
+			logs.Error("获取角色权限失败: roleId=%d, navName=%s, error=%v", GlobalRoleId, navName, err)
 		}
 		if len(mdl.Action) > 0 {
 			action := strings.Split(mdl.Action, ",")
 			if len(action) > 0 {
 				roleAction.IsSuccess = true
 				for i := 0; i < len(action); i++ {
-					if action[i] == "Add" { // 添加、拷贝
+					switch action[i] {
+					case "Add":
 						roleAction.IsHasAdd = true
-					}
-					if action[i] == "Audit" { // 审核
+					case "Audit":
 						roleAction.IsHasAudit = true
-					}
-					if action[i] == "Edit" { // 编辑、保存
+					case "Edit":
 						roleAction.IsHasEdit = true
-					}
-					if action[i] == "Delete" { // 删除
+					case "Delete":
 						roleAction.IsHasDelete = true
-					}
-					if action[i] == "View" { // 查看
+					case "View":
 						roleAction.IsHasView = true
-					}
-					if action[i] == "Attach" { // 附件
+					case "Attach":
 						roleAction.IsHasAttach = true
-					}
-					if action[i] == "Album" { // 相册
+					case "Album":
 						roleAction.IsHasAlbum = true
 					}
 				}
@@ -130,7 +135,10 @@ func (ctrl *BaseController) RolePowerGet(navName string) vmodel.RoleAction {
 	return roleAction
 }
 
-// CheckPasswordRole 检查密码规则
+// CheckPasswordRole 检查密码是否符合安全规则
+// 规则: 长度8-16位,必须包含数字、小写字母、大写字母、特殊字符
+// @param ps 密码字符串
+// @return error 验证失败返回错误信息
 func CheckPasswordRole(ps string) error {
 	if len(ps) < 8 || len(ps) > 16 {
 		return fmt.Errorf("密码长度应为8~16位")

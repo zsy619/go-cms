@@ -4,18 +4,23 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/beego/beego/v2/core/logs"
+
 	"haedu.gov.cn/cms/app/cms/mapper"
 	"haedu.gov.cn/cms/app/cms/service"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
 )
 
+// IndexController 后台首页控制器
 type IndexController struct{ BaseController }
 
+// Index 后台首页
 func (ctrl *IndexController) Index() {
 	ctrl.Data["userName"] = GlobalRealName
 	ctrl.displayNoLayout()
 }
 
+// Welcome 欢迎页面
 func (ctrl *IndexController) Welcome() {
 	ctrl.Data["roleId"] = GlobalRoleId
 	ctrl.Data["roleType"] = GlobalRoleType
@@ -24,6 +29,8 @@ func (ctrl *IndexController) Welcome() {
 	ctrl.display()
 }
 
+// Count 获取统计数据(站点、频道、栏目、文章数量)
+// @return JSON响应包含四个统计数据
 func (ctrl *IndexController) Count() {
 	result := struct {
 		SiteCount     int64 `json:"site_count"`
@@ -52,38 +59,42 @@ func (ctrl *IndexController) Count() {
 	ctrl.JSONSuccess("success", result)
 }
 
+// UserPassword 修改密码页面
 func (ctrl *IndexController) UserPassword() {
 	ctrl.display()
 }
 
-// UserPasswordSave 修改密码
+// UserPasswordSave 修改密码处理
 // @router /admin/index/UserPasswordSave [post]
 func (ctrl *IndexController) UserPasswordSave() {
 	oldPassword := ctrl.GetSafeString("old_password")
 	newPassword := ctrl.GetSafeString("new_password")
 	confirmPassword := ctrl.GetSafeString("again_password")
-	fmt.Println(oldPassword, newPassword, confirmPassword)
+	logs.Debug("修改密码请求: oldPassword=%s, newPassword=%s, confirmPassword=%s", oldPassword, newPassword, confirmPassword)
 
 	if newPassword != confirmPassword {
 		ctrl.JSONError("两次输入的密码不一致")
 	}
-	// 检查密码是否符合规则
 	if psErr := CheckPasswordRole(newPassword); psErr != nil {
 		ctrl.JSONError(psErr.Error())
 	}
 	err := service.NewCmsAdmin().ModifyPassword(GlobalAdminId, oldPassword, newPassword)
 	if err != nil {
+		logs.Error("修改密码失败: adminId=%d, error=%v", GlobalAdminId, err)
 		ctrl.JSONError(err.Error())
 	}
 
+	logs.Info("用户修改密码成功: adminId=%d", GlobalAdminId)
 	ctrl.JSONSuccess("修改成功", nil)
 }
 
+// UserSetting 用户设置页面
 func (ctrl *IndexController) UserSetting() {
 	ctrl.display()
 }
 
-// ReportFormsGet 获取首页报表数据
+// ReportFormsGet 获取首页报表数据(最近7天的链接、广告、文章创建数量统计)
+// @return JSON响应包含日期和各类数据统计
 func (ctrl *IndexController) ReportFormsGet() {
 	currentDate := time.Now()
 	var times []time.Time

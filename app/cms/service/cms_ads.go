@@ -2,9 +2,9 @@ package service
 
 import (
 	"errors"
-	"fmt"
 	"time"
 
+	"github.com/beego/beego/v2/core/logs"
 	"github.com/zsy619/tools/xgeneric"
 
 	"haedu.gov.cn/cms/app/cms/domain"
@@ -12,13 +12,22 @@ import (
 	"haedu.gov.cn/cms/global"
 )
 
+// CmsAds 广告管理服务
 type CmsAds struct{}
 
+// NewCmsAds 创建广告服务实例
 func NewCmsAds() *CmsAds {
 	return &CmsAds{}
 }
 
-// CategoryPaginate 分页查询
+// CategoryPaginate 分页查询广告分类
+// @param page 页码
+// @param limit 每页数量
+// @param channelId 频道ID
+// @param title 标题(模糊搜索)
+// @param callIndex 调用别名
+// @param siteId 站点ID列表
+// @return []*domain.CmsAdsCategory 广告分类列表,总数,错误信息
 func (svc *CmsAds) CategoryPaginate(page, limit int, channelId int64, title, callIndex string, siteId ...int64) ([]*domain.CmsAdsCategory, int64, error) {
 	mdl, do := mapper.CmsAdsCategoryDo()
 	if len(siteId) > 0 {
@@ -36,13 +45,17 @@ func (svc *CmsAds) CategoryPaginate(page, limit int, channelId int64, title, cal
 	return do.Order(mdl.SortID).FindByPage((page-1)*limit, limit)
 }
 
-// CategoryFind 获取
+// CategoryFind 根据ID获取广告分类
+// @param categoryId 分类ID
+// @return *domain.CmsAdsCategory 分类实体,错误信息
 func (svc *CmsAds) CategoryFind(categoryId int64) (*domain.CmsAdsCategory, error) {
 	mdl, do := mapper.CmsAdsCategoryDo()
 	return do.Where(mdl.CategoryID.Eq(categoryId)).First()
 }
 
-// CategorySave 保存或更新
+// CategorySave 保存或更新广告分类
+// @param input 广告分类实体
+// @return error 错误信息
 func (svc *CmsAds) CategorySave(input *domain.CmsAdsCategory) error {
 	mdl, do := mapper.CmsAdsCategoryDo()
 	if input.CallIndex != "" {
@@ -67,7 +80,7 @@ func (svc *CmsAds) CategorySave(input *domain.CmsAdsCategory) error {
 			mdl.UpdateTime.ColumnName().String(): input.UpdateTime,
 		})
 		if err != nil {
-			fmt.Println(err.Error())
+			logs.Error("更新广告分类失败: adsId=%d, error=%v", input.CategoryID, err)
 		}
 		adsMdl, adsDo := mapper.CmsAdsDo()
 		_, err = adsDo.Where(adsMdl.CategoryID.Eq(input.CategoryID)).UpdateColumns(map[string]interface{}{
@@ -75,12 +88,16 @@ func (svc *CmsAds) CategorySave(input *domain.CmsAdsCategory) error {
 			adsMdl.UpdateTime.ColumnName().String(): input.UpdateTime,
 		})
 		if err != nil {
-			fmt.Println(err.Error())
+			logs.Error("更新广告分类下的广告站点ID失败: categoryId=%d, error=%v", input.CategoryID, err)
 		}
 	}
 	return err
 }
 
+// CategorySaveSortId 保存广告分类排序
+// @param categoryId 分类ID
+// @param sortId 排序值
+// @return error 错误信息
 func (svc *CmsAds) CategorySaveSortId(categoryId int64, sortId int32) error {
 	mdl, do := mapper.CmsAdsCategoryDo()
 	_, err := do.Where(mdl.CategoryID.Eq(categoryId)).UpdateColumns(
@@ -92,11 +109,14 @@ func (svc *CmsAds) CategorySaveSortId(categoryId int64, sortId int32) error {
 	return err
 }
 
-// AdsClone 克隆
+// AdsClone 克隆广告
+// @param adsId 原广告ID
+// @return int64 新广告ID,错误信息
 func (svc *CmsAds) AdsClone(adsId int64) (int64, error) {
 	mdl, do := mapper.CmsAdsDo()
 	art, err := do.Where(mdl.AdsID.Eq(adsId)).First()
 	if err != nil {
+		logs.Error("克隆广告查询失败: adsId=%d, error=%v", adsId, err)
 		return 0, err
 	}
 	art.AdsID = 0
@@ -104,10 +124,16 @@ func (svc *CmsAds) AdsClone(adsId int64) (int64, error) {
 	art.UpdateTime = time.Now()
 	art.Status = 0
 	err = do.Create(art)
+	if err != nil {
+		logs.Error("克隆广告创建失败: adsId=%d, error=%v", adsId, err)
+	}
 	return art.AdsID, err
 }
 
-// AdsChangeStatus 修改状态
+// AdsChangeStatus 修改广告状态
+// @param adsId 广告ID
+// @param status 状态值
+// @return error 错误信息
 func (svc *CmsAds) AdsChangeStatus(adsId int64, status int32) error {
 	mdl, do := mapper.CmsAdsDo()
 	_, err := do.Where(mdl.AdsID.Eq(adsId)).UpdateColumns(
@@ -116,28 +142,46 @@ func (svc *CmsAds) AdsChangeStatus(adsId int64, status int32) error {
 			mdl.UpdateTime.ColumnName().String(): time.Now(),
 		},
 	)
+	if err != nil {
+		logs.Error("修改广告状态失败: adsId=%d, status=%d, error=%v", adsId, status, err)
+	}
 	return err
 }
 
-// CategoryDestory 删除
+// CategoryDestory 删除广告分类
+// @param categoryId 分类ID
+// @return error 错误信息
 func (svc *CmsAds) CategoryDestory(categoryId int64) error {
 	mdl, do := mapper.CmsAdsCategoryDo()
 	if _, err := do.Where(mdl.CategoryID.Eq(categoryId)).Delete(); err != nil {
+		logs.Error("删除广告分类失败: categoryId=%d, error=%v", categoryId, err)
 		return err
 	}
 	return svc.AdsDestroyByCategoryId(categoryId)
 }
 
-// AdsDestroyByCategoryId 删除
+// AdsDestroyByCategoryId 根据分类ID删除广告
+// @param categoryId 分类ID
+// @return error 错误信息
 func (svc *CmsAds) AdsDestroyByCategoryId(categoryId int64) error {
 	mdl, do := mapper.CmsAdsDo()
 	if _, err := do.Where(mdl.CategoryID.Eq(categoryId)).Delete(); err != nil {
+		logs.Error("删除广告失败: categoryId=%d, error=%v", categoryId, err)
 		return err
 	}
 	return nil
 }
 
-// AdsPaginate 分页查询
+// AdsPaginate 分页查询广告
+// @param page 页码
+// @param limit 每页数量
+// @param channelId 频道ID
+// @param categoryId 分类ID
+// @param title 标题
+// @param callIndex 调用别名
+// @param status 状态
+// @param siteId 站点ID列表
+// @return []*domain.CmsAds 广告列表,总数,错误信息
 func (svc *CmsAds) AdsPaginate(page, limit int, channelId, categoryId int64, title, callIndex string, status int32, siteId ...int64) ([]*domain.CmsAds, int64, error) {
 	mdl, do := mapper.CmsAdsDo()
 	if len(siteId) > 0 {
@@ -161,13 +205,17 @@ func (svc *CmsAds) AdsPaginate(page, limit int, channelId, categoryId int64, tit
 	return do.Order(mdl.IsTop.Desc(), mdl.SortID).FindByPage((page-1)*limit, limit)
 }
 
-// AdsFind 获取
+// AdsFind 根据ID获取广告
+// @param adsId 广告ID
+// @return *domain.CmsAds 广告实体,错误信息
 func (svc *CmsAds) AdsFind(adsId int64) (*domain.CmsAds, error) {
 	mdl, do := mapper.CmsAdsDo()
 	return do.Where(mdl.AdsID.Eq(adsId)).First()
 }
 
-// AdsSave 保存或更新
+// AdsSave 保存或更新广告
+// @param input 广告实体
+// @return error 错误信息
 func (svc *CmsAds) AdsSave(input *domain.CmsAds) error {
 	mdl, do := mapper.CmsAdsDo()
 	if input.CallIndex != "" {
@@ -185,7 +233,7 @@ func (svc *CmsAds) AdsSave(input *domain.CmsAds) error {
 		siteId := int64(0)
 		catMdl, catDo := mapper.CmsLinkCategoryDo()
 		if err := catDo.Where(catMdl.CategoryID.Eq(input.CategoryID)).Pluck(catMdl.SiteID, &siteId); err != nil {
-			fmt.Println(err.Error())
+			logs.Error("获取站点ID失败: categoryId=%d, error=%v", input.CategoryID, err)
 		}
 		_, err = do.Where(mdl.AdsID.Eq(input.AdsID)).Updates(map[string]interface{}{
 			mdl.SiteID.ColumnName().String():     siteId,
@@ -210,29 +258,29 @@ func (svc *CmsAds) AdsSave(input *domain.CmsAds) error {
 			mdl.UpdateID.ColumnName().String():   input.UpdateID,
 			mdl.UpdateName.ColumnName().String(): input.UpdateName,
 		})
+		if err != nil {
+			logs.Error("更新广告失败: adsId=%d, error=%v", input.AdsID, err)
+		}
 	}
 	return err
 }
 
-/**
- * @description: AdsDestory 删除
- * @param {int64} adsId 广告ID
- * @return {*}
- */
+// AdsDestory 删除广告
+// @param adsId 广告ID
+// @return error 错误信息
 func (svc *CmsAds) AdsDestory(adsId int64) error {
 	mdl, do := mapper.CmsAdsDo()
 	if _, err := do.Where(mdl.AdsID.Eq(adsId)).Delete(); err != nil {
+		logs.Error("删除广告失败: adsId=%d, error=%v", adsId, err)
 		return err
 	}
 	return nil
 }
 
-/**
- * @description: AdsSaveSortId 保存排序
- * @param {int64} adsId 广告ID
- * @param {int32} sortId 排序
- * @return {*}
- */
+// AdsSaveSortId 保存广告排序
+// @param adsId 广告ID
+// @param sortId 排序值
+// @return error 错误信息
 func (svc *CmsAds) AdsSaveSortId(adsId int64, sortId int32) error {
 	mdl, do := mapper.CmsAdsDo()
 	_, err := do.Where(mdl.AdsID.Eq(adsId)).UpdateColumns(
@@ -244,7 +292,10 @@ func (svc *CmsAds) AdsSaveSortId(adsId int64, sortId int32) error {
 	return err
 }
 
-// SiteCategoryGet 获取站点与分类
+// SiteCategoryGet 获取站点与分类列表(根据角色权限)
+// @param roleId 角色ID
+// @param roleType 角色类型
+// @return []*domain.CmsSite 站点列表, []*domain.CmsAdsCategory 分类列表, error
 func (svc *CmsAds) SiteCategoryGet(roleId int64, roleType string) ([]*domain.CmsSite, []*domain.CmsAdsCategory, error) {
 	if global.IsSuper(roleType) {
 		list, _, _ := svc.CategoryPaginate(1, 99999, -1, "", "")
@@ -266,7 +317,11 @@ func (svc *CmsAds) SiteCategoryGet(roleId int64, roleType string) ([]*domain.Cms
 	return siteList, categoryList, nil
 }
 
-// SiteIdsGet 根据传入的站点筛选条件、角色类型、角色ID获取站点ID集合
+// SiteIdsGet 根据站点筛选条件和角色获取站点ID集合
+// @param siteId 站点ID(>0时直接使用)
+// @param roleType 角色类型
+// @param roleId 角色ID
+// @return []int64 站点ID列表
 func (svc *CmsAds) SiteIdsGet(siteId int64, roleType string, roleId int64) []int64 {
 	var siteIds []int64
 	if siteId > 0 {
@@ -282,6 +337,9 @@ func (svc *CmsAds) SiteIdsGet(siteId int64, roleType string, roleId int64) []int
 	return siteIds
 }
 
+// FindByDate 根据日期范围查询广告创建数量(用于统计报表)
+// @param selectTime 日期列表
+// @return []int64 每天的广告数量列表
 func (svc *CmsAds) FindByDate(selectTime ...time.Time) []int64 {
 	mdl, do := mapper.CmsAdsDo()
 	duration, _ := time.ParseDuration("24h")

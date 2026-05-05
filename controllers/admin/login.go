@@ -1,7 +1,6 @@
 package admin
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/beego/beego/v2/core/logs"
@@ -18,13 +17,15 @@ import (
 
 type LoginController struct{ controllers.BaseController }
 
-// AdminLogin 管理员登录
+// AdminLogin 管理员登录页面渲染
 // @router cms/admin/login [get]
 func (ctrl *LoginController) AdminLogin() {
 	ctrl.Data["captcha"] = "/captcha"
 	ctrl.TplName = "admin/login/login.html"
 }
 
+// SavaAdminState 保存管理员登录状态到Session和全局变量
+// @param user *domain.CmsAdmin 管理员用户实体
 func (ctrl *LoginController) SavaAdminState(user *domain.CmsAdmin) {
 	ctrl.SetSession("adminId", user.UserID)
 	ctrl.SetSession("adminAccount", user.UserName)
@@ -35,7 +36,7 @@ func (ctrl *LoginController) SavaAdminState(user *domain.CmsAdmin) {
 	ctrl.SetSession("user", user)
 
 	GlobalAdminId = user.UserID
-	GlobalUserType = int(user.UserType) // 1:管理员 2:学校
+	GlobalUserType = int(user.UserType)
 	GlobalAdminName = user.UserName
 	GlobalRealName = user.RealName
 	GlobalIsAudit = user.IsAudit
@@ -43,7 +44,7 @@ func (ctrl *LoginController) SavaAdminState(user *domain.CmsAdmin) {
 	GlobalRoleType = user.RoleType
 }
 
-// AdminLoginVerify 管理员登录验证
+// AdminLoginVerify 管理员登录验证处理
 // @router cms/admin/login/verify [post]
 func (ctrl *LoginController) AdminLoginVerify() {
 	result := vmodel.LoginResult{
@@ -63,11 +64,12 @@ func (ctrl *LoginController) AdminLoginVerify() {
 
 	username := ctrl.GetSafeString("username")
 	password := ctrl.GetSafeString("password")
-	fmt.Println(username, password, captcha)
+	logs.Debug("登录尝试: username=%s, captcha=%s", username, captcha)
+
 	adminDo := service.NewCmsAdmin()
 	user, err := adminDo.Login(username, password, 0, service.LoginAll)
 	if err != nil {
-		fmt.Println("登录错误：", err.Error())
+		logs.Error("登录失败: %v", err)
 		result.Code = 2
 		result.Message = "账号密码错误"
 		ctrl.Data["json"] = &result
@@ -81,74 +83,74 @@ func (ctrl *LoginController) AdminLoginVerify() {
 	ctrl.ServeJSON()
 }
 
-// Logout 退出登录
+// Logout 管理员退出登录
 // @router cms/admin/logout [get]
 func (ctrl *LoginController) Logout() {
 	ctrl.DestroySession()
 	ctrl.Redirect("/admin/login", 302)
 }
 
-// School学校登录
+// School 学校用户登录入口
 func (ctrl *LoginController) School() {
 	ctrl.login(lib.LoginCasPathOfSchool, lib.LoginPathOfSchool, "school")
 }
 
-// Admin 管理员登录
+// Admin 管理员登录入口
 func (ctrl *LoginController) Admin() {
 	ctrl.login(lib.LoginCasPathOfAdmin, lib.LoginPathOfAdmin, "admin")
 }
 
+// login 处理CAS单点登录的核心逻辑
+// @param loginCasPath CAS登录重定向路径
+// @param loginPath 服务端回调路径
+// @param kind 登录类型(school/admin)
 func (ctrl *LoginController) login(loginCasPath, loginPath string, kind string) {
-	// TOD：20220418 登录类型
 	xcache.SetDiskvString("cas_login", kind)
 	GlobalAuthFlag = kind
 	ticket := ctrl.GetSafeString("ticket")
-	fmt.Println("ticket: ", ticket)
+	logs.Debug("CAS ticket: %s", ticket)
+
 	if ticket == "" {
 		ctrl.Redirect(loginCasPath, http.StatusFound)
 		return
 	}
+
 	url := lib.CaseServiceValidatePath + "?service=" + loginPath + "&ticket=" + ticket
-	logs.Debug("--->", url)
-	fmt.Println("--->", url)
+	logs.Debug("CAS验证URL: %s", url)
+
 	serviceResponse, err := xcas.CasVersion2ServiceValidateAction(url)
 	if err != nil {
-		logs.Error(err)
-		fmt.Println("err:", err)
+		logs.Error("CAS验证请求失败: %v", err)
 		ctrl.Redirect(loginCasPath, http.StatusFound)
 		ctrl.StopRun()
 		return
 	}
-	// fmt.Println("--------------------------------------------------------:::", serviceResponse)
+
 	if serviceResponse.Failure != nil {
-		fmt.Println("error: ", serviceResponse.Failure.Message)
+		logs.Warning("CAS验证失败: %s", serviceResponse.Failure.Message)
 		ctrl.Ctx.ResponseWriter.Write([]byte(serviceResponse.Failure.Message))
 		ctrl.StopRun()
 	}
+
 	if serviceResponse.Success != nil {
-		// 类型检查
-		{
-			kindx := ""
-			for _, attribute := range serviceResponse.Success.Attributes.UserAttributes.Attributes {
-				if attribute.Name == xcas.UserTypeField {
-					kindx = attribute.Value
-					break
-				}
+		kindx := ""
+		for _, attribute := range serviceResponse.Success.Attributes.UserAttributes.Attributes {
+			if attribute.Name == xcas.UserTypeField {
+				kindx = attribute.Value
+				break
 			}
-			if kindx != kind {
-				ctrl.Ctx.ResponseWriter.Write([]byte("invalid user type"))
-				fmt.Println("invalid user type")
-				ctrl.StopRun()
-			}
+		}
+		if kindx != kind {
+			ctrl.Ctx.ResponseWriter.Write([]byte("invalid user type"))
+			logs.Warning("用户类型不匹配: expected=%s, got=%s", kind, kindx)
+			ctrl.StopRun()
 		}
 
 		account := serviceResponse.Success.User
-		// 判断用户是否存在，不存在则创建
 		userDo := service.NewCmsAdmin()
 		user, err := userDo.FindByAccount(account)
 		if user == nil || user.UserName == "" || err != nil {
-			fmt.Println("error: ", err.Error())
-			// 创建用户
+			logs.Warning("用户不存在，将创建新用户: account=%s, error=%v", account, err)
 			user = &domain.CmsAdmin{
 				UserName:   account,
 				NickName:   account,
@@ -163,23 +165,24 @@ func (ctrl *LoginController) login(loginCasPath, loginPath string, kind string) 
 			}
 			err := userDo.AdminSave(user)
 			if err != nil {
-				fmt.Println("error: ", err.Error())
+				logs.Error("创建用户失败: %v", err)
 				ctrl.Ctx.ResponseWriter.Write([]byte("创建用户失败"))
 				ctrl.StopRun()
 			}
 		}
+
 		user, err = userDo.FindByAccount(account)
 		if err != nil {
+			logs.Error("获取用户信息失败: %v", err)
 			ctrl.Ctx.ResponseWriter.Write([]byte("未能获取用户信息"))
 			ctrl.StopRun()
 		}
-		fmt.Println("user: ", user)
-		// 保存登录状态
+
+		logs.Info("用户登录成功: userId=%d, account=%s", user.UserID, account)
 		ctrl.SavaAdminState(user)
 		userDo.LoginLog(user.UserID, account, "AdminLoginCase", "", "", "OK", ctrl.GetClientIp())
 		url = "/admin/index"
 		ctrl.Redirect(url, http.StatusFound)
 		ctrl.StopRun()
-		return
 	}
 }

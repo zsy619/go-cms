@@ -9,12 +9,9 @@ import (
 	"gorm.io/gorm"
 )
 
-// https://github.com/qicmsg/go_vcard/blob/master/app/models/entity/Gorm.go
-
-///region 业务上扩展方法
-
+// BuildWhere 构建动态查询条件
+// 支持结构体、Map和Slice三种形式的查询条件
 func BuildWhere(db *gorm.DB, where interface{}) (*gorm.DB, error) {
-	var err error
 	t := reflect.TypeOf(where).Kind()
 	switch t {
 	case reflect.Struct, reflect.Map:
@@ -29,40 +26,27 @@ func BuildWhere(db *gorm.DB, where interface{}) (*gorm.DB, error) {
 					return nil, errors.New("切片长度不能小于2")
 				}
 				columnstr := column.(string)
-				// 拼接参数形式
 				if strings.Contains(columnstr, "?") {
 					db = db.Where(column, item[1:]...)
 				} else {
-					cond := "and" // cond
-					opt := "="
-					_opt := " = "
+					cond := "and"
 					var val interface{}
+					var opt string
 					if count == 2 {
 						opt = "="
 						val = item[1]
 					} else {
 						opt = strings.ToLower(item[1].(string))
-						_opt = " " + strings.ReplaceAll(opt, " ", "") + " "
 						val = item[2]
+						if count == 4 {
+							cond = strings.ToLower(strings.ReplaceAll(item[3].(string), " ", ""))
+						}
 					}
+					column = columnstr + " " + opt + " ?"
 
-					if count == 4 {
-						cond = strings.ToLower(strings.ReplaceAll(item[3].(string), " ", ""))
-					}
-
-					/*
-					   '=', '<', '>', '<=', '>=', '<>', '!=', '<=>',
-					   'like', 'like binary', 'not like', 'ilike',
-					   '&', '|', '^', '<<', '>>',
-					   'rlike', 'regexp', 'not regexp',
-					   '~', '~*', '!~', '!~*', 'similar to',
-					   'not similar to', 'not ilike', '~~*', '!~~*',
-					*/
-
-					if strings.Contains(" in notin ", _opt) {
-						// val 是数组类型
+					if strings.Contains(" in notin ", opt) {
 						column = columnstr + " " + opt + " (?)"
-					} else if strings.Contains(" = < > <= >= <> != <=> like likebinary notlike ilike rlike regexp notregexp", _opt) {
+					} else if strings.Contains(" = < > <= >= <> != <=> like likebinary notlike ilike rlike regexp notregexp", opt) {
 						column = columnstr + " " + opt + " ?"
 					}
 
@@ -72,19 +56,10 @@ func BuildWhere(db *gorm.DB, where interface{}) (*gorm.DB, error) {
 						db = db.Or(column, val)
 					}
 				}
-			} else if t == reflect.Map /*Map*/ {
+			} else if t == reflect.Map {
 				db = db.Where(item)
 			} else {
-				/*
-					// 解决and 与 or 混合查询，但这种写法有问题，会抛出 invalid query condition
-					db = db.Where(func(db *gorm.DB) *gorm.DB {
-						db, err = BuildWhere(db, item)
-						if err != nil {
-							panic(err)
-						}
-						return db
-					})*/
-
+				var err error
 				db, err = BuildWhere(db, item)
 				if err != nil {
 					return nil, err
@@ -97,6 +72,8 @@ func BuildWhere(db *gorm.DB, where interface{}) (*gorm.DB, error) {
 	return db, nil
 }
 
+// BuildQueryList 构建分页查询
+// wheres: 查询条件, columns: 选择列, orderBy: 排序, page: 页码, rows: 每页数量
 func BuildQueryList(db *gorm.DB, wheres interface{}, columns interface{}, orderBy interface{}, page, rows int) (*gorm.DB, error) {
 	var err error
 	db, err = BuildWhere(db, wheres)
@@ -110,14 +87,12 @@ func BuildQueryList(db *gorm.DB, wheres interface{}, columns interface{}, orderB
 	if page > 0 && rows > 0 {
 		db = db.Limit(rows).Offset((page - 1) * rows)
 	}
-	return db, err
+	return db, nil
 }
 
-///endregion
-
-// 分页封装
-// https://gobea.cn/blog/detail/Xg5pqmoa.html
-func Paginate(page int, pageSize int) func(db *gorm.DB) *gorm.DB {
+// Paginate 分页函数
+// 返回一个gorm回调函数用于分页
+func Paginate(page, pageSize int) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if page == 0 {
 			page = 1

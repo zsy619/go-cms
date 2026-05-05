@@ -1,37 +1,61 @@
 package dal
 
 import (
-	"fmt"
 	"net/url"
+	"time"
 
+	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
 )
 
+// 数据库连接池配置常量
+const (
+	MaxIdleConns    = 10  // 最大空闲连接数
+	MaxOpenConns    = 100 // 最大打开连接数
+	ConnMaxLifetime  = 3600 // 连接最大生命周期(秒)
+	ConnMaxIdleTime = 600  // 连接最大空闲时间(秒)
+)
+
 var (
-	CmsDatabase  *DBExtension // gsg数据库
+	CmsDatabase  *DBExtension // CMS主数据库
 	AuthDatabase *DBExtension // 认证数据库
 )
 
+// init 初始化数据库连接
+// 说明: 分别连接CMS主数据库和认证数据库,配置连接池参数以优化性能和资源利用
 func init() {
-	// cms数据库
+	// CMS数据库初始化
 	{
 		dsn := GetDbConn("cms", "cms")
 		dbConnect, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 			NamingStrategy: schema.NamingStrategy{
-				SingularTable: true,
+				SingularTable: true, // 使用单数表名
 			},
 		})
 		if err != nil {
-			fmt.Println(err.Error())
+			logs.Error("CMS数据库连接失败: %v", err)
 			panic(err)
 		}
 
+		// 配置数据库连接池
+		sqlDB, err := dbConnect.DB()
+		if err != nil {
+			logs.Error("获取CMS数据库连接池失败: %v", err)
+			panic(err)
+		}
+		sqlDB.SetMaxIdleConns(MaxIdleConns)
+		sqlDB.SetMaxOpenConns(MaxOpenConns)
+		sqlDB.SetConnMaxLifetime(time.Duration(ConnMaxLifetime) * time.Second)
+		sqlDB.SetConnMaxIdleTime(time.Duration(ConnMaxIdleTime) * time.Second)
+
 		CmsDatabase = NewDBWrapper(dbConnect)
+		logs.Info("CMS数据库连接成功, 连接池配置: MaxIdle=%d, MaxOpen=%d", MaxIdleConns, MaxOpenConns)
 	}
-	// 认证数据库
+
+	// 认证数据库初始化
 	{
 		dsn := GetDbConn("auth", "un2co_yunzhipin")
 		dbConnect, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
@@ -40,14 +64,29 @@ func init() {
 			},
 		})
 		if err != nil {
-			fmt.Println(err.Error())
-			// panic(err)
+			logs.Warning("认证数据库连接失败: %v", err)
 		} else {
+			// 配置数据库连接池
+			sqlDB, err := dbConnect.DB()
+			if err != nil {
+				logs.Warning("获取认证数据库连接池失败: %v", err)
+			} else {
+				sqlDB.SetMaxIdleConns(MaxIdleConns)
+				sqlDB.SetMaxOpenConns(MaxOpenConns)
+				sqlDB.SetConnMaxLifetime(time.Duration(ConnMaxLifetime) * time.Second)
+				sqlDB.SetConnMaxIdleTime(time.Duration(ConnMaxIdleTime) * time.Second)
+			}
+
 			AuthDatabase = NewDBWrapper(dbConnect)
+			logs.Info("认证数据库连接成功")
 		}
 	}
 }
 
+// GetDbConn 构建数据库连接字符串(DSN)
+// @param prefix 配置前缀,如"cms"将读取cms.host,cms.port等配置
+// @param defaultDb 默认数据库名称
+// @return string 数据库DSN连接字符串
 func GetDbConn(prefix string, defaultDb string) string {
 	if prefix == "" {
 		prefix = "db"
@@ -80,6 +119,6 @@ func GetDbConn(prefix string, defaultDb string) string {
 	if timezone != "" {
 		dsn = dsn + "&loc=" + url.QueryEscape(timezone)
 	}
-	fmt.Println(prefix, dsn)
+	logs.Debug("数据库连接配置[%s]: %s", prefix, dsn)
 	return dsn
 }

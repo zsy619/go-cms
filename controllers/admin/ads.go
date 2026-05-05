@@ -1,7 +1,6 @@
 package admin
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/beego/beego/v2/core/logs"
@@ -82,7 +81,7 @@ func (ctrl *AdsController) AdsSave() {
 func (ctrl *AdsController) AdsSaveSortId() {
 	mdls := []vmodel.Ads_SaveSortIdModel{}
 	data := ctrl.Ctx.Input.RequestBody
-	fmt.Println("AdsSaveSortId", string(data))
+	logs.Debug("AdsSaveSortId request: %s", string(data))
 	if err := xjson.Unmarshal(ctrl.Ctx.Input.RequestBody, &mdls); err != nil {
 		logs.Error("AdsSaveSortId", err.Error())
 		ctrl.JSONError(err.Error())
@@ -186,7 +185,7 @@ func (ctrl *AdsController) CategorySave() {
 func (ctrl *AdsController) CategorySaveSortId() {
 	mdls := []vmodel.Category_SaveSortIdModel{}
 	data := ctrl.Ctx.Input.RequestBody
-	fmt.Println("CategorySaveSortId", string(data))
+	logs.Debug("CategorySaveSortId request: %s", string(data))
 	if err := xjson.Unmarshal(ctrl.Ctx.Input.RequestBody, &mdls); err != nil {
 		logs.Error("CategorySaveSortId", err.Error())
 		ctrl.JSONError(err.Error())
