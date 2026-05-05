@@ -6,7 +6,7 @@ import (
 
 func TestWxPayData_ToUrl(t *testing.T) {
 	type fields struct {
-		m_values map[string]interface{}
+		m_values map[string]any
 	}
 	tests := []struct {
 		name    string
@@ -17,7 +17,7 @@ func TestWxPayData_ToUrl(t *testing.T) {
 		{
 			"test1",
 			fields{
-				m_values: map[string]interface{}{
+				m_values: map[string]any{
 					"a": "a",
 					"b": "b",
 					"c": 1,

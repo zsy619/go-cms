@@ -116,6 +116,6 @@ func HmacSha256(data, key string) string {
 // GetRemoteAddr 获取远程地址
 // @param r *http.Request
 // @return string IP地址
-func GetRemoteAddr(r interface{}) string {
+func GetRemoteAddr(r any) string {
 	return ""
 }

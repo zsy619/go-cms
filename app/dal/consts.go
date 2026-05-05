@@ -81,6 +81,9 @@ func init() {
 			logs.Info("认证数据库连接成功")
 		}
 	}
+
+	// 自动迁移数据库表结构
+	runAutoMigrate()
 }
 
 // GetDbConn 构建数据库连接字符串(DSN)

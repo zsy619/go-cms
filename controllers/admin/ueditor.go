@@ -16,7 +16,7 @@ import (
 	lib "haedu.gov.cn/cms/app/tool"
 )
 
-var UEditorConfig = map[string]interface{}{
+var UEditorConfig = map[string]any{
 	// 上传图片配置项
 	"imageActionName":     "image",                                           /* 执行上传图片的action名称 */
 	"imageFieldName":      "file",                                            /* 提交的图片表单名称 */
@@ -86,7 +86,7 @@ var UEditorConfig = map[string]interface{}{
 	"fileManagerAllowFiles": []string{".png", ".jpg", ".jpeg", ".gif", ".bmp", ".flv", ".swf", ".mkv", ".avi", ".rm", ".rmvb", ".mpeg", ".mpg", ".ogg", ".ogv", ".mov", ".wmv", ".mp4", ".webm", ".mp3", ".wav", ".mid", ".rar", ".zip", ".tar", ".gz", ".7z", ".bz2", ".cab", ".iso", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".pdf", ".txt", ".md", ".xml"}, /* 列出的文件类型 */
 
 	/* 公式渲染 */
-	"formulaConfig": map[string]interface{}{
+	"formulaConfig": map[string]any{
 		"imageUrlTemplate": "https://latex.codecogs.com/svg.image?{}",
 	},
 }

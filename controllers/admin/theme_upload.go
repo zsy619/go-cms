@@ -18,7 +18,7 @@ import (
 )
 
 func (ctrl *ThemeController) uploadMsg(code int32, msg string) {
-	ctrl.Data["json"] = map[string]interface{}{
+	ctrl.Data["json"] = map[string]any{
 		"code": code,
 		"msg":  msg,
 	}
@@ -179,7 +179,7 @@ func (ctrl *ThemeController) Upload() {
 	}
 
 	// 返回上传成功的信息
-	ctrl.Data["json"] = map[string]interface{}{
+	ctrl.Data["json"] = map[string]any{
 		"code": 0,
 		"msg":  "上传成功",
 	}
