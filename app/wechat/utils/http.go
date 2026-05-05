@@ -48,7 +48,7 @@ func HTTPPost(uri string, data string) ([]byte, error) {
 }
 
 // PostJSON post json 数据请求
-func PostJSON(uri string, obj interface{}) ([]byte, error) {
+func PostJSON(uri string, obj any) ([]byte, error) {
 	jsonData, err := json.Marshal(obj)
 	if err != nil {
 		return nil, err
@@ -70,7 +70,7 @@ func PostJSON(uri string, obj interface{}) ([]byte, error) {
 }
 
 // PostJSONWithRespContentType post json数据请求，且返回数据类型
-func PostJSONWithRespContentType(uri string, obj interface{}) ([]byte, string, error) {
+func PostJSONWithRespContentType(uri string, obj any) ([]byte, string, error) {
 	jsonData, err := json.Marshal(obj)
 	if err != nil {
 		return nil, "", err
@@ -168,7 +168,7 @@ func PostMultipartForm(fields []MultipartFormField, uri string) (respBody []byte
 }
 
 // PostXML perform a HTTP/POST request with XML body
-func PostXML(uri string, obj interface{}) ([]byte, error) {
+func PostXML(uri string, obj any) ([]byte, error) {
 	xmlData, err := xml.Marshal(obj)
 	if err != nil {
 		return nil, err
@@ -229,7 +229,7 @@ func pkcs12ToPem(p12 []byte, password string) tls.Certificate {
 }
 
 // PostXMLWithTLS perform a HTTP/POST request with XML body and TLS
-func PostXMLWithTLS(uri string, obj interface{}, ca, key string) ([]byte, error) {
+func PostXMLWithTLS(uri string, obj any, ca, key string) ([]byte, error) {
 	xmlData, err := xml.Marshal(obj)
 	if err != nil {
 		return nil, err
@@ -271,7 +271,7 @@ func Get(path string) (resp *http.Response, bs []byte, err error) {
 }
 
 // GetJSONByParams
-func GetJSONByParams(path string, params map[string]string) (resp *http.Response, data map[string]interface{}, err error) {
+func GetJSONByParams(path string, params map[string]string) (resp *http.Response, data map[string]any, err error) {
 	params_s := ""
 	for k, v := range params {
 		params_s += fmt.Sprintf("%s=%s&", k, QueryEscape(v))

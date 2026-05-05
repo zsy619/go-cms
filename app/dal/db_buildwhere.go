@@ -30,7 +30,7 @@ func BuildWhere(db *gorm.DB, where any) (*gorm.DB, error) {
 					db = db.Where(column, item[1:]...)
 				} else {
 					cond := "and"
-					var val interface{}
+					var val any
 					var opt string
 					if count == 2 {
 						opt = "="

@@ -44,9 +44,9 @@ func (ctrl *CaptchaController) GenerateHandler() {
 // 验证
 func (ctrl *CaptchaController) VerifyHandle() {
 	code := ctrl.Ctx.Request.FormValue("code")
-	body := map[string]interface{}{"code": 1000, "msg": "failed"}
+	body := map[string]any{"code": 1000, "msg": "failed"}
 	if store.Verify(verifyId, code, true) {
-		body = map[string]interface{}{"code": 1001, "msg": "ok"}
+		body = map[string]any{"code": 1001, "msg": "ok"}
 	}
 	ctrl.Ctx.ResponseWriter.Header().Set("Content-Type", "application/json; charset=utf-8")
 	_ = json.NewEncoder(ctrl.Ctx.ResponseWriter).Encode(body)

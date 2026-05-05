@@ -3,7 +3,6 @@ package pay
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 	"net/url"
 	"time"
@@ -53,7 +52,7 @@ func (jsApi *JsApiPay) GetOpenidAndAccessToken() {
 		host := jsApi.r.URL.Host
 		path := jsApi.r.URL.Path
 		redirect_uri := url.QueryEscape("http://" + host + path)
-		fmt.Println(redirect_uri)
+		logs.Debug(redirect_uri)
 		// data := models.NewWxPayData()
 		// data.SetValue("appid", jsApi.AppId)
 		// data.SetValue("redirect_uri", redirect_uri)

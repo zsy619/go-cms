@@ -42,8 +42,8 @@ func (ctrl *FileController) GetFileDataVm() {
 	}
 
 	rs := struct {
-		Images []map[string]interface{} `json:"images"`
-		Count  int                      `json:"count"`
+		Images []map[string]any `json:"images"`
+		Count  int            `json:"count"`
 	}{}
 
 	infos, _ := os.ReadDir(path)
@@ -56,7 +56,7 @@ func (ctrl *FileController) GetFileDataVm() {
 		}
 		logs.Debug("fs---->", fs)
 		if info.IsDir() {
-			rs.Images = append(rs.Images, map[string]interface{}{
+			rs.Images = append(rs.Images, map[string]any{
 				"thumb": "",
 				"name":  info.Name(),
 				"type":  "dir",

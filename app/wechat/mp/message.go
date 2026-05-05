@@ -85,7 +85,7 @@ func (message *Message) ReplyNewsMsg(rw http.ResponseWriter, articles *[]Article
 }
 
 // reply message
-func (message *Message) replyMsg(rw http.ResponseWriter, msg interface{}) error {
+func (message *Message) replyMsg(rw http.ResponseWriter, msg any) error {
 	v := reflect.ValueOf(msg).Elem()
 	v.FieldByName("ToUserName").SetString(message.Request.FromUserName)
 	v.FieldByName("FromUserName").SetString(message.Request.ToUserName)
@@ -149,7 +149,7 @@ func (message *Message) SendNewsMsg(touser string, articles *[]Article) error {
 }
 
 // send message
-func (message *Message) sendMsg(touser string, msg interface{}) error {
+func (message *Message) sendMsg(touser string, msg any) error {
 	v := reflect.ValueOf(msg).Elem()
 	v.FieldByName("ToUserName").SetString(touser)
 	data, err := json.Marshal(msg)

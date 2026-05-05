@@ -10,8 +10,8 @@ import (
 )
 
 type SortArray struct {
-	k interface{}
-	v interface{}
+	k any
+	v any
 }
 
 type PayData map[string]string

@@ -41,7 +41,7 @@ func DecodeWithCommonError(response []byte, apiName string) (err error) {
 }
 
 // DecodeWithError 将返回值按照解析
-func DecodeWithError(response []byte, obj interface{}, apiName string) error {
+func DecodeWithError(response []byte, obj any, apiName string) error {
 	err := json.Unmarshal(response, obj)
 	if err != nil {
 		return fmt.Errorf("json Unmarshal Error, err=%v", err)
