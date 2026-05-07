@@ -12,21 +12,21 @@ const TableNameWeixinRequestContent = "weixin_request_content"
 
 // WeixinRequestContent mapped from table <weixin_request_content>
 type WeixinRequestContent struct {
-	ContentID  int64     `gorm:"column:content_id;type:bigint;primaryKey;autoIncrement:true" json:"content_id" form:"content_id"`  // 主键
-	RuleID     int64     `gorm:"column:rule_id;type:bigint;not null" json:"rule_id" form:"rule_id"`                                // 规则ID
-	Title      string    `gorm:"column:title;type:varchar(512)" json:"title" form:"title"`                                         // 回复标题
-	Content    string    `gorm:"column:content;type:text" json:"content" form:"content"`                                           // 回复内容
-	LinkURL    string    `gorm:"column:link_url;type:varchar(512)" json:"link_url" form:"link_url"`                                // 详情链接地址
-	ImgURL     string    `gorm:"column:img_url;type:varchar(512)" json:"img_url" form:"img_url"`                                   // 图片地址
-	MediaURL   string    `gorm:"column:media_url;type:varchar(512)" json:"media_url" form:"media_url"`                             // 语音或视频地址
-	MediaHdURL string    `gorm:"column:media_hd_url;type:varchar(512)" json:"media_hd_url" form:"media_hd_url"`                    // 高清语音或者视频地址
-	SortID     int32     `gorm:"column:sort_id;type:int" json:"sort_id" form:"sort_id"`                                            // 排序
-	CreateID   int32     `gorm:"column:create_id;type:int" json:"create_id" form:"create_id"`                                      // 创建人ID
-	CreateName string    `gorm:"column:create_name;type:varchar(64)" json:"create_name" form:"create_name"`                        // 创建人姓名
-	CreateTime time.Time `gorm:"column:create_time;type:datetime;default:CURRENT_TIMESTAMP" json:"create_time" form:"create_time"` // 创建时间
-	UpdateID   int32     `gorm:"column:update_id;type:int" json:"update_id" form:"update_id"`                                      // 更新人ID
-	UpdateName string    `gorm:"column:update_name;type:varchar(64)" json:"update_name" form:"update_name"`                        // 更新人姓名
-	UpdateTime time.Time `gorm:"column:update_time;type:datetime" json:"update_time" form:"update_time"`                           // 修改时间
+	ContentID  int64     `gorm:"column:content_id;type:bigint;primaryKey;autoIncrement:true;comment:主键" json:"content_id" form:"content_id"`
+	RuleID     int64     `gorm:"column:rule_id;type:bigint;not null;comment:规则ID" json:"rule_id" form:"rule_id"`
+	Title      string    `gorm:"column:title;type:varchar(512);comment:回复标题" json:"title" form:"title"`
+	Content    string    `gorm:"column:content;type:text;comment:回复内容" json:"content" form:"content"`
+	LinkURL    string    `gorm:"column:link_url;type:varchar(512);comment:详情链接地址" json:"link_url" form:"link_url"`
+	ImgURL     string    `gorm:"column:img_url;type:varchar(512);comment:图片地址" json:"img_url" form:"img_url"`
+	MediaURL   string    `gorm:"column:media_url;type:varchar(512);comment:语音或视频地址" json:"media_url" form:"media_url"`
+	MediaHdURL string    `gorm:"column:media_hd_url;type:varchar(512);comment:高清语音或者视频地址" json:"media_hd_url" form:"media_hd_url"`
+	SortID     int32     `gorm:"column:sort_id;type:int;comment:排序" json:"sort_id" form:"sort_id"`
+	CreateID   int32     `gorm:"column:create_id;type:int;comment:创建人ID" json:"create_id" form:"create_id"`
+	CreateName string    `gorm:"column:create_name;type:varchar(64);comment:创建人姓名" json:"create_name" form:"create_name"`
+	CreateTime time.Time `gorm:"column:create_time;type:datetime;default:CURRENT_TIMESTAMP;comment:创建时间" json:"create_time" form:"create_time"`
+	UpdateID   int32     `gorm:"column:update_id;type:int;comment:更新人ID" json:"update_id" form:"update_id"`
+	UpdateName string    `gorm:"column:update_name;type:varchar(64);comment:更新人姓名" json:"update_name" form:"update_name"`
+	UpdateTime time.Time `gorm:"column:update_time;type:datetime;comment:修改时间" json:"update_time" form:"update_time"`
 }
 
 // TableName WeixinRequestContent's table name

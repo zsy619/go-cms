@@ -12,28 +12,28 @@ const TableNamePlgOnlineRegister = "plg_online_register"
 
 // PlgOnlineRegister mapped from table <plg_online_register>
 type PlgOnlineRegister struct {
-	RegisterID int64     `gorm:"column:register_id;type:bigint;primaryKey;autoIncrement:true" json:"register_id" form:"register_id"` // 主键
-	RealName   string    `gorm:"column:real_name;type:varchar(64)" json:"real_name" form:"real_name"`                                // 姓名
-	Sex        string    `gorm:"column:sex;type:varchar(16)" json:"sex" form:"sex"`                                                  // 性别
-	Year       string    `gorm:"column:year;type:varchar(16)" json:"year" form:"year"`                                               // 年龄
-	Special    string    `gorm:"column:special;type:varchar(128)" json:"special" form:"special"`                                     // 意向专业
-	Degree     string    `gorm:"column:degree;type:varchar(64)" json:"degree" form:"degree"`                                         // 学历
-	Mobile     string    `gorm:"column:mobile;type:varchar(64)" json:"mobile" form:"mobile"`                                         // 联系电话
-	Email      string    `gorm:"column:email;type:varchar(128)" json:"email" form:"email"`                                           // 电子邮箱
-	Wechat     string    `gorm:"column:wechat;type:varchar(64)" json:"wechat" form:"wechat"`                                         // 微信号
-	Address    string    `gorm:"column:address;type:varchar(128)" json:"address" form:"address"`                                     // 家庭地址
-	Content    string    `gorm:"column:content;type:varchar(512)" json:"content" form:"content"`                                     // 留言内容
-	IP         string    `gorm:"column:ip;type:varchar(64)" json:"ip" form:"ip"`                                                     // IP地址
-	IsRead     int32     `gorm:"column:is_read;type:tinyint" json:"is_read" form:"is_read"`                                          // 是否已读
-	Tags       string    `gorm:"column:tags;type:varchar(128)" json:"tags" form:"tags"`                                              // 标签
-	Remark     string    `gorm:"column:remark;type:varchar(128)" json:"remark" form:"remark"`                                        // 备注
-	IsDeleted  bool      `gorm:"column:is_deleted;type:tinyint(1)" json:"is_deleted" form:"is_deleted"`                              // 删除标识
-	CreateID   int32     `gorm:"column:create_id;type:int" json:"create_id" form:"create_id"`                                        // 创建人ID
-	CreateName string    `gorm:"column:create_name;type:varchar(64)" json:"create_name" form:"create_name"`                          // 创建人姓名
-	CreateTime time.Time `gorm:"column:create_time;type:datetime;default:CURRENT_TIMESTAMP" json:"create_time" form:"create_time"`   // 创建时间
-	UpdateID   int32     `gorm:"column:update_id;type:int" json:"update_id" form:"update_id"`                                        // 更新人ID
-	UpdateName string    `gorm:"column:update_name;type:varchar(64)" json:"update_name" form:"update_name"`                          // 更新人姓名
-	UpdateTime time.Time `gorm:"column:update_time;type:datetime" json:"update_time" form:"update_time"`                             // 修改时间
+	RegisterID int64     `gorm:"column:register_id;type:bigint;primaryKey;autoIncrement:true;comment:主键" json:"register_id" form:"register_id"`
+	RealName   string    `gorm:"column:real_name;type:varchar(64);comment:姓名" json:"real_name" form:"real_name"`
+	Sex        string    `gorm:"column:sex;type:varchar(16);comment:性别" json:"sex" form:"sex"`
+	Year       string    `gorm:"column:year;type:varchar(16);comment:年龄" json:"year" form:"year"`
+	Special    string    `gorm:"column:special;type:varchar(128);comment:意向专业" json:"special" form:"special"`
+	Degree     string    `gorm:"column:degree;type:varchar(64);comment:学历" json:"degree" form:"degree"`
+	Mobile     string    `gorm:"column:mobile;type:varchar(64);comment:联系电话" json:"mobile" form:"mobile"`
+	Email      string    `gorm:"column:email;type:varchar(128);comment:电子邮箱" json:"email" form:"email"`
+	Wechat     string    `gorm:"column:wechat;type:varchar(64);comment:微信号" json:"wechat" form:"wechat"`
+	Address    string    `gorm:"column:address;type:varchar(128);comment:家庭地址" json:"address" form:"address"`
+	Content    string    `gorm:"column:content;type:varchar(512);comment:留言内容" json:"content" form:"content"`
+	IP         string    `gorm:"column:ip;type:varchar(64);comment:IP地址" json:"ip" form:"ip"`
+	IsRead     int32     `gorm:"column:is_read;type:tinyint;comment:是否已读" json:"is_read" form:"is_read"`
+	Tags       string    `gorm:"column:tags;type:varchar(128);comment:标签" json:"tags" form:"tags"`
+	Remark     string    `gorm:"column:remark;type:varchar(128);comment:备注" json:"remark" form:"remark"`
+	IsDeleted  bool      `gorm:"column:is_deleted;type:tinyint(1);comment:删除标识" json:"is_deleted" form:"is_deleted"`
+	CreateID   int32     `gorm:"column:create_id;type:int;comment:创建人ID" json:"create_id" form:"create_id"`
+	CreateName string    `gorm:"column:create_name;type:varchar(64);comment:创建人姓名" json:"create_name" form:"create_name"`
+	CreateTime time.Time `gorm:"column:create_time;type:datetime;default:CURRENT_TIMESTAMP;comment:创建时间" json:"create_time" form:"create_time"`
+	UpdateID   int32     `gorm:"column:update_id;type:int;comment:更新人ID" json:"update_id" form:"update_id"`
+	UpdateName string    `gorm:"column:update_name;type:varchar(64);comment:更新人姓名" json:"update_name" form:"update_name"`
+	UpdateTime time.Time `gorm:"column:update_time;type:datetime;comment:修改时间" json:"update_time" form:"update_time"`
 }
 
 // TableName PlgOnlineRegister's table name

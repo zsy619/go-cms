@@ -12,20 +12,20 @@ const TableNameCmsAdminNotice = "cms_admin_notice"
 
 // CmsAdminNotice mapped from table <cms_admin_notice>
 type CmsAdminNotice struct {
-	NoticeID    int64     `gorm:"column:notice_id;type:bigint;primaryKey;autoIncrement:true" json:"notice_id" form:"notice_id"`        // 主键
-	Title       string    `gorm:"column:title;type:varchar(256)" json:"title" form:"title"`                                            // 内容标题
-	SubTitle    string    `gorm:"column:sub_title;type:varchar(128)" json:"sub_title" form:"sub_title"`                                // 副标题
-	Content     string    `gorm:"column:content;type:text" json:"content" form:"content"`                                              // 详细内容
-	SortID      int32     `gorm:"column:sort_id;type:int" json:"sort_id" form:"sort_id"`                                               // 排序
-	IsTop       int32     `gorm:"column:is_top;type:tinyint" json:"is_top" form:"is_top"`                                              // 是否置顶
-	Status      int32     `gorm:"column:status;type:tinyint" json:"status" form:"status"`                                              // 状态0草稿1提交2审核通过3审核未通过4驳回
-	PublishTime time.Time `gorm:"column:publish_time;type:datetime;default:CURRENT_TIMESTAMP" json:"publish_time" form:"publish_time"` // 发布时间
-	CreateID    int32     `gorm:"column:create_id;type:int" json:"create_id" form:"create_id"`                                         // 创建人ID
-	CreateName  string    `gorm:"column:create_name;type:varchar(64)" json:"create_name" form:"create_name"`                           // 创建人姓名
-	CreateTime  time.Time `gorm:"column:create_time;type:datetime;default:CURRENT_TIMESTAMP" json:"create_time" form:"create_time"`    // 创建时间
-	UpdateID    int32     `gorm:"column:update_id;type:int" json:"update_id" form:"update_id"`                                         // 更新人ID
-	UpdateName  string    `gorm:"column:update_name;type:varchar(64)" json:"update_name" form:"update_name"`                           // 更新人姓名
-	UpdateTime  time.Time `gorm:"column:update_time;type:datetime" json:"update_time" form:"update_time"`                              // 修改时间
+	NoticeID    int64     `gorm:"column:notice_id;type:bigint;primaryKey;autoIncrement:true;comment:主键" json:"notice_id" form:"notice_id"`
+	Title       string    `gorm:"column:title;type:varchar(256);comment:内容标题" json:"title" form:"title"`
+	SubTitle    string    `gorm:"column:sub_title;type:varchar(128);comment:副标题" json:"sub_title" form:"sub_title"`
+	Content     string    `gorm:"column:content;type:text;comment:详细内容" json:"content" form:"content"`
+	SortID      int32     `gorm:"column:sort_id;type:int;comment:排序" json:"sort_id" form:"sort_id"`
+	IsTop       int32     `gorm:"column:is_top;type:tinyint;comment:是否置顶" json:"is_top" form:"is_top"`
+	Status      int32     `gorm:"column:status;type:tinyint;comment:状态0草稿1提交2审核通过3审核未通过4驳回" json:"status" form:"status"`
+	PublishTime time.Time `gorm:"column:publish_time;type:datetime;default:CURRENT_TIMESTAMP;comment:发布时间" json:"publish_time" form:"publish_time"`
+	CreateID    int32     `gorm:"column:create_id;type:int;comment:创建人ID" json:"create_id" form:"create_id"`
+	CreateName  string    `gorm:"column:create_name;type:varchar(64);comment:创建人姓名" json:"create_name" form:"create_name"`
+	CreateTime  time.Time `gorm:"column:create_time;type:datetime;default:CURRENT_TIMESTAMP;comment:创建时间" json:"create_time" form:"create_time"`
+	UpdateID    int32     `gorm:"column:update_id;type:int;comment:更新人ID" json:"update_id" form:"update_id"`
+	UpdateName  string    `gorm:"column:update_name;type:varchar(64);comment:更新人姓名" json:"update_name" form:"update_name"`
+	UpdateTime  time.Time `gorm:"column:update_time;type:datetime;comment:修改时间" json:"update_time" form:"update_time"`
 }
 
 // TableName CmsAdminNotice's table name
