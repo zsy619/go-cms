@@ -24,7 +24,8 @@ type DBLogger interface {
 
 type DBExtension struct {
 	*gorm.DB
-	logger DBLogger
+	logger  DBLogger
+	dialect string // 数据库方言(mysql/postgres)
 }
 
 func NewDBWrapper(db *gorm.DB) *DBExtension {
@@ -41,6 +42,14 @@ func (dw *DBExtension) SetDB(db *gorm.DB) {
 
 func (dw *DBExtension) SetLogger(logger DBLogger) {
 	dw.logger = logger
+}
+
+// getCategory 返回日志分类标签,根据数据库方言动态生成
+func (dw *DBExtension) getCategory() string {
+	if dw.dialect != "" {
+		return dw.dialect
+	}
+	return "db"
 }
 
 type UpdateAttrs map[string]any
@@ -115,7 +124,7 @@ func (dw *DBExtension) getListCore(result any, order string, limit, offset int, 
 	}
 
 	if err := db.Find(result).Error; err != nil {
-		dw.logger.LogErrorc("mysql", err, fmt.Sprintf("failed to query %s, query is %+v, args are %+v, order is %s, limit is %d", tableNameAble.TableName(), query, args, order, limit))
+		dw.logger.LogErrorc(dw.getCategory(), err, fmt.Sprintf("failed to query %s, query is %+v, args are %+v, order is %s, limit is %d", tableNameAble.TableName(), query, args, order, limit))
 		return err
 	}
 
@@ -126,7 +135,7 @@ func (dw *DBExtension) getListCore(result any, order string, limit, offset int, 
 func (dw *DBExtension) SaveOne(value TableNameAble) error {
 	var err error
 	if err = dw.Save(value).Error; err != nil {
-		dw.logger.LogErrorc("mysql", err, fmt.Sprintf("Failed to save %s, the value is %+v", value.TableName(), value))
+		dw.logger.LogErrorc(dw.getCategory(), err, fmt.Sprintf("Failed to save %s, the value is %+v", value.TableName(), value))
 	}
 	return err
 }
@@ -156,11 +165,11 @@ func (dw *DBExtension) Update(attrs any, query any, args ...any) error {
 	db := dw.Table(tableName).Where(query, args...).Updates(attrs)
 
 	if err = db.Error; err != nil {
-		dw.logger.LogErrorc("mysql", err, fmt.Sprintf("failed to update %s, query is %+v, args are %+v, attrs is %+v", tableName, query, args, attrs))
+		dw.logger.LogErrorc(dw.getCategory(), err, fmt.Sprintf("failed to update %s, query is %+v, args are %+v, attrs is %+v", tableName, query, args, attrs))
 	}
 
 	if db.RowsAffected == 0 {
-		dw.logger.LogWarnc("mysql", nil, fmt.Sprintf("No rows is updated.For %s, query is %+v, args are %+v, attrs is %+v", tableName, query, args, attrs))
+		dw.logger.LogWarnc(dw.getCategory(), nil, fmt.Sprintf("No rows is updated.For %s, query is %+v, args are %+v, attrs is %+v", tableName, query, args, attrs))
 	}
 
 	return err
@@ -181,12 +190,12 @@ func (dw *DBExtension) GetOne(result any, query any, args ...any) (found bool, e
 	err = dw.Table(tableNameAble.TableName()).Where(query, args...).First(result).Error
 
 	if err == gorm.ErrRecordNotFound {
-		dw.logger.LogInfoc("mysql", fmt.Sprintf("record not found for query %s, the query is %+v, args are %+v", tableNameAble.TableName(), query, args))
+		dw.logger.LogInfoc(dw.getCategory(), fmt.Sprintf("record not found for query %s, the query is %+v, args are %+v", tableNameAble.TableName(), query, args))
 		return false, nil
 	}
 
 	if err != nil {
-		dw.logger.LogErrorc("mysql", err, fmt.Sprintf("failed to query %s, the query is %+v, args are %+v", tableNameAble.TableName(), query, args))
+		dw.logger.LogErrorc(dw.getCategory(), err, fmt.Sprintf("failed to query %s, the query is %+v, args are %+v", tableNameAble.TableName(), query, args))
 		return false, err
 	}
 
@@ -196,7 +205,7 @@ func (dw *DBExtension) GetOne(result any, query any, args ...any) (found bool, e
 func (dw *DBExtension) ExecSql(result any, sql string, args ...any) error {
 	err := dw.Raw(sql, args...).Scan(result).Error
 	if err != nil {
-		dw.logger.LogErrorc("mysql", err, fmt.Sprintf("failed to execute sql %s, args are %+v", sql, args))
+		dw.logger.LogErrorc(dw.getCategory(), err, fmt.Sprintf("failed to execute sql %s, args are %+v", sql, args))
 	}
 
 	return err
@@ -226,7 +235,7 @@ func (dw *DBExtension) countCore(count *int64, byField string, query any) error 
 	}
 
 	if err := db.Count(count).Error; err != nil {
-		dw.logger.LogErrorc("mysql", err, fmt.Sprintf("failed to count %s, query is %+v, byField is %s", tableNameAble.TableName(), query, byField))
+		dw.logger.LogErrorc(dw.getCategory(), err, fmt.Sprintf("failed to count %s, query is %+v, byField is %s", tableNameAble.TableName(), query, byField))
 		return err
 	}
 

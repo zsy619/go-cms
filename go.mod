@@ -8,12 +8,20 @@ require (
 	github.com/kardianos/service v1.2.2
 	github.com/mojocn/base64Captcha v1.3.8
 	github.com/prometheus/client_golang v1.22.0
+	github.com/zsy619/tools v1.2.3
 	golang.org/x/net v0.41.0
 	gorm.io/driver/mysql v1.6.0
 	gorm.io/gen v0.3.27
 	gorm.io/gorm v1.30.0
 	gorm.io/plugin/dbresolver v1.6.0
-	github.com/zsy619/tools v1.2.3
+)
+
+require (
+	github.com/jackc/pgpassfile v1.0.0 // indirect
+	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
+	github.com/jackc/pgx/v5 v5.6.0 // indirect
+	github.com/jackc/puddle/v2 v2.2.2 // indirect
+	gorm.io/driver/postgres v1.6.0 // indirect
 )
 
 require (

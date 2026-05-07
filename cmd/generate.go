@@ -33,10 +33,10 @@ func main() {
 		FieldWithTypeTag: true, // generate with gorm column type tag
 	})
 
-	g.WithOpts(gen.FieldGORMTagReg(".", func(tag field.GormTag) field.GormTag {
-		tag.Remove("comment")
-		return tag
-	}))
+	// 保留字段 comment 注释，不自动移除
+g.WithOpts(gen.FieldGORMTagReg(".", func(tag field.GormTag) field.GormTag {
+	return tag
+}))
 
 	g.UseDB(dal.CmsDatabase.DB)
 
