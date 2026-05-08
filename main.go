@@ -158,6 +158,15 @@ func (p *Program) run() { // 此处编写具体的服务代码
 		// runtime.KeepAlive(ballast)
 	}
 
+	// 判断上传目录是否存在
+	if _, err := os.Stat("./uploads"); os.IsNotExist(err) {
+		os.MkdirAll("./uploads", os.ModePerm)
+	}
+	// 判断下载目录是否存在
+	if _, err := os.Stat("./downloads"); os.IsNotExist(err) {
+		os.MkdirAll("./downloads", os.ModePerm)
+	}
+
 	// 例: /images/user/1.jpg 实际访问的是 static/images/user/1.jpg
 	web.SetStaticPath("/views", "views")
 	web.SetStaticPath("/images", "static/images")
@@ -167,11 +176,9 @@ func (p *Program) run() { // 此处编写具体的服务代码
 	// 通过 /js/资源路径  可以访问static/js目录的内容
 	web.SetStaticPath("/js", "static/js")
 
-	web.SetStaticPath("/Upload", "Upload")
-	web.SetStaticPath("/Uploads", "Uploads")
-	web.SetStaticPath("/Download", "Download")
-	web.SetStaticPath("/Downloads", "Downloads")
-	web.SetStaticPath("/Public", "Public")
+	web.SetStaticPath("/uploads", "uploads")
+	web.SetStaticPath("/downloads", "downloads")
+	web.SetStaticPath("/public", "public")
 	web.SetStaticPath("/debug", "debug")
 
 	web.ErrorController(&controllers.ErrorController{})
