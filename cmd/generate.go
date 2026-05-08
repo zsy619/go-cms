@@ -3,8 +3,7 @@ package main
 import (
 	"gorm.io/gen"
 	"gorm.io/gen/field"
-
-	"haedu.gov.cn/cms/app/dal"
+	"haedu.gov.cn/cms/app/db"
 )
 
 // 参考：https://blog.csdn.net/Jeffid/article/details/126898000
@@ -34,11 +33,11 @@ func main() {
 	})
 
 	// 保留字段 comment 注释，不自动移除
-g.WithOpts(gen.FieldGORMTagReg(".", func(tag field.GormTag) field.GormTag {
-	return tag
-}))
+	g.WithOpts(gen.FieldGORMTagReg(".", func(tag field.GormTag) field.GormTag {
+		return tag
+	}))
 
-	g.UseDB(dal.CmsDatabase.DB)
+	g.UseDB(db.CmsDatabase.DB)
 
 	// 将特定字段名的 json 标签加上`string`属性,即 MarshalJSON 时该字段由数字类型转成字符串类型
 	jsonField := gen.FieldJSONTagWithNS(func(columnName string) (tagContent string) {

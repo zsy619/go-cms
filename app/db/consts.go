@@ -1,4 +1,4 @@
-package dal
+package db
 
 import (
 	"fmt"
@@ -7,7 +7,6 @@ import (
 
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
-
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlserver"
@@ -56,10 +55,10 @@ type dsnOptions struct {
 // dbDialectConfig 每种数据库方言的配置信息
 // 通过 RegisterDialect 函数注册,支持运行时扩展
 type dbDialectConfig struct {
-	opener       func(string) gorm.Dialector                  // GORM驱动开启器(dsn→Dialector)
-	buildDSN     func(dsnOptions) string                       // DSN构建函数
-	tableComment func(table, comment string) string            // 表注释SQL语句生成函数
-	defaultPort  string                                        // 默认端口
+	opener       func(string) gorm.Dialector        // GORM驱动开启器(dsn→Dialector)
+	buildDSN     func(dsnOptions) string            // DSN构建函数
+	tableComment func(table, comment string) string // 表注释SQL语句生成函数
+	defaultPort  string                             // 默认端口
 }
 
 // dialectRegistry 全局方言注册表
@@ -281,6 +280,7 @@ func configureConnectionPool(db *gorm.DB, dbName string) {
 // Oracle 和 达梦 需分别引入对应驱动包,DSN格式:
 //   - Oracle:      oracle://user:password@host:port/service_name
 //   - 达梦:        dm://user:password@host:port?schema=SCHEMA_NAME
+//
 // @param prefix 配置前缀,如"cms"将读取cms.host,cms.port等配置
 // @param defaultDb 默认数据库名称
 // @return string 数据库DSN连接字符串
