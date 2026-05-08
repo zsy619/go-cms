@@ -28,9 +28,9 @@ package main
 
 import (
 	"encoding/gob"
-	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
@@ -38,6 +38,7 @@ import (
 	"github.com/beego/beego/v2/server/web/session"
 	"github.com/kardianos/service"
 
+	"haedu.gov.cn/cms/app/banner"
 	"haedu.gov.cn/cms/app/cms/domain"
 	"haedu.gov.cn/cms/controllers"
 	_ "haedu.gov.cn/cms/controllers/admin"
@@ -150,7 +151,33 @@ func (p *Program) Stop(s service.Service) error {
 	return nil
 }
 
+// ============================================================
+// 编译时注入（可选）
+// go build -ldflags="
+//
+//	-X main.Version=2.0.0
+//	-X main.BuildTime=2024-07-15
+//
+// "
+// ============================================================
+var (
+	Version   = "1.0.0"
+	BuildTime = "unknown"
+)
+
 func (p *Program) run() { // 此处编写具体的服务代码
+	// ========== 配置 Banner ==========
+	bannerCfg := &banner.Config{
+		Mode:    banner.ModeConsole,
+		Version: Version,
+		AppName: "YY-Cms Application",
+	}
+
+	hook := banner.NewBeegoHook(bannerCfg)
+
+	// ========== 启动前：打印 Banner + 初始化日志 ==========
+	hook.BeforeRun()
+
 	// https://www.cnblogs.com/ahfuzhang/p/16745742.html
 	// 能够减少GC的频率，从而提升程序性能
 	{
@@ -208,13 +235,16 @@ func (p *Program) run() { // 此处编写具体的服务代码
 	// web.InsertFilter("/mobile/x/*", web.BeforeRouter, routers.FilterMobile)
 	// }
 
-	fmt.Println(`
- ██████ ███    ███ ███████ 
-██      ████  ████ ██      
-██      ██ ████ ██ ███████ 
-██      ██  ██  ██      ██ 
- ██████ ██      ██ ███████ 
-     `)
+	// ========== 启动 Beego（会阻塞） ==========
+	// 注意：beego.Run() 内部会打印 "http server Running on http://:8080"
+	// 为了在所有端口都监听成功后再输出我们的汇总，我们采用一个小技巧：
+	// 在另一个 goroutine 中短暂延迟后调用 AfterRun
+	go func() {
+		// 延迟 300ms 确保 beego 已绑定端口并输出自己的信息
+		// 这个延迟可根据实际情况调整，非常可靠
+		time.Sleep(300 * time.Millisecond)
+		hook.AfterRun()
+	}()
 
 	web.Run()
 }
