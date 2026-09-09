@@ -9,7 +9,7 @@ type Article_PropertySaveModel struct {
 	Value      string `gorm:"column:value;type:varchar(128)" json:"value" form:"value"`                                           // 属性值
 	SortID     int32  `gorm:"column:sort_id;type:int" json:"sort_id" form:"sort_id"`                                              // 排序
 	Status     int32  `gorm:"column:status;type:tinyint" json:"status" form:"status"`                                             // 状态0草稿1提交2审核通过3审核未通过4驳回
-	IsDeleted  bool   `gorm:"column:is_deleted;type:tinyint(1)" json:"is_deleted" form:"is_deleted"`                              // 删除标识
+	Deleted    bool   `gorm:"column:deleted;type:tinyint(1);not null;default:0;index;comment:逻辑删除标识(0未删除1已删除)" json:"deleted" form:"deleted"` // 逻辑删除
 	BelongTo   string `gorm:"column:belong_to;type:varchar(64)" json:"belong_to" form:"belong_to"`                                // 归属
 	CreateID   int32  `gorm:"column:create_id;type:int" json:"create_id" form:"create_id"`                                        // 创建人ID
 	CreateName string `gorm:"column:create_name;type:varchar(64)" json:"create_name" form:"create_name"`                          // 创建人姓名

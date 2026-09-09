@@ -153,7 +153,7 @@ func (ctrl *ArticleController) ArticleSave() {
 			item.Value = propertyList[i].Value
 			item.SortID = propertyList[i].SortID
 			item.Status = propertyList[i].Status
-			item.IsDeleted = propertyList[i].IsDeleted
+			item.Deleted = propertyList[i].Deleted
 			item.BelongTo = propertyList[i].BelongTo
 			item.CreateID = propertyList[i].CreateID
 			item.CreateName = propertyList[i].CreateName
