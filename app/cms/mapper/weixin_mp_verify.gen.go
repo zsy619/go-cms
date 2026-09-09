@@ -38,6 +38,8 @@ func newWeixinMpVerify(db *gorm.DB, opts ...gen.DOOption) weixinMpVerify {
 	_weixinMpVerify.UpdateID = field.NewInt32(tableName, "update_id")
 	_weixinMpVerify.UpdateName = field.NewString(tableName, "update_name")
 	_weixinMpVerify.UpdateTime = field.NewTime(tableName, "update_time")
+	_weixinMpVerify.TenantID = field.NewInt64(tableName, "tenant_id")
+	_weixinMpVerify.Deleted = field.NewBool(tableName, "deleted")
 
 	_weixinMpVerify.fillFieldMap()
 
@@ -47,69 +49,71 @@ func newWeixinMpVerify(db *gorm.DB, opts ...gen.DOOption) weixinMpVerify {
 type weixinMpVerify struct {
 	weixinMpVerifyDo weixinMpVerifyDo
 
-	ALL        field.Asterisk
-	VerifyID   field.Int64  // 主键
-	AccountID  field.Int64  // 归属公众号
-	Path       field.String // 访问路径，默认/MP_verify_公众号原始ID.txt
-	FilePath   field.String // 文件路径
-	FileName   field.String // 文件名称
-	SortID     field.Int32  // 排序
-	Status     field.Int32  // 状态0草稿1提交2审核通过3审核未通过4驳回
-	CreateID   field.Int32  // 创建人ID
-	CreateName field.String // 创建人姓名
-	CreateTime field.Time   // 创建时间
-	UpdateID   field.Int32  // 更新人ID
-	UpdateName field.String // 更新人姓名
-	UpdateTime field.Time   // 修改时间
+	ALL field.Asterisk
+	VerifyID field.Int64
+	AccountID field.Int64
+	Path field.String
+	FilePath field.String
+	FileName field.String
+	SortID field.Int32
+	Status field.Int32
+	CreateID field.Int32
+	CreateName field.String
+	CreateTime field.Time
+	UpdateID field.Int32
+	UpdateName field.String
+	UpdateTime field.Time
+	TenantID field.Int64
+	Deleted field.Bool
 
 	fieldMap map[string]field.Expr
 }
 
-func (w weixinMpVerify) Table(newTableName string) *weixinMpVerify {
-	w.weixinMpVerifyDo.UseTable(newTableName)
-	return w.updateTableName(newTableName)
+func (c weixinMpVerify) Table(newTableName string) *weixinMpVerify {
+	c.weixinMpVerifyDo.UseTable(newTableName)
+	return c.updateTableName(newTableName)
 }
 
-func (w weixinMpVerify) As(alias string) *weixinMpVerify {
-	w.weixinMpVerifyDo.DO = *(w.weixinMpVerifyDo.As(alias).(*gen.DO))
-	return w.updateTableName(alias)
+func (c weixinMpVerify) As(alias string) *weixinMpVerify {
+	c.weixinMpVerifyDo.DO = *(c.weixinMpVerifyDo.As(alias).(*gen.DO))
+	return c.updateTableName(alias)
 }
 
-func (w *weixinMpVerify) updateTableName(table string) *weixinMpVerify {
-	w.ALL = field.NewAsterisk(table)
-	w.VerifyID = field.NewInt64(table, "verify_id")
-	w.AccountID = field.NewInt64(table, "account_id")
-	w.Path = field.NewString(table, "path")
-	w.FilePath = field.NewString(table, "file_path")
-	w.FileName = field.NewString(table, "file_name")
-	w.SortID = field.NewInt32(table, "sort_id")
-	w.Status = field.NewInt32(table, "status")
-	w.CreateID = field.NewInt32(table, "create_id")
-	w.CreateName = field.NewString(table, "create_name")
-	w.CreateTime = field.NewTime(table, "create_time")
-	w.UpdateID = field.NewInt32(table, "update_id")
-	w.UpdateName = field.NewString(table, "update_name")
-	w.UpdateTime = field.NewTime(table, "update_time")
+func (c *weixinMpVerify) updateTableName(table string) *weixinMpVerify {
+	c.ALL = field.NewAsterisk(table)
+	c.VerifyID = field.NewInt64(table, "verify_id")
+	c.AccountID = field.NewInt64(table, "account_id")
+	c.Path = field.NewString(table, "path")
+	c.FilePath = field.NewString(table, "file_path")
+	c.FileName = field.NewString(table, "file_name")
+	c.SortID = field.NewInt32(table, "sort_id")
+	c.Status = field.NewInt32(table, "status")
+	c.CreateID = field.NewInt32(table, "create_id")
+	c.CreateName = field.NewString(table, "create_name")
+	c.CreateTime = field.NewTime(table, "create_time")
+	c.UpdateID = field.NewInt32(table, "update_id")
+	c.UpdateName = field.NewString(table, "update_name")
+	c.UpdateTime = field.NewTime(table, "update_time")
+	c.TenantID = field.NewInt64(table, "tenant_id")
+	c.Deleted = field.NewBool(table, "deleted")
 
-	w.fillFieldMap()
+	c.fillFieldMap()
 
-	return w
+	return c
 }
 
-func (w *weixinMpVerify) WithContext(ctx context.Context) *weixinMpVerifyDo {
-	return w.weixinMpVerifyDo.WithContext(ctx)
+func (c *weixinMpVerify) WithContext(ctx context.Context) *weixinMpVerifyDo {
+	return c.weixinMpVerifyDo.WithContext(ctx)
 }
 
-func (w weixinMpVerify) TableName() string { return w.weixinMpVerifyDo.TableName() }
+func (c weixinMpVerify) TableName() string { return c.weixinMpVerifyDo.TableName() }
 
-func (w weixinMpVerify) Alias() string { return w.weixinMpVerifyDo.Alias() }
+func (c weixinMpVerify) Alias() string { return c.weixinMpVerifyDo.Alias() }
 
-func (w weixinMpVerify) Columns(cols ...field.Expr) gen.Columns {
-	return w.weixinMpVerifyDo.Columns(cols...)
-}
+func (c weixinMpVerify) Columns(cols ...field.Expr) gen.Columns { return c.weixinMpVerifyDo.Columns(cols...) }
 
-func (w *weixinMpVerify) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
-	_f, ok := w.fieldMap[fieldName]
+func (c *weixinMpVerify) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
+	_f, ok := c.fieldMap[fieldName]
 	if !ok || _f == nil {
 		return nil, false
 	}
@@ -117,229 +121,231 @@ func (w *weixinMpVerify) GetFieldByName(fieldName string) (field.OrderExpr, bool
 	return _oe, ok
 }
 
-func (w *weixinMpVerify) fillFieldMap() {
-	w.fieldMap = make(map[string]field.Expr, 13)
-	w.fieldMap["verify_id"] = w.VerifyID
-	w.fieldMap["account_id"] = w.AccountID
-	w.fieldMap["path"] = w.Path
-	w.fieldMap["file_path"] = w.FilePath
-	w.fieldMap["file_name"] = w.FileName
-	w.fieldMap["sort_id"] = w.SortID
-	w.fieldMap["status"] = w.Status
-	w.fieldMap["create_id"] = w.CreateID
-	w.fieldMap["create_name"] = w.CreateName
-	w.fieldMap["create_time"] = w.CreateTime
-	w.fieldMap["update_id"] = w.UpdateID
-	w.fieldMap["update_name"] = w.UpdateName
-	w.fieldMap["update_time"] = w.UpdateTime
+func (c *weixinMpVerify) fillFieldMap() {
+	c.fieldMap = make(map[string]field.Expr, 15)
+	c.fieldMap["verify_id"] = c.VerifyID
+	c.fieldMap["account_id"] = c.AccountID
+	c.fieldMap["path"] = c.Path
+	c.fieldMap["file_path"] = c.FilePath
+	c.fieldMap["file_name"] = c.FileName
+	c.fieldMap["sort_id"] = c.SortID
+	c.fieldMap["status"] = c.Status
+	c.fieldMap["create_id"] = c.CreateID
+	c.fieldMap["create_name"] = c.CreateName
+	c.fieldMap["create_time"] = c.CreateTime
+	c.fieldMap["update_id"] = c.UpdateID
+	c.fieldMap["update_name"] = c.UpdateName
+	c.fieldMap["update_time"] = c.UpdateTime
+	c.fieldMap["tenant_id"] = c.TenantID
+	c.fieldMap["deleted"] = c.Deleted
 }
 
-func (w weixinMpVerify) clone(db *gorm.DB) weixinMpVerify {
-	w.weixinMpVerifyDo.ReplaceConnPool(db.Statement.ConnPool)
-	return w
+func (c weixinMpVerify) clone(db *gorm.DB) weixinMpVerify {
+	c.weixinMpVerifyDo.ReplaceConnPool(db.Statement.ConnPool)
+	return c
 }
 
-func (w weixinMpVerify) replaceDB(db *gorm.DB) weixinMpVerify {
-	w.weixinMpVerifyDo.ReplaceDB(db)
-	return w
+func (c weixinMpVerify) replaceDB(db *gorm.DB) weixinMpVerify {
+	c.weixinMpVerifyDo.ReplaceDB(db)
+	return c
 }
 
 type weixinMpVerifyDo struct{ gen.DO }
 
-func (w weixinMpVerifyDo) Debug() *weixinMpVerifyDo {
-	return w.withDO(w.DO.Debug())
+func (c weixinMpVerifyDo) Debug() *weixinMpVerifyDo {
+	return c.withDO(c.DO.Debug())
 }
 
-func (w weixinMpVerifyDo) WithContext(ctx context.Context) *weixinMpVerifyDo {
-	return w.withDO(w.DO.WithContext(ctx))
+func (c weixinMpVerifyDo) WithContext(ctx context.Context) *weixinMpVerifyDo {
+	return c.withDO(c.DO.WithContext(ctx))
 }
 
-func (w weixinMpVerifyDo) ReadDB() *weixinMpVerifyDo {
-	return w.Clauses(dbresolver.Read)
+func (c weixinMpVerifyDo) Session(config *gorm.Session) *weixinMpVerifyDo {
+	return c.withDO(c.DO.Session(config))
 }
 
-func (w weixinMpVerifyDo) WriteDB() *weixinMpVerifyDo {
-	return w.Clauses(dbresolver.Write)
+func (c weixinMpVerifyDo) clauses(conds ...clause.Expression) *weixinMpVerifyDo {
+	return c.withDO(c.DO.Clauses(conds...))
 }
 
-func (w weixinMpVerifyDo) Session(config *gorm.Session) *weixinMpVerifyDo {
-	return w.withDO(w.DO.Session(config))
+func (c weixinMpVerifyDo) Returning(value interface{}, columns ...string) *weixinMpVerifyDo {
+	return c.withDO(c.DO.Returning(value, columns...))
 }
 
-func (w weixinMpVerifyDo) Clauses(conds ...clause.Expression) *weixinMpVerifyDo {
-	return w.withDO(w.DO.Clauses(conds...))
+func (c weixinMpVerifyDo) Not(conds ...gen.Condition) *weixinMpVerifyDo {
+	return c.withDO(c.DO.Not(conds...))
 }
 
-func (w weixinMpVerifyDo) Returning(value interface{}, columns ...string) *weixinMpVerifyDo {
-	return w.withDO(w.DO.Returning(value, columns...))
+func (c weixinMpVerifyDo) Or(conds ...gen.Condition) *weixinMpVerifyDo {
+	return c.withDO(c.DO.Or(conds...))
 }
 
-func (w weixinMpVerifyDo) Not(conds ...gen.Condition) *weixinMpVerifyDo {
-	return w.withDO(w.DO.Not(conds...))
+func (c weixinMpVerifyDo) Select(conds ...field.Expr) *weixinMpVerifyDo {
+	return c.withDO(c.DO.Select(conds...))
 }
 
-func (w weixinMpVerifyDo) Or(conds ...gen.Condition) *weixinMpVerifyDo {
-	return w.withDO(w.DO.Or(conds...))
+func (c weixinMpVerifyDo) Where(conds ...gen.Condition) *weixinMpVerifyDo {
+	return c.withDO(c.DO.Where(conds...))
 }
 
-func (w weixinMpVerifyDo) Select(conds ...field.Expr) *weixinMpVerifyDo {
-	return w.withDO(w.DO.Select(conds...))
+func (c weixinMpVerifyDo) Order(conds ...field.Expr) *weixinMpVerifyDo {
+	return c.withDO(c.DO.Order(conds...))
 }
 
-func (w weixinMpVerifyDo) Where(conds ...gen.Condition) *weixinMpVerifyDo {
-	return w.withDO(w.DO.Where(conds...))
+func (c weixinMpVerifyDo) Distinct(cols ...field.Expr) *weixinMpVerifyDo {
+	return c.withDO(c.DO.Distinct(cols...))
 }
 
-func (w weixinMpVerifyDo) Order(conds ...field.Expr) *weixinMpVerifyDo {
-	return w.withDO(w.DO.Order(conds...))
+func (c weixinMpVerifyDo) Omit(cols ...field.Expr) *weixinMpVerifyDo {
+	return c.withDO(c.DO.Omit(cols...))
 }
 
-func (w weixinMpVerifyDo) Distinct(cols ...field.Expr) *weixinMpVerifyDo {
-	return w.withDO(w.DO.Distinct(cols...))
+func (c weixinMpVerifyDo) Join(table schema.Tabler, on ...field.Expr) *weixinMpVerifyDo {
+	return c.withDO(c.DO.Join(table, on...))
 }
 
-func (w weixinMpVerifyDo) Omit(cols ...field.Expr) *weixinMpVerifyDo {
-	return w.withDO(w.DO.Omit(cols...))
+func (c weixinMpVerifyDo) LeftJoin(table schema.Tabler, on ...field.Expr) *weixinMpVerifyDo {
+	return c.withDO(c.DO.LeftJoin(table, on...))
 }
 
-func (w weixinMpVerifyDo) Join(table schema.Tabler, on ...field.Expr) *weixinMpVerifyDo {
-	return w.withDO(w.DO.Join(table, on...))
+func (c weixinMpVerifyDo) RightJoin(table schema.Tabler, on ...field.Expr) *weixinMpVerifyDo {
+	return c.withDO(c.DO.RightJoin(table, on...))
 }
 
-func (w weixinMpVerifyDo) LeftJoin(table schema.Tabler, on ...field.Expr) *weixinMpVerifyDo {
-	return w.withDO(w.DO.LeftJoin(table, on...))
+func (c weixinMpVerifyDo) Group(cols ...field.Expr) *weixinMpVerifyDo {
+	return c.withDO(c.DO.Group(cols...))
 }
 
-func (w weixinMpVerifyDo) RightJoin(table schema.Tabler, on ...field.Expr) *weixinMpVerifyDo {
-	return w.withDO(w.DO.RightJoin(table, on...))
+func (c weixinMpVerifyDo) Having(conds ...gen.Condition) *weixinMpVerifyDo {
+	return c.withDO(c.DO.Having(conds...))
 }
 
-func (w weixinMpVerifyDo) Group(cols ...field.Expr) *weixinMpVerifyDo {
-	return w.withDO(w.DO.Group(cols...))
+func (c weixinMpVerifyDo) Limit(limit int) *weixinMpVerifyDo {
+	return c.withDO(c.DO.Limit(limit))
 }
 
-func (w weixinMpVerifyDo) Having(conds ...gen.Condition) *weixinMpVerifyDo {
-	return w.withDO(w.DO.Having(conds...))
+func (c weixinMpVerifyDo) Offset(offset int) *weixinMpVerifyDo {
+	return c.withDO(c.DO.Offset(offset))
 }
 
-func (w weixinMpVerifyDo) Limit(limit int) *weixinMpVerifyDo {
-	return w.withDO(w.DO.Limit(limit))
+func (c weixinMpVerifyDo) Scopes(funcs ...func(gen.Dao) gen.Dao) *weixinMpVerifyDo {
+	return c.withDO(c.DO.Scopes(funcs...))
 }
 
-func (w weixinMpVerifyDo) Offset(offset int) *weixinMpVerifyDo {
-	return w.withDO(w.DO.Offset(offset))
+func (c weixinMpVerifyDo) Unscoped() *weixinMpVerifyDo {
+	return c.withDO(c.DO.Unscoped())
 }
 
-func (w weixinMpVerifyDo) Scopes(funcs ...func(gen.Dao) gen.Dao) *weixinMpVerifyDo {
-	return w.withDO(w.DO.Scopes(funcs...))
+func (c weixinMpVerifyDo) Attrs(attrs ...field.AssignExpr) *weixinMpVerifyDo {
+	return c.withDO(c.DO.Attrs(attrs...))
 }
 
-func (w weixinMpVerifyDo) Unscoped() *weixinMpVerifyDo {
-	return w.withDO(w.DO.Unscoped())
+func (c weixinMpVerifyDo) Assign(attrs ...field.AssignExpr) *weixinMpVerifyDo {
+	return c.withDO(c.DO.Assign(attrs...))
 }
 
-func (w weixinMpVerifyDo) Create(values ...*domain.WeixinMpVerify) error {
+func (c weixinMpVerifyDo) ReadDB() *weixinMpVerifyDo {
+	return c.withDO(c.Clauses(dbresolver.Read))
+}
+
+func (c weixinMpVerifyDo) WriteDB() *weixinMpVerifyDo {
+	return c.withDO(c.Clauses(dbresolver.Write))
+}
+
+func (c weixinMpVerifyDo) Create(values ...*domain.WeixinMpVerify) error {
 	if len(values) == 0 {
 		return nil
 	}
-	return w.DO.Create(values)
+	return c.DO.Create(values)
 }
 
-func (w weixinMpVerifyDo) CreateInBatches(values []*domain.WeixinMpVerify, batchSize int) error {
-	return w.DO.CreateInBatches(values, batchSize)
+func (c weixinMpVerifyDo) CreateInBatches(values []*domain.WeixinMpVerify, batchSize int) error {
+	return c.DO.CreateInBatches(values, batchSize)
 }
 
 // Save : !!! underlying implementation is different with GORM
 // The method is equivalent to executing the statement: db.Clauses(clause.OnConflict{UpdateAll: true}).Create(values)
-func (w weixinMpVerifyDo) Save(values ...*domain.WeixinMpVerify) error {
+func (c weixinMpVerifyDo) Save(values ...*domain.WeixinMpVerify) error {
 	if len(values) == 0 {
 		return nil
 	}
-	return w.DO.Save(values)
+	return c.DO.Save(values)
 }
 
-func (w weixinMpVerifyDo) First() (*domain.WeixinMpVerify, error) {
-	if result, err := w.DO.First(); err != nil {
+func (c weixinMpVerifyDo) First() (*domain.WeixinMpVerify, error) {
+	if result, err := c.DO.First(); err != nil {
 		return nil, err
 	} else {
 		return result.(*domain.WeixinMpVerify), nil
 	}
 }
 
-func (w weixinMpVerifyDo) Take() (*domain.WeixinMpVerify, error) {
-	if result, err := w.DO.Take(); err != nil {
+func (c weixinMpVerifyDo) Take() (*domain.WeixinMpVerify, error) {
+	if result, err := c.DO.Take(); err != nil {
 		return nil, err
 	} else {
 		return result.(*domain.WeixinMpVerify), nil
 	}
 }
 
-func (w weixinMpVerifyDo) Last() (*domain.WeixinMpVerify, error) {
-	if result, err := w.DO.Last(); err != nil {
+func (c weixinMpVerifyDo) Last() (*domain.WeixinMpVerify, error) {
+	if result, err := c.DO.Last(); err != nil {
 		return nil, err
 	} else {
 		return result.(*domain.WeixinMpVerify), nil
 	}
 }
 
-func (w weixinMpVerifyDo) Find() ([]*domain.WeixinMpVerify, error) {
-	result, err := w.DO.Find()
+func (c weixinMpVerifyDo) Find() ([]*domain.WeixinMpVerify, error) {
+	result, err := c.DO.Find()
 	return result.([]*domain.WeixinMpVerify), err
 }
 
-func (w weixinMpVerifyDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*domain.WeixinMpVerify, err error) {
+func (c weixinMpVerifyDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*domain.WeixinMpVerify, err error) {
 	buf := make([]*domain.WeixinMpVerify, 0, batchSize)
-	err = w.DO.FindInBatches(&buf, batchSize, func(tx gen.Dao, batch int) error {
+	err = c.DO.FindInBatches(&buf, batchSize, func(tx gen.Dao, batch int) error {
 		defer func() { results = append(results, buf...) }()
 		return fc(tx, batch)
 	})
 	return results, err
 }
 
-func (w weixinMpVerifyDo) FindInBatches(result *[]*domain.WeixinMpVerify, batchSize int, fc func(tx gen.Dao, batch int) error) error {
-	return w.DO.FindInBatches(result, batchSize, fc)
+func (c weixinMpVerifyDo) FindInBatches(result *[]*domain.WeixinMpVerify, batchSize int, fc func(tx gen.Dao, batch int) error) error {
+	return c.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (w weixinMpVerifyDo) Attrs(attrs ...field.AssignExpr) *weixinMpVerifyDo {
-	return w.withDO(w.DO.Attrs(attrs...))
-}
-
-func (w weixinMpVerifyDo) Assign(attrs ...field.AssignExpr) *weixinMpVerifyDo {
-	return w.withDO(w.DO.Assign(attrs...))
-}
-
-func (w weixinMpVerifyDo) Joins(fields ...field.RelationField) *weixinMpVerifyDo {
+func (c weixinMpVerifyDo) Joins(fields ...field.RelationField) *weixinMpVerifyDo {
 	for _, _f := range fields {
-		w = *w.withDO(w.DO.Joins(_f))
+		c = *c.withDO(c.DO.Joins(_f))
 	}
-	return &w
+	return &c
 }
 
-func (w weixinMpVerifyDo) Preload(fields ...field.RelationField) *weixinMpVerifyDo {
+func (c weixinMpVerifyDo) Preload(fields ...field.RelationField) *weixinMpVerifyDo {
 	for _, _f := range fields {
-		w = *w.withDO(w.DO.Preload(_f))
+		c = *c.withDO(c.DO.Preload(_f))
 	}
-	return &w
+	return &c
 }
 
-func (w weixinMpVerifyDo) FirstOrInit() (*domain.WeixinMpVerify, error) {
-	if result, err := w.DO.FirstOrInit(); err != nil {
+func (c weixinMpVerifyDo) FirstOrInit() (*domain.WeixinMpVerify, error) {
+	if result, err := c.DO.FirstOrInit(); err != nil {
 		return nil, err
 	} else {
 		return result.(*domain.WeixinMpVerify), nil
 	}
 }
 
-func (w weixinMpVerifyDo) FirstOrCreate() (*domain.WeixinMpVerify, error) {
-	if result, err := w.DO.FirstOrCreate(); err != nil {
+func (c weixinMpVerifyDo) FirstOrCreate() (*domain.WeixinMpVerify, error) {
+	if result, err := c.DO.FirstOrCreate(); err != nil {
 		return nil, err
 	} else {
 		return result.(*domain.WeixinMpVerify), nil
 	}
 }
 
-func (w weixinMpVerifyDo) FindByPage(offset int, limit int) (result []*domain.WeixinMpVerify, count int64, err error) {
-	result, err = w.Offset(offset).Limit(limit).Find()
+func (c weixinMpVerifyDo) FindByPage(offset int, limit int) (result []*domain.WeixinMpVerify, count int64, err error) {
+	result, err = c.Offset(offset).Limit(limit).Find()
 	if err != nil {
 		return
 	}
@@ -349,29 +355,28 @@ func (w weixinMpVerifyDo) FindByPage(offset int, limit int) (result []*domain.We
 		return
 	}
 
-	count, err = w.Offset(-1).Limit(-1).Count()
+	count, err = c.Offset(-1).Limit(-1).Count()
 	return
 }
 
-func (w weixinMpVerifyDo) ScanByPage(result interface{}, offset int, limit int) (count int64, err error) {
-	count, err = w.Count()
+func (c weixinMpVerifyDo) ScanByPage(result interface{}, offset int, limit int) (count int64, err error) {
+	count, err = c.Count()
 	if err != nil {
 		return
 	}
-
-	err = w.Offset(offset).Limit(limit).Scan(result)
+	err = c.Offset(offset).Limit(limit).Scan(result)
 	return
 }
 
-func (w weixinMpVerifyDo) Scan(result interface{}) (err error) {
-	return w.DO.Scan(result)
+func (c weixinMpVerifyDo) Scan(result interface{}) (err error) {
+	return c.DO.Scan(result)
 }
 
-func (w weixinMpVerifyDo) Delete(models ...*domain.WeixinMpVerify) (result gen.ResultInfo, err error) {
-	return w.DO.Delete(models)
+func (c weixinMpVerifyDo) Delete(models ...*domain.WeixinMpVerify) (result gen.ResultInfo, err error) {
+	return c.DO.Delete(models)
 }
 
-func (w *weixinMpVerifyDo) withDO(do gen.Dao) *weixinMpVerifyDo {
-	w.DO = *do.(*gen.DO)
-	return w
+func (c *weixinMpVerifyDo) withDO(do gen.Dao) *weixinMpVerifyDo {
+	c.DO = *do.(*gen.DO)
+	return c
 }

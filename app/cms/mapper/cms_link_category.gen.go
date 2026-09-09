@@ -10,10 +10,8 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"gorm.io/gorm/schema"
-
 	"gorm.io/gen"
 	"gorm.io/gen/field"
-
 	"gorm.io/plugin/dbresolver"
 
 	"haedu.gov.cn/cms/app/cms/domain"
@@ -49,6 +47,8 @@ func newCmsLinkCategory(db *gorm.DB, opts ...gen.DOOption) cmsLinkCategory {
 	_cmsLinkCategory.UpdateID = field.NewInt32(tableName, "update_id")
 	_cmsLinkCategory.UpdateName = field.NewString(tableName, "update_name")
 	_cmsLinkCategory.UpdateTime = field.NewTime(tableName, "update_time")
+	_cmsLinkCategory.TenantID = field.NewInt64(tableName, "tenant_id")
+	_cmsLinkCategory.Deleted = field.NewBool(tableName, "deleted")
 
 	_cmsLinkCategory.fillFieldMap()
 
@@ -58,29 +58,31 @@ func newCmsLinkCategory(db *gorm.DB, opts ...gen.DOOption) cmsLinkCategory {
 type cmsLinkCategory struct {
 	cmsLinkCategoryDo cmsLinkCategoryDo
 
-	ALL            field.Asterisk
-	CategoryID     field.Int64  // 主键
-	ParentID       field.Int64  // 父节点
-	SiteID         field.Int64  // 所属站点
-	ChannelID      field.Int64  // 所属频道
-	Title          field.String // 类别标题
-	CallIndex      field.String // 调用别名
-	LinkURL        field.String // 外部链接
-	ImgUrl1        field.String // 图片地址
-	ImgUrl2        field.String // 图片地址
-	SeoTitle       field.String // SEO标题
-	SeoKeyword     field.String // SEO关健字
+	ALL field.Asterisk
+	CategoryID field.Int64 // 主键
+	ParentID field.Int64 // 父节点
+	SiteID field.Int64 // 所属站点
+	ChannelID field.Int64 // 所属频道
+	Title field.String // 类别标题
+	CallIndex field.String // 调用别名
+	LinkURL field.String // 外部链接
+	ImgUrl1 field.String // 图片地址
+	ImgUrl2 field.String // 图片地址
+	SeoTitle field.String // SEO标题
+	SeoKeyword field.String // SEO关健字
 	SeoDescription field.String // SEO描述
-	Content        field.String // 详细内容
-	SortID         field.Int32  // 排序
-	Template       field.String // 模板路径
-	BelongTo       field.String // 归属
-	CreateID       field.Int32  // 创建人ID
-	CreateName     field.String // 创建人姓名
-	CreateTime     field.Time   // 创建时间
-	UpdateID       field.Int32  // 更新人ID
-	UpdateName     field.String // 更新人姓名
-	UpdateTime     field.Time   // 修改时间
+	Content field.String // 详细内容
+	SortID field.Int32 // 排序
+	Template field.String // 模板路径
+	BelongTo field.String // 归属
+	CreateID field.Int32 // 创建人ID
+	CreateName field.String // 创建人姓名
+	CreateTime field.Time // 创建时间
+	UpdateID field.Int32 // 更新人ID
+	UpdateName field.String // 更新人姓名
+	UpdateTime field.Time // 修改时间
+	TenantID field.Int64
+	Deleted field.Bool
 
 	fieldMap map[string]field.Expr
 }
@@ -119,6 +121,8 @@ func (c *cmsLinkCategory) updateTableName(table string) *cmsLinkCategory {
 	c.UpdateID = field.NewInt32(table, "update_id")
 	c.UpdateName = field.NewString(table, "update_name")
 	c.UpdateTime = field.NewTime(table, "update_time")
+	c.TenantID = field.NewInt64(table, "tenant_id")
+	c.Deleted = field.NewBool(table, "deleted")
 
 	c.fillFieldMap()
 
@@ -133,9 +137,7 @@ func (c cmsLinkCategory) TableName() string { return c.cmsLinkCategoryDo.TableNa
 
 func (c cmsLinkCategory) Alias() string { return c.cmsLinkCategoryDo.Alias() }
 
-func (c cmsLinkCategory) Columns(cols ...field.Expr) gen.Columns {
-	return c.cmsLinkCategoryDo.Columns(cols...)
-}
+func (c cmsLinkCategory) Columns(cols ...field.Expr) gen.Columns { return c.cmsLinkCategoryDo.Columns(cols...) }
 
 func (c *cmsLinkCategory) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := c.fieldMap[fieldName]
@@ -147,7 +149,7 @@ func (c *cmsLinkCategory) GetFieldByName(fieldName string) (field.OrderExpr, boo
 }
 
 func (c *cmsLinkCategory) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 22)
+	c.fieldMap = make(map[string]field.Expr, 24)
 	c.fieldMap["category_id"] = c.CategoryID
 	c.fieldMap["parent_id"] = c.ParentID
 	c.fieldMap["site_id"] = c.SiteID
@@ -170,6 +172,8 @@ func (c *cmsLinkCategory) fillFieldMap() {
 	c.fieldMap["update_id"] = c.UpdateID
 	c.fieldMap["update_name"] = c.UpdateName
 	c.fieldMap["update_time"] = c.UpdateTime
+	c.fieldMap["tenant_id"] = c.TenantID
+	c.fieldMap["deleted"] = c.Deleted
 }
 
 func (c cmsLinkCategory) clone(db *gorm.DB) cmsLinkCategory {
@@ -192,19 +196,11 @@ func (c cmsLinkCategoryDo) WithContext(ctx context.Context) *cmsLinkCategoryDo {
 	return c.withDO(c.DO.WithContext(ctx))
 }
 
-func (c cmsLinkCategoryDo) ReadDB() *cmsLinkCategoryDo {
-	return c.Clauses(dbresolver.Read)
-}
-
-func (c cmsLinkCategoryDo) WriteDB() *cmsLinkCategoryDo {
-	return c.Clauses(dbresolver.Write)
-}
-
 func (c cmsLinkCategoryDo) Session(config *gorm.Session) *cmsLinkCategoryDo {
 	return c.withDO(c.DO.Session(config))
 }
 
-func (c cmsLinkCategoryDo) Clauses(conds ...clause.Expression) *cmsLinkCategoryDo {
+func (c cmsLinkCategoryDo) clauses(conds ...clause.Expression) *cmsLinkCategoryDo {
 	return c.withDO(c.DO.Clauses(conds...))
 }
 
@@ -276,6 +272,22 @@ func (c cmsLinkCategoryDo) Unscoped() *cmsLinkCategoryDo {
 	return c.withDO(c.DO.Unscoped())
 }
 
+func (c cmsLinkCategoryDo) Attrs(attrs ...field.AssignExpr) *cmsLinkCategoryDo {
+	return c.withDO(c.DO.Attrs(attrs...))
+}
+
+func (c cmsLinkCategoryDo) Assign(attrs ...field.AssignExpr) *cmsLinkCategoryDo {
+	return c.withDO(c.DO.Assign(attrs...))
+}
+
+func (c cmsLinkCategoryDo) ReadDB() *cmsLinkCategoryDo {
+	return c.withDO(c.Clauses(dbresolver.Read))
+}
+
+func (c cmsLinkCategoryDo) WriteDB() *cmsLinkCategoryDo {
+	return c.withDO(c.Clauses(dbresolver.Write))
+}
+
 func (c cmsLinkCategoryDo) Create(values ...*domain.CmsLinkCategory) error {
 	if len(values) == 0 {
 		return nil
@@ -338,14 +350,6 @@ func (c cmsLinkCategoryDo) FindInBatches(result *[]*domain.CmsLinkCategory, batc
 	return c.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (c cmsLinkCategoryDo) Attrs(attrs ...field.AssignExpr) *cmsLinkCategoryDo {
-	return c.withDO(c.DO.Attrs(attrs...))
-}
-
-func (c cmsLinkCategoryDo) Assign(attrs ...field.AssignExpr) *cmsLinkCategoryDo {
-	return c.withDO(c.DO.Assign(attrs...))
-}
-
 func (c cmsLinkCategoryDo) Joins(fields ...field.RelationField) *cmsLinkCategoryDo {
 	for _, _f := range fields {
 		c = *c.withDO(c.DO.Joins(_f))
@@ -396,7 +400,6 @@ func (c cmsLinkCategoryDo) ScanByPage(result interface{}, offset int, limit int)
 	if err != nil {
 		return
 	}
-
 	err = c.Offset(offset).Limit(limit).Scan(result)
 	return
 }

@@ -42,7 +42,6 @@ func newCmsSiteChannel(db *gorm.DB, opts ...gen.DOOption) cmsSiteChannel {
 	_cmsSiteChannel.IsSpec = field.NewInt32(tableName, "is_spec")
 	_cmsSiteChannel.SortID = field.NewInt32(tableName, "sort_id")
 	_cmsSiteChannel.Status = field.NewInt32(tableName, "status")
-	_cmsSiteChannel.IsDeleted = field.NewBool(tableName, "is_deleted")
 	_cmsSiteChannel.IsShow = field.NewBool(tableName, "is_show")
 	_cmsSiteChannel.TmplChnl = field.NewString(tableName, "tmpl_chnl")
 	_cmsSiteChannel.TmplCat = field.NewString(tableName, "tmpl_cat")
@@ -54,6 +53,8 @@ func newCmsSiteChannel(db *gorm.DB, opts ...gen.DOOption) cmsSiteChannel {
 	_cmsSiteChannel.UpdateID = field.NewInt32(tableName, "update_id")
 	_cmsSiteChannel.UpdateName = field.NewString(tableName, "update_name")
 	_cmsSiteChannel.UpdateTime = field.NewTime(tableName, "update_time")
+	_cmsSiteChannel.TenantID = field.NewInt64(tableName, "tenant_id")
+	_cmsSiteChannel.Deleted = field.NewBool(tableName, "deleted")
 
 	_cmsSiteChannel.fillFieldMap()
 
@@ -63,36 +64,37 @@ func newCmsSiteChannel(db *gorm.DB, opts ...gen.DOOption) cmsSiteChannel {
 type cmsSiteChannel struct {
 	cmsSiteChannelDo cmsSiteChannelDo
 
-	ALL        field.Asterisk
-	ChannelID  field.Int64  // 主键
-	ParentID   field.Int64  // 父级ID
-	SiteID     field.Int64  // 站点ID
-	Name       field.String // 频道名称
-	Title      field.String // 频道标题
-	Kind       field.Int32  // 频道类型0文章1链接
-	ClassLayer field.Int32  // 类别深度
-	LinkURL    field.String // 外部链接
-	Target     field.String // 是否开启浏览器新窗口
-	ImgUrl1    field.String // 图片地址
-	ImgUrl2    field.String // 图片地址
-	IsComment  field.Int32  // 是否开启评论
-	IsAlbum    field.Int32  // 是否开启相册功能
-	IsAttach   field.Int32  // 是否开启附件功能
-	IsSpec     field.Int32  // 是否开启规格
-	SortID     field.Int32  // 排序
-	Status     field.Int32  // 状态0草稿1提交2审核通过3审核未通过4驳回
-	IsDeleted  field.Bool   // 删除标识
-	IsShow     field.Bool   // 是否显示:1显示，0隐藏
-	TmplChnl   field.String // 频道模板路径
-	TmplCat    field.String // 栏目模板路径
-	TmplLst    field.String // 列表模板路径
-	TmplDtl    field.String // 明细模板路径
-	CreateID   field.Int32  // 创建人ID
+	ALL field.Asterisk
+	ChannelID field.Int64 // 主键
+	ParentID field.Int64 // 父级ID
+	SiteID field.Int64 // 站点ID
+	Name field.String // 频道名称
+	Title field.String // 频道标题
+	Kind field.Int32 // 频道类型0文章1链接
+	ClassLayer field.Int32 // 类别深度
+	LinkURL field.String // 外部链接
+	Target field.String // 是否开启浏览器新窗口
+	ImgUrl1 field.String // 图片地址
+	ImgUrl2 field.String // 图片地址
+	IsComment field.Int32 // 是否开启评论
+	IsAlbum field.Int32 // 是否开启相册功能
+	IsAttach field.Int32 // 是否开启附件功能
+	IsSpec field.Int32 // 是否开启规格
+	SortID field.Int32 // 排序
+	Status field.Int32 // 状态0草稿1提交2审核通过3审核未通过4驳回
+	IsShow field.Bool // 是否显示:1显示，0隐藏
+	TmplChnl field.String // 频道模板路径
+	TmplCat field.String // 栏目模板路径
+	TmplLst field.String // 列表模板路径
+	TmplDtl field.String // 明细模板路径
+	CreateID field.Int32 // 创建人ID
 	CreateName field.String // 创建人姓名
-	CreateTime field.Time   // 创建时间
-	UpdateID   field.Int32  // 更新人ID
+	CreateTime field.Time // 创建时间
+	UpdateID field.Int32 // 更新人ID
 	UpdateName field.String // 更新人姓名
-	UpdateTime field.Time   // 修改时间
+	UpdateTime field.Time // 修改时间
+	TenantID field.Int64
+	Deleted field.Bool
 
 	fieldMap map[string]field.Expr
 }
@@ -126,7 +128,6 @@ func (c *cmsSiteChannel) updateTableName(table string) *cmsSiteChannel {
 	c.IsSpec = field.NewInt32(table, "is_spec")
 	c.SortID = field.NewInt32(table, "sort_id")
 	c.Status = field.NewInt32(table, "status")
-	c.IsDeleted = field.NewBool(table, "is_deleted")
 	c.IsShow = field.NewBool(table, "is_show")
 	c.TmplChnl = field.NewString(table, "tmpl_chnl")
 	c.TmplCat = field.NewString(table, "tmpl_cat")
@@ -138,6 +139,8 @@ func (c *cmsSiteChannel) updateTableName(table string) *cmsSiteChannel {
 	c.UpdateID = field.NewInt32(table, "update_id")
 	c.UpdateName = field.NewString(table, "update_name")
 	c.UpdateTime = field.NewTime(table, "update_time")
+	c.TenantID = field.NewInt64(table, "tenant_id")
+	c.Deleted = field.NewBool(table, "deleted")
 
 	c.fillFieldMap()
 
@@ -152,9 +155,7 @@ func (c cmsSiteChannel) TableName() string { return c.cmsSiteChannelDo.TableName
 
 func (c cmsSiteChannel) Alias() string { return c.cmsSiteChannelDo.Alias() }
 
-func (c cmsSiteChannel) Columns(cols ...field.Expr) gen.Columns {
-	return c.cmsSiteChannelDo.Columns(cols...)
-}
+func (c cmsSiteChannel) Columns(cols ...field.Expr) gen.Columns { return c.cmsSiteChannelDo.Columns(cols...) }
 
 func (c *cmsSiteChannel) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := c.fieldMap[fieldName]
@@ -166,7 +167,7 @@ func (c *cmsSiteChannel) GetFieldByName(fieldName string) (field.OrderExpr, bool
 }
 
 func (c *cmsSiteChannel) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 29)
+	c.fieldMap = make(map[string]field.Expr, 30)
 	c.fieldMap["channel_id"] = c.ChannelID
 	c.fieldMap["parent_id"] = c.ParentID
 	c.fieldMap["site_id"] = c.SiteID
@@ -184,7 +185,6 @@ func (c *cmsSiteChannel) fillFieldMap() {
 	c.fieldMap["is_spec"] = c.IsSpec
 	c.fieldMap["sort_id"] = c.SortID
 	c.fieldMap["status"] = c.Status
-	c.fieldMap["is_deleted"] = c.IsDeleted
 	c.fieldMap["is_show"] = c.IsShow
 	c.fieldMap["tmpl_chnl"] = c.TmplChnl
 	c.fieldMap["tmpl_cat"] = c.TmplCat
@@ -196,6 +196,8 @@ func (c *cmsSiteChannel) fillFieldMap() {
 	c.fieldMap["update_id"] = c.UpdateID
 	c.fieldMap["update_name"] = c.UpdateName
 	c.fieldMap["update_time"] = c.UpdateTime
+	c.fieldMap["tenant_id"] = c.TenantID
+	c.fieldMap["deleted"] = c.Deleted
 }
 
 func (c cmsSiteChannel) clone(db *gorm.DB) cmsSiteChannel {
@@ -218,19 +220,11 @@ func (c cmsSiteChannelDo) WithContext(ctx context.Context) *cmsSiteChannelDo {
 	return c.withDO(c.DO.WithContext(ctx))
 }
 
-func (c cmsSiteChannelDo) ReadDB() *cmsSiteChannelDo {
-	return c.Clauses(dbresolver.Read)
-}
-
-func (c cmsSiteChannelDo) WriteDB() *cmsSiteChannelDo {
-	return c.Clauses(dbresolver.Write)
-}
-
 func (c cmsSiteChannelDo) Session(config *gorm.Session) *cmsSiteChannelDo {
 	return c.withDO(c.DO.Session(config))
 }
 
-func (c cmsSiteChannelDo) Clauses(conds ...clause.Expression) *cmsSiteChannelDo {
+func (c cmsSiteChannelDo) clauses(conds ...clause.Expression) *cmsSiteChannelDo {
 	return c.withDO(c.DO.Clauses(conds...))
 }
 
@@ -302,6 +296,22 @@ func (c cmsSiteChannelDo) Unscoped() *cmsSiteChannelDo {
 	return c.withDO(c.DO.Unscoped())
 }
 
+func (c cmsSiteChannelDo) Attrs(attrs ...field.AssignExpr) *cmsSiteChannelDo {
+	return c.withDO(c.DO.Attrs(attrs...))
+}
+
+func (c cmsSiteChannelDo) Assign(attrs ...field.AssignExpr) *cmsSiteChannelDo {
+	return c.withDO(c.DO.Assign(attrs...))
+}
+
+func (c cmsSiteChannelDo) ReadDB() *cmsSiteChannelDo {
+	return c.withDO(c.Clauses(dbresolver.Read))
+}
+
+func (c cmsSiteChannelDo) WriteDB() *cmsSiteChannelDo {
+	return c.withDO(c.Clauses(dbresolver.Write))
+}
+
 func (c cmsSiteChannelDo) Create(values ...*domain.CmsSiteChannel) error {
 	if len(values) == 0 {
 		return nil
@@ -364,14 +374,6 @@ func (c cmsSiteChannelDo) FindInBatches(result *[]*domain.CmsSiteChannel, batchS
 	return c.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (c cmsSiteChannelDo) Attrs(attrs ...field.AssignExpr) *cmsSiteChannelDo {
-	return c.withDO(c.DO.Attrs(attrs...))
-}
-
-func (c cmsSiteChannelDo) Assign(attrs ...field.AssignExpr) *cmsSiteChannelDo {
-	return c.withDO(c.DO.Assign(attrs...))
-}
-
 func (c cmsSiteChannelDo) Joins(fields ...field.RelationField) *cmsSiteChannelDo {
 	for _, _f := range fields {
 		c = *c.withDO(c.DO.Joins(_f))
@@ -422,7 +424,6 @@ func (c cmsSiteChannelDo) ScanByPage(result interface{}, offset int, limit int) 
 	if err != nil {
 		return
 	}
-
 	err = c.Offset(offset).Limit(limit).Scan(result)
 	return
 }

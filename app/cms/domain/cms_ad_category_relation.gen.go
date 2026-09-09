@@ -11,6 +11,8 @@ type CmsAdCategoryRelation struct {
 	RelationID int64 `gorm:"column:relation_id;type:bigint;primaryKey;autoIncrement:true;comment:主键" json:"relation_id" form:"relation_id"`
 	CategoryID int64 `gorm:"column:category_id;type:bigint;comment:所属分类" json:"category_id" form:"category_id"`
 	AdID       int64 `gorm:"column:ad_id;type:bigint;comment:所属广告" json:"ad_id" form:"ad_id"`
+	TenantID int64 `gorm:"column:tenant_id;type:bigint;not null;default:0;index;comment:租户ID(多租户隔离)" json:"tenant_id" form:"tenant_id"`
+	Deleted bool `gorm:"column:deleted;type:tinyint(1);not null;default:0;index;comment:逻辑删除标识(0未删除1已删除)" json:"deleted" form:"deleted"`
 }
 
 // TableName CmsAdCategoryRelation's table name

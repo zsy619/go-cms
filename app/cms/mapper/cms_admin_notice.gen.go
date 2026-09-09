@@ -39,6 +39,8 @@ func newCmsAdminNotice(db *gorm.DB, opts ...gen.DOOption) cmsAdminNotice {
 	_cmsAdminNotice.UpdateID = field.NewInt32(tableName, "update_id")
 	_cmsAdminNotice.UpdateName = field.NewString(tableName, "update_name")
 	_cmsAdminNotice.UpdateTime = field.NewTime(tableName, "update_time")
+	_cmsAdminNotice.TenantID = field.NewInt64(tableName, "tenant_id")
+	_cmsAdminNotice.Deleted = field.NewBool(tableName, "deleted")
 
 	_cmsAdminNotice.fillFieldMap()
 
@@ -48,21 +50,23 @@ func newCmsAdminNotice(db *gorm.DB, opts ...gen.DOOption) cmsAdminNotice {
 type cmsAdminNotice struct {
 	cmsAdminNoticeDo cmsAdminNoticeDo
 
-	ALL         field.Asterisk
-	NoticeID    field.Int64  // 主键
-	Title       field.String // 内容标题
-	SubTitle    field.String // 副标题
-	Content     field.String // 详细内容
-	SortID      field.Int32  // 排序
-	IsTop       field.Int32  // 是否置顶
-	Status      field.Int32  // 状态0草稿1提交2审核通过3审核未通过4驳回
-	PublishTime field.Time   // 发布时间
-	CreateID    field.Int32  // 创建人ID
-	CreateName  field.String // 创建人姓名
-	CreateTime  field.Time   // 创建时间
-	UpdateID    field.Int32  // 更新人ID
-	UpdateName  field.String // 更新人姓名
-	UpdateTime  field.Time   // 修改时间
+	ALL field.Asterisk
+	NoticeID field.Int64
+	Title field.String
+	SubTitle field.String
+	Content field.String
+	SortID field.Int32
+	IsTop field.Int32
+	Status field.Int32
+	PublishTime field.Time
+	CreateID field.Int32
+	CreateName field.String
+	CreateTime field.Time
+	UpdateID field.Int32
+	UpdateName field.String
+	UpdateTime field.Time
+	TenantID field.Int64
+	Deleted field.Bool
 
 	fieldMap map[string]field.Expr
 }
@@ -93,6 +97,8 @@ func (c *cmsAdminNotice) updateTableName(table string) *cmsAdminNotice {
 	c.UpdateID = field.NewInt32(table, "update_id")
 	c.UpdateName = field.NewString(table, "update_name")
 	c.UpdateTime = field.NewTime(table, "update_time")
+	c.TenantID = field.NewInt64(table, "tenant_id")
+	c.Deleted = field.NewBool(table, "deleted")
 
 	c.fillFieldMap()
 
@@ -107,9 +113,7 @@ func (c cmsAdminNotice) TableName() string { return c.cmsAdminNoticeDo.TableName
 
 func (c cmsAdminNotice) Alias() string { return c.cmsAdminNoticeDo.Alias() }
 
-func (c cmsAdminNotice) Columns(cols ...field.Expr) gen.Columns {
-	return c.cmsAdminNoticeDo.Columns(cols...)
-}
+func (c cmsAdminNotice) Columns(cols ...field.Expr) gen.Columns { return c.cmsAdminNoticeDo.Columns(cols...) }
 
 func (c *cmsAdminNotice) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := c.fieldMap[fieldName]
@@ -121,7 +125,7 @@ func (c *cmsAdminNotice) GetFieldByName(fieldName string) (field.OrderExpr, bool
 }
 
 func (c *cmsAdminNotice) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 14)
+	c.fieldMap = make(map[string]field.Expr, 16)
 	c.fieldMap["notice_id"] = c.NoticeID
 	c.fieldMap["title"] = c.Title
 	c.fieldMap["sub_title"] = c.SubTitle
@@ -136,6 +140,8 @@ func (c *cmsAdminNotice) fillFieldMap() {
 	c.fieldMap["update_id"] = c.UpdateID
 	c.fieldMap["update_name"] = c.UpdateName
 	c.fieldMap["update_time"] = c.UpdateTime
+	c.fieldMap["tenant_id"] = c.TenantID
+	c.fieldMap["deleted"] = c.Deleted
 }
 
 func (c cmsAdminNotice) clone(db *gorm.DB) cmsAdminNotice {
@@ -158,19 +164,11 @@ func (c cmsAdminNoticeDo) WithContext(ctx context.Context) *cmsAdminNoticeDo {
 	return c.withDO(c.DO.WithContext(ctx))
 }
 
-func (c cmsAdminNoticeDo) ReadDB() *cmsAdminNoticeDo {
-	return c.Clauses(dbresolver.Read)
-}
-
-func (c cmsAdminNoticeDo) WriteDB() *cmsAdminNoticeDo {
-	return c.Clauses(dbresolver.Write)
-}
-
 func (c cmsAdminNoticeDo) Session(config *gorm.Session) *cmsAdminNoticeDo {
 	return c.withDO(c.DO.Session(config))
 }
 
-func (c cmsAdminNoticeDo) Clauses(conds ...clause.Expression) *cmsAdminNoticeDo {
+func (c cmsAdminNoticeDo) clauses(conds ...clause.Expression) *cmsAdminNoticeDo {
 	return c.withDO(c.DO.Clauses(conds...))
 }
 
@@ -242,6 +240,22 @@ func (c cmsAdminNoticeDo) Unscoped() *cmsAdminNoticeDo {
 	return c.withDO(c.DO.Unscoped())
 }
 
+func (c cmsAdminNoticeDo) Attrs(attrs ...field.AssignExpr) *cmsAdminNoticeDo {
+	return c.withDO(c.DO.Attrs(attrs...))
+}
+
+func (c cmsAdminNoticeDo) Assign(attrs ...field.AssignExpr) *cmsAdminNoticeDo {
+	return c.withDO(c.DO.Assign(attrs...))
+}
+
+func (c cmsAdminNoticeDo) ReadDB() *cmsAdminNoticeDo {
+	return c.withDO(c.Clauses(dbresolver.Read))
+}
+
+func (c cmsAdminNoticeDo) WriteDB() *cmsAdminNoticeDo {
+	return c.withDO(c.Clauses(dbresolver.Write))
+}
+
 func (c cmsAdminNoticeDo) Create(values ...*domain.CmsAdminNotice) error {
 	if len(values) == 0 {
 		return nil
@@ -304,14 +318,6 @@ func (c cmsAdminNoticeDo) FindInBatches(result *[]*domain.CmsAdminNotice, batchS
 	return c.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (c cmsAdminNoticeDo) Attrs(attrs ...field.AssignExpr) *cmsAdminNoticeDo {
-	return c.withDO(c.DO.Attrs(attrs...))
-}
-
-func (c cmsAdminNoticeDo) Assign(attrs ...field.AssignExpr) *cmsAdminNoticeDo {
-	return c.withDO(c.DO.Assign(attrs...))
-}
-
 func (c cmsAdminNoticeDo) Joins(fields ...field.RelationField) *cmsAdminNoticeDo {
 	for _, _f := range fields {
 		c = *c.withDO(c.DO.Joins(_f))
@@ -362,7 +368,6 @@ func (c cmsAdminNoticeDo) ScanByPage(result interface{}, offset int, limit int) 
 	if err != nil {
 		return
 	}
-
 	err = c.Offset(offset).Limit(limit).Scan(result)
 	return
 }

@@ -34,6 +34,8 @@ type CmsTag struct {
 	UpdateID       int32     `gorm:"column:update_id;type:int" json:"update_id" form:"update_id"`                                      // 更新人ID
 	UpdateName     string    `gorm:"column:update_name;type:varchar(64)" json:"update_name" form:"update_name"`                        // 更新人姓名
 	UpdateTime     time.Time `gorm:"column:update_time;type:datetime" json:"update_time" form:"update_time"`                           // 修改时间
+	TenantID int64 `gorm:"column:tenant_id;type:bigint;not null;default:0;index;comment:租户ID(多租户隔离)" json:"tenant_id" form:"tenant_id"`
+	Deleted bool `gorm:"column:deleted;type:tinyint(1);not null;default:0;index;comment:逻辑删除标识(0未删除1已删除)" json:"deleted" form:"deleted"`
 }
 
 // TableName CmsTag's table name

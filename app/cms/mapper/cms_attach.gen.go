@@ -46,6 +46,8 @@ func newCmsAttach(db *gorm.DB, opts ...gen.DOOption) cmsAttach {
 	_cmsAttach.UpdateID = field.NewInt32(tableName, "update_id")
 	_cmsAttach.UpdateName = field.NewString(tableName, "update_name")
 	_cmsAttach.UpdateTime = field.NewTime(tableName, "update_time")
+	_cmsAttach.TenantID = field.NewInt64(tableName, "tenant_id")
+	_cmsAttach.Deleted = field.NewBool(tableName, "deleted")
 
 	_cmsAttach.fillFieldMap()
 
@@ -55,28 +57,30 @@ func newCmsAttach(db *gorm.DB, opts ...gen.DOOption) cmsAttach {
 type cmsAttach struct {
 	cmsAttachDo cmsAttachDo
 
-	ALL          field.Asterisk
-	AttachID     field.Int64  // 主键
-	TableName_   field.String // 关联表名
-	RecordID     field.Int64  // 关联记录ID
-	TypeID       field.Int32  // 分类
-	Title        field.String // 标题
-	OriginalPath field.String // 原始地址
-	FilePath     field.String // 文件路径（带域名）
-	FileSize     field.Int64  // 文件大小(字节)
-	FileMime     field.String // Mime类型
-	FileExt      field.String // 文件扩展名
-	Point        field.Int32  // 下载所需积分
-	Click        field.Int32  // 下载次数
-	SortID       field.Int32  // 排序
-	IsShow       field.Int32  // 是否显示：1显示2隐藏
-	Remark       field.String // 附件描述
-	CreateID     field.Int32  // 创建人ID
-	CreateName   field.String // 创建人姓名
-	CreateTime   field.Time   // 创建时间
-	UpdateID     field.Int32  // 更新人ID
-	UpdateName   field.String // 更新人姓名
-	UpdateTime   field.Time   // 修改时间
+	ALL field.Asterisk
+	AttachID field.Int64
+	TableName_ field.String
+	RecordID field.Int64
+	TypeID field.Int32
+	Title field.String
+	OriginalPath field.String
+	FilePath field.String
+	FileSize field.Int64
+	FileMime field.String
+	FileExt field.String
+	Point field.Int32
+	Click field.Int32
+	SortID field.Int32
+	IsShow field.Int32
+	Remark field.String
+	CreateID field.Int32
+	CreateName field.String
+	CreateTime field.Time
+	UpdateID field.Int32
+	UpdateName field.String
+	UpdateTime field.Time
+	TenantID field.Int64
+	Deleted field.Bool
 
 	fieldMap map[string]field.Expr
 }
@@ -114,6 +118,8 @@ func (c *cmsAttach) updateTableName(table string) *cmsAttach {
 	c.UpdateID = field.NewInt32(table, "update_id")
 	c.UpdateName = field.NewString(table, "update_name")
 	c.UpdateTime = field.NewTime(table, "update_time")
+	c.TenantID = field.NewInt64(table, "tenant_id")
+	c.Deleted = field.NewBool(table, "deleted")
 
 	c.fillFieldMap()
 
@@ -140,7 +146,7 @@ func (c *cmsAttach) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *cmsAttach) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 21)
+	c.fieldMap = make(map[string]field.Expr, 23)
 	c.fieldMap["attach_id"] = c.AttachID
 	c.fieldMap["table_name"] = c.TableName_
 	c.fieldMap["record_id"] = c.RecordID
@@ -162,6 +168,8 @@ func (c *cmsAttach) fillFieldMap() {
 	c.fieldMap["update_id"] = c.UpdateID
 	c.fieldMap["update_name"] = c.UpdateName
 	c.fieldMap["update_time"] = c.UpdateTime
+	c.fieldMap["tenant_id"] = c.TenantID
+	c.fieldMap["deleted"] = c.Deleted
 }
 
 func (c cmsAttach) clone(db *gorm.DB) cmsAttach {
@@ -184,19 +192,11 @@ func (c cmsAttachDo) WithContext(ctx context.Context) *cmsAttachDo {
 	return c.withDO(c.DO.WithContext(ctx))
 }
 
-func (c cmsAttachDo) ReadDB() *cmsAttachDo {
-	return c.Clauses(dbresolver.Read)
-}
-
-func (c cmsAttachDo) WriteDB() *cmsAttachDo {
-	return c.Clauses(dbresolver.Write)
-}
-
 func (c cmsAttachDo) Session(config *gorm.Session) *cmsAttachDo {
 	return c.withDO(c.DO.Session(config))
 }
 
-func (c cmsAttachDo) Clauses(conds ...clause.Expression) *cmsAttachDo {
+func (c cmsAttachDo) clauses(conds ...clause.Expression) *cmsAttachDo {
 	return c.withDO(c.DO.Clauses(conds...))
 }
 
@@ -268,6 +268,22 @@ func (c cmsAttachDo) Unscoped() *cmsAttachDo {
 	return c.withDO(c.DO.Unscoped())
 }
 
+func (c cmsAttachDo) Attrs(attrs ...field.AssignExpr) *cmsAttachDo {
+	return c.withDO(c.DO.Attrs(attrs...))
+}
+
+func (c cmsAttachDo) Assign(attrs ...field.AssignExpr) *cmsAttachDo {
+	return c.withDO(c.DO.Assign(attrs...))
+}
+
+func (c cmsAttachDo) ReadDB() *cmsAttachDo {
+	return c.withDO(c.Clauses(dbresolver.Read))
+}
+
+func (c cmsAttachDo) WriteDB() *cmsAttachDo {
+	return c.withDO(c.Clauses(dbresolver.Write))
+}
+
 func (c cmsAttachDo) Create(values ...*domain.CmsAttach) error {
 	if len(values) == 0 {
 		return nil
@@ -330,14 +346,6 @@ func (c cmsAttachDo) FindInBatches(result *[]*domain.CmsAttach, batchSize int, f
 	return c.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (c cmsAttachDo) Attrs(attrs ...field.AssignExpr) *cmsAttachDo {
-	return c.withDO(c.DO.Attrs(attrs...))
-}
-
-func (c cmsAttachDo) Assign(attrs ...field.AssignExpr) *cmsAttachDo {
-	return c.withDO(c.DO.Assign(attrs...))
-}
-
 func (c cmsAttachDo) Joins(fields ...field.RelationField) *cmsAttachDo {
 	for _, _f := range fields {
 		c = *c.withDO(c.DO.Joins(_f))
@@ -388,7 +396,6 @@ func (c cmsAttachDo) ScanByPage(result interface{}, offset int, limit int) (coun
 	if err != nil {
 		return
 	}
-
 	err = c.Offset(offset).Limit(limit).Scan(result)
 	return
 }

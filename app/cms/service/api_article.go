@@ -134,17 +134,17 @@ func (svc *ApiArticle) CategoryGet(channel_name, call_index string) ([]*service_
 	}
 	list := make([]*service_model.ApiCategoryGetModel, 0)
 	_, do := mapper.CmsArticleCategoryDo()
-	sqlSelect := "b.`name` as channel_name,b.title as channel_title,a.category_id,a.parent_id,a.site_id,a.channel_id,a.title,a.call_index,a.class_layer,a.link_url,a.img_url1,a.img_url2,a.sort_id,a.is_show,a.is_search,a.is_deleted"
+	sqlSelect := "b.`name` as channel_name,b.title as channel_title,a.category_id,a.parent_id,a.site_id,a.channel_id,a.title,a.call_index,a.class_layer,a.link_url,a.img_url1,a.img_url2,a.sort_id,a.is_show,a.is_search,a.deleted"
 	sql := ""
 	if channel_name != "" {
-		sql = "SELECT " + sqlSelect + " FROM cms_article_category a LEFT JOIN cms_site_channel b ON a.channel_id=b.channel_id WHERE a.is_deleted=0 AND a.`status`=2 AND a.`is_show`=1 " +
+		sql = "SELECT " + sqlSelect + " FROM cms_article_category a LEFT JOIN cms_site_channel b ON a.channel_id=b.channel_id WHERE a.deleted=0 AND a.`status`=2 AND a.`is_show`=1 " +
 			xgeneric.IFF(channel_name == "", "", " AND b.`name`='"+channel_name+"'") +
 			" ORDER BY a.sort_id"
 	} else {
 		sql = "SELECT " + sqlSelect + " FROM cms_article_category a" +
 			" LEFT JOIN cms_article_category c ON a.parent_id=c.category_id" +
 			" LEFT JOIN cms_site_channel b ON a.channel_id=b.channel_id" +
-			" WHERE a.is_deleted=0 AND a.`status`=2 AND a.`is_show`=1 " +
+			" WHERE a.deleted=0 AND a.`status`=2 AND a.`is_show`=1 " +
 			xgeneric.IFF(call_index == "", "", " AND c.`call_index`='"+call_index+"'") +
 			" ORDER BY a.sort_id"
 	}
@@ -173,14 +173,14 @@ func (svc *ApiArticle) CategoryFind(category_id int64, call_index string) (*serv
 	find := &service_model.ApiCategoryFindModel{}
 	_, do := mapper.CmsArticleCategoryDo()
 	sqlSelect := `b.name as channel_name,b.title as channel_title` +
-		`,a.category_id,a.parent_id,a.site_id,a.channel_id,a.title,a.call_index,a.class_layer,a.link_url,a.target,a.img_url1,a.img_url2,a.sort_id,a.is_show,a.is_search,a.is_deleted,a.seo_title,a.seo_keyword,a.seo_description,a.content` +
+		`,a.category_id,a.parent_id,a.site_id,a.channel_id,a.title,a.call_index,a.class_layer,a.link_url,a.target,a.img_url1,a.img_url2,a.sort_id,a.is_show,a.is_search,a.deleted,a.seo_title,a.seo_keyword,a.seo_description,a.content` +
 		`,case when a.tmpl_cat='' then b.tmpl_cat else a.tmpl_cat end tmpl_cat,case when a.tmpl_lst='' then b.tmpl_lst else a.tmpl_lst end tmpl_lst,case when a.tmpl_dtl='' then b.tmpl_dtl else a.tmpl_dtl end tmpl_dtl` +
 		`,c.flag as site_flag`
 
 	sql := `SELECT ` + sqlSelect + ` FROM cms_article_category a` +
 		` LEFT JOIN cms_site_channel b ON a.channel_id=b.channel_id` +
 		` LEFT JOIN cms_site c ON b.site_id=a.site_id` +
-		` WHERE a.is_deleted=0 AND a.status=2 AND a.is_show=1` +
+		` WHERE a.deleted=0 AND a.status=2 AND a.is_show=1` +
 		xgeneric.IFF(category_id > 0, ` AND a.category_id=`+strconv.FormatInt(category_id, 10), ``) +
 		xgeneric.IFF(call_index != "", ` AND a.call_index='`+call_index+`'`, ``)
 	err := do.UnderlyingDB().Raw(sql).Scan(&find).Error
@@ -360,7 +360,7 @@ func (svc *ApiArticle) ArticleFind(call_index string, article_id int64) (*servic
 	}
 	field := `a.*,b.call_index as category_call_index,b.title as category_title,b.link_url as category_link_url,c.name as channel_name,c.title as channel_title,case when b.tmpl_dtl='' then c.tmpl_dtl else b.tmpl_dtl end tmpl_dtl`
 	sql := `SELECT ` + field + ` FROM cms_article a LEFT JOIN cms_article_category b ON a.category_id = b.category_id LEFT JOIN cms_site_channel c ON a.channel_id = c.channel_id`
-	sql += ` WHERE a.article_id=? AND a.is_deleted=0 AND a.status=2 AND b.status=2`
+	sql += ` WHERE a.article_id=? AND a.deleted=0 AND a.status=2 AND b.status=2`
 	list := &service_model.ApiArticleOneModel{}
 	if err := do.Debug().UnderlyingDB().Raw(sql, article_id).Scan(&list).Error; err != nil {
 		logs.Error("Get", err.Error())
@@ -380,7 +380,7 @@ func (svc *ApiArticle) ArticleFind(call_index string, article_id int64) (*servic
 
 	propertyMdl, propertyDo := mapper.CmsArticlePropertyDo()
 	propertys := []*service_model.ApiPropertyModel{}
-	if err := propertyDo.Where(propertyMdl.ArticleID.Eq(article_id), propertyMdl.IsDeleted.Is(false)).Order(propertyMdl.SortID).Scan(&propertys); err != nil {
+	if err := propertyDo.Where(propertyMdl.ArticleID.Eq(article_id), propertyMdl.Deleted.Is(false)).Order(propertyMdl.SortID).Scan(&propertys); err != nil {
 		propertys = []*service_model.ApiPropertyModel{}
 	}
 
@@ -399,7 +399,7 @@ func (svc *ApiArticle) PrevNext(call_index string, category_id, article_id int64
 	field := `a.*` +
 		`,b.call_index as category_call_index,b.title as category_title,b.link_url as category_link_url,c.name as channel_name,c.title as channel_title,case when b.tmpl_dtl='' then c.tmpl_dtl else b.tmpl_dtl end tmpl_dtl`
 	sql := `SELECT ` + field + ` FROM cms_article a LEFT JOIN cms_article_category b ON a.category_id = b.category_id LEFT JOIN cms_site_channel c ON a.channel_id = c.channel_id`
-	sql += ` WHERE a.is_deleted=0 AND a.status=2 AND b.status=2` +
+	sql += ` WHERE a.deleted=0 AND a.status=2 AND b.status=2` +
 		xgeneric.IFF(category_id <= 0, "", " AND b.category_id="+strconv.FormatInt(category_id, 10)) +
 		xgeneric.IFF(call_index == "", "", " AND b.call_index='"+call_index+"'") +
 		` AND a.article_id<? ORDER BY a.sort_id DESC LIMIT 1`
@@ -408,7 +408,7 @@ func (svc *ApiArticle) PrevNext(call_index string, category_id, article_id int64
 		logs.Error("PrevNext", err.Error())
 	}
 	sql = `SELECT ` + field + ` FROM cms_article a LEFT JOIN cms_article_category b ON a.category_id = b.category_id LEFT JOIN cms_site_channel c ON a.channel_id = c.channel_id`
-	sql += ` WHERE a.is_deleted=0 AND a.status=2 AND b.status=2` +
+	sql += ` WHERE a.deleted=0 AND a.status=2 AND b.status=2` +
 		xgeneric.IFF(category_id <= 0, "", " AND b.category_id="+strconv.FormatInt(category_id, 10)) +
 		xgeneric.IFF(call_index == "", "", " AND b.call_index='"+call_index+"'") +
 		` AND a.article_id>? ORDER BY a.sort_id ASC LIMIT 1`
@@ -431,14 +431,14 @@ func (svc *ApiArticle) Article(call_index string, article_id int64) (*service_mo
 	sql := `SELECT ` + field + ` FROM cms_article a LEFT JOIN cms_article_category b ON a.category_id = b.category_id LEFT JOIN cms_site_channel c ON a.channel_id = c.channel_id`
 	list := &service_model.ApiArticleOneModel{}
 	if call_index != "" {
-		sql += ` WHERE a.call_index=? AND a.is_deleted=0 AND a.status=2 AND b.status=2`
+		sql += ` WHERE a.call_index=? AND a.deleted=0 AND a.status=2 AND b.status=2`
 		if err := do.Debug().UnderlyingDB().Raw(sql, call_index).Scan(&list).Error; err != nil {
 			logs.Error("Get", err.Error())
 			return list, err
 		}
 		return list, nil
 	}
-	sql += ` WHERE a.article_id=? AND a.is_deleted=0 AND a.status=2 AND b.status=2`
+	sql += ` WHERE a.article_id=? AND a.deleted=0 AND a.status=2 AND b.status=2`
 	if err := do.Debug().UnderlyingDB().Raw(sql, article_id).Scan(&list).Error; err != nil {
 		logs.Error("Get", err.Error())
 		return list, err
@@ -557,5 +557,5 @@ func (svc *ApiArticle) Property(page, limit int, parentId, articleId int64, call
 	if title != "" {
 		do = do.Where(mdl.Title.Like("%" + title + "%"))
 	}
-	return do.Where(mdl.IsDeleted.Is(false)).Order(mdl.SortID).FindByPage((page-1)*limit, limit)
+	return do.Where(mdl.Deleted.Is(false)).Order(mdl.SortID).FindByPage((page-1)*limit, limit)
 }

@@ -28,6 +28,8 @@ func newCmsAdminRoleSite(db *gorm.DB, opts ...gen.DOOption) cmsAdminRoleSite {
 	_cmsAdminRoleSite.ValueID = field.NewInt64(tableName, "value_id")
 	_cmsAdminRoleSite.RoleID = field.NewInt64(tableName, "role_id")
 	_cmsAdminRoleSite.SiteID = field.NewInt64(tableName, "site_id")
+	_cmsAdminRoleSite.TenantID = field.NewInt64(tableName, "tenant_id")
+	_cmsAdminRoleSite.Deleted = field.NewBool(tableName, "deleted")
 
 	_cmsAdminRoleSite.fillFieldMap()
 
@@ -37,10 +39,12 @@ func newCmsAdminRoleSite(db *gorm.DB, opts ...gen.DOOption) cmsAdminRoleSite {
 type cmsAdminRoleSite struct {
 	cmsAdminRoleSiteDo cmsAdminRoleSiteDo
 
-	ALL     field.Asterisk
-	ValueID field.Int64 // 主键
-	RoleID  field.Int64 // 角色
-	SiteID  field.Int64 // 站点
+	ALL field.Asterisk
+	ValueID field.Int64
+	RoleID field.Int64
+	SiteID field.Int64
+	TenantID field.Int64
+	Deleted field.Bool
 
 	fieldMap map[string]field.Expr
 }
@@ -60,6 +64,8 @@ func (c *cmsAdminRoleSite) updateTableName(table string) *cmsAdminRoleSite {
 	c.ValueID = field.NewInt64(table, "value_id")
 	c.RoleID = field.NewInt64(table, "role_id")
 	c.SiteID = field.NewInt64(table, "site_id")
+	c.TenantID = field.NewInt64(table, "tenant_id")
+	c.Deleted = field.NewBool(table, "deleted")
 
 	c.fillFieldMap()
 
@@ -74,9 +80,7 @@ func (c cmsAdminRoleSite) TableName() string { return c.cmsAdminRoleSiteDo.Table
 
 func (c cmsAdminRoleSite) Alias() string { return c.cmsAdminRoleSiteDo.Alias() }
 
-func (c cmsAdminRoleSite) Columns(cols ...field.Expr) gen.Columns {
-	return c.cmsAdminRoleSiteDo.Columns(cols...)
-}
+func (c cmsAdminRoleSite) Columns(cols ...field.Expr) gen.Columns { return c.cmsAdminRoleSiteDo.Columns(cols...) }
 
 func (c *cmsAdminRoleSite) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := c.fieldMap[fieldName]
@@ -88,10 +92,12 @@ func (c *cmsAdminRoleSite) GetFieldByName(fieldName string) (field.OrderExpr, bo
 }
 
 func (c *cmsAdminRoleSite) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 3)
+	c.fieldMap = make(map[string]field.Expr, 5)
 	c.fieldMap["value_id"] = c.ValueID
 	c.fieldMap["role_id"] = c.RoleID
 	c.fieldMap["site_id"] = c.SiteID
+	c.fieldMap["tenant_id"] = c.TenantID
+	c.fieldMap["deleted"] = c.Deleted
 }
 
 func (c cmsAdminRoleSite) clone(db *gorm.DB) cmsAdminRoleSite {
@@ -114,19 +120,11 @@ func (c cmsAdminRoleSiteDo) WithContext(ctx context.Context) *cmsAdminRoleSiteDo
 	return c.withDO(c.DO.WithContext(ctx))
 }
 
-func (c cmsAdminRoleSiteDo) ReadDB() *cmsAdminRoleSiteDo {
-	return c.Clauses(dbresolver.Read)
-}
-
-func (c cmsAdminRoleSiteDo) WriteDB() *cmsAdminRoleSiteDo {
-	return c.Clauses(dbresolver.Write)
-}
-
 func (c cmsAdminRoleSiteDo) Session(config *gorm.Session) *cmsAdminRoleSiteDo {
 	return c.withDO(c.DO.Session(config))
 }
 
-func (c cmsAdminRoleSiteDo) Clauses(conds ...clause.Expression) *cmsAdminRoleSiteDo {
+func (c cmsAdminRoleSiteDo) clauses(conds ...clause.Expression) *cmsAdminRoleSiteDo {
 	return c.withDO(c.DO.Clauses(conds...))
 }
 
@@ -198,6 +196,22 @@ func (c cmsAdminRoleSiteDo) Unscoped() *cmsAdminRoleSiteDo {
 	return c.withDO(c.DO.Unscoped())
 }
 
+func (c cmsAdminRoleSiteDo) Attrs(attrs ...field.AssignExpr) *cmsAdminRoleSiteDo {
+	return c.withDO(c.DO.Attrs(attrs...))
+}
+
+func (c cmsAdminRoleSiteDo) Assign(attrs ...field.AssignExpr) *cmsAdminRoleSiteDo {
+	return c.withDO(c.DO.Assign(attrs...))
+}
+
+func (c cmsAdminRoleSiteDo) ReadDB() *cmsAdminRoleSiteDo {
+	return c.withDO(c.Clauses(dbresolver.Read))
+}
+
+func (c cmsAdminRoleSiteDo) WriteDB() *cmsAdminRoleSiteDo {
+	return c.withDO(c.Clauses(dbresolver.Write))
+}
+
 func (c cmsAdminRoleSiteDo) Create(values ...*domain.CmsAdminRoleSite) error {
 	if len(values) == 0 {
 		return nil
@@ -260,14 +274,6 @@ func (c cmsAdminRoleSiteDo) FindInBatches(result *[]*domain.CmsAdminRoleSite, ba
 	return c.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (c cmsAdminRoleSiteDo) Attrs(attrs ...field.AssignExpr) *cmsAdminRoleSiteDo {
-	return c.withDO(c.DO.Attrs(attrs...))
-}
-
-func (c cmsAdminRoleSiteDo) Assign(attrs ...field.AssignExpr) *cmsAdminRoleSiteDo {
-	return c.withDO(c.DO.Assign(attrs...))
-}
-
 func (c cmsAdminRoleSiteDo) Joins(fields ...field.RelationField) *cmsAdminRoleSiteDo {
 	for _, _f := range fields {
 		c = *c.withDO(c.DO.Joins(_f))
@@ -318,7 +324,6 @@ func (c cmsAdminRoleSiteDo) ScanByPage(result interface{}, offset int, limit int
 	if err != nil {
 		return
 	}
-
 	err = c.Offset(offset).Limit(limit).Scan(result)
 	return
 }

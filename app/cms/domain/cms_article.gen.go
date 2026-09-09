@@ -43,7 +43,6 @@ type CmsArticle struct {
 	IsHot          int32     `gorm:"column:is_hot;type:tinyint;comment:是否热门" json:"is_hot" form:"is_hot"`
 	IsSlide        int32     `gorm:"column:is_slide;type:tinyint;comment:是否幻灯片" json:"is_slide" form:"is_slide"`
 	StaticURL      string    `gorm:"column:static_url;type:varchar(256);comment:静态链接" json:"static_url" form:"static_url"`
-	IsDeleted      bool      `gorm:"column:is_deleted;type:tinyint(1);comment:删除标识" json:"is_deleted" form:"is_deleted"`
 	Status         int32     `gorm:"column:status;type:tinyint;comment:状态0草稿1提交2审核通过3审核未通过4驳回" json:"status" form:"status"`
 	PublishTime    time.Time `gorm:"column:publish_time;type:datetime;default:CURRENT_TIMESTAMP;comment:发布时间" json:"publish_time" form:"publish_time"`
 	Topic          string    `gorm:"column:topic;type:varchar(256);comment:文章专题" json:"topic" form:"topic"`
@@ -55,6 +54,9 @@ type CmsArticle struct {
 	UpdateID       int32     `gorm:"column:update_id;type:int;comment:更新人ID" json:"update_id" form:"update_id"`
 	UpdateName     string    `gorm:"column:update_name;type:varchar(64);comment:更新人姓名" json:"update_name" form:"update_name"`
 	UpdateTime     time.Time `gorm:"column:update_time;type:datetime;comment:修改时间" json:"update_time" form:"update_time"`
+
+	TenantID int64 `gorm:"column:tenant_id;type:bigint;not null;default:0;index;comment:租户ID(多租户隔离)" json:"tenant_id" form:"tenant_id"`
+	Deleted bool `gorm:"column:deleted;type:tinyint(1);not null;default:0;index;comment:逻辑删除标识(0未删除1已删除)" json:"deleted" form:"deleted"`
 }
 
 // TableName CmsArticle's table name

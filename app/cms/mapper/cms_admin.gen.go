@@ -49,9 +49,10 @@ func newCmsAdmin(db *gorm.DB, opts ...gen.DOOption) cmsAdmin {
 	_cmsAdmin.SortID = field.NewInt32(tableName, "sort_id")
 	_cmsAdmin.LastIP = field.NewString(tableName, "last_ip")
 	_cmsAdmin.LastTime = field.NewString(tableName, "last_time")
-	_cmsAdmin.IsDeleted = field.NewBool(tableName, "is_deleted")
 	_cmsAdmin.CreateTime = field.NewTime(tableName, "create_time")
 	_cmsAdmin.UpdateTime = field.NewTime(tableName, "update_time")
+	_cmsAdmin.TenantID = field.NewInt64(tableName, "tenant_id")
+	_cmsAdmin.Deleted = field.NewBool(tableName, "deleted")
 
 	_cmsAdmin.fillFieldMap()
 
@@ -61,34 +62,35 @@ func newCmsAdmin(db *gorm.DB, opts ...gen.DOOption) cmsAdmin {
 type cmsAdmin struct {
 	cmsAdminDo cmsAdminDo
 
-	ALL            field.Asterisk
-	UserID         field.Int64  // 主键
-	RoleID         field.Int64  // 角色ID
-	RoleType       field.String // 角色类型supper超级用户,system系统用户
-	RealName       field.String // 姓名
-	NickName       field.String // 昵称
-	IDCard         field.String // 身份证号
-	Sex            field.Int32  // 性别（1男2女0未知）
-	UserName       field.String // 用户名(登录名),保持系统唯一
-	UserNumber     field.String // 其他唯一特征标识：如教职工的工号或学生的学号
-	Password       field.String // 密码
-	PasswordSalt   field.String // 密码的Hash值
-	PasswordFormat field.Int32  // 密码加密格式 0不加密 1默认加密 2MD5类型
-	Email          field.String // 邮箱
-	Telphone       field.String // 固话
-	Mobile         field.String // 手机号码
-	MobilePin      field.String // 手机PIN码
-	UserType       field.Int32  // 用户类别(0管理员），根据业务定义其他类型（如1学生2教职工；如1商家2卖家）
-	Enabled        field.Bool   // 是否可用:1可用 0禁用
-	Remark         field.String // 描述
-	Avatar         field.String // 会员头像
-	IsAudit        field.Int32  // 启用发布审核
-	SortID         field.Int32  // 排序
-	LastIP         field.String // 最后登录IP
-	LastTime       field.String // 最后登录时间
-	IsDeleted      field.Bool   // 删除标识
-	CreateTime     field.Time   // 创建时间
-	UpdateTime     field.Time   // 修改时间
+	ALL field.Asterisk
+	UserID field.Int64
+	RoleID field.Int64
+	RoleType field.String
+	RealName field.String
+	NickName field.String
+	IDCard field.String
+	Sex field.Int32
+	UserName field.String
+	UserNumber field.String
+	Password field.String
+	PasswordSalt field.String
+	PasswordFormat field.Int32
+	Email field.String
+	Telphone field.String
+	Mobile field.String
+	MobilePin field.String
+	UserType field.Int32
+	Enabled field.Bool
+	Remark field.String
+	Avatar field.String
+	IsAudit field.Int32
+	SortID field.Int32
+	LastIP field.String
+	LastTime field.String
+	CreateTime field.Time
+	UpdateTime field.Time
+	TenantID field.Int64
+	Deleted field.Bool
 
 	fieldMap map[string]field.Expr
 }
@@ -129,16 +131,19 @@ func (c *cmsAdmin) updateTableName(table string) *cmsAdmin {
 	c.SortID = field.NewInt32(table, "sort_id")
 	c.LastIP = field.NewString(table, "last_ip")
 	c.LastTime = field.NewString(table, "last_time")
-	c.IsDeleted = field.NewBool(table, "is_deleted")
 	c.CreateTime = field.NewTime(table, "create_time")
 	c.UpdateTime = field.NewTime(table, "update_time")
+	c.TenantID = field.NewInt64(table, "tenant_id")
+	c.Deleted = field.NewBool(table, "deleted")
 
 	c.fillFieldMap()
 
 	return c
 }
 
-func (c *cmsAdmin) WithContext(ctx context.Context) *cmsAdminDo { return c.cmsAdminDo.WithContext(ctx) }
+func (c *cmsAdmin) WithContext(ctx context.Context) *cmsAdminDo {
+	return c.cmsAdminDo.WithContext(ctx)
+}
 
 func (c cmsAdmin) TableName() string { return c.cmsAdminDo.TableName() }
 
@@ -156,7 +161,7 @@ func (c *cmsAdmin) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *cmsAdmin) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 27)
+	c.fieldMap = make(map[string]field.Expr, 28)
 	c.fieldMap["user_id"] = c.UserID
 	c.fieldMap["role_id"] = c.RoleID
 	c.fieldMap["role_type"] = c.RoleType
@@ -181,9 +186,10 @@ func (c *cmsAdmin) fillFieldMap() {
 	c.fieldMap["sort_id"] = c.SortID
 	c.fieldMap["last_ip"] = c.LastIP
 	c.fieldMap["last_time"] = c.LastTime
-	c.fieldMap["is_deleted"] = c.IsDeleted
 	c.fieldMap["create_time"] = c.CreateTime
 	c.fieldMap["update_time"] = c.UpdateTime
+	c.fieldMap["tenant_id"] = c.TenantID
+	c.fieldMap["deleted"] = c.Deleted
 }
 
 func (c cmsAdmin) clone(db *gorm.DB) cmsAdmin {
@@ -206,19 +212,11 @@ func (c cmsAdminDo) WithContext(ctx context.Context) *cmsAdminDo {
 	return c.withDO(c.DO.WithContext(ctx))
 }
 
-func (c cmsAdminDo) ReadDB() *cmsAdminDo {
-	return c.Clauses(dbresolver.Read)
-}
-
-func (c cmsAdminDo) WriteDB() *cmsAdminDo {
-	return c.Clauses(dbresolver.Write)
-}
-
 func (c cmsAdminDo) Session(config *gorm.Session) *cmsAdminDo {
 	return c.withDO(c.DO.Session(config))
 }
 
-func (c cmsAdminDo) Clauses(conds ...clause.Expression) *cmsAdminDo {
+func (c cmsAdminDo) clauses(conds ...clause.Expression) *cmsAdminDo {
 	return c.withDO(c.DO.Clauses(conds...))
 }
 
@@ -290,6 +288,22 @@ func (c cmsAdminDo) Unscoped() *cmsAdminDo {
 	return c.withDO(c.DO.Unscoped())
 }
 
+func (c cmsAdminDo) Attrs(attrs ...field.AssignExpr) *cmsAdminDo {
+	return c.withDO(c.DO.Attrs(attrs...))
+}
+
+func (c cmsAdminDo) Assign(attrs ...field.AssignExpr) *cmsAdminDo {
+	return c.withDO(c.DO.Assign(attrs...))
+}
+
+func (c cmsAdminDo) ReadDB() *cmsAdminDo {
+	return c.withDO(c.Clauses(dbresolver.Read))
+}
+
+func (c cmsAdminDo) WriteDB() *cmsAdminDo {
+	return c.withDO(c.Clauses(dbresolver.Write))
+}
+
 func (c cmsAdminDo) Create(values ...*domain.CmsAdmin) error {
 	if len(values) == 0 {
 		return nil
@@ -352,14 +366,6 @@ func (c cmsAdminDo) FindInBatches(result *[]*domain.CmsAdmin, batchSize int, fc 
 	return c.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (c cmsAdminDo) Attrs(attrs ...field.AssignExpr) *cmsAdminDo {
-	return c.withDO(c.DO.Attrs(attrs...))
-}
-
-func (c cmsAdminDo) Assign(attrs ...field.AssignExpr) *cmsAdminDo {
-	return c.withDO(c.DO.Assign(attrs...))
-}
-
 func (c cmsAdminDo) Joins(fields ...field.RelationField) *cmsAdminDo {
 	for _, _f := range fields {
 		c = *c.withDO(c.DO.Joins(_f))
@@ -410,7 +416,6 @@ func (c cmsAdminDo) ScanByPage(result interface{}, offset int, limit int) (count
 	if err != nil {
 		return
 	}
-
 	err = c.Offset(offset).Limit(limit).Scan(result)
 	return
 }

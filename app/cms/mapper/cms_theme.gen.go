@@ -10,10 +10,8 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"gorm.io/gorm/schema"
-
 	"gorm.io/gen"
 	"gorm.io/gen/field"
-
 	"gorm.io/plugin/dbresolver"
 
 	"haedu.gov.cn/cms/app/cms/domain"
@@ -45,6 +43,8 @@ func newCmsTheme(db *gorm.DB, opts ...gen.DOOption) cmsTheme {
 	_cmsTheme.UpdateID = field.NewInt32(tableName, "update_id")
 	_cmsTheme.UpdateName = field.NewString(tableName, "update_name")
 	_cmsTheme.UpdateTime = field.NewTime(tableName, "update_time")
+	_cmsTheme.TenantID = field.NewInt64(tableName, "tenant_id")
+	_cmsTheme.Deleted = field.NewBool(tableName, "deleted")
 
 	_cmsTheme.fillFieldMap()
 
@@ -54,25 +54,27 @@ func newCmsTheme(db *gorm.DB, opts ...gen.DOOption) cmsTheme {
 type cmsTheme struct {
 	cmsThemeDo cmsThemeDo
 
-	ALL        field.Asterisk
-	ThemeID    field.Int64  // 模板ID
-	Name       field.String // 主题名称
-	Type       field.Int32  // 类别(0系统；1高校)，根据业务需求添加
-	Title      field.String // 主题标题
-	IsDefault  field.Bool   // 是否默认主题
-	IsSystem   field.Bool   // 是否系统主题
-	Thumb      field.String // 主题预览图
-	Version    field.String // 版本
-	Author     field.String // 作者
-	Remark     field.String // 主题描述
-	SortID     field.Int32  // 排序
-	BelongTo   field.String // 归属
-	CreateID   field.Int32  // 创建人ID
+	ALL field.Asterisk
+	ThemeID field.Int64 // 模板ID
+	Name field.String // 主题名称
+	Type field.Int32 // 类别(0系统；1高校)，根据业务需求添加
+	Title field.String // 主题标题
+	IsDefault field.Bool // 是否默认主题
+	IsSystem field.Bool // 是否系统主题
+	Thumb field.String // 主题预览图
+	Version field.String // 版本
+	Author field.String // 作者
+	Remark field.String // 主题描述
+	SortID field.Int32 // 排序
+	BelongTo field.String // 归属
+	CreateID field.Int32 // 创建人ID
 	CreateName field.String // 创建人姓名
-	CreateTime field.Time   // 创建时间
-	UpdateID   field.Int32  // 更新人ID
+	CreateTime field.Time // 创建时间
+	UpdateID field.Int32 // 更新人ID
 	UpdateName field.String // 更新人姓名
-	UpdateTime field.Time   // 修改时间
+	UpdateTime field.Time // 修改时间
+	TenantID field.Int64
+	Deleted field.Bool
 
 	fieldMap map[string]field.Expr
 }
@@ -107,13 +109,17 @@ func (c *cmsTheme) updateTableName(table string) *cmsTheme {
 	c.UpdateID = field.NewInt32(table, "update_id")
 	c.UpdateName = field.NewString(table, "update_name")
 	c.UpdateTime = field.NewTime(table, "update_time")
+	c.TenantID = field.NewInt64(table, "tenant_id")
+	c.Deleted = field.NewBool(table, "deleted")
 
 	c.fillFieldMap()
 
 	return c
 }
 
-func (c *cmsTheme) WithContext(ctx context.Context) *cmsThemeDo { return c.cmsThemeDo.WithContext(ctx) }
+func (c *cmsTheme) WithContext(ctx context.Context) *cmsThemeDo {
+	return c.cmsThemeDo.WithContext(ctx)
+}
 
 func (c cmsTheme) TableName() string { return c.cmsThemeDo.TableName() }
 
@@ -131,7 +137,7 @@ func (c *cmsTheme) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *cmsTheme) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 18)
+	c.fieldMap = make(map[string]field.Expr, 20)
 	c.fieldMap["theme_id"] = c.ThemeID
 	c.fieldMap["name"] = c.Name
 	c.fieldMap["type"] = c.Type
@@ -150,6 +156,8 @@ func (c *cmsTheme) fillFieldMap() {
 	c.fieldMap["update_id"] = c.UpdateID
 	c.fieldMap["update_name"] = c.UpdateName
 	c.fieldMap["update_time"] = c.UpdateTime
+	c.fieldMap["tenant_id"] = c.TenantID
+	c.fieldMap["deleted"] = c.Deleted
 }
 
 func (c cmsTheme) clone(db *gorm.DB) cmsTheme {
@@ -172,19 +180,11 @@ func (c cmsThemeDo) WithContext(ctx context.Context) *cmsThemeDo {
 	return c.withDO(c.DO.WithContext(ctx))
 }
 
-func (c cmsThemeDo) ReadDB() *cmsThemeDo {
-	return c.Clauses(dbresolver.Read)
-}
-
-func (c cmsThemeDo) WriteDB() *cmsThemeDo {
-	return c.Clauses(dbresolver.Write)
-}
-
 func (c cmsThemeDo) Session(config *gorm.Session) *cmsThemeDo {
 	return c.withDO(c.DO.Session(config))
 }
 
-func (c cmsThemeDo) Clauses(conds ...clause.Expression) *cmsThemeDo {
+func (c cmsThemeDo) clauses(conds ...clause.Expression) *cmsThemeDo {
 	return c.withDO(c.DO.Clauses(conds...))
 }
 
@@ -256,6 +256,22 @@ func (c cmsThemeDo) Unscoped() *cmsThemeDo {
 	return c.withDO(c.DO.Unscoped())
 }
 
+func (c cmsThemeDo) Attrs(attrs ...field.AssignExpr) *cmsThemeDo {
+	return c.withDO(c.DO.Attrs(attrs...))
+}
+
+func (c cmsThemeDo) Assign(attrs ...field.AssignExpr) *cmsThemeDo {
+	return c.withDO(c.DO.Assign(attrs...))
+}
+
+func (c cmsThemeDo) ReadDB() *cmsThemeDo {
+	return c.withDO(c.Clauses(dbresolver.Read))
+}
+
+func (c cmsThemeDo) WriteDB() *cmsThemeDo {
+	return c.withDO(c.Clauses(dbresolver.Write))
+}
+
 func (c cmsThemeDo) Create(values ...*domain.CmsTheme) error {
 	if len(values) == 0 {
 		return nil
@@ -318,14 +334,6 @@ func (c cmsThemeDo) FindInBatches(result *[]*domain.CmsTheme, batchSize int, fc 
 	return c.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (c cmsThemeDo) Attrs(attrs ...field.AssignExpr) *cmsThemeDo {
-	return c.withDO(c.DO.Attrs(attrs...))
-}
-
-func (c cmsThemeDo) Assign(attrs ...field.AssignExpr) *cmsThemeDo {
-	return c.withDO(c.DO.Assign(attrs...))
-}
-
 func (c cmsThemeDo) Joins(fields ...field.RelationField) *cmsThemeDo {
 	for _, _f := range fields {
 		c = *c.withDO(c.DO.Joins(_f))
@@ -376,7 +384,6 @@ func (c cmsThemeDo) ScanByPage(result interface{}, offset int, limit int) (count
 	if err != nil {
 		return
 	}
-
 	err = c.Offset(offset).Limit(limit).Scan(result)
 	return
 }

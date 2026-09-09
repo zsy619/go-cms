@@ -10,10 +10,8 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"gorm.io/gorm/schema"
-
 	"gorm.io/gen"
 	"gorm.io/gen/field"
-
 	"gorm.io/plugin/dbresolver"
 
 	"haedu.gov.cn/cms/app/cms/domain"
@@ -43,6 +41,8 @@ func newCmsArticleComment(db *gorm.DB, opts ...gen.DOOption) cmsArticleComment {
 	_cmsArticleComment.ReplyUser = field.NewString(tableName, "reply_user")
 	_cmsArticleComment.ReplyContent = field.NewString(tableName, "reply_content")
 	_cmsArticleComment.ReplyTime = field.NewTime(tableName, "reply_time")
+	_cmsArticleComment.TenantID = field.NewInt64(tableName, "tenant_id")
+	_cmsArticleComment.Deleted = field.NewBool(tableName, "deleted")
 
 	_cmsArticleComment.fillFieldMap()
 
@@ -52,23 +52,25 @@ func newCmsArticleComment(db *gorm.DB, opts ...gen.DOOption) cmsArticleComment {
 type cmsArticleComment struct {
 	cmsArticleCommentDo cmsArticleCommentDo
 
-	ALL          field.Asterisk
-	CommentID    field.Int64  // 主键
-	ParentID     field.Int64  // 父评论ID
-	ArticleID    field.Int64  // 所属文章
-	SiteID       field.Int64  // 站点ID
-	ChannelID    field.Int64  // 频道ID
-	UserID       field.Int64  // 用户ID
-	UserName     field.String // 用户名
-	UserIP       field.String // 用户IP
-	Content      field.String // 评论内容
-	Status       field.Int32  // 状态0草稿1提交2审核通过3审核未通过4驳回
-	IsLock       field.Bool   // 是否锁定
-	AddTime      field.Time   // 发表时间
-	IsReply      field.Bool   // 是否已答复
-	ReplyUser    field.String // 回复户名
-	ReplyContent field.String // 答复内容
-	ReplyTime    field.Time   // 回复时间
+	ALL field.Asterisk
+	CommentID field.Int64
+	ParentID field.Int64
+	ArticleID field.Int64
+	SiteID field.Int64
+	ChannelID field.Int64
+	UserID field.Int64
+	UserName field.String
+	UserIP field.String
+	Content field.String
+	Status field.Int32
+	IsLock field.Bool
+	AddTime field.Time
+	IsReply field.Bool
+	ReplyUser field.String
+	ReplyContent field.String
+	ReplyTime field.Time
+	TenantID field.Int64
+	Deleted field.Bool
 
 	fieldMap map[string]field.Expr
 }
@@ -101,6 +103,8 @@ func (c *cmsArticleComment) updateTableName(table string) *cmsArticleComment {
 	c.ReplyUser = field.NewString(table, "reply_user")
 	c.ReplyContent = field.NewString(table, "reply_content")
 	c.ReplyTime = field.NewTime(table, "reply_time")
+	c.TenantID = field.NewInt64(table, "tenant_id")
+	c.Deleted = field.NewBool(table, "deleted")
 
 	c.fillFieldMap()
 
@@ -115,9 +119,7 @@ func (c cmsArticleComment) TableName() string { return c.cmsArticleCommentDo.Tab
 
 func (c cmsArticleComment) Alias() string { return c.cmsArticleCommentDo.Alias() }
 
-func (c cmsArticleComment) Columns(cols ...field.Expr) gen.Columns {
-	return c.cmsArticleCommentDo.Columns(cols...)
-}
+func (c cmsArticleComment) Columns(cols ...field.Expr) gen.Columns { return c.cmsArticleCommentDo.Columns(cols...) }
 
 func (c *cmsArticleComment) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := c.fieldMap[fieldName]
@@ -129,7 +131,7 @@ func (c *cmsArticleComment) GetFieldByName(fieldName string) (field.OrderExpr, b
 }
 
 func (c *cmsArticleComment) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 16)
+	c.fieldMap = make(map[string]field.Expr, 18)
 	c.fieldMap["comment_id"] = c.CommentID
 	c.fieldMap["parent_id"] = c.ParentID
 	c.fieldMap["article_id"] = c.ArticleID
@@ -146,6 +148,8 @@ func (c *cmsArticleComment) fillFieldMap() {
 	c.fieldMap["reply_user"] = c.ReplyUser
 	c.fieldMap["reply_content"] = c.ReplyContent
 	c.fieldMap["reply_time"] = c.ReplyTime
+	c.fieldMap["tenant_id"] = c.TenantID
+	c.fieldMap["deleted"] = c.Deleted
 }
 
 func (c cmsArticleComment) clone(db *gorm.DB) cmsArticleComment {
@@ -168,19 +172,11 @@ func (c cmsArticleCommentDo) WithContext(ctx context.Context) *cmsArticleComment
 	return c.withDO(c.DO.WithContext(ctx))
 }
 
-func (c cmsArticleCommentDo) ReadDB() *cmsArticleCommentDo {
-	return c.Clauses(dbresolver.Read)
-}
-
-func (c cmsArticleCommentDo) WriteDB() *cmsArticleCommentDo {
-	return c.Clauses(dbresolver.Write)
-}
-
 func (c cmsArticleCommentDo) Session(config *gorm.Session) *cmsArticleCommentDo {
 	return c.withDO(c.DO.Session(config))
 }
 
-func (c cmsArticleCommentDo) Clauses(conds ...clause.Expression) *cmsArticleCommentDo {
+func (c cmsArticleCommentDo) clauses(conds ...clause.Expression) *cmsArticleCommentDo {
 	return c.withDO(c.DO.Clauses(conds...))
 }
 
@@ -252,6 +248,22 @@ func (c cmsArticleCommentDo) Unscoped() *cmsArticleCommentDo {
 	return c.withDO(c.DO.Unscoped())
 }
 
+func (c cmsArticleCommentDo) Attrs(attrs ...field.AssignExpr) *cmsArticleCommentDo {
+	return c.withDO(c.DO.Attrs(attrs...))
+}
+
+func (c cmsArticleCommentDo) Assign(attrs ...field.AssignExpr) *cmsArticleCommentDo {
+	return c.withDO(c.DO.Assign(attrs...))
+}
+
+func (c cmsArticleCommentDo) ReadDB() *cmsArticleCommentDo {
+	return c.withDO(c.Clauses(dbresolver.Read))
+}
+
+func (c cmsArticleCommentDo) WriteDB() *cmsArticleCommentDo {
+	return c.withDO(c.Clauses(dbresolver.Write))
+}
+
 func (c cmsArticleCommentDo) Create(values ...*domain.CmsArticleComment) error {
 	if len(values) == 0 {
 		return nil
@@ -314,14 +326,6 @@ func (c cmsArticleCommentDo) FindInBatches(result *[]*domain.CmsArticleComment, 
 	return c.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (c cmsArticleCommentDo) Attrs(attrs ...field.AssignExpr) *cmsArticleCommentDo {
-	return c.withDO(c.DO.Attrs(attrs...))
-}
-
-func (c cmsArticleCommentDo) Assign(attrs ...field.AssignExpr) *cmsArticleCommentDo {
-	return c.withDO(c.DO.Assign(attrs...))
-}
-
 func (c cmsArticleCommentDo) Joins(fields ...field.RelationField) *cmsArticleCommentDo {
 	for _, _f := range fields {
 		c = *c.withDO(c.DO.Joins(_f))
@@ -372,7 +376,6 @@ func (c cmsArticleCommentDo) ScanByPage(result interface{}, offset int, limit in
 	if err != nil {
 		return
 	}
-
 	err = c.Offset(offset).Limit(limit).Scan(result)
 	return
 }

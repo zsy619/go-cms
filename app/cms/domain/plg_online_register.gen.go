@@ -27,13 +27,15 @@ type PlgOnlineRegister struct {
 	IsRead     int32     `gorm:"column:is_read;type:tinyint;comment:是否已读" json:"is_read" form:"is_read"`
 	Tags       string    `gorm:"column:tags;type:varchar(128);comment:标签" json:"tags" form:"tags"`
 	Remark     string    `gorm:"column:remark;type:varchar(128);comment:备注" json:"remark" form:"remark"`
-	IsDeleted  bool      `gorm:"column:is_deleted;type:tinyint(1);comment:删除标识" json:"is_deleted" form:"is_deleted"`
 	CreateID   int32     `gorm:"column:create_id;type:int;comment:创建人ID" json:"create_id" form:"create_id"`
 	CreateName string    `gorm:"column:create_name;type:varchar(64);comment:创建人姓名" json:"create_name" form:"create_name"`
 	CreateTime time.Time `gorm:"column:create_time;type:datetime;default:CURRENT_TIMESTAMP;comment:创建时间" json:"create_time" form:"create_time"`
 	UpdateID   int32     `gorm:"column:update_id;type:int;comment:更新人ID" json:"update_id" form:"update_id"`
 	UpdateName string    `gorm:"column:update_name;type:varchar(64);comment:更新人姓名" json:"update_name" form:"update_name"`
 	UpdateTime time.Time `gorm:"column:update_time;type:datetime;comment:修改时间" json:"update_time" form:"update_time"`
+
+	TenantID int64 `gorm:"column:tenant_id;type:bigint;not null;default:0;index;comment:租户ID(多租户隔离)" json:"tenant_id" form:"tenant_id"`
+	Deleted bool `gorm:"column:deleted;type:tinyint(1);not null;default:0;index;comment:逻辑删除标识(0未删除1已删除)" json:"deleted" form:"deleted"`
 }
 
 // TableName PlgOnlineRegister's table name

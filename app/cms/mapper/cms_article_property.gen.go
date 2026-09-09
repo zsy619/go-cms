@@ -10,10 +10,8 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"gorm.io/gorm/schema"
-
 	"gorm.io/gen"
 	"gorm.io/gen/field"
-
 	"gorm.io/plugin/dbresolver"
 
 	"haedu.gov.cn/cms/app/cms/domain"
@@ -35,7 +33,6 @@ func newCmsArticleProperty(db *gorm.DB, opts ...gen.DOOption) cmsArticleProperty
 	_cmsArticleProperty.Value = field.NewString(tableName, "value")
 	_cmsArticleProperty.SortID = field.NewInt32(tableName, "sort_id")
 	_cmsArticleProperty.Status = field.NewInt32(tableName, "status")
-	_cmsArticleProperty.IsDeleted = field.NewBool(tableName, "is_deleted")
 	_cmsArticleProperty.BelongTo = field.NewString(tableName, "belong_to")
 	_cmsArticleProperty.CreateID = field.NewInt32(tableName, "create_id")
 	_cmsArticleProperty.CreateName = field.NewString(tableName, "create_name")
@@ -43,6 +40,8 @@ func newCmsArticleProperty(db *gorm.DB, opts ...gen.DOOption) cmsArticleProperty
 	_cmsArticleProperty.UpdateID = field.NewInt32(tableName, "update_id")
 	_cmsArticleProperty.UpdateName = field.NewString(tableName, "update_name")
 	_cmsArticleProperty.UpdateTime = field.NewTime(tableName, "update_time")
+	_cmsArticleProperty.TenantID = field.NewInt64(tableName, "tenant_id")
+	_cmsArticleProperty.Deleted = field.NewBool(tableName, "deleted")
 
 	_cmsArticleProperty.fillFieldMap()
 
@@ -52,23 +51,24 @@ func newCmsArticleProperty(db *gorm.DB, opts ...gen.DOOption) cmsArticleProperty
 type cmsArticleProperty struct {
 	cmsArticlePropertyDo cmsArticlePropertyDo
 
-	ALL        field.Asterisk
-	PropertyID field.Int64  // 主键
-	ParentID   field.Int64  // 父ID
-	ArticleID  field.Int64  // 所属文章
-	Title      field.String // 属性标题
-	CallIndex  field.String // 调用别名
-	Value      field.String // 属性值
-	SortID     field.Int32  // 排序
-	Status     field.Int32  // 状态0草稿1提交2审核通过3审核未通过4驳回
-	IsDeleted  field.Bool   // 删除标识
-	BelongTo   field.String // 归属
-	CreateID   field.Int32  // 创建人ID
-	CreateName field.String // 创建人姓名
-	CreateTime field.Time   // 创建时间
-	UpdateID   field.Int32  // 更新人ID
-	UpdateName field.String // 更新人姓名
-	UpdateTime field.Time   // 修改时间
+	ALL field.Asterisk
+	PropertyID field.Int64
+	ParentID field.Int64
+	ArticleID field.Int64
+	Title field.String
+	CallIndex field.String
+	Value field.String
+	SortID field.Int32
+	Status field.Int32
+	BelongTo field.String
+	CreateID field.Int32
+	CreateName field.String
+	CreateTime field.Time
+	UpdateID field.Int32
+	UpdateName field.String
+	UpdateTime field.Time
+	TenantID field.Int64
+	Deleted field.Bool
 
 	fieldMap map[string]field.Expr
 }
@@ -93,7 +93,6 @@ func (c *cmsArticleProperty) updateTableName(table string) *cmsArticleProperty {
 	c.Value = field.NewString(table, "value")
 	c.SortID = field.NewInt32(table, "sort_id")
 	c.Status = field.NewInt32(table, "status")
-	c.IsDeleted = field.NewBool(table, "is_deleted")
 	c.BelongTo = field.NewString(table, "belong_to")
 	c.CreateID = field.NewInt32(table, "create_id")
 	c.CreateName = field.NewString(table, "create_name")
@@ -101,6 +100,8 @@ func (c *cmsArticleProperty) updateTableName(table string) *cmsArticleProperty {
 	c.UpdateID = field.NewInt32(table, "update_id")
 	c.UpdateName = field.NewString(table, "update_name")
 	c.UpdateTime = field.NewTime(table, "update_time")
+	c.TenantID = field.NewInt64(table, "tenant_id")
+	c.Deleted = field.NewBool(table, "deleted")
 
 	c.fillFieldMap()
 
@@ -115,9 +116,7 @@ func (c cmsArticleProperty) TableName() string { return c.cmsArticlePropertyDo.T
 
 func (c cmsArticleProperty) Alias() string { return c.cmsArticlePropertyDo.Alias() }
 
-func (c cmsArticleProperty) Columns(cols ...field.Expr) gen.Columns {
-	return c.cmsArticlePropertyDo.Columns(cols...)
-}
+func (c cmsArticleProperty) Columns(cols ...field.Expr) gen.Columns { return c.cmsArticlePropertyDo.Columns(cols...) }
 
 func (c *cmsArticleProperty) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := c.fieldMap[fieldName]
@@ -129,7 +128,7 @@ func (c *cmsArticleProperty) GetFieldByName(fieldName string) (field.OrderExpr, 
 }
 
 func (c *cmsArticleProperty) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 16)
+	c.fieldMap = make(map[string]field.Expr, 17)
 	c.fieldMap["property_id"] = c.PropertyID
 	c.fieldMap["parent_id"] = c.ParentID
 	c.fieldMap["article_id"] = c.ArticleID
@@ -138,7 +137,6 @@ func (c *cmsArticleProperty) fillFieldMap() {
 	c.fieldMap["value"] = c.Value
 	c.fieldMap["sort_id"] = c.SortID
 	c.fieldMap["status"] = c.Status
-	c.fieldMap["is_deleted"] = c.IsDeleted
 	c.fieldMap["belong_to"] = c.BelongTo
 	c.fieldMap["create_id"] = c.CreateID
 	c.fieldMap["create_name"] = c.CreateName
@@ -146,6 +144,8 @@ func (c *cmsArticleProperty) fillFieldMap() {
 	c.fieldMap["update_id"] = c.UpdateID
 	c.fieldMap["update_name"] = c.UpdateName
 	c.fieldMap["update_time"] = c.UpdateTime
+	c.fieldMap["tenant_id"] = c.TenantID
+	c.fieldMap["deleted"] = c.Deleted
 }
 
 func (c cmsArticleProperty) clone(db *gorm.DB) cmsArticleProperty {
@@ -168,19 +168,11 @@ func (c cmsArticlePropertyDo) WithContext(ctx context.Context) *cmsArticleProper
 	return c.withDO(c.DO.WithContext(ctx))
 }
 
-func (c cmsArticlePropertyDo) ReadDB() *cmsArticlePropertyDo {
-	return c.Clauses(dbresolver.Read)
-}
-
-func (c cmsArticlePropertyDo) WriteDB() *cmsArticlePropertyDo {
-	return c.Clauses(dbresolver.Write)
-}
-
 func (c cmsArticlePropertyDo) Session(config *gorm.Session) *cmsArticlePropertyDo {
 	return c.withDO(c.DO.Session(config))
 }
 
-func (c cmsArticlePropertyDo) Clauses(conds ...clause.Expression) *cmsArticlePropertyDo {
+func (c cmsArticlePropertyDo) clauses(conds ...clause.Expression) *cmsArticlePropertyDo {
 	return c.withDO(c.DO.Clauses(conds...))
 }
 
@@ -252,6 +244,22 @@ func (c cmsArticlePropertyDo) Unscoped() *cmsArticlePropertyDo {
 	return c.withDO(c.DO.Unscoped())
 }
 
+func (c cmsArticlePropertyDo) Attrs(attrs ...field.AssignExpr) *cmsArticlePropertyDo {
+	return c.withDO(c.DO.Attrs(attrs...))
+}
+
+func (c cmsArticlePropertyDo) Assign(attrs ...field.AssignExpr) *cmsArticlePropertyDo {
+	return c.withDO(c.DO.Assign(attrs...))
+}
+
+func (c cmsArticlePropertyDo) ReadDB() *cmsArticlePropertyDo {
+	return c.withDO(c.Clauses(dbresolver.Read))
+}
+
+func (c cmsArticlePropertyDo) WriteDB() *cmsArticlePropertyDo {
+	return c.withDO(c.Clauses(dbresolver.Write))
+}
+
 func (c cmsArticlePropertyDo) Create(values ...*domain.CmsArticleProperty) error {
 	if len(values) == 0 {
 		return nil
@@ -314,14 +322,6 @@ func (c cmsArticlePropertyDo) FindInBatches(result *[]*domain.CmsArticleProperty
 	return c.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (c cmsArticlePropertyDo) Attrs(attrs ...field.AssignExpr) *cmsArticlePropertyDo {
-	return c.withDO(c.DO.Attrs(attrs...))
-}
-
-func (c cmsArticlePropertyDo) Assign(attrs ...field.AssignExpr) *cmsArticlePropertyDo {
-	return c.withDO(c.DO.Assign(attrs...))
-}
-
 func (c cmsArticlePropertyDo) Joins(fields ...field.RelationField) *cmsArticlePropertyDo {
 	for _, _f := range fields {
 		c = *c.withDO(c.DO.Joins(_f))
@@ -372,7 +372,6 @@ func (c cmsArticlePropertyDo) ScanByPage(result interface{}, offset int, limit i
 	if err != nil {
 		return
 	}
-
 	err = c.Offset(offset).Limit(limit).Scan(result)
 	return
 }

@@ -41,7 +41,7 @@ func (svc *CmsSite) SiteSaveSortId(siteId int64, sortId int32) error {
  */
 func (svc *CmsSite) SitePaginate(page, limit int, name string, title string) ([]*domain.CmsSite, int64, error) {
 	site, siteDo := mapper.CmsSiteDo()
-	siteDo = siteDo.Where(site.IsDeleted.Is(false))
+	siteDo = siteDo.Where(site.Deleted.Is(false))
 	if name != "" {
 		siteDo = siteDo.Where(site.Name.Like("%" + name + "%"))
 	}
@@ -61,7 +61,7 @@ func (svc *CmsSite) SiteDelete(ids string) {
 		id := idarr[i]
 		id64, _ := strconv.ParseInt(id, 0, 64)
 		if id != "" {
-			_, _ = siteDo.Where(site.SiteID.Eq(id64)).Update(site.IsDeleted, true)
+			_, _ = siteDo.Where(site.SiteID.Eq(id64)).Update(site.Deleted, true)
 		}
 	}
 }
@@ -81,17 +81,17 @@ func (svc *CmsSite) SiteSave(mdl *domain.CmsSite, domains []string, remarks []st
 
 	site, siteDo := mapper.CmsSiteDo()
 	if mdl.IsDefault {
-		if count, _ := siteDo.Where(site.IsDefault.Is(true), site.IsDeleted.Is(false), site.SiteID.Neq(mdl.SiteID)).Count(); count > 0 {
+		if count, _ := siteDo.Where(site.IsDefault.Is(true), site.Deleted.Is(false), site.SiteID.Neq(mdl.SiteID)).Count(); count > 0 {
 			_, _ = siteDo.Where(site.IsDefault.Is(true)).UpdateColumns(map[string]interface{}{
 				site.IsDefault.ColumnName().String(): false,
 			})
 			// return errors.New("默认站点只能有一个，请修改后重试")
 		}
 	}
-	if count, _ := siteDo.Where(site.Name.Eq(mdl.Name), site.IsDeleted.Is(false), site.SiteID.Neq(mdl.SiteID)).Count(); count > 0 {
+	if count, _ := siteDo.Where(site.Name.Eq(mdl.Name), site.Deleted.Is(false), site.SiteID.Neq(mdl.SiteID)).Count(); count > 0 {
 		return errors.New("网站名称已存在，请修改后重试")
 	}
-	if count, _ := siteDo.Where(site.Flag.Eq(mdl.Flag), site.IsDeleted.Is(false), site.SiteID.Neq(mdl.SiteID)).Count(); count > 0 {
+	if count, _ := siteDo.Where(site.Flag.Eq(mdl.Flag), site.Deleted.Is(false), site.SiteID.Neq(mdl.SiteID)).Count(); count > 0 {
 		return errors.New("网站标识已存在，请修改后重试")
 	}
 	mdl.Logo2 = xgeneric.IFF(mdl.Logo1 == "", "", mdl.Logo2)

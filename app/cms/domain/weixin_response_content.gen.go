@@ -23,6 +23,8 @@ type WeixinResponseContent struct {
 	CreateTime     time.Time `gorm:"column:create_time;type:datetime;default:CURRENT_TIMESTAMP;comment:创建时间" json:"create_time" form:"create_time"`
 	XMLContent     string    `gorm:"column:xml_content;type:varchar(2048);comment:xml原始内容" json:"xml_content" form:"xml_content"`
 	AddTime        time.Time `gorm:"column:add_time;type:datetime;default:CURRENT_TIMESTAMP;comment:录入系统的时间" json:"add_time" form:"add_time"`
+	TenantID int64 `gorm:"column:tenant_id;type:bigint;not null;default:0;index;comment:租户ID(多租户隔离)" json:"tenant_id" form:"tenant_id"`
+	Deleted bool `gorm:"column:deleted;type:tinyint(1);not null;default:0;index;comment:逻辑删除标识(0未删除1已删除)" json:"deleted" form:"deleted"`
 }
 
 // TableName WeixinResponseContent's table name

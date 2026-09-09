@@ -46,6 +46,8 @@ func newCmsAdminNav(db *gorm.DB, opts ...gen.DOOption) cmsAdminNav {
 	_cmsAdminNav.UpdateID = field.NewInt32(tableName, "update_id")
 	_cmsAdminNav.UpdateName = field.NewString(tableName, "update_name")
 	_cmsAdminNav.UpdateTime = field.NewTime(tableName, "update_time")
+	_cmsAdminNav.TenantID = field.NewInt64(tableName, "tenant_id")
+	_cmsAdminNav.Deleted = field.NewBool(tableName, "deleted")
 
 	_cmsAdminNav.fillFieldMap()
 
@@ -55,28 +57,30 @@ func newCmsAdminNav(db *gorm.DB, opts ...gen.DOOption) cmsAdminNav {
 type cmsAdminNav struct {
 	cmsAdminNavDo cmsAdminNavDo
 
-	ALL        field.Asterisk
-	NavID      field.Int64  // 主键
-	ParentID   field.Int64  // 父节点
-	SiteID     field.Int64  // 站点ID
-	ChannelID  field.Int64  // 频道ID
-	Type       field.String // 导航类别
-	Name       field.String // 导航ID
-	Title      field.String // 标题
-	SubTitle   field.String // 副标题
-	IconURL    field.String // 图标地址
-	LinkURL    field.String // 链接地址
-	IsHide     field.Int32  // 是否隐藏0显示1隐藏
-	SortID     field.Int32  // 排序
-	Action     field.String // 权限资源
-	IsSys      field.Int32  // 是否系统默认0否1是
-	Remark     field.String // 备注
-	CreateID   field.Int32  // 创建人ID
-	CreateName field.String // 创建人姓名
-	CreateTime field.Time   // 创建时间
-	UpdateID   field.Int32  // 更新人ID
-	UpdateName field.String // 更新人姓名
-	UpdateTime field.Time   // 修改时间
+	ALL field.Asterisk
+	NavID field.Int64
+	ParentID field.Int64
+	SiteID field.Int64
+	ChannelID field.Int64
+	Type field.String
+	Name field.String
+	Title field.String
+	SubTitle field.String
+	IconURL field.String
+	LinkURL field.String
+	IsHide field.Int32
+	SortID field.Int32
+	Action field.String
+	IsSys field.Int32
+	Remark field.String
+	CreateID field.Int32
+	CreateName field.String
+	CreateTime field.Time
+	UpdateID field.Int32
+	UpdateName field.String
+	UpdateTime field.Time
+	TenantID field.Int64
+	Deleted field.Bool
 
 	fieldMap map[string]field.Expr
 }
@@ -114,6 +118,8 @@ func (c *cmsAdminNav) updateTableName(table string) *cmsAdminNav {
 	c.UpdateID = field.NewInt32(table, "update_id")
 	c.UpdateName = field.NewString(table, "update_name")
 	c.UpdateTime = field.NewTime(table, "update_time")
+	c.TenantID = field.NewInt64(table, "tenant_id")
+	c.Deleted = field.NewBool(table, "deleted")
 
 	c.fillFieldMap()
 
@@ -140,7 +146,7 @@ func (c *cmsAdminNav) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *cmsAdminNav) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 21)
+	c.fieldMap = make(map[string]field.Expr, 23)
 	c.fieldMap["nav_id"] = c.NavID
 	c.fieldMap["parent_id"] = c.ParentID
 	c.fieldMap["site_id"] = c.SiteID
@@ -162,6 +168,8 @@ func (c *cmsAdminNav) fillFieldMap() {
 	c.fieldMap["update_id"] = c.UpdateID
 	c.fieldMap["update_name"] = c.UpdateName
 	c.fieldMap["update_time"] = c.UpdateTime
+	c.fieldMap["tenant_id"] = c.TenantID
+	c.fieldMap["deleted"] = c.Deleted
 }
 
 func (c cmsAdminNav) clone(db *gorm.DB) cmsAdminNav {
@@ -184,19 +192,11 @@ func (c cmsAdminNavDo) WithContext(ctx context.Context) *cmsAdminNavDo {
 	return c.withDO(c.DO.WithContext(ctx))
 }
 
-func (c cmsAdminNavDo) ReadDB() *cmsAdminNavDo {
-	return c.Clauses(dbresolver.Read)
-}
-
-func (c cmsAdminNavDo) WriteDB() *cmsAdminNavDo {
-	return c.Clauses(dbresolver.Write)
-}
-
 func (c cmsAdminNavDo) Session(config *gorm.Session) *cmsAdminNavDo {
 	return c.withDO(c.DO.Session(config))
 }
 
-func (c cmsAdminNavDo) Clauses(conds ...clause.Expression) *cmsAdminNavDo {
+func (c cmsAdminNavDo) clauses(conds ...clause.Expression) *cmsAdminNavDo {
 	return c.withDO(c.DO.Clauses(conds...))
 }
 
@@ -268,6 +268,22 @@ func (c cmsAdminNavDo) Unscoped() *cmsAdminNavDo {
 	return c.withDO(c.DO.Unscoped())
 }
 
+func (c cmsAdminNavDo) Attrs(attrs ...field.AssignExpr) *cmsAdminNavDo {
+	return c.withDO(c.DO.Attrs(attrs...))
+}
+
+func (c cmsAdminNavDo) Assign(attrs ...field.AssignExpr) *cmsAdminNavDo {
+	return c.withDO(c.DO.Assign(attrs...))
+}
+
+func (c cmsAdminNavDo) ReadDB() *cmsAdminNavDo {
+	return c.withDO(c.Clauses(dbresolver.Read))
+}
+
+func (c cmsAdminNavDo) WriteDB() *cmsAdminNavDo {
+	return c.withDO(c.Clauses(dbresolver.Write))
+}
+
 func (c cmsAdminNavDo) Create(values ...*domain.CmsAdminNav) error {
 	if len(values) == 0 {
 		return nil
@@ -330,14 +346,6 @@ func (c cmsAdminNavDo) FindInBatches(result *[]*domain.CmsAdminNav, batchSize in
 	return c.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (c cmsAdminNavDo) Attrs(attrs ...field.AssignExpr) *cmsAdminNavDo {
-	return c.withDO(c.DO.Attrs(attrs...))
-}
-
-func (c cmsAdminNavDo) Assign(attrs ...field.AssignExpr) *cmsAdminNavDo {
-	return c.withDO(c.DO.Assign(attrs...))
-}
-
 func (c cmsAdminNavDo) Joins(fields ...field.RelationField) *cmsAdminNavDo {
 	for _, _f := range fields {
 		c = *c.withDO(c.DO.Joins(_f))
@@ -388,7 +396,6 @@ func (c cmsAdminNavDo) ScanByPage(result interface{}, offset int, limit int) (co
 	if err != nil {
 		return
 	}
-
 	err = c.Offset(offset).Limit(limit).Scan(result)
 	return
 }

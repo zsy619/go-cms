@@ -22,6 +22,8 @@ type CmsSiteChannelField struct {
 	ValidErrorMsg string `gorm:"column:valid_error_msg;type:varchar(128)" json:"valid_error_msg" form:"valid_error_msg"`    // 验证失败提示信息
 	ValidPattern  string `gorm:"column:valid_pattern;type:varchar(128)" json:"valid_pattern" form:"valid_pattern"`          // 验证正则表达式
 	SortID        int32  `gorm:"column:sort_id;type:int" json:"sort_id" form:"sort_id"`                                     // 排序
+	TenantID int64 `gorm:"column:tenant_id;type:bigint;not null;default:0;index;comment:租户ID(多租户隔离)" json:"tenant_id" form:"tenant_id"`
+	Deleted bool `gorm:"column:deleted;type:tinyint(1);not null;default:0;index;comment:逻辑删除标识(0未删除1已删除)" json:"deleted" form:"deleted"`
 }
 
 // TableName CmsSiteChannelField's table name

@@ -28,6 +28,8 @@ type CmsArticleComment struct {
 	ReplyUser    string    `gorm:"column:reply_user;type:varchar(64);comment:回复户名" json:"reply_user" form:"reply_user"`
 	ReplyContent string    `gorm:"column:reply_content;type:varchar(512);comment:答复内容" json:"reply_content" form:"reply_content"`
 	ReplyTime    time.Time `gorm:"column:reply_time;type:datetime;default:CURRENT_TIMESTAMP;comment:回复时间" json:"reply_time" form:"reply_time"`
+	TenantID int64 `gorm:"column:tenant_id;type:bigint;not null;default:0;index;comment:租户ID(多租户隔离)" json:"tenant_id" form:"tenant_id"`
+	Deleted bool `gorm:"column:deleted;type:tinyint(1);not null;default:0;index;comment:逻辑删除标识(0未删除1已删除)" json:"deleted" form:"deleted"`
 }
 
 // TableName CmsArticleComment's table name

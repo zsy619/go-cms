@@ -40,6 +40,8 @@ func newWeixinRequestContent(db *gorm.DB, opts ...gen.DOOption) weixinRequestCon
 	_weixinRequestContent.UpdateID = field.NewInt32(tableName, "update_id")
 	_weixinRequestContent.UpdateName = field.NewString(tableName, "update_name")
 	_weixinRequestContent.UpdateTime = field.NewTime(tableName, "update_time")
+	_weixinRequestContent.TenantID = field.NewInt64(tableName, "tenant_id")
+	_weixinRequestContent.Deleted = field.NewBool(tableName, "deleted")
 
 	_weixinRequestContent.fillFieldMap()
 
@@ -49,73 +51,75 @@ func newWeixinRequestContent(db *gorm.DB, opts ...gen.DOOption) weixinRequestCon
 type weixinRequestContent struct {
 	weixinRequestContentDo weixinRequestContentDo
 
-	ALL        field.Asterisk
-	ContentID  field.Int64  // 主键
-	RuleID     field.Int64  // 规则ID
-	Title      field.String // 回复标题
-	Content    field.String // 回复内容
-	LinkURL    field.String // 详情链接地址
-	ImgURL     field.String // 图片地址
-	MediaURL   field.String // 语音或视频地址
-	MediaHdURL field.String // 高清语音或者视频地址
-	SortID     field.Int32  // 排序
-	CreateID   field.Int32  // 创建人ID
-	CreateName field.String // 创建人姓名
-	CreateTime field.Time   // 创建时间
-	UpdateID   field.Int32  // 更新人ID
-	UpdateName field.String // 更新人姓名
-	UpdateTime field.Time   // 修改时间
+	ALL field.Asterisk
+	ContentID field.Int64
+	RuleID field.Int64
+	Title field.String
+	Content field.String
+	LinkURL field.String
+	ImgURL field.String
+	MediaURL field.String
+	MediaHdURL field.String
+	SortID field.Int32
+	CreateID field.Int32
+	CreateName field.String
+	CreateTime field.Time
+	UpdateID field.Int32
+	UpdateName field.String
+	UpdateTime field.Time
+	TenantID field.Int64
+	Deleted field.Bool
 
 	fieldMap map[string]field.Expr
 }
 
-func (w weixinRequestContent) Table(newTableName string) *weixinRequestContent {
-	w.weixinRequestContentDo.UseTable(newTableName)
-	return w.updateTableName(newTableName)
+func (c weixinRequestContent) Table(newTableName string) *weixinRequestContent {
+	c.weixinRequestContentDo.UseTable(newTableName)
+	return c.updateTableName(newTableName)
 }
 
-func (w weixinRequestContent) As(alias string) *weixinRequestContent {
-	w.weixinRequestContentDo.DO = *(w.weixinRequestContentDo.As(alias).(*gen.DO))
-	return w.updateTableName(alias)
+func (c weixinRequestContent) As(alias string) *weixinRequestContent {
+	c.weixinRequestContentDo.DO = *(c.weixinRequestContentDo.As(alias).(*gen.DO))
+	return c.updateTableName(alias)
 }
 
-func (w *weixinRequestContent) updateTableName(table string) *weixinRequestContent {
-	w.ALL = field.NewAsterisk(table)
-	w.ContentID = field.NewInt64(table, "content_id")
-	w.RuleID = field.NewInt64(table, "rule_id")
-	w.Title = field.NewString(table, "title")
-	w.Content = field.NewString(table, "content")
-	w.LinkURL = field.NewString(table, "link_url")
-	w.ImgURL = field.NewString(table, "img_url")
-	w.MediaURL = field.NewString(table, "media_url")
-	w.MediaHdURL = field.NewString(table, "media_hd_url")
-	w.SortID = field.NewInt32(table, "sort_id")
-	w.CreateID = field.NewInt32(table, "create_id")
-	w.CreateName = field.NewString(table, "create_name")
-	w.CreateTime = field.NewTime(table, "create_time")
-	w.UpdateID = field.NewInt32(table, "update_id")
-	w.UpdateName = field.NewString(table, "update_name")
-	w.UpdateTime = field.NewTime(table, "update_time")
+func (c *weixinRequestContent) updateTableName(table string) *weixinRequestContent {
+	c.ALL = field.NewAsterisk(table)
+	c.ContentID = field.NewInt64(table, "content_id")
+	c.RuleID = field.NewInt64(table, "rule_id")
+	c.Title = field.NewString(table, "title")
+	c.Content = field.NewString(table, "content")
+	c.LinkURL = field.NewString(table, "link_url")
+	c.ImgURL = field.NewString(table, "img_url")
+	c.MediaURL = field.NewString(table, "media_url")
+	c.MediaHdURL = field.NewString(table, "media_hd_url")
+	c.SortID = field.NewInt32(table, "sort_id")
+	c.CreateID = field.NewInt32(table, "create_id")
+	c.CreateName = field.NewString(table, "create_name")
+	c.CreateTime = field.NewTime(table, "create_time")
+	c.UpdateID = field.NewInt32(table, "update_id")
+	c.UpdateName = field.NewString(table, "update_name")
+	c.UpdateTime = field.NewTime(table, "update_time")
+	c.TenantID = field.NewInt64(table, "tenant_id")
+	c.Deleted = field.NewBool(table, "deleted")
 
-	w.fillFieldMap()
+	c.fillFieldMap()
 
-	return w
+	return c
 }
 
-func (w *weixinRequestContent) WithContext(ctx context.Context) *weixinRequestContentDo {
-	return w.weixinRequestContentDo.WithContext(ctx)
+func (c *weixinRequestContent) WithContext(ctx context.Context) *weixinRequestContentDo {
+	return c.weixinRequestContentDo.WithContext(ctx)
 }
 
-func (w weixinRequestContent) TableName() string { return w.weixinRequestContentDo.TableName() }
+func (c weixinRequestContent) TableName() string { return c.weixinRequestContentDo.TableName() }
 
-func (w weixinRequestContent) Alias() string { return w.weixinRequestContentDo.Alias() }
+func (c weixinRequestContent) Alias() string { return c.weixinRequestContentDo.Alias() }
 
-func (w weixinRequestContent) Columns(cols ...field.Expr) gen.Columns {
-	return w.weixinRequestContentDo.Columns(cols...)
-}
+func (c weixinRequestContent) Columns(cols ...field.Expr) gen.Columns { return c.weixinRequestContentDo.Columns(cols...) }
 
-func (w *weixinRequestContent) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
-	_f, ok := w.fieldMap[fieldName]
+func (c *weixinRequestContent) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
+	_f, ok := c.fieldMap[fieldName]
 	if !ok || _f == nil {
 		return nil, false
 	}
@@ -123,231 +127,233 @@ func (w *weixinRequestContent) GetFieldByName(fieldName string) (field.OrderExpr
 	return _oe, ok
 }
 
-func (w *weixinRequestContent) fillFieldMap() {
-	w.fieldMap = make(map[string]field.Expr, 15)
-	w.fieldMap["content_id"] = w.ContentID
-	w.fieldMap["rule_id"] = w.RuleID
-	w.fieldMap["title"] = w.Title
-	w.fieldMap["content"] = w.Content
-	w.fieldMap["link_url"] = w.LinkURL
-	w.fieldMap["img_url"] = w.ImgURL
-	w.fieldMap["media_url"] = w.MediaURL
-	w.fieldMap["media_hd_url"] = w.MediaHdURL
-	w.fieldMap["sort_id"] = w.SortID
-	w.fieldMap["create_id"] = w.CreateID
-	w.fieldMap["create_name"] = w.CreateName
-	w.fieldMap["create_time"] = w.CreateTime
-	w.fieldMap["update_id"] = w.UpdateID
-	w.fieldMap["update_name"] = w.UpdateName
-	w.fieldMap["update_time"] = w.UpdateTime
+func (c *weixinRequestContent) fillFieldMap() {
+	c.fieldMap = make(map[string]field.Expr, 17)
+	c.fieldMap["content_id"] = c.ContentID
+	c.fieldMap["rule_id"] = c.RuleID
+	c.fieldMap["title"] = c.Title
+	c.fieldMap["content"] = c.Content
+	c.fieldMap["link_url"] = c.LinkURL
+	c.fieldMap["img_url"] = c.ImgURL
+	c.fieldMap["media_url"] = c.MediaURL
+	c.fieldMap["media_hd_url"] = c.MediaHdURL
+	c.fieldMap["sort_id"] = c.SortID
+	c.fieldMap["create_id"] = c.CreateID
+	c.fieldMap["create_name"] = c.CreateName
+	c.fieldMap["create_time"] = c.CreateTime
+	c.fieldMap["update_id"] = c.UpdateID
+	c.fieldMap["update_name"] = c.UpdateName
+	c.fieldMap["update_time"] = c.UpdateTime
+	c.fieldMap["tenant_id"] = c.TenantID
+	c.fieldMap["deleted"] = c.Deleted
 }
 
-func (w weixinRequestContent) clone(db *gorm.DB) weixinRequestContent {
-	w.weixinRequestContentDo.ReplaceConnPool(db.Statement.ConnPool)
-	return w
+func (c weixinRequestContent) clone(db *gorm.DB) weixinRequestContent {
+	c.weixinRequestContentDo.ReplaceConnPool(db.Statement.ConnPool)
+	return c
 }
 
-func (w weixinRequestContent) replaceDB(db *gorm.DB) weixinRequestContent {
-	w.weixinRequestContentDo.ReplaceDB(db)
-	return w
+func (c weixinRequestContent) replaceDB(db *gorm.DB) weixinRequestContent {
+	c.weixinRequestContentDo.ReplaceDB(db)
+	return c
 }
 
 type weixinRequestContentDo struct{ gen.DO }
 
-func (w weixinRequestContentDo) Debug() *weixinRequestContentDo {
-	return w.withDO(w.DO.Debug())
+func (c weixinRequestContentDo) Debug() *weixinRequestContentDo {
+	return c.withDO(c.DO.Debug())
 }
 
-func (w weixinRequestContentDo) WithContext(ctx context.Context) *weixinRequestContentDo {
-	return w.withDO(w.DO.WithContext(ctx))
+func (c weixinRequestContentDo) WithContext(ctx context.Context) *weixinRequestContentDo {
+	return c.withDO(c.DO.WithContext(ctx))
 }
 
-func (w weixinRequestContentDo) ReadDB() *weixinRequestContentDo {
-	return w.Clauses(dbresolver.Read)
+func (c weixinRequestContentDo) Session(config *gorm.Session) *weixinRequestContentDo {
+	return c.withDO(c.DO.Session(config))
 }
 
-func (w weixinRequestContentDo) WriteDB() *weixinRequestContentDo {
-	return w.Clauses(dbresolver.Write)
+func (c weixinRequestContentDo) clauses(conds ...clause.Expression) *weixinRequestContentDo {
+	return c.withDO(c.DO.Clauses(conds...))
 }
 
-func (w weixinRequestContentDo) Session(config *gorm.Session) *weixinRequestContentDo {
-	return w.withDO(w.DO.Session(config))
+func (c weixinRequestContentDo) Returning(value interface{}, columns ...string) *weixinRequestContentDo {
+	return c.withDO(c.DO.Returning(value, columns...))
 }
 
-func (w weixinRequestContentDo) Clauses(conds ...clause.Expression) *weixinRequestContentDo {
-	return w.withDO(w.DO.Clauses(conds...))
+func (c weixinRequestContentDo) Not(conds ...gen.Condition) *weixinRequestContentDo {
+	return c.withDO(c.DO.Not(conds...))
 }
 
-func (w weixinRequestContentDo) Returning(value interface{}, columns ...string) *weixinRequestContentDo {
-	return w.withDO(w.DO.Returning(value, columns...))
+func (c weixinRequestContentDo) Or(conds ...gen.Condition) *weixinRequestContentDo {
+	return c.withDO(c.DO.Or(conds...))
 }
 
-func (w weixinRequestContentDo) Not(conds ...gen.Condition) *weixinRequestContentDo {
-	return w.withDO(w.DO.Not(conds...))
+func (c weixinRequestContentDo) Select(conds ...field.Expr) *weixinRequestContentDo {
+	return c.withDO(c.DO.Select(conds...))
 }
 
-func (w weixinRequestContentDo) Or(conds ...gen.Condition) *weixinRequestContentDo {
-	return w.withDO(w.DO.Or(conds...))
+func (c weixinRequestContentDo) Where(conds ...gen.Condition) *weixinRequestContentDo {
+	return c.withDO(c.DO.Where(conds...))
 }
 
-func (w weixinRequestContentDo) Select(conds ...field.Expr) *weixinRequestContentDo {
-	return w.withDO(w.DO.Select(conds...))
+func (c weixinRequestContentDo) Order(conds ...field.Expr) *weixinRequestContentDo {
+	return c.withDO(c.DO.Order(conds...))
 }
 
-func (w weixinRequestContentDo) Where(conds ...gen.Condition) *weixinRequestContentDo {
-	return w.withDO(w.DO.Where(conds...))
+func (c weixinRequestContentDo) Distinct(cols ...field.Expr) *weixinRequestContentDo {
+	return c.withDO(c.DO.Distinct(cols...))
 }
 
-func (w weixinRequestContentDo) Order(conds ...field.Expr) *weixinRequestContentDo {
-	return w.withDO(w.DO.Order(conds...))
+func (c weixinRequestContentDo) Omit(cols ...field.Expr) *weixinRequestContentDo {
+	return c.withDO(c.DO.Omit(cols...))
 }
 
-func (w weixinRequestContentDo) Distinct(cols ...field.Expr) *weixinRequestContentDo {
-	return w.withDO(w.DO.Distinct(cols...))
+func (c weixinRequestContentDo) Join(table schema.Tabler, on ...field.Expr) *weixinRequestContentDo {
+	return c.withDO(c.DO.Join(table, on...))
 }
 
-func (w weixinRequestContentDo) Omit(cols ...field.Expr) *weixinRequestContentDo {
-	return w.withDO(w.DO.Omit(cols...))
+func (c weixinRequestContentDo) LeftJoin(table schema.Tabler, on ...field.Expr) *weixinRequestContentDo {
+	return c.withDO(c.DO.LeftJoin(table, on...))
 }
 
-func (w weixinRequestContentDo) Join(table schema.Tabler, on ...field.Expr) *weixinRequestContentDo {
-	return w.withDO(w.DO.Join(table, on...))
+func (c weixinRequestContentDo) RightJoin(table schema.Tabler, on ...field.Expr) *weixinRequestContentDo {
+	return c.withDO(c.DO.RightJoin(table, on...))
 }
 
-func (w weixinRequestContentDo) LeftJoin(table schema.Tabler, on ...field.Expr) *weixinRequestContentDo {
-	return w.withDO(w.DO.LeftJoin(table, on...))
+func (c weixinRequestContentDo) Group(cols ...field.Expr) *weixinRequestContentDo {
+	return c.withDO(c.DO.Group(cols...))
 }
 
-func (w weixinRequestContentDo) RightJoin(table schema.Tabler, on ...field.Expr) *weixinRequestContentDo {
-	return w.withDO(w.DO.RightJoin(table, on...))
+func (c weixinRequestContentDo) Having(conds ...gen.Condition) *weixinRequestContentDo {
+	return c.withDO(c.DO.Having(conds...))
 }
 
-func (w weixinRequestContentDo) Group(cols ...field.Expr) *weixinRequestContentDo {
-	return w.withDO(w.DO.Group(cols...))
+func (c weixinRequestContentDo) Limit(limit int) *weixinRequestContentDo {
+	return c.withDO(c.DO.Limit(limit))
 }
 
-func (w weixinRequestContentDo) Having(conds ...gen.Condition) *weixinRequestContentDo {
-	return w.withDO(w.DO.Having(conds...))
+func (c weixinRequestContentDo) Offset(offset int) *weixinRequestContentDo {
+	return c.withDO(c.DO.Offset(offset))
 }
 
-func (w weixinRequestContentDo) Limit(limit int) *weixinRequestContentDo {
-	return w.withDO(w.DO.Limit(limit))
+func (c weixinRequestContentDo) Scopes(funcs ...func(gen.Dao) gen.Dao) *weixinRequestContentDo {
+	return c.withDO(c.DO.Scopes(funcs...))
 }
 
-func (w weixinRequestContentDo) Offset(offset int) *weixinRequestContentDo {
-	return w.withDO(w.DO.Offset(offset))
+func (c weixinRequestContentDo) Unscoped() *weixinRequestContentDo {
+	return c.withDO(c.DO.Unscoped())
 }
 
-func (w weixinRequestContentDo) Scopes(funcs ...func(gen.Dao) gen.Dao) *weixinRequestContentDo {
-	return w.withDO(w.DO.Scopes(funcs...))
+func (c weixinRequestContentDo) Attrs(attrs ...field.AssignExpr) *weixinRequestContentDo {
+	return c.withDO(c.DO.Attrs(attrs...))
 }
 
-func (w weixinRequestContentDo) Unscoped() *weixinRequestContentDo {
-	return w.withDO(w.DO.Unscoped())
+func (c weixinRequestContentDo) Assign(attrs ...field.AssignExpr) *weixinRequestContentDo {
+	return c.withDO(c.DO.Assign(attrs...))
 }
 
-func (w weixinRequestContentDo) Create(values ...*domain.WeixinRequestContent) error {
+func (c weixinRequestContentDo) ReadDB() *weixinRequestContentDo {
+	return c.withDO(c.Clauses(dbresolver.Read))
+}
+
+func (c weixinRequestContentDo) WriteDB() *weixinRequestContentDo {
+	return c.withDO(c.Clauses(dbresolver.Write))
+}
+
+func (c weixinRequestContentDo) Create(values ...*domain.WeixinRequestContent) error {
 	if len(values) == 0 {
 		return nil
 	}
-	return w.DO.Create(values)
+	return c.DO.Create(values)
 }
 
-func (w weixinRequestContentDo) CreateInBatches(values []*domain.WeixinRequestContent, batchSize int) error {
-	return w.DO.CreateInBatches(values, batchSize)
+func (c weixinRequestContentDo) CreateInBatches(values []*domain.WeixinRequestContent, batchSize int) error {
+	return c.DO.CreateInBatches(values, batchSize)
 }
 
 // Save : !!! underlying implementation is different with GORM
 // The method is equivalent to executing the statement: db.Clauses(clause.OnConflict{UpdateAll: true}).Create(values)
-func (w weixinRequestContentDo) Save(values ...*domain.WeixinRequestContent) error {
+func (c weixinRequestContentDo) Save(values ...*domain.WeixinRequestContent) error {
 	if len(values) == 0 {
 		return nil
 	}
-	return w.DO.Save(values)
+	return c.DO.Save(values)
 }
 
-func (w weixinRequestContentDo) First() (*domain.WeixinRequestContent, error) {
-	if result, err := w.DO.First(); err != nil {
+func (c weixinRequestContentDo) First() (*domain.WeixinRequestContent, error) {
+	if result, err := c.DO.First(); err != nil {
 		return nil, err
 	} else {
 		return result.(*domain.WeixinRequestContent), nil
 	}
 }
 
-func (w weixinRequestContentDo) Take() (*domain.WeixinRequestContent, error) {
-	if result, err := w.DO.Take(); err != nil {
+func (c weixinRequestContentDo) Take() (*domain.WeixinRequestContent, error) {
+	if result, err := c.DO.Take(); err != nil {
 		return nil, err
 	} else {
 		return result.(*domain.WeixinRequestContent), nil
 	}
 }
 
-func (w weixinRequestContentDo) Last() (*domain.WeixinRequestContent, error) {
-	if result, err := w.DO.Last(); err != nil {
+func (c weixinRequestContentDo) Last() (*domain.WeixinRequestContent, error) {
+	if result, err := c.DO.Last(); err != nil {
 		return nil, err
 	} else {
 		return result.(*domain.WeixinRequestContent), nil
 	}
 }
 
-func (w weixinRequestContentDo) Find() ([]*domain.WeixinRequestContent, error) {
-	result, err := w.DO.Find()
+func (c weixinRequestContentDo) Find() ([]*domain.WeixinRequestContent, error) {
+	result, err := c.DO.Find()
 	return result.([]*domain.WeixinRequestContent), err
 }
 
-func (w weixinRequestContentDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*domain.WeixinRequestContent, err error) {
+func (c weixinRequestContentDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*domain.WeixinRequestContent, err error) {
 	buf := make([]*domain.WeixinRequestContent, 0, batchSize)
-	err = w.DO.FindInBatches(&buf, batchSize, func(tx gen.Dao, batch int) error {
+	err = c.DO.FindInBatches(&buf, batchSize, func(tx gen.Dao, batch int) error {
 		defer func() { results = append(results, buf...) }()
 		return fc(tx, batch)
 	})
 	return results, err
 }
 
-func (w weixinRequestContentDo) FindInBatches(result *[]*domain.WeixinRequestContent, batchSize int, fc func(tx gen.Dao, batch int) error) error {
-	return w.DO.FindInBatches(result, batchSize, fc)
+func (c weixinRequestContentDo) FindInBatches(result *[]*domain.WeixinRequestContent, batchSize int, fc func(tx gen.Dao, batch int) error) error {
+	return c.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (w weixinRequestContentDo) Attrs(attrs ...field.AssignExpr) *weixinRequestContentDo {
-	return w.withDO(w.DO.Attrs(attrs...))
-}
-
-func (w weixinRequestContentDo) Assign(attrs ...field.AssignExpr) *weixinRequestContentDo {
-	return w.withDO(w.DO.Assign(attrs...))
-}
-
-func (w weixinRequestContentDo) Joins(fields ...field.RelationField) *weixinRequestContentDo {
+func (c weixinRequestContentDo) Joins(fields ...field.RelationField) *weixinRequestContentDo {
 	for _, _f := range fields {
-		w = *w.withDO(w.DO.Joins(_f))
+		c = *c.withDO(c.DO.Joins(_f))
 	}
-	return &w
+	return &c
 }
 
-func (w weixinRequestContentDo) Preload(fields ...field.RelationField) *weixinRequestContentDo {
+func (c weixinRequestContentDo) Preload(fields ...field.RelationField) *weixinRequestContentDo {
 	for _, _f := range fields {
-		w = *w.withDO(w.DO.Preload(_f))
+		c = *c.withDO(c.DO.Preload(_f))
 	}
-	return &w
+	return &c
 }
 
-func (w weixinRequestContentDo) FirstOrInit() (*domain.WeixinRequestContent, error) {
-	if result, err := w.DO.FirstOrInit(); err != nil {
+func (c weixinRequestContentDo) FirstOrInit() (*domain.WeixinRequestContent, error) {
+	if result, err := c.DO.FirstOrInit(); err != nil {
 		return nil, err
 	} else {
 		return result.(*domain.WeixinRequestContent), nil
 	}
 }
 
-func (w weixinRequestContentDo) FirstOrCreate() (*domain.WeixinRequestContent, error) {
-	if result, err := w.DO.FirstOrCreate(); err != nil {
+func (c weixinRequestContentDo) FirstOrCreate() (*domain.WeixinRequestContent, error) {
+	if result, err := c.DO.FirstOrCreate(); err != nil {
 		return nil, err
 	} else {
 		return result.(*domain.WeixinRequestContent), nil
 	}
 }
 
-func (w weixinRequestContentDo) FindByPage(offset int, limit int) (result []*domain.WeixinRequestContent, count int64, err error) {
-	result, err = w.Offset(offset).Limit(limit).Find()
+func (c weixinRequestContentDo) FindByPage(offset int, limit int) (result []*domain.WeixinRequestContent, count int64, err error) {
+	result, err = c.Offset(offset).Limit(limit).Find()
 	if err != nil {
 		return
 	}
@@ -357,29 +363,28 @@ func (w weixinRequestContentDo) FindByPage(offset int, limit int) (result []*dom
 		return
 	}
 
-	count, err = w.Offset(-1).Limit(-1).Count()
+	count, err = c.Offset(-1).Limit(-1).Count()
 	return
 }
 
-func (w weixinRequestContentDo) ScanByPage(result interface{}, offset int, limit int) (count int64, err error) {
-	count, err = w.Count()
+func (c weixinRequestContentDo) ScanByPage(result interface{}, offset int, limit int) (count int64, err error) {
+	count, err = c.Count()
 	if err != nil {
 		return
 	}
-
-	err = w.Offset(offset).Limit(limit).Scan(result)
+	err = c.Offset(offset).Limit(limit).Scan(result)
 	return
 }
 
-func (w weixinRequestContentDo) Scan(result interface{}) (err error) {
-	return w.DO.Scan(result)
+func (c weixinRequestContentDo) Scan(result interface{}) (err error) {
+	return c.DO.Scan(result)
 }
 
-func (w weixinRequestContentDo) Delete(models ...*domain.WeixinRequestContent) (result gen.ResultInfo, err error) {
-	return w.DO.Delete(models)
+func (c weixinRequestContentDo) Delete(models ...*domain.WeixinRequestContent) (result gen.ResultInfo, err error) {
+	return c.DO.Delete(models)
 }
 
-func (w *weixinRequestContentDo) withDO(do gen.Dao) *weixinRequestContentDo {
-	w.DO = *do.(*gen.DO)
-	return w
+func (c *weixinRequestContentDo) withDO(do gen.Dao) *weixinRequestContentDo {
+	c.DO = *do.(*gen.DO)
+	return c
 }

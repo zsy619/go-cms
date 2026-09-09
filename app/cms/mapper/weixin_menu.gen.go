@@ -43,6 +43,8 @@ func newWeixinMenu(db *gorm.DB, opts ...gen.DOOption) weixinMenu {
 	_weixinMenu.UpdateID = field.NewInt32(tableName, "update_id")
 	_weixinMenu.UpdateName = field.NewString(tableName, "update_name")
 	_weixinMenu.UpdateTime = field.NewTime(tableName, "update_time")
+	_weixinMenu.TenantID = field.NewInt64(tableName, "tenant_id")
+	_weixinMenu.Deleted = field.NewBool(tableName, "deleted")
 
 	_weixinMenu.fillFieldMap()
 
@@ -52,77 +54,81 @@ func newWeixinMenu(db *gorm.DB, opts ...gen.DOOption) weixinMenu {
 type weixinMenu struct {
 	weixinMenuDo weixinMenuDo
 
-	ALL        field.Asterisk
-	MenuID     field.Int64  // 主键
-	ParentID   field.Int64  // 父级ID
-	AccountID  field.Int64  // 归属公众号
-	Name       field.String // 菜单标题，不超过16个字节，子菜单不超过40个字节
-	Type       field.String // 菜单的响应动作类型，view表示网页类型，click表示点击类型，miniprogram表示小程序类型
-	Key        field.String // 菜单KEY值，用于消息接口推送，不超过128字节
-	URL        field.String // 网页链接，用户点击菜单可打开链接，不超过1024字节。当type为miniprogram时，不支持小程序的老版本客户端将打开本url
-	AppID      field.String // 小程序appid
-	PagePath   field.String // 小程序页面路径
-	MediaID    field.String // media_id类型和view_limited类型必须
-	ArticleID  field.String // article_id类型和article_view_limited类型必须
-	SortID     field.Int32  // 排序
-	CreateID   field.Int32  // 创建人ID
-	CreateName field.String // 创建人姓名
-	CreateTime field.Time   // 创建时间
-	UpdateID   field.Int32  // 更新人ID
-	UpdateName field.String // 更新人姓名
-	UpdateTime field.Time   // 修改时间
+	ALL field.Asterisk
+	MenuID field.Int64
+	ParentID field.Int64
+	AccountID field.Int64
+	Name field.String
+	Type field.String
+	Key field.String
+	URL field.String
+	AppID field.String
+	PagePath field.String
+	MediaID field.String
+	ArticleID field.String
+	SortID field.Int32
+	CreateID field.Int32
+	CreateName field.String
+	CreateTime field.Time
+	UpdateID field.Int32
+	UpdateName field.String
+	UpdateTime field.Time
+	TenantID field.Int64
+	Deleted field.Bool
 
 	fieldMap map[string]field.Expr
 }
 
-func (w weixinMenu) Table(newTableName string) *weixinMenu {
-	w.weixinMenuDo.UseTable(newTableName)
-	return w.updateTableName(newTableName)
+func (c weixinMenu) Table(newTableName string) *weixinMenu {
+	c.weixinMenuDo.UseTable(newTableName)
+	return c.updateTableName(newTableName)
 }
 
-func (w weixinMenu) As(alias string) *weixinMenu {
-	w.weixinMenuDo.DO = *(w.weixinMenuDo.As(alias).(*gen.DO))
-	return w.updateTableName(alias)
+func (c weixinMenu) As(alias string) *weixinMenu {
+	c.weixinMenuDo.DO = *(c.weixinMenuDo.As(alias).(*gen.DO))
+	return c.updateTableName(alias)
 }
 
-func (w *weixinMenu) updateTableName(table string) *weixinMenu {
-	w.ALL = field.NewAsterisk(table)
-	w.MenuID = field.NewInt64(table, "menu_id")
-	w.ParentID = field.NewInt64(table, "parent_id")
-	w.AccountID = field.NewInt64(table, "account_id")
-	w.Name = field.NewString(table, "name")
-	w.Type = field.NewString(table, "type")
-	w.Key = field.NewString(table, "key")
-	w.URL = field.NewString(table, "url")
-	w.AppID = field.NewString(table, "app_id")
-	w.PagePath = field.NewString(table, "page_path")
-	w.MediaID = field.NewString(table, "media_id")
-	w.ArticleID = field.NewString(table, "article_id")
-	w.SortID = field.NewInt32(table, "sort_id")
-	w.CreateID = field.NewInt32(table, "create_id")
-	w.CreateName = field.NewString(table, "create_name")
-	w.CreateTime = field.NewTime(table, "create_time")
-	w.UpdateID = field.NewInt32(table, "update_id")
-	w.UpdateName = field.NewString(table, "update_name")
-	w.UpdateTime = field.NewTime(table, "update_time")
+func (c *weixinMenu) updateTableName(table string) *weixinMenu {
+	c.ALL = field.NewAsterisk(table)
+	c.MenuID = field.NewInt64(table, "menu_id")
+	c.ParentID = field.NewInt64(table, "parent_id")
+	c.AccountID = field.NewInt64(table, "account_id")
+	c.Name = field.NewString(table, "name")
+	c.Type = field.NewString(table, "type")
+	c.Key = field.NewString(table, "key")
+	c.URL = field.NewString(table, "url")
+	c.AppID = field.NewString(table, "app_id")
+	c.PagePath = field.NewString(table, "page_path")
+	c.MediaID = field.NewString(table, "media_id")
+	c.ArticleID = field.NewString(table, "article_id")
+	c.SortID = field.NewInt32(table, "sort_id")
+	c.CreateID = field.NewInt32(table, "create_id")
+	c.CreateName = field.NewString(table, "create_name")
+	c.CreateTime = field.NewTime(table, "create_time")
+	c.UpdateID = field.NewInt32(table, "update_id")
+	c.UpdateName = field.NewString(table, "update_name")
+	c.UpdateTime = field.NewTime(table, "update_time")
+	c.TenantID = field.NewInt64(table, "tenant_id")
+	c.Deleted = field.NewBool(table, "deleted")
 
-	w.fillFieldMap()
+	c.fillFieldMap()
 
-	return w
+	return c
 }
 
-func (w *weixinMenu) WithContext(ctx context.Context) *weixinMenuDo {
-	return w.weixinMenuDo.WithContext(ctx)
+func (c *weixinMenu) WithContext(ctx context.Context) *weixinMenuDo {
+	return c.weixinMenuDo.WithContext(ctx)
 }
 
-func (w weixinMenu) TableName() string { return w.weixinMenuDo.TableName() }
+func (c weixinMenu) TableName() string { return c.weixinMenuDo.TableName() }
 
-func (w weixinMenu) Alias() string { return w.weixinMenuDo.Alias() }
+func (c weixinMenu) Alias() string { return c.weixinMenuDo.Alias() }
 
-func (w weixinMenu) Columns(cols ...field.Expr) gen.Columns { return w.weixinMenuDo.Columns(cols...) }
+func (c weixinMenu) Columns(cols ...field.Expr) gen.Columns { return c.weixinMenuDo.Columns(cols...) }
 
-func (w *weixinMenu) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
-	_f, ok := w.fieldMap[fieldName]
+func (c *weixinMenu) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
+	_f, ok := c.fieldMap[fieldName]
 	if !ok || _f == nil {
 		return nil, false
 	}
@@ -130,234 +136,236 @@ func (w *weixinMenu) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	return _oe, ok
 }
 
-func (w *weixinMenu) fillFieldMap() {
-	w.fieldMap = make(map[string]field.Expr, 18)
-	w.fieldMap["menu_id"] = w.MenuID
-	w.fieldMap["parent_id"] = w.ParentID
-	w.fieldMap["account_id"] = w.AccountID
-	w.fieldMap["name"] = w.Name
-	w.fieldMap["type"] = w.Type
-	w.fieldMap["key"] = w.Key
-	w.fieldMap["url"] = w.URL
-	w.fieldMap["app_id"] = w.AppID
-	w.fieldMap["page_path"] = w.PagePath
-	w.fieldMap["media_id"] = w.MediaID
-	w.fieldMap["article_id"] = w.ArticleID
-	w.fieldMap["sort_id"] = w.SortID
-	w.fieldMap["create_id"] = w.CreateID
-	w.fieldMap["create_name"] = w.CreateName
-	w.fieldMap["create_time"] = w.CreateTime
-	w.fieldMap["update_id"] = w.UpdateID
-	w.fieldMap["update_name"] = w.UpdateName
-	w.fieldMap["update_time"] = w.UpdateTime
+func (c *weixinMenu) fillFieldMap() {
+	c.fieldMap = make(map[string]field.Expr, 20)
+	c.fieldMap["menu_id"] = c.MenuID
+	c.fieldMap["parent_id"] = c.ParentID
+	c.fieldMap["account_id"] = c.AccountID
+	c.fieldMap["name"] = c.Name
+	c.fieldMap["type"] = c.Type
+	c.fieldMap["key"] = c.Key
+	c.fieldMap["url"] = c.URL
+	c.fieldMap["app_id"] = c.AppID
+	c.fieldMap["page_path"] = c.PagePath
+	c.fieldMap["media_id"] = c.MediaID
+	c.fieldMap["article_id"] = c.ArticleID
+	c.fieldMap["sort_id"] = c.SortID
+	c.fieldMap["create_id"] = c.CreateID
+	c.fieldMap["create_name"] = c.CreateName
+	c.fieldMap["create_time"] = c.CreateTime
+	c.fieldMap["update_id"] = c.UpdateID
+	c.fieldMap["update_name"] = c.UpdateName
+	c.fieldMap["update_time"] = c.UpdateTime
+	c.fieldMap["tenant_id"] = c.TenantID
+	c.fieldMap["deleted"] = c.Deleted
 }
 
-func (w weixinMenu) clone(db *gorm.DB) weixinMenu {
-	w.weixinMenuDo.ReplaceConnPool(db.Statement.ConnPool)
-	return w
+func (c weixinMenu) clone(db *gorm.DB) weixinMenu {
+	c.weixinMenuDo.ReplaceConnPool(db.Statement.ConnPool)
+	return c
 }
 
-func (w weixinMenu) replaceDB(db *gorm.DB) weixinMenu {
-	w.weixinMenuDo.ReplaceDB(db)
-	return w
+func (c weixinMenu) replaceDB(db *gorm.DB) weixinMenu {
+	c.weixinMenuDo.ReplaceDB(db)
+	return c
 }
 
 type weixinMenuDo struct{ gen.DO }
 
-func (w weixinMenuDo) Debug() *weixinMenuDo {
-	return w.withDO(w.DO.Debug())
+func (c weixinMenuDo) Debug() *weixinMenuDo {
+	return c.withDO(c.DO.Debug())
 }
 
-func (w weixinMenuDo) WithContext(ctx context.Context) *weixinMenuDo {
-	return w.withDO(w.DO.WithContext(ctx))
+func (c weixinMenuDo) WithContext(ctx context.Context) *weixinMenuDo {
+	return c.withDO(c.DO.WithContext(ctx))
 }
 
-func (w weixinMenuDo) ReadDB() *weixinMenuDo {
-	return w.Clauses(dbresolver.Read)
+func (c weixinMenuDo) Session(config *gorm.Session) *weixinMenuDo {
+	return c.withDO(c.DO.Session(config))
 }
 
-func (w weixinMenuDo) WriteDB() *weixinMenuDo {
-	return w.Clauses(dbresolver.Write)
+func (c weixinMenuDo) clauses(conds ...clause.Expression) *weixinMenuDo {
+	return c.withDO(c.DO.Clauses(conds...))
 }
 
-func (w weixinMenuDo) Session(config *gorm.Session) *weixinMenuDo {
-	return w.withDO(w.DO.Session(config))
+func (c weixinMenuDo) Returning(value interface{}, columns ...string) *weixinMenuDo {
+	return c.withDO(c.DO.Returning(value, columns...))
 }
 
-func (w weixinMenuDo) Clauses(conds ...clause.Expression) *weixinMenuDo {
-	return w.withDO(w.DO.Clauses(conds...))
+func (c weixinMenuDo) Not(conds ...gen.Condition) *weixinMenuDo {
+	return c.withDO(c.DO.Not(conds...))
 }
 
-func (w weixinMenuDo) Returning(value interface{}, columns ...string) *weixinMenuDo {
-	return w.withDO(w.DO.Returning(value, columns...))
+func (c weixinMenuDo) Or(conds ...gen.Condition) *weixinMenuDo {
+	return c.withDO(c.DO.Or(conds...))
 }
 
-func (w weixinMenuDo) Not(conds ...gen.Condition) *weixinMenuDo {
-	return w.withDO(w.DO.Not(conds...))
+func (c weixinMenuDo) Select(conds ...field.Expr) *weixinMenuDo {
+	return c.withDO(c.DO.Select(conds...))
 }
 
-func (w weixinMenuDo) Or(conds ...gen.Condition) *weixinMenuDo {
-	return w.withDO(w.DO.Or(conds...))
+func (c weixinMenuDo) Where(conds ...gen.Condition) *weixinMenuDo {
+	return c.withDO(c.DO.Where(conds...))
 }
 
-func (w weixinMenuDo) Select(conds ...field.Expr) *weixinMenuDo {
-	return w.withDO(w.DO.Select(conds...))
+func (c weixinMenuDo) Order(conds ...field.Expr) *weixinMenuDo {
+	return c.withDO(c.DO.Order(conds...))
 }
 
-func (w weixinMenuDo) Where(conds ...gen.Condition) *weixinMenuDo {
-	return w.withDO(w.DO.Where(conds...))
+func (c weixinMenuDo) Distinct(cols ...field.Expr) *weixinMenuDo {
+	return c.withDO(c.DO.Distinct(cols...))
 }
 
-func (w weixinMenuDo) Order(conds ...field.Expr) *weixinMenuDo {
-	return w.withDO(w.DO.Order(conds...))
+func (c weixinMenuDo) Omit(cols ...field.Expr) *weixinMenuDo {
+	return c.withDO(c.DO.Omit(cols...))
 }
 
-func (w weixinMenuDo) Distinct(cols ...field.Expr) *weixinMenuDo {
-	return w.withDO(w.DO.Distinct(cols...))
+func (c weixinMenuDo) Join(table schema.Tabler, on ...field.Expr) *weixinMenuDo {
+	return c.withDO(c.DO.Join(table, on...))
 }
 
-func (w weixinMenuDo) Omit(cols ...field.Expr) *weixinMenuDo {
-	return w.withDO(w.DO.Omit(cols...))
+func (c weixinMenuDo) LeftJoin(table schema.Tabler, on ...field.Expr) *weixinMenuDo {
+	return c.withDO(c.DO.LeftJoin(table, on...))
 }
 
-func (w weixinMenuDo) Join(table schema.Tabler, on ...field.Expr) *weixinMenuDo {
-	return w.withDO(w.DO.Join(table, on...))
+func (c weixinMenuDo) RightJoin(table schema.Tabler, on ...field.Expr) *weixinMenuDo {
+	return c.withDO(c.DO.RightJoin(table, on...))
 }
 
-func (w weixinMenuDo) LeftJoin(table schema.Tabler, on ...field.Expr) *weixinMenuDo {
-	return w.withDO(w.DO.LeftJoin(table, on...))
+func (c weixinMenuDo) Group(cols ...field.Expr) *weixinMenuDo {
+	return c.withDO(c.DO.Group(cols...))
 }
 
-func (w weixinMenuDo) RightJoin(table schema.Tabler, on ...field.Expr) *weixinMenuDo {
-	return w.withDO(w.DO.RightJoin(table, on...))
+func (c weixinMenuDo) Having(conds ...gen.Condition) *weixinMenuDo {
+	return c.withDO(c.DO.Having(conds...))
 }
 
-func (w weixinMenuDo) Group(cols ...field.Expr) *weixinMenuDo {
-	return w.withDO(w.DO.Group(cols...))
+func (c weixinMenuDo) Limit(limit int) *weixinMenuDo {
+	return c.withDO(c.DO.Limit(limit))
 }
 
-func (w weixinMenuDo) Having(conds ...gen.Condition) *weixinMenuDo {
-	return w.withDO(w.DO.Having(conds...))
+func (c weixinMenuDo) Offset(offset int) *weixinMenuDo {
+	return c.withDO(c.DO.Offset(offset))
 }
 
-func (w weixinMenuDo) Limit(limit int) *weixinMenuDo {
-	return w.withDO(w.DO.Limit(limit))
+func (c weixinMenuDo) Scopes(funcs ...func(gen.Dao) gen.Dao) *weixinMenuDo {
+	return c.withDO(c.DO.Scopes(funcs...))
 }
 
-func (w weixinMenuDo) Offset(offset int) *weixinMenuDo {
-	return w.withDO(w.DO.Offset(offset))
+func (c weixinMenuDo) Unscoped() *weixinMenuDo {
+	return c.withDO(c.DO.Unscoped())
 }
 
-func (w weixinMenuDo) Scopes(funcs ...func(gen.Dao) gen.Dao) *weixinMenuDo {
-	return w.withDO(w.DO.Scopes(funcs...))
+func (c weixinMenuDo) Attrs(attrs ...field.AssignExpr) *weixinMenuDo {
+	return c.withDO(c.DO.Attrs(attrs...))
 }
 
-func (w weixinMenuDo) Unscoped() *weixinMenuDo {
-	return w.withDO(w.DO.Unscoped())
+func (c weixinMenuDo) Assign(attrs ...field.AssignExpr) *weixinMenuDo {
+	return c.withDO(c.DO.Assign(attrs...))
 }
 
-func (w weixinMenuDo) Create(values ...*domain.WeixinMenu) error {
+func (c weixinMenuDo) ReadDB() *weixinMenuDo {
+	return c.withDO(c.Clauses(dbresolver.Read))
+}
+
+func (c weixinMenuDo) WriteDB() *weixinMenuDo {
+	return c.withDO(c.Clauses(dbresolver.Write))
+}
+
+func (c weixinMenuDo) Create(values ...*domain.WeixinMenu) error {
 	if len(values) == 0 {
 		return nil
 	}
-	return w.DO.Create(values)
+	return c.DO.Create(values)
 }
 
-func (w weixinMenuDo) CreateInBatches(values []*domain.WeixinMenu, batchSize int) error {
-	return w.DO.CreateInBatches(values, batchSize)
+func (c weixinMenuDo) CreateInBatches(values []*domain.WeixinMenu, batchSize int) error {
+	return c.DO.CreateInBatches(values, batchSize)
 }
 
 // Save : !!! underlying implementation is different with GORM
 // The method is equivalent to executing the statement: db.Clauses(clause.OnConflict{UpdateAll: true}).Create(values)
-func (w weixinMenuDo) Save(values ...*domain.WeixinMenu) error {
+func (c weixinMenuDo) Save(values ...*domain.WeixinMenu) error {
 	if len(values) == 0 {
 		return nil
 	}
-	return w.DO.Save(values)
+	return c.DO.Save(values)
 }
 
-func (w weixinMenuDo) First() (*domain.WeixinMenu, error) {
-	if result, err := w.DO.First(); err != nil {
+func (c weixinMenuDo) First() (*domain.WeixinMenu, error) {
+	if result, err := c.DO.First(); err != nil {
 		return nil, err
 	} else {
 		return result.(*domain.WeixinMenu), nil
 	}
 }
 
-func (w weixinMenuDo) Take() (*domain.WeixinMenu, error) {
-	if result, err := w.DO.Take(); err != nil {
+func (c weixinMenuDo) Take() (*domain.WeixinMenu, error) {
+	if result, err := c.DO.Take(); err != nil {
 		return nil, err
 	} else {
 		return result.(*domain.WeixinMenu), nil
 	}
 }
 
-func (w weixinMenuDo) Last() (*domain.WeixinMenu, error) {
-	if result, err := w.DO.Last(); err != nil {
+func (c weixinMenuDo) Last() (*domain.WeixinMenu, error) {
+	if result, err := c.DO.Last(); err != nil {
 		return nil, err
 	} else {
 		return result.(*domain.WeixinMenu), nil
 	}
 }
 
-func (w weixinMenuDo) Find() ([]*domain.WeixinMenu, error) {
-	result, err := w.DO.Find()
+func (c weixinMenuDo) Find() ([]*domain.WeixinMenu, error) {
+	result, err := c.DO.Find()
 	return result.([]*domain.WeixinMenu), err
 }
 
-func (w weixinMenuDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*domain.WeixinMenu, err error) {
+func (c weixinMenuDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*domain.WeixinMenu, err error) {
 	buf := make([]*domain.WeixinMenu, 0, batchSize)
-	err = w.DO.FindInBatches(&buf, batchSize, func(tx gen.Dao, batch int) error {
+	err = c.DO.FindInBatches(&buf, batchSize, func(tx gen.Dao, batch int) error {
 		defer func() { results = append(results, buf...) }()
 		return fc(tx, batch)
 	})
 	return results, err
 }
 
-func (w weixinMenuDo) FindInBatches(result *[]*domain.WeixinMenu, batchSize int, fc func(tx gen.Dao, batch int) error) error {
-	return w.DO.FindInBatches(result, batchSize, fc)
+func (c weixinMenuDo) FindInBatches(result *[]*domain.WeixinMenu, batchSize int, fc func(tx gen.Dao, batch int) error) error {
+	return c.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (w weixinMenuDo) Attrs(attrs ...field.AssignExpr) *weixinMenuDo {
-	return w.withDO(w.DO.Attrs(attrs...))
-}
-
-func (w weixinMenuDo) Assign(attrs ...field.AssignExpr) *weixinMenuDo {
-	return w.withDO(w.DO.Assign(attrs...))
-}
-
-func (w weixinMenuDo) Joins(fields ...field.RelationField) *weixinMenuDo {
+func (c weixinMenuDo) Joins(fields ...field.RelationField) *weixinMenuDo {
 	for _, _f := range fields {
-		w = *w.withDO(w.DO.Joins(_f))
+		c = *c.withDO(c.DO.Joins(_f))
 	}
-	return &w
+	return &c
 }
 
-func (w weixinMenuDo) Preload(fields ...field.RelationField) *weixinMenuDo {
+func (c weixinMenuDo) Preload(fields ...field.RelationField) *weixinMenuDo {
 	for _, _f := range fields {
-		w = *w.withDO(w.DO.Preload(_f))
+		c = *c.withDO(c.DO.Preload(_f))
 	}
-	return &w
+	return &c
 }
 
-func (w weixinMenuDo) FirstOrInit() (*domain.WeixinMenu, error) {
-	if result, err := w.DO.FirstOrInit(); err != nil {
+func (c weixinMenuDo) FirstOrInit() (*domain.WeixinMenu, error) {
+	if result, err := c.DO.FirstOrInit(); err != nil {
 		return nil, err
 	} else {
 		return result.(*domain.WeixinMenu), nil
 	}
 }
 
-func (w weixinMenuDo) FirstOrCreate() (*domain.WeixinMenu, error) {
-	if result, err := w.DO.FirstOrCreate(); err != nil {
+func (c weixinMenuDo) FirstOrCreate() (*domain.WeixinMenu, error) {
+	if result, err := c.DO.FirstOrCreate(); err != nil {
 		return nil, err
 	} else {
 		return result.(*domain.WeixinMenu), nil
 	}
 }
 
-func (w weixinMenuDo) FindByPage(offset int, limit int) (result []*domain.WeixinMenu, count int64, err error) {
-	result, err = w.Offset(offset).Limit(limit).Find()
+func (c weixinMenuDo) FindByPage(offset int, limit int) (result []*domain.WeixinMenu, count int64, err error) {
+	result, err = c.Offset(offset).Limit(limit).Find()
 	if err != nil {
 		return
 	}
@@ -367,29 +375,28 @@ func (w weixinMenuDo) FindByPage(offset int, limit int) (result []*domain.Weixin
 		return
 	}
 
-	count, err = w.Offset(-1).Limit(-1).Count()
+	count, err = c.Offset(-1).Limit(-1).Count()
 	return
 }
 
-func (w weixinMenuDo) ScanByPage(result interface{}, offset int, limit int) (count int64, err error) {
-	count, err = w.Count()
+func (c weixinMenuDo) ScanByPage(result interface{}, offset int, limit int) (count int64, err error) {
+	count, err = c.Count()
 	if err != nil {
 		return
 	}
-
-	err = w.Offset(offset).Limit(limit).Scan(result)
+	err = c.Offset(offset).Limit(limit).Scan(result)
 	return
 }
 
-func (w weixinMenuDo) Scan(result interface{}) (err error) {
-	return w.DO.Scan(result)
+func (c weixinMenuDo) Scan(result interface{}) (err error) {
+	return c.DO.Scan(result)
 }
 
-func (w weixinMenuDo) Delete(models ...*domain.WeixinMenu) (result gen.ResultInfo, err error) {
-	return w.DO.Delete(models)
+func (c weixinMenuDo) Delete(models ...*domain.WeixinMenu) (result gen.ResultInfo, err error) {
+	return c.DO.Delete(models)
 }
 
-func (w *weixinMenuDo) withDO(do gen.Dao) *weixinMenuDo {
-	w.DO = *do.(*gen.DO)
-	return w
+func (c *weixinMenuDo) withDO(do gen.Dao) *weixinMenuDo {
+	c.DO = *do.(*gen.DO)
+	return c
 }

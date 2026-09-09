@@ -29,7 +29,6 @@ type CmsSiteChannel struct {
 	IsSpec     int32     `gorm:"column:is_spec;type:tinyint" json:"is_spec" form:"is_spec"`                                        // 是否开启规格
 	SortID     int32     `gorm:"column:sort_id;type:int" json:"sort_id" form:"sort_id"`                                            // 排序
 	Status     int32     `gorm:"column:status;type:tinyint" json:"status" form:"status"`                                           // 状态0草稿1提交2审核通过3审核未通过4驳回
-	IsDeleted  bool      `gorm:"column:is_deleted;type:tinyint(1)" json:"is_deleted" form:"is_deleted"`                            // 删除标识
 	IsShow     bool      `gorm:"column:is_show;type:tinyint(1);default:1" json:"is_show" form:"is_show"`                           // 是否显示:1显示，0隐藏
 	TmplChnl   string    `gorm:"column:tmpl_chnl;type:varchar(256)" json:"tmpl_chnl" form:"tmpl_chnl"`                             // 频道模板路径
 	TmplCat    string    `gorm:"column:tmpl_cat;type:varchar(256)" json:"tmpl_cat" form:"tmpl_cat"`                                // 栏目模板路径
@@ -41,6 +40,9 @@ type CmsSiteChannel struct {
 	UpdateID   int32     `gorm:"column:update_id;type:int" json:"update_id" form:"update_id"`                                      // 更新人ID
 	UpdateName string    `gorm:"column:update_name;type:varchar(64)" json:"update_name" form:"update_name"`                        // 更新人姓名
 	UpdateTime time.Time `gorm:"column:update_time;type:datetime" json:"update_time" form:"update_time"`                           // 修改时间
+
+	TenantID int64 `gorm:"column:tenant_id;type:bigint;not null;default:0;index;comment:租户ID(多租户隔离)" json:"tenant_id" form:"tenant_id"`
+	Deleted bool `gorm:"column:deleted;type:tinyint(1);not null;default:0;index;comment:逻辑删除标识(0未删除1已删除)" json:"deleted" form:"deleted"`
 }
 
 // TableName CmsSiteChannel's table name

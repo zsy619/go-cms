@@ -53,6 +53,8 @@ func newCmsAds(db *gorm.DB, opts ...gen.DOOption) cmsAds {
 	_cmsAds.UpdateID = field.NewInt32(tableName, "update_id")
 	_cmsAds.UpdateName = field.NewString(tableName, "update_name")
 	_cmsAds.UpdateTime = field.NewTime(tableName, "update_time")
+	_cmsAds.TenantID = field.NewInt64(tableName, "tenant_id")
+	_cmsAds.Deleted = field.NewBool(tableName, "deleted")
 
 	_cmsAds.fillFieldMap()
 
@@ -62,35 +64,37 @@ func newCmsAds(db *gorm.DB, opts ...gen.DOOption) cmsAds {
 type cmsAds struct {
 	cmsAdsDo cmsAdsDo
 
-	ALL        field.Asterisk
-	AdsID      field.Int64  // 主键
-	SiteID     field.Int64  // 所属站点
-	ChannelID  field.Int64  // 所属频道
-	CategoryID field.Int64  // 类别ID
-	Title      field.String // 标题
-	CallIndex  field.String // 调用别名
-	LinkURL    field.String // 外部链接
-	Target     field.String // 是否开启浏览器新窗口
-	ImgUrl1    field.String // 图片地址
-	ImgUrl2    field.String // 图片地址
-	Remark     field.String // 备注
-	SortID     field.Int32  // 排序
-	Click      field.Int32  // 浏览次数
-	Status     field.Int32  // 状态0草稿1提交2审核通过3审核未通过4驳回
-	IsLock     field.Int32  // 是否锁定（不允许编辑）
-	IsTop      field.Int32  // 是否置顶
-	IsRed      field.Int32  // 是否推荐
-	IsHot      field.Int32  // 是否热门
-	IsSlide    field.Int32  // 是否幻灯片
-	BeginTime  field.Time   // 开始时间
-	EndTime    field.Time   // 结束时间
-	BelongTo   field.String // 归属
-	CreateID   field.Int32  // 创建人ID
-	CreateName field.String // 创建人姓名
-	CreateTime field.Time   // 创建时间
-	UpdateID   field.Int32  // 更新人ID
-	UpdateName field.String // 更新人姓名
-	UpdateTime field.Time   // 修改时间
+	ALL field.Asterisk
+	AdsID field.Int64
+	SiteID field.Int64
+	ChannelID field.Int64
+	CategoryID field.Int64
+	Title field.String
+	CallIndex field.String
+	LinkURL field.String
+	Target field.String
+	ImgUrl1 field.String
+	ImgUrl2 field.String
+	Remark field.String
+	SortID field.Int32
+	Click field.Int32
+	Status field.Int32
+	IsLock field.Int32
+	IsTop field.Int32
+	IsRed field.Int32
+	IsHot field.Int32
+	IsSlide field.Int32
+	BeginTime field.Time
+	EndTime field.Time
+	BelongTo field.String
+	CreateID field.Int32
+	CreateName field.String
+	CreateTime field.Time
+	UpdateID field.Int32
+	UpdateName field.String
+	UpdateTime field.Time
+	TenantID field.Int64
+	Deleted field.Bool
 
 	fieldMap map[string]field.Expr
 }
@@ -135,13 +139,17 @@ func (c *cmsAds) updateTableName(table string) *cmsAds {
 	c.UpdateID = field.NewInt32(table, "update_id")
 	c.UpdateName = field.NewString(table, "update_name")
 	c.UpdateTime = field.NewTime(table, "update_time")
+	c.TenantID = field.NewInt64(table, "tenant_id")
+	c.Deleted = field.NewBool(table, "deleted")
 
 	c.fillFieldMap()
 
 	return c
 }
 
-func (c *cmsAds) WithContext(ctx context.Context) *cmsAdsDo { return c.cmsAdsDo.WithContext(ctx) }
+func (c *cmsAds) WithContext(ctx context.Context) *cmsAdsDo {
+	return c.cmsAdsDo.WithContext(ctx)
+}
 
 func (c cmsAds) TableName() string { return c.cmsAdsDo.TableName() }
 
@@ -159,7 +167,7 @@ func (c *cmsAds) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *cmsAds) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 28)
+	c.fieldMap = make(map[string]field.Expr, 30)
 	c.fieldMap["ads_id"] = c.AdsID
 	c.fieldMap["site_id"] = c.SiteID
 	c.fieldMap["channel_id"] = c.ChannelID
@@ -188,6 +196,8 @@ func (c *cmsAds) fillFieldMap() {
 	c.fieldMap["update_id"] = c.UpdateID
 	c.fieldMap["update_name"] = c.UpdateName
 	c.fieldMap["update_time"] = c.UpdateTime
+	c.fieldMap["tenant_id"] = c.TenantID
+	c.fieldMap["deleted"] = c.Deleted
 }
 
 func (c cmsAds) clone(db *gorm.DB) cmsAds {
@@ -210,19 +220,11 @@ func (c cmsAdsDo) WithContext(ctx context.Context) *cmsAdsDo {
 	return c.withDO(c.DO.WithContext(ctx))
 }
 
-func (c cmsAdsDo) ReadDB() *cmsAdsDo {
-	return c.Clauses(dbresolver.Read)
-}
-
-func (c cmsAdsDo) WriteDB() *cmsAdsDo {
-	return c.Clauses(dbresolver.Write)
-}
-
 func (c cmsAdsDo) Session(config *gorm.Session) *cmsAdsDo {
 	return c.withDO(c.DO.Session(config))
 }
 
-func (c cmsAdsDo) Clauses(conds ...clause.Expression) *cmsAdsDo {
+func (c cmsAdsDo) clauses(conds ...clause.Expression) *cmsAdsDo {
 	return c.withDO(c.DO.Clauses(conds...))
 }
 
@@ -294,6 +296,22 @@ func (c cmsAdsDo) Unscoped() *cmsAdsDo {
 	return c.withDO(c.DO.Unscoped())
 }
 
+func (c cmsAdsDo) Attrs(attrs ...field.AssignExpr) *cmsAdsDo {
+	return c.withDO(c.DO.Attrs(attrs...))
+}
+
+func (c cmsAdsDo) Assign(attrs ...field.AssignExpr) *cmsAdsDo {
+	return c.withDO(c.DO.Assign(attrs...))
+}
+
+func (c cmsAdsDo) ReadDB() *cmsAdsDo {
+	return c.withDO(c.Clauses(dbresolver.Read))
+}
+
+func (c cmsAdsDo) WriteDB() *cmsAdsDo {
+	return c.withDO(c.Clauses(dbresolver.Write))
+}
+
 func (c cmsAdsDo) Create(values ...*domain.CmsAds) error {
 	if len(values) == 0 {
 		return nil
@@ -356,14 +374,6 @@ func (c cmsAdsDo) FindInBatches(result *[]*domain.CmsAds, batchSize int, fc func
 	return c.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (c cmsAdsDo) Attrs(attrs ...field.AssignExpr) *cmsAdsDo {
-	return c.withDO(c.DO.Attrs(attrs...))
-}
-
-func (c cmsAdsDo) Assign(attrs ...field.AssignExpr) *cmsAdsDo {
-	return c.withDO(c.DO.Assign(attrs...))
-}
-
 func (c cmsAdsDo) Joins(fields ...field.RelationField) *cmsAdsDo {
 	for _, _f := range fields {
 		c = *c.withDO(c.DO.Joins(_f))
@@ -414,7 +424,6 @@ func (c cmsAdsDo) ScanByPage(result interface{}, offset int, limit int) (count i
 	if err != nil {
 		return
 	}
-
 	err = c.Offset(offset).Limit(limit).Scan(result)
 	return
 }

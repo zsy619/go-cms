@@ -28,6 +28,8 @@ func newCmsLinkCategoryRelation(db *gorm.DB, opts ...gen.DOOption) cmsLinkCatego
 	_cmsLinkCategoryRelation.RelationID = field.NewInt64(tableName, "relation_id")
 	_cmsLinkCategoryRelation.CategoryID = field.NewInt64(tableName, "category_id")
 	_cmsLinkCategoryRelation.LinkID = field.NewInt64(tableName, "link_id")
+	_cmsLinkCategoryRelation.TenantID = field.NewInt64(tableName, "tenant_id")
+	_cmsLinkCategoryRelation.Deleted = field.NewBool(tableName, "deleted")
 
 	_cmsLinkCategoryRelation.fillFieldMap()
 
@@ -37,10 +39,12 @@ func newCmsLinkCategoryRelation(db *gorm.DB, opts ...gen.DOOption) cmsLinkCatego
 type cmsLinkCategoryRelation struct {
 	cmsLinkCategoryRelationDo cmsLinkCategoryRelationDo
 
-	ALL        field.Asterisk
+	ALL field.Asterisk
 	RelationID field.Int64 // 主键
 	CategoryID field.Int64 // 所属分类
-	LinkID     field.Int64 // 所属链接
+	LinkID field.Int64 // 所属链接
+	TenantID field.Int64
+	Deleted field.Bool
 
 	fieldMap map[string]field.Expr
 }
@@ -60,6 +64,8 @@ func (c *cmsLinkCategoryRelation) updateTableName(table string) *cmsLinkCategory
 	c.RelationID = field.NewInt64(table, "relation_id")
 	c.CategoryID = field.NewInt64(table, "category_id")
 	c.LinkID = field.NewInt64(table, "link_id")
+	c.TenantID = field.NewInt64(table, "tenant_id")
+	c.Deleted = field.NewBool(table, "deleted")
 
 	c.fillFieldMap()
 
@@ -74,9 +80,7 @@ func (c cmsLinkCategoryRelation) TableName() string { return c.cmsLinkCategoryRe
 
 func (c cmsLinkCategoryRelation) Alias() string { return c.cmsLinkCategoryRelationDo.Alias() }
 
-func (c cmsLinkCategoryRelation) Columns(cols ...field.Expr) gen.Columns {
-	return c.cmsLinkCategoryRelationDo.Columns(cols...)
-}
+func (c cmsLinkCategoryRelation) Columns(cols ...field.Expr) gen.Columns { return c.cmsLinkCategoryRelationDo.Columns(cols...) }
 
 func (c *cmsLinkCategoryRelation) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := c.fieldMap[fieldName]
@@ -88,10 +92,12 @@ func (c *cmsLinkCategoryRelation) GetFieldByName(fieldName string) (field.OrderE
 }
 
 func (c *cmsLinkCategoryRelation) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 3)
+	c.fieldMap = make(map[string]field.Expr, 5)
 	c.fieldMap["relation_id"] = c.RelationID
 	c.fieldMap["category_id"] = c.CategoryID
 	c.fieldMap["link_id"] = c.LinkID
+	c.fieldMap["tenant_id"] = c.TenantID
+	c.fieldMap["deleted"] = c.Deleted
 }
 
 func (c cmsLinkCategoryRelation) clone(db *gorm.DB) cmsLinkCategoryRelation {
@@ -114,19 +120,11 @@ func (c cmsLinkCategoryRelationDo) WithContext(ctx context.Context) *cmsLinkCate
 	return c.withDO(c.DO.WithContext(ctx))
 }
 
-func (c cmsLinkCategoryRelationDo) ReadDB() *cmsLinkCategoryRelationDo {
-	return c.Clauses(dbresolver.Read)
-}
-
-func (c cmsLinkCategoryRelationDo) WriteDB() *cmsLinkCategoryRelationDo {
-	return c.Clauses(dbresolver.Write)
-}
-
 func (c cmsLinkCategoryRelationDo) Session(config *gorm.Session) *cmsLinkCategoryRelationDo {
 	return c.withDO(c.DO.Session(config))
 }
 
-func (c cmsLinkCategoryRelationDo) Clauses(conds ...clause.Expression) *cmsLinkCategoryRelationDo {
+func (c cmsLinkCategoryRelationDo) clauses(conds ...clause.Expression) *cmsLinkCategoryRelationDo {
 	return c.withDO(c.DO.Clauses(conds...))
 }
 
@@ -198,6 +196,22 @@ func (c cmsLinkCategoryRelationDo) Unscoped() *cmsLinkCategoryRelationDo {
 	return c.withDO(c.DO.Unscoped())
 }
 
+func (c cmsLinkCategoryRelationDo) Attrs(attrs ...field.AssignExpr) *cmsLinkCategoryRelationDo {
+	return c.withDO(c.DO.Attrs(attrs...))
+}
+
+func (c cmsLinkCategoryRelationDo) Assign(attrs ...field.AssignExpr) *cmsLinkCategoryRelationDo {
+	return c.withDO(c.DO.Assign(attrs...))
+}
+
+func (c cmsLinkCategoryRelationDo) ReadDB() *cmsLinkCategoryRelationDo {
+	return c.withDO(c.Clauses(dbresolver.Read))
+}
+
+func (c cmsLinkCategoryRelationDo) WriteDB() *cmsLinkCategoryRelationDo {
+	return c.withDO(c.Clauses(dbresolver.Write))
+}
+
 func (c cmsLinkCategoryRelationDo) Create(values ...*domain.CmsLinkCategoryRelation) error {
 	if len(values) == 0 {
 		return nil
@@ -260,14 +274,6 @@ func (c cmsLinkCategoryRelationDo) FindInBatches(result *[]*domain.CmsLinkCatego
 	return c.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (c cmsLinkCategoryRelationDo) Attrs(attrs ...field.AssignExpr) *cmsLinkCategoryRelationDo {
-	return c.withDO(c.DO.Attrs(attrs...))
-}
-
-func (c cmsLinkCategoryRelationDo) Assign(attrs ...field.AssignExpr) *cmsLinkCategoryRelationDo {
-	return c.withDO(c.DO.Assign(attrs...))
-}
-
 func (c cmsLinkCategoryRelationDo) Joins(fields ...field.RelationField) *cmsLinkCategoryRelationDo {
 	for _, _f := range fields {
 		c = *c.withDO(c.DO.Joins(_f))
@@ -318,7 +324,6 @@ func (c cmsLinkCategoryRelationDo) ScanByPage(result interface{}, offset int, li
 	if err != nil {
 		return
 	}
-
 	err = c.Offset(offset).Limit(limit).Scan(result)
 	return
 }

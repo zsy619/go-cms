@@ -10,10 +10,8 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"gorm.io/gorm/schema"
-
 	"gorm.io/gen"
 	"gorm.io/gen/field"
-
 	"gorm.io/plugin/dbresolver"
 
 	"haedu.gov.cn/cms/app/cms/domain"
@@ -49,6 +47,8 @@ func newCmsAlbum(db *gorm.DB, opts ...gen.DOOption) cmsAlbum {
 	_cmsAlbum.UpdateID = field.NewInt32(tableName, "update_id")
 	_cmsAlbum.UpdateName = field.NewString(tableName, "update_name")
 	_cmsAlbum.UpdateTime = field.NewTime(tableName, "update_time")
+	_cmsAlbum.TenantID = field.NewInt64(tableName, "tenant_id")
+	_cmsAlbum.Deleted = field.NewBool(tableName, "deleted")
 
 	_cmsAlbum.fillFieldMap()
 
@@ -58,29 +58,31 @@ func newCmsAlbum(db *gorm.DB, opts ...gen.DOOption) cmsAlbum {
 type cmsAlbum struct {
 	cmsAlbumDo cmsAlbumDo
 
-	ALL          field.Asterisk
-	AlbumID      field.Int64  // 主键
-	TableName_   field.String // 关联表名
-	RecordID     field.Int64  // 关联记录ID
-	TypeID       field.Int32  // 分类
-	Title        field.String // 标题
-	ThumbPath    field.String // 缩略图地址
-	OriginalPath field.String // 原图地址
-	FilePath     field.String // 文件路径（带域名）
-	FileSize     field.Int64  // 文件大小(字节)
-	FileMime     field.String // Mime类型
-	FileExt      field.String // 文件扩展名
-	LinkURL      field.String // 外部链接
-	Click        field.Int32  // 点击次数
-	SortID       field.Int32  // 排序
-	IsShow       field.Int32  // 是否显示：1显示2隐藏
-	Remark       field.String // 图片描述
-	CreateID     field.Int32  // 创建人ID
-	CreateName   field.String // 创建人姓名
-	CreateTime   field.Time   // 创建时间
-	UpdateID     field.Int32  // 更新人ID
-	UpdateName   field.String // 更新人姓名
-	UpdateTime   field.Time   // 修改时间
+	ALL field.Asterisk
+	AlbumID field.Int64
+	TableName_ field.String
+	RecordID field.Int64
+	TypeID field.Int32
+	Title field.String
+	ThumbPath field.String
+	OriginalPath field.String
+	FilePath field.String
+	FileSize field.Int64
+	FileMime field.String
+	FileExt field.String
+	LinkURL field.String
+	Click field.Int32
+	SortID field.Int32
+	IsShow field.Int32
+	Remark field.String
+	CreateID field.Int32
+	CreateName field.String
+	CreateTime field.Time
+	UpdateID field.Int32
+	UpdateName field.String
+	UpdateTime field.Time
+	TenantID field.Int64
+	Deleted field.Bool
 
 	fieldMap map[string]field.Expr
 }
@@ -119,13 +121,17 @@ func (c *cmsAlbum) updateTableName(table string) *cmsAlbum {
 	c.UpdateID = field.NewInt32(table, "update_id")
 	c.UpdateName = field.NewString(table, "update_name")
 	c.UpdateTime = field.NewTime(table, "update_time")
+	c.TenantID = field.NewInt64(table, "tenant_id")
+	c.Deleted = field.NewBool(table, "deleted")
 
 	c.fillFieldMap()
 
 	return c
 }
 
-func (c *cmsAlbum) WithContext(ctx context.Context) *cmsAlbumDo { return c.cmsAlbumDo.WithContext(ctx) }
+func (c *cmsAlbum) WithContext(ctx context.Context) *cmsAlbumDo {
+	return c.cmsAlbumDo.WithContext(ctx)
+}
 
 func (c cmsAlbum) TableName() string { return c.cmsAlbumDo.TableName() }
 
@@ -143,7 +149,7 @@ func (c *cmsAlbum) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *cmsAlbum) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 22)
+	c.fieldMap = make(map[string]field.Expr, 24)
 	c.fieldMap["album_id"] = c.AlbumID
 	c.fieldMap["table_name"] = c.TableName_
 	c.fieldMap["record_id"] = c.RecordID
@@ -166,6 +172,8 @@ func (c *cmsAlbum) fillFieldMap() {
 	c.fieldMap["update_id"] = c.UpdateID
 	c.fieldMap["update_name"] = c.UpdateName
 	c.fieldMap["update_time"] = c.UpdateTime
+	c.fieldMap["tenant_id"] = c.TenantID
+	c.fieldMap["deleted"] = c.Deleted
 }
 
 func (c cmsAlbum) clone(db *gorm.DB) cmsAlbum {
@@ -188,19 +196,11 @@ func (c cmsAlbumDo) WithContext(ctx context.Context) *cmsAlbumDo {
 	return c.withDO(c.DO.WithContext(ctx))
 }
 
-func (c cmsAlbumDo) ReadDB() *cmsAlbumDo {
-	return c.Clauses(dbresolver.Read)
-}
-
-func (c cmsAlbumDo) WriteDB() *cmsAlbumDo {
-	return c.Clauses(dbresolver.Write)
-}
-
 func (c cmsAlbumDo) Session(config *gorm.Session) *cmsAlbumDo {
 	return c.withDO(c.DO.Session(config))
 }
 
-func (c cmsAlbumDo) Clauses(conds ...clause.Expression) *cmsAlbumDo {
+func (c cmsAlbumDo) clauses(conds ...clause.Expression) *cmsAlbumDo {
 	return c.withDO(c.DO.Clauses(conds...))
 }
 
@@ -272,6 +272,22 @@ func (c cmsAlbumDo) Unscoped() *cmsAlbumDo {
 	return c.withDO(c.DO.Unscoped())
 }
 
+func (c cmsAlbumDo) Attrs(attrs ...field.AssignExpr) *cmsAlbumDo {
+	return c.withDO(c.DO.Attrs(attrs...))
+}
+
+func (c cmsAlbumDo) Assign(attrs ...field.AssignExpr) *cmsAlbumDo {
+	return c.withDO(c.DO.Assign(attrs...))
+}
+
+func (c cmsAlbumDo) ReadDB() *cmsAlbumDo {
+	return c.withDO(c.Clauses(dbresolver.Read))
+}
+
+func (c cmsAlbumDo) WriteDB() *cmsAlbumDo {
+	return c.withDO(c.Clauses(dbresolver.Write))
+}
+
 func (c cmsAlbumDo) Create(values ...*domain.CmsAlbum) error {
 	if len(values) == 0 {
 		return nil
@@ -334,14 +350,6 @@ func (c cmsAlbumDo) FindInBatches(result *[]*domain.CmsAlbum, batchSize int, fc 
 	return c.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (c cmsAlbumDo) Attrs(attrs ...field.AssignExpr) *cmsAlbumDo {
-	return c.withDO(c.DO.Attrs(attrs...))
-}
-
-func (c cmsAlbumDo) Assign(attrs ...field.AssignExpr) *cmsAlbumDo {
-	return c.withDO(c.DO.Assign(attrs...))
-}
-
 func (c cmsAlbumDo) Joins(fields ...field.RelationField) *cmsAlbumDo {
 	for _, _f := range fields {
 		c = *c.withDO(c.DO.Joins(_f))
@@ -392,7 +400,6 @@ func (c cmsAlbumDo) ScanByPage(result interface{}, offset int, limit int) (count
 	if err != nil {
 		return
 	}
-
 	err = c.Offset(offset).Limit(limit).Scan(result)
 	return
 }

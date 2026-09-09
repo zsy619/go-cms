@@ -21,6 +21,8 @@ type CmsAdminLog struct {
 	StatusCode string    `gorm:"column:status_code;type:varchar(64);comment:响应状态码" json:"status_code" form:"status_code"`
 	IP         string    `gorm:"column:ip;type:varchar(64);comment:IP地址" json:"ip" form:"ip"`
 	CreateTime time.Time `gorm:"column:create_time;type:datetime;default:CURRENT_TIMESTAMP;comment:记录时间" json:"create_time" form:"create_time"`
+	TenantID int64 `gorm:"column:tenant_id;type:bigint;not null;default:0;index;comment:租户ID(多租户隔离)" json:"tenant_id" form:"tenant_id"`
+	Deleted bool `gorm:"column:deleted;type:tinyint(1);not null;default:0;index;comment:逻辑删除标识(0未删除1已删除)" json:"deleted" form:"deleted"`
 }
 
 // TableName CmsAdminLog's table name

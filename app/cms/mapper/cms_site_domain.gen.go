@@ -29,6 +29,8 @@ func newCmsSiteDomain(db *gorm.DB, opts ...gen.DOOption) cmsSiteDomain {
 	_cmsSiteDomain.SiteID = field.NewInt64(tableName, "site_id")
 	_cmsSiteDomain.Domain = field.NewString(tableName, "domain")
 	_cmsSiteDomain.Remark = field.NewString(tableName, "remark")
+	_cmsSiteDomain.TenantID = field.NewInt64(tableName, "tenant_id")
+	_cmsSiteDomain.Deleted = field.NewBool(tableName, "deleted")
 
 	_cmsSiteDomain.fillFieldMap()
 
@@ -38,11 +40,13 @@ func newCmsSiteDomain(db *gorm.DB, opts ...gen.DOOption) cmsSiteDomain {
 type cmsSiteDomain struct {
 	cmsSiteDomainDo cmsSiteDomainDo
 
-	ALL      field.Asterisk
-	DomainID field.Int64  // 主键
-	SiteID   field.Int64  // 所属站点
-	Domain   field.String // 站点域名
-	Remark   field.String // 备注说明
+	ALL field.Asterisk
+	DomainID field.Int64 // 主键
+	SiteID field.Int64 // 所属站点
+	Domain field.String // 站点域名
+	Remark field.String // 备注说明
+	TenantID field.Int64
+	Deleted field.Bool
 
 	fieldMap map[string]field.Expr
 }
@@ -63,6 +67,8 @@ func (c *cmsSiteDomain) updateTableName(table string) *cmsSiteDomain {
 	c.SiteID = field.NewInt64(table, "site_id")
 	c.Domain = field.NewString(table, "domain")
 	c.Remark = field.NewString(table, "remark")
+	c.TenantID = field.NewInt64(table, "tenant_id")
+	c.Deleted = field.NewBool(table, "deleted")
 
 	c.fillFieldMap()
 
@@ -77,9 +83,7 @@ func (c cmsSiteDomain) TableName() string { return c.cmsSiteDomainDo.TableName()
 
 func (c cmsSiteDomain) Alias() string { return c.cmsSiteDomainDo.Alias() }
 
-func (c cmsSiteDomain) Columns(cols ...field.Expr) gen.Columns {
-	return c.cmsSiteDomainDo.Columns(cols...)
-}
+func (c cmsSiteDomain) Columns(cols ...field.Expr) gen.Columns { return c.cmsSiteDomainDo.Columns(cols...) }
 
 func (c *cmsSiteDomain) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := c.fieldMap[fieldName]
@@ -91,11 +95,13 @@ func (c *cmsSiteDomain) GetFieldByName(fieldName string) (field.OrderExpr, bool)
 }
 
 func (c *cmsSiteDomain) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 4)
+	c.fieldMap = make(map[string]field.Expr, 6)
 	c.fieldMap["domain_id"] = c.DomainID
 	c.fieldMap["site_id"] = c.SiteID
 	c.fieldMap["domain"] = c.Domain
 	c.fieldMap["remark"] = c.Remark
+	c.fieldMap["tenant_id"] = c.TenantID
+	c.fieldMap["deleted"] = c.Deleted
 }
 
 func (c cmsSiteDomain) clone(db *gorm.DB) cmsSiteDomain {
@@ -118,19 +124,11 @@ func (c cmsSiteDomainDo) WithContext(ctx context.Context) *cmsSiteDomainDo {
 	return c.withDO(c.DO.WithContext(ctx))
 }
 
-func (c cmsSiteDomainDo) ReadDB() *cmsSiteDomainDo {
-	return c.Clauses(dbresolver.Read)
-}
-
-func (c cmsSiteDomainDo) WriteDB() *cmsSiteDomainDo {
-	return c.Clauses(dbresolver.Write)
-}
-
 func (c cmsSiteDomainDo) Session(config *gorm.Session) *cmsSiteDomainDo {
 	return c.withDO(c.DO.Session(config))
 }
 
-func (c cmsSiteDomainDo) Clauses(conds ...clause.Expression) *cmsSiteDomainDo {
+func (c cmsSiteDomainDo) clauses(conds ...clause.Expression) *cmsSiteDomainDo {
 	return c.withDO(c.DO.Clauses(conds...))
 }
 
@@ -202,6 +200,22 @@ func (c cmsSiteDomainDo) Unscoped() *cmsSiteDomainDo {
 	return c.withDO(c.DO.Unscoped())
 }
 
+func (c cmsSiteDomainDo) Attrs(attrs ...field.AssignExpr) *cmsSiteDomainDo {
+	return c.withDO(c.DO.Attrs(attrs...))
+}
+
+func (c cmsSiteDomainDo) Assign(attrs ...field.AssignExpr) *cmsSiteDomainDo {
+	return c.withDO(c.DO.Assign(attrs...))
+}
+
+func (c cmsSiteDomainDo) ReadDB() *cmsSiteDomainDo {
+	return c.withDO(c.Clauses(dbresolver.Read))
+}
+
+func (c cmsSiteDomainDo) WriteDB() *cmsSiteDomainDo {
+	return c.withDO(c.Clauses(dbresolver.Write))
+}
+
 func (c cmsSiteDomainDo) Create(values ...*domain.CmsSiteDomain) error {
 	if len(values) == 0 {
 		return nil
@@ -264,14 +278,6 @@ func (c cmsSiteDomainDo) FindInBatches(result *[]*domain.CmsSiteDomain, batchSiz
 	return c.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (c cmsSiteDomainDo) Attrs(attrs ...field.AssignExpr) *cmsSiteDomainDo {
-	return c.withDO(c.DO.Attrs(attrs...))
-}
-
-func (c cmsSiteDomainDo) Assign(attrs ...field.AssignExpr) *cmsSiteDomainDo {
-	return c.withDO(c.DO.Assign(attrs...))
-}
-
 func (c cmsSiteDomainDo) Joins(fields ...field.RelationField) *cmsSiteDomainDo {
 	for _, _f := range fields {
 		c = *c.withDO(c.DO.Joins(_f))
@@ -322,7 +328,6 @@ func (c cmsSiteDomainDo) ScanByPage(result interface{}, offset int, limit int) (
 	if err != nil {
 		return
 	}
-
 	err = c.Offset(offset).Limit(limit).Scan(result)
 	return
 }

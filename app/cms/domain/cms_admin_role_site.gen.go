@@ -11,6 +11,8 @@ type CmsAdminRoleSite struct {
 	ValueID int64 `gorm:"column:value_id;type:bigint;primaryKey;autoIncrement:true;comment:主键" json:"value_id" form:"value_id"`
 	RoleID  int64 `gorm:"column:role_id;type:bigint;not null;comment:角色" json:"role_id" form:"role_id"`
 	SiteID  int64 `gorm:"column:site_id;type:bigint;not null;comment:站点" json:"site_id" form:"site_id"`
+	TenantID int64 `gorm:"column:tenant_id;type:bigint;not null;default:0;index;comment:租户ID(多租户隔离)" json:"tenant_id" form:"tenant_id"`
+	Deleted bool `gorm:"column:deleted;type:tinyint(1);not null;default:0;index;comment:逻辑删除标识(0未删除1已删除)" json:"deleted" form:"deleted"`
 }
 
 // TableName CmsAdminRoleSite's table name

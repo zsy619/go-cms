@@ -54,13 +54,14 @@ func newCmsSite(db *gorm.DB, opts ...gen.DOOption) cmsSite {
 	_cmsSite.MetaDescription = field.NewString(tableName, "meta_description")
 	_cmsSite.SortID = field.NewInt32(tableName, "sort_id")
 	_cmsSite.Status = field.NewInt32(tableName, "status")
-	_cmsSite.IsDeleted = field.NewBool(tableName, "is_deleted")
 	_cmsSite.CreateID = field.NewInt32(tableName, "create_id")
 	_cmsSite.CreateName = field.NewString(tableName, "create_name")
 	_cmsSite.CreateTime = field.NewTime(tableName, "create_time")
 	_cmsSite.UpdateID = field.NewInt32(tableName, "update_id")
 	_cmsSite.UpdateName = field.NewString(tableName, "update_name")
 	_cmsSite.UpdateTime = field.NewTime(tableName, "update_time")
+	_cmsSite.TenantID = field.NewInt64(tableName, "tenant_id")
+	_cmsSite.Deleted = field.NewBool(tableName, "deleted")
 
 	_cmsSite.fillFieldMap()
 
@@ -70,43 +71,44 @@ func newCmsSite(db *gorm.DB, opts ...gen.DOOption) cmsSite {
 type cmsSite struct {
 	cmsSiteDo cmsSiteDo
 
-	ALL             field.Asterisk
-	SiteID          field.Int64  // 主键
-	ParentID        field.Int64  // 父级ID
-	Name            field.String // 站点名称
-	Flag            field.String // 站点标识
-	Title           field.String // 标题
-	Template        field.String // 模板名称
-	IsDefault       field.Bool   // 是否默认站
-	IsMobile        field.Bool   // 是否移动端
-	Logo1           field.String // 网站LOGO
-	Logo2           field.String // 网站LOGO
-	Icon1           field.String // 网站icon
-	Icon2           field.String // 网站icon
-	Company         field.String // 公司名称
-	Address         field.String // 通讯地址
-	Telphone        field.String // 联系电话
-	Fax             field.String // 传真
-	Email           field.String // 邮箱
-	Crod            field.String // 备案号
-	Cache           field.Int32  // 缓存时间
-	MaxLength       field.Int32  // 最大文件上传
-	FileType        field.String // 上传文件类型
-	HomeTitle       field.String // 首页标题
-	Copyright       field.String // 版权信息
-	Statcode        field.String // 统计代码
-	Robots          field.String // 爬虫规则
-	MetaKeyword     field.String // META关键词
+	ALL field.Asterisk
+	SiteID field.Int64 // 主键
+	ParentID field.Int64 // 父级ID
+	Name field.String // 站点名称
+	Flag field.String // 站点标识
+	Title field.String // 标题
+	Template field.String // 模板名称
+	IsDefault field.Bool // 是否默认站
+	IsMobile field.Bool // 是否移动端
+	Logo1 field.String // 网站LOGO
+	Logo2 field.String // 网站LOGO
+	Icon1 field.String // 网站icon
+	Icon2 field.String // 网站icon
+	Company field.String // 公司名称
+	Address field.String // 通讯地址
+	Telphone field.String // 联系电话
+	Fax field.String // 传真
+	Email field.String // 邮箱
+	Crod field.String // 备案号
+	Cache field.Int32 // 缓存时间
+	MaxLength field.Int32 // 最大文件上传
+	FileType field.String // 上传文件类型
+	HomeTitle field.String // 首页标题
+	Copyright field.String // 版权信息
+	Statcode field.String // 统计代码
+	Robots field.String // 爬虫规则
+	MetaKeyword field.String // META关键词
 	MetaDescription field.String // META描述
-	SortID          field.Int32  // 排序
-	Status          field.Int32  // 状态0草稿1提交2审核通过3审核未通过4驳回
-	IsDeleted       field.Bool   // 删除标识
-	CreateID        field.Int32  // 创建人ID
-	CreateName      field.String // 创建人姓名
-	CreateTime      field.Time   // 创建时间
-	UpdateID        field.Int32  // 更新人ID
-	UpdateName      field.String // 更新人姓名
-	UpdateTime      field.Time   // 修改时间
+	SortID field.Int32 // 排序
+	Status field.Int32 // 状态0草稿1提交2审核通过3审核未通过4驳回
+	CreateID field.Int32 // 创建人ID
+	CreateName field.String // 创建人姓名
+	CreateTime field.Time // 创建时间
+	UpdateID field.Int32 // 更新人ID
+	UpdateName field.String // 更新人姓名
+	UpdateTime field.Time // 修改时间
+	TenantID field.Int64
+	Deleted field.Bool
 
 	fieldMap map[string]field.Expr
 }
@@ -152,20 +154,23 @@ func (c *cmsSite) updateTableName(table string) *cmsSite {
 	c.MetaDescription = field.NewString(table, "meta_description")
 	c.SortID = field.NewInt32(table, "sort_id")
 	c.Status = field.NewInt32(table, "status")
-	c.IsDeleted = field.NewBool(table, "is_deleted")
 	c.CreateID = field.NewInt32(table, "create_id")
 	c.CreateName = field.NewString(table, "create_name")
 	c.CreateTime = field.NewTime(table, "create_time")
 	c.UpdateID = field.NewInt32(table, "update_id")
 	c.UpdateName = field.NewString(table, "update_name")
 	c.UpdateTime = field.NewTime(table, "update_time")
+	c.TenantID = field.NewInt64(table, "tenant_id")
+	c.Deleted = field.NewBool(table, "deleted")
 
 	c.fillFieldMap()
 
 	return c
 }
 
-func (c *cmsSite) WithContext(ctx context.Context) *cmsSiteDo { return c.cmsSiteDo.WithContext(ctx) }
+func (c *cmsSite) WithContext(ctx context.Context) *cmsSiteDo {
+	return c.cmsSiteDo.WithContext(ctx)
+}
 
 func (c cmsSite) TableName() string { return c.cmsSiteDo.TableName() }
 
@@ -183,7 +188,7 @@ func (c *cmsSite) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *cmsSite) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 36)
+	c.fieldMap = make(map[string]field.Expr, 37)
 	c.fieldMap["site_id"] = c.SiteID
 	c.fieldMap["parent_id"] = c.ParentID
 	c.fieldMap["name"] = c.Name
@@ -213,13 +218,14 @@ func (c *cmsSite) fillFieldMap() {
 	c.fieldMap["meta_description"] = c.MetaDescription
 	c.fieldMap["sort_id"] = c.SortID
 	c.fieldMap["status"] = c.Status
-	c.fieldMap["is_deleted"] = c.IsDeleted
 	c.fieldMap["create_id"] = c.CreateID
 	c.fieldMap["create_name"] = c.CreateName
 	c.fieldMap["create_time"] = c.CreateTime
 	c.fieldMap["update_id"] = c.UpdateID
 	c.fieldMap["update_name"] = c.UpdateName
 	c.fieldMap["update_time"] = c.UpdateTime
+	c.fieldMap["tenant_id"] = c.TenantID
+	c.fieldMap["deleted"] = c.Deleted
 }
 
 func (c cmsSite) clone(db *gorm.DB) cmsSite {
@@ -242,19 +248,11 @@ func (c cmsSiteDo) WithContext(ctx context.Context) *cmsSiteDo {
 	return c.withDO(c.DO.WithContext(ctx))
 }
 
-func (c cmsSiteDo) ReadDB() *cmsSiteDo {
-	return c.Clauses(dbresolver.Read)
-}
-
-func (c cmsSiteDo) WriteDB() *cmsSiteDo {
-	return c.Clauses(dbresolver.Write)
-}
-
 func (c cmsSiteDo) Session(config *gorm.Session) *cmsSiteDo {
 	return c.withDO(c.DO.Session(config))
 }
 
-func (c cmsSiteDo) Clauses(conds ...clause.Expression) *cmsSiteDo {
+func (c cmsSiteDo) clauses(conds ...clause.Expression) *cmsSiteDo {
 	return c.withDO(c.DO.Clauses(conds...))
 }
 
@@ -326,6 +324,22 @@ func (c cmsSiteDo) Unscoped() *cmsSiteDo {
 	return c.withDO(c.DO.Unscoped())
 }
 
+func (c cmsSiteDo) Attrs(attrs ...field.AssignExpr) *cmsSiteDo {
+	return c.withDO(c.DO.Attrs(attrs...))
+}
+
+func (c cmsSiteDo) Assign(attrs ...field.AssignExpr) *cmsSiteDo {
+	return c.withDO(c.DO.Assign(attrs...))
+}
+
+func (c cmsSiteDo) ReadDB() *cmsSiteDo {
+	return c.withDO(c.Clauses(dbresolver.Read))
+}
+
+func (c cmsSiteDo) WriteDB() *cmsSiteDo {
+	return c.withDO(c.Clauses(dbresolver.Write))
+}
+
 func (c cmsSiteDo) Create(values ...*domain.CmsSite) error {
 	if len(values) == 0 {
 		return nil
@@ -388,14 +402,6 @@ func (c cmsSiteDo) FindInBatches(result *[]*domain.CmsSite, batchSize int, fc fu
 	return c.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (c cmsSiteDo) Attrs(attrs ...field.AssignExpr) *cmsSiteDo {
-	return c.withDO(c.DO.Attrs(attrs...))
-}
-
-func (c cmsSiteDo) Assign(attrs ...field.AssignExpr) *cmsSiteDo {
-	return c.withDO(c.DO.Assign(attrs...))
-}
-
 func (c cmsSiteDo) Joins(fields ...field.RelationField) *cmsSiteDo {
 	for _, _f := range fields {
 		c = *c.withDO(c.DO.Joins(_f))
@@ -446,7 +452,6 @@ func (c cmsSiteDo) ScanByPage(result interface{}, offset int, limit int) (count 
 	if err != nil {
 		return
 	}
-
 	err = c.Offset(offset).Limit(limit).Scan(result)
 	return
 }

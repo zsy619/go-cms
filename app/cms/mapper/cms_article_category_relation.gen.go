@@ -28,6 +28,8 @@ func newCmsArticleCategoryRelation(db *gorm.DB, opts ...gen.DOOption) cmsArticle
 	_cmsArticleCategoryRelation.RelationID = field.NewInt64(tableName, "relation_id")
 	_cmsArticleCategoryRelation.CategoryID = field.NewInt64(tableName, "category_id")
 	_cmsArticleCategoryRelation.ArticleID = field.NewInt64(tableName, "article_id")
+	_cmsArticleCategoryRelation.TenantID = field.NewInt64(tableName, "tenant_id")
+	_cmsArticleCategoryRelation.Deleted = field.NewBool(tableName, "deleted")
 
 	_cmsArticleCategoryRelation.fillFieldMap()
 
@@ -37,10 +39,12 @@ func newCmsArticleCategoryRelation(db *gorm.DB, opts ...gen.DOOption) cmsArticle
 type cmsArticleCategoryRelation struct {
 	cmsArticleCategoryRelationDo cmsArticleCategoryRelationDo
 
-	ALL        field.Asterisk
-	RelationID field.Int64 // 主键
-	CategoryID field.Int64 // 所属分类
-	ArticleID  field.Int64 // 所属文章
+	ALL field.Asterisk
+	RelationID field.Int64
+	CategoryID field.Int64
+	ArticleID field.Int64
+	TenantID field.Int64
+	Deleted field.Bool
 
 	fieldMap map[string]field.Expr
 }
@@ -60,6 +64,8 @@ func (c *cmsArticleCategoryRelation) updateTableName(table string) *cmsArticleCa
 	c.RelationID = field.NewInt64(table, "relation_id")
 	c.CategoryID = field.NewInt64(table, "category_id")
 	c.ArticleID = field.NewInt64(table, "article_id")
+	c.TenantID = field.NewInt64(table, "tenant_id")
+	c.Deleted = field.NewBool(table, "deleted")
 
 	c.fillFieldMap()
 
@@ -70,15 +76,11 @@ func (c *cmsArticleCategoryRelation) WithContext(ctx context.Context) *cmsArticl
 	return c.cmsArticleCategoryRelationDo.WithContext(ctx)
 }
 
-func (c cmsArticleCategoryRelation) TableName() string {
-	return c.cmsArticleCategoryRelationDo.TableName()
-}
+func (c cmsArticleCategoryRelation) TableName() string { return c.cmsArticleCategoryRelationDo.TableName() }
 
 func (c cmsArticleCategoryRelation) Alias() string { return c.cmsArticleCategoryRelationDo.Alias() }
 
-func (c cmsArticleCategoryRelation) Columns(cols ...field.Expr) gen.Columns {
-	return c.cmsArticleCategoryRelationDo.Columns(cols...)
-}
+func (c cmsArticleCategoryRelation) Columns(cols ...field.Expr) gen.Columns { return c.cmsArticleCategoryRelationDo.Columns(cols...) }
 
 func (c *cmsArticleCategoryRelation) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := c.fieldMap[fieldName]
@@ -90,10 +92,12 @@ func (c *cmsArticleCategoryRelation) GetFieldByName(fieldName string) (field.Ord
 }
 
 func (c *cmsArticleCategoryRelation) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 3)
+	c.fieldMap = make(map[string]field.Expr, 5)
 	c.fieldMap["relation_id"] = c.RelationID
 	c.fieldMap["category_id"] = c.CategoryID
 	c.fieldMap["article_id"] = c.ArticleID
+	c.fieldMap["tenant_id"] = c.TenantID
+	c.fieldMap["deleted"] = c.Deleted
 }
 
 func (c cmsArticleCategoryRelation) clone(db *gorm.DB) cmsArticleCategoryRelation {
@@ -116,19 +120,11 @@ func (c cmsArticleCategoryRelationDo) WithContext(ctx context.Context) *cmsArtic
 	return c.withDO(c.DO.WithContext(ctx))
 }
 
-func (c cmsArticleCategoryRelationDo) ReadDB() *cmsArticleCategoryRelationDo {
-	return c.Clauses(dbresolver.Read)
-}
-
-func (c cmsArticleCategoryRelationDo) WriteDB() *cmsArticleCategoryRelationDo {
-	return c.Clauses(dbresolver.Write)
-}
-
 func (c cmsArticleCategoryRelationDo) Session(config *gorm.Session) *cmsArticleCategoryRelationDo {
 	return c.withDO(c.DO.Session(config))
 }
 
-func (c cmsArticleCategoryRelationDo) Clauses(conds ...clause.Expression) *cmsArticleCategoryRelationDo {
+func (c cmsArticleCategoryRelationDo) clauses(conds ...clause.Expression) *cmsArticleCategoryRelationDo {
 	return c.withDO(c.DO.Clauses(conds...))
 }
 
@@ -200,6 +196,22 @@ func (c cmsArticleCategoryRelationDo) Unscoped() *cmsArticleCategoryRelationDo {
 	return c.withDO(c.DO.Unscoped())
 }
 
+func (c cmsArticleCategoryRelationDo) Attrs(attrs ...field.AssignExpr) *cmsArticleCategoryRelationDo {
+	return c.withDO(c.DO.Attrs(attrs...))
+}
+
+func (c cmsArticleCategoryRelationDo) Assign(attrs ...field.AssignExpr) *cmsArticleCategoryRelationDo {
+	return c.withDO(c.DO.Assign(attrs...))
+}
+
+func (c cmsArticleCategoryRelationDo) ReadDB() *cmsArticleCategoryRelationDo {
+	return c.withDO(c.Clauses(dbresolver.Read))
+}
+
+func (c cmsArticleCategoryRelationDo) WriteDB() *cmsArticleCategoryRelationDo {
+	return c.withDO(c.Clauses(dbresolver.Write))
+}
+
 func (c cmsArticleCategoryRelationDo) Create(values ...*domain.CmsArticleCategoryRelation) error {
 	if len(values) == 0 {
 		return nil
@@ -262,14 +274,6 @@ func (c cmsArticleCategoryRelationDo) FindInBatches(result *[]*domain.CmsArticle
 	return c.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (c cmsArticleCategoryRelationDo) Attrs(attrs ...field.AssignExpr) *cmsArticleCategoryRelationDo {
-	return c.withDO(c.DO.Attrs(attrs...))
-}
-
-func (c cmsArticleCategoryRelationDo) Assign(attrs ...field.AssignExpr) *cmsArticleCategoryRelationDo {
-	return c.withDO(c.DO.Assign(attrs...))
-}
-
 func (c cmsArticleCategoryRelationDo) Joins(fields ...field.RelationField) *cmsArticleCategoryRelationDo {
 	for _, _f := range fields {
 		c = *c.withDO(c.DO.Joins(_f))
@@ -320,7 +324,6 @@ func (c cmsArticleCategoryRelationDo) ScanByPage(result interface{}, offset int,
 	if err != nil {
 		return
 	}
-
 	err = c.Offset(offset).Limit(limit).Scan(result)
 	return
 }

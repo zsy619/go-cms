@@ -27,12 +27,12 @@ func (svc *CmsArticle) PropertyPaginate(page, limit int, parentId, articleId int
 	if title != "" {
 		do = do.Where(mdl.Title.Like("%" + title + "%"))
 	}
-	return do.Where(mdl.IsDeleted.Is(false)).Order(mdl.SortID).FindByPage((page-1)*limit, limit)
+	return do.Where(mdl.Deleted.Is(false)).Order(mdl.SortID).FindByPage((page-1)*limit, limit)
 }
 
 func (svc *CmsArticle) PropertyFind(propertyId int64) (*domain.CmsArticleProperty, error) {
 	mdl, do := mapper.CmsArticlePropertyDo()
-	return do.Where(mdl.IsDeleted.Is(false)).Where(mdl.PropertyID.Eq(propertyId)).First()
+	return do.Where(mdl.Deleted.Is(false)).Where(mdl.PropertyID.Eq(propertyId)).First()
 }
 
 func (svc *CmsArticle) PropertySave(input *domain.CmsArticleProperty) error {

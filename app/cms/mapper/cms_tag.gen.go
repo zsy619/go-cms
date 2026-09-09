@@ -47,6 +47,8 @@ func newCmsTag(db *gorm.DB, opts ...gen.DOOption) cmsTag {
 	_cmsTag.UpdateID = field.NewInt32(tableName, "update_id")
 	_cmsTag.UpdateName = field.NewString(tableName, "update_name")
 	_cmsTag.UpdateTime = field.NewTime(tableName, "update_time")
+	_cmsTag.TenantID = field.NewInt64(tableName, "tenant_id")
+	_cmsTag.Deleted = field.NewBool(tableName, "deleted")
 
 	_cmsTag.fillFieldMap()
 
@@ -56,29 +58,31 @@ func newCmsTag(db *gorm.DB, opts ...gen.DOOption) cmsTag {
 type cmsTag struct {
 	cmsTagDo cmsTagDo
 
-	ALL            field.Asterisk
-	TagID          field.Int64  // 标签ID
-	SiteID         field.Int64  // 所属站点
-	ChannelID      field.Int64  // 所属频道
-	Name           field.String // 标签名称
-	Title          field.String // 标签标题
-	ImgUrl1        field.String // 图片
-	ImgUrl2        field.String // 图片
-	SeoTitle       field.String // SEO标题
-	SeoKeyword     field.String // SEO关健字
+	ALL field.Asterisk
+	TagID field.Int64 // 标签ID
+	SiteID field.Int64 // 所属站点
+	ChannelID field.Int64 // 所属频道
+	Name field.String // 标签名称
+	Title field.String // 标签标题
+	ImgUrl1 field.String // 图片
+	ImgUrl2 field.String // 图片
+	SeoTitle field.String // SEO标题
+	SeoKeyword field.String // SEO关健字
 	SeoDescription field.String // SEO描述
-	Remark         field.String // 备注
-	SortID         field.Int32  // 排序
-	Click          field.Int32  // 浏览次数
-	Status         field.Int32  // 状态0草稿1提交2审核通过3审核未通过4驳回
-	Template       field.String // 模板路径
-	BelongTo       field.String // 归属
-	CreateID       field.Int32  // 创建人ID
-	CreateName     field.String // 创建人姓名
-	CreateTime     field.Time   // 创建时间
-	UpdateID       field.Int32  // 更新人ID
-	UpdateName     field.String // 更新人姓名
-	UpdateTime     field.Time   // 修改时间
+	Remark field.String // 备注
+	SortID field.Int32 // 排序
+	Click field.Int32 // 浏览次数
+	Status field.Int32 // 状态0草稿1提交2审核通过3审核未通过4驳回
+	Template field.String // 模板路径
+	BelongTo field.String // 归属
+	CreateID field.Int32 // 创建人ID
+	CreateName field.String // 创建人姓名
+	CreateTime field.Time // 创建时间
+	UpdateID field.Int32 // 更新人ID
+	UpdateName field.String // 更新人姓名
+	UpdateTime field.Time // 修改时间
+	TenantID field.Int64
+	Deleted field.Bool
 
 	fieldMap map[string]field.Expr
 }
@@ -117,13 +121,17 @@ func (c *cmsTag) updateTableName(table string) *cmsTag {
 	c.UpdateID = field.NewInt32(table, "update_id")
 	c.UpdateName = field.NewString(table, "update_name")
 	c.UpdateTime = field.NewTime(table, "update_time")
+	c.TenantID = field.NewInt64(table, "tenant_id")
+	c.Deleted = field.NewBool(table, "deleted")
 
 	c.fillFieldMap()
 
 	return c
 }
 
-func (c *cmsTag) WithContext(ctx context.Context) *cmsTagDo { return c.cmsTagDo.WithContext(ctx) }
+func (c *cmsTag) WithContext(ctx context.Context) *cmsTagDo {
+	return c.cmsTagDo.WithContext(ctx)
+}
 
 func (c cmsTag) TableName() string { return c.cmsTagDo.TableName() }
 
@@ -141,7 +149,7 @@ func (c *cmsTag) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *cmsTag) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 22)
+	c.fieldMap = make(map[string]field.Expr, 24)
 	c.fieldMap["tag_id"] = c.TagID
 	c.fieldMap["site_id"] = c.SiteID
 	c.fieldMap["channel_id"] = c.ChannelID
@@ -164,6 +172,8 @@ func (c *cmsTag) fillFieldMap() {
 	c.fieldMap["update_id"] = c.UpdateID
 	c.fieldMap["update_name"] = c.UpdateName
 	c.fieldMap["update_time"] = c.UpdateTime
+	c.fieldMap["tenant_id"] = c.TenantID
+	c.fieldMap["deleted"] = c.Deleted
 }
 
 func (c cmsTag) clone(db *gorm.DB) cmsTag {
@@ -186,19 +196,11 @@ func (c cmsTagDo) WithContext(ctx context.Context) *cmsTagDo {
 	return c.withDO(c.DO.WithContext(ctx))
 }
 
-func (c cmsTagDo) ReadDB() *cmsTagDo {
-	return c.Clauses(dbresolver.Read)
-}
-
-func (c cmsTagDo) WriteDB() *cmsTagDo {
-	return c.Clauses(dbresolver.Write)
-}
-
 func (c cmsTagDo) Session(config *gorm.Session) *cmsTagDo {
 	return c.withDO(c.DO.Session(config))
 }
 
-func (c cmsTagDo) Clauses(conds ...clause.Expression) *cmsTagDo {
+func (c cmsTagDo) clauses(conds ...clause.Expression) *cmsTagDo {
 	return c.withDO(c.DO.Clauses(conds...))
 }
 
@@ -270,6 +272,22 @@ func (c cmsTagDo) Unscoped() *cmsTagDo {
 	return c.withDO(c.DO.Unscoped())
 }
 
+func (c cmsTagDo) Attrs(attrs ...field.AssignExpr) *cmsTagDo {
+	return c.withDO(c.DO.Attrs(attrs...))
+}
+
+func (c cmsTagDo) Assign(attrs ...field.AssignExpr) *cmsTagDo {
+	return c.withDO(c.DO.Assign(attrs...))
+}
+
+func (c cmsTagDo) ReadDB() *cmsTagDo {
+	return c.withDO(c.Clauses(dbresolver.Read))
+}
+
+func (c cmsTagDo) WriteDB() *cmsTagDo {
+	return c.withDO(c.Clauses(dbresolver.Write))
+}
+
 func (c cmsTagDo) Create(values ...*domain.CmsTag) error {
 	if len(values) == 0 {
 		return nil
@@ -332,14 +350,6 @@ func (c cmsTagDo) FindInBatches(result *[]*domain.CmsTag, batchSize int, fc func
 	return c.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (c cmsTagDo) Attrs(attrs ...field.AssignExpr) *cmsTagDo {
-	return c.withDO(c.DO.Attrs(attrs...))
-}
-
-func (c cmsTagDo) Assign(attrs ...field.AssignExpr) *cmsTagDo {
-	return c.withDO(c.DO.Assign(attrs...))
-}
-
 func (c cmsTagDo) Joins(fields ...field.RelationField) *cmsTagDo {
 	for _, _f := range fields {
 		c = *c.withDO(c.DO.Joins(_f))
@@ -390,7 +400,6 @@ func (c cmsTagDo) ScanByPage(result interface{}, offset int, limit int) (count i
 	if err != nil {
 		return
 	}
-
 	err = c.Offset(offset).Limit(limit).Scan(result)
 	return
 }

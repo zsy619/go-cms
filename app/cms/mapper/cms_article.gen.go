@@ -56,7 +56,6 @@ func newCmsArticle(db *gorm.DB, opts ...gen.DOOption) cmsArticle {
 	_cmsArticle.IsHot = field.NewInt32(tableName, "is_hot")
 	_cmsArticle.IsSlide = field.NewInt32(tableName, "is_slide")
 	_cmsArticle.StaticURL = field.NewString(tableName, "static_url")
-	_cmsArticle.IsDeleted = field.NewBool(tableName, "is_deleted")
 	_cmsArticle.Status = field.NewInt32(tableName, "status")
 	_cmsArticle.PublishTime = field.NewTime(tableName, "publish_time")
 	_cmsArticle.Topic = field.NewString(tableName, "topic")
@@ -68,6 +67,8 @@ func newCmsArticle(db *gorm.DB, opts ...gen.DOOption) cmsArticle {
 	_cmsArticle.UpdateID = field.NewInt32(tableName, "update_id")
 	_cmsArticle.UpdateName = field.NewString(tableName, "update_name")
 	_cmsArticle.UpdateTime = field.NewTime(tableName, "update_time")
+	_cmsArticle.TenantID = field.NewInt64(tableName, "tenant_id")
+	_cmsArticle.Deleted = field.NewBool(tableName, "deleted")
 
 	_cmsArticle.fillFieldMap()
 
@@ -77,50 +78,51 @@ func newCmsArticle(db *gorm.DB, opts ...gen.DOOption) cmsArticle {
 type cmsArticle struct {
 	cmsArticleDo cmsArticleDo
 
-	ALL            field.Asterisk
-	ArticleID      field.Int64  // 主键
-	SiteID         field.Int64  // 所属站点
-	ChannelID      field.Int64  // 所属频道
-	CategoryID     field.Int64  // 类别ID
-	Title          field.String // 内容标题
-	SubTitle       field.String // 副标题
-	IcoUrl1        field.String // 标题图标
-	IcoUrl2        field.String // 标题图标
-	CallIndex      field.String // 调用别名
-	Source         field.String // 来源
-	Author         field.String // 作者
-	LinkURL        field.String // 外部链接
-	ImgUrl1        field.String // 图片地址
-	ImgUrl2        field.String // 图片地址
-	SeoTitle       field.String // SEO标题
-	SeoKeyword     field.String // SEO关健字
-	SeoDescription field.String // SEO描述
-	Tags           field.String // TAG标签逗号分隔
-	Summary        field.String // 内容摘要
-	Content        field.String // 详细内容
-	SortID         field.Int32  // 排序
-	Click          field.Int32  // 浏览次数
-	IsLock         field.Int32  // 是否锁定（不允许编辑）
-	IsComment      field.Int32  // 是否允许评论:0禁止1允许
-	CommentCount   field.Int32  // 评论总数
-	LikeCount      field.Int32  // 点赞总数
-	IsTop          field.Int32  // 是否置顶
-	IsRed          field.Int32  // 是否推荐
-	IsHot          field.Int32  // 是否热门
-	IsSlide        field.Int32  // 是否幻灯片
-	StaticURL      field.String // 静态链接
-	IsDeleted      field.Bool   // 删除标识
-	Status         field.Int32  // 状态0草稿1提交2审核通过3审核未通过4驳回
-	PublishTime    field.Time   // 发布时间
-	Topic          field.String // 文章专题
-	Template       field.String // 模板路径
-	BelongTo       field.String // 归属
-	CreateID       field.Int32  // 创建人ID
-	CreateName     field.String // 创建人姓名
-	CreateTime     field.Time   // 创建时间
-	UpdateID       field.Int32  // 更新人ID
-	UpdateName     field.String // 更新人姓名
-	UpdateTime     field.Time   // 修改时间
+	ALL field.Asterisk
+	ArticleID field.Int64
+	SiteID field.Int64
+	ChannelID field.Int64
+	CategoryID field.Int64
+	Title field.String
+	SubTitle field.String
+	IcoUrl1 field.String
+	IcoUrl2 field.String
+	CallIndex field.String
+	Source field.String
+	Author field.String
+	LinkURL field.String
+	ImgUrl1 field.String
+	ImgUrl2 field.String
+	SeoTitle field.String
+	SeoKeyword field.String
+	SeoDescription field.String
+	Tags field.String
+	Summary field.String
+	Content field.String
+	SortID field.Int32
+	Click field.Int32
+	IsLock field.Int32
+	IsComment field.Int32
+	CommentCount field.Int32
+	LikeCount field.Int32
+	IsTop field.Int32
+	IsRed field.Int32
+	IsHot field.Int32
+	IsSlide field.Int32
+	StaticURL field.String
+	Status field.Int32
+	PublishTime field.Time
+	Topic field.String
+	Template field.String
+	BelongTo field.String
+	CreateID field.Int32
+	CreateName field.String
+	CreateTime field.Time
+	UpdateID field.Int32
+	UpdateName field.String
+	UpdateTime field.Time
+	TenantID field.Int64
+	Deleted field.Bool
 
 	fieldMap map[string]field.Expr
 }
@@ -168,7 +170,6 @@ func (c *cmsArticle) updateTableName(table string) *cmsArticle {
 	c.IsHot = field.NewInt32(table, "is_hot")
 	c.IsSlide = field.NewInt32(table, "is_slide")
 	c.StaticURL = field.NewString(table, "static_url")
-	c.IsDeleted = field.NewBool(table, "is_deleted")
 	c.Status = field.NewInt32(table, "status")
 	c.PublishTime = field.NewTime(table, "publish_time")
 	c.Topic = field.NewString(table, "topic")
@@ -180,6 +181,8 @@ func (c *cmsArticle) updateTableName(table string) *cmsArticle {
 	c.UpdateID = field.NewInt32(table, "update_id")
 	c.UpdateName = field.NewString(table, "update_name")
 	c.UpdateTime = field.NewTime(table, "update_time")
+	c.TenantID = field.NewInt64(table, "tenant_id")
+	c.Deleted = field.NewBool(table, "deleted")
 
 	c.fillFieldMap()
 
@@ -206,7 +209,7 @@ func (c *cmsArticle) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *cmsArticle) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 43)
+	c.fieldMap = make(map[string]field.Expr, 44)
 	c.fieldMap["article_id"] = c.ArticleID
 	c.fieldMap["site_id"] = c.SiteID
 	c.fieldMap["channel_id"] = c.ChannelID
@@ -238,7 +241,6 @@ func (c *cmsArticle) fillFieldMap() {
 	c.fieldMap["is_hot"] = c.IsHot
 	c.fieldMap["is_slide"] = c.IsSlide
 	c.fieldMap["static_url"] = c.StaticURL
-	c.fieldMap["is_deleted"] = c.IsDeleted
 	c.fieldMap["status"] = c.Status
 	c.fieldMap["publish_time"] = c.PublishTime
 	c.fieldMap["topic"] = c.Topic
@@ -250,6 +252,8 @@ func (c *cmsArticle) fillFieldMap() {
 	c.fieldMap["update_id"] = c.UpdateID
 	c.fieldMap["update_name"] = c.UpdateName
 	c.fieldMap["update_time"] = c.UpdateTime
+	c.fieldMap["tenant_id"] = c.TenantID
+	c.fieldMap["deleted"] = c.Deleted
 }
 
 func (c cmsArticle) clone(db *gorm.DB) cmsArticle {
@@ -272,19 +276,11 @@ func (c cmsArticleDo) WithContext(ctx context.Context) *cmsArticleDo {
 	return c.withDO(c.DO.WithContext(ctx))
 }
 
-func (c cmsArticleDo) ReadDB() *cmsArticleDo {
-	return c.Clauses(dbresolver.Read)
-}
-
-func (c cmsArticleDo) WriteDB() *cmsArticleDo {
-	return c.Clauses(dbresolver.Write)
-}
-
 func (c cmsArticleDo) Session(config *gorm.Session) *cmsArticleDo {
 	return c.withDO(c.DO.Session(config))
 }
 
-func (c cmsArticleDo) Clauses(conds ...clause.Expression) *cmsArticleDo {
+func (c cmsArticleDo) clauses(conds ...clause.Expression) *cmsArticleDo {
 	return c.withDO(c.DO.Clauses(conds...))
 }
 
@@ -356,6 +352,22 @@ func (c cmsArticleDo) Unscoped() *cmsArticleDo {
 	return c.withDO(c.DO.Unscoped())
 }
 
+func (c cmsArticleDo) Attrs(attrs ...field.AssignExpr) *cmsArticleDo {
+	return c.withDO(c.DO.Attrs(attrs...))
+}
+
+func (c cmsArticleDo) Assign(attrs ...field.AssignExpr) *cmsArticleDo {
+	return c.withDO(c.DO.Assign(attrs...))
+}
+
+func (c cmsArticleDo) ReadDB() *cmsArticleDo {
+	return c.withDO(c.Clauses(dbresolver.Read))
+}
+
+func (c cmsArticleDo) WriteDB() *cmsArticleDo {
+	return c.withDO(c.Clauses(dbresolver.Write))
+}
+
 func (c cmsArticleDo) Create(values ...*domain.CmsArticle) error {
 	if len(values) == 0 {
 		return nil
@@ -418,14 +430,6 @@ func (c cmsArticleDo) FindInBatches(result *[]*domain.CmsArticle, batchSize int,
 	return c.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (c cmsArticleDo) Attrs(attrs ...field.AssignExpr) *cmsArticleDo {
-	return c.withDO(c.DO.Attrs(attrs...))
-}
-
-func (c cmsArticleDo) Assign(attrs ...field.AssignExpr) *cmsArticleDo {
-	return c.withDO(c.DO.Assign(attrs...))
-}
-
 func (c cmsArticleDo) Joins(fields ...field.RelationField) *cmsArticleDo {
 	for _, _f := range fields {
 		c = *c.withDO(c.DO.Joins(_f))
@@ -476,7 +480,6 @@ func (c cmsArticleDo) ScanByPage(result interface{}, offset int, limit int) (cou
 	if err != nil {
 		return
 	}
-
 	err = c.Offset(offset).Limit(limit).Scan(result)
 	return
 }

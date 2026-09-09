@@ -38,32 +38,32 @@ func (svc *CmsAdmin) Login(userKey, password string, userType int, loginType Log
 	ctx := context.Background()
 	switch loginType {
 	case LoginName:
-		do = do.Where(mdl.IsDeleted.Is(false), mdl.UserName.Eq(userKey))
+		do = do.Where(mdl.Deleted.Is(false), mdl.UserName.Eq(userKey))
 	case LoginMobile:
-		do = do.Where(mdl.IsDeleted.Is(false), mdl.Mobile.Eq(userKey))
+		do = do.Where(mdl.Deleted.Is(false), mdl.Mobile.Eq(userKey))
 	case LoginEmail:
-		do = do.Where(mdl.IsDeleted.Is(false), mdl.Email.Eq(userKey))
+		do = do.Where(mdl.Deleted.Is(false), mdl.Email.Eq(userKey))
 	case LoginNameMobile:
 		do = do.Where(
-			do.WithContext(ctx).Where(mdl.IsDeleted.Is(false)),
+			do.WithContext(ctx).Where(mdl.Deleted.Is(false)),
 		).Where(
 			do.Or(mdl.UserName.Eq(userKey)).Or(mdl.Mobile.Eq(userKey)),
 		)
 	case LoginNameEmail:
 		do = do.Where(
-			do.WithContext(ctx).Where(mdl.IsDeleted.Is(false)),
+			do.WithContext(ctx).Where(mdl.Deleted.Is(false)),
 		).Where(
 			do.Or(mdl.UserName.Eq(userKey)).Or(mdl.Email.Eq(userKey)),
 		)
 	case LoginMobileEmail:
 		do = do.Where(
-			do.WithContext(ctx).Where(mdl.IsDeleted.Is(false)),
+			do.WithContext(ctx).Where(mdl.Deleted.Is(false)),
 		).Where(
 			do.Or(mdl.Mobile.Eq(userKey)).Or(mdl.Email.Eq(userKey)),
 		)
 	case LoginAll:
 		do = do.Where(
-			do.WithContext(ctx).Where(mdl.IsDeleted.Is(false)),
+			do.WithContext(ctx).Where(mdl.Deleted.Is(false)),
 		).Where(
 			do.Or(mdl.UserName.Eq(userKey)).Or(mdl.Mobile.Eq(userKey)).Or(mdl.Email.Eq(userKey)),
 		)

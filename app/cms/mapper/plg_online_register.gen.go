@@ -40,13 +40,14 @@ func newPlgOnlineRegister(db *gorm.DB, opts ...gen.DOOption) plgOnlineRegister {
 	_plgOnlineRegister.IsRead = field.NewInt32(tableName, "is_read")
 	_plgOnlineRegister.Tags = field.NewString(tableName, "tags")
 	_plgOnlineRegister.Remark = field.NewString(tableName, "remark")
-	_plgOnlineRegister.IsDeleted = field.NewBool(tableName, "is_deleted")
 	_plgOnlineRegister.CreateID = field.NewInt32(tableName, "create_id")
 	_plgOnlineRegister.CreateName = field.NewString(tableName, "create_name")
 	_plgOnlineRegister.CreateTime = field.NewTime(tableName, "create_time")
 	_plgOnlineRegister.UpdateID = field.NewInt32(tableName, "update_id")
 	_plgOnlineRegister.UpdateName = field.NewString(tableName, "update_name")
 	_plgOnlineRegister.UpdateTime = field.NewTime(tableName, "update_time")
+	_plgOnlineRegister.TenantID = field.NewInt64(tableName, "tenant_id")
+	_plgOnlineRegister.Deleted = field.NewBool(tableName, "deleted")
 
 	_plgOnlineRegister.fillFieldMap()
 
@@ -56,87 +57,87 @@ func newPlgOnlineRegister(db *gorm.DB, opts ...gen.DOOption) plgOnlineRegister {
 type plgOnlineRegister struct {
 	plgOnlineRegisterDo plgOnlineRegisterDo
 
-	ALL        field.Asterisk
-	RegisterID field.Int64  // 主键
-	RealName   field.String // 姓名
-	Sex        field.String // 性别
-	Year       field.String // 年龄
-	Special    field.String // 意向专业
-	Degree     field.String // 学历
-	Mobile     field.String // 联系电话
-	Email      field.String // 电子邮箱
-	Wechat     field.String // 微信号
-	Address    field.String // 家庭地址
-	Content    field.String // 留言内容
-	IP         field.String // IP地址
-	IsRead     field.Int32  // 是否已读
-	Tags       field.String // 标签
-	Remark     field.String // 备注
-	IsDeleted  field.Bool   // 删除标识
-	CreateID   field.Int32  // 创建人ID
-	CreateName field.String // 创建人姓名
-	CreateTime field.Time   // 创建时间
-	UpdateID   field.Int32  // 更新人ID
-	UpdateName field.String // 更新人姓名
-	UpdateTime field.Time   // 修改时间
+	ALL field.Asterisk
+	RegisterID field.Int64
+	RealName field.String
+	Sex field.String
+	Year field.String
+	Special field.String
+	Degree field.String
+	Mobile field.String
+	Email field.String
+	Wechat field.String
+	Address field.String
+	Content field.String
+	IP field.String
+	IsRead field.Int32
+	Tags field.String
+	Remark field.String
+	CreateID field.Int32
+	CreateName field.String
+	CreateTime field.Time
+	UpdateID field.Int32
+	UpdateName field.String
+	UpdateTime field.Time
+	TenantID field.Int64
+	Deleted field.Bool
 
 	fieldMap map[string]field.Expr
 }
 
-func (p plgOnlineRegister) Table(newTableName string) *plgOnlineRegister {
-	p.plgOnlineRegisterDo.UseTable(newTableName)
-	return p.updateTableName(newTableName)
+func (c plgOnlineRegister) Table(newTableName string) *plgOnlineRegister {
+	c.plgOnlineRegisterDo.UseTable(newTableName)
+	return c.updateTableName(newTableName)
 }
 
-func (p plgOnlineRegister) As(alias string) *plgOnlineRegister {
-	p.plgOnlineRegisterDo.DO = *(p.plgOnlineRegisterDo.As(alias).(*gen.DO))
-	return p.updateTableName(alias)
+func (c plgOnlineRegister) As(alias string) *plgOnlineRegister {
+	c.plgOnlineRegisterDo.DO = *(c.plgOnlineRegisterDo.As(alias).(*gen.DO))
+	return c.updateTableName(alias)
 }
 
-func (p *plgOnlineRegister) updateTableName(table string) *plgOnlineRegister {
-	p.ALL = field.NewAsterisk(table)
-	p.RegisterID = field.NewInt64(table, "register_id")
-	p.RealName = field.NewString(table, "real_name")
-	p.Sex = field.NewString(table, "sex")
-	p.Year = field.NewString(table, "year")
-	p.Special = field.NewString(table, "special")
-	p.Degree = field.NewString(table, "degree")
-	p.Mobile = field.NewString(table, "mobile")
-	p.Email = field.NewString(table, "email")
-	p.Wechat = field.NewString(table, "wechat")
-	p.Address = field.NewString(table, "address")
-	p.Content = field.NewString(table, "content")
-	p.IP = field.NewString(table, "ip")
-	p.IsRead = field.NewInt32(table, "is_read")
-	p.Tags = field.NewString(table, "tags")
-	p.Remark = field.NewString(table, "remark")
-	p.IsDeleted = field.NewBool(table, "is_deleted")
-	p.CreateID = field.NewInt32(table, "create_id")
-	p.CreateName = field.NewString(table, "create_name")
-	p.CreateTime = field.NewTime(table, "create_time")
-	p.UpdateID = field.NewInt32(table, "update_id")
-	p.UpdateName = field.NewString(table, "update_name")
-	p.UpdateTime = field.NewTime(table, "update_time")
+func (c *plgOnlineRegister) updateTableName(table string) *plgOnlineRegister {
+	c.ALL = field.NewAsterisk(table)
+	c.RegisterID = field.NewInt64(table, "register_id")
+	c.RealName = field.NewString(table, "real_name")
+	c.Sex = field.NewString(table, "sex")
+	c.Year = field.NewString(table, "year")
+	c.Special = field.NewString(table, "special")
+	c.Degree = field.NewString(table, "degree")
+	c.Mobile = field.NewString(table, "mobile")
+	c.Email = field.NewString(table, "email")
+	c.Wechat = field.NewString(table, "wechat")
+	c.Address = field.NewString(table, "address")
+	c.Content = field.NewString(table, "content")
+	c.IP = field.NewString(table, "ip")
+	c.IsRead = field.NewInt32(table, "is_read")
+	c.Tags = field.NewString(table, "tags")
+	c.Remark = field.NewString(table, "remark")
+	c.CreateID = field.NewInt32(table, "create_id")
+	c.CreateName = field.NewString(table, "create_name")
+	c.CreateTime = field.NewTime(table, "create_time")
+	c.UpdateID = field.NewInt32(table, "update_id")
+	c.UpdateName = field.NewString(table, "update_name")
+	c.UpdateTime = field.NewTime(table, "update_time")
+	c.TenantID = field.NewInt64(table, "tenant_id")
+	c.Deleted = field.NewBool(table, "deleted")
 
-	p.fillFieldMap()
+	c.fillFieldMap()
 
-	return p
+	return c
 }
 
-func (p *plgOnlineRegister) WithContext(ctx context.Context) *plgOnlineRegisterDo {
-	return p.plgOnlineRegisterDo.WithContext(ctx)
+func (c *plgOnlineRegister) WithContext(ctx context.Context) *plgOnlineRegisterDo {
+	return c.plgOnlineRegisterDo.WithContext(ctx)
 }
 
-func (p plgOnlineRegister) TableName() string { return p.plgOnlineRegisterDo.TableName() }
+func (c plgOnlineRegister) TableName() string { return c.plgOnlineRegisterDo.TableName() }
 
-func (p plgOnlineRegister) Alias() string { return p.plgOnlineRegisterDo.Alias() }
+func (c plgOnlineRegister) Alias() string { return c.plgOnlineRegisterDo.Alias() }
 
-func (p plgOnlineRegister) Columns(cols ...field.Expr) gen.Columns {
-	return p.plgOnlineRegisterDo.Columns(cols...)
-}
+func (c plgOnlineRegister) Columns(cols ...field.Expr) gen.Columns { return c.plgOnlineRegisterDo.Columns(cols...) }
 
-func (p *plgOnlineRegister) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
-	_f, ok := p.fieldMap[fieldName]
+func (c *plgOnlineRegister) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
+	_f, ok := c.fieldMap[fieldName]
 	if !ok || _f == nil {
 		return nil, false
 	}
@@ -144,238 +145,239 @@ func (p *plgOnlineRegister) GetFieldByName(fieldName string) (field.OrderExpr, b
 	return _oe, ok
 }
 
-func (p *plgOnlineRegister) fillFieldMap() {
-	p.fieldMap = make(map[string]field.Expr, 22)
-	p.fieldMap["register_id"] = p.RegisterID
-	p.fieldMap["real_name"] = p.RealName
-	p.fieldMap["sex"] = p.Sex
-	p.fieldMap["year"] = p.Year
-	p.fieldMap["special"] = p.Special
-	p.fieldMap["degree"] = p.Degree
-	p.fieldMap["mobile"] = p.Mobile
-	p.fieldMap["email"] = p.Email
-	p.fieldMap["wechat"] = p.Wechat
-	p.fieldMap["address"] = p.Address
-	p.fieldMap["content"] = p.Content
-	p.fieldMap["ip"] = p.IP
-	p.fieldMap["is_read"] = p.IsRead
-	p.fieldMap["tags"] = p.Tags
-	p.fieldMap["remark"] = p.Remark
-	p.fieldMap["is_deleted"] = p.IsDeleted
-	p.fieldMap["create_id"] = p.CreateID
-	p.fieldMap["create_name"] = p.CreateName
-	p.fieldMap["create_time"] = p.CreateTime
-	p.fieldMap["update_id"] = p.UpdateID
-	p.fieldMap["update_name"] = p.UpdateName
-	p.fieldMap["update_time"] = p.UpdateTime
+func (c *plgOnlineRegister) fillFieldMap() {
+	c.fieldMap = make(map[string]field.Expr, 23)
+	c.fieldMap["register_id"] = c.RegisterID
+	c.fieldMap["real_name"] = c.RealName
+	c.fieldMap["sex"] = c.Sex
+	c.fieldMap["year"] = c.Year
+	c.fieldMap["special"] = c.Special
+	c.fieldMap["degree"] = c.Degree
+	c.fieldMap["mobile"] = c.Mobile
+	c.fieldMap["email"] = c.Email
+	c.fieldMap["wechat"] = c.Wechat
+	c.fieldMap["address"] = c.Address
+	c.fieldMap["content"] = c.Content
+	c.fieldMap["ip"] = c.IP
+	c.fieldMap["is_read"] = c.IsRead
+	c.fieldMap["tags"] = c.Tags
+	c.fieldMap["remark"] = c.Remark
+	c.fieldMap["create_id"] = c.CreateID
+	c.fieldMap["create_name"] = c.CreateName
+	c.fieldMap["create_time"] = c.CreateTime
+	c.fieldMap["update_id"] = c.UpdateID
+	c.fieldMap["update_name"] = c.UpdateName
+	c.fieldMap["update_time"] = c.UpdateTime
+	c.fieldMap["tenant_id"] = c.TenantID
+	c.fieldMap["deleted"] = c.Deleted
 }
 
-func (p plgOnlineRegister) clone(db *gorm.DB) plgOnlineRegister {
-	p.plgOnlineRegisterDo.ReplaceConnPool(db.Statement.ConnPool)
-	return p
+func (c plgOnlineRegister) clone(db *gorm.DB) plgOnlineRegister {
+	c.plgOnlineRegisterDo.ReplaceConnPool(db.Statement.ConnPool)
+	return c
 }
 
-func (p plgOnlineRegister) replaceDB(db *gorm.DB) plgOnlineRegister {
-	p.plgOnlineRegisterDo.ReplaceDB(db)
-	return p
+func (c plgOnlineRegister) replaceDB(db *gorm.DB) plgOnlineRegister {
+	c.plgOnlineRegisterDo.ReplaceDB(db)
+	return c
 }
 
 type plgOnlineRegisterDo struct{ gen.DO }
 
-func (p plgOnlineRegisterDo) Debug() *plgOnlineRegisterDo {
-	return p.withDO(p.DO.Debug())
+func (c plgOnlineRegisterDo) Debug() *plgOnlineRegisterDo {
+	return c.withDO(c.DO.Debug())
 }
 
-func (p plgOnlineRegisterDo) WithContext(ctx context.Context) *plgOnlineRegisterDo {
-	return p.withDO(p.DO.WithContext(ctx))
+func (c plgOnlineRegisterDo) WithContext(ctx context.Context) *plgOnlineRegisterDo {
+	return c.withDO(c.DO.WithContext(ctx))
 }
 
-func (p plgOnlineRegisterDo) ReadDB() *plgOnlineRegisterDo {
-	return p.Clauses(dbresolver.Read)
+func (c plgOnlineRegisterDo) Session(config *gorm.Session) *plgOnlineRegisterDo {
+	return c.withDO(c.DO.Session(config))
 }
 
-func (p plgOnlineRegisterDo) WriteDB() *plgOnlineRegisterDo {
-	return p.Clauses(dbresolver.Write)
+func (c plgOnlineRegisterDo) clauses(conds ...clause.Expression) *plgOnlineRegisterDo {
+	return c.withDO(c.DO.Clauses(conds...))
 }
 
-func (p plgOnlineRegisterDo) Session(config *gorm.Session) *plgOnlineRegisterDo {
-	return p.withDO(p.DO.Session(config))
+func (c plgOnlineRegisterDo) Returning(value interface{}, columns ...string) *plgOnlineRegisterDo {
+	return c.withDO(c.DO.Returning(value, columns...))
 }
 
-func (p plgOnlineRegisterDo) Clauses(conds ...clause.Expression) *plgOnlineRegisterDo {
-	return p.withDO(p.DO.Clauses(conds...))
+func (c plgOnlineRegisterDo) Not(conds ...gen.Condition) *plgOnlineRegisterDo {
+	return c.withDO(c.DO.Not(conds...))
 }
 
-func (p plgOnlineRegisterDo) Returning(value interface{}, columns ...string) *plgOnlineRegisterDo {
-	return p.withDO(p.DO.Returning(value, columns...))
+func (c plgOnlineRegisterDo) Or(conds ...gen.Condition) *plgOnlineRegisterDo {
+	return c.withDO(c.DO.Or(conds...))
 }
 
-func (p plgOnlineRegisterDo) Not(conds ...gen.Condition) *plgOnlineRegisterDo {
-	return p.withDO(p.DO.Not(conds...))
+func (c plgOnlineRegisterDo) Select(conds ...field.Expr) *plgOnlineRegisterDo {
+	return c.withDO(c.DO.Select(conds...))
 }
 
-func (p plgOnlineRegisterDo) Or(conds ...gen.Condition) *plgOnlineRegisterDo {
-	return p.withDO(p.DO.Or(conds...))
+func (c plgOnlineRegisterDo) Where(conds ...gen.Condition) *plgOnlineRegisterDo {
+	return c.withDO(c.DO.Where(conds...))
 }
 
-func (p plgOnlineRegisterDo) Select(conds ...field.Expr) *plgOnlineRegisterDo {
-	return p.withDO(p.DO.Select(conds...))
+func (c plgOnlineRegisterDo) Order(conds ...field.Expr) *plgOnlineRegisterDo {
+	return c.withDO(c.DO.Order(conds...))
 }
 
-func (p plgOnlineRegisterDo) Where(conds ...gen.Condition) *plgOnlineRegisterDo {
-	return p.withDO(p.DO.Where(conds...))
+func (c plgOnlineRegisterDo) Distinct(cols ...field.Expr) *plgOnlineRegisterDo {
+	return c.withDO(c.DO.Distinct(cols...))
 }
 
-func (p plgOnlineRegisterDo) Order(conds ...field.Expr) *plgOnlineRegisterDo {
-	return p.withDO(p.DO.Order(conds...))
+func (c plgOnlineRegisterDo) Omit(cols ...field.Expr) *plgOnlineRegisterDo {
+	return c.withDO(c.DO.Omit(cols...))
 }
 
-func (p plgOnlineRegisterDo) Distinct(cols ...field.Expr) *plgOnlineRegisterDo {
-	return p.withDO(p.DO.Distinct(cols...))
+func (c plgOnlineRegisterDo) Join(table schema.Tabler, on ...field.Expr) *plgOnlineRegisterDo {
+	return c.withDO(c.DO.Join(table, on...))
 }
 
-func (p plgOnlineRegisterDo) Omit(cols ...field.Expr) *plgOnlineRegisterDo {
-	return p.withDO(p.DO.Omit(cols...))
+func (c plgOnlineRegisterDo) LeftJoin(table schema.Tabler, on ...field.Expr) *plgOnlineRegisterDo {
+	return c.withDO(c.DO.LeftJoin(table, on...))
 }
 
-func (p plgOnlineRegisterDo) Join(table schema.Tabler, on ...field.Expr) *plgOnlineRegisterDo {
-	return p.withDO(p.DO.Join(table, on...))
+func (c plgOnlineRegisterDo) RightJoin(table schema.Tabler, on ...field.Expr) *plgOnlineRegisterDo {
+	return c.withDO(c.DO.RightJoin(table, on...))
 }
 
-func (p plgOnlineRegisterDo) LeftJoin(table schema.Tabler, on ...field.Expr) *plgOnlineRegisterDo {
-	return p.withDO(p.DO.LeftJoin(table, on...))
+func (c plgOnlineRegisterDo) Group(cols ...field.Expr) *plgOnlineRegisterDo {
+	return c.withDO(c.DO.Group(cols...))
 }
 
-func (p plgOnlineRegisterDo) RightJoin(table schema.Tabler, on ...field.Expr) *plgOnlineRegisterDo {
-	return p.withDO(p.DO.RightJoin(table, on...))
+func (c plgOnlineRegisterDo) Having(conds ...gen.Condition) *plgOnlineRegisterDo {
+	return c.withDO(c.DO.Having(conds...))
 }
 
-func (p plgOnlineRegisterDo) Group(cols ...field.Expr) *plgOnlineRegisterDo {
-	return p.withDO(p.DO.Group(cols...))
+func (c plgOnlineRegisterDo) Limit(limit int) *plgOnlineRegisterDo {
+	return c.withDO(c.DO.Limit(limit))
 }
 
-func (p plgOnlineRegisterDo) Having(conds ...gen.Condition) *plgOnlineRegisterDo {
-	return p.withDO(p.DO.Having(conds...))
+func (c plgOnlineRegisterDo) Offset(offset int) *plgOnlineRegisterDo {
+	return c.withDO(c.DO.Offset(offset))
 }
 
-func (p plgOnlineRegisterDo) Limit(limit int) *plgOnlineRegisterDo {
-	return p.withDO(p.DO.Limit(limit))
+func (c plgOnlineRegisterDo) Scopes(funcs ...func(gen.Dao) gen.Dao) *plgOnlineRegisterDo {
+	return c.withDO(c.DO.Scopes(funcs...))
 }
 
-func (p plgOnlineRegisterDo) Offset(offset int) *plgOnlineRegisterDo {
-	return p.withDO(p.DO.Offset(offset))
+func (c plgOnlineRegisterDo) Unscoped() *plgOnlineRegisterDo {
+	return c.withDO(c.DO.Unscoped())
 }
 
-func (p plgOnlineRegisterDo) Scopes(funcs ...func(gen.Dao) gen.Dao) *plgOnlineRegisterDo {
-	return p.withDO(p.DO.Scopes(funcs...))
+func (c plgOnlineRegisterDo) Attrs(attrs ...field.AssignExpr) *plgOnlineRegisterDo {
+	return c.withDO(c.DO.Attrs(attrs...))
 }
 
-func (p plgOnlineRegisterDo) Unscoped() *plgOnlineRegisterDo {
-	return p.withDO(p.DO.Unscoped())
+func (c plgOnlineRegisterDo) Assign(attrs ...field.AssignExpr) *plgOnlineRegisterDo {
+	return c.withDO(c.DO.Assign(attrs...))
 }
 
-func (p plgOnlineRegisterDo) Create(values ...*domain.PlgOnlineRegister) error {
+func (c plgOnlineRegisterDo) ReadDB() *plgOnlineRegisterDo {
+	return c.withDO(c.Clauses(dbresolver.Read))
+}
+
+func (c plgOnlineRegisterDo) WriteDB() *plgOnlineRegisterDo {
+	return c.withDO(c.Clauses(dbresolver.Write))
+}
+
+func (c plgOnlineRegisterDo) Create(values ...*domain.PlgOnlineRegister) error {
 	if len(values) == 0 {
 		return nil
 	}
-	return p.DO.Create(values)
+	return c.DO.Create(values)
 }
 
-func (p plgOnlineRegisterDo) CreateInBatches(values []*domain.PlgOnlineRegister, batchSize int) error {
-	return p.DO.CreateInBatches(values, batchSize)
+func (c plgOnlineRegisterDo) CreateInBatches(values []*domain.PlgOnlineRegister, batchSize int) error {
+	return c.DO.CreateInBatches(values, batchSize)
 }
 
 // Save : !!! underlying implementation is different with GORM
 // The method is equivalent to executing the statement: db.Clauses(clause.OnConflict{UpdateAll: true}).Create(values)
-func (p plgOnlineRegisterDo) Save(values ...*domain.PlgOnlineRegister) error {
+func (c plgOnlineRegisterDo) Save(values ...*domain.PlgOnlineRegister) error {
 	if len(values) == 0 {
 		return nil
 	}
-	return p.DO.Save(values)
+	return c.DO.Save(values)
 }
 
-func (p plgOnlineRegisterDo) First() (*domain.PlgOnlineRegister, error) {
-	if result, err := p.DO.First(); err != nil {
+func (c plgOnlineRegisterDo) First() (*domain.PlgOnlineRegister, error) {
+	if result, err := c.DO.First(); err != nil {
 		return nil, err
 	} else {
 		return result.(*domain.PlgOnlineRegister), nil
 	}
 }
 
-func (p plgOnlineRegisterDo) Take() (*domain.PlgOnlineRegister, error) {
-	if result, err := p.DO.Take(); err != nil {
+func (c plgOnlineRegisterDo) Take() (*domain.PlgOnlineRegister, error) {
+	if result, err := c.DO.Take(); err != nil {
 		return nil, err
 	} else {
 		return result.(*domain.PlgOnlineRegister), nil
 	}
 }
 
-func (p plgOnlineRegisterDo) Last() (*domain.PlgOnlineRegister, error) {
-	if result, err := p.DO.Last(); err != nil {
+func (c plgOnlineRegisterDo) Last() (*domain.PlgOnlineRegister, error) {
+	if result, err := c.DO.Last(); err != nil {
 		return nil, err
 	} else {
 		return result.(*domain.PlgOnlineRegister), nil
 	}
 }
 
-func (p plgOnlineRegisterDo) Find() ([]*domain.PlgOnlineRegister, error) {
-	result, err := p.DO.Find()
+func (c plgOnlineRegisterDo) Find() ([]*domain.PlgOnlineRegister, error) {
+	result, err := c.DO.Find()
 	return result.([]*domain.PlgOnlineRegister), err
 }
 
-func (p plgOnlineRegisterDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*domain.PlgOnlineRegister, err error) {
+func (c plgOnlineRegisterDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*domain.PlgOnlineRegister, err error) {
 	buf := make([]*domain.PlgOnlineRegister, 0, batchSize)
-	err = p.DO.FindInBatches(&buf, batchSize, func(tx gen.Dao, batch int) error {
+	err = c.DO.FindInBatches(&buf, batchSize, func(tx gen.Dao, batch int) error {
 		defer func() { results = append(results, buf...) }()
 		return fc(tx, batch)
 	})
 	return results, err
 }
 
-func (p plgOnlineRegisterDo) FindInBatches(result *[]*domain.PlgOnlineRegister, batchSize int, fc func(tx gen.Dao, batch int) error) error {
-	return p.DO.FindInBatches(result, batchSize, fc)
+func (c plgOnlineRegisterDo) FindInBatches(result *[]*domain.PlgOnlineRegister, batchSize int, fc func(tx gen.Dao, batch int) error) error {
+	return c.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (p plgOnlineRegisterDo) Attrs(attrs ...field.AssignExpr) *plgOnlineRegisterDo {
-	return p.withDO(p.DO.Attrs(attrs...))
-}
-
-func (p plgOnlineRegisterDo) Assign(attrs ...field.AssignExpr) *plgOnlineRegisterDo {
-	return p.withDO(p.DO.Assign(attrs...))
-}
-
-func (p plgOnlineRegisterDo) Joins(fields ...field.RelationField) *plgOnlineRegisterDo {
+func (c plgOnlineRegisterDo) Joins(fields ...field.RelationField) *plgOnlineRegisterDo {
 	for _, _f := range fields {
-		p = *p.withDO(p.DO.Joins(_f))
+		c = *c.withDO(c.DO.Joins(_f))
 	}
-	return &p
+	return &c
 }
 
-func (p plgOnlineRegisterDo) Preload(fields ...field.RelationField) *plgOnlineRegisterDo {
+func (c plgOnlineRegisterDo) Preload(fields ...field.RelationField) *plgOnlineRegisterDo {
 	for _, _f := range fields {
-		p = *p.withDO(p.DO.Preload(_f))
+		c = *c.withDO(c.DO.Preload(_f))
 	}
-	return &p
+	return &c
 }
 
-func (p plgOnlineRegisterDo) FirstOrInit() (*domain.PlgOnlineRegister, error) {
-	if result, err := p.DO.FirstOrInit(); err != nil {
+func (c plgOnlineRegisterDo) FirstOrInit() (*domain.PlgOnlineRegister, error) {
+	if result, err := c.DO.FirstOrInit(); err != nil {
 		return nil, err
 	} else {
 		return result.(*domain.PlgOnlineRegister), nil
 	}
 }
 
-func (p plgOnlineRegisterDo) FirstOrCreate() (*domain.PlgOnlineRegister, error) {
-	if result, err := p.DO.FirstOrCreate(); err != nil {
+func (c plgOnlineRegisterDo) FirstOrCreate() (*domain.PlgOnlineRegister, error) {
+	if result, err := c.DO.FirstOrCreate(); err != nil {
 		return nil, err
 	} else {
 		return result.(*domain.PlgOnlineRegister), nil
 	}
 }
 
-func (p plgOnlineRegisterDo) FindByPage(offset int, limit int) (result []*domain.PlgOnlineRegister, count int64, err error) {
-	result, err = p.Offset(offset).Limit(limit).Find()
+func (c plgOnlineRegisterDo) FindByPage(offset int, limit int) (result []*domain.PlgOnlineRegister, count int64, err error) {
+	result, err = c.Offset(offset).Limit(limit).Find()
 	if err != nil {
 		return
 	}
@@ -385,29 +387,28 @@ func (p plgOnlineRegisterDo) FindByPage(offset int, limit int) (result []*domain
 		return
 	}
 
-	count, err = p.Offset(-1).Limit(-1).Count()
+	count, err = c.Offset(-1).Limit(-1).Count()
 	return
 }
 
-func (p plgOnlineRegisterDo) ScanByPage(result interface{}, offset int, limit int) (count int64, err error) {
-	count, err = p.Count()
+func (c plgOnlineRegisterDo) ScanByPage(result interface{}, offset int, limit int) (count int64, err error) {
+	count, err = c.Count()
 	if err != nil {
 		return
 	}
-
-	err = p.Offset(offset).Limit(limit).Scan(result)
+	err = c.Offset(offset).Limit(limit).Scan(result)
 	return
 }
 
-func (p plgOnlineRegisterDo) Scan(result interface{}) (err error) {
-	return p.DO.Scan(result)
+func (c plgOnlineRegisterDo) Scan(result interface{}) (err error) {
+	return c.DO.Scan(result)
 }
 
-func (p plgOnlineRegisterDo) Delete(models ...*domain.PlgOnlineRegister) (result gen.ResultInfo, err error) {
-	return p.DO.Delete(models)
+func (c plgOnlineRegisterDo) Delete(models ...*domain.PlgOnlineRegister) (result gen.ResultInfo, err error) {
+	return c.DO.Delete(models)
 }
 
-func (p *plgOnlineRegisterDo) withDO(do gen.Dao) *plgOnlineRegisterDo {
-	p.DO = *do.(*gen.DO)
-	return p
+func (c *plgOnlineRegisterDo) withDO(do gen.Dao) *plgOnlineRegisterDo {
+	c.DO = *do.(*gen.DO)
+	return c
 }

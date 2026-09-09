@@ -39,6 +39,8 @@ func newCmsSiteChannelField(db *gorm.DB, opts ...gen.DOOption) cmsSiteChannelFie
 	_cmsSiteChannelField.ValidErrorMsg = field.NewString(tableName, "valid_error_msg")
 	_cmsSiteChannelField.ValidPattern = field.NewString(tableName, "valid_pattern")
 	_cmsSiteChannelField.SortID = field.NewInt32(tableName, "sort_id")
+	_cmsSiteChannelField.TenantID = field.NewInt64(tableName, "tenant_id")
+	_cmsSiteChannelField.Deleted = field.NewBool(tableName, "deleted")
 
 	_cmsSiteChannelField.fillFieldMap()
 
@@ -48,21 +50,23 @@ func newCmsSiteChannelField(db *gorm.DB, opts ...gen.DOOption) cmsSiteChannelFie
 type cmsSiteChannelField struct {
 	cmsSiteChannelFieldDo cmsSiteChannelFieldDo
 
-	ALL           field.Asterisk
-	FieldID       field.Int64  // 主键
-	ChannelID     field.Int64  // 所属频道
-	Name          field.String // 字段名
-	Title         field.String // 标题
-	ControlType   field.Int32  // 控件类型
-	ItemOption    field.String // 选项列表
-	DefaultValue  field.String // 默认值
-	IsPassword    field.Int32  // 是否密码框
-	IsRequired    field.Int32  // 是否必填0非必填1必填
-	EditorType    field.Int32  // 编辑器0标准型1简洁型
-	ValidTipMsg   field.String // 验证提示信息
+	ALL field.Asterisk
+	FieldID field.Int64 // 主键
+	ChannelID field.Int64 // 所属频道
+	Name field.String // 字段名
+	Title field.String // 标题
+	ControlType field.Int32 // 控件类型
+	ItemOption field.String // 选项列表
+	DefaultValue field.String // 默认值
+	IsPassword field.Int32 // 是否密码框
+	IsRequired field.Int32 // 是否必填0非必填1必填
+	EditorType field.Int32 // 编辑器0标准型1简洁型
+	ValidTipMsg field.String // 验证提示信息
 	ValidErrorMsg field.String // 验证失败提示信息
-	ValidPattern  field.String // 验证正则表达式
-	SortID        field.Int32  // 排序
+	ValidPattern field.String // 验证正则表达式
+	SortID field.Int32 // 排序
+	TenantID field.Int64
+	Deleted field.Bool
 
 	fieldMap map[string]field.Expr
 }
@@ -93,6 +97,8 @@ func (c *cmsSiteChannelField) updateTableName(table string) *cmsSiteChannelField
 	c.ValidErrorMsg = field.NewString(table, "valid_error_msg")
 	c.ValidPattern = field.NewString(table, "valid_pattern")
 	c.SortID = field.NewInt32(table, "sort_id")
+	c.TenantID = field.NewInt64(table, "tenant_id")
+	c.Deleted = field.NewBool(table, "deleted")
 
 	c.fillFieldMap()
 
@@ -107,9 +113,7 @@ func (c cmsSiteChannelField) TableName() string { return c.cmsSiteChannelFieldDo
 
 func (c cmsSiteChannelField) Alias() string { return c.cmsSiteChannelFieldDo.Alias() }
 
-func (c cmsSiteChannelField) Columns(cols ...field.Expr) gen.Columns {
-	return c.cmsSiteChannelFieldDo.Columns(cols...)
-}
+func (c cmsSiteChannelField) Columns(cols ...field.Expr) gen.Columns { return c.cmsSiteChannelFieldDo.Columns(cols...) }
 
 func (c *cmsSiteChannelField) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := c.fieldMap[fieldName]
@@ -121,7 +125,7 @@ func (c *cmsSiteChannelField) GetFieldByName(fieldName string) (field.OrderExpr,
 }
 
 func (c *cmsSiteChannelField) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 14)
+	c.fieldMap = make(map[string]field.Expr, 16)
 	c.fieldMap["field_id"] = c.FieldID
 	c.fieldMap["channel_id"] = c.ChannelID
 	c.fieldMap["name"] = c.Name
@@ -136,6 +140,8 @@ func (c *cmsSiteChannelField) fillFieldMap() {
 	c.fieldMap["valid_error_msg"] = c.ValidErrorMsg
 	c.fieldMap["valid_pattern"] = c.ValidPattern
 	c.fieldMap["sort_id"] = c.SortID
+	c.fieldMap["tenant_id"] = c.TenantID
+	c.fieldMap["deleted"] = c.Deleted
 }
 
 func (c cmsSiteChannelField) clone(db *gorm.DB) cmsSiteChannelField {
@@ -158,19 +164,11 @@ func (c cmsSiteChannelFieldDo) WithContext(ctx context.Context) *cmsSiteChannelF
 	return c.withDO(c.DO.WithContext(ctx))
 }
 
-func (c cmsSiteChannelFieldDo) ReadDB() *cmsSiteChannelFieldDo {
-	return c.Clauses(dbresolver.Read)
-}
-
-func (c cmsSiteChannelFieldDo) WriteDB() *cmsSiteChannelFieldDo {
-	return c.Clauses(dbresolver.Write)
-}
-
 func (c cmsSiteChannelFieldDo) Session(config *gorm.Session) *cmsSiteChannelFieldDo {
 	return c.withDO(c.DO.Session(config))
 }
 
-func (c cmsSiteChannelFieldDo) Clauses(conds ...clause.Expression) *cmsSiteChannelFieldDo {
+func (c cmsSiteChannelFieldDo) clauses(conds ...clause.Expression) *cmsSiteChannelFieldDo {
 	return c.withDO(c.DO.Clauses(conds...))
 }
 
@@ -242,6 +240,22 @@ func (c cmsSiteChannelFieldDo) Unscoped() *cmsSiteChannelFieldDo {
 	return c.withDO(c.DO.Unscoped())
 }
 
+func (c cmsSiteChannelFieldDo) Attrs(attrs ...field.AssignExpr) *cmsSiteChannelFieldDo {
+	return c.withDO(c.DO.Attrs(attrs...))
+}
+
+func (c cmsSiteChannelFieldDo) Assign(attrs ...field.AssignExpr) *cmsSiteChannelFieldDo {
+	return c.withDO(c.DO.Assign(attrs...))
+}
+
+func (c cmsSiteChannelFieldDo) ReadDB() *cmsSiteChannelFieldDo {
+	return c.withDO(c.Clauses(dbresolver.Read))
+}
+
+func (c cmsSiteChannelFieldDo) WriteDB() *cmsSiteChannelFieldDo {
+	return c.withDO(c.Clauses(dbresolver.Write))
+}
+
 func (c cmsSiteChannelFieldDo) Create(values ...*domain.CmsSiteChannelField) error {
 	if len(values) == 0 {
 		return nil
@@ -304,14 +318,6 @@ func (c cmsSiteChannelFieldDo) FindInBatches(result *[]*domain.CmsSiteChannelFie
 	return c.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (c cmsSiteChannelFieldDo) Attrs(attrs ...field.AssignExpr) *cmsSiteChannelFieldDo {
-	return c.withDO(c.DO.Attrs(attrs...))
-}
-
-func (c cmsSiteChannelFieldDo) Assign(attrs ...field.AssignExpr) *cmsSiteChannelFieldDo {
-	return c.withDO(c.DO.Assign(attrs...))
-}
-
 func (c cmsSiteChannelFieldDo) Joins(fields ...field.RelationField) *cmsSiteChannelFieldDo {
 	for _, _f := range fields {
 		c = *c.withDO(c.DO.Joins(_f))
@@ -362,7 +368,6 @@ func (c cmsSiteChannelFieldDo) ScanByPage(result interface{}, offset int, limit 
 	if err != nil {
 		return
 	}
-
 	err = c.Offset(offset).Limit(limit).Scan(result)
 	return
 }

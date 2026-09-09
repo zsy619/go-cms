@@ -36,7 +36,6 @@ func newWeixinAccount(db *gorm.DB, opts ...gen.DOOption) weixinAccount {
 	_weixinAccount.IsPush = field.NewBool(tableName, "is_push")
 	_weixinAccount.SortID = field.NewInt32(tableName, "sort_id")
 	_weixinAccount.Status = field.NewInt32(tableName, "status")
-	_weixinAccount.IsDeleted = field.NewBool(tableName, "is_deleted")
 	_weixinAccount.BelongTo = field.NewString(tableName, "belong_to")
 	_weixinAccount.CreateID = field.NewInt32(tableName, "create_id")
 	_weixinAccount.CreateName = field.NewString(tableName, "create_name")
@@ -44,6 +43,8 @@ func newWeixinAccount(db *gorm.DB, opts ...gen.DOOption) weixinAccount {
 	_weixinAccount.UpdateID = field.NewInt32(tableName, "update_id")
 	_weixinAccount.UpdateName = field.NewString(tableName, "update_name")
 	_weixinAccount.UpdateTime = field.NewTime(tableName, "update_time")
+	_weixinAccount.TenantID = field.NewInt64(tableName, "tenant_id")
+	_weixinAccount.Deleted = field.NewBool(tableName, "deleted")
 
 	_weixinAccount.fillFieldMap()
 
@@ -53,81 +54,81 @@ func newWeixinAccount(db *gorm.DB, opts ...gen.DOOption) weixinAccount {
 type weixinAccount struct {
 	weixinAccountDo weixinAccountDo
 
-	ALL        field.Asterisk
-	AccountID  field.Int64  // 主键
-	Name       field.String // 公众号名称
-	OriginalID field.String // 公众号原始ID
-	WxCode     field.String // 公众平台微信号
-	Token      field.String // 令牌ToKen
-	AppID      field.String // 开发者IDAppId
-	AppSecret  field.String // 开发者密码AppSecret
-	AppAesKey  field.String // 消息加解密密钥
-	IsPush     field.Bool   // 内容推送
-	SortID     field.Int32  // 排序
-	Status     field.Int32  // 状态0草稿1提交2审核通过3审核未通过4驳回
-	IsDeleted  field.Bool   // 删除标识
-	BelongTo   field.String // 归属
-	CreateID   field.Int32  // 创建人ID
-	CreateName field.String // 创建人姓名
-	CreateTime field.Time   // 创建时间
-	UpdateID   field.Int32  // 更新人ID
-	UpdateName field.String // 更新人姓名
-	UpdateTime field.Time   // 修改时间
+	ALL field.Asterisk
+	AccountID field.Int64
+	Name field.String
+	OriginalID field.String
+	WxCode field.String
+	Token field.String
+	AppID field.String
+	AppSecret field.String
+	AppAesKey field.String
+	IsPush field.Bool
+	SortID field.Int32
+	Status field.Int32
+	BelongTo field.String
+	CreateID field.Int32
+	CreateName field.String
+	CreateTime field.Time
+	UpdateID field.Int32
+	UpdateName field.String
+	UpdateTime field.Time
+	TenantID field.Int64
+	Deleted field.Bool
 
 	fieldMap map[string]field.Expr
 }
 
-func (w weixinAccount) Table(newTableName string) *weixinAccount {
-	w.weixinAccountDo.UseTable(newTableName)
-	return w.updateTableName(newTableName)
+func (c weixinAccount) Table(newTableName string) *weixinAccount {
+	c.weixinAccountDo.UseTable(newTableName)
+	return c.updateTableName(newTableName)
 }
 
-func (w weixinAccount) As(alias string) *weixinAccount {
-	w.weixinAccountDo.DO = *(w.weixinAccountDo.As(alias).(*gen.DO))
-	return w.updateTableName(alias)
+func (c weixinAccount) As(alias string) *weixinAccount {
+	c.weixinAccountDo.DO = *(c.weixinAccountDo.As(alias).(*gen.DO))
+	return c.updateTableName(alias)
 }
 
-func (w *weixinAccount) updateTableName(table string) *weixinAccount {
-	w.ALL = field.NewAsterisk(table)
-	w.AccountID = field.NewInt64(table, "account_id")
-	w.Name = field.NewString(table, "name")
-	w.OriginalID = field.NewString(table, "original_id")
-	w.WxCode = field.NewString(table, "wx_code")
-	w.Token = field.NewString(table, "token")
-	w.AppID = field.NewString(table, "app_id")
-	w.AppSecret = field.NewString(table, "app_secret")
-	w.AppAesKey = field.NewString(table, "app_aes_key")
-	w.IsPush = field.NewBool(table, "is_push")
-	w.SortID = field.NewInt32(table, "sort_id")
-	w.Status = field.NewInt32(table, "status")
-	w.IsDeleted = field.NewBool(table, "is_deleted")
-	w.BelongTo = field.NewString(table, "belong_to")
-	w.CreateID = field.NewInt32(table, "create_id")
-	w.CreateName = field.NewString(table, "create_name")
-	w.CreateTime = field.NewTime(table, "create_time")
-	w.UpdateID = field.NewInt32(table, "update_id")
-	w.UpdateName = field.NewString(table, "update_name")
-	w.UpdateTime = field.NewTime(table, "update_time")
+func (c *weixinAccount) updateTableName(table string) *weixinAccount {
+	c.ALL = field.NewAsterisk(table)
+	c.AccountID = field.NewInt64(table, "account_id")
+	c.Name = field.NewString(table, "name")
+	c.OriginalID = field.NewString(table, "original_id")
+	c.WxCode = field.NewString(table, "wx_code")
+	c.Token = field.NewString(table, "token")
+	c.AppID = field.NewString(table, "app_id")
+	c.AppSecret = field.NewString(table, "app_secret")
+	c.AppAesKey = field.NewString(table, "app_aes_key")
+	c.IsPush = field.NewBool(table, "is_push")
+	c.SortID = field.NewInt32(table, "sort_id")
+	c.Status = field.NewInt32(table, "status")
+	c.BelongTo = field.NewString(table, "belong_to")
+	c.CreateID = field.NewInt32(table, "create_id")
+	c.CreateName = field.NewString(table, "create_name")
+	c.CreateTime = field.NewTime(table, "create_time")
+	c.UpdateID = field.NewInt32(table, "update_id")
+	c.UpdateName = field.NewString(table, "update_name")
+	c.UpdateTime = field.NewTime(table, "update_time")
+	c.TenantID = field.NewInt64(table, "tenant_id")
+	c.Deleted = field.NewBool(table, "deleted")
 
-	w.fillFieldMap()
+	c.fillFieldMap()
 
-	return w
+	return c
 }
 
-func (w *weixinAccount) WithContext(ctx context.Context) *weixinAccountDo {
-	return w.weixinAccountDo.WithContext(ctx)
+func (c *weixinAccount) WithContext(ctx context.Context) *weixinAccountDo {
+	return c.weixinAccountDo.WithContext(ctx)
 }
 
-func (w weixinAccount) TableName() string { return w.weixinAccountDo.TableName() }
+func (c weixinAccount) TableName() string { return c.weixinAccountDo.TableName() }
 
-func (w weixinAccount) Alias() string { return w.weixinAccountDo.Alias() }
+func (c weixinAccount) Alias() string { return c.weixinAccountDo.Alias() }
 
-func (w weixinAccount) Columns(cols ...field.Expr) gen.Columns {
-	return w.weixinAccountDo.Columns(cols...)
-}
+func (c weixinAccount) Columns(cols ...field.Expr) gen.Columns { return c.weixinAccountDo.Columns(cols...) }
 
-func (w *weixinAccount) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
-	_f, ok := w.fieldMap[fieldName]
+func (c *weixinAccount) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
+	_f, ok := c.fieldMap[fieldName]
 	if !ok || _f == nil {
 		return nil, false
 	}
@@ -135,235 +136,236 @@ func (w *weixinAccount) GetFieldByName(fieldName string) (field.OrderExpr, bool)
 	return _oe, ok
 }
 
-func (w *weixinAccount) fillFieldMap() {
-	w.fieldMap = make(map[string]field.Expr, 19)
-	w.fieldMap["account_id"] = w.AccountID
-	w.fieldMap["name"] = w.Name
-	w.fieldMap["original_id"] = w.OriginalID
-	w.fieldMap["wx_code"] = w.WxCode
-	w.fieldMap["token"] = w.Token
-	w.fieldMap["app_id"] = w.AppID
-	w.fieldMap["app_secret"] = w.AppSecret
-	w.fieldMap["app_aes_key"] = w.AppAesKey
-	w.fieldMap["is_push"] = w.IsPush
-	w.fieldMap["sort_id"] = w.SortID
-	w.fieldMap["status"] = w.Status
-	w.fieldMap["is_deleted"] = w.IsDeleted
-	w.fieldMap["belong_to"] = w.BelongTo
-	w.fieldMap["create_id"] = w.CreateID
-	w.fieldMap["create_name"] = w.CreateName
-	w.fieldMap["create_time"] = w.CreateTime
-	w.fieldMap["update_id"] = w.UpdateID
-	w.fieldMap["update_name"] = w.UpdateName
-	w.fieldMap["update_time"] = w.UpdateTime
+func (c *weixinAccount) fillFieldMap() {
+	c.fieldMap = make(map[string]field.Expr, 20)
+	c.fieldMap["account_id"] = c.AccountID
+	c.fieldMap["name"] = c.Name
+	c.fieldMap["original_id"] = c.OriginalID
+	c.fieldMap["wx_code"] = c.WxCode
+	c.fieldMap["token"] = c.Token
+	c.fieldMap["app_id"] = c.AppID
+	c.fieldMap["app_secret"] = c.AppSecret
+	c.fieldMap["app_aes_key"] = c.AppAesKey
+	c.fieldMap["is_push"] = c.IsPush
+	c.fieldMap["sort_id"] = c.SortID
+	c.fieldMap["status"] = c.Status
+	c.fieldMap["belong_to"] = c.BelongTo
+	c.fieldMap["create_id"] = c.CreateID
+	c.fieldMap["create_name"] = c.CreateName
+	c.fieldMap["create_time"] = c.CreateTime
+	c.fieldMap["update_id"] = c.UpdateID
+	c.fieldMap["update_name"] = c.UpdateName
+	c.fieldMap["update_time"] = c.UpdateTime
+	c.fieldMap["tenant_id"] = c.TenantID
+	c.fieldMap["deleted"] = c.Deleted
 }
 
-func (w weixinAccount) clone(db *gorm.DB) weixinAccount {
-	w.weixinAccountDo.ReplaceConnPool(db.Statement.ConnPool)
-	return w
+func (c weixinAccount) clone(db *gorm.DB) weixinAccount {
+	c.weixinAccountDo.ReplaceConnPool(db.Statement.ConnPool)
+	return c
 }
 
-func (w weixinAccount) replaceDB(db *gorm.DB) weixinAccount {
-	w.weixinAccountDo.ReplaceDB(db)
-	return w
+func (c weixinAccount) replaceDB(db *gorm.DB) weixinAccount {
+	c.weixinAccountDo.ReplaceDB(db)
+	return c
 }
 
 type weixinAccountDo struct{ gen.DO }
 
-func (w weixinAccountDo) Debug() *weixinAccountDo {
-	return w.withDO(w.DO.Debug())
+func (c weixinAccountDo) Debug() *weixinAccountDo {
+	return c.withDO(c.DO.Debug())
 }
 
-func (w weixinAccountDo) WithContext(ctx context.Context) *weixinAccountDo {
-	return w.withDO(w.DO.WithContext(ctx))
+func (c weixinAccountDo) WithContext(ctx context.Context) *weixinAccountDo {
+	return c.withDO(c.DO.WithContext(ctx))
 }
 
-func (w weixinAccountDo) ReadDB() *weixinAccountDo {
-	return w.Clauses(dbresolver.Read)
+func (c weixinAccountDo) Session(config *gorm.Session) *weixinAccountDo {
+	return c.withDO(c.DO.Session(config))
 }
 
-func (w weixinAccountDo) WriteDB() *weixinAccountDo {
-	return w.Clauses(dbresolver.Write)
+func (c weixinAccountDo) clauses(conds ...clause.Expression) *weixinAccountDo {
+	return c.withDO(c.DO.Clauses(conds...))
 }
 
-func (w weixinAccountDo) Session(config *gorm.Session) *weixinAccountDo {
-	return w.withDO(w.DO.Session(config))
+func (c weixinAccountDo) Returning(value interface{}, columns ...string) *weixinAccountDo {
+	return c.withDO(c.DO.Returning(value, columns...))
 }
 
-func (w weixinAccountDo) Clauses(conds ...clause.Expression) *weixinAccountDo {
-	return w.withDO(w.DO.Clauses(conds...))
+func (c weixinAccountDo) Not(conds ...gen.Condition) *weixinAccountDo {
+	return c.withDO(c.DO.Not(conds...))
 }
 
-func (w weixinAccountDo) Returning(value interface{}, columns ...string) *weixinAccountDo {
-	return w.withDO(w.DO.Returning(value, columns...))
+func (c weixinAccountDo) Or(conds ...gen.Condition) *weixinAccountDo {
+	return c.withDO(c.DO.Or(conds...))
 }
 
-func (w weixinAccountDo) Not(conds ...gen.Condition) *weixinAccountDo {
-	return w.withDO(w.DO.Not(conds...))
+func (c weixinAccountDo) Select(conds ...field.Expr) *weixinAccountDo {
+	return c.withDO(c.DO.Select(conds...))
 }
 
-func (w weixinAccountDo) Or(conds ...gen.Condition) *weixinAccountDo {
-	return w.withDO(w.DO.Or(conds...))
+func (c weixinAccountDo) Where(conds ...gen.Condition) *weixinAccountDo {
+	return c.withDO(c.DO.Where(conds...))
 }
 
-func (w weixinAccountDo) Select(conds ...field.Expr) *weixinAccountDo {
-	return w.withDO(w.DO.Select(conds...))
+func (c weixinAccountDo) Order(conds ...field.Expr) *weixinAccountDo {
+	return c.withDO(c.DO.Order(conds...))
 }
 
-func (w weixinAccountDo) Where(conds ...gen.Condition) *weixinAccountDo {
-	return w.withDO(w.DO.Where(conds...))
+func (c weixinAccountDo) Distinct(cols ...field.Expr) *weixinAccountDo {
+	return c.withDO(c.DO.Distinct(cols...))
 }
 
-func (w weixinAccountDo) Order(conds ...field.Expr) *weixinAccountDo {
-	return w.withDO(w.DO.Order(conds...))
+func (c weixinAccountDo) Omit(cols ...field.Expr) *weixinAccountDo {
+	return c.withDO(c.DO.Omit(cols...))
 }
 
-func (w weixinAccountDo) Distinct(cols ...field.Expr) *weixinAccountDo {
-	return w.withDO(w.DO.Distinct(cols...))
+func (c weixinAccountDo) Join(table schema.Tabler, on ...field.Expr) *weixinAccountDo {
+	return c.withDO(c.DO.Join(table, on...))
 }
 
-func (w weixinAccountDo) Omit(cols ...field.Expr) *weixinAccountDo {
-	return w.withDO(w.DO.Omit(cols...))
+func (c weixinAccountDo) LeftJoin(table schema.Tabler, on ...field.Expr) *weixinAccountDo {
+	return c.withDO(c.DO.LeftJoin(table, on...))
 }
 
-func (w weixinAccountDo) Join(table schema.Tabler, on ...field.Expr) *weixinAccountDo {
-	return w.withDO(w.DO.Join(table, on...))
+func (c weixinAccountDo) RightJoin(table schema.Tabler, on ...field.Expr) *weixinAccountDo {
+	return c.withDO(c.DO.RightJoin(table, on...))
 }
 
-func (w weixinAccountDo) LeftJoin(table schema.Tabler, on ...field.Expr) *weixinAccountDo {
-	return w.withDO(w.DO.LeftJoin(table, on...))
+func (c weixinAccountDo) Group(cols ...field.Expr) *weixinAccountDo {
+	return c.withDO(c.DO.Group(cols...))
 }
 
-func (w weixinAccountDo) RightJoin(table schema.Tabler, on ...field.Expr) *weixinAccountDo {
-	return w.withDO(w.DO.RightJoin(table, on...))
+func (c weixinAccountDo) Having(conds ...gen.Condition) *weixinAccountDo {
+	return c.withDO(c.DO.Having(conds...))
 }
 
-func (w weixinAccountDo) Group(cols ...field.Expr) *weixinAccountDo {
-	return w.withDO(w.DO.Group(cols...))
+func (c weixinAccountDo) Limit(limit int) *weixinAccountDo {
+	return c.withDO(c.DO.Limit(limit))
 }
 
-func (w weixinAccountDo) Having(conds ...gen.Condition) *weixinAccountDo {
-	return w.withDO(w.DO.Having(conds...))
+func (c weixinAccountDo) Offset(offset int) *weixinAccountDo {
+	return c.withDO(c.DO.Offset(offset))
 }
 
-func (w weixinAccountDo) Limit(limit int) *weixinAccountDo {
-	return w.withDO(w.DO.Limit(limit))
+func (c weixinAccountDo) Scopes(funcs ...func(gen.Dao) gen.Dao) *weixinAccountDo {
+	return c.withDO(c.DO.Scopes(funcs...))
 }
 
-func (w weixinAccountDo) Offset(offset int) *weixinAccountDo {
-	return w.withDO(w.DO.Offset(offset))
+func (c weixinAccountDo) Unscoped() *weixinAccountDo {
+	return c.withDO(c.DO.Unscoped())
 }
 
-func (w weixinAccountDo) Scopes(funcs ...func(gen.Dao) gen.Dao) *weixinAccountDo {
-	return w.withDO(w.DO.Scopes(funcs...))
+func (c weixinAccountDo) Attrs(attrs ...field.AssignExpr) *weixinAccountDo {
+	return c.withDO(c.DO.Attrs(attrs...))
 }
 
-func (w weixinAccountDo) Unscoped() *weixinAccountDo {
-	return w.withDO(w.DO.Unscoped())
+func (c weixinAccountDo) Assign(attrs ...field.AssignExpr) *weixinAccountDo {
+	return c.withDO(c.DO.Assign(attrs...))
 }
 
-func (w weixinAccountDo) Create(values ...*domain.WeixinAccount) error {
+func (c weixinAccountDo) ReadDB() *weixinAccountDo {
+	return c.withDO(c.Clauses(dbresolver.Read))
+}
+
+func (c weixinAccountDo) WriteDB() *weixinAccountDo {
+	return c.withDO(c.Clauses(dbresolver.Write))
+}
+
+func (c weixinAccountDo) Create(values ...*domain.WeixinAccount) error {
 	if len(values) == 0 {
 		return nil
 	}
-	return w.DO.Create(values)
+	return c.DO.Create(values)
 }
 
-func (w weixinAccountDo) CreateInBatches(values []*domain.WeixinAccount, batchSize int) error {
-	return w.DO.CreateInBatches(values, batchSize)
+func (c weixinAccountDo) CreateInBatches(values []*domain.WeixinAccount, batchSize int) error {
+	return c.DO.CreateInBatches(values, batchSize)
 }
 
 // Save : !!! underlying implementation is different with GORM
 // The method is equivalent to executing the statement: db.Clauses(clause.OnConflict{UpdateAll: true}).Create(values)
-func (w weixinAccountDo) Save(values ...*domain.WeixinAccount) error {
+func (c weixinAccountDo) Save(values ...*domain.WeixinAccount) error {
 	if len(values) == 0 {
 		return nil
 	}
-	return w.DO.Save(values)
+	return c.DO.Save(values)
 }
 
-func (w weixinAccountDo) First() (*domain.WeixinAccount, error) {
-	if result, err := w.DO.First(); err != nil {
+func (c weixinAccountDo) First() (*domain.WeixinAccount, error) {
+	if result, err := c.DO.First(); err != nil {
 		return nil, err
 	} else {
 		return result.(*domain.WeixinAccount), nil
 	}
 }
 
-func (w weixinAccountDo) Take() (*domain.WeixinAccount, error) {
-	if result, err := w.DO.Take(); err != nil {
+func (c weixinAccountDo) Take() (*domain.WeixinAccount, error) {
+	if result, err := c.DO.Take(); err != nil {
 		return nil, err
 	} else {
 		return result.(*domain.WeixinAccount), nil
 	}
 }
 
-func (w weixinAccountDo) Last() (*domain.WeixinAccount, error) {
-	if result, err := w.DO.Last(); err != nil {
+func (c weixinAccountDo) Last() (*domain.WeixinAccount, error) {
+	if result, err := c.DO.Last(); err != nil {
 		return nil, err
 	} else {
 		return result.(*domain.WeixinAccount), nil
 	}
 }
 
-func (w weixinAccountDo) Find() ([]*domain.WeixinAccount, error) {
-	result, err := w.DO.Find()
+func (c weixinAccountDo) Find() ([]*domain.WeixinAccount, error) {
+	result, err := c.DO.Find()
 	return result.([]*domain.WeixinAccount), err
 }
 
-func (w weixinAccountDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*domain.WeixinAccount, err error) {
+func (c weixinAccountDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*domain.WeixinAccount, err error) {
 	buf := make([]*domain.WeixinAccount, 0, batchSize)
-	err = w.DO.FindInBatches(&buf, batchSize, func(tx gen.Dao, batch int) error {
+	err = c.DO.FindInBatches(&buf, batchSize, func(tx gen.Dao, batch int) error {
 		defer func() { results = append(results, buf...) }()
 		return fc(tx, batch)
 	})
 	return results, err
 }
 
-func (w weixinAccountDo) FindInBatches(result *[]*domain.WeixinAccount, batchSize int, fc func(tx gen.Dao, batch int) error) error {
-	return w.DO.FindInBatches(result, batchSize, fc)
+func (c weixinAccountDo) FindInBatches(result *[]*domain.WeixinAccount, batchSize int, fc func(tx gen.Dao, batch int) error) error {
+	return c.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (w weixinAccountDo) Attrs(attrs ...field.AssignExpr) *weixinAccountDo {
-	return w.withDO(w.DO.Attrs(attrs...))
-}
-
-func (w weixinAccountDo) Assign(attrs ...field.AssignExpr) *weixinAccountDo {
-	return w.withDO(w.DO.Assign(attrs...))
-}
-
-func (w weixinAccountDo) Joins(fields ...field.RelationField) *weixinAccountDo {
+func (c weixinAccountDo) Joins(fields ...field.RelationField) *weixinAccountDo {
 	for _, _f := range fields {
-		w = *w.withDO(w.DO.Joins(_f))
+		c = *c.withDO(c.DO.Joins(_f))
 	}
-	return &w
+	return &c
 }
 
-func (w weixinAccountDo) Preload(fields ...field.RelationField) *weixinAccountDo {
+func (c weixinAccountDo) Preload(fields ...field.RelationField) *weixinAccountDo {
 	for _, _f := range fields {
-		w = *w.withDO(w.DO.Preload(_f))
+		c = *c.withDO(c.DO.Preload(_f))
 	}
-	return &w
+	return &c
 }
 
-func (w weixinAccountDo) FirstOrInit() (*domain.WeixinAccount, error) {
-	if result, err := w.DO.FirstOrInit(); err != nil {
+func (c weixinAccountDo) FirstOrInit() (*domain.WeixinAccount, error) {
+	if result, err := c.DO.FirstOrInit(); err != nil {
 		return nil, err
 	} else {
 		return result.(*domain.WeixinAccount), nil
 	}
 }
 
-func (w weixinAccountDo) FirstOrCreate() (*domain.WeixinAccount, error) {
-	if result, err := w.DO.FirstOrCreate(); err != nil {
+func (c weixinAccountDo) FirstOrCreate() (*domain.WeixinAccount, error) {
+	if result, err := c.DO.FirstOrCreate(); err != nil {
 		return nil, err
 	} else {
 		return result.(*domain.WeixinAccount), nil
 	}
 }
 
-func (w weixinAccountDo) FindByPage(offset int, limit int) (result []*domain.WeixinAccount, count int64, err error) {
-	result, err = w.Offset(offset).Limit(limit).Find()
+func (c weixinAccountDo) FindByPage(offset int, limit int) (result []*domain.WeixinAccount, count int64, err error) {
+	result, err = c.Offset(offset).Limit(limit).Find()
 	if err != nil {
 		return
 	}
@@ -373,29 +375,28 @@ func (w weixinAccountDo) FindByPage(offset int, limit int) (result []*domain.Wei
 		return
 	}
 
-	count, err = w.Offset(-1).Limit(-1).Count()
+	count, err = c.Offset(-1).Limit(-1).Count()
 	return
 }
 
-func (w weixinAccountDo) ScanByPage(result interface{}, offset int, limit int) (count int64, err error) {
-	count, err = w.Count()
+func (c weixinAccountDo) ScanByPage(result interface{}, offset int, limit int) (count int64, err error) {
+	count, err = c.Count()
 	if err != nil {
 		return
 	}
-
-	err = w.Offset(offset).Limit(limit).Scan(result)
+	err = c.Offset(offset).Limit(limit).Scan(result)
 	return
 }
 
-func (w weixinAccountDo) Scan(result interface{}) (err error) {
-	return w.DO.Scan(result)
+func (c weixinAccountDo) Scan(result interface{}) (err error) {
+	return c.DO.Scan(result)
 }
 
-func (w weixinAccountDo) Delete(models ...*domain.WeixinAccount) (result gen.ResultInfo, err error) {
-	return w.DO.Delete(models)
+func (c weixinAccountDo) Delete(models ...*domain.WeixinAccount) (result gen.ResultInfo, err error) {
+	return c.DO.Delete(models)
 }
 
-func (w *weixinAccountDo) withDO(do gen.Dao) *weixinAccountDo {
-	w.DO = *do.(*gen.DO)
-	return w
+func (c *weixinAccountDo) withDO(do gen.Dao) *weixinAccountDo {
+	c.DO = *do.(*gen.DO)
+	return c
 }

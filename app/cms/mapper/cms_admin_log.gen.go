@@ -10,10 +10,8 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"gorm.io/gorm/schema"
-
 	"gorm.io/gen"
 	"gorm.io/gen/field"
-
 	"gorm.io/plugin/dbresolver"
 
 	"haedu.gov.cn/cms/app/cms/domain"
@@ -36,6 +34,8 @@ func newCmsAdminLog(db *gorm.DB, opts ...gen.DOOption) cmsAdminLog {
 	_cmsAdminLog.StatusCode = field.NewString(tableName, "status_code")
 	_cmsAdminLog.IP = field.NewString(tableName, "ip")
 	_cmsAdminLog.CreateTime = field.NewTime(tableName, "create_time")
+	_cmsAdminLog.TenantID = field.NewInt64(tableName, "tenant_id")
+	_cmsAdminLog.Deleted = field.NewBool(tableName, "deleted")
 
 	_cmsAdminLog.fillFieldMap()
 
@@ -45,16 +45,18 @@ func newCmsAdminLog(db *gorm.DB, opts ...gen.DOOption) cmsAdminLog {
 type cmsAdminLog struct {
 	cmsAdminLogDo cmsAdminLogDo
 
-	ALL        field.Asterisk
-	LogID      field.Int64  // 主键
-	UserID     field.Int64  // 用户id
-	UserName   field.String // 账号
-	Method     field.String // 请求方法
-	Path       field.String // 请求路径
-	Query      field.String // 请求参数
-	StatusCode field.String // 响应状态码
-	IP         field.String // IP地址
-	CreateTime field.Time   // 记录时间
+	ALL field.Asterisk
+	LogID field.Int64
+	UserID field.Int64
+	UserName field.String
+	Method field.String
+	Path field.String
+	Query field.String
+	StatusCode field.String
+	IP field.String
+	CreateTime field.Time
+	TenantID field.Int64
+	Deleted field.Bool
 
 	fieldMap map[string]field.Expr
 }
@@ -80,6 +82,8 @@ func (c *cmsAdminLog) updateTableName(table string) *cmsAdminLog {
 	c.StatusCode = field.NewString(table, "status_code")
 	c.IP = field.NewString(table, "ip")
 	c.CreateTime = field.NewTime(table, "create_time")
+	c.TenantID = field.NewInt64(table, "tenant_id")
+	c.Deleted = field.NewBool(table, "deleted")
 
 	c.fillFieldMap()
 
@@ -106,7 +110,7 @@ func (c *cmsAdminLog) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *cmsAdminLog) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 9)
+	c.fieldMap = make(map[string]field.Expr, 11)
 	c.fieldMap["log_id"] = c.LogID
 	c.fieldMap["user_id"] = c.UserID
 	c.fieldMap["user_name"] = c.UserName
@@ -116,6 +120,8 @@ func (c *cmsAdminLog) fillFieldMap() {
 	c.fieldMap["status_code"] = c.StatusCode
 	c.fieldMap["ip"] = c.IP
 	c.fieldMap["create_time"] = c.CreateTime
+	c.fieldMap["tenant_id"] = c.TenantID
+	c.fieldMap["deleted"] = c.Deleted
 }
 
 func (c cmsAdminLog) clone(db *gorm.DB) cmsAdminLog {
@@ -138,19 +144,11 @@ func (c cmsAdminLogDo) WithContext(ctx context.Context) *cmsAdminLogDo {
 	return c.withDO(c.DO.WithContext(ctx))
 }
 
-func (c cmsAdminLogDo) ReadDB() *cmsAdminLogDo {
-	return c.Clauses(dbresolver.Read)
-}
-
-func (c cmsAdminLogDo) WriteDB() *cmsAdminLogDo {
-	return c.Clauses(dbresolver.Write)
-}
-
 func (c cmsAdminLogDo) Session(config *gorm.Session) *cmsAdminLogDo {
 	return c.withDO(c.DO.Session(config))
 }
 
-func (c cmsAdminLogDo) Clauses(conds ...clause.Expression) *cmsAdminLogDo {
+func (c cmsAdminLogDo) clauses(conds ...clause.Expression) *cmsAdminLogDo {
 	return c.withDO(c.DO.Clauses(conds...))
 }
 
@@ -222,6 +220,22 @@ func (c cmsAdminLogDo) Unscoped() *cmsAdminLogDo {
 	return c.withDO(c.DO.Unscoped())
 }
 
+func (c cmsAdminLogDo) Attrs(attrs ...field.AssignExpr) *cmsAdminLogDo {
+	return c.withDO(c.DO.Attrs(attrs...))
+}
+
+func (c cmsAdminLogDo) Assign(attrs ...field.AssignExpr) *cmsAdminLogDo {
+	return c.withDO(c.DO.Assign(attrs...))
+}
+
+func (c cmsAdminLogDo) ReadDB() *cmsAdminLogDo {
+	return c.withDO(c.Clauses(dbresolver.Read))
+}
+
+func (c cmsAdminLogDo) WriteDB() *cmsAdminLogDo {
+	return c.withDO(c.Clauses(dbresolver.Write))
+}
+
 func (c cmsAdminLogDo) Create(values ...*domain.CmsAdminLog) error {
 	if len(values) == 0 {
 		return nil
@@ -284,14 +298,6 @@ func (c cmsAdminLogDo) FindInBatches(result *[]*domain.CmsAdminLog, batchSize in
 	return c.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (c cmsAdminLogDo) Attrs(attrs ...field.AssignExpr) *cmsAdminLogDo {
-	return c.withDO(c.DO.Attrs(attrs...))
-}
-
-func (c cmsAdminLogDo) Assign(attrs ...field.AssignExpr) *cmsAdminLogDo {
-	return c.withDO(c.DO.Assign(attrs...))
-}
-
 func (c cmsAdminLogDo) Joins(fields ...field.RelationField) *cmsAdminLogDo {
 	for _, _f := range fields {
 		c = *c.withDO(c.DO.Joins(_f))
@@ -342,7 +348,6 @@ func (c cmsAdminLogDo) ScanByPage(result interface{}, offset int, limit int) (co
 	if err != nil {
 		return
 	}
-
 	err = c.Offset(offset).Limit(limit).Scan(result)
 	return
 }

@@ -36,7 +36,7 @@ func (svc *ApiSite) Default() (*service_model.ApiSiteModel, error) {
 	}
 	site, siteDo := mapper.CmsSiteDo()
 	find := &service_model.ApiSiteModel{}
-	err := siteDo.Where(site.IsDefault.Is(true), site.IsDeleted.Is(false)).Scan(&find)
+	err := siteDo.Where(site.IsDefault.Is(true), site.Deleted.Is(false)).Scan(&find)
 	if err == nil {
 		// 获取默认模板
 		if find.Template == "" {
@@ -76,7 +76,7 @@ func (svc *ApiSite) FindByHost(host string) (*service_model.ApiSiteModel, error)
 	}
 	// 获取站点信息
 	site, siteDo := mapper.CmsSiteDo()
-	err := siteDo.Where(site.SiteID.Eq(domainMdl.SiteID), site.IsDeleted.Is(false)).Scan(&find)
+	err := siteDo.Where(site.SiteID.Eq(domainMdl.SiteID), site.Deleted.Is(false)).Scan(&find)
 	if err != nil {
 		return nil, err
 	}

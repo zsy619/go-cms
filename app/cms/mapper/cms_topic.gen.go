@@ -47,6 +47,8 @@ func newCmsTopic(db *gorm.DB, opts ...gen.DOOption) cmsTopic {
 	_cmsTopic.UpdateID = field.NewInt32(tableName, "update_id")
 	_cmsTopic.UpdateName = field.NewString(tableName, "update_name")
 	_cmsTopic.UpdateTime = field.NewTime(tableName, "update_time")
+	_cmsTopic.TenantID = field.NewInt64(tableName, "tenant_id")
+	_cmsTopic.Deleted = field.NewBool(tableName, "deleted")
 
 	_cmsTopic.fillFieldMap()
 
@@ -56,29 +58,31 @@ func newCmsTopic(db *gorm.DB, opts ...gen.DOOption) cmsTopic {
 type cmsTopic struct {
 	cmsTopicDo cmsTopicDo
 
-	ALL            field.Asterisk
-	TopicID        field.Int64  // 专题ID
-	SiteID         field.Int64  // 所属站点
-	ChannelID      field.Int64  // 所属频道
-	Name           field.String // 专题名称
-	Title          field.String // 专题标题
-	ImgUrl1        field.String // 图片
-	ImgUrl2        field.String // 图片
-	SeoTitle       field.String // SEO标题
-	SeoKeyword     field.String // SEO关健字
+	ALL field.Asterisk
+	TopicID field.Int64 // 专题ID
+	SiteID field.Int64 // 所属站点
+	ChannelID field.Int64 // 所属频道
+	Name field.String // 专题名称
+	Title field.String // 专题标题
+	ImgUrl1 field.String // 图片
+	ImgUrl2 field.String // 图片
+	SeoTitle field.String // SEO标题
+	SeoKeyword field.String // SEO关健字
 	SeoDescription field.String // SEO描述
-	Remark         field.String // 备注
-	SortID         field.Int32  // 排序
-	Click          field.Int32  // 浏览次数
-	Status         field.Int32  // 状态0草稿1提交2审核通过3审核未通过4驳回
-	Template       field.String // 模板路径
-	BelongTo       field.String // 归属
-	CreateID       field.Int32  // 创建人ID
-	CreateName     field.String // 创建人姓名
-	CreateTime     field.Time   // 创建时间
-	UpdateID       field.Int32  // 更新人ID
-	UpdateName     field.String // 更新人姓名
-	UpdateTime     field.Time   // 修改时间
+	Remark field.String // 备注
+	SortID field.Int32 // 排序
+	Click field.Int32 // 浏览次数
+	Status field.Int32 // 状态0草稿1提交2审核通过3审核未通过4驳回
+	Template field.String // 模板路径
+	BelongTo field.String // 归属
+	CreateID field.Int32 // 创建人ID
+	CreateName field.String // 创建人姓名
+	CreateTime field.Time // 创建时间
+	UpdateID field.Int32 // 更新人ID
+	UpdateName field.String // 更新人姓名
+	UpdateTime field.Time // 修改时间
+	TenantID field.Int64
+	Deleted field.Bool
 
 	fieldMap map[string]field.Expr
 }
@@ -117,13 +121,17 @@ func (c *cmsTopic) updateTableName(table string) *cmsTopic {
 	c.UpdateID = field.NewInt32(table, "update_id")
 	c.UpdateName = field.NewString(table, "update_name")
 	c.UpdateTime = field.NewTime(table, "update_time")
+	c.TenantID = field.NewInt64(table, "tenant_id")
+	c.Deleted = field.NewBool(table, "deleted")
 
 	c.fillFieldMap()
 
 	return c
 }
 
-func (c *cmsTopic) WithContext(ctx context.Context) *cmsTopicDo { return c.cmsTopicDo.WithContext(ctx) }
+func (c *cmsTopic) WithContext(ctx context.Context) *cmsTopicDo {
+	return c.cmsTopicDo.WithContext(ctx)
+}
 
 func (c cmsTopic) TableName() string { return c.cmsTopicDo.TableName() }
 
@@ -141,7 +149,7 @@ func (c *cmsTopic) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *cmsTopic) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 22)
+	c.fieldMap = make(map[string]field.Expr, 24)
 	c.fieldMap["topic_id"] = c.TopicID
 	c.fieldMap["site_id"] = c.SiteID
 	c.fieldMap["channel_id"] = c.ChannelID
@@ -164,6 +172,8 @@ func (c *cmsTopic) fillFieldMap() {
 	c.fieldMap["update_id"] = c.UpdateID
 	c.fieldMap["update_name"] = c.UpdateName
 	c.fieldMap["update_time"] = c.UpdateTime
+	c.fieldMap["tenant_id"] = c.TenantID
+	c.fieldMap["deleted"] = c.Deleted
 }
 
 func (c cmsTopic) clone(db *gorm.DB) cmsTopic {
@@ -186,19 +196,11 @@ func (c cmsTopicDo) WithContext(ctx context.Context) *cmsTopicDo {
 	return c.withDO(c.DO.WithContext(ctx))
 }
 
-func (c cmsTopicDo) ReadDB() *cmsTopicDo {
-	return c.Clauses(dbresolver.Read)
-}
-
-func (c cmsTopicDo) WriteDB() *cmsTopicDo {
-	return c.Clauses(dbresolver.Write)
-}
-
 func (c cmsTopicDo) Session(config *gorm.Session) *cmsTopicDo {
 	return c.withDO(c.DO.Session(config))
 }
 
-func (c cmsTopicDo) Clauses(conds ...clause.Expression) *cmsTopicDo {
+func (c cmsTopicDo) clauses(conds ...clause.Expression) *cmsTopicDo {
 	return c.withDO(c.DO.Clauses(conds...))
 }
 
@@ -270,6 +272,22 @@ func (c cmsTopicDo) Unscoped() *cmsTopicDo {
 	return c.withDO(c.DO.Unscoped())
 }
 
+func (c cmsTopicDo) Attrs(attrs ...field.AssignExpr) *cmsTopicDo {
+	return c.withDO(c.DO.Attrs(attrs...))
+}
+
+func (c cmsTopicDo) Assign(attrs ...field.AssignExpr) *cmsTopicDo {
+	return c.withDO(c.DO.Assign(attrs...))
+}
+
+func (c cmsTopicDo) ReadDB() *cmsTopicDo {
+	return c.withDO(c.Clauses(dbresolver.Read))
+}
+
+func (c cmsTopicDo) WriteDB() *cmsTopicDo {
+	return c.withDO(c.Clauses(dbresolver.Write))
+}
+
 func (c cmsTopicDo) Create(values ...*domain.CmsTopic) error {
 	if len(values) == 0 {
 		return nil
@@ -332,14 +350,6 @@ func (c cmsTopicDo) FindInBatches(result *[]*domain.CmsTopic, batchSize int, fc 
 	return c.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (c cmsTopicDo) Attrs(attrs ...field.AssignExpr) *cmsTopicDo {
-	return c.withDO(c.DO.Attrs(attrs...))
-}
-
-func (c cmsTopicDo) Assign(attrs ...field.AssignExpr) *cmsTopicDo {
-	return c.withDO(c.DO.Assign(attrs...))
-}
-
 func (c cmsTopicDo) Joins(fields ...field.RelationField) *cmsTopicDo {
 	for _, _f := range fields {
 		c = *c.withDO(c.DO.Joins(_f))
@@ -390,7 +400,6 @@ func (c cmsTopicDo) ScanByPage(result interface{}, offset int, limit int) (count
 	if err != nil {
 		return
 	}
-
 	err = c.Offset(offset).Limit(limit).Scan(result)
 	return
 }

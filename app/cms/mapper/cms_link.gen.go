@@ -51,6 +51,8 @@ func newCmsLink(db *gorm.DB, opts ...gen.DOOption) cmsLink {
 	_cmsLink.UpdateID = field.NewInt32(tableName, "update_id")
 	_cmsLink.UpdateName = field.NewString(tableName, "update_name")
 	_cmsLink.UpdateTime = field.NewTime(tableName, "update_time")
+	_cmsLink.TenantID = field.NewInt64(tableName, "tenant_id")
+	_cmsLink.Deleted = field.NewBool(tableName, "deleted")
 
 	_cmsLink.fillFieldMap()
 
@@ -60,33 +62,35 @@ func newCmsLink(db *gorm.DB, opts ...gen.DOOption) cmsLink {
 type cmsLink struct {
 	cmsLinkDo cmsLinkDo
 
-	ALL        field.Asterisk
-	LinkID     field.Int64  // 主键
-	SiteID     field.Int64  // 所属站点
-	ChannelID  field.Int64  // 所属频道
-	CategoryID field.Int64  // 类别ID
-	Title      field.String // 标题
-	CallIndex  field.String // 调用别名
-	LinkURL    field.String // 外部链接
-	Target     field.String // 是否开启浏览器新窗口
-	ImgUrl1    field.String // 网站logo地址
-	ImgUrl2    field.String // 网站logo地址
-	Remark     field.String // 备注
-	SortID     field.Int32  // 排序
-	Click      field.Int32  // 浏览次数
-	Status     field.Int32  // 状态0草稿1提交2审核通过3审核未通过4驳回
-	IsLock     field.Int32  // 是否锁定（不允许编辑）
-	IsTop      field.Int32  // 是否置顶
-	IsRed      field.Int32  // 是否推荐
-	IsHot      field.Int32  // 是否热门
-	IsSlide    field.Int32  // 是否幻灯片
-	BelongTo   field.String // 归属
-	CreateID   field.Int32  // 创建人ID
+	ALL field.Asterisk
+	LinkID field.Int64 // 主键
+	SiteID field.Int64 // 所属站点
+	ChannelID field.Int64 // 所属频道
+	CategoryID field.Int64 // 类别ID
+	Title field.String // 标题
+	CallIndex field.String // 调用别名
+	LinkURL field.String // 外部链接
+	Target field.String // 是否开启浏览器新窗口
+	ImgUrl1 field.String // 网站logo地址
+	ImgUrl2 field.String // 网站logo地址
+	Remark field.String // 备注
+	SortID field.Int32 // 排序
+	Click field.Int32 // 浏览次数
+	Status field.Int32 // 状态0草稿1提交2审核通过3审核未通过4驳回
+	IsLock field.Int32 // 是否锁定（不允许编辑）
+	IsTop field.Int32 // 是否置顶
+	IsRed field.Int32 // 是否推荐
+	IsHot field.Int32 // 是否热门
+	IsSlide field.Int32 // 是否幻灯片
+	BelongTo field.String // 归属
+	CreateID field.Int32 // 创建人ID
 	CreateName field.String // 创建人姓名
-	CreateTime field.Time   // 创建时间
-	UpdateID   field.Int32  // 更新人ID
+	CreateTime field.Time // 创建时间
+	UpdateID field.Int32 // 更新人ID
 	UpdateName field.String // 更新人姓名
-	UpdateTime field.Time   // 修改时间
+	UpdateTime field.Time // 修改时间
+	TenantID field.Int64
+	Deleted field.Bool
 
 	fieldMap map[string]field.Expr
 }
@@ -129,13 +133,17 @@ func (c *cmsLink) updateTableName(table string) *cmsLink {
 	c.UpdateID = field.NewInt32(table, "update_id")
 	c.UpdateName = field.NewString(table, "update_name")
 	c.UpdateTime = field.NewTime(table, "update_time")
+	c.TenantID = field.NewInt64(table, "tenant_id")
+	c.Deleted = field.NewBool(table, "deleted")
 
 	c.fillFieldMap()
 
 	return c
 }
 
-func (c *cmsLink) WithContext(ctx context.Context) *cmsLinkDo { return c.cmsLinkDo.WithContext(ctx) }
+func (c *cmsLink) WithContext(ctx context.Context) *cmsLinkDo {
+	return c.cmsLinkDo.WithContext(ctx)
+}
 
 func (c cmsLink) TableName() string { return c.cmsLinkDo.TableName() }
 
@@ -153,7 +161,7 @@ func (c *cmsLink) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *cmsLink) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 26)
+	c.fieldMap = make(map[string]field.Expr, 28)
 	c.fieldMap["link_id"] = c.LinkID
 	c.fieldMap["site_id"] = c.SiteID
 	c.fieldMap["channel_id"] = c.ChannelID
@@ -180,6 +188,8 @@ func (c *cmsLink) fillFieldMap() {
 	c.fieldMap["update_id"] = c.UpdateID
 	c.fieldMap["update_name"] = c.UpdateName
 	c.fieldMap["update_time"] = c.UpdateTime
+	c.fieldMap["tenant_id"] = c.TenantID
+	c.fieldMap["deleted"] = c.Deleted
 }
 
 func (c cmsLink) clone(db *gorm.DB) cmsLink {
@@ -202,19 +212,11 @@ func (c cmsLinkDo) WithContext(ctx context.Context) *cmsLinkDo {
 	return c.withDO(c.DO.WithContext(ctx))
 }
 
-func (c cmsLinkDo) ReadDB() *cmsLinkDo {
-	return c.Clauses(dbresolver.Read)
-}
-
-func (c cmsLinkDo) WriteDB() *cmsLinkDo {
-	return c.Clauses(dbresolver.Write)
-}
-
 func (c cmsLinkDo) Session(config *gorm.Session) *cmsLinkDo {
 	return c.withDO(c.DO.Session(config))
 }
 
-func (c cmsLinkDo) Clauses(conds ...clause.Expression) *cmsLinkDo {
+func (c cmsLinkDo) clauses(conds ...clause.Expression) *cmsLinkDo {
 	return c.withDO(c.DO.Clauses(conds...))
 }
 
@@ -286,6 +288,22 @@ func (c cmsLinkDo) Unscoped() *cmsLinkDo {
 	return c.withDO(c.DO.Unscoped())
 }
 
+func (c cmsLinkDo) Attrs(attrs ...field.AssignExpr) *cmsLinkDo {
+	return c.withDO(c.DO.Attrs(attrs...))
+}
+
+func (c cmsLinkDo) Assign(attrs ...field.AssignExpr) *cmsLinkDo {
+	return c.withDO(c.DO.Assign(attrs...))
+}
+
+func (c cmsLinkDo) ReadDB() *cmsLinkDo {
+	return c.withDO(c.Clauses(dbresolver.Read))
+}
+
+func (c cmsLinkDo) WriteDB() *cmsLinkDo {
+	return c.withDO(c.Clauses(dbresolver.Write))
+}
+
 func (c cmsLinkDo) Create(values ...*domain.CmsLink) error {
 	if len(values) == 0 {
 		return nil
@@ -348,14 +366,6 @@ func (c cmsLinkDo) FindInBatches(result *[]*domain.CmsLink, batchSize int, fc fu
 	return c.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (c cmsLinkDo) Attrs(attrs ...field.AssignExpr) *cmsLinkDo {
-	return c.withDO(c.DO.Attrs(attrs...))
-}
-
-func (c cmsLinkDo) Assign(attrs ...field.AssignExpr) *cmsLinkDo {
-	return c.withDO(c.DO.Assign(attrs...))
-}
-
 func (c cmsLinkDo) Joins(fields ...field.RelationField) *cmsLinkDo {
 	for _, _f := range fields {
 		c = *c.withDO(c.DO.Joins(_f))
@@ -406,7 +416,6 @@ func (c cmsLinkDo) ScanByPage(result interface{}, offset int, limit int) (count 
 	if err != nil {
 		return
 	}
-
 	err = c.Offset(offset).Limit(limit).Scan(result)
 	return
 }

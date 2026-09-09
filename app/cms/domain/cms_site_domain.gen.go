@@ -12,6 +12,8 @@ type CmsSiteDomain struct {
 	SiteID   int64  `gorm:"column:site_id;type:bigint;not null" json:"site_id" form:"site_id"`                            // 所属站点
 	Domain   string `gorm:"column:domain;type:varchar(128)" json:"domain" form:"domain"`                                  // 站点域名
 	Remark   string `gorm:"column:remark;type:varchar(512)" json:"remark" form:"remark"`                                  // 备注说明
+	TenantID int64 `gorm:"column:tenant_id;type:bigint;not null;default:0;index;comment:租户ID(多租户隔离)" json:"tenant_id" form:"tenant_id"`
+	Deleted bool `gorm:"column:deleted;type:tinyint(1);not null;default:0;index;comment:逻辑删除标识(0未删除1已删除)" json:"deleted" form:"deleted"`
 }
 
 // TableName CmsSiteDomain's table name

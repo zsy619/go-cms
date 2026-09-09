@@ -30,7 +30,6 @@ func newCmsArticleLabel(db *gorm.DB, opts ...gen.DOOption) cmsArticleLabel {
 	_cmsArticleLabel.CallIndex = field.NewString(tableName, "call_index")
 	_cmsArticleLabel.SortID = field.NewInt32(tableName, "sort_id")
 	_cmsArticleLabel.Status = field.NewInt32(tableName, "status")
-	_cmsArticleLabel.IsDeleted = field.NewBool(tableName, "is_deleted")
 	_cmsArticleLabel.BelongTo = field.NewString(tableName, "belong_to")
 	_cmsArticleLabel.CreateID = field.NewInt32(tableName, "create_id")
 	_cmsArticleLabel.CreateName = field.NewString(tableName, "create_name")
@@ -38,6 +37,8 @@ func newCmsArticleLabel(db *gorm.DB, opts ...gen.DOOption) cmsArticleLabel {
 	_cmsArticleLabel.UpdateID = field.NewInt32(tableName, "update_id")
 	_cmsArticleLabel.UpdateName = field.NewString(tableName, "update_name")
 	_cmsArticleLabel.UpdateTime = field.NewTime(tableName, "update_time")
+	_cmsArticleLabel.TenantID = field.NewInt64(tableName, "tenant_id")
+	_cmsArticleLabel.Deleted = field.NewBool(tableName, "deleted")
 
 	_cmsArticleLabel.fillFieldMap()
 
@@ -47,20 +48,21 @@ func newCmsArticleLabel(db *gorm.DB, opts ...gen.DOOption) cmsArticleLabel {
 type cmsArticleLabel struct {
 	cmsArticleLabelDo cmsArticleLabelDo
 
-	ALL        field.Asterisk
-	LabelID    field.Int64  // 主键
-	Title      field.String // 类别标题
-	CallIndex  field.String // 调用别名
-	SortID     field.Int32  // 排序
-	Status     field.Int32  // 状态0草稿1提交2审核通过3审核未通过4驳回
-	IsDeleted  field.Bool   // 删除标识
-	BelongTo   field.String // 归属
-	CreateID   field.Int32  // 创建人ID
-	CreateName field.String // 创建人姓名
-	CreateTime field.Time   // 创建时间
-	UpdateID   field.Int32  // 更新人ID
-	UpdateName field.String // 更新人姓名
-	UpdateTime field.Time   // 修改时间
+	ALL field.Asterisk
+	LabelID field.Int64
+	Title field.String
+	CallIndex field.String
+	SortID field.Int32
+	Status field.Int32
+	BelongTo field.String
+	CreateID field.Int32
+	CreateName field.String
+	CreateTime field.Time
+	UpdateID field.Int32
+	UpdateName field.String
+	UpdateTime field.Time
+	TenantID field.Int64
+	Deleted field.Bool
 
 	fieldMap map[string]field.Expr
 }
@@ -82,7 +84,6 @@ func (c *cmsArticleLabel) updateTableName(table string) *cmsArticleLabel {
 	c.CallIndex = field.NewString(table, "call_index")
 	c.SortID = field.NewInt32(table, "sort_id")
 	c.Status = field.NewInt32(table, "status")
-	c.IsDeleted = field.NewBool(table, "is_deleted")
 	c.BelongTo = field.NewString(table, "belong_to")
 	c.CreateID = field.NewInt32(table, "create_id")
 	c.CreateName = field.NewString(table, "create_name")
@@ -90,6 +91,8 @@ func (c *cmsArticleLabel) updateTableName(table string) *cmsArticleLabel {
 	c.UpdateID = field.NewInt32(table, "update_id")
 	c.UpdateName = field.NewString(table, "update_name")
 	c.UpdateTime = field.NewTime(table, "update_time")
+	c.TenantID = field.NewInt64(table, "tenant_id")
+	c.Deleted = field.NewBool(table, "deleted")
 
 	c.fillFieldMap()
 
@@ -104,9 +107,7 @@ func (c cmsArticleLabel) TableName() string { return c.cmsArticleLabelDo.TableNa
 
 func (c cmsArticleLabel) Alias() string { return c.cmsArticleLabelDo.Alias() }
 
-func (c cmsArticleLabel) Columns(cols ...field.Expr) gen.Columns {
-	return c.cmsArticleLabelDo.Columns(cols...)
-}
+func (c cmsArticleLabel) Columns(cols ...field.Expr) gen.Columns { return c.cmsArticleLabelDo.Columns(cols...) }
 
 func (c *cmsArticleLabel) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 	_f, ok := c.fieldMap[fieldName]
@@ -118,13 +119,12 @@ func (c *cmsArticleLabel) GetFieldByName(fieldName string) (field.OrderExpr, boo
 }
 
 func (c *cmsArticleLabel) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 13)
+	c.fieldMap = make(map[string]field.Expr, 14)
 	c.fieldMap["label_id"] = c.LabelID
 	c.fieldMap["title"] = c.Title
 	c.fieldMap["call_index"] = c.CallIndex
 	c.fieldMap["sort_id"] = c.SortID
 	c.fieldMap["status"] = c.Status
-	c.fieldMap["is_deleted"] = c.IsDeleted
 	c.fieldMap["belong_to"] = c.BelongTo
 	c.fieldMap["create_id"] = c.CreateID
 	c.fieldMap["create_name"] = c.CreateName
@@ -132,6 +132,8 @@ func (c *cmsArticleLabel) fillFieldMap() {
 	c.fieldMap["update_id"] = c.UpdateID
 	c.fieldMap["update_name"] = c.UpdateName
 	c.fieldMap["update_time"] = c.UpdateTime
+	c.fieldMap["tenant_id"] = c.TenantID
+	c.fieldMap["deleted"] = c.Deleted
 }
 
 func (c cmsArticleLabel) clone(db *gorm.DB) cmsArticleLabel {
@@ -154,19 +156,11 @@ func (c cmsArticleLabelDo) WithContext(ctx context.Context) *cmsArticleLabelDo {
 	return c.withDO(c.DO.WithContext(ctx))
 }
 
-func (c cmsArticleLabelDo) ReadDB() *cmsArticleLabelDo {
-	return c.Clauses(dbresolver.Read)
-}
-
-func (c cmsArticleLabelDo) WriteDB() *cmsArticleLabelDo {
-	return c.Clauses(dbresolver.Write)
-}
-
 func (c cmsArticleLabelDo) Session(config *gorm.Session) *cmsArticleLabelDo {
 	return c.withDO(c.DO.Session(config))
 }
 
-func (c cmsArticleLabelDo) Clauses(conds ...clause.Expression) *cmsArticleLabelDo {
+func (c cmsArticleLabelDo) clauses(conds ...clause.Expression) *cmsArticleLabelDo {
 	return c.withDO(c.DO.Clauses(conds...))
 }
 
@@ -238,6 +232,22 @@ func (c cmsArticleLabelDo) Unscoped() *cmsArticleLabelDo {
 	return c.withDO(c.DO.Unscoped())
 }
 
+func (c cmsArticleLabelDo) Attrs(attrs ...field.AssignExpr) *cmsArticleLabelDo {
+	return c.withDO(c.DO.Attrs(attrs...))
+}
+
+func (c cmsArticleLabelDo) Assign(attrs ...field.AssignExpr) *cmsArticleLabelDo {
+	return c.withDO(c.DO.Assign(attrs...))
+}
+
+func (c cmsArticleLabelDo) ReadDB() *cmsArticleLabelDo {
+	return c.withDO(c.Clauses(dbresolver.Read))
+}
+
+func (c cmsArticleLabelDo) WriteDB() *cmsArticleLabelDo {
+	return c.withDO(c.Clauses(dbresolver.Write))
+}
+
 func (c cmsArticleLabelDo) Create(values ...*domain.CmsArticleLabel) error {
 	if len(values) == 0 {
 		return nil
@@ -300,14 +310,6 @@ func (c cmsArticleLabelDo) FindInBatches(result *[]*domain.CmsArticleLabel, batc
 	return c.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (c cmsArticleLabelDo) Attrs(attrs ...field.AssignExpr) *cmsArticleLabelDo {
-	return c.withDO(c.DO.Attrs(attrs...))
-}
-
-func (c cmsArticleLabelDo) Assign(attrs ...field.AssignExpr) *cmsArticleLabelDo {
-	return c.withDO(c.DO.Assign(attrs...))
-}
-
 func (c cmsArticleLabelDo) Joins(fields ...field.RelationField) *cmsArticleLabelDo {
 	for _, _f := range fields {
 		c = *c.withDO(c.DO.Joins(_f))
@@ -358,7 +360,6 @@ func (c cmsArticleLabelDo) ScanByPage(result interface{}, offset int, limit int)
 	if err != nil {
 		return
 	}
-
 	err = c.Offset(offset).Limit(limit).Scan(result)
 	return
 }

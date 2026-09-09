@@ -12,6 +12,8 @@ type CmsAdminRoleValue struct {
 	RoleID  int64  `gorm:"column:role_id;type:bigint;not null;comment:角色" json:"role_id" form:"role_id"`
 	NavName string `gorm:"column:nav_name;type:varchar(128);comment:导航ID" json:"nav_name" form:"nav_name"`
 	Action  string `gorm:"column:action;type:varchar(128);comment:权限资源" json:"action" form:"action"`
+	TenantID int64 `gorm:"column:tenant_id;type:bigint;not null;default:0;index;comment:租户ID(多租户隔离)" json:"tenant_id" form:"tenant_id"`
+	Deleted bool `gorm:"column:deleted;type:tinyint(1);not null;default:0;index;comment:逻辑删除标识(0未删除1已删除)" json:"deleted" form:"deleted"`
 }
 
 // TableName CmsAdminRoleValue's table name
