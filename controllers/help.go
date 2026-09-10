@@ -39,6 +39,8 @@ func (ctrl *HelpController) Index() {
 	}
 	ctrl.Data["breadcrumb"] = breadCrumb
 	ctrl.Data["year"] = time.Now().Year()
+	// 是否首页 (/help/index.html)
+	ctrl.Data["isHome"] = chn == ""
 
 	ctrl.Layout = "help/layout.html"
 	ctrl.TplName = tplName
