@@ -41,13 +41,15 @@
             --border: #e5e7eb;
             --code-bg: #282a36;
             --accent: #10b981;
+            --sidebar-w: 280px;
+            --header-h: 64px;
+            --footer-h: 56px;
         }
-        html { scroll-behavior: smooth; }
+        html, body { height: 100dvh; overflow: hidden; margin: 0; padding: 0; }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             color: var(--ink);
             background: var(--bg);
-            min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
@@ -57,13 +59,57 @@
         .CodeMirror-scrollbar { width: 10px; background-color: #f1f1f1; }
         .CodeMirror-scrollbar-filler { background-color: transparent; }
         .CodeMirror-scrollbar-thumb { background-color: #888; }
+
+        /* ============ 固定布局 ============ */
+        .help-header {
+            height: var(--header-h);
+            flex-shrink: 0;
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid #e2e8f0;
+            z-index: 50;
+        }
+        .help-body {
+            flex: 1;
+            display: flex;
+            min-height: 0;
+            overflow: hidden;
+        }
+        .help-sidebar {
+            width: var(--sidebar-w);
+            flex-shrink: 0;
+            height: 100%;
+            overflow-y: auto;
+            background: #fff;
+            border-right: 1px solid #e2e8f0;
+        }
+        .help-main {
+            flex: 1;
+            min-width: 0;
+            height: 100%;
+            overflow-y: auto;
+            padding-bottom: 1.5rem;
+        }
+        .help-footer {
+            height: var(--footer-h);
+            flex-shrink: 0;
+            background: #fff;
+            border-top: 1px solid #e2e8f0;
+            z-index: 50;
+        }
+
+        /* ============ 响应式：窄屏隐藏侧栏 ============ */
+        @media (max-width: 1023px) {
+            .help-sidebar { display: none; }
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased">
-    <!-- 顶部导航 -->
-    <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
+    <!-- 顶部导航 (固定顶部) -->
+    <header class="help-header">
+        <div class="h-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-full">
                 <a href="/" class="flex items-center space-x-2.5 group">
                     <img src="/static/help/images/logo.png" alt="YYCMS" class="h-9 w-9 rounded-lg shadow-sm group-hover:shadow transition">
                     <div class="flex flex-col">
@@ -86,16 +132,79 @@
         <!-- 移动端菜单 -->
         <div id="mobileMenu" class="hidden md:hidden border-t border-slate-200 bg-white">
             <div class="px-4 py-3 space-y-1">
-                    <a href="/" class="block px-3 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-600 rounded-md">首页</a>
-                    <a href="/help/dev/index" class="block px-3 py-2 text-sm text-white bg-blue-600 rounded-md">开发手册</a>
-                    <a href="/admin/login" class="block px-3 py-2 text-sm text-slate-700 hover:bg-slate-100 rounded-md">后台登录</a>
-                </div>
+                <a href="/" class="block px-3 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-600 rounded-md">首页</a>
+                <a href="/help/dev/index" class="block px-3 py-2 text-sm text-white bg-blue-600 rounded-md">开发手册</a>
+                <a href="/admin/login" class="block px-3 py-2 text-sm text-slate-700 hover:bg-slate-100 rounded-md">后台登录</a>
             </div>
+        </div>
     </header>
 
-    <!-- 主体内容 -->
-    <main class="flex-1">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <!-- 主体 (左侧栏固定 + 中间滚动) -->
+    <div class="help-body">
+        <!-- 左侧菜单 (固定) -->
+        <aside class="help-sidebar">
+            <div class="px-4 py-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-slate-200">
+                <h3 class="text-xs font-bold text-blue-700 uppercase tracking-wider">📚 文档导航</h3>
+            </div>
+            <div class="p-2">
+                <div class="mb-1">
+                    <p class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">开放 API</p>
+                    <ul class="space-y-0.5">
+                        <li><a href="/help/dev/api_site" class="nav-link">站点</a></li>
+                        <li><a href="/help/dev/api_ads" class="nav-link">广告</a></li>
+                        <li><a href="/help/dev/api_link" class="nav-link">链接</a></li>
+                        <li><a href="/help/dev/api_tag" class="nav-link">标签</a></li>
+                        <li><a href="/help/dev/api_topic" class="nav-link">专题</a></li>
+                        <li><a href="/help/dev/api_article" class="nav-link">文章</a></li>
+                        <li><a href="/help/dev/api_constjs" class="nav-link">const.js</a></li>
+                        <li><a href="/help/dev/api_cmsjs" class="nav-link">cms.js</a></li>
+                        <li><a href="/help/dev/api_example" class="nav-link">示例</a></li>
+                    </ul>
+                </div>
+                <div class="mt-2 mb-1">
+                    <p class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">函数接口</p>
+                    <ul class="space-y-0.5">
+                        <li><a href="/help/dev/apii_front" class="nav-link">公共函数</a></li>
+                        <li><a href="/help/dev/apii_var" class="nav-link">内置变量</a></li>
+                        <li><a href="/help/dev/apii_site" class="nav-link">站点函数</a></li>
+                        <li><a href="/help/dev/apii_ads" class="nav-link">广告函数</a></li>
+                        <li><a href="/help/dev/apii_link" class="nav-link">链接函数</a></li>
+                        <li><a href="/help/dev/apii_tag" class="nav-link">标签函数</a></li>
+                        <li><a href="/help/dev/apii_topic" class="nav-link">专题函数</a></li>
+                        <li><a href="/help/dev/apii_article" class="nav-link">文章函数</a></li>
+                        <li><a href="/help/dev/apii_urlfor" class="nav-link">路径函数</a></li>
+                    </ul>
+                </div>
+                <div class="mt-2 mb-1">
+                    <p class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">语法</p>
+                    <ul class="space-y-0.5">
+                        <li><a href="/help/dev/grammar_grammar" class="nav-link">模板语法</a></li>
+                        <li><a href="/help/dev/grammar_tmpl" class="nav-link">模板嵌套</a></li>
+                        <li><a href="/help/dev/grammar_for" class="nav-link">range 循环</a></li>
+                        <li><a href="/help/dev/grammar_if" class="nav-link">if 判断</a></li>
+                        <li><a href="/help/dev/grammar_switch" class="nav-link">switch 分支</a></li>
+                        <li><a href="/help/dev/grammar_func" class="nav-link">内置函数</a></li>
+                        <li><a href="/help/dev/grammar_var" class="nav-link">变量渲染</a></li>
+                    </ul>
+                </div>
+                <div class="mt-2 mb-1">
+                    <p class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">主题页面</p>
+                    <ul class="space-y-0.5">
+                        <li><a href="/help/dev/theme_config" class="nav-link">主题配置</a></li>
+                        <li><a href="/help/dev/theme_index" class="nav-link">index 页面</a></li>
+                        <li><a href="/help/dev/theme_search" class="nav-link">search 页面</a></li>
+                        <li><a href="/help/dev/theme_tag" class="nav-link">tag 页面</a></li>
+                        <li><a href="/help/dev/theme_topic" class="nav-link">topic 页面</a></li>
+                        <li><a href="/help/dev/theme_category" class="nav-link">category 页面</a></li>
+                        <li><a href="/help/dev/theme_article" class="nav-link">article 页面</a></li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 中间内容 (滚动区) -->
+        <main class="help-main">
+            <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
                 <!-- 面包屑 -->
                 <nav class="flex items-center text-sm text-slate-500 mb-6" aria-label="Breadcrumb">
                     <a href="/" class="hover:text-blue-600 transition">
@@ -105,94 +214,25 @@
                     <span class="text-slate-700 font-medium">{{.breadcrumb}}</span>
                 </nav>
 
-                <!-- 左右布局 -->
-                <div class="lg:grid lg:grid-cols-12 lg:gap-8">
-                    <!-- 左侧菜单 -->
-                    <aside class="lg:col-span-3 xl:col-span-2 mb-6 lg:mb-0">
-                        <nav class="sticky top-20 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                            <div class="px-4 py-3 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-slate-200">
-                                <h3 class="text-xs font-bold text-blue-700 uppercase tracking-wider">文档导航</h3>
-                            </div>
-                            <div class="p-2 max-h-[calc(100vh-7rem)] overflow-y-auto custom-scroll">
-                                <div class="mb-1">
-                                    <p class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">开放 API</p>
-                                    <ul class="space-y-0.5">
-                                        <li><a href="/help/dev/api_site" class="nav-link">站点</a></li>
-                                        <li><a href="/help/dev/api_ads" class="nav-link">广告</a></li>
-                                        <li><a href="/help/dev/api_link" class="nav-link">链接</a></li>
-                                        <li><a href="/help/dev/api_tag" class="nav-link">标签</a></li>
-                                        <li><a href="/help/dev/api_topic" class="nav-link">专题</a></li>
-                                        <li><a href="/help/dev/api_article" class="nav-link">文章</a></li>
-                                        <li><a href="/help/dev/api_constjs" class="nav-link">const.js</a></li>
-                                        <li><a href="/help/dev/api_cmsjs" class="nav-link">cms.js</a></li>
-                                        <li><a href="/help/dev/api_example" class="nav-link">示例</a></li>
-                                    </ul>
-                                </div>
-                                <div class="mt-2 mb-1">
-                                    <p class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">函数接口</p>
-                                    <ul class="space-y-0.5">
-                                        <li><a href="/help/dev/apii_front" class="nav-link">公共函数</a></li>
-                                        <li><a href="/help/dev/apii_var" class="nav-link">内置变量</a></li>
-                                        <li><a href="/help/dev/apii_site" class="nav-link">站点函数</a></li>
-                                        <li><a href="/help/dev/apii_ads" class="nav-link">广告函数</a></li>
-                                        <li><a href="/help/dev/apii_link" class="nav-link">链接函数</a></li>
-                                        <li><a href="/help/dev/apii_tag" class="nav-link">标签函数</a></li>
-                                        <li><a href="/help/dev/apii_topic" class="nav-link">专题函数</a></li>
-                                        <li><a href="/help/dev/apii_article" class="nav-link">文章函数</a></li>
-                                        <li><a href="/help/dev/apii_urlfor" class="nav-link">路径函数</a></li>
-                                    </ul>
-                                </div>
-                                <div class="mt-2 mb-1">
-                                    <p class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">语法</p>
-                                    <ul class="space-y-0.5">
-                                        <li><a href="/help/dev/grammar_grammar" class="nav-link">模板语法</a></li>
-                                        <li><a href="/help/dev/grammar_tmpl" class="nav-link">模板嵌套</a></li>
-                                        <li><a href="/help/dev/grammar_for" class="nav-link">range 循环</a></li>
-                                        <li><a href="/help/dev/grammar_if" class="nav-link">if 判断</a></li>
-                                        <li><a href="/help/dev/grammar_switch" class="nav-link">switch 分支</a></li>
-                                        <li><a href="/help/dev/grammar_func" class="nav-link">内置函数</a></li>
-                                        <li><a href="/help/dev/grammar_var" class="nav-link">变量渲染</a></li>
-                                    </ul>
-                                </div>
-                                <div class="mt-2 mb-1">
-                                    <p class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">主题页面</p>
-                                    <ul class="space-y-0.5">
-                                        <li><a href="/help/dev/theme_config" class="nav-link">主题配置</a></li>
-                                        <li><a href="/help/dev/theme_index" class="nav-link">index 页面</a></li>
-                                        <li><a href="/help/dev/theme_search" class="nav-link">search 页面</a></li>
-                                        <li><a href="/help/dev/theme_tag" class="nav-link">tag 页面</a></li>
-                                        <li><a href="/help/dev/theme_topic" class="nav-link">topic 页面</a></li>
-                                        <li><a href="/help/dev/theme_category" class="nav-link">category 页面</a></li>
-                                        <li><a href="/help/dev/theme_article" class="nav-link">article 页面</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </nav>
-                    </aside>
-
-                    <!-- 右侧内容 -->
-                    <article class="lg:col-span-9 xl:col-span-10">
-                        <div class="bg-white rounded-xl border border-slate-200 shadow-sm">
-                            <div class="help-content px-6 py-8 lg:px-10 lg:py-10 prose prose-slate max-w-none">
-                                {{.LayoutContent}}
-                            </div>
-                        </div>
-                    </article>
-                </div>
+                <!-- 正文 -->
+                <article class="bg-white rounded-xl border border-slate-200 shadow-sm px-6 py-8 lg:px-10 lg:py-10">
+                    {{.LayoutContent}}
+                </article>
             </div>
-    </main>
+        </main>
+    </div>
 
-    <!-- Footer -->
-    <footer class="mt-12 border-t border-slate-200 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-                <div class="flex items-center space-x-3">
-                    <img src="/static/help/images/logo.png" alt="YYCMS" class="h-8 w-8 rounded">
+    <!-- Footer (固定底部) -->
+    <footer class="help-footer">
+        <div class="h-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="h-full flex flex-col md:flex-row items-center justify-between gap-2 text-sm">
+                <div class="flex items-center space-x-3 text-slate-500">
+                    <img src="/static/help/images/logo.png" alt="YYCMS" class="h-6 w-6 rounded">
                     <span class="font-bold text-slate-900">YYCMS</span>
-                    <span class="text-slate-400">·</span>
-                    <span class="text-sm text-slate-500">免费、快速、轻量、企业级</span>
+                    <span class="text-slate-300">·</span>
+                    <span>免费、快速、轻量、企业级</span>
                 </div>
-                <div class="text-sm text-slate-500">
+                <div class="text-slate-500">
                     <a href="https://beian.miit.gov.cn/" target="_blank" class="hover:text-blue-600 transition">豫ICP备2022007138号-3</a>
                     <span class="mx-2 text-slate-300">·</span>
                     <a href="http://yh24365.com" target="_blank" class="font-semibold text-slate-700 hover:text-blue-600 transition">YYCMS ©{{.year}}</a>
