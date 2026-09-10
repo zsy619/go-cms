@@ -19,9 +19,22 @@
                         </label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input type="hidden" name="site_id" value="{{.site.SiteID}}">
+                            <input type="hidden" name="parent_id" id="parent_id" value="{{.site.ParentID}}">
                             <input type="text" maxlength="128" id="title" name="title" value="{{.site.Title}}" lay-verify="required" lay-reqtext="站点名称为必填项" autocomplete="off" placeholder="请输入站点名称" class="layui-input">
                         </div>
                         <div class="layui-form-mid layui-word-aux">标题备注，允许中文</div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">父级站点</label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <select name="parent_id_select" id="parent_id_select" lay-filter="parent_id_select" lay-search="">
+                                <option value="0">顶级站点（无父级）</option>
+                                {{range .siteList}}
+                                <option value="{{.SiteID}}" {{if eq $.site.ParentID .SiteID}}selected{{end}}>{{.Title}}</option>
+                                {{end}}
+                            </select>
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">支持选择现有站点作为父级，构建站点树</div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label required">
@@ -362,6 +375,9 @@
                 layer.msg("排序数字应为0-999的正整数", { icon: 2, time: 2000 });
                 return false;
             }
+            // 同步父级站点下拉框值到隐藏字段(表单序列化使用 hidden 字段名)
+            var parentVal = $('#parent_id_select').val() || '0';
+            $('#parent_id').val(parentVal);
             form.submit('frmEdit', function (data) {
                 $.ajax({
                     type: "POST", //提交的方法

@@ -25,12 +25,26 @@ func (ctrl *SiteController) Index() {
 
 // SiteData 获取站点列表数据
 // @router /admin/site/data [get]
+//
+// query 参数:
+//   - tree: 任意非空值 → 返回所有未删除站点(不分页),供前端 treeTable 渲染
+//   - page/limit: 分页参数(tree=空时生效)
+//   - name/title: 模糊搜索关键字
 func (ctrl *SiteController) SiteData() {
 	name := ctrl.GetStringTrim("name", "")
 	title := ctrl.GetStringTrim("title", "")
+	siteService := service.NewCmsSite()
+
+	// 树形表格模式: 返回全部数据(不分页),前端 treeTable 自行渲染树
+	if ctrl.GetStringTrim("tree", "") != "" {
+		list, count, _ := siteService.SiteListForTree(name, title)
+		ctrl.JSONPage(lib.CodeSuccess, "", list, count)
+		return
+	}
+
+	// 普通模式: 分页
 	page, _ := ctrl.GetInt("page")
 	limit, _ := ctrl.GetInt("limit")
-	siteService := service.NewCmsSite()
 	list, count, _ := siteService.SitePaginate(page, limit, name, title)
 	ctrl.JSONPage(lib.CodeSuccess, "", list, count)
 }
@@ -62,8 +76,13 @@ func (ctrl *SiteController) Delete() {
 
 // SiteEdit 站点编辑页面
 // @router /admin/site/edit [get]
+//
+// query 参数:
+//   - id: 编辑时为站点ID,新增时为 0
+//   - parent_id: 新增子站时默认选中的父级ID(可选)
 func (ctrl *SiteController) SiteEdit() {
 	id, _ := ctrl.GetInt64("id", 0)
+	parentIDQuery, _ := ctrl.GetInt64("parent_id", 0)
 	site := &domain.CmsSite{SortID: 99} // 默认值
 	var list []*domain.CmsSiteDomain
 	if id != 0 {
@@ -77,10 +96,48 @@ func (ctrl *SiteController) SiteEdit() {
 	if len(list) == 0 {
 		list = append(list, &domain.CmsSiteDomain{})
 	}
+
+	// 新增子站: 用 query 参数设置默认父级
+	if id == 0 && parentIDQuery > 0 && site.ParentID == 0 {
+		site.ParentID = parentIDQuery
+	}
+
+	// 加载所有可用站点作为父级选项(排除自身及其所有子站,防止循环引用)
+	allSites, _, _ := service.NewCmsSite().SiteListForTree("", "")
+	siteList := make([]*domain.CmsSite, 0)
+	if id == 0 {
+		// 新增时,全部可用
+		siteList = allSites
+	} else {
+		// 编辑时,排除自身及子站(防止父级选自己形成环)
+		descendantIDs := collectDescendantIDs(allSites, id)
+		descendantIDs[id] = true
+		for _, s := range allSites {
+			if !descendantIDs[s.SiteID] {
+				siteList = append(siteList, s)
+			}
+		}
+	}
+
 	ctrl.Data["listSize"] = len(list) - 1
 	ctrl.Data["domainList"] = list
 	ctrl.Data["site"] = site
+	ctrl.Data["siteList"] = siteList
 	ctrl.display()
+}
+
+// collectDescendantIDs 递归收集 siteID 的所有后代ID(含间接子站),返回 map[id]bool
+func collectDescendantIDs(all []*domain.CmsSite, rootID int64) map[int64]bool {
+	out := make(map[int64]bool)
+	for _, s := range all {
+		if s.ParentID == rootID {
+			out[s.SiteID] = true
+			for k := range collectDescendantIDs(all, s.SiteID) {
+				out[k] = true
+			}
+		}
+	}
+	return out
 }
 
 // Save 保存站点

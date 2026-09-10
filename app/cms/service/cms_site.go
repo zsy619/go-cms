@@ -51,6 +51,24 @@ func (svc *CmsSite) SitePaginate(page, limit int, name string, title string) ([]
 	return siteDo.Order(site.IsDefault.Desc(), site.SortID).FindByPage((page-1)*limit, limit)
 }
 
+// SiteListForTree 获取所有未删除的站点列表(树形表格用,不进行分页)
+// 可按名称 / 标题模糊搜索
+func (svc *CmsSite) SiteListForTree(name string, title string) ([]*domain.CmsSite, int64, error) {
+	site, siteDo := mapper.CmsSiteDo()
+	siteDo = siteDo.Where(site.Deleted.Is(false))
+	if name != "" {
+		siteDo = siteDo.Where(site.Name.Like("%" + name + "%"))
+	}
+	if title != "" {
+		siteDo = siteDo.Where(site.Title.Like("%" + title + "%"))
+	}
+	list, err := siteDo.Order(site.IsDefault.Desc(), site.ParentID.Asc(), site.SortID.Asc()).Find()
+	if err != nil {
+		return nil, 0, err
+	}
+	return list, int64(len(list)), nil
+}
+
 func (svc *CmsSite) SiteDelete(ids string) {
 	if ids == "" {
 		return
