@@ -107,13 +107,14 @@
 </head>
 <body class="text-slate-800 antialiased">
     <!-- 动态背景 -->
-    <div class="bg-anim">
+    <div class="bg-anim" id="bgAnim">
         <div class="orb-left"></div>
+        <div class="orb-right"></div>
         <div class="particles" id="bgParticles"></div>
         <div class="grid"></div>
     </div>
     <!-- 顶部导航 (固定顶部) -->
-    <header class="help-header" style="background: rgba(15,23,42,0.85);">
+    <header class="help-header">
         <div class="h-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-full">
                 <a href="/" class="flex items-center space-x-2.5 group">
@@ -148,7 +149,7 @@
     <!-- 主体 (左侧栏固定 + 中间滚动) -->
     <div class="help-body">
         <!-- 左侧菜单 (固定) -->
-        <aside class="help-sidebar" style="background: rgba(15,23,42,0.75); border-color: rgba(255,255,255,0.08);">
+        <aside class="help-sidebar">
             <div class="px-4 py-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-slate-200">
                 <h3 class="text-xs font-bold text-blue-700 uppercase tracking-wider">📚 文档导航</h3>
             </div>
@@ -209,7 +210,7 @@
         </aside>
 
         <!-- 中间内容 (滚动区) -->
-        <main class="help-main" style="background: rgba(15,23,42,0.6);">
+        <main class="help-main">
             <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
                 <!-- 面包屑 -->
                 <nav class="flex items-center text-sm text-slate-500 mb-6" aria-label="Breadcrumb">
@@ -221,7 +222,7 @@
                 </nav>
 
                 <!-- 正文 -->
-                <article class="rounded-xl shadow-sm px-6 py-8 lg:px-10 lg:py-10" style="background: rgba(30,41,59,0.9); border: 1px solid rgba(255,255,255,0.08); color: #e2e8f0;">
+                <article class="bg-white rounded-xl border border-slate-200 shadow-sm px-6 py-8 lg:px-10 lg:py-10">
                     {{.LayoutContent}}
                 </article>
             </div>
@@ -229,7 +230,7 @@
     </div>
 
     <!-- Footer (固定底部) -->
-    <footer class="help-footer" style="background: rgba(15,23,42,0.85); border-color: rgba(255,255,255,0.08);">
+    <footer class="help-footer">
         <div class="h-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div class="h-full flex flex-col md:flex-row items-center justify-between gap-2 text-sm">
                 <div class="flex items-center space-x-3 text-slate-500">
@@ -259,24 +260,7 @@
                     var cm = createCodeMirror($ta.attr('id'), codeType);
                 }
                 $wrap.before('<button class="copy-btn" type="button">📋 复制</button>');
-            
-// 动态背景粒子生成
-(function(){
-    var container = document.getElementById('bgParticles');
-    if (!container) return;
-    var count = 25;
-    for (var i = 0; i < count; i++) {
-        var p = document.createElement('div');
-        p.className = 'p';
-        p.style.left = Math.random() * 100 + '%';
-        p.style.width = p.style.height = (Math.random() * 2 + 1) + 'px';
-        p.style.animationDuration = (Math.random() * 12 + 8) + 's';
-        p.style.animationDelay = (Math.random() * 10) + 's';
-        p.style.opacity = Math.random() * 0.5 + 0.2;
-        container.appendChild(p);
-    }
-})();
-        });
+            });
             // 2. 复制按钮事件
             $(document).on('click', '.copy-btn', function () {
                 var $btn = $(this);
@@ -315,5 +299,32 @@
             });
         });
     </script>
+<script>
+(function(){
+    var container = document.getElementById('bgParticles');
+    if (!container) return;
+    // 光粒子上浮
+    for (var i = 0; i < 22; i++) {
+        var p = document.createElement('div');
+        p.className = 'p';
+        p.style.left = (Math.random() * 100) + '%';
+        p.style.width = p.style.height = (Math.random() * 2.5 + 1) + 'px';
+        p.style.background = 'rgba(59,130,246,' + (Math.random() * 0.4 + 0.15) + ')';
+        p.style.animationDuration = (Math.random() * 14 + 9) + 's';
+        p.style.animationDelay = (Math.random() * 12) + 's';
+        container.appendChild(p);
+    }
+    // 光点漂浮
+    for (var j = 0; j < 8; j++) {
+        var d = document.createElement('div');
+        d.className = 'dot';
+        d.style.left = (Math.random() * 90 + 5) + '%';
+        d.style.top = (Math.random() * 70 + 15) + '%';
+        d.style.animationDuration = (Math.random() * 20 + 15) + 's';
+        d.style.animationDelay = (Math.random() * 15) + 's';
+        container.appendChild(d);
+    }
+})();
+</script>
 </body>
 </html>

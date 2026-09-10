@@ -31,110 +31,6 @@ html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
 .custom-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-
-/* ============ 动态背景 ============ */
-.bg-anim {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    overflow: hidden;
-    background: #0f172a;
-}
-
-/* 底部渐变光晕 */
-.bg-anim::before {
-    content: '';
-    position: absolute;
-    bottom: -30%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 140%;
-    height: 80%;
-    background: radial-gradient(ellipse at center, rgba(59, 130, 246, 0.18) 0%, rgba(59, 130, 246, 0.06) 40%, transparent 70%);
-    animation: orb-float-a 12s ease-in-out infinite;
-}
-
-/* 右上角光晕 */
-.bg-anim::after {
-    content: '';
-    position: absolute;
-    top: -10%;
-    right: -10%;
-    width: 60%;
-    height: 60%;
-    background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.15) 0%, transparent 65%);
-    animation: orb-float-b 18s ease-in-out infinite;
-}
-
-/* 左侧光晕 */
-.bg-anim .orb-left {
-    position: absolute;
-    top: 20%;
-    left: -15%;
-    width: 50%;
-    height: 70%;
-    background: radial-gradient(ellipse at center, rgba(16, 185, 129, 0.1) 0%, transparent 60%);
-    animation: orb-float-c 15s ease-in-out infinite;
-}
-
-/* 漂浮粒子层 */
-.bg-anim .particles {
-    position: absolute;
-    inset: 0;
-}
-
-/* 每个粒子 */
-.bg-anim .p {
-    position: absolute;
-    width: 3px;
-    height: 3px;
-    background: rgba(255, 255, 255, 0.4);
-    border-radius: 50%;
-    animation: float-up linear infinite;
-}
-
-/* 网格线（极淡） */
-.bg-anim .grid {
-    position: absolute;
-    inset: 0;
-    background-image:
-        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-    background-size: 60px 60px;
-}
-
-/* 光晕动画 */
-@keyframes orb-float-a {
-    0%, 100% { transform: translateX(-50%) translateY(0) scale(1); opacity: 0.8; }
-    33%       { transform: translateX(-45%) translateY(-8%) scale(1.05); opacity: 1; }
-    66%       { transform: translateX(-55%) translateY(5%) scale(0.95); opacity: 0.7; }
-}
-@keyframes orb-float-b {
-    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
-    50%       { transform: translate(-5%, 8%) scale(1.1); opacity: 1; }
-}
-@keyframes orb-float-c {
-    0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.5; }
-    50%       { transform: translateY(-12%) rotate(3deg); opacity: 0.9; }
-}
-
-/* 粒子上浮 */
-@keyframes float-up {
-    0%   { transform: translateY(100vh) scale(0); opacity: 0; }
-    10%  { opacity: 0.6; }
-    80%  { opacity: 0.3; }
-    100% { transform: translateY(-10vh) scale(1); opacity: 0; }
-}
-
-/* 内容层 z-index 要高于背景 */
-.help-header,
-.help-body,
-.help-footer {
-    position: relative;
-    z-index: 1;
-}
-
 /* ============ 帮助内容区域样式 (替代 Bulma .content) ============ */
 .help-content h1 {
     font-size: 1.875rem;
@@ -1080,200 +976,124 @@ h4:hover .anchor-link {
 
 
 
-/* ============ 暗黑主题覆盖（动态背景页） ============ */
-.help-header,
-.help-footer {
-    background: rgba(15, 23, 42, 0.85) !important;
-    border-color: rgba(255,255,255,0.08) !important;
+/* ============ 动态背景（浅色主题） ============ */
+.bg-anim {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 40%, #f0fdf4 70%, #fefce8 100%);
 }
 
-/* 侧栏导航 - 暗色主题 */
-.help-sidebar {
-    background: rgba(15, 23, 42, 0.75) !important;
-    border-color: rgba(255,255,255,0.08) !important;
+/* 底部柔光 */
+.bg-anim::before {
+    content: '';
+    position: absolute;
+    bottom: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120%;
+    height: 60%;
+    background: radial-gradient(ellipse at center, rgba(59, 130, 246, 0.12) 0%, rgba(59, 130, 246, 0.04) 45%, transparent 70%);
+    animation: orb-a 14s ease-in-out infinite;
 }
 
-/* 侧栏 nav-link - 暗色主题 */
-.nav-link {
-    color: #94a3b8;
-}
-.nav-link:hover {
-    background: rgba(59, 130, 246, 0.15);
-    color: #60a5fa;
-    border-left-color: #3b82f6;
-}
-.nav-link.is-active {
-    background: rgba(59, 130, 246, 0.2);
-    color: #60a5fa;
-    font-weight: 600;
-    border-left-color: #3b82f6;
+/* 右上角柔光 */
+.bg-anim::after {
+    content: '';
+    position: absolute;
+    top: -15%;
+    right: -5%;
+    width: 55%;
+    height: 55%;
+    background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.1) 0%, transparent 60%);
+    animation: orb-b 20s ease-in-out infinite;
 }
 
-/* 暗色主题下的 h1 标题 */
-.help-content h1,
-.prose-doc h1 {
-    color: #f1f5f9;
-    border-bottom-color: rgba(59, 130, 246, 0.4);
+/* 左下角柔光 */
+.bg-anim .orb-left {
+    position: absolute;
+    bottom: -10%;
+    left: -10%;
+    width: 45%;
+    height: 50%;
+    background: radial-gradient(ellipse at center, rgba(16, 185, 129, 0.08) 0%, transparent 65%);
+    animation: orb-c 17s ease-in-out infinite;
 }
 
-/* 暗色主题 prose-doc 正文 */
-.prose-doc {
-    color: #cbd5e1;
-}
-.prose-doc h2 {
-    color: #f1f5f9;
-    border-left-color: #3b82f6;
-    background: linear-gradient(90deg, rgba(59,130,246,0.1) 0%, transparent 70%);
-}
-.prose-doc h3 {
-    color: #e2e8f0;
-    border-bottom-color: rgba(148, 163, 184, 0.3);
-}
-.prose-doc p {
-    color: #cbd5e1;
-}
-.prose-doc strong {
-    color: #f1f5f9;
-}
-.prose-doc em {
-    color: #94a3b8;
-}
-.prose-doc a {
-    color: #60a5fa;
-}
-.prose-doc a:hover {
-    color: #93c5fd;
+/* 右上小光斑 */
+.bg-anim .orb-right {
+    position: absolute;
+    top: 10%;
+    right: 5%;
+    width: 30%;
+    height: 35%;
+    background: radial-gradient(ellipse at center, rgba(245, 158, 11, 0.06) 0%, transparent 60%);
+    animation: orb-d 22s ease-in-out infinite;
 }
 
-/* 表格 - 暗色主题 */
-.doc-table-wrapper {
-    background: rgba(30, 41, 59, 0.8);
-    border-color: rgba(255,255,255,0.08);
+/* 漂浮粒子 */
+.bg-anim .particles {
+    position: absolute;
+    inset: 0;
 }
-.doc-table thead th {
-    background: linear-gradient(180deg, rgba(30,41,59,1) 0%, rgba(30,41,59,0.9) 100%);
-    color: #e2e8f0;
-    border-bottom-color: rgba(148,163,184,0.3);
-}
-.doc-table tbody tr:nth-child(even) {
-    background: rgba(15, 23, 42, 0.4);
-}
-.doc-table tbody tr:hover {
-    background: rgba(59, 130, 246, 0.1);
-}
-.doc-table tbody td {
-    color: #cbd5e1;
-    border-bottom-color: rgba(255,255,255,0.06);
-}
-.doc-table-meta {
-    background: rgba(15, 23, 42, 0.6);
-    color: #94a3b8;
-    border-color: rgba(255,255,255,0.06);
+.bg-anim .p {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    animation: float-up linear infinite;
 }
 
-/* 代码块 - 暗色主题 */
-.code-block-wrap {
-    background: rgba(30, 41, 59, 0.9);
-    border: 1px solid rgba(255,255,255,0.08);
-}
-.callout {
-    background: rgba(30, 41, 59, 0.8) !important;
-    border-color: rgba(255,255,255,0.1) !important;
-}
-.callout.info {
-    border-color: rgba(59, 130, 246, 0.4) !important;
-}
-.callout.success {
-    border-color: rgba(16, 185, 129, 0.4) !important;
-}
-.callout p {
-    color: #cbd5e1 !important;
-}
-.callout strong {
-    color: #f1f5f9 !important;
+/* 网格纹理（极淡） */
+.bg-anim .grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
 }
 
-/* 面包屑 - 暗色主题 */
-.help-main .flex.items-center.text-sm.text-slate-500 {
-    color: #94a3b8;
-}
-.help-main .flex.items-center.text-sm.text-slate-500 a:hover {
-    color: #60a5fa;
-}
-.help-main .flex.items-center.text-sm.text-slate-500 span {
-    color: #cbd5e1;
-}
-
-/* footer 暗色主题 */
-.help-footer {
-    color: #94a3b8;
-}
-.help-footer a {
-    color: #94a3b8;
-}
-.help-footer a:hover {
-    color: #60a5fa;
+/* 漂浮光点 */
+.bg-anim .dot {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.6) 0%, transparent 70%);
+    animation: dot-drift linear infinite;
 }
 
-/* 暗色主题下的 code / 标签 */
-code {
-    background: rgba(59, 130, 246, 0.15);
-    color: #93c5fd;
+/* ============ 动画定义 ============ */
+@keyframes orb-a {
+    0%, 100% { transform: translateX(-50%) translateY(0) scale(1); opacity: 0.7; }
+    40%       { transform: translateX(-42%) translateY(-10%) scale(1.08); opacity: 1; }
+    70%       { transform: translateX(-56%) translateY(6%) scale(0.94); opacity: 0.6; }
 }
-.cell-method {
-    background: rgba(16, 185, 129, 0.15);
-    color: #6ee7b7;
+@keyframes orb-b {
+    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+    50%       { transform: translate(-8%, 12%) scale(1.15); opacity: 0.9; }
 }
-.return-type {
-    background: rgba(139, 92, 246, 0.15);
-    color: #c4b5fd;
+@keyframes orb-c {
+    0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.5; }
+    50%       { transform: translateY(-15%) rotate(4deg); opacity: 0.9; }
 }
-.param-type {
-    background: rgba(245, 158, 11, 0.15);
-    color: #fcd34d;
+@keyframes orb-d {
+    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+    50%       { transform: translate(10%, -8%) scale(1.2); opacity: 0.7; }
 }
-.param-name {
-    color: #f1f5f9;
+@keyframes float-up {
+    0%   { transform: translateY(100vh) scale(0); opacity: 0; }
+    8%   { opacity: 0.5; }
+    85%  { opacity: 0.2; }
+    100% { transform: translateY(-8vh) scale(1); opacity: 0; }
 }
-.param-desc {
-    color: #94a3b8;
-}
-.param-list {
-    color: #cbd5e1;
-}
-.param-list li {
-    color: #cbd5e1;
-}
-.cell-path {
-    color: #94a3b8;
-}
-
-/* 暗色主题滚动条 */
-.custom-scroll::-webkit-scrollbar-track {
-    background: rgba(255,255,255,0.03);
-}
-.custom-scroll::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,0.12);
-}
-.custom-scroll::-webkit-scrollbar-thumb:hover {
-    background: rgba(255,255,255,0.2);
-}
-
-/* 暗色主题 blockquote */
-.prose-doc blockquote {
-    background: linear-gradient(135deg, rgba(59,130,246,0.1) 0%, rgba(139,92,246,0.1) 100%);
-    border-left-color: #3b82f6;
-    color: #94a3b8;
-}
-.prose-doc blockquote p {
-    color: #94a3b8 !important;
-}
-.prose-doc blockquote code {
-    background: rgba(255,255,255,0.1);
-    color: #93c5fd;
-}
-
-/* 暗色主题 horizontal rule */
-.prose-doc hr {
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+@keyframes dot-drift {
+    0%   { transform: translate(0, 0) scale(1); opacity: 0; }
+    15%  { opacity: 0.7; }
+    50%  { transform: translate(30px, -50px) scale(1.2); opacity: 0.5; }
+    85%  { opacity: 0.3; }
+    100% { transform: translate(60px, -100px) scale(0.8); opacity: 0; }
 }
