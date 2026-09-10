@@ -84,68 +84,70 @@
             </nav>
         </div>
     </div>
-    <section class="section">
+    <section class="section" style="padding-top: 1.5rem; padding-bottom: 1.5rem;">
         <div class="container">
-            <div class="tile  ">
-                <div class="tile is-2 is-parent">
-                    <div class="tile is-child ">
-                        <aside class="menu">
-                            <p class="menu-label is-size-6">
-                                开放API接口
-                            </p>
-                            <ul class="menu-list">
-                                <li><a href="/help/dev/api_site">站点</a></li>
-                                <li><a href="/help/dev/api_ads">广告</a></li>
-                                <li><a href="/help/dev/api_link">链接</a></li>
-                                <li><a href="/help/dev/api_tag">标签</a></li>
-                                <li><a href="/help/dev/api_topic">专题</a></li>
-                                <li><a href="/help/dev/api_article">文章</a></li>
-                                <li><a href="/help/dev/api_constjs">const.js</a></li>
-                                <li><a href="/help/dev/api_cmsjs">cms.js</a></li>
-                                <li><a href="/help/dev/api_example">示例</a></li>
-                            </ul>
-                            <p class="menu-label is-size-6">
-                                函数接口
-                            </p>
-                            <ul class="menu-list">
-                                <li><a href="/help/dev/apii_front">公共函数</a></li>
-                                <li><a href="/help/dev/apii_var">内置变量</a></li>
-                                <li><a href="/help/dev/apii_site">站点函数</a></li>
-                                <li><a href="/help/dev/apii_ads">广告函数</a></li>
-                                <li><a href="/help/dev/apii_link">链接函数</a></li>
-                                <li><a href="/help/dev/apii_tag">标签函数</a></li>
-                                <li><a href="/help/dev/apii_topic">专题函数</a></li>
-                                <li><a href="/help/dev/apii_article">文章函数</a></li>
-                                <li><a href="/help/dev/apii_urlfor">路径函数</a></li>
-                            </ul>
-                            <p class="menu-label is-size-6">
-                                语法
-                            </p>
-                            <ul class="menu-list">
-                                <li><a href="/help/dev/grammar_grammar">模板语法</a></li>
-                                <li><a href="/help/dev/grammar_tmpl">模板的嵌套</a></li>
-                                <li><a href="/help/dev/grammar_for">range循环</a></li>
-                                <li><a href="/help/dev/grammar_if">if判断</a></li>
-                                <li><a href="/help/dev/grammar_switch">switch分支</a></li>
-                                <li><a href="/help/dev/grammar_func">内置函数</a></li>
-                                <li><a href="/help/dev/grammar_var">变量渲染</a></li>
-                            </ul>
-                            <p class="menu-label is-size-6">
-                                页面
-                            </p>
-                            <ul class="menu-list">
-                                <li><a href="/help/dev/theme_config">主题的基本信息详解</a></li>
-                                <li><a href="/help/dev/theme_index">index页面</a></li>
-                                <li><a href="/help/dev/theme_search">search页面</a></li>
-                                <li><a href="/help/dev/theme_tag">tag页面</a></li>
-                                <li><a href="/help/dev/theme_topic">topic页面</a></li>
-                                <li><a href="/help/dev/theme_category">category页面</a></li>
-                                <li><a href="/help/dev/theme_article">article页面</a></li>
-                            </ul>
-                        </aside>
+            <!-- 面包屑导航 -->
+            <nav class="breadcrumb is-small" aria-label="breadcrumbs">
+                <ul>
+                    <li><a href="/">首页</a></li>
+                    <li class="is-active"><a href="#" aria-current="page">{{.breadcrumb}}</a></li>
+                </ul>
+            </nav>
+            <!-- 左右两栏: 左侧菜单 1/5 + 右侧内容 4/5 -->
+            <div class="columns">
+                <div class="column is-2">
+                    <aside class="menu help-sidebar">
+                        <p class="menu-label is-size-6">开放API接口</p>
+                        <ul class="menu-list">
+                            <li><a href="/help/dev/api_site">站点</a></li>
+                            <li><a href="/help/dev/api_ads">广告</a></li>
+                            <li><a href="/help/dev/api_link">链接</a></li>
+                            <li><a href="/help/dev/api_tag">标签</a></li>
+                            <li><a href="/help/dev/api_topic">专题</a></li>
+                            <li><a href="/help/dev/api_article">文章</a></li>
+                            <li><a href="/help/dev/api_constjs">const.js</a></li>
+                            <li><a href="/help/dev/api_cmsjs">cms.js</a></li>
+                            <li><a href="/help/dev/api_example">示例</a></li>
+                        </ul>
+                        <p class="menu-label is-size-6">函数接口</p>
+                        <ul class="menu-list">
+                            <li><a href="/help/dev/apii_front">公共函数</a></li>
+                            <li><a href="/help/dev/apii_var">内置变量</a></li>
+                            <li><a href="/help/dev/apii_site">站点函数</a></li>
+                            <li><a href="/help/dev/apii_ads">广告函数</a></li>
+                            <li><a href="/help/dev/apii_link">链接函数</a></li>
+                            <li><a href="/help/dev/apii_tag">标签函数</a></li>
+                            <li><a href="/help/dev/apii_topic">专题函数</a></li>
+                            <li><a href="/help/dev/apii_article">文章函数</a></li>
+                            <li><a href="/help/dev/apii_urlfor">路径函数</a></li>
+                        </ul>
+                        <p class="menu-label is-size-6">语法</p>
+                        <ul class="menu-list">
+                            <li><a href="/help/dev/grammar_grammar">模板语法</a></li>
+                            <li><a href="/help/dev/grammar_tmpl">模板的嵌套</a></li>
+                            <li><a href="/help/dev/grammar_for">range循环</a></li>
+                            <li><a href="/help/dev/grammar_if">if判断</a></li>
+                            <li><a href="/help/dev/grammar_switch">switch分支</a></li>
+                            <li><a href="/help/dev/grammar_func">内置函数</a></li>
+                            <li><a href="/help/dev/grammar_var">变量渲染</a></li>
+                        </ul>
+                        <p class="menu-label is-size-6">页面</p>
+                        <ul class="menu-list">
+                            <li><a href="/help/dev/theme_config">主题的基本信息详解</a></li>
+                            <li><a href="/help/dev/theme_index">index页面</a></li>
+                            <li><a href="/help/dev/theme_search">search页面</a></li>
+                            <li><a href="/help/dev/theme_tag">tag页面</a></li>
+                            <li><a href="/help/dev/theme_topic">topic页面</a></li>
+                            <li><a href="/help/dev/theme_category">category页面</a></li>
+                            <li><a href="/help/dev/theme_article">article页面</a></li>
+                        </ul>
+                    </aside>
+                </div>
+                <div class="column is-10">
+                    <div class="help-content box">
+                        {{.LayoutContent}}
                     </div>
                 </div>
-                {{.LayoutContent}}
             </div>
         </div>
     </section>

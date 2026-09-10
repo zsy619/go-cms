@@ -1,19 +1,159 @@
-<!-- <section class="section" style="padding-bottom: 0rem;">
-    <div class="container">
-        <nav class="breadcrumb" aria-label="breadcrumbs">
+
+<article class="content dev-index">
+    <h1 class="title has-text-centered">YYCMS 开发手册</h1>
+    <p class="has-text-centered is-size-6" style="color:#7a8290;margin-bottom:1.5rem;">
+        设计理念 · 前端开放接口 · 模板渲染函数 · 知识档案
+    </p>
+
+    <blockquote>
+        YYCMS 是一套面向教育/政务场景的轻量级 CMS，提供完整的多站点（multi-site）、多语言（i18n）、
+        多租户（multi-tenant）能力，前后端模板采用 Go template 语法渲染，前端可通过 JSON API 与 const.js / cms.js 集成。
+        本手册是开发者的快速索引，按"开放 API → 函数接口 → 模板语法 → 主题页面"四大板块组织。
+    </blockquote>
+
+    <div class="dev-stats">
+        <div class="dev-stat-item">
+            <span class="num">9</span>
+            <span class="label">开放 API 接口</span>
+        </div>
+        <div class="dev-stat-item">
+            <span class="num">9</span>
+            <span class="label">模板函数</span>
+        </div>
+        <div class="dev-stat-item">
+            <span class="num">7</span>
+            <span class="label">语法规则</span>
+        </div>
+        <div class="dev-stat-item">
+            <span class="num">7</span>
+            <span class="label">主题页面</span>
+        </div>
+    </div>
+
+    <h3 id="api">一、开放 API 接口</h3>
+    <p>YYCMS 通过 <code>/api/...</code> 路径对外暴露 RESTful 接口，前端 Ajax / fetch 直接调用，返回 JSON。
+        配合 <code>const.js</code>（常量定义）与 <code>cms.js</code>（封装工具）使用更顺手。</p>
+    <div class="dev-feature-grid">
+        <div class="dev-feature-card">
+            <h4>🔌 数据接口</h4>
+            <p>站点、广告、链接、标签、专题、文章</p>
             <ul>
-                <li><a href="/">首页</a></li>
-                <li><a href="/help/dev/index">开发手册</a></li>
+                <li><a href="/help/dev/api_site">📍 站点 API</a></li>
+                <li><a href="/help/dev/api_ads">📢 广告 API</a></li>
+                <li><a href="/help/dev/api_link">🔗 链接 API</a></li>
+                <li><a href="/help/dev/api_tag">🏷️ 标签 API</a></li>
+                <li><a href="/help/dev/api_topic">📚 专题 API</a></li>
+                <li><a href="/help/dev/api_article">📰 文章 API</a></li>
             </ul>
-        </nav>
+        </div>
+        <div class="dev-feature-card">
+            <h4>📦 JS 资源</h4>
+            <p>前端常量与工具封装</p>
+            <ul>
+                <li><a href="/help/dev/api_constjs">📄 const.js 常量</a></li>
+                <li><a href="/help/dev/api_cmsjs">🛠️ cms.js 工具</a></li>
+                <li><a href="/help/dev/api_example">💡 完整示例</a></li>
+            </ul>
+        </div>
     </div>
-</section> -->
-<div class="tile  is-ancestor  is-parent">
-    <div class="tile is-child box">
-        <article class="content ">
-            <h1 class="title has-text-centered">开发手册</h1>
-            <hr>
-            YYCMS设计理念构想元素,前端开放接口,模板渲染函数,相关知识档案。
-        </article>
+
+    <h3 id="func">二、函数接口（模板可调用）</h3>
+    <p>在 Go template 中可调用的内置函数，覆盖变量、路径、栏目、文章等。</p>
+    <div class="dev-feature-grid">
+        <div class="dev-feature-card">
+            <h4>🧰 基础</h4>
+            <ul>
+                <li><a href="/help/dev/apii_front">公共函数</a></li>
+                <li><a href="/help/dev/apii_var">内置变量</a></li>
+                <li><a href="/help/dev/apii_urlfor">路径函数</a></li>
+            </ul>
+        </div>
+        <div class="dev-feature-card">
+            <h4>🎯 业务</h4>
+            <ul>
+                <li><a href="/help/dev/apii_site">站点函数</a></li>
+                <li><a href="/help/dev/apii_ads">广告函数</a></li>
+                <li><a href="/help/dev/apii_link">链接函数</a></li>
+                <li><a href="/help/dev/apii_tag">标签函数</a></li>
+                <li><a href="/help/dev/apii_topic">专题函数</a></li>
+                <li><a href="/help/dev/apii_article">文章函数</a></li>
+            </ul>
+        </div>
     </div>
-</div>
+
+    <h3 id="grammar">三、模板语法</h3>
+    <p>YYCMS 使用 Beego 内置的 Go template 引擎，下方文档覆盖常用语法片段。</p>
+    <div class="dev-feature-grid">
+        <div class="dev-feature-card">
+            <h4>📘 控制流</h4>
+            <ul>
+                <li><a href="/help/dev/grammar_grammar">模板语法总览</a></li>
+                <li><a href="/help/dev/grammar_tmpl">模板的嵌套</a></li>
+                <li><a href="/help/dev/grammar_for">range 循环</a></li>
+                <li><a href="/help/dev/grammar_if">if 判断</a></li>
+                <li><a href="/help/dev/grammar_switch">switch 分支</a></li>
+            </ul>
+        </div>
+        <div class="dev-feature-card">
+            <h4>📗 进阶</h4>
+            <ul>
+                <li><a href="/help/dev/grammar_func">内置函数</a></li>
+                <li><a href="/help/dev/grammar_var">变量渲染</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <h3 id="theme">四、主题页面（前端模板）</h3>
+    <p>每个前台页面背后都对应一个主题模板，命名约定 <code>主题/views/&lt;page&gt;.html</code>。</p>
+    <div class="dev-feature-grid">
+        <div class="dev-feature-card">
+            <h4>🎨 基础</h4>
+            <ul>
+                <li><a href="/help/dev/theme_config">主题基本信息详解</a></li>
+            </ul>
+        </div>
+        <div class="dev-feature-card">
+            <h4>📄 页面模板</h4>
+            <ul>
+                <li><a href="/help/dev/theme_index">index 页面</a></li>
+                <li><a href="/help/dev/theme_search">search 页面</a></li>
+                <li><a href="/help/dev/theme_tag">tag 页面</a></li>
+                <li><a href="/help/dev/theme_topic">topic 页面</a></li>
+                <li><a href="/help/dev/theme_category">category 页面</a></li>
+                <li><a href="/help/dev/theme_article">article 页面</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <h3 id="quickstart">五、5 分钟快速接入</h3>
+    <div class="dev-quickstart">
+        <p style="margin-top:0;">① 后台创建站点 → ② 绑定域名 → ③ 上传主题 → ④ 启用 API → ⑤ 前端拉数据</p>
+        <h3>1) 引入前端 JS</h3>
+<pre><code>&lt;script src="/static/help/js/const.js"&gt;&lt;/script&gt;
+&lt;script src="/static/help/js/cms.js"&gt;&lt;/script&gt;</code></pre>
+        <h3>2) 调用站点信息</h3>
+<pre><code>$.getJSON('/api/site/default', function (site) {
+    console.log(site);
+});</code></pre>
+        <h3>3) 拉取文章列表</h3>
+<pre><code>$.getJSON('/api/article/list', { site_id: 1, page: 1, limit: 10 }, function (res) {
+    console.log(res.data);
+});</code></pre>
+    </div>
+
+    <h3 id="faq">六、常见问题</h3>
+    <div class="dev-feature-grid">
+        <div class="dev-feature-card">
+            <h4>❓ 多站点如何切换？</h4>
+            <p>通过 host 解析对应站点（详见 <a href="/help/dev/apii_site">站点函数</a>）。</p>
+        </div>
+        <div class="dev-feature-card">
+            <h4>❓ 模板里如何调用 API？</h4>
+            <p>使用 <code>apiGet</code> / <code>apiPost</code> 函数（详见 <a href="/help/dev/apii_front">公共函数</a>）。</p>
+        </div>
+        <div class="dev-feature-card">
+            <h4>❓ 如何自定义主题？</h4>
+            <p>复制默认主题 <code>default</code> 到 <code>themes/&lt;你的主题&gt;</code> 即可。</p>
+        </div>
+    </div>
+</article>
