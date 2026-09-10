@@ -1,13 +1,15 @@
 <!doctype html>
 <html lang="zh-cn">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>YYCMS</title>
-    <link rel="stylesheet" href="/static/help/lib/bulma-0.9.1/css/bulma.min.css">
+    <title>{{.pageTitle}}</title>
+    <script src="/static/help/lib/tailwindcss-4/tailwindcss.js"></script>
     <link rel="stylesheet" href="/static/help/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="/static/plugins/jquery-1.7.2.min.js"></script>
     <link href="/static/admin/lib/codemirror-5.65.13/lib/codemirror.css" rel="stylesheet">
     <link href="/static/admin/lib/codemirror-5.65.13/theme/dracula.css" rel="stylesheet">
@@ -21,7 +23,6 @@
     <script src="/static/admin/lib/codemirror-5.65.13/mode/javascript/javascript.js"></script>
     <script src="/static/admin/lib/codemirror-5.65.13/addon/selection/active-line.js"></script>
     <script src="/static/admin/lib/codemirror-5.65.13/addon/edit/matchbrackets.js"></script>
-    <!--支持代码折叠-->
     <link rel="stylesheet" href="/static/admin/lib/codemirror-5.65.13/addon/fold/foldgutter.css" rel="external nofollow" />
     <script src="/static/admin/lib/codemirror-5.65.13/addon/fold/foldcode.js"></script>
     <script src="/static/admin/lib/codemirror-5.65.13/addon/fold/foldgutter.js"></script>
@@ -29,156 +30,199 @@
     <script src="/static/admin/lib/codemirror-5.65.13/addon/fold/comment-fold.js"></script>
     <script src="/static/help/js/pub.js?r={{.time}}"></script>
     <style>
-        .CodeMirror {
-            width: 100%;
-            min-height: 100px;
-            overflow: auto;
+        :root {
+            --brand: #3b82f6;
+            --brand-dark: #1e40af;
+            --ink: #1f2937;
+            --ink-soft: #4b5563;
+            --ink-mute: #9ca3af;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --border: #e5e7eb;
+            --code-bg: #282a36;
+            --accent: #10b981;
         }
-
-        .CodeMirror-linenumber {
-            padding: 0 3px 0 5px;
-            width: 40px;
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--ink);
+            background: var(--bg);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
-
-        .CodeMirror-scrollbar {
-            width: 10px;
-            background-color: #f1f1f1;
-        }
-
-        .CodeMirror-scrollbar-filler {
-            background-color: transparent;
-        }
-
-        .CodeMirror-scrollbar-thumb {
-            background-color: #888;
-        }
+        .font-mono { font-family: 'JetBrains Mono', 'SFMono-Regular', Menlo, Monaco, Consolas, monospace; }
+        .CodeMirror { width: 100%; min-height: 100px; overflow: auto; border-radius: 8px; }
+        .CodeMirror-linenumber { padding: 0 3px 0 5px; width: 40px; }
+        .CodeMirror-scrollbar { width: 10px; background-color: #f1f1f1; }
+        .CodeMirror-scrollbar-filler { background-color: transparent; }
+        .CodeMirror-scrollbar-thumb { background-color: #888; }
     </style>
 </head>
+<body class="bg-slate-50 text-slate-800 antialiased">
+    <!-- 顶部导航 -->
+    <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="/" class="flex items-center space-x-2.5 group">
+                    <img src="/static/help/images/logo.png" alt="YYCMS" class="h-9 w-9 rounded-lg shadow-sm group-hover:shadow transition">
+                    <div class="flex flex-col">
+                        <span class="font-bold text-slate-900 leading-tight">YYCMS</span>
+                        <span class="text-[10px] uppercase tracking-wider text-slate-500 leading-tight">开发手册</span>
+                    </div>
+                </a>
+                <nav class="hidden md:flex items-center space-x-1">
+                    <a href="/" class="px-3.5 py-2 text-sm font-medium text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-md transition">首页</a>
+                    <a href="/help/dev/index" class="px-3.5 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition">开发手册</a>
+                    <a href="/admin/login" class="ml-2 px-3.5 py-2 text-sm font-medium text-white bg-slate-900 hover:bg-slate-800 rounded-md transition">后台登录</a>
+                </nav>
+                <button id="mobileMenuBtn" class="md:hidden p-2 text-slate-600 hover:text-blue-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <!-- 移动端菜单 -->
+        <div id="mobileMenu" class="hidden md:hidden border-t border-slate-200 bg-white">
+            <div class="px-4 py-3 space-y-1">
+                    <a href="/" class="block px-3 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-600 rounded-md">首页</a>
+                    <a href="/help/dev/index" class="block px-3 py-2 text-sm text-white bg-blue-600 rounded-md">开发手册</a>
+                    <a href="/admin/login" class="block px-3 py-2 text-sm text-slate-700 hover:bg-slate-100 rounded-md">后台登录</a>
+                </div>
+            </div>
+    </header>
 
-<body>
-    <div class="has-background-info	">
-        <div class="container">
-            <nav class="navbar has-background-info">
-                <div class="container">
-                    <div class="navbar-brand">
-                        <a href="/" class="navbar-item">
-                            <img src="/static/help/images/logo.png" alt="Logo">
-                        </a>
-                        <span class="navbar-burger burger" data-target="navbarMenuHeroB">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </span>
-                    </div>
-                    <div id="navbarMenuHeroB" class="navbar-menu">
-                        <div class="navbar-end">
-                            <a href="/" class="navbar-item" id="navbar">
-                                首页
-                            </a>
-                            <a href="/help/dev/index" class="navbar-item is-active">
-                                开发手册
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-        </div>
-    </div>
-    <section class="section" style="padding-top: 1.5rem; padding-bottom: 1.5rem;">
-        <div class="container">
-            <!-- 面包屑导航 -->
-            <nav class="breadcrumb is-small" aria-label="breadcrumbs">
-                <ul>
-                    <li><a href="/">首页</a></li>
-                    <li class="is-active"><a href="#" aria-current="page">{{.breadcrumb}}</a></li>
-                </ul>
-            </nav>
-            <!-- 左右两栏: 左侧菜单 1/5 + 右侧内容 4/5 -->
-            <div class="columns">
-                <div class="column is-2">
-                    <aside class="menu help-sidebar">
-                        <p class="menu-label is-size-6">开放API接口</p>
-                        <ul class="menu-list">
-                            <li><a href="/help/dev/api_site">站点</a></li>
-                            <li><a href="/help/dev/api_ads">广告</a></li>
-                            <li><a href="/help/dev/api_link">链接</a></li>
-                            <li><a href="/help/dev/api_tag">标签</a></li>
-                            <li><a href="/help/dev/api_topic">专题</a></li>
-                            <li><a href="/help/dev/api_article">文章</a></li>
-                            <li><a href="/help/dev/api_constjs">const.js</a></li>
-                            <li><a href="/help/dev/api_cmsjs">cms.js</a></li>
-                            <li><a href="/help/dev/api_example">示例</a></li>
-                        </ul>
-                        <p class="menu-label is-size-6">函数接口</p>
-                        <ul class="menu-list">
-                            <li><a href="/help/dev/apii_front">公共函数</a></li>
-                            <li><a href="/help/dev/apii_var">内置变量</a></li>
-                            <li><a href="/help/dev/apii_site">站点函数</a></li>
-                            <li><a href="/help/dev/apii_ads">广告函数</a></li>
-                            <li><a href="/help/dev/apii_link">链接函数</a></li>
-                            <li><a href="/help/dev/apii_tag">标签函数</a></li>
-                            <li><a href="/help/dev/apii_topic">专题函数</a></li>
-                            <li><a href="/help/dev/apii_article">文章函数</a></li>
-                            <li><a href="/help/dev/apii_urlfor">路径函数</a></li>
-                        </ul>
-                        <p class="menu-label is-size-6">语法</p>
-                        <ul class="menu-list">
-                            <li><a href="/help/dev/grammar_grammar">模板语法</a></li>
-                            <li><a href="/help/dev/grammar_tmpl">模板的嵌套</a></li>
-                            <li><a href="/help/dev/grammar_for">range循环</a></li>
-                            <li><a href="/help/dev/grammar_if">if判断</a></li>
-                            <li><a href="/help/dev/grammar_switch">switch分支</a></li>
-                            <li><a href="/help/dev/grammar_func">内置函数</a></li>
-                            <li><a href="/help/dev/grammar_var">变量渲染</a></li>
-                        </ul>
-                        <p class="menu-label is-size-6">页面</p>
-                        <ul class="menu-list">
-                            <li><a href="/help/dev/theme_config">主题的基本信息详解</a></li>
-                            <li><a href="/help/dev/theme_index">index页面</a></li>
-                            <li><a href="/help/dev/theme_search">search页面</a></li>
-                            <li><a href="/help/dev/theme_tag">tag页面</a></li>
-                            <li><a href="/help/dev/theme_topic">topic页面</a></li>
-                            <li><a href="/help/dev/theme_category">category页面</a></li>
-                            <li><a href="/help/dev/theme_article">article页面</a></li>
-                        </ul>
+    <!-- 主体内容 -->
+    <main class="flex-1">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                <!-- 面包屑 -->
+                <nav class="flex items-center text-sm text-slate-500 mb-6" aria-label="Breadcrumb">
+                    <a href="/" class="hover:text-blue-600 transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                    </a>
+                    <svg class="w-4 h-4 mx-2 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    <span class="text-slate-700 font-medium">{{.breadcrumb}}</span>
+                </nav>
+
+                <!-- 左右布局 -->
+                <div class="lg:grid lg:grid-cols-12 lg:gap-8">
+                    <!-- 左侧菜单 -->
+                    <aside class="lg:col-span-3 xl:col-span-2 mb-6 lg:mb-0">
+                        <nav class="sticky top-20 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                            <div class="px-4 py-3 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-slate-200">
+                                <h3 class="text-xs font-bold text-blue-700 uppercase tracking-wider">文档导航</h3>
+                            </div>
+                            <div class="p-2 max-h-[calc(100vh-7rem)] overflow-y-auto custom-scroll">
+                                <div class="mb-1">
+                                    <p class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">开放 API</p>
+                                    <ul class="space-y-0.5">
+                                        <li><a href="/help/dev/api_site" class="nav-link">站点</a></li>
+                                        <li><a href="/help/dev/api_ads" class="nav-link">广告</a></li>
+                                        <li><a href="/help/dev/api_link" class="nav-link">链接</a></li>
+                                        <li><a href="/help/dev/api_tag" class="nav-link">标签</a></li>
+                                        <li><a href="/help/dev/api_topic" class="nav-link">专题</a></li>
+                                        <li><a href="/help/dev/api_article" class="nav-link">文章</a></li>
+                                        <li><a href="/help/dev/api_constjs" class="nav-link">const.js</a></li>
+                                        <li><a href="/help/dev/api_cmsjs" class="nav-link">cms.js</a></li>
+                                        <li><a href="/help/dev/api_example" class="nav-link">示例</a></li>
+                                    </ul>
+                                </div>
+                                <div class="mt-2 mb-1">
+                                    <p class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">函数接口</p>
+                                    <ul class="space-y-0.5">
+                                        <li><a href="/help/dev/apii_front" class="nav-link">公共函数</a></li>
+                                        <li><a href="/help/dev/apii_var" class="nav-link">内置变量</a></li>
+                                        <li><a href="/help/dev/apii_site" class="nav-link">站点函数</a></li>
+                                        <li><a href="/help/dev/apii_ads" class="nav-link">广告函数</a></li>
+                                        <li><a href="/help/dev/apii_link" class="nav-link">链接函数</a></li>
+                                        <li><a href="/help/dev/apii_tag" class="nav-link">标签函数</a></li>
+                                        <li><a href="/help/dev/apii_topic" class="nav-link">专题函数</a></li>
+                                        <li><a href="/help/dev/apii_article" class="nav-link">文章函数</a></li>
+                                        <li><a href="/help/dev/apii_urlfor" class="nav-link">路径函数</a></li>
+                                    </ul>
+                                </div>
+                                <div class="mt-2 mb-1">
+                                    <p class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">语法</p>
+                                    <ul class="space-y-0.5">
+                                        <li><a href="/help/dev/grammar_grammar" class="nav-link">模板语法</a></li>
+                                        <li><a href="/help/dev/grammar_tmpl" class="nav-link">模板嵌套</a></li>
+                                        <li><a href="/help/dev/grammar_for" class="nav-link">range 循环</a></li>
+                                        <li><a href="/help/dev/grammar_if" class="nav-link">if 判断</a></li>
+                                        <li><a href="/help/dev/grammar_switch" class="nav-link">switch 分支</a></li>
+                                        <li><a href="/help/dev/grammar_func" class="nav-link">内置函数</a></li>
+                                        <li><a href="/help/dev/grammar_var" class="nav-link">变量渲染</a></li>
+                                    </ul>
+                                </div>
+                                <div class="mt-2 mb-1">
+                                    <p class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">主题页面</p>
+                                    <ul class="space-y-0.5">
+                                        <li><a href="/help/dev/theme_config" class="nav-link">主题配置</a></li>
+                                        <li><a href="/help/dev/theme_index" class="nav-link">index 页面</a></li>
+                                        <li><a href="/help/dev/theme_search" class="nav-link">search 页面</a></li>
+                                        <li><a href="/help/dev/theme_tag" class="nav-link">tag 页面</a></li>
+                                        <li><a href="/help/dev/theme_topic" class="nav-link">topic 页面</a></li>
+                                        <li><a href="/help/dev/theme_category" class="nav-link">category 页面</a></li>
+                                        <li><a href="/help/dev/theme_article" class="nav-link">article 页面</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </nav>
                     </aside>
-                </div>
-                <div class="column is-10">
-                    <div class="help-content box">
-                        {{.LayoutContent}}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <section class="has-background-success p-6">
-        <div class="container">
-            <div class="columns">
-                <div class="column is-12">
-                    <div class="content" style="text-align: center;">
-                        <img src="/static/help/images/logo.png">
-                        <p class="title has-text-centered">免费,快速,轻量,企业级</p>
-                    </div>
+
+                    <!-- 右侧内容 -->
+                    <article class="lg:col-span-9 xl:col-span-10">
+                        <div class="bg-white rounded-xl border border-slate-200 shadow-sm">
+                            <div class="help-content px-6 py-8 lg:px-10 lg:py-10 prose prose-slate max-w-none">
+                                {{.LayoutContent}}
+                            </div>
+                        </div>
+                    </article>
                 </div>
             </div>
-        </div>
-    </section>
-    <footer class="footer">
-        <div class="content has-text-centered">
-            <p>
-                <span><a href="https://beian.miit.gov.cn/" target="_blank">豫ICP备2022007138号-3</a></span><strong> <a href="http://yh24365.com" target="_blank">YYCMS</a>
-                    &copy;{{.year}}</strong>
-            </p>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-12 border-t border-slate-200 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center space-x-3">
+                    <img src="/static/help/images/logo.png" alt="YYCMS" class="h-8 w-8 rounded">
+                    <span class="font-bold text-slate-900">YYCMS</span>
+                    <span class="text-slate-400">·</span>
+                    <span class="text-sm text-slate-500">免费、快速、轻量、企业级</span>
+                </div>
+                <div class="text-sm text-slate-500">
+                    <a href="https://beian.miit.gov.cn/" target="_blank" class="hover:text-blue-600 transition">豫ICP备2022007138号-3</a>
+                    <span class="mx-2 text-slate-300">·</span>
+                    <a href="http://yh24365.com" target="_blank" class="font-semibold text-slate-700 hover:text-blue-600 transition">YYCMS ©{{.year}}</a>
+                </div>
+            </div>
         </div>
     </footer>
+
     <script type="text/javascript">
         $(function () {
+            // CodeMirror 初始化
             $("textarea[code-type]").each(function () {
                 var codeType = $(this).attr("code-type");
-                var codeMirror = createCodeMirror($(this).attr("id"), codeType);
-            })
+                var createCodeMirror = window.createCodeMirror;
+                if (typeof createCodeMirror === 'function') {
+                    var cm = createCodeMirror($(this).attr("id"), codeType);
+                }
+            });
+            // 移动端菜单切换
+            $('#mobileMenuBtn').on('click', function () {
+                $('#mobileMenu').toggleClass('hidden');
+            });
+            // 当前页面高亮
+            var currentPath = window.location.pathname;
+            $('.nav-link').each(function () {
+                if ($(this).attr('href') === currentPath) {
+                    $(this).addClass('is-active');
+                }
+            });
         });
     </script>
 </body>
-
 </html>

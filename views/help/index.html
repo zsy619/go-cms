@@ -1,40 +1,184 @@
+<section class="help-hero">
+    <h1>YYCMS 帮助中心</h1>
+    <p>选你所想 · 学你所需 — 为开发者、管理员、运维精心组织的知识库</p>
+    <div class="hero-search">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+        <input type="search" placeholder="搜索 API、模板语法、主题页面..." id="heroSearch" autocomplete="off">
+    </div>
+</section>
 
-<article class="content help-index">
-    <h1 class="title has-text-centered">YYCMS 帮助中心</h1>
-    <p class="has-text-centered is-size-6" style="color:#7a8290;margin-bottom:1.5rem;">
-        选你所想 · 学你所需
-    </p>
-
-    <blockquote>
-        这里是 YYCMS 知识库的总入口。开发者请查看左侧
-        <a href="/help/dev/index" style="font-weight:600;color:#3273dc;">开发手册</a>，
-        管理员请登录后台查阅操作手册。
-    </blockquote>
-
-    <div class="dev-feature-grid">
-        <div class="dev-feature-card">
-            <h4>📘 开发手册</h4>
-            <p>面向开发者：API 接口、模板语法、主题页面</p>
+<section class="help-section">
+    <div class="help-section-header">
+        <span class="badge">🎯</span>
+        <h2>按角色快速进入</h2>
+    </div>
+    <div class="help-role-grid">
+        <a href="/help/dev/index" class="help-role-card" style="text-decoration:none;color:inherit;">
+            <div class="role-icon">📘</div>
+            <h3>开发者</h3>
+            <p class="role-desc">面向开发者：API 接口、模板函数、主题页面开发</p>
             <ul>
-                <li><a href="/help/dev/index">→ 进入开发手册</a></li>
+                <li><a href="/help/dev/index">进入开发手册</a></li>
                 <li><a href="/help/dev/api_site">站点 API</a></li>
                 <li><a href="/help/dev/grammar_grammar">模板语法</a></li>
+                <li><a href="/help/dev/apii_urlfor">路径函数</a></li>
             </ul>
-        </div>
-        <div class="dev-feature-card">
-            <h4>⚙️ 后台操作</h4>
-            <p>面向管理员：站点、栏目、内容、用户管理</p>
+        </a>
+        <a href="/admin/login" class="help-role-card" style="text-decoration:none;color:inherit;">
+            <div class="role-icon">⚙️</div>
+            <h3>管理员</h3>
+            <p class="role-desc">面向管理员：站点、栏目、内容、用户管理</p>
             <ul>
-                <li><a href="/admin/login">→ 登录后台</a></li>
+                <li><a href="/admin/login">登录后台</a></li>
                 <li><a href="/help/dev/index">站点管理</a></li>
+                <li><a href="/help/dev/theme_config">主题配置</a></li>
+                <li><a href="/help/dev/api_article">文章管理</a></li>
             </ul>
-        </div>
-        <div class="dev-feature-card">
-            <h4>🔧 部署与运维</h4>
-            <p>面向运维：环境配置、性能调优、备份恢复</p>
+        </a>
+        <a href="https://github.com/zsy619/go-cms" target="_blank" class="help-role-card" style="text-decoration:none;color:inherit;">
+            <div class="role-icon">🔧</div>
+            <h3>运维 & 部署</h3>
+            <p class="role-desc">面向运维：环境配置、性能调优、备份恢复</p>
             <ul>
-                <li>详见项目 README.md</li>
+                <li><a href="https://github.com/zsy619/go-cms" target="_blank">GitHub 仓库</a></li>
+                <li><a href="https://github.com/zsy619/go-cms/blob/master/docs/" target="_blank">部署文档</a></li>
+                <li><a href="https://github.com/zsy619/go-cms/blob/master/docs/multi_site_design.md" target="_blank">多站点方案</a></li>
             </ul>
+        </a>
+    </div>
+</section>
+
+<section class="help-section">
+    <div class="help-section-header">
+        <span class="badge">API</span>
+        <h2>开放 API 接口</h2>
+        <span class="badge-count">9 个</span>
+    </div>
+    <div class="help-section-grid">
+        <a href="/help/dev/api_site" class="help-section-card">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            站点 API
+        </a>
+        <a href="/help/dev/api_ads" class="help-section-card">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-5v11a3 3 0 01-3 3H-3a3 3 0 01-3-3V8a3 3 0 013-3h4.436z" style="display:none"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            广告 API
+        </a>
+        <a href="/help/dev/api_link" class="help-section-card">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+            链接 API
+        </a>
+        <a href="/help/dev/api_tag" class="help-section-card">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+            标签 API
+        </a>
+        <a href="/help/dev/api_topic" class="help-section-card">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            专题 API
+        </a>
+        <a href="/help/dev/api_article" class="help-section-card">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            文章 API
+        </a>
+        <a href="/help/dev/api_constjs" class="help-section-card">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+            const.js
+        </a>
+        <a href="/help/dev/api_cmsjs" class="help-section-card">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            cms.js
+        </a>
+        <a href="/help/dev/api_example" class="help-section-card">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+            完整示例
+        </a>
+    </div>
+</section>
+
+<section class="help-section">
+    <div class="help-section-header">
+        <span class="badge">FN</span>
+        <h2>模板函数接口</h2>
+        <span class="badge-count">9 个</span>
+    </div>
+    <div class="help-section-grid">
+        <a href="/help/dev/apii_front" class="help-section-card">公共函数</a>
+        <a href="/help/dev/apii_var" class="help-section-card">内置变量</a>
+        <a href="/help/dev/apii_site" class="help-section-card">站点函数</a>
+        <a href="/help/dev/apii_ads" class="help-section-card">广告函数</a>
+        <a href="/help/dev/apii_link" class="help-section-card">链接函数</a>
+        <a href="/help/dev/apii_tag" class="help-section-card">标签函数</a>
+        <a href="/help/dev/apii_topic" class="help-section-card">专题函数</a>
+        <a href="/help/dev/apii_article" class="help-section-card">文章函数</a>
+        <a href="/help/dev/apii_urlfor" class="help-section-card">路径函数</a>
+    </div>
+</section>
+
+<section class="help-section">
+    <div class="help-section-header">
+        <span class="badge">语法</span>
+        <h2>模板语法</h2>
+        <span class="badge-count">7 篇</span>
+    </div>
+    <div class="help-section-grid">
+        <a href="/help/dev/grammar_grammar" class="help-section-card">模板语法总览</a>
+        <a href="/help/dev/grammar_tmpl" class="help-section-card">模板嵌套</a>
+        <a href="/help/dev/grammar_for" class="help-section-card">range 循环</a>
+        <a href="/help/dev/grammar_if" class="help-section-card">if 判断</a>
+        <a href="/help/dev/grammar_switch" class="help-section-card">switch 分支</a>
+        <a href="/help/dev/grammar_func" class="help-section-card">内置函数</a>
+        <a href="/help/dev/grammar_var" class="help-section-card">变量渲染</a>
+    </div>
+</section>
+
+<section class="help-section">
+    <div class="help-section-header">
+        <span class="badge">主题</span>
+        <h2>主题页面模板</h2>
+        <span class="badge-count">7 篇</span>
+    </div>
+    <div class="help-section-grid">
+        <a href="/help/dev/theme_config" class="help-section-card">主题配置</a>
+        <a href="/help/dev/theme_index" class="help-section-card">index 页面</a>
+        <a href="/help/dev/theme_search" class="help-section-card">search 页面</a>
+        <a href="/help/dev/theme_tag" class="help-section-card">tag 页面</a>
+        <a href="/help/dev/theme_topic" class="help-section-card">topic 页面</a>
+        <a href="/help/dev/theme_category" class="help-section-card">category 页面</a>
+        <a href="/help/dev/theme_article" class="help-section-card">article 页面</a>
+    </div>
+</section>
+
+<section class="help-section">
+    <div class="help-section-header">
+        <span class="badge">❓</span>
+        <h2>常见问题</h2>
+    </div>
+    <div class="dev-faq-grid">
+        <div class="dev-faq-item">
+            <h4>多站点如何切换？</h4>
+            <p>通过 host 解析对应站点，详见 <a href="/help/dev/apii_site">站点函数</a>。</p>
+        </div>
+        <div class="dev-faq-item">
+            <h4>模板里如何调用 API？</h4>
+            <p>使用 <code>apiGet</code> / <code>apiPost</code> 函数，详见 <a href="/help/dev/apii_front">公共函数</a>。</p>
+        </div>
+        <div class="dev-faq-item">
+            <h4>如何自定义主题？</h4>
+            <p>复制默认主题 <code>default</code> 到 <code>themes/&lt;你的主题&gt;</code> 即可，详见 <a href="/help/dev/theme_config">主题配置</a>。</p>
+        </div>
+        <div class="dev-faq-item">
+            <h4>如何启用多语言？</h4>
+            <p>参见 <code>docs/i18n_design.md</code> 完整方案，或 <a href="/help/dev/apii_var">内置变量</a>。</p>
         </div>
     </div>
-</article>
+</section>
+
+<script type="text/javascript">
+    // Hero 搜索跳转 (简化版: 直接跳到开发手册)
+    document.getElementById('heroSearch').addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+            window.location.href = '/help/dev/index?q=' + encodeURIComponent(this.value);
+        }
+    });
+</script>
