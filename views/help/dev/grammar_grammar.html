@@ -1,21 +1,35 @@
+<article class="prose-doc">
+    <h1>模板语法</h1>
+    <p>YYCMS 模板引擎兼容 Go 标准库 <code>html/template</code> 与 <code>text/template</code>，统一使用 <code>{{"{{"}} }}</code> 作为左右标签，没有其它标识符。</p>
 
-        <article class="content ">
-            <h1 class="title has-text-centered">模板语法</h1>
-            <hr>
-            <p><b>统一使用了 {{`{{`}} 和 }} 作为左右标签，没有其他的标签符号。</b></p>
-            <p>使用 . 来访问当前位置的上下文。</p>
-            <p>使用 $ 来引用当前模板根级的上下文。</p>
-            <p>使用 $var 来访问创建的变量。</p>
-            <p><b>模板中支持的 go 语言符号</b></p>
-            <textarea id="code1" code-type="go">
-{{`{{`}}"string"}} // 一般 string
+    <div class="callout info">
+        <span class="callout-icon">ℹ️</span>
+        <div class="callout-body">
+            <p><strong>转义提示</strong>：在 Markdown / HTML 中输出模板示例需用 <code>{{"{{"}}{{"{{"}} }}</code> 或反引号包裹，避免被引擎提前解析。</p>
+        </div>
+    </div>
+
+    <h2>核心语法</h2>
+    <ul>
+        <li>使用 <code>.</code> 访问当前位置的上下文</li>
+        <li>使用 <code>$</code> 引用当前模板根级的上下文</li>
+        <li>使用 <code>$var</code> 访问创建的局部变量</li>
+    </ul>
+
+    <h2>支持的 Go 字面量</h2>
+    <textarea id="code1" code-type="go">{{`{{`}}"string"}} // 一般 string
 {{`{{`}}`raw string`}} // 原始 string
 {{`{{`}}'c'}} // byte
-{{`{{`}}print nil}} // nil 也被支持
-            </textarea>
-            <p><b>模板中的 pipeline</b></p>
-            <p>可以是上下文的变量输出，也可以是函数通过管道传递的返回值</p>
-            <textarea id="code2" code-type="go">
-{{`{{`}}. | FuncA | FuncB | FuncC}}
-            </textarea>
-        </article>
+{{`{{`}}print nil}} // nil 也被支持</textarea>
+
+    <h2>Pipeline 管道</h2>
+    <p>Pipeline 可以是上下文变量输出，也可以是函数通过管道传递的返回值。</p>
+    <textarea id="code2" code-type="go">{{`{{`}}. | FuncA | FuncB | FuncC}}</textarea>
+
+    <div class="callout success">
+        <span class="callout-icon">💡</span>
+        <div class="callout-body">
+            <p><strong>继续学习</strong>：详见 <a href="grammar_var">变量渲染</a> · <a href="grammar_if">if 判断</a> · <a href="grammar_for">循环</a> · <a href="grammar_func">函数调用</a> · <a href="grammar_tmpl">模板嵌套</a>。</p>
+        </div>
+    </div>
+</article>

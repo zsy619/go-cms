@@ -1,238 +1,266 @@
+<article class="prose-doc">
+    <h1>文章开放接口</h1>
+    <p>YYCMS 文章与栏目相关的 RESTful API。基础路径为 <code>/api/article/...</code> 和 <code>/api/category/...</code>。</p>
 
-        <article class="content ">
-            <h1 class="title has-text-centered">文章开放接口</h1>
-            <hr>
-            <p>文章相关开放接口</p>
-            <h3 id="r5spb"><b>文章API</b></h3>
-            <div>
-                <table border="0" width="100%" cellpadding="0" cellspacing="0">
-                    <tbody>
-                        <tr>
-                            <th>访问路径</th>
-                            <th>参数说明</th>
-                            <th style="word-break: keep-all;">返回值</th>
-                            <th>说明</th>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>/api/category/nav</p>
-                            </td>
-                            <td>
-                                <a name="category_nav"></a>
-                                {string} channel_name 频道名称<br>
-                                {in64} channel_id 频道ID<br>
-                                {string} call_index 栏目别名<br>
-                                {in64} category_id 栏目ID<br>
-                                {int64} article_id 文章ID
-                            </td>
-                            <td><a href="#category1">查看</a></td>
-                            <td>获取栏目导航</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>/api/category/get</p>
-                            </td>
-                            <td>
-                                <a name="category_get"></a>
-                                {string} channel_name 频道名称
-                            </td>
-                            <td><a href="#category2">查看</a></td>
-                            <td>获取栏目列表</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>/api/category/get</p>
-                            </td>
-                            <td>
-                                {string} channel_name 频道名称<br>
-                                {string} call_index 栏目别名
-                            </td>
-                            <td><a href="#category2">查看</a></td>
-                            <td>获取栏目列表</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>/api/category/find</p>
-                            </td>
-                            <td>
-                                <a name="category_find"></a>
-                                {int64} category_id 栏目ID<br>
-                                {string} call_index 栏目别名
-                            </td>
-                            <td><a href="#category3">查看</a></td>
-                            <td>获取栏目详情</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>/api/article/get</p>
-                            </td>
-                            <td>
-                                <a name="get"></a>
-                                {int} limit 获取数量，默认值6<br>
-                                {int64} channel_id 频道ID<br>
-                                {int64} category_id 栏目ID<br>
-                                {string} call_index 栏目别名<br>
-                                {int} is_top 是否置顶<br>
-                                {int} is_red 是否推荐<br>
-                                {int} is_hot 是否热门<br>
-                                {int} is_slide 是否幻灯片<br>
-                                {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time<br>
-                                {bool} is_cache 是否使用缓存
-                            </td>
-                            <td><a href="#article1">查看</a></td>
-                            <td>获取文章列表</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>/api/article/get/new</p>
-                            </td>
-                            <td>
-                                <a name="getNew"></a>
-                                {int} limit 获取数量，默认值6<br>
-                                {int64} channel_id 频道ID<br>
-                                {int64} category_id 栏目ID<br>
-                                {string} call_index 栏目别名<br>
-                                {int} is_top 是否置顶<br>
-                                {int} is_red 是否推荐<br>
-                                {int} is_hot 是否热门<br>
-                                {int} is_slide 是否幻灯片<br>
-                                {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time<br>
-                            </td>
-                            <td><a href="#article1">查看</a></td>
-                            <td>获取最新文章列表</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>/api/article/paginate</p>
-                            </td>
-                            <td>
-                                <a name="paginate"></a>
-                                {int} limit 获取数量，默认值6<br>
-                                {int64} channel_id 频道ID<br>
-                                {int64} category_id 栏目ID<br>
-                                {string} call_index 栏目别名<br>
-                                {string} keyword 关键词：按标题、摘要进行搜索<br>
-                                {int} is_top 是否置顶<br>
-                                {int} is_red 是否推荐<br>
-                                {int} is_hot 是否热门<br>
-                                {int} is_slide 是否幻灯片<br>
-                                {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time<br>
-                            </td>
-                            <td><a href="#article1">查看</a></td>
-                            <td>获取文章分页列表</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>/api/article/find</p>
-                            </td>
-                            <td>
-                                <a name="find"></a>
-                                {string} call_index 调用别名<br>
-                                {int64} article_id 文章id
-                            </td>
-                            <td><a href="#article2">查看</a></td>
-                            <td>根据article_id获取文章详情、相册、附件</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>/api/article/prev_next</p>
-                            </td>
-                            <td>
-                                {string} call_index 栏目调用别名<br>
-                                {int64} category_id 栏目id<br>
-                                {int64} article_id 文章id
-                            </td>
-                            <td><a href="#article3">查看</a></td>
-                            <td>根据article_id获取文章上一个、下一个</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>/api/article/article</p>
-                            </td>
-                            <td>
-                                <a name="article"></a>
-                                {string} call_index 调用别名<br>
-                                {int64} article_id 文章id
-                            </td>
-                            <td><a href="#article4">查看</a></td>
-                            <td>获取文章详情，不包括附件、相册</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>/api/article/album</p>
-                            </td>
-                            <td>
-                                <a name="album"></a>
-                                {string} call_index 调用别名<br>
-                                {int64} article_id 文章id
-                            </td>
-                            <td><a href="#article5">查看</a></td>
-                            <td>获取文章相册列表</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>/api/article/attach</p>
-                            </td>
-                            <td>
-                                <a name="attach"></a>
-                                {string} call_index 调用别名<br>
-                                {int64} article_id 文章id
-                            </td>
-                            <td><a href="#article5">查看</a></td>
-                            <td>获取文章附件列表</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>/api/article/click</p>
-                            </td>
-                            <td>
-                                {string} call_index 调用别名<br>
-                                {int64} article_id 文章id
-                            </td>
-                            <td></td>
-                            <td>文章点击数+1</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>/api/article/like</p>
-                            </td>
-                            <td>
-                                {string} call_index 调用别名<br>
-                                {int64} article_id 文章id
-                            </td>
-                            <td></td>
-                            <td>文章点赞数+1</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>/api/article/album/click</p>
-                            </td>
-                            <td>
-                                {int64} article_id 文章id<br>
-                                {int64} ablum_id 图片id
-                            </td>
-                            <td></td>
-                            <td>文章相册点击数+1</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>/api/article/property</p>
-                            </td>
-                            <td>
-                                {int64} parentId 父id<br>
-                                {int64} articleId 文章id<br>
-                                {int64} callIndex 属性别名<br>
-                                {int64} title 属性名称
-                            </td>
-                            <td></td>
-                            <td>获取内容自定义属性列表</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <h3><b><a name='category1'>栏目导航结构</a></b></h3>
-            <textarea id="tagJson" code-type="javascript">
-{
+    <div class="callout info">
+        <span class="callout-icon">ℹ️</span>
+        <div class="callout-body">
+            <p><strong>说明</strong>: <code>call_index</code> 与 <code>article_id</code> 在查询文章详情时二选一即可。前端组合查询时建议同时传两个参数以便容错。</p>
+        </div>
+    </div>
+
+    <h2>栏目导航 API</h2>
+    <div class="doc-table-wrapper">
+        <div class="doc-table-meta"><span>📋 栏目导航</span><span class="row-count">1 个接口</span></div>
+        <div class="doc-table-scroll">
+            <table class="doc-table">
+                <thead><tr><th style="width:100px">方法</th><th>访问路径</th><th>参数说明</th><th>返回值</th><th>说明</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><span class="cell-method get">GET</span></td>
+                        <td><span class="cell-path">/api/category/nav</span></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">string</span> <span class="param-name">channel_name</span><span class="param-desc">频道名称</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">channel_id</span><span class="param-desc">频道 ID</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">call_index</span><span class="param-desc">栏目别名</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">category_id</span><span class="param-desc">栏目 ID</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">article_id</span><span class="param-desc">文章 ID</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">[]Nav</span></td>
+                        <td>获取栏目导航</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <h2>栏目 API</h2>
+    <div class="doc-table-wrapper">
+        <div class="doc-table-meta"><span>📋 栏目</span><span class="row-count">3 个接口</span></div>
+        <div class="doc-table-scroll">
+            <table class="doc-table">
+                <thead><tr><th style="width:100px">方法</th><th>访问路径</th><th>参数说明</th><th>返回值</th><th>说明</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><span class="cell-method get">GET</span></td>
+                        <td><span class="cell-path">/api/category/get</span></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">string</span> <span class="param-name">channel_name</span><span class="param-desc">频道名称</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">[]Category</span></td>
+                        <td>通过频道名称获取栏目列表</td>
+                    </tr>
+                    <tr>
+                        <td><span class="cell-method get">GET</span></td>
+                        <td><span class="cell-path">/api/category/get</span></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">string</span> <span class="param-name">channel_name</span><span class="param-desc">频道名称</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">call_index</span><span class="param-desc">栏目别名</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">[]Category</span></td>
+                        <td>通过频道+栏目别名获取列表</td>
+                    </tr>
+                    <tr>
+                        <td><span class="cell-method get">GET</span></td>
+                        <td><span class="cell-path">/api/category/find</span></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int64</span> <span class="param-name">category_id</span><span class="param-desc">栏目 ID</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">call_index</span><span class="param-desc">栏目别名</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">Category</span></td>
+                        <td>获取栏目详情</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <h2>文章 API</h2>
+    <div class="doc-table-wrapper">
+        <div class="doc-table-meta"><span>📋 文章</span><span class="row-count">11 个接口</span></div>
+        <div class="doc-table-scroll">
+            <table class="doc-table">
+                <thead><tr><th style="width:100px">方法</th><th>访问路径</th><th>参数说明</th><th>返回值</th><th>说明</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><span class="cell-method get">GET</span></td>
+                        <td><span class="cell-path">/api/article/get</span></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int</span> <span class="param-name">limit</span><span class="param-desc">获取数量，默认 6</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">channel_id</span><span class="param-desc">频道 ID</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">category_id</span><span class="param-desc">栏目 ID</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">call_index</span><span class="param-desc">栏目别名</span></li>
+                                <li><span class="param-type">int</span> <span class="param-name">is_top</span><span class="param-desc">是否置顶</span></li>
+                                <li><span class="param-type">int</span> <span class="param-name">is_red</span><span class="param-desc">是否推荐</span></li>
+                                <li><span class="param-type">int</span> <span class="param-name">is_hot</span><span class="param-desc">是否热门</span></li>
+                                <li><span class="param-type">int</span> <span class="param-name">is_slide</span><span class="param-desc">是否幻灯片</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">order_by</span><span class="param-desc">排序字段</span></li>
+                                <li><span class="param-type">bool</span> <span class="param-name">is_cache</span><span class="param-desc">是否使用缓存</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">[]Article</span></td>
+                        <td>获取文章列表</td>
+                    </tr>
+                    <tr>
+                        <td><span class="cell-method get">GET</span></td>
+                        <td><span class="cell-path">/api/article/get/new</span></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int</span> <span class="param-name">limit</span><span class="param-desc">获取数量</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">channel_id</span><span class="param-desc">频道 ID</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">category_id</span><span class="param-desc">栏目 ID</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">call_index</span><span class="param-desc">栏目别名</span></li>
+                                <li><span class="param-type">int</span> <span class="param-name">is_top/is_red/is_hot/is_slide</span><span class="param-desc">过滤标志</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">order_by</span><span class="param-desc">排序字段</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">[]Article</span></td>
+                        <td>获取最新文章列表</td>
+                    </tr>
+                    <tr>
+                        <td><span class="cell-method get">GET</span></td>
+                        <td><span class="cell-path">/api/article/paginate</span></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int</span> <span class="param-name">limit</span><span class="param-desc">每页数量</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">channel_id</span><span class="param-desc">频道 ID</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">category_id</span><span class="param-desc">栏目 ID</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">call_index</span><span class="param-desc">栏目别名</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">keyword</span><span class="param-desc">搜索关键词</span></li>
+                                <li><span class="param-type">int</span> <span class="param-name">is_top/is_red/is_hot/is_slide</span><span class="param-desc">过滤标志</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">order_by</span><span class="param-desc">排序字段</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">[]Article</span></td>
+                        <td>分页获取文章列表</td>
+                    </tr>
+                    <tr>
+                        <td><span class="cell-method get">GET</span></td>
+                        <td><span class="cell-path">/api/article/find</span></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">string</span> <span class="param-name">call_index</span><span class="param-desc">调用别名</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">article_id</span><span class="param-desc">文章 ID</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">ArticleDetail</span></td>
+                        <td>获取文章详情、相册、附件</td>
+                    </tr>
+                    <tr>
+                        <td><span class="cell-method get">GET</span></td>
+                        <td><span class="cell-path">/api/article/prev_next</span></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">string</span> <span class="param-name">call_index</span><span class="param-desc">栏目别名</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">category_id</span><span class="param-desc">栏目 ID</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">article_id</span><span class="param-desc">文章 ID</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">PrevNext</span></td>
+                        <td>获取文章上一篇、下一篇</td>
+                    </tr>
+                    <tr>
+                        <td><span class="cell-method get">GET</span></td>
+                        <td><span class="cell-path">/api/article/article</span></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">string</span> <span class="param-name">call_index</span><span class="param-desc">调用别名</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">article_id</span><span class="param-desc">文章 ID</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">Article</span></td>
+                        <td>获取文章详情（不含附件、相册）</td>
+                    </tr>
+                    <tr>
+                        <td><span class="cell-method get">GET</span></td>
+                        <td><span class="cell-path">/api/article/album</span></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">string</span> <span class="param-name">call_index</span><span class="param-desc">调用别名</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">article_id</span><span class="param-desc">文章 ID</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">[]Album</span></td>
+                        <td>获取文章相册列表</td>
+                    </tr>
+                    <tr>
+                        <td><span class="cell-method get">GET</span></td>
+                        <td><span class="cell-path">/api/article/attach</span></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">string</span> <span class="param-name">call_index</span><span class="param-desc">调用别名</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">article_id</span><span class="param-desc">文章 ID</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">[]Attach</span></td>
+                        <td>获取文章附件列表</td>
+                    </tr>
+                    <tr>
+                        <td><span class="cell-method post">POST</span></td>
+                        <td><span class="cell-path">/api/article/click</span></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">string</span> <span class="param-name">call_index</span><span class="param-desc">调用别名</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">article_id</span><span class="param-desc">文章 ID</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">bool</span></td>
+                        <td>文章点击数 +1</td>
+                    </tr>
+                    <tr>
+                        <td><span class="cell-method post">POST</span></td>
+                        <td><span class="cell-path">/api/article/like</span></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">string</span> <span class="param-name">call_index</span><span class="param-desc">调用别名</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">article_id</span><span class="param-desc">文章 ID</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">bool</span></td>
+                        <td>文章点赞数 +1</td>
+                    </tr>
+                    <tr>
+                        <td><span class="cell-method post">POST</span></td>
+                        <td><span class="cell-path">/api/article/album/click</span></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int64</span> <span class="param-name">article_id</span><span class="param-desc">文章 ID</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">ablum_id</span><span class="param-desc">图片 ID</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">bool</span></td>
+                        <td>文章相册点击数 +1</td>
+                    </tr>
+                    <tr>
+                        <td><span class="cell-method get">GET</span></td>
+                        <td><span class="cell-path">/api/article/property</span></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int64</span> <span class="param-name">parentId</span><span class="param-desc">父 ID</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">articleId</span><span class="param-desc">文章 ID</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">callIndex</span><span class="param-desc">属性别名</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">title</span><span class="param-desc">属性名称</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">[]Property</span></td>
+                        <td>获取内容自定义属性列表</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <h2>📦 栏目导航结构</h2>
+    <textarea id="tagJson" code-type="javascript">{
     "count": 2,
     "code": 0,
     "msg": "",
@@ -251,9 +279,9 @@
         }
     ]
 }</textarea>
-            <h3><b><a name='category2'>栏目列表结构</a></b></h3>
-            <textarea id="tagJson2" code-type="javascript">
-{
+
+    <h2>📦 栏目列表结构</h2>
+    <textarea id="tagJson2" code-type="javascript">{
     "count": 11,
     "code": 0,
     "msg": "",
@@ -278,9 +306,9 @@
         }
     ]
 }</textarea>
-            <h3><b><a name='category3'>栏目详情结构</a></b></h3>
-            <textarea id="tagJson3" code-type="javascript">
-{
+
+    <h2>📦 栏目详情结构</h2>
+    <textarea id="tagJson3" code-type="javascript">{
     "count": 1,
     "code": 0,
     "msg": "",
@@ -312,9 +340,9 @@
         "site_flag": "web"
     }
 }</textarea>
-            <h3><b><a name='article1'>文章列表结构</a></b></h3>
-            <textarea id="tagJson4" code-type="javascript">
-{
+
+    <h2>📦 文章列表结构</h2>
+    <textarea id="tagJson4" code-type="javascript">{
     "count": 6,
     "code": 0,
     "msg": "",
@@ -356,9 +384,9 @@
         }
     ]
 }</textarea>
-            <h3><b><a name='article2'>文章结构</a></b></h3>
-            <textarea id="tagJson5" code-type="javascript">
-{
+
+    <h2>📦 文章详情结构（含相册/附件）</h2>
+    <textarea id="tagJson5" code-type="javascript">{
     "count": 1,
     "code": 0,
     "msg": "",
@@ -445,9 +473,9 @@
         ]
     }
 }</textarea>
-            <h3><b><a name='article3'>文章上下结构</a></b></h3>
-            <textarea id="tagJson6" code-type="javascript">
-{
+
+    <h2>📦 文章上一篇/下一篇结构</h2>
+    <textarea id="tagJson6" code-type="javascript">{
     "count": 1,
     "code": 0,
     "msg": "",
@@ -504,9 +532,9 @@
         }
     }
 }</textarea>
-            <h3><b><a name='article4'>文章(Article)结构</a></b></h3>
-            <textarea id="tagJson7" code-type="javascript">
-{
+
+    <h2>📦 文章详情（精简）结构</h2>
+    <textarea id="tagJson7" code-type="javascript">{
     "count": 1,
     "code": 0,
     "msg": "",
@@ -552,9 +580,9 @@
         "tmpl_dtl": ""
     }
 }</textarea>
-            <h3><b><a name='article5'>文章(Album)结构</a></b></h3>
-            <textarea id="tagJson8" code-type="javascript">
-{
+
+    <h2>📦 文章相册结构</h2>
+    <textarea id="tagJson8" code-type="javascript">{
     "count": 5,
     "code": 0,
     "msg": "",
@@ -579,9 +607,9 @@
         }
     ]
 }</textarea>
-            <h3><b><a name='article6'>文章(Attach)结构</a></b></h3>
-            <textarea id="tagJson9" code-type="javascript">
-{
+
+    <h2>📦 文章附件结构</h2>
+    <textarea id="tagJson9" code-type="javascript">{
     "count": 1,
     "code": 0,
     "msg": "",
@@ -605,4 +633,4 @@
         }
     ]
 }</textarea>
-        </article>
+</article>

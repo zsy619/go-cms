@@ -1,108 +1,125 @@
+<article class="prose-doc">
+    <h1>广告开放接口</h1>
+    <p>YYCMS 广告相关的 RESTful API，支持获取广告列表、最新广告、分页广告、点击数统计等。
+    基础路径为 <code>/api/ads/...</code>，返回 JSON。</p>
 
-        <article class="content ">
-            <h1 class="title has-text-centered">广告开放接口</h1>
-            <hr>
-            <p>广告相关开放接口</p>
-            <h3 id="r5spb"><b>广告API</b></h3>
-            <div>
-                <table border="0" width="100%" cellpadding="0" cellspacing="0">
-                    <tbody>
-                        <tr>
-                            <th>访问路径</th>
-                            <th>参数说明</th>
-                            <th style="word-break: keep-all;">返回值</th>
-                            <th>说明</th>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>/api/ads/get</p>
-                            </td>
-                            <td>
-                                <a name="get"></a>
-                                {int} limit 获取数量<br>
-                                {int64} site_id 站点ID<br>
-                                {string} site_flag 站点标识<br>
-                                {int64} category_id 广告分类ID<br>
-                                {string} call_index 广告分类标识
-                            </td>
-                            <td><a href="#ads1">查看</a></td>
-                            <td>获取广告，按is_top升序排序</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>/api/ads/get/new</p>
-                            </td>
-                            <td>
-                                <a name="get_new"></a>
-                                {int} limit 获取数量<br>
-                                {int64} site_id 站点ID<br>
-                                {string} site_flag 站点标识<br>
-                                {int64} category_id 广告分类ID<br>
-                                {string} call_index 广告分类标识
-                            </td>
-                            <td><a href="#ads1">查看</a></td>
-                            <td>获取最新广告，按ads_id倒序排序</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>/api/ads/paginate</p>
-                            </td>
-                            <td>
-                                <a name="paginate"></a>
-                                {int} page 页码<br>
-                                {int} limit 获取数量<br>
-                                {int64} site_id 站点ID<br>
-                                {string} site_flag 站点标识<br>
-                                {int64} category_id 广告分类ID<br>
-                                {string} call_index 广告分类标识
-                            </td>
-                            <td><a href="#ads1">查看</a></td>
-                            <td>分页取广告，按is_top升序排序</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>/api/ads/click</p>
-                            </td>
-                            <td>
-                                {int64} ads_id 广告ID
-                            </td>
-                            <td></td>
-                            <td>点击数+1</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <h3><b><a name='ads1'>广告结构</a></b></h3>
-            <textarea id="adsJson" code-type="javascript">
-{
-    "count": 3, // 返回总条数
-    "code": 0, // 0表示成功，其它表示失败
-    "msg": "", // 提示信息
+    <div class="callout info">
+        <span class="callout-icon">ℹ️</span>
+        <div class="callout-body">
+            <p><strong>参数说明</strong>: <code>site_id</code> 与 <code>site_flag</code> 二选一即可；<code>category_id</code> 与 <code>call_index</code> 用于广告位定位，传入其一即可。</p>
+        </div>
+    </div>
+
+    <h2>API 列表</h2>
+    <div class="doc-table-wrapper">
+        <div class="doc-table-meta">
+            <span>📋 广告开放接口</span>
+            <span class="row-count">4 个接口</span>
+        </div>
+        <div class="doc-table-scroll">
+            <table class="doc-table">
+                <thead>
+                    <tr>
+                        <th style="width:100px">方法</th>
+                        <th>访问路径</th>
+                        <th>参数说明</th>
+                        <th>返回值</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="cell-method get">GET</span></td>
+                        <td><span class="cell-path">/api/ads/get</span></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int</span> <span class="param-name">limit</span><span class="param-desc">获取数量</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">site_id</span><span class="param-desc">站点 ID</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">site_flag</span><span class="param-desc">站点标识</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">category_id</span><span class="param-desc">广告分类 ID</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">call_index</span><span class="param-desc">广告分类标识</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">[]Ads</span></td>
+                        <td>获取广告，按 is_top 升序排序</td>
+                    </tr>
+                    <tr>
+                        <td><span class="cell-method get">GET</span></td>
+                        <td><span class="cell-path">/api/ads/get/new</span></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int</span> <span class="param-name">limit</span><span class="param-desc">获取数量</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">site_id</span><span class="param-desc">站点 ID</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">site_flag</span><span class="param-desc">站点标识</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">category_id</span><span class="param-desc">广告分类 ID</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">call_index</span><span class="param-desc">广告分类标识</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">[]Ads</span></td>
+                        <td>获取最新广告，按 ads_id 倒序</td>
+                    </tr>
+                    <tr>
+                        <td><span class="cell-method get">GET</span></td>
+                        <td><span class="cell-path">/api/ads/paginate</span></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int</span> <span class="param-name">page</span><span class="param-desc">页码</span></li>
+                                <li><span class="param-type">int</span> <span class="param-name">limit</span><span class="param-desc">每页数量</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">site_id</span><span class="param-desc">站点 ID</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">site_flag</span><span class="param-desc">站点标识</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">category_id</span><span class="param-desc">广告分类 ID</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">call_index</span><span class="param-desc">广告分类标识</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">[]Ads</span></td>
+                        <td>分页获取广告，按 is_top 升序</td>
+                    </tr>
+                    <tr>
+                        <td><span class="cell-method post">POST</span></td>
+                        <td><span class="cell-path">/api/ads/click</span></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int64</span> <span class="param-name">ads_id</span><span class="param-desc">广告 ID</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">bool</span></td>
+                        <td>广告点击数 +1</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <h2>📦 广告结构</h2>
+    <textarea id="adsJson" code-type="javascript">{
+    "count": 3,                                          // 返回总条数
+    "code": 0,                                          // 0 表示成功，其它表示失败
+    "msg": "",                                          // 提示信息
     "data": [
         {
-            "ads_id": 100000, // 广告ID
-            "site_id": 0, // 站点ID，0表示全局
-            "channel_id": 0, // 频道ID，0表示全局
-            "category_id": 100000, // 栏目ID，0表示全局
-            "category_title": "首页顶部", // 栏目名称
-            "title": "首页banner1", // 广告标题
-            "call_index": "", // 调用别名
-            "link_url": "", // 链接地址
-            "target": "_blank", // 打开方式
-            "img_url1": "/images/banner_img1.png", // 广告图片
-            "img_url2": "http://域名/images/banner_img1.png", // 广告图片
-            "remark": "", // 备注信息 
-            "sort_id": 0, // 排序号
-            "click": 0, // 点击率
-            "is_lock": 0, // 是否锁定
-            "is_top": 0, // 是否置顶
-            "is_red": 0, // 是否推荐
-            "is_hot": 0, // 是否热门
-            "is_slide": 0, // 是否幻灯片
-            "begin_time": "2023-04-18T15:41:25+08:00", // 开始时间
-            "end_time": "2030-10-25T15:41:25+08:00", // 结束时间
-            "site_flag": "" // 站点标识
+            "ads_id": 100000,                            // 广告 ID
+            "site_id": 0,                                // 站点 ID（0 表示全局）
+            "channel_id": 0,                             // 频道 ID（0 表示全局）
+            "category_id": 100000,                       // 栏目 ID（0 表示全局）
+            "category_title": "首页顶部",                 // 栏目名称
+            "title": "首页banner1",                       // 广告标题
+            "call_index": "",                             // 调用别名
+            "link_url": "",                               // 链接地址
+            "target": "_blank",                           // 打开方式
+            "img_url1": "/images/banner_img1.png",        // 广告图片
+            "img_url2": "http://域名/images/banner_img1.png", // 广告图片（绝对地址）
+            "remark": "",                                  // 备注信息
+            "sort_id": 0,                                 // 排序号
+            "click": 0,                                   // 点击率
+            "is_lock": 0,                                 // 是否锁定
+            "is_top": 0,                                  // 是否置顶
+            "is_red": 0,                                  // 是否推荐
+            "is_hot": 0,                                  // 是否热门
+            "is_slide": 0,                                // 是否幻灯片
+            "begin_time": "2023-04-18T15:41:25+08:00",    // 开始时间
+            "end_time": "2030-10-25T15:41:25+08:00",      // 结束时间
+            "site_flag": ""                               // 站点标识
         }
     ]
 }</textarea>
-        </article>
+</article>

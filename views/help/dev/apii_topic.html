@@ -1,82 +1,80 @@
+<article class="prose-doc">
+    <h1>专题函数</h1>
+    <p>模板内可调用的专题（Topic）相关函数。</p>
 
-        <article class="content ">
-            <h1 class="title has-text-centered">专题函数</h1>
-            <hr>
-            <h3 id="r5spb"><b>专题函数</b></h3>
-            <div>
-                <table border="0" width="100%" cellpadding="0" cellspacing="0">
-                    <tbody>
-                        <tr>
-                            <th>api名称</th>
-                            <th>需要参数</th>
-                            <th style="word-break: keep-all;">返回值</th>
-                            <th>说明</th>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>TopicNew</p>
-                            </td>
-                            <td>
-                                {int} limit 获取数量，小于等于0时按6条处理
-                            </td>
-                            <td><a href="#ApiTopicModel">[]*ApiTopicModel</a></td>
-                            <td>获取最新专题列表</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>TopicNewExtend</p>
-                            </td>
-                            <td>
-                                {int} limit 获取数量，小于等于0时按6条处理<br>
-                                {int64} site_id 站点ID<br>
-                                {string} site_flag 站点标识<br>
-                                {int64} channel_id 栏目ID
-                            </td>
-                            <td><a href="#ApiTopicModel">[]*ApiTopicModel</a></td>
-                            <td>获取最新专题列表</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>TopicNew</p>
-                            </td>
-                            <td>
-                                {int} limit 获取数量，小于等于0时按6条处理
-                            </td>
-                            <td><a href="#ApiTopicModel">[]*ApiTopicModel</a></td>
-                            <td>获取专题列表</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>TopicTopExtend</p>
-                            </td>
-                            <td>
-                                {int} limit 获取数量，小于等于0时按6条处理<br>
-                                {int64} site_id 站点ID<br>
-                                {string} site_flag 站点标识<br>
-                                {int64} channel_id 栏目ID
-                            </td>
-                            <td><a href="#ApiTopicModel">[]*ApiTopicModel</a></td>
-                            <td>获取专题列表</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>TopicTopExtend</p>
-                            </td>
-                            <td>
-                                {int} limit 获取数量，小于等于0时按6条处理<br>
-                                {int64} site_id 站点ID<br>
-                                {string} site_flag 站点标识<br>
-                                {int64} channel_id 栏目ID
-                            </td>
-                            <td><a href="apii_article#ApiArticleListModel">[]*ApiArticleListModel</a></td>
-                            <td>获取专题文章列表</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <h3 id="r5spb"><b><a name="ApiTopicModel">ApiTopicModel结构</a></b></h3>
-            <textarea id="code1" code-type="go">
-type ApiTopicModel struct {
+    <div class="doc-table-wrapper">
+        <div class="doc-table-meta"><span>📋 专题函数</span><span class="row-count">5 个</span></div>
+        <div class="doc-table-scroll">
+            <table class="doc-table">
+                <thead><tr><th style="width:170px">api 名称</th><th>需要参数</th><th>返回值</th><th>说明</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><code>TopicNew</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int</span> <span class="param-name">limit</span><span class="param-desc">获取数量（≤0 按 6 条）</span></li>
+                            </ul>
+                        </td>
+                        <td><a class="cell-link" href="#apii_topic-2">[]*ApiTopicModel</a></td>
+                        <td>获取最新专题列表</td>
+                    </tr>
+                    <tr>
+                        <td><code>TopicNewExtend</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int</span> <span class="param-name">limit</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">site_id</span><span class="param-desc">站点 ID</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">site_flag</span><span class="param-desc">站点标识</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">channel_id</span><span class="param-desc">频道 ID</span></li>
+                            </ul>
+                        </td>
+                        <td><a class="cell-link" href="#apii_topic-2">[]*ApiTopicModel</a></td>
+                        <td>获取最新专题列表（带过滤）</td>
+                    </tr>
+                    <tr>
+                        <td><code>TopicTop</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int</span> <span class="param-name">limit</span></li>
+                            </ul>
+                        </td>
+                        <td><a class="cell-link" href="#apii_topic-2">[]*ApiTopicModel</a></td>
+                        <td>获取专题列表（按 is_top 排序）</td>
+                    </tr>
+                    <tr>
+                        <td><code>TopicTopExtend</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int</span> <span class="param-name">limit</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">site_id</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">site_flag</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">channel_id</span></li>
+                            </ul>
+                        </td>
+                        <td><a class="cell-link" href="#apii_topic-2">[]*ApiTopicModel</a></td>
+                        <td>获取专题列表（带过滤）</td>
+                    </tr>
+                    <tr>
+                        <td><code>TopicArticleTop</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int</span> <span class="param-name">limit</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">site_id</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">site_flag</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">channel_id</span></li>
+                            </ul>
+                        </td>
+                        <td><a class="cell-link" href="apii_article">[]*ApiArticleListModel</a></td>
+                        <td>获取专题下文章列表</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <h2 id="apii_topic-2">📦 ApiTopicModel 结构</h2>
+    <p>专题对象，对应数据库 <code>cms_topic</code> 表。</p>
+    <textarea id="code1" code-type="go">type ApiTopicModel struct {
 	TopicID        int64  `gorm:"column:topic_id;type:bigint;" json:"topic_id" form:"topic_id"`                            // 专题ID
 	SiteID         int64  `gorm:"column:site_id;type:bigint;" json:"site_id" form:"site_id"`                               // 所属站点
 	ChannelID      int64  `gorm:"column:channel_id;type:bigint;" json:"channel_id" form:"channel_id"`                      // 所属频道
@@ -92,6 +90,5 @@ type ApiTopicModel struct {
 	Click          int32  `gorm:"column:click;type:int;" json:"click" form:"click"`                                        // 浏览次数
 	Template       string `gorm:"column:template;type:varchar(256);" json:"template" form:"template"`                      // 模板路径
 	SiteFlag       string `gorm:"column:site_flag;type:varchar(64);" json:"site_flag" form:"site_flag"`                    // 站点标识
-}          
-            </textarea>
-        </article>
+}</textarea>
+</article>

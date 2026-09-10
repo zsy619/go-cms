@@ -1,48 +1,52 @@
+<article class="prose-doc">
+    <h1>if 判断</h1>
+    <p>YYCMS 模板支持 <code>if</code> / <code>else</code> / <code>else if</code> 三种条件分支，并内置了 <code>not</code> / <code>and</code> / <code>or</code> 三种布尔运算以及 <code>eq</code> / <code>ne</code> / <code>lt</code> / <code>le</code> / <code>gt</code> / <code>ge</code> 六种比较运算。</p>
 
-        <article class="content ">
-            <h1 class="title has-text-centered">if判断</h1>
-            <hr>
-            <p><strong>if条件判断</strong><br></p>
-            <textarea id="code1" code-type="htmlmixed">{{"{{"}}if .condition}}
-{{"{{"}}end}}</textarea>
-            <p><b>if,else,else if嵌套</b></p>
-            <textarea id="code2" code-type="javascript">{{"{{"}}if .condition1}}
-{{"{{"}}else if .contition2}}
-{{"{{"}}end}} </textarea>
-            <ul>
-                <li><b>not 非</b></li>
-            </ul>
-            <textarea id="code3" code-type="htmlmixed">{{"{{"}}if not .condition}}{{"{{"}}end}}</textarea>
-            <ul>
-                <li><b>and 与</b></li>
-            </ul>
-            <textarea id="code4" code-type="htmlmixed">{{"{{"}}if and .condition1 .condition2}}{{"{{"}}end}}</textarea>
-            <ul>
-                <li><b>or 或</b></li>
-            </ul>
-            <textarea id="code5" code-type="htmlmixed">{{"{{"}}if or .condition1 .condition2}}{{"{{"}}end}}</textarea>
-            <ul>
-                <li><b>eq 等于</b></li>
-            </ul>
-            <textarea id="code6" code-type="htmlmixed">{{"{{"}}if eq .var1 .var2}}{{"{{"}}end}}</textarea>
-            <ul>
-                <li><b>ne 不等于</b></li>
-            </ul>
-            <textarea id="code7" code-type="htmlmixed">{{"{{"}}if ne .var1 .var2}}{{"{{"}}end}}</textarea>
-            <ul>
-                <li><b>lt 小于 (less than)</b></li>
-            </ul>
-            <textarea id="code8" code-type="htmlmixed">{{"{{"}}if lt .var1 .var2}}{{"{{"}}end}}</textarea>
-            <ul>
-                <li><b>le 小于等于</b></li>
-            </ul>
-            <textarea id="code9" code-type="htmlmixed">{{"{{"}}if le .var1 .var2}}{{"{{"}}end}}</textarea>
-            <ul>
-                <li><b>gt 大于</b></li>
-            </ul>
-            <textarea id="code10" code-type="htmlmixed">{{"{{"}}if gt .var1 .var2}}{{"{{"}}end}}</textarea>
-            <ul>
-                <li><b>ge 大于等于</b></li>
-            </ul>
-            <textarea id="code11" code-type="htmlmixed">{{"{{"}}if ge .var1 .var2}}{{"{{"}}end}}</textarea>
-        </article>
+    <div class="callout info">
+        <span class="callout-icon">ℹ️</span>
+        <div class="callout-body">
+            <p><strong>结束标签</strong>：每个 <code>if</code> 必须有对应的 <code>{{"{{"}} end }}</code>；分支结构相同。</p>
+        </div>
+    </div>
+
+    <h2>基本 if</h2>
+    <textarea id="code1" code-type="htmlmixed">{{"{{"}} if .condition }}
+    <p>condition 为真时输出</p>
+{{"{{"}} end }}</textarea>
+
+    <h2>if / else if / else</h2>
+    <textarea id="code2" code-type="javascript">{{"{{"}} if .condition1 }}
+    <p>满足 condition1</p>
+{{"{{"}} else if .condition2 }}
+    <p>满足 condition2</p>
+{{"{{"}} else }}
+    <p>其它情况</p>
+{{"{{"}} end }}</textarea>
+
+    <div class="doc-table-wrapper">
+        <div class="doc-table-meta"><span>📋 条件运算</span><span class="row-count">9 种</span></div>
+        <div class="doc-table-scroll">
+            <table class="doc-table">
+                <thead><tr><th style="width:140px">运算</th><th>示例</th><th>说明</th></tr></thead>
+                <tbody>
+                    <tr><td><code>not</code></td><td><textarea id="code3" code-type="htmlmixed">{{"{{"}} if not .condition }}{{"{{}} end }}</textarea></td><td>逻辑非</td></tr>
+                    <tr><td><code>and</code></td><td><textarea id="code4" code-type="htmlmixed">{{"{{"}} if and .condition1 .condition2 }}{{"{{}} end }}</textarea></td><td>逻辑与</td></tr>
+                    <tr><td><code>or</code></td><td><textarea id="code5" code-type="htmlmixed">{{"{{"}} if or .condition1 .condition2 }}{{"{{}} end }}</textarea></td><td>逻辑或</td></tr>
+                    <tr><td><code>eq</code></td><td><textarea id="code6" code-type="htmlmixed">{{"{{"}} if eq .var1 .var2 }}{{"{{}} end }}</textarea></td><td>等于</td></tr>
+                    <tr><td><code>ne</code></td><td><textarea id="code7" code-type="htmlmixed">{{"{{"}} if ne .var1 .var2 }}{{"{{}} end }}</textarea></td><td>不等于</td></tr>
+                    <tr><td><code>lt</code></td><td><textarea id="code8" code-type="htmlmixed">{{"{{"}} if lt .var1 .var2 }}{{"{{}} end }}</textarea></td><td>小于</td></tr>
+                    <tr><td><code>le</code></td><td><textarea id="code9" code-type="htmlmixed">{{"{{"}} if le .var1 .var2 }}{{"{{}} end }}</textarea></td><td>小于等于</td></tr>
+                    <tr><td><code>gt</code></td><td><textarea id="code10" code-type="htmlmixed">{{"{{"}} if gt .var1 .var2 }}{{"{{}} end }}</textarea></td><td>大于</td></tr>
+                    <tr><td><code>ge</code></td><td><textarea id="code11" code-type="htmlmixed">{{"{{"}} if ge .var1 .var2 }}{{"{{}} end }}</textarea></td><td>大于等于</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="callout success">
+        <span class="callout-icon">💡</span>
+        <div class="callout-body">
+            <p><strong>使用提示</strong>：<code>eq</code> / <code>ne</code> / <code>lt</code> 等比较函数也常用于 <code>range</code> 管道里做值过滤，详见<a href="grammar_func">函数调用</a>。</p>
+        </div>
+    </div>
+</article>

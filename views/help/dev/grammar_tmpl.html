@@ -1,12 +1,27 @@
-<link rel="stylesheet" href="/static/help/lib/bulma-0.9.1/css/bulma.min.css">
+<article class="prose-doc">
+    <h1>模板嵌套</h1>
+    <p>使用 <code>{{"{{"}} template }}</code> 和 <code>{{"{{"}} define }}</code> 可以把模板拆分成多个文件复用，常用于提取共用区块（如导航、页脚、分页组件）。</p>
 
-        <article class="content ">
-            <h1 class="title has-text-centered">模板的嵌套</h1>
-            <hr>
-            <p><b>主模板引入</b></p>
-            <textarea id="code1" code-type="javascript">{{"{{"}}template "navbar"{{"}}"}}</textarea>
-            <p><b>被引入的子模板定义</b></p>
-            <textarea id="code2" code-type="javascript">{{"{{"}}define "navbar"{{"}}"}} {{"{{"}}end{{"}}"}} </textarea>
-            <p><b>主模板引入的时候，将主模板的变量也传入子模板</b></p>
-            <textarea id="code3" code-type="javascript">{{"{{"}}template "navbar" .{{"}}"}} </textarea>
-        </article>
+    <div class="callout info">
+        <span class="callout-icon">ℹ️</span>
+        <div class="callout-body">
+            <p><strong>语法</strong>：<code>{{"{{"}} define "name" }}...{{"{{"}} end }}</code> 定义块；<code>{{"{{"}} template "name" . }}</code> 调用并传入数据。</p>
+        </div>
+    </div>
+
+    <h2>1. 主模板引入子模板</h2>
+    <textarea id="code1" code-type="javascript">{{"{{"}}template "navbar"{{"}}"}}</textarea>
+
+    <h2>2. 子模板定义</h2>
+    <textarea id="code2" code-type="javascript">{{"{{"}}define "navbar"{{"}}"}} {{"{{"}}end{{"}}"}}</textarea>
+
+    <h2>3. 传入主模板变量到子模板</h2>
+    <textarea id="code3" code-type="javascript">{{"{{"}}template "navbar" .{{"}}"}}</textarea>
+
+    <div class="callout success">
+        <span class="callout-icon">💡</span>
+        <div class="callout-body">
+            <p><strong>使用提示</strong>：<code>.navbar</code> 把当前上下文传入子模板；如需传入部分变量，可使用 <code>dict "key" .Value</code> 或直接传 struct。</p>
+        </div>
+    </div>
+</article>

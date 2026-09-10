@@ -1,71 +1,69 @@
+<article class="prose-doc">
+    <h1>广告函数</h1>
+    <p>模板内可调用的广告相关函数，对应 <code>const.js</code> 中同名函数的服务端实现。</p>
 
-        <article class="content ">
-            <h1 class="title has-text-centered">广告函数</h1>
-            <hr>
-            <h3 id="r5spb"><b>广告函数</b></h3>
-            <div>
-                <table border="0" width="100%" cellpadding="0" cellspacing="0">
-                    <tbody>
-                        <tr>
-                            <th>api名称</th>
-                            <th>需要参数</th>
-                            <th style="word-break: keep-all;">返回值</th>
-                            <th>说明</th>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>AdsNew</p>
-                            </td>
-                            <td>
-                                {int} limit 获取数量，小于等于0时按6条处理
-                            </td>
-                            <td><a href="#ApiAdsModel">[]*ApiAdsModel</a></td>
-                            <td>获取最新广告列表</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>AdsNewExtend</p>
-                            </td>
-                            <td>
-                                {int} limit 获取数量，小于等于0时按6条处理<br>
-                                {int64} site_id 站点ID<br>
-                                {string} site_flag 站点标识<br>
-                                {int64} category_id 广告分类ID<br>
-                                {string} call_index 广告分类标识
-                            </td>
-                            <td><a href="#ApiAdsModel">[]*ApiAdsModel</a></td>
-                            <td>获取最新广告列表</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>AdsTop</p>
-                            </td>
-                            <td>
-                                {int} limit 获取数量，小于等于0时按6条处理
-                            </td>
-                            <td><a href="#ApiAdsModel">[]*ApiAdsModel</a></td>
-                            <td>获取广告列表</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>AdsTopExtend</p>
-                            </td>
-                            <td>
-                                {int} limit 获取数量，小于等于0时按6条处理<br>
-                                {int64} site_id 站点ID<br>
-                                {string} site_flag 站点标识<br>
-                                {int64} category_id 广告分类ID<br>
-                                {string} call_index 广告分类标识
-                            </td>
-                            <td><a href="#ApiAdsModel">[]*ApiAdsModel</a></td>
-                            <td>获取广告列表</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <h3 id="r5spb"><b><a name="ApiAdsModel">ApiAdsModel结构</a></b></h3>
-            <textarea id="code1" code-type="go">
-type ApiAdsModel struct {
+    <div class="doc-table-wrapper">
+        <div class="doc-table-meta"><span>📋 广告函数</span><span class="row-count">4 个</span></div>
+        <div class="doc-table-scroll">
+            <table class="doc-table">
+                <thead><tr><th style="width:170px">api 名称</th><th>需要参数</th><th>返回值</th><th>说明</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><code>AdsNew</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int</span> <span class="param-name">limit</span><span class="param-desc">获取数量（≤0 按 6 条）</span></li>
+                            </ul>
+                        </td>
+                        <td><a class="cell-link" href="#apii_ads-2">[]*ApiAdsModel</a></td>
+                        <td>获取最新广告列表</td>
+                    </tr>
+                    <tr>
+                        <td><code>AdsNewExtend</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int</span> <span class="param-name">limit</span><span class="param-desc">获取数量</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">site_id</span><span class="param-desc">站点 ID</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">site_flag</span><span class="param-desc">站点标识</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">category_id</span><span class="param-desc">广告分类 ID</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">call_index</span><span class="param-desc">广告分类标识</span></li>
+                            </ul>
+                        </td>
+                        <td><a class="cell-link" href="#apii_ads-2">[]*ApiAdsModel</a></td>
+                        <td>获取最新广告列表（带过滤）</td>
+                    </tr>
+                    <tr>
+                        <td><code>AdsTop</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int</span> <span class="param-name">limit</span><span class="param-desc">获取数量</span></li>
+                            </ul>
+                        </td>
+                        <td><a class="cell-link" href="#apii_ads-2">[]*ApiAdsModel</a></td>
+                        <td>获取广告列表（按 is_top 排序）</td>
+                    </tr>
+                    <tr>
+                        <td><code>AdsTopExtend</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int</span> <span class="param-name">limit</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">site_id</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">site_flag</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">category_id</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">call_index</span></li>
+                            </ul>
+                        </td>
+                        <td><a class="cell-link" href="#apii_ads-2">[]*ApiAdsModel</a></td>
+                        <td>获取广告列表（带过滤）</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <h2 id="apii_ads-2">📦 ApiAdsModel 结构</h2>
+    <p>广告对象，对应数据库 <code>cms_ads</code> 表。</p>
+    <textarea id="code1" code-type="go">type ApiAdsModel struct {
     AdsID         int64     `gorm:"column:ads_id;type:bigint;" json:"ads_id" form:"ads_id"`                                        // 主键
     SiteID        int64     `gorm:"column:site_id;type:bigint" json:"site_id" form:"site_id"`                                      // 所属站点
     ChannelID     int64     `gorm:"column:channel_id;type:bigint" json:"channel_id" form:"channel_id"`                             // 所属频道
@@ -89,6 +87,5 @@ type ApiAdsModel struct {
     BeginTime     time.Time `gorm:"column:begin_time;type:datetime;default:CURRENT_TIMESTAMP" json:"begin_time" form:"begin_time"` // 创建时间
     EndTime       time.Time `gorm:"column:end_time;type:datetime;default:CURRENT_TIMESTAMP" json:"end_time" form:"end_time"`       // 创建时间
     SiteFlag      string    `gorm:"column:site_flag;type:varchar(64)" json:"site_flag" form:"site_flag"`                           // 站点标识
-}                
-            </textarea>
-        </article>
+}</textarea>
+</article>

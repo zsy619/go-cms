@@ -1,0 +1,51 @@
+<article class="prose-doc">
+    <h1>topic 页面</h1>
+    <p>专题聚合页模板，接收路径参数 <code>name</code>，展示该专题下的所有文章与专题信息。</p>
+
+    <div class="callout info">
+        <span class="callout-icon">ℹ️</span>
+        <div class="callout-body">
+            <p><strong>接口</strong>：<code>/api/topic/article/paginate?topic_name=...</code>。</p>
+        </div>
+    </div>
+
+    <h2>推荐结构</h2>
+    <ul>
+        <li>专题名：<code>{{"{{"}} .topic.Name }}</code></li>
+        <li>专题标题：<code>{{"{{"}} .topic.Title }}</code></li>
+        <li>专题描述：<code>{{"{{"}} .topic.Remark }}</code></li>
+        <li>专题文章：<code>{{"{{"}} range .articles }}</code></li>
+    </ul>
+
+    <h2>完整示例</h2>
+    <textarea id="code" code-type="htmlmixed"><section class="topic-page">
+    <header>
+        <h1>{{"{{"}} .topic.Title }}</h1>
+        <p class="desc">{{"{{"}} .topic.Remark }}</p>
+    </header>
+
+    <ul class="article-list">
+        {{"{{"}} range .articles }}
+        <li>
+            <a href="{{"{{"}} UrlForArticle .CallIndex .ArticleID .LinkURL }}">
+                <h2>{{"{{"}} .Title }}</h2>
+                <time>{{"{{"}} dateformat .PublishTime "2006-01-02" }}</time>
+                <p>{{"{{"}} .Summary }}</p>
+            </a>
+        </li>
+        {{"{{"}} end }}
+    </ul>
+
+    {{"{{"}} if gt .totalPages 1 }}
+    <nav class="pagination">
+        {{"{{"}} if gt .page 1 }}
+        <a href="?page={{"{{"}} sub .page 1 }}">← 上一页</a>
+        {{"{{"}} end }}
+        <span>{{"{{"}} .page }} / {{"{{"}} .totalPages }}</span>
+        {{"{{"}} if lt .page .totalPages }}
+        <a href="?page={{"{{"}} add .page 1 }}">下一页 →</a>
+        {{"{{"}} end }}
+    </nav>
+    {{"{{"}} end }}
+</section></textarea>
+</article>

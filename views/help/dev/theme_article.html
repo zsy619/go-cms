@@ -1,0 +1,71 @@
+<article class="prose-doc">
+    <h1>article 页面</h1>
+    <p>文章详情页模板，对应数据库 <code>cms_article</code> 表的完整内容渲染。包括文章标题、正文、相册、附件、上一篇/下一篇、相关文章等。</p>
+
+    <div class="callout info">
+        <span class="callout-icon">ℹ️</span>
+        <div class="callout-body">
+            <p><strong>上下文变量</strong>：<code>.Article</code> 当前文章完整模型、<code>.Album</code> 相册列表、<code>.Attach</code> 附件列表、<code>.PrevNext</code> 上下篇。</p>
+        </div>
+    </div>
+
+    <h2>推荐结构</h2>
+    <ul>
+        <li>面包屑：<code>{{"{{"}} .Category.Title }}</code></li>
+        <li>标题：<code>{{"{{"}} .Article.Title }}</code></li>
+        <li>发布时间：<code>{{"{{"}} dateformat .Article.PublishTime "2006-01-02 15:04" }}</code></li>
+        <li>来源 / 作者：<code>{{"{{"}} .Article.Source }} / {{"{{"}} .Article.Author }}</code></li>
+        <li>正文：<code>{{"{{"}} str2html .Article.Content }}</code></li>
+        <li>相册 / 附件：<code>{{"{{"}} range .Album }}</code> / <code>{{"{{"}} range .Attach }}</code></li>
+        <li>上一篇 / 下一篇：<code>{{"{{"}} if .PrevNext.Prev }}</code>...</li>
+    </ul>
+
+    <h2>完整示例</h2>
+    <textarea id="code" code-type="htmlmixed"><article class="article-detail">
+    <header>
+        <h1>{{"{{"}} .Article.Title }}</h1>
+        <div class="meta">
+            <span>发布时间：{{"{{"}} dateformat .Article.PublishTime "2006-01-02 15:04" }}</span>
+            <span>来源：{{"{{"}} .Article.Source }}</span>
+            <span>作者：{{"{{"}} .Article.Author }}</span>
+        </div>
+    </header>
+
+    <div class="content">
+        {{"{{"}} str2html .Article.Content }}
+    </div>
+
+    {{"{{"}} if .Album }}
+    <section class="album">
+        <h3>📷 相册</h3>
+        {{"{{"}} range .Album }}
+        <a href="{{"{{"}} .ImgUrl1 }}"><img src="{{"{{"}} .ImgUrl1 }}" alt=""></a>
+        {{"{{"}} end }}
+    </section>
+    {{"{{"}} end }}
+
+    {{"{{"}} if .Attach }}
+    <section class="attach">
+        <h3>📎 附件下载</h3>
+        <ul>
+        {{"{{"}} range .Attach }}
+            <li><a href="{{"{{"}} .FilePath }}">{{"{{"}} .Title }}</a></li>
+        {{"{{"}} end }}
+        </ul>
+    </section>
+    {{"{{"}} end }}
+
+    <nav class="prev-next">
+        {{"{{"}} if .PrevNext.Prev }}
+        <a class="prev" href="{{"{{"}} UrlForArticle .PrevNext.Prev.CallIndex .PrevNext.Prev.ArticleID .PrevNext.Prev.LinkURL }}">
+            ← {{"{{"}} .PrevNext.Prev.Title }}
+        </a>
+        {{"{{"}} end }}
+        {{"{{"}} if .PrevNext.Next }}
+        <a class="next" href="{{"{{"}} UrlForArticle .PrevNext.Next.CallIndex .PrevNext.Next.ArticleID .PrevNext.Next.LinkURL }}">
+            {{"{{"}} .PrevNext.Next.Title }} →
+        </a>
+        {{"{{"}} end }}
+    </nav>
+</article></textarea>
+</article>

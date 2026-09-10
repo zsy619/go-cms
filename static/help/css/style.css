@@ -580,3 +580,396 @@ html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
     .help-hero p { font-size: 0.95rem; }
     .dev-stat-item .stat-num { font-size: 1.5rem; }
 }
+
+/* ============ 文档正文 prose-doc ============ */
+.prose-doc {
+    color: #1f2937;
+    line-height: 1.75;
+    font-size: 0.95rem;
+}
+.prose-doc > h1:first-child {
+    margin-top: 0 !important;
+}
+.prose-doc p {
+    margin: 0.85rem 0;
+    color: #374151;
+}
+.prose-doc strong { color: #0f172a; font-weight: 600; }
+.prose-doc em { color: #4b5563; font-style: italic; }
+
+/* ============ 章节锚点 (h2/h3) ============ */
+.prose-doc h2 {
+    scroll-margin-top: 5rem;
+    margin: 2.5rem 0 1rem;
+    padding: 0.6rem 0 0.6rem 0.85rem;
+    border-left: 4px solid #3b82f6;
+    background: linear-gradient(90deg, #f0f9ff 0%, transparent 70%);
+    border-radius: 0 0.375rem 0.375rem 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+.prose-doc h3 {
+    scroll-margin-top: 5rem;
+    margin: 1.75rem 0 0.85rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px dashed #cbd5e1;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+.prose-doc h4 {
+    margin: 1.25rem 0 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #334155;
+}
+.prose-doc hr {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #cbd5e1, transparent);
+    margin: 2rem 0;
+}
+
+/* ============ 块引用 (quote/tip) ============ */
+.prose-doc blockquote {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 100%);
+    border-left: 4px solid #3b82f6;
+    padding: 1rem 1.25rem;
+    margin: 1.5rem 0;
+    border-radius: 0 0.5rem 0.5rem 0;
+    color: #1e40af;
+    font-size: 0.92rem;
+}
+.prose-doc blockquote p { margin: 0; color: #1e40af; }
+.prose-doc blockquote code {
+    background: rgba(255,255,255,0.7);
+    color: #1e40af;
+}
+
+/* ============ 提示框 (callout) ============ */
+.callout {
+    border-radius: 0.5rem;
+    padding: 0.85rem 1rem;
+    margin: 1rem 0;
+    border: 1px solid;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-size: 0.875rem;
+}
+.callout-icon { font-size: 1.1rem; line-height: 1.5; }
+.callout-body { flex: 1; }
+.callout-body p:first-child { margin-top: 0; }
+.callout-body p:last-child { margin-bottom: 0; }
+.callout.info { background: #eff6ff; border-color: #bfdbfe; color: #1e40af; }
+.callout.success { background: #ecfdf5; border-color: #a7f3d0; color: #065f46; }
+.callout.warn { background: #fffbeb; border-color: #fde68a; color: #92400e; }
+.callout.danger { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+
+/* ============ 文档表格 (新版) ============ */
+.doc-table-wrapper {
+    margin: 1.5rem 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    position: relative;
+}
+.doc-table-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 1rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 0.8rem;
+    color: #64748b;
+    font-weight: 600;
+}
+.doc-table-meta .row-count {
+    background: #fff;
+    color: #475569;
+    padding: 0.1rem 0.55rem;
+    border-radius: 999px;
+    border: 1px solid #e2e8f0;
+    font-size: 0.72rem;
+}
+.doc-table-scroll {
+    overflow-x: auto;
+    max-height: 600px;
+    overflow-y: auto;
+}
+.doc-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.875rem;
+}
+.doc-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+.doc-table thead th {
+    background: linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%);
+    color: #1e293b;
+    font-weight: 700;
+    text-align: left;
+    padding: 0.7rem 0.9rem;
+    border-bottom: 2px solid #94a3b8;
+    white-space: nowrap;
+    font-size: 0.8rem;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+}
+.doc-table tbody tr {
+    transition: background 0.1s ease;
+}
+.doc-table tbody tr:nth-child(even) {
+    background: #f8fafc;
+}
+.doc-table tbody tr:hover {
+    background: #eff6ff;
+}
+.doc-table tbody td {
+    padding: 0.7rem 0.9rem;
+    border-bottom: 1px solid #e2e8f0;
+    color: #334155;
+    vertical-align: top;
+}
+.doc-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+/* ============ 单元格类型 ============ */
+.cell-method {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.18rem 0.55rem;
+    border-radius: 0.375rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+.cell-method.get { background: #dbeafe; color: #1e40af; }
+.cell-method.post { background: #dcfce7; color: #166534; }
+.cell-method.put { background: #fef3c7; color: #92400e; }
+.cell-method.delete { background: #fee2e2; color: #991b1b; }
+
+.cell-path {
+    display: inline-block;
+    background: #0f172a;
+    color: #f1f5f9;
+    padding: 0.2rem 0.55rem;
+    border-radius: 0.375rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 500;
+    word-break: break-all;
+}
+.cell-path::before {
+    content: '⟨';
+    color: #94a3b8;
+    margin-right: 0.15rem;
+}
+.cell-path::after {
+    content: '⟩';
+    color: #94a3b8;
+    margin-left: 0.15rem;
+}
+
+.param-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.param-list li {
+    padding: 0.2rem 0;
+    font-size: 0.82rem;
+    color: #475569;
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+}
+.param-type {
+    display: inline-block;
+    background: #f1f5f9;
+    color: #7c3aed;
+    padding: 0.05rem 0.45rem;
+    border-radius: 0.25rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.74rem;
+    font-weight: 600;
+    border: 1px solid #e9d5ff;
+    flex-shrink: 0;
+}
+.param-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: #1e293b;
+    font-weight: 600;
+}
+.param-desc {
+    color: #64748b;
+    font-size: 0.8rem;
+}
+
+.return-type {
+    display: inline-block;
+    background: #ecfdf5;
+    color: #047857;
+    padding: 0.1rem 0.5rem;
+    border-radius: 0.25rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    border: 1px solid #a7f3d0;
+}
+
+.cell-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.6rem;
+    background: #eff6ff;
+    color: #2563eb;
+    border-radius: 0.375rem;
+    font-size: 0.8rem;
+    text-decoration: none;
+    transition: all 0.15s;
+    border: 1px solid transparent;
+}
+.cell-link:hover {
+    background: #2563eb;
+    color: #fff;
+    border-color: #1d4ed8;
+    text-decoration: none;
+}
+
+/* ============ 复制代码按钮 ============ */
+.code-block-wrap {
+    position: relative;
+    margin: 1rem 0;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    background: #282a36;
+}
+.code-block-wrap .CodeMirror {
+    border-radius: 0;
+    background: #282a36;
+    color: #f8f8f2;
+    min-height: 60px;
+    font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    padding: 0.85rem 1rem;
+}
+.copy-btn {
+    position: absolute;
+    top: 0.55rem;
+    right: 0.55rem;
+    z-index: 10;
+    padding: 0.3rem 0.6rem;
+    background: rgba(255,255,255,0.1);
+    color: #f8f8f2;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 0.25rem;
+    font-size: 0.72rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-weight: 500;
+    user-select: none;
+}
+.copy-btn:hover {
+    background: rgba(255,255,255,0.2);
+}
+.copy-btn:active {
+    transform: scale(0.96);
+}
+.copy-btn.copied {
+    background: #10b981;
+    border-color: #059669;
+    color: #fff;
+}
+
+/* ============ 面包屑回到顶部 ============ */
+.back-to-top {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 0.5rem;
+    padding: 0.15rem 0.5rem;
+    background: #f1f5f9;
+    color: #64748b;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    text-decoration: none;
+    transition: all 0.15s;
+}
+.back-to-top:hover {
+    background: #3b82f6;
+    color: #fff;
+    text-decoration: none;
+}
+
+/* ============ 列表优化 ============ */
+.prose-doc ul:not(.param-list),
+.prose-doc ol {
+    margin: 0.75rem 0;
+    padding-left: 1.5rem;
+}
+.prose-doc ul:not(.param-list) li {
+    margin: 0.4rem 0;
+    line-height: 1.7;
+}
+.prose-doc ul:not(.param-list) li > a {
+    color: #2563eb;
+}
+.prose-doc ul:not(.param-list) li > a:hover {
+    text-decoration: underline;
+}
+
+/* ============ 行内代码 ============ */
+.prose-doc code {
+    background: #f1f5f9;
+    color: #be185d;
+    padding: 0.1em 0.4em;
+    border-radius: 0.25rem;
+    font-family: 'JetBrains Mono', 'SFMono-Regular', Menlo, monospace;
+    font-size: 0.875em;
+    border: 1px solid #e2e8f0;
+}
+.prose-doc code.method {
+    background: #dbeafe;
+    color: #1e40af;
+    border-color: #93c5fd;
+    font-weight: 600;
+}
+
+/* ============ 锚点链接 ============ */
+.anchor-link {
+    opacity: 0;
+    margin-left: 0.4rem;
+    color: #94a3b8;
+    font-size: 0.75em;
+    text-decoration: none;
+    transition: opacity 0.15s, color 0.15s;
+}
+h2:hover .anchor-link,
+h3:hover .anchor-link,
+h4:hover .anchor-link {
+    opacity: 1;
+}
+.anchor-link:hover {
+    color: #2563eb;
+}
+
+/* ============ 响应式 ============ */
+@media (max-width: 768px) {
+    .doc-table { font-size: 0.8rem; }
+    .doc-table thead th { padding: 0.55rem 0.5rem; font-size: 0.72rem; }
+    .doc-table tbody td { padding: 0.55rem 0.5rem; }
+    .cell-path { font-size: 0.7rem; }
+    .param-list li { font-size: 0.75rem; }
+}

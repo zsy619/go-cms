@@ -1,64 +1,164 @@
+<article class="prose-doc">
+    <h1>const.js 文件</h1>
+    <p>YYCMS 提供一个常驻的 <code>const.min.js</code>（<code>const.js</code> 的压缩版本），封装了页面常用的常量、链接生成、点击率上报等工具函数。</p>
 
-        <article class="content ">
-            <h1 class="title has-text-centered">const.js文件</h1>
-            <hr>
-            <p></p>
-            <p>1. 页面引用const.js文件。&nbsp;</p>
-            <textarea id="config" code-type="javascript">
-<script src="/static/const.min.js"></script>
-</textarea>
-            <p>对常用js操作进行封装。</p>
-            <p>2. 请求代码</p>
-            <textarea id="config1" code-type="javascript">
-var CodeSuccess = 0; // 成功
-var CodeError = 1;// 失败
-var CodeInvalid = 2;// 无效
-var CodeNoAuth = 3;// 无权限
-var CodeParamError = 4;// 参数错误
-var CodeNoLogin = 5;// 未登录
-var CodeNoData = 6;// 无数据
-var CodeFatal = 7;// 严重错误
-</textarea>
-            <p>3. ArticleClick函数</p>
-            <p>文章点击率</p>
-            <textarea id="config2" code-type="javascript">
-{int64} articleId 文章ID
-{string} callIndex 文件调用别名,如果为空则不记录
-</textarea>
-            <p>4. AdsClick函数</p>
-            <p>广告点击率</p>
-            <textarea id="configAds" code-type="javascript">
-{int64} ads_id 广告ID
-</textarea>
-            <p>5. LinkClick函数</p>
-            <p>链接点击率</p>
-            <textarea id="configLink" code-type="javascript">
-{int64} link_id 链接ID
-</textarea>
-            <p>6. UrlForArticle函数</p>
-            <p>文章链接</p>
-            <p>
-                <textarea id="config3" code-type="javascript">
-{string} call_index 栏目别名
-{int64} article_id 文章ID
-{string} url 自定义链接
-</textarea>
-            <p>7. UrlForSearch函数</p>
-            <p>搜索链接</p>
-            <textarea id="config4" code-type="javascript">
-{string} keyword 关键词
-</textarea>
-            <p>8. UrlForTopic函数</p>
-            <p>专题链接</p>
-            <textarea id="config5" code-type="javascript">
-{string} site_flag 站点标识
-{string} name 专题名称
-</textarea>
-            <p>9. UrlForTag函数</p>
-            <p>标签链接</p>
-            <textarea id="config6" code-type="javascript">
-{string} site_flag 站点标识
-{string} name 标签名称
-</textarea>
-            <p>怎么样，是不是很实用呢。</p>
-        </article>
+    <div class="callout info">
+        <span class="callout-icon">ℹ️</span>
+        <div class="callout-body">
+            <p><strong>使用方式</strong>：直接在页面 <code>&lt;head&gt;</code> 引入即可，所有函数挂在 <code>window.YYCMS</code> 命名空间下。</p>
+        </div>
+    </div>
+
+    <h2>1. 页面引入</h2>
+    <textarea id="config" code-type="htmlmixed"><script src="/static/const.min.js"></script></textarea>
+
+    <h2>2. 状态码常量</h2>
+    <p>业务返回的 <code>code</code> 字段约定如下，0 表示成功，其它值均为业务错误。</p>
+    <textarea id="config1" code-type="javascript">var CodeSuccess   = 0;  // 成功
+var CodeError     = 1;  // 失败
+var CodeInvalid   = 2;  // 无效
+var CodeNoAuth    = 3;  // 无权限
+var CodeParamError= 4;  // 参数错误
+var CodeNoLogin   = 5;  // 未登录
+var CodeNoData    = 6;  // 无数据
+var CodeFatal     = 7;  // 严重错误</textarea>
+
+    <h2>3. 点击率上报函数</h2>
+    <p>用于上报文章、广告、链接等点击，统一发往 <code>/api/.../click</code> 接口，后端异步累加计数。</p>
+
+    <div class="doc-table-wrapper">
+        <div class="doc-table-meta"><span>📋 点击率函数</span><span class="row-count">3 个</span></div>
+        <div class="doc-table-scroll">
+            <table class="doc-table">
+                <thead><tr><th>函数</th><th>参数说明</th><th>用途</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><code style="color:#1e40af">ArticleClick</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int64</span> <span class="param-name">articleId</span><span class="param-desc">文章 ID</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">callIndex</span><span class="param-desc">文件调用别名，为空则不记录</span></li>
+                            </ul>
+                        </td>
+                        <td>文章点击率 +1</td>
+                    </tr>
+                    <tr>
+                        <td><code style="color:#1e40af">AdsClick</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int64</span> <span class="param-name">ads_id</span><span class="param-desc">广告 ID</span></li>
+                            </ul>
+                        </td>
+                        <td>广告点击率 +1</td>
+                    </tr>
+                    <tr>
+                        <td><code style="color:#1e40af">LinkClick</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int64</span> <span class="param-name">link_id</span><span class="param-desc">链接 ID</span></li>
+                            </ul>
+                        </td>
+                        <td>友情链接点击率 +1</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <h3>ArticleClick</h3>
+    <p>文章点击率上报。</p>
+    <textarea id="config2" code-type="javascript">// 参数列表
+{int64}  articleId  文章 ID
+{string} callIndex  文件调用别名，为空则不记录</textarea>
+
+    <h3>AdsClick</h3>
+    <p>广告点击率上报。</p>
+    <textarea id="configAds" code-type="javascript">// 参数列表
+{int64} ads_id  广告 ID</textarea>
+
+    <h3>LinkClick</h3>
+    <p>友情链接点击率上报。</p>
+    <textarea id="configLink" code-type="javascript">// 参数列表
+{int64} link_id  链接 ID</textarea>
+
+    <h2>4. URL 生成函数</h2>
+    <p>用于在前端拼接静态化的文章/搜索/专题/标签页面 URL，避免手写路径出错。</p>
+
+    <div class="doc-table-wrapper">
+        <div class="doc-table-meta"><span>📋 URL 生成函数</span><span class="row-count">4 个</span></div>
+        <div class="doc-table-scroll">
+            <table class="doc-table">
+                <thead><tr><th>函数</th><th>参数说明</th><th>说明</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><code style="color:#1e40af">UrlForArticle</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">string</span> <span class="param-name">call_index</span><span class="param-desc">栏目别名</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">article_id</span><span class="param-desc">文章 ID</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">url</span><span class="param-desc">自定义链接（可选）</span></li>
+                            </ul>
+                        </td>
+                        <td>生成文章详情页 URL</td>
+                    </tr>
+                    <tr>
+                        <td><code style="color:#1e40af">UrlForSearch</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">string</span> <span class="param-name">keyword</span><span class="param-desc">搜索关键词</span></li>
+                            </ul>
+                        </td>
+                        <td>生成搜索结果页 URL</td>
+                    </tr>
+                    <tr>
+                        <td><code style="color:#1e40af">UrlForTopic</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">string</span> <span class="param-name">site_flag</span><span class="param-desc">站点标识</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">name</span><span class="param-desc">专题名称</span></li>
+                            </ul>
+                        </td>
+                        <td>生成专题页 URL</td>
+                    </tr>
+                    <tr>
+                        <td><code style="color:#1e40af">UrlForTag</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">string</span> <span class="param-name">site_flag</span><span class="param-desc">站点标识</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">name</span><span class="param-desc">标签名称</span></li>
+                            </ul>
+                        </td>
+                        <td>生成标签页 URL</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <h3>UrlForArticle</h3>
+    <textarea id="config3" code-type="javascript">// 参数列表
+{string} call_index  栏目别名
+{int64}  article_id  文章 ID
+{string} url         自定义链接（可选）</textarea>
+
+    <h3>UrlForSearch</h3>
+    <textarea id="config4" code-type="javascript">// 参数列表
+{string} keyword  关键词</textarea>
+
+    <h3>UrlForTopic</h3>
+    <textarea id="config5" code-type="javascript">// 参数列表
+{string} site_flag  站点标识
+{string} name       专题名称</textarea>
+
+    <h3>UrlForTag</h3>
+    <textarea id="config6" code-type="javascript">// 参数列表
+{string} site_flag  站点标识
+{string} name       标签名称</textarea>
+
+    <div class="callout success">
+        <span class="callout-icon">💡</span>
+        <div class="callout-body">
+            <p><strong>小贴士</strong>：所有 URL 生成函数都返回 <code>String</code>，返回空表示当前站点未启用静态化或参数不合法。</p>
+        </div>
+    </div>
+</article>

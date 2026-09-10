@@ -1,18 +1,30 @@
+<article class="prose-doc">
+    <h1>switch 判断</h1>
+    <p>YYCMS 模板没有 Go 原生的 <code>switch</code> 关键字，但可以使用 <code>if / else if / else</code> 组合，配合 <code>eq</code> 函数模拟 <code>switch / case</code> 语义。</p>
 
-        <article class="content ">
-            <h1 class="title has-text-centered">swich</h1>
-            <hr>
-            <p><b>YYCMS提供了大量的函数给予前端调用，保证功能，这些函数可以方便地在模板中使用。以下是一些常用的内置模板函数：</b></p>
-            <p><b>1.eq：判断两个值是否相等。</b></p>
-            <textarea id="code1" code-type="javascript">
-{{`{{`}}if eq .Condition "option1"}}
+    <div class="callout info">
+        <span class="callout-icon">ℹ️</span>
+        <div class="callout-body">
+            <p><strong>default 分支</strong>：对应 <code>{{"{{"}} else }}</code>；没有 default 时若所有 case 都不匹配则不输出。</p>
+        </div>
+    </div>
+
+    <h2>示例代码</h2>
+    <textarea id="code1" code-type="javascript">{{`{{`}}if eq .Condition "option1"}}
     Option 1 selected
 {{`{{`}}else if eq .Condition "option2"}}
     Option 2 selected
 {{`{{`}}else}}
     No option selected
-{{`{{`}}end}}
-            </textarea>
-            <p><b>在这个示例中，.Condition 是每个数据项的属性，该属性的值被用于 switch 语句。如果 .Condition 的值等于 "option1"，则会输出 "Option 1 selected"。如果 .Condition 的值等于 "option2"，则会输出 "Option 2 selected"。如果 .Condition 的值既不是 "option1" 也不是 "option2"，则会输出 "No option selected"。</b></p>
-            <p><b>注意，switch 语句中的 default 分支是可选的，如果没有 default 分支并且没有匹配的 case 分支，switch 语句将不会输出任何内容。</b></p>
-        </article>
+{{`{{`}}end}}</textarea>
+
+    <p>在上述示例中，<code>.Condition</code> 是当前数据项的属性，按其值匹配对应分支：
+    <code>option1</code> → 输出 Option 1 selected；<code>option2</code> → 输出 Option 2 selected；其它值 → 输出 No option selected。</p>
+
+    <div class="callout success">
+        <span class="callout-icon">💡</span>
+        <div class="callout-body">
+            <p><strong>进阶</strong>：分支过多时可考虑先用 <code>{{"{{"}} $key := .Condition }}</code> 抽出变量，再用 <code>{{"{{"}} if eq $key "x" }}</code> 让代码更易读。</p>
+        </div>
+    </div>
+</article>

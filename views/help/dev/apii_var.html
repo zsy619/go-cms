@@ -1,82 +1,67 @@
+<article class="prose-doc">
+    <h1>内置变量</h1>
+    <p>所有模板都可以直接访问的全局变量，命名空间以 <code>$</code> 开头（如 <code>$.siteTheme</code>）。</p>
 
-        <article class="content ">
-            <h1 class="title has-text-centered">内置变量</h1>
-            <hr>
-            <h3 id="r5spb"><b>内置变量</b></h3>
-            <div>
-                <table border="0" width="100%" cellpadding="0" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>变量</th>
-                            <th style="word-break: keep-all;">返回值</th>
-                            <th>说明</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <p>siteTheme</p>
-                            </td>
-                            <td>string</td>
-                            <td>默认站点模板名称</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>siteStatic</p>
-                            </td>
-                            <td>string</td>
-                            <td>站点静态路径：/views/themes/{{"{{"}}$.siteTheme}}/static/</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>siteImages</p>
-                            </td>
-                            <td>string</td>
-                            <td>站点静态images路径：/views/themes/{{"{{"}}$.siteTheme}}/static/images/</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>siteJs</p>
-                            </td>
-                            <td>string</td>
-                            <td>站点静态js路径：/views/themes/{{"{{"}}$.siteTheme}}/static/js/</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>siteCss</p>
-                            </td>
-                            <td>string</td>
-                            <td>站点静态css路径：/views/themes/{{"{{"}}$.siteTheme}}/static/css/</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>siteViews</p>
-                            </td>
-                            <td>string</td>
-                            <td>站点views视图路径：/views/themes/{{"{{"}}$.siteTheme}}/views/</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>site</p>
-                            </td>
-                            <td><a href="apii_site#ApiSiteModel">*ApiSiteModel</a></td>
-                            <td>当前站点信息</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>channel</p>
-                            </td>
-                            <td><a href="apii_site#ApiChannelModel">[]*ApiChannelModel</a></td>
-                            <td>站点频道信息</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>year</p>
-                            </td>
-                            <td></td>
-                            <td>年份，如：2023</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </article>
+    <div class="doc-table-wrapper">
+        <div class="doc-table-meta"><span>📋 内置变量</span><span class="row-count">9 个</span></div>
+        <div class="doc-table-scroll">
+            <table class="doc-table">
+                <thead><tr><th style="width:140px">变量</th><th>返回值</th><th>说明</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><code>siteTheme</code></td>
+                        <td><span class="return-type">string</span></td>
+                        <td>默认站点模板名称</td>
+                    </tr>
+                    <tr>
+                        <td><code>siteStatic</code></td>
+                        <td><span class="return-type">string</span></td>
+                        <td>站点静态路径：<code>/views/themes/{{"{{"}}$.siteTheme}}/static/</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>siteImages</code></td>
+                        <td><span class="return-type">string</span></td>
+                        <td>站点静态图片路径：<code>/views/themes/{{"{{"}}$.siteTheme}}/static/images/</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>siteJs</code></td>
+                        <td><span class="return-type">string</span></td>
+                        <td>站点静态 JS 路径：<code>/views/themes/{{"{{"}}$.siteTheme}}/static/js/</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>siteCss</code></td>
+                        <td><span class="return-type">string</span></td>
+                        <td>站点静态 CSS 路径：<code>/views/themes/{{"{{"}}$.siteTheme}}/static/css/</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>siteViews</code></td>
+                        <td><span class="return-type">string</span></td>
+                        <td>站点 views 路径：<code>/views/themes/{{"{{"}}$.siteTheme}}/views/</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>site</code></td>
+                        <td><a class="cell-link" href="apii_site">*ApiSiteModel</a></td>
+                        <td>当前站点信息</td>
+                    </tr>
+                    <tr>
+                        <td><code>channel</code></td>
+                        <td><a class="cell-link" href="apii_site">[]*ApiChannelModel</a></td>
+                        <td>站点频道信息</td>
+                    </tr>
+                    <tr>
+                        <td><code>year</code></td>
+                        <td><span class="return-type">int</span></td>
+                        <td>年份（例：2024）</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="callout info">
+        <span class="callout-icon">ℹ️</span>
+        <div class="callout-body">
+            <p><strong>调用方式</strong>：模板中可直接使用 <code>{{"{{"}}.site.Company}}</code> 访问站点公司名；页面顶部标题可用 <code>{{"{{"}}.site.Title}}</code>。</p>
+        </div>
+    </div>
+</article>

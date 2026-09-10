@@ -1,138 +1,142 @@
+<article class="prose-doc">
+    <h1>公共函数</h1>
+    <p>模板中可直接使用的公共函数清单。所有函数都在 <code>YYCMS/cms/utils</code> 包内注册，可在任意 <code>.html</code> 模板中调用。</p>
 
-        <article class="content ">
-            <h1 class="title has-text-centered">公共函数</h1>
-            <hr>
-            <h3 id="r5spb"><b>公共函数</b></h3>
-            <div>
-                <table border="0" width="100%" cellpadding="0" cellspacing="0">
-                    <tbody>
-                        <tr>
-                            <th>api名称</th>
-                            <th>需要参数</th>
-                            <th style="word-break: keep-all;">返回值</th>
-                            <th>说明</th>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>ConcatStr</p>
-                            </td>
-                            <td>
-                                {...string} input 输入字符串
-                            </td>
-                            <td>string</td>
-                            <td>字符串拼接</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>SubStr</p>
-                            </td>
-                            <td>
-                                {string} s 输入字符串<br>
-                                {int} start 开始位置<br>
-                                {int} length 截取长度
-                            </td>
-                            <td>string</td>
-                            <td>字符串截取</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>StrCheck</p>
-                            </td>
-                            <td>
-                                {string} x<br>
-                                {string} y
-                            </td>
-                            <td>相等返回true，否则false</td>
-                            <td>字符串比较</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>UcWords</p>
-                            </td>
-                            <td>
-                                {string} str
-                            </td>
-                            <td>string</td>
-                            <td>首字符大写</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>ToUpper</p>
-                            </td>
-                            <td>
-                                {string} str
-                            </td>
-                            <td>string</td>
-                            <td>转换为大写</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>Time2Str</p>
-                            </td>
-                            <td>
-                                {time.Time} input 时间戳
-                            </td>
-                            <td>string，格式2006-01-02 15:04:05</td>
-                            <td>时间戳转时间</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>IIF</p>
-                            </td>
-                            <td>
-                                {bool} condition 条件<br>
-                                {interface{}} trueVal<br>
-                                {interface{}} falseVal
-                            </td>
-                            <td>interface{}</td>
-                            <td>三元运算</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>UnixTimeFormat</p>
-                            </td>
-                            <td>
-                                {int} timeUnix 时间戳
-                            </td>
-                            <td>string，格式2006-01-02 15:04:05</td>
-                            <td>时间轴转时间字符串</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>UnixTimeFormat</p>
-                            </td>
-                            <td>
-                                {string} size 文件大小<br>
-                                {string} delimiter 分隔符
-                            </td>
-                            <td>string</td>
-                            <td>格式化文件大小单位</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>TemplateTheme</p>
-                            </td>
-                            <td>
-                                {string} theme 主题名称，如defalut、h5、pc等，对应views/themes目录下的文件夹，区分大小写<br>
-                                {string} file 模板文件名称，如index.html、list.html等，对应views/themes/主题名称/views目录下的文件<br>
-                                {map[interface{}]interface{}} b 模板变量
-                            </td>
-                            <td>template.HTML</td>
-                            <td>根据theme加载模板</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>TemplateView</p>
-                            </td>
-                            <td>
-                                {string} views views目录路径，如themes/default/views<br>
-                                {string} file 模板文件名称，如index.html、list.html等，对应views/themes/主题名称/views目录下的文件<br>
-                                {map[interface{}]interface{}} b 模板变量
-                            </td>
-                            <td>template.HTML</td>
-                            <td>根据views目录加载模板</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </article>
+    <div class="doc-table-wrapper">
+        <div class="doc-table-meta"><span>📋 公共函数</span><span class="row-count">10 个</span></div>
+        <div class="doc-table-scroll">
+            <table class="doc-table">
+                <thead><tr><th style="width:160px">api 名称</th><th>需要参数</th><th>返回值</th><th>说明</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><code>ConcatStr</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">...string</span> <span class="param-name">input</span><span class="param-desc">输入字符串</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">string</span></td>
+                        <td>字符串拼接</td>
+                    </tr>
+                    <tr>
+                        <td><code>SubStr</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">string</span> <span class="param-name">s</span><span class="param-desc">输入字符串</span></li>
+                                <li><span class="param-type">int</span> <span class="param-name">start</span><span class="param-desc">开始位置</span></li>
+                                <li><span class="param-type">int</span> <span class="param-name">length</span><span class="param-desc">截取长度</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">string</span></td>
+                        <td>字符串截取</td>
+                    </tr>
+                    <tr>
+                        <td><code>StrCheck</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">string</span> <span class="param-name">x</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">y</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">bool</span></td>
+                        <td>相等返回 true，否则 false</td>
+                    </tr>
+                    <tr>
+                        <td><code>UcWords</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">string</span> <span class="param-name">str</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">string</span></td>
+                        <td>首字符大写</td>
+                    </tr>
+                    <tr>
+                        <td><code>ToUpper</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">string</span> <span class="param-name">str</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">string</span></td>
+                        <td>转换为大写</td>
+                    </tr>
+                    <tr>
+                        <td><code>Time2Str</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">time.Time</span> <span class="param-name">input</span><span class="param-desc">时间戳</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">string</span> <em>2006-01-02 15:04:05</em></td>
+                        <td>时间戳转时间字符串</td>
+                    </tr>
+                    <tr>
+                        <td><code>IIF</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">bool</span> <span class="param-name">condition</span><span class="param-desc">条件</span></li>
+                                <li><span class="param-type">interface{}</span> <span class="param-name">trueVal</span></li>
+                                <li><span class="param-type">interface{}</span> <span class="param-name">falseVal</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">interface{}</span></td>
+                        <td>三元运算</td>
+                    </tr>
+                    <tr>
+                        <td><code>UnixTimeFormat</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int</span> <span class="param-name">timeUnix</span><span class="param-desc">时间戳</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">string</span> <em>2006-01-02 15:04:05</em></td>
+                        <td>Unix 时间轴转时间字符串</td>
+                    </tr>
+                    <tr>
+                        <td><code>FileSizeFormat</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">string</span> <span class="param-name">size</span><span class="param-desc">文件大小</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">delimiter</span><span class="param-desc">分隔符</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">string</span></td>
+                        <td>格式化文件大小（含单位）</td>
+                    </tr>
+                    <tr>
+                        <td><code>TemplateTheme</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">string</span> <span class="param-name">theme</span><span class="param-desc">主题名称，如 default/h5/pc</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">file</span><span class="param-desc">模板文件，如 index.html</span></li>
+                                <li><span class="param-type">map</span> <span class="param-name">b</span><span class="param-desc">模板变量</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">template.HTML</span></td>
+                        <td>根据主题加载模板</td>
+                    </tr>
+                    <tr>
+                        <td><code>TemplateView</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">string</span> <span class="param-name">views</span><span class="param-desc">目录路径</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">file</span><span class="param-desc">模板文件</span></li>
+                                <li><span class="param-type">map</span> <span class="param-name">b</span><span class="param-desc">模板变量</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">template.HTML</span></td>
+                        <td>根据 views 目录加载模板</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="callout success">
+        <span class="callout-icon">💡</span>
+        <div class="callout-body">
+            <p><strong>使用示例</strong>：<code>{{UnixTimeFormat .CreateTime}}</code> 会输出形如 <code>2024-01-15 14:30:00</code> 的字符串。</p>
+        </div>
+    </div>
+</article>

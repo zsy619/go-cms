@@ -1,0 +1,49 @@
+<article class="prose-doc">
+    <h1>category 页面</h1>
+    <p>栏目列表页（带分页）模板，对应 <code>cms_category</code> 下所有文章的分页渲染。</p>
+
+    <div class="callout info">
+        <span class="callout-icon">ℹ️</span>
+        <div class="callout-body">
+            <p><strong>分页参数</strong>：<code>.page</code> 当前页码、<code>.totalPages</code> 总页数、<code>.category</code> 当前栏目。</p>
+        </div>
+    </div>
+
+    <h2>推荐结构</h2>
+    <ul>
+        <li>栏目标题：<code>{{"{{"}} .category.Title }}</code></li>
+        <li>栏目描述：<code>{{"{{"}} .category.Description }}</code></li>
+        <li>文章列表：<code>{{"{{"}} range .articles }}</code></li>
+        <li>分页：<code>{{"{{"}} if gt .totalPages 1 }}</code></li>
+    </ul>
+
+    <h2>完整示例</h2>
+    <textarea id="code" code-type="htmlmixed"><section class="category-list">
+    <h1>{{"{{"}} .category.Title }}</h1>
+    <p class="desc">{{"{{"}} .category.Description }}</p>
+
+    <ul class="article-list">
+        {{"{{"}} range .articles }}
+        <li>
+            <a href="{{"{{"}} UrlForArticle .CallIndex .ArticleID .LinkURL }}">
+                <h2>{{"{{"}} .Title }}</h2>
+                <time>{{"{{"}} dateformat .PublishTime "2006-01-02" }}</time>
+                <p>{{"{{"}} .Summary }}</p>
+            </a>
+        </li>
+        {{"{{"}} end }}
+    </ul>
+
+    {{"{{"}} if gt .totalPages 1 }}
+    <nav class="pagination">
+        {{"{{"}} if gt .page 1 }}
+        <a href="?page={{"{{"}} sub .page 1 }}">← 上一页</a>
+        {{"{{"}} end }}
+        <span>第 {{"{{"}} .page }} / {{"{{"}} .totalPages }} 页</span>
+        {{"{{"}} if lt .page .totalPages }}
+        <a href="?page={{"{{"}} add .page 1 }}">下一页 →</a>
+        {{"{{"}} end }}
+    </nav>
+    {{"{{"}} end }}
+</section></textarea>
+</article>

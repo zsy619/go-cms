@@ -1,9 +1,58 @@
+<article class="prose-doc">
+    <h1>index 页面</h1>
+    <p>首页模板是站点访问量最大的页面，通常包含顶部导航、轮播、推荐栏目、热点文章列表、底部友链等区块。<code>page.htm</code>（或 <code>index.html</code>）是默认的首页模板文件，也可以通过后台"主题设置 → 首页模板"指定独立模板。</p>
 
-        <article class="content ">
-            <h1 class="title has-text-centered">index页面</h1>
-            <hr>
-            <p>默page.htm是默认的单页页面，这个页面也是可以通过后台设置单独的模板的，默认内容如下</p>
-            <textarea id="code" code-type="htmlmixed">
+    <div class="callout info">
+        <span class="callout-icon">ℹ️</span>
+        <div class="callout-body">
+            <p><strong>模板变量</strong>：<code>.site</code> 站点信息、<code>.channel</code> 频道列表、<code>.articles</code> 最新文章等。</p>
+        </div>
+    </div>
 
-            </textarea>
+    <h2>推荐结构</h2>
+    <ul>
+        <li><strong>顶部</strong>：<code>{{"{{"}} template "_top.html" . }}</code></li>
+        <li><strong>菜单</strong>：<code>{{"{{"}} template "_menu.html" . }}</code></li>
+        <li><strong>轮播</strong>：使用 <code>{{"{{"}} AdsTop 5 }}</code> 取置顶广告</li>
+        <li><strong>推荐栏目</strong>：<code>{{"{{"}} range ArticleNewExtend 8 1 1 0 "" 0 0 0 0 "" }}</code></li>
+        <li><strong>底部</strong>：<code>{{"{{"}} template "_bottom.html" . }}</code></li>
+    </ul>
+
+    <h2>完整示例</h2>
+    <textarea id="code" code-type="htmlmixed"><!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>{{"{{"}} .site.Title }}</title>
+    <meta name="keywords" content="{{"{{"}} .site.MetaKeyword }}">
+    <meta name="description" content="{{"{{"}} .site.MetaDescription }}">
+    <link rel="stylesheet" href="{{"{{"}} .siteCss }}style.css">
+</head>
+<body>
+    {{"{{"}} template "_top.html" . }}
+
+    {{"{{"}} template "_menu.html" . }}
+
+    <!-- 轮播 -->
+    <section class="banner">
+        {{"{{"}} range AdsTop 5 }}
+        <a href="{{"{{"}} .LinkURL }}"><img src="{{"{{"}} .ImgUrl1 }}" alt="{{"{{"}} .Title }}"></a>
+        {{"{{"}} end }}
+    </section>
+
+    <!-- 推荐文章 -->
+    <section class="articles">
+        {{"{{"}} range ArticleNewExtend 8 0 0 0 "" 0 0 0 0 "" }}
+        <article class="card">
+            <a href="{{"{{"}} UrlForArticle .CallIndex .ArticleID .LinkURL }}">
+                <h3>{{"{{"}} .Title }}</h3>
+                <time>{{"{{"}} dateformat .PublishTime "2006-01-02" }}</time>
+            </a>
         </article>
+        {{"{{"}} end }}
+    </section>
+
+    {{"{{"}} template "_bottom.html" . }}
+</body>
+</html></textarea>
+</article>

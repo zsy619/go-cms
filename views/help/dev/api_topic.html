@@ -1,146 +1,161 @@
+<article class="prose-doc">
+    <h1>专题开放接口</h1>
+    <p>YYCMS 专题（Topic）相关的 RESTful API。基础路径为 <code>/api/topic/...</code>。</p>
 
-        <article class="content ">
-            <h1 class="title has-text-centered">专题开放接口</h1>
-            <hr>
-            <p>专题相关开放接口</p>
-            <h3 id="r5spb"><b>专题API</b></h3>
-            <div>
-                <table border="0" width="100%" cellpadding="0" cellspacing="0">
-                    <tbody>
-                        <tr>
-                            <th>访问路径</th>
-                            <th>参数说明</th>
-                            <th style="word-break: keep-all;">返回值</th>
-                            <th>说明</th>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>/api/topic/get</p>
-                            </td>
-                            <td>
-                                {int} limit 限制数量<br>
-                                {string} site_flag 站点标识<br>
-                                {int64} site_id 站点ID<br>
-                                {int64} channel_id 栏目ID
-                            </td>
-                            <td><a href="#topic1">查看</a></td>
-                            <td>获取专题，按is_top升序排序</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>/api/tag/get/new</p>
-                            </td>
-                            <td>
-                                {int} limit 限制数量<br>
-                                {string} site_flag 站点标识<br>
-                                {int64} site_id 站点ID<br>
-                                {int64} channel_id 栏目ID
-                            </td>
-                            <td><a href="#topic1">查看</a></td>
-                            <td>获取最新专题，按topic_id倒序排序</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>/api/topic/click</p>
-                            </td>
-                            <td>{int64} ads_id 广告ID</td>
-                            <td></td>
-                            <td>点击数+1</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>/api/topic/article/paginate</p>
-                            </td>
-                            <td>
-                                {int} page 页码<br>
-                                {int} limit 每页数量<br>
-                                {string} topic_name 标签名称<br>
-                                {int64} channel_id 频道ID<br>
-                                {string} channel_name 频道名称<br>
-                                {int64} category_id 栏目ID<br>
-                                {string} call_index 栏目别名<br>
-                                {string} keyword 关键词：按标题、摘要进行搜索<br>
-                                {int} is_top 是否置顶<br>
-                                {int} is_red 是否推荐<br>
-                                {int} is_hot 是否热门<br>
-                                {int} is_slide 是否幻灯片<br>
-                                {int} is_search 是否搜索<br>
-                                {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
-                            </td>
-                            <td><a href="#topic2">查看</a></td>
-                            <td>获取文章分页列表</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <h3><b><a name='topic1'>专题结构</a></b></h3>
-            <textarea id="tagJson" code-type="javascript">
-{
-    "count": 1, // 专题总数
-    "code": 0, // 返回状态码，0为正常
-    "msg": "", // 返回信息
+    <h2>API 列表</h2>
+    <div class="doc-table-wrapper">
+        <div class="doc-table-meta">
+            <span>📋 专题开放接口</span>
+            <span class="row-count">4 个接口</span>
+        </div>
+        <div class="doc-table-scroll">
+            <table class="doc-table">
+                <thead>
+                    <tr>
+                        <th style="width:100px">方法</th>
+                        <th>访问路径</th>
+                        <th>参数说明</th>
+                        <th>返回值</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="cell-method get">GET</span></td>
+                        <td><span class="cell-path">/api/topic/get</span></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int</span> <span class="param-name">limit</span><span class="param-desc">限制数量</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">site_flag</span><span class="param-desc">站点标识</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">site_id</span><span class="param-desc">站点 ID</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">channel_id</span><span class="param-desc">频道 ID</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">[]Topic</span></td>
+                        <td>获取专题，按 is_top 升序</td>
+                    </tr>
+                    <tr>
+                        <td><span class="cell-method get">GET</span></td>
+                        <td><span class="cell-path">/api/topic/get/new</span></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int</span> <span class="param-name">limit</span><span class="param-desc">限制数量</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">site_flag</span><span class="param-desc">站点标识</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">site_id</span><span class="param-desc">站点 ID</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">channel_id</span><span class="param-desc">频道 ID</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">[]Topic</span></td>
+                        <td>获取最新专题，按 topic_id 倒序</td>
+                    </tr>
+                    <tr>
+                        <td><span class="cell-method post">POST</span></td>
+                        <td><span class="cell-path">/api/topic/click</span></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int64</span> <span class="param-name">topic_id</span><span class="param-desc">专题 ID</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">bool</span></td>
+                        <td>专题点击数 +1</td>
+                    </tr>
+                    <tr>
+                        <td><span class="cell-method get">GET</span></td>
+                        <td><span class="cell-path">/api/topic/article/paginate</span></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int</span> <span class="param-name">page</span><span class="param-desc">页码</span></li>
+                                <li><span class="param-type">int</span> <span class="param-name">limit</span><span class="param-desc">每页数量</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">topic_name</span><span class="param-desc">专题名称</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">channel_id</span><span class="param-desc">频道 ID</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">channel_name</span><span class="param-desc">频道名称</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">category_id</span><span class="param-desc">栏目 ID</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">call_index</span><span class="param-desc">栏目别名</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">keyword</span><span class="param-desc">搜索关键词</span></li>
+                                <li><span class="param-type">int</span> <span class="param-name">is_top</span><span class="param-desc">是否置顶</span></li>
+                                <li><span class="param-type">int</span> <span class="param-name">is_red</span><span class="param-desc">是否推荐</span></li>
+                                <li><span class="param-type">int</span> <span class="param-name">is_hot</span><span class="param-desc">是否热门</span></li>
+                                <li><span class="param-type">int</span> <span class="param-name">is_slide</span><span class="param-desc">是否幻灯片</span></li>
+                                <li><span class="param-type">int</span> <span class="param-name">is_search</span><span class="param-desc">是否搜索</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">order_by</span><span class="param-desc">排序字段</span></li>
+                            </ul>
+                        </td>
+                        <td><span class="return-type">[]Article</span></td>
+                        <td>获取专题下文章分页列表</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <h2>📦 专题结构</h2>
+    <textarea id="tagJson" code-type="javascript">{
+    "count": 1,                  // 专题总数
+    "code": 0,                   // 状态码
+    "msg": "",                   // 返回信息
     "data": [
         {
-            "topic_id": 100000, // 专题ID
-            "site_id": 100000, // 站点ID
-            "channel_id": 0, // 频道ID
-            "name": "ss333", // 专题名称
-            "title": "", // 专题标题
-            "img_url1": "", // 专题图片
-            "img_url2": "", // 专题图片
-            "seo_title": "", // SEO标题
-            "seo_keyword": "", // SEO关键字
-            "seo_description": "", // SEO描述
-            "remark": "", // 备注
-            "sort_id": 2, // 排序
-            "click": 0, // 点击数
-            "template": "", // 模板
-            "site_flag": "web" // 站点标识
+            "topic_id": 100000,  // 专题 ID
+            "site_id": 100000,   // 站点 ID
+            "channel_id": 0,     // 频道 ID
+            "name": "ss333",      // 专题名称
+            "title": "",          // 专题标题
+            "img_url1": "",       // 专题图片 1
+            "img_url2": "",       // 专题图片 2
+            "seo_title": "",      // SEO 标题
+            "seo_keyword": "",    // SEO 关键字
+            "seo_description": "",// SEO 描述
+            "remark": "",         // 备注
+            "sort_id": 2,         // 排序
+            "click": 0,           // 点击数
+            "template": "",       // 模板
+            "site_flag": "web"    // 站点标识
         }
     ]
 }</textarea>
-            <h3><b><a name='topic2'>文章结构</a></b></h3>
-            <textarea id="tagJson2" code-type="javascript">
-{
-    "count": 41, // 文章总数
-    "code": 0, // 返回状态码，0为正常
-    "msg": "", // 返回信息
+
+    <h2>📦 文章结构</h2>
+    <p>专题下文章列表元素结构。</p>
+    <textarea id="tagJson2" code-type="javascript">{
+    "count": 41,                                          // 文章总数
+    "code": 0,
+    "msg": "",
     "data": [
         {
-            "article_id": 100042, // 文章ID
-            "site_id": 100000, // 站点ID
-            "channel_id": 100013, // 频道ID
-            "category_id": 100021, // 分类ID
-            "title": "教师风采", // 文章标题
-            "sub_title": "", // 文章副标题
-            "ico_url1": "", // 文章图标1
-            "ico_url2": "", // 文章图标2
-            "call_index": "", // 调用别名
-            "source": "", // 来源
-            "author": "管理员", // 作者
-            "link_url": "", // 链接地址
-            "img_url1": "/images/jsfc_img1.png", // 图片1
-            "img_url2": "http://域名/images/jsfc_img1.png", // 图片2
-            "seo_title": "", // SEO标题
-            "seo_keyword": "", // SEO关键字
-            "seo_description": "", // SEO描述
-            "tags": "", // 标签
-            "summary": "", // 文章摘要
-            "click": 71, // 点击数
-            "is_lock": false, // 是否锁定
-            "is_comment": false, // 是否允许评论
-            "like_count": 0, // 点赞数
-            "is_top": false, // 是否置顶
-            "is_hot": false, // 是否热门
-            "is_slide": false, // 是否幻灯片
-            "static_url": "", // 静态地址
-            "publish_time": "2023-04-02T21:13:38+08:00", // 发布时间
-            "category_title": "教师风采", // 分类标题
-            "category_call_index": "jsfc", // 分类调用别名
-            "category_link_url": "/web/jyjx/jsfc", // 分类链接地址
-            "channel_name": "jyjx", // 频道名称
-            "channel_title": "教育教学" // 频道标题
-        },
+            "article_id": 100042,
+            "site_id": 100000,
+            "channel_id": 100013,
+            "category_id": 100021,
+            "title": "教师风采",
+            "sub_title": "",
+            "ico_url1": "",
+            "ico_url2": "",
+            "call_index": "",
+            "source": "",
+            "author": "管理员",
+            "link_url": "",
+            "img_url1": "/images/jsfc_img1.png",
+            "img_url2": "http://域名/images/jsfc_img1.png",
+            "seo_title": "",
+            "seo_keyword": "",
+            "seo_description": "",
+            "tags": "",
+            "summary": "",
+            "click": 71,
+            "is_lock": false,
+            "is_comment": false,
+            "like_count": 0,
+            "is_top": false,
+            "is_hot": false,
+            "is_slide": false,
+            "static_url": "",
+            "publish_time": "2023-04-02T21:13:38+08:00",
+            "category_title": "教师风采",
+            "category_call_index": "jsfc",
+            "category_link_url": "/web/jyjx/jsfc",
+            "channel_name": "jyjx",
+            "channel_title": "教育教学"
+        }
     ]
 }</textarea>
-        </article>
+</article>

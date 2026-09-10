@@ -1,0 +1,46 @@
+<article class="prose-doc">
+    <h1>search 页面</h1>
+    <p>搜索结果页模板，接收查询参数 <code>keyword</code>，按文章标题与摘要进行模糊匹配。</p>
+
+    <div class="callout info">
+        <span class="callout-icon">ℹ️</span>
+        <div class="callout-body">
+            <p><strong>查询接口</strong>：<code>/api/article/paginate?keyword=...</code>；结果字段 <code>res.data</code> 为文章列表。</p>
+        </div>
+    </div>
+
+    <h2>推荐结构</h2>
+    <ul>
+        <li>关键词回显：<code>{{"{{"}} .keyword }}</code></li>
+        <li>搜索表单：<code>&lt;input name="keyword"&gt;</code></li>
+        <li>结果数：<code>{{"{{"}} .count }}</code></li>
+        <li>结果列表：<code>{{"{{"}} range .results }}</code></li>
+    </ul>
+
+    <h2>完整示例</h2>
+    <textarea id="code" code-type="htmlmixed"><section class="search">
+    <h1>搜索：{{"{{"}} .keyword }}</h1>
+    <p>共找到 <strong>{{"{{"}} .count }}</strong> 条结果</p>
+
+    <form action="/search" method="get" class="search-form">
+        <input type="text" name="keyword" value="{{"{{"}} .keyword }}" placeholder="输入关键词…" required>
+        <button type="submit">搜索</button>
+    </form>
+
+    {{"{{"}} if .results }}
+    <ul class="result-list">
+        {{"{{"}} range .results }}
+        <li>
+            <a href="{{"{{"}} UrlForArticle .CallIndex .ArticleID .LinkURL }}">
+                <h2>{{"{{"}} .Title }}</h2>
+                <time>{{"{{"}} dateformat .PublishTime "2006-01-02" }}</time>
+                <p>{{"{{"}} .Summary }}</p>
+            </a>
+        </li>
+        {{"{{"}} end }}
+    </ul>
+    {{"{{"}} else }}
+    <div class="empty">没有找到相关内容，请尝试其他关键词。</div>
+    {{"{{"}} end }}
+</section></textarea>
+</article>

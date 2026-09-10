@@ -1,10 +1,17 @@
+<article class="prose-doc">
+    <h1>主题的基本信息详解</h1>
+    <p>在制作主题模板时，常常需要显示主题图片与一些描述信息。本节说明主题打包的标准结构与 <code>config.json</code> 字段。</p>
 
-        <article class="content ">
-            <h1 class="title has-text-centered">主题的基本信息详解</h1>
-            <hr>
-            <p>在制作主题模板的时候，需要显示主题的图片和一些主题相关的描述信息，这是怎么做到的呢？下面来看看。</p>
-            <p>1. 最首先的就是config.json这个专门用来描述主题信息的文件。&nbsp;</p>
-            <textarea id="config" code-type="javascript">{
+    <div class="callout info">
+        <span class="callout-icon">ℹ️</span>
+        <div class="callout-body">
+            <p><strong>主题安装位置</strong>：<code>/views/themes/{name}/</code>，打包为 zip 后通过后台"主题管理"上传即可启用。</p>
+        </div>
+    </div>
+
+    <h2>1. config.json</h2>
+    <p>主题根目录的 <code>config.json</code> 用于描述主题元数据，字段语义清晰、便于搜索引擎收录。</p>
+    <textarea id="config" code-type="javascript">{
     "name": "default", // 确保唯一，不要和其他主题重名
     "title": "默认模板", // 主题的名称
     "description": "默认模板", // 主题的描述
@@ -12,14 +19,16 @@
     "mail": "haedu@163.com", // 主题作者的邮箱
     "version": "1.0.0" // 主题的版本
 }</textarea>
-            <p>如上所示，YYCMS收集的信息都很好理解。具体的展现如下</p>
-            <p><img src="/views/help/images/theme.png" style="max-width:100%;"></p>
-            <p>2. 图片信息</p>
-            <p>图片需要为thumb.png即可。</p>
-            <p>3. 皮肤目录结构</p>
-            <p>
-                <textarea id="config1" code-type="javascript">
-├── config.json // 主题的配置文件
+
+    <p>如上所示，YYCMS 收集的信息都很容易理解，效果预览如下：</p>
+    <p><img src="/views/help/images/theme.png" alt="主题配置预览" style="max-width:100%; border-radius: 0.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"></p>
+
+    <h2>2. 图片信息</h2>
+    <p>主题需要一张 <code>thumb.png</code> 作为缩略图，建议尺寸 800×600，最大不超过 2MB。</p>
+
+    <h2>3. 皮肤目录结构</h2>
+    <p>标准主题目录结构：</p>
+    <textarea id="config1" code-type="javascript">├── config.json // 主题的配置文件
 ├── thumb.png   // 主题的缩略图
 ├── static      // 主题的静态资源
 │   ├── css     // 主题的样式文件
@@ -42,9 +51,27 @@
     ├── index.html
     ├── search.html
     ├── tag.html
-    └── topic.html
-</textarea>
-            </p>
-            <p><br></p>
-            <p>怎么样，主题是不是很简单呢。</p>
-        </article>
+    └── topic.html</textarea>
+
+    <div class="doc-table-wrapper">
+        <div class="doc-table-meta"><span>📋 目录约定</span><span class="row-count">4 个顶层目录</span></div>
+        <div class="doc-table-scroll">
+            <table class="doc-table">
+                <thead><tr><th style="width:140px">目录</th><th>用途</th></tr></thead>
+                <tbody>
+                    <tr><td><code>config.json</code></td><td>主题元数据（必填）</td></tr>
+                    <tr><td><code>thumb.png</code></td><td>主题缩略图（必填）</td></tr>
+                    <tr><td><code>static/</code></td><td>静态资源（CSS / JS / 图片）</td></tr>
+                    <tr><td><code>views/</code></td><td>模板文件（公共 + 业务页）</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="callout success">
+        <span class="callout-icon">💡</span>
+        <div class="callout-body">
+            <p><strong>小贴士</strong>：<code>views/_top.html</code>、<code>_bottom.html</code>、<code>_menu.html</code> 三个文件是公共模板，会被 <code>index.html</code> 等业务页 <code>{{"{{"}} template "</code> 引用。</p>
+        </div>
+    </div>
+</article>

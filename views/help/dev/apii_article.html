@@ -1,174 +1,166 @@
+<article class="prose-doc">
+    <h1>文章函数</h1>
+    <p>模板内可调用的文章与栏目相关函数，对应 <code>const.js</code> 中同名函数的服务端实现。</p>
 
-        <article class="content ">
-            <h1 class="title has-text-centered">文章函数</h1>
-            <hr>
-            <h3 id="r5spb"><b>文章函数</b></h3>
-            <div>
-                <table border="0" width="100%" cellpadding="0" cellspacing="0">
-                    <tbody>
-                        <tr>
-                            <th>api名称</th>
-                            <th>需要参数</th>
-                            <th style="word-break: keep-all;">返回值</th>
-                            <th>说明</th>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>ArticleNew</p>
-                            </td>
-                            <td>
-                                {int} limit 获取数量，小于等于0时按6条处理
-                            </td>
-                            <td><a href="#ApiArticleListModel">[]*ApiArticleListModel</a></td>
-                            <td>获取最新文章列表</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>ArticleNewExtend</p>
-                            </td>
-                            <td>
-                                {int} limit 获取数量，小于等于0时按6条处理<br>
-                                {int64} channel_id 频道ID<br>
-                                {string} channel_name 频道名称<br>
-                                {int64} category_id 栏目ID<br>
-                                {string} call_index 栏目别名<br>
-                                {int} is_top 是否置顶<br>
-                                {int} is_red 是否推荐<br>
-                                {int} is_hot 是否热门<br>
-                                {int} is_slide 是否幻灯片<br>
-                                {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
-                            </td>
-                            <td><a href="#ApiArticleListModel">[]*ApiArticleListModel</a></td>
-                            <td>获取最新文章列表</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>ArticleTop</p>
-                            </td>
-                            <td>
-                                {int} limit 获取数量，小于等于0时按6条处理
-                            </td>
-                            <td><a href="#ApiArticleListModel">[]*ApiArticleListModel</a></td>
-                            <td>获取文章列表</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>ArticleTopExtend</p>
-                            </td>
-                            <td>
-                                {int} limit 获取数量，小于等于0时按6条处理<br>
-                                {int64} channel_id 频道ID<br>
-                                {string} channel_name 频道名称<br>
-                                {int64} category_id 栏目ID<br>
-                                {string} call_index 栏目别名<br>
-                                {int} is_top 是否置顶<br>
-                                {int} is_red 是否推荐<br>
-                                {int} is_hot 是否热门<br>
-                                {int} is_slide 是否幻灯片<br>
-                                {string} order_by 排序字段，为空则默认按sort_id排序，可选值：sort_id,publish_time
-                            </td>
-                            <td><a href="#ApiArticleListModel">[]*ApiArticleListModel</a></td>
-                            <td>获取文章列表</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>CategoryNav</p>
-                            </td>
-                            <td>
-                                {string} channel_name 频道名称<br>
-                                {in64} channel_id 频道ID<br>
-                                {string} call_index 栏目别名<br>
-                                {in64} category_id 栏目ID<br>
-                                {int64} article_id 文章ID
-                            </td>
-                            <td><a href="#ApiCategoryNav">[]*ApiCategoryNav</a></td>
-                            <td>获取栏目导航</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>CategoryNav</p>
-                            </td>
-                            <td>
-                                {string} channel_name 频道名称
-                            </td>
-                            <td><a href="#ApiCategoryGetModel">[]*ApiCategoryGetModel</a></td>
-                            <td>获取栏目列表</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>CategoryFind</p>
-                            </td>
-                            <td>
-                                {int64} category_id 栏目ID<br>
-                                {string} call_index 栏目别名
-                            </td>
-                            <td><a href="#ApiCategoryFindModel">*ApiCategoryFindModel</a></td>
-                            <td>获取栏目详情</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>ArticleAlbum</p>
-                            </td>
-                            <td>
-                                {string} call_index 文章调用别名<br>
-                                {int64} article_id 文章id<br>
-                                {int32} type_id 分类
-                            </td>
-                            <td><a href="#ApiAlbumModel">[]*ApiAlbumModel</a></td>
-                            <td>获取文章相册列表</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>ArticleAttach</p>
-                            </td>
-                            <td>
-                                {string} call_index 文章调用别名<br>
-                                {int64} article_id 文章id<br>
-                                {int32} type_id 分类
-                            </td>
-                            <td><a href="#ApiAttachModel">[]*ApiAttachModel</a></td>
-                            <td>获取文章附件列表</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>ArticleArticle</p>
-                            </td>
-                            <td>
-                                {string} call_index 文章调用别名<br>
-                                {int64} article_id 文章id
-                            </td>
-                            <td><a href="#ApiArticleOneModel">*ApiArticleOneModel</a></td>
-                            <td>获取文章详情</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>ArticlePrevNext</p>
-                            </td>
-                            <td>
-                                {string} call_index 栏目调用别名<br>
-                                {int64} category_id 栏目id<br>
-                                {int64} article_id 文章id
-                            </td>
-                            <td><a href="#ApiArticlePrevNext">*ApiArticlePrevNext</a></td>
-                            <td>根据article_id获取文章上一个、下一个</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>ArticleFind</p>
-                            </td>
-                            <td>
-                                {string} call_index 调用别名<br>
-                                {int64} article_id 文章id
-                            </td>
-                            <td><a href="#ApiArticleModel">*ApiArticleModel</a></td>
-                            <td>根据article_id获取文章详情、相册、附件</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <h3 id="r5spb"><b><a name="ApiArticleListModel">ApiArticleListModel结构</a></b></h3>
-            <textarea id="codeApiArticleListModel" code-type="go">
-// ApiArticleListModel 文章查询模型
+    <div class="doc-table-wrapper">
+        <div class="doc-table-meta"><span>📋 文章函数</span><span class="row-count">9 个</span></div>
+        <div class="doc-table-scroll">
+            <table class="doc-table">
+                <thead><tr><th style="width:180px">api 名称</th><th>需要参数</th><th>返回值</th><th>说明</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><code>ArticleNew</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int</span> <span class="param-name">limit</span><span class="param-desc">获取数量（≤0 按 6 条）</span></li>
+                            </ul>
+                        </td>
+                        <td><a class="cell-link" href="#apii_article-2">[]*ApiArticleListModel</a></td>
+                        <td>获取最新文章列表</td>
+                    </tr>
+                    <tr>
+                        <td><code>ArticleNewExtend</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int</span> <span class="param-name">limit</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">channel_id</span><span class="param-desc">频道 ID</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">channel_name</span><span class="param-desc">频道名</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">category_id</span><span class="param-desc">栏目 ID</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">call_index</span><span class="param-desc">栏目别名</span></li>
+                                <li><span class="param-type">int</span> <span class="param-name">is_top/is_red/is_hot/is_slide</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">order_by</span><span class="param-desc">sort_id/publish_time</span></li>
+                            </ul>
+                        </td>
+                        <td><a class="cell-link" href="#apii_article-2">[]*ApiArticleListModel</a></td>
+                        <td>获取最新文章列表（带过滤）</td>
+                    </tr>
+                    <tr>
+                        <td><code>ArticleTop</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int</span> <span class="param-name">limit</span></li>
+                            </ul>
+                        </td>
+                        <td><a class="cell-link" href="#apii_article-2">[]*ApiArticleListModel</a></td>
+                        <td>获取文章列表（按 is_top 排序）</td>
+                    </tr>
+                    <tr>
+                        <td><code>ArticleTopExtend</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int</span> <span class="param-name">limit</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">channel_id</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">channel_name</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">category_id</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">call_index</span></li>
+                                <li><span class="param-type">int</span> <span class="param-name">is_top/is_red/is_hot/is_slide</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">order_by</span></li>
+                            </ul>
+                        </td>
+                        <td><a class="cell-link" href="#apii_article-2">[]*ApiArticleListModel</a></td>
+                        <td>获取文章列表（带过滤）</td>
+                    </tr>
+                    <tr>
+                        <td><code>CategoryNav</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">string</span> <span class="param-name">channel_name</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">channel_id</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">call_index</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">category_id</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">article_id</span></li>
+                            </ul>
+                        </td>
+                        <td><a class="cell-link" href="#apii_article-3">[]*ApiCategoryNav</a></td>
+                        <td>获取栏目导航</td>
+                    </tr>
+                    <tr>
+                        <td><code>CategoryGet</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">string</span> <span class="param-name">channel_name</span></li>
+                            </ul>
+                        </td>
+                        <td><a class="cell-link" href="#apii_article-4">[]*ApiCategoryGetModel</a></td>
+                        <td>获取栏目列表</td>
+                    </tr>
+                    <tr>
+                        <td><code>CategoryFind</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int64</span> <span class="param-name">category_id</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">call_index</span></li>
+                            </ul>
+                        </td>
+                        <td><a class="cell-link" href="#apii_article-5">*ApiCategoryFindModel</a></td>
+                        <td>获取栏目详情</td>
+                    </tr>
+                    <tr>
+                        <td><code>ArticleAlbum</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">string</span> <span class="param-name">call_index</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">article_id</span></li>
+                                <li><span class="param-type">int32</span> <span class="param-name">type_id</span><span class="param-desc">分类</span></li>
+                            </ul>
+                        </td>
+                        <td><a class="cell-link" href="#apii_article-6">[]*ApiAlbumModel</a></td>
+                        <td>获取文章相册</td>
+                    </tr>
+                    <tr>
+                        <td><code>ArticleAttach</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">string</span> <span class="param-name">call_index</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">article_id</span></li>
+                                <li><span class="param-type">int32</span> <span class="param-name">type_id</span></li>
+                            </ul>
+                        </td>
+                        <td><a class="cell-link" href="#apii_article-7">[]*ApiAttachModel</a></td>
+                        <td>获取文章附件</td>
+                    </tr>
+                    <tr>
+                        <td><code>ArticleArticle</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">string</span> <span class="param-name">call_index</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">article_id</span></li>
+                            </ul>
+                        </td>
+                        <td><a class="cell-link" href="#apii_article-8">*ApiArticleOneModel</a></td>
+                        <td>获取文章详情</td>
+                    </tr>
+                    <tr>
+                        <td><code>ArticlePrevNext</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">string</span> <span class="param-name">call_index</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">category_id</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">article_id</span></li>
+                            </ul>
+                        </td>
+                        <td><a class="cell-link" href="#apii_article-9">*ApiArticlePrevNext</a></td>
+                        <td>获取文章上一篇/下一篇</td>
+                    </tr>
+                    <tr>
+                        <td><code>ArticleFind</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">string</span> <span class="param-name">call_index</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">article_id</span></li>
+                            </ul>
+                        </td>
+                        <td><a class="cell-link" href="#apii_article-10">*ApiArticleModel</a></td>
+                        <td>获取文章详情（完整）</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <h2 id="apii_article-2">📦 ApiArticleListModel 结构</h2>
+    <p>文章列表元素模型，对应数据库 <code>cms_article</code> 表的核心字段。</p>
+    <textarea id="codeApiArticleListModel" code-type="go">// ApiArticleListModel 文章查询模型
 type ApiArticleListModel struct {
     ArtilceID         int64     `gorm:"column:article_id;type:bigint;" json:"article_id" form:"article_id"`                                // 主键
     SiteID            int64     `gorm:"column:site_id;type:bigint" json:"site_id" form:"site_id"`                                          // 所属站点
@@ -203,21 +195,19 @@ type ApiArticleListModel struct {
     CategoryLinkURL   string    `gorm:"column:category_link_url;type:varchar(256)" json:"category_link_url" form:"link_url"`               // category_外部链接
     ChannelName       string    `gorm:"column:channel_name;type:varchar(128)" json:"channel_name" form:"channel_name"`                     // channel_字段名
     ChannelTitle      string    `gorm:"column:channel_title;type:varchar(128)" json:"channel_title" form:"channel_title"`                  // channel_标题
-}          
-            </textarea>
-            <h3 id="r5spb"><b><a name="ApiCategoryNav">ApiCategoryNav结构</a></b></h3>
-            <textarea id="codeApiCategoryNav" code-type="go">
-// ApiCategoryNav 导航栏目
+}</textarea>
+
+    <h2 id="apii_article-3">📦 ApiCategoryNav 结构</h2>
+    <textarea id="codeApiCategoryNav" code-type="go">// ApiCategoryNav 导航栏目
 type ApiCategoryNav struct {
 	Title     string `json:"title"`      // 标题
 	CallIndex string `json:"call_index"` // 调用别名
 	LinkURL   string `json:"link_url"`   // 外部链接
 	NavType   string `json:"nav_type"`   // 导航类型,channel:栏目,category:目录
-}
-            </textarea>
-            <h3 id="r5spb"><b><a name="ApiCategoryGetModel">ApiCategoryGetModel结构</a></b></h3>
-            <textarea id="codeApiCategoryGetModel" code-type="go">
-// ApiCategoryGetModel 文章模型
+}</textarea>
+
+    <h2 id="apii_article-4">📦 ApiCategoryGetModel 结构</h2>
+    <textarea id="codeApiCategoryGetModel" code-type="go">// ApiCategoryGetModel 文章模型
 type ApiCategoryGetModel struct {
 	ChannelName  string `gorm:"column:channel_name;type:varchar(128)" json:"channel_name" form:"channel_name"`    // 频道名称
 	ChannelTitle string `gorm:"column:channel_title;type:varchar(128)" json:"channel_title" form:"channel_title"` // 频道标题
@@ -235,11 +225,10 @@ type ApiCategoryGetModel struct {
 	IsShow       bool   `gorm:"column:is_show;type:tinyint(1);default:1" json:"is_show" form:"is_show"`           // 是否显示:1显示，0隐藏
 	IsSearch     bool   `gorm:"column:is_search;type:tinyint(1);default:1" json:"is_search" form:"is_search"`     // 允许检索:1允许，0禁止
 	IsDeleted    bool   `gorm:"column:is_deleted;type:tinyint(1)" json:"is_deleted" form:"is_deleted"`            // 删除标识
-}
-            </textarea>
-            <h3 id="r5spb"><b><a name="ApiCategoryFindModel">ApiCategoryFindModel结构</a></b></h3>
-            <textarea id="ApiCategoryFindModelCode" code-type="go">
-// ApiCategoryFindModel 目录模型
+}</textarea>
+
+    <h2 id="apii_article-5">📦 ApiCategoryFindModel 结构</h2>
+    <textarea id="ApiCategoryFindModelCode" code-type="go">// ApiCategoryFindModel 目录模型
 type ApiCategoryFindModel struct {
 	ApiCategoryGetModel
 	Target         string `gorm:"column:target;type:varchar(16);default:_blank" json:"target" form:"target"`              // 是否开启浏览器新窗口
@@ -251,11 +240,10 @@ type ApiCategoryFindModel struct {
 	TmplLst        string `gorm:"column:tmpl_lst;type:varchar(256)" json:"tmpl_lst" form:"tmpl_lst"`                      // 列表模板路径
 	TmplDtl        string `gorm:"column:tmpl_dtl;type:varchar(256)" json:"tmpl_dtl" form:"tmpl_dtl"`                      // 明细模板路径
 	SiteFlag       string `gorm:"column:site_flag;type:varchar(64)" json:"site_flag" form:"site_flag"`                    // 站点标识
-}
-            </textarea>
-            <h3 id="r5spb"><b><a name="ApiAlbumModel">ApiAlbumModel结构</a></b></h3>
-            <textarea id="ApiAlbumModelCode" code-type="go">
-type ApiAlbumModel struct {
+}</textarea>
+
+    <h2 id="apii_article-6">📦 ApiAlbumModel 结构</h2>
+    <textarea id="ApiAlbumModelCode" code-type="go">type ApiAlbumModel struct {
 	AlbumID      int64  `gorm:"column:album_id;type:bigint;primaryKey;autoIncrement:true;comment:" json:"album_id" form:"album_id"` // 主键
 	RecordID     int64  `gorm:"column:record_id;type:bigint;comment:" json:"record_id" form:"record_id"`                            // 关联记录ID
 	Title        string `gorm:"column:title;type:varchar(128);comment:" json:"title" form:"title"`                                  // 标题
@@ -269,11 +257,10 @@ type ApiAlbumModel struct {
 	Click        int32  `gorm:"column:click;type:int;comment:" json:"click" form:"click"`                                           // 点击次数
 	SortID       int32  `gorm:"column:sort_id;type:int;comment:" json:"sort_id" form:"sort_id"`                                     // 排序
 	Remark       string `gorm:"column:remark;type:varchar(256);comment:" json:"remark" form:"remark"`                               // 图片描述
-}
-            </textarea>
-            <h3 id="r5spb"><b><a name="ApiAttachModel">ApiAttachModel结构</a></b></h3>
-            <textarea id="ApiAttachModelCode" code-type="go">
-type ApiAttachModel struct {
+}</textarea>
+
+    <h2 id="apii_article-7">📦 ApiAttachModel 结构</h2>
+    <textarea id="ApiAttachModelCode" code-type="go">type ApiAttachModel struct {
 	AttachID     int64  `gorm:"column:attach_id;type:bigint;primaryKey;autoIncrement:true;comment:" json:"attach_id" form:"attach_id"` // 主键
 	RecordID     int64  `gorm:"column:record_id;type:bigint;comment:" json:"record_id" form:"record_id"`                               // 关联记录ID
 	Title        string `gorm:"column:title;type:varchar(128);comment:" json:"title" form:"title"`                                     // 标题
@@ -286,11 +273,10 @@ type ApiAttachModel struct {
 	Click        int32  `gorm:"column:click;type:int;comment:" json:"click" form:"click"`                                              // 下载次数
 	SortID       int32  `gorm:"column:sort_id;type:int;comment:" json:"sort_id" form:"sort_id"`                                        // 排序
 	Remark       string `gorm:"column:remark;type:varchar(256);comment:" json:"remark" form:"remark"`                                  // 附件描述
-}
-            </textarea>
-            <h3 id="r5spb"><b><a name="ApiArticleOneModel">ApiArticleOneModel结构</a></b></h3>
-            <textarea id="ApiArticleOneModelCode" code-type="go">
-type ApiArticleOneModel struct {
+}</textarea>
+
+    <h2 id="apii_article-8">📦 ApiArticleOneModel 结构</h2>
+    <textarea id="ApiArticleOneModelCode" code-type="go">type ApiArticleOneModel struct {
 	ArticleID         int64     `gorm:"column:article_id;type:bigint;" json:"article_id" form:"article_id"`                                  // 主键
 	SiteID            int64     `gorm:"column:site_id;type:bigint" json:"site_id" form:"site_id"`                                            // 所属站点
 	ChannelID         int64     `gorm:"column:channel_id;type:bigint" json:"channel_id" form:"channel_id"`                                   // 所属频道
@@ -330,11 +316,10 @@ type ApiArticleOneModel struct {
 	ChannelName       string    `gorm:"column:channel_name;type:varchar(128)" json:"channel_name" form:"channel_name"`                       // channel_字段名
 	ChannelTitle      string    `gorm:"column:channel_title;type:varchar(128)" json:"channel_title" form:"channel_title"`                    // channel_标题
 	TmplDtl           string    `gorm:"column:tmpl_dtl;type:varchar(256)" json:"tmpl_dtl" form:"tmpl_dtl"`                                   // 明细模板路径
-}
-            </textarea>
-            <h3 id="r5spb"><b><a name="ApiArticlePrevNext">ApiArticlePrevNext结构</a></b></h3>
-            <textarea id="ApiArticlePrevNextCode" code-type="go">
-type ApiArticlePrevNext struct {
+}</textarea>
+
+    <h2 id="apii_article-9">📦 ApiArticlePrevNext 结构</h2>
+    <textarea id="ApiArticlePrevNextCode" code-type="go">type ApiArticlePrevNext struct {
 	Prev *ApiArticlePrevNextModel `json:"prev"` // 上一篇
 	Next *ApiArticlePrevNextModel `json:"next"` // 下一篇
 }
@@ -363,14 +348,13 @@ type ApiArticlePrevNextModel struct {
 	ChannelName       string    `gorm:"column:channel_name;type:varchar(128)" json:"channel_name" form:"channel_name"`                       // channel_字段名
 	ChannelTitle      string    `gorm:"column:channel_title;type:varchar(128)" json:"channel_title" form:"channel_title"`                    // channel_标题
 	TmplDtl           string    `gorm:"column:tmpl_dtl;type:varchar(256)" json:"tmpl_dtl" form:"tmpl_dtl"`                                   // 明细模板路径
-}
-            </textarea>
-            <h3 id="r5spb"><b><a name="ApiArticleModel">ApiArticleModel结构</a></b></h3>
-            <textarea id="ApiArticleModelCode" code-type="go">
-type ApiArticleModel struct {
+}</textarea>
+
+    <h2 id="apii_article-10">📦 ApiArticleModel 结构</h2>
+    <p>文章完整模型，含详情字段、相册与附件。</p>
+    <textarea id="ApiArticleModelCode" code-type="go">type ApiArticleModel struct {
 	Article *ApiArticleOneModel `json:"article"` // 文章
 	Album   []*ApiAlbumModel    `json:"album"`   // 相册
 	Attach  []*ApiAttachModel   `json:"attach"`  // 附件
-}
-            </textarea>
-        </article>
+}</textarea>
+</article>

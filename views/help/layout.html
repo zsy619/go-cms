@@ -203,24 +203,52 @@
 
     <script type="text/javascript">
         $(function () {
-            // CodeMirror 初始化
-            $("textarea[code-type]").each(function () {
-                var codeType = $(this).attr("code-type");
+            // 1. CodeMirror 初始化 + 自动添加复制按钮
+            $('textarea[code-type]').each(function () {
+                var $ta = $(this);
+                var codeType = $ta.attr('code-type');
                 var createCodeMirror = window.createCodeMirror;
+                var $wrap = $ta.wrap('<div class="code-block-wrap"></div>');
                 if (typeof createCodeMirror === 'function') {
-                    var cm = createCodeMirror($(this).attr("id"), codeType);
+                    var cm = createCodeMirror($ta.attr('id'), codeType);
+                }
+                $wrap.before('<button class="copy-btn" type="button">📋 复制</button>');
+            });
+            // 2. 复制按钮事件
+            $(document).on('click', '.copy-btn', function () {
+                var $btn = $(this);
+                var $wrap = $btn.next('.code-block-wrap');
+                var $ta = $wrap.find('textarea[code-type]');
+                if (!$ta.length) return;
+                var code = $ta.val();
+                var done = function () {
+                    var orig = $btn.text();
+                    $btn.text('✓ 已复制').addClass('copied');
+                    setTimeout(function () { $btn.text(orig).removeClass('copied'); }, 1500);
+                };
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(code).then(done).catch(function () { $ta.select(); document.execCommand('copy'); done(); });
+                } else {
+                    $ta[0].select();
+                    try { document.execCommand('copy'); done(); } catch (e) {}
                 }
             });
-            // 移动端菜单切换
+            // 3. 移动端菜单切换
             $('#mobileMenuBtn').on('click', function () {
                 $('#mobileMenu').toggleClass('hidden');
             });
-            // 当前页面高亮
+            // 4. 当前页面高亮
             var currentPath = window.location.pathname;
             $('.nav-link').each(function () {
                 if ($(this).attr('href') === currentPath) {
                     $(this).addClass('is-active');
                 }
+            });
+            // 5. 为所有 h2/h3 添加锚点链接
+            $('.prose-doc h2[id], .prose-doc h3[id], .prose-doc h4[id]').each(function () {
+                var $h = $(this);
+                var id = $h.attr('id');
+                $h.append('<a class="anchor-link" href="#' + id + '" title="复制锚点链接">#</a>');
             });
         });
     </script>

@@ -1,80 +1,78 @@
+<article class="prose-doc">
+    <h1>标签函数</h1>
+    <p>模板内可调用的标签（Tag）相关函数。</p>
 
-        <article class="content ">
-            <h1 class="title has-text-centered">标签函数</h1>
-            <hr>
-            <h3 id="r5spb"><b>标签函数</b></h3>
-            <div>
-                <table border="0" width="100%" cellpadding="0" cellspacing="0">
-                    <tbody>
-                        <tr>
-                            <th>api名称</th>
-                            <th>需要参数</th>
-                            <th style="word-break: keep-all;">返回值</th>
-                            <th>说明</th>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>TagNew</p>
-                            </td>
-                            <td>
-                                {int} limit 获取数量，小于等于0时按6条处理
-                            </td>
-                            <td><a href="#ApiTagModel">[]*ApiTagModel</a></td>
-                            <td>获取最新标签列表</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>TagNewExtend</p>
-                            </td>
-                            <td>
-                                {int} limit 获取数量，小于等于0时按6条处理<br>
-                                {int64} site_id 站点ID<br>
-                                {string} site_flag 站点标识<br>
-                                {int64} channel_id 栏目ID
-                            </td>
-                            <td><a href="#ApiTagModel">[]*ApiTagModel</a></td>
-                            <td>获取最新标签列表</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>TagTop</p>
-                            </td>
-                            <td>
-                                {int} limit 获取数量，小于等于0时按6条处理
-                            </td>
-                            <td><a href="#ApiTagModel">[]*ApiTagModel</a></td>
-                            <td>获取标签列表</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>TagTopExtend</p>
-                            </td>
-                            <td>
-                                {int} limit 获取数量，小于等于0时按6条处理<br>
-                                {int64} site_id 站点ID<br>
-                                {string} site_flag 站点标识<br>
-                                {int64} channel_id 栏目ID
-                            </td>
-                            <td><a href="#ApiTagModel">[]*ApiTagModel</a></td>
-                            <td>获取标签列表</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>TagArtilceTop</p>
-                            </td>
-                            <td>
-                                {int} limit 获取数量，小于等于0时按6条处理<br>
-                                {string} tag_name
-                            </td>
-                            <td><a href="apii_article#ApiArticleListModel">[]*ApiArticleListModel</a></td>
-                            <td>获取标签文章列表</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <h3 id="r5spb"><b><a name="ApiTagModel">ApiTagModel结构</a></b></h3>
-            <textarea id="codeApiTagModel" code-type="go">
-type ApiTagModel struct {
+    <div class="doc-table-wrapper">
+        <div class="doc-table-meta"><span>📋 标签函数</span><span class="row-count">5 个</span></div>
+        <div class="doc-table-scroll">
+            <table class="doc-table">
+                <thead><tr><th style="width:170px">api 名称</th><th>需要参数</th><th>返回值</th><th>说明</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><code>TagNew</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int</span> <span class="param-name">limit</span><span class="param-desc">获取数量（≤0 按 6 条）</span></li>
+                            </ul>
+                        </td>
+                        <td><a class="cell-link" href="#apii_tag-2">[]*ApiTagModel</a></td>
+                        <td>获取最新标签列表</td>
+                    </tr>
+                    <tr>
+                        <td><code>TagNewExtend</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int</span> <span class="param-name">limit</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">site_id</span><span class="param-desc">站点 ID</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">site_flag</span><span class="param-desc">站点标识</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">channel_id</span><span class="param-desc">频道 ID</span></li>
+                            </ul>
+                        </td>
+                        <td><a class="cell-link" href="#apii_tag-2">[]*ApiTagModel</a></td>
+                        <td>获取最新标签列表（带过滤）</td>
+                    </tr>
+                    <tr>
+                        <td><code>TagTop</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int</span> <span class="param-name">limit</span></li>
+                            </ul>
+                        </td>
+                        <td><a class="cell-link" href="#apii_tag-2">[]*ApiTagModel</a></td>
+                        <td>获取标签列表（按 is_top 排序）</td>
+                    </tr>
+                    <tr>
+                        <td><code>TagTopExtend</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int</span> <span class="param-name">limit</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">site_id</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">site_flag</span></li>
+                                <li><span class="param-type">int64</span> <span class="param-name">channel_id</span></li>
+                            </ul>
+                        </td>
+                        <td><a class="cell-link" href="#apii_tag-2">[]*ApiTagModel</a></td>
+                        <td>获取标签列表（带过滤）</td>
+                    </tr>
+                    <tr>
+                        <td><code>TagArticleTop</code></td>
+                        <td>
+                            <ul class="param-list">
+                                <li><span class="param-type">int</span> <span class="param-name">limit</span></li>
+                                <li><span class="param-type">string</span> <span class="param-name">tag_name</span><span class="param-desc">标签名</span></li>
+                            </ul>
+                        </td>
+                        <td><a class="cell-link" href="apii_article">[]*ApiArticleListModel</a></td>
+                        <td>获取标签下文章列表</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <h2 id="apii_tag-2">📦 ApiTagModel 结构</h2>
+    <p>标签对象，对应数据库 <code>cms_tag</code> 表。</p>
+    <textarea id="codeApiTagModel" code-type="go">type ApiTagModel struct {
     TagID          int64  `gorm:"column:tag_id;type:bigint;" json:"tag_id" form:"tag_id"`                                  // 标签ID
     SiteID         int64  `gorm:"column:site_id;type:bigint;" json:"site_id" form:"site_id"`                               // 所属站点
     ChannelID      int64  `gorm:"column:channel_id;type:bigint;" json:"channel_id" form:"channel_id"`                      // 所属频道
@@ -88,6 +86,5 @@ type ApiTagModel struct {
     Template       string `gorm:"column:template;type:varchar(64);" json:"template" form:"template"`                       // 模板
     SortID         int32  `gorm:"column:sort_id;type:int;" json:"sort_id" form:"sort_id"`                                  // 排序
     SiteFlag       string `gorm:"column:site_flag;type:varchar(64);" json:"site_flag" form:"site_flag"`                    // 站点标识
-}
-            </textarea>
-        </article>
+}</textarea>
+</article>
