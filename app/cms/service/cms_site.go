@@ -121,12 +121,12 @@ func (svc *CmsSite) SiteSave(mdl *domain.CmsSite, domains []string, remarks []st
 	} else {
 		// 修改 cms_admin_nav
 		nav, navDo := mapper.CmsAdminNavDo()
-		_, _ = navDo.Where(nav.SiteID.Eq(mdl.SiteID), nav.Type.Eq("Site")).UpdateColumns(map[string]interface{}{
+		_, _ = navDo.Where(nav.SiteID.Eq(mdl.SiteID), nav.Type.Eq("Site")).UpdateColumns(map[string]any{
 			nav.Title.ColumnName().String():      mdl.Title,
 			nav.SortID.ColumnName().String():     mdl.SortID,
 			nav.UpdateTime.ColumnName().String(): time.Now(),
 		})
-		if _, err := siteDo.Where(site.SiteID.Eq(mdl.SiteID)).UpdateColumns(map[string]interface{}{
+		if _, err := siteDo.Where(site.SiteID.Eq(mdl.SiteID)).UpdateColumns(map[string]any{
 			site.Name.ColumnName().String():            mdl.Name,
 			site.Flag.ColumnName().String():            mdl.Flag,
 			site.Title.ColumnName().String():           mdl.Title,
@@ -152,6 +152,7 @@ func (svc *CmsSite) SiteSave(mdl *domain.CmsSite, domains []string, remarks []st
 			site.UpdateID.ColumnName().String():        mdl.UpdateID,
 			site.UpdateName.ColumnName().String():      mdl.UpdateName,
 			site.UpdateTime.ColumnName().String():      time.Now(),
+			site.LanguageCode.ColumnName().String():    mdl.LanguageCode,
 		}); err != nil {
 			return err
 		}
