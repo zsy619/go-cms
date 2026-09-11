@@ -1,8 +1,13 @@
 package controllers
 
-import "github.com/beego/beego/v2/server/web"
+import (
+	"github.com/beego/beego/v2/server/web"
+)
 
 func init() {
+	// 全局操作日志中间件 - 记录所有后台操作到 cms_admin_log 表
+	web.InsertFilter("/*", web.BeforeRouter, MiddlewareLog)
+
 	web.Router("/captcha", &CaptchaController{}, "get:GenerateHandler")     // 生成图形验证码
 	web.Router("/captcha/verify", &CaptchaController{}, "get:VerifyHandle") // 验证
 

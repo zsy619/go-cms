@@ -41,6 +41,15 @@ func init() {
 		web.NSAutoRouter(&UEditorController{}),
 		web.NSRouter("index", &IndexController{}, "*:Index"),
 
+				// log namespace 操作日志管理
+		web.NSNamespace("log",
+			web.NSRouter("page", &LogController{}, "*:LogPage"),
+			web.NSRouter("data", &LogController{}, "*:LogData"),
+			web.NSRouter("delete", &LogController{}, "*:LogDelete"),
+			web.NSRouter("batch/delete", &LogController{}, "*:LogBatchDelete"),
+			web.NSRouter("clear", &LogController{}, "*:LogClear"),
+		),
+
 		// site namespace 包含站点管理和语言设置
 		web.NSNamespace("site",
 			web.NSRouter("edit", &SiteController{}, "get:SiteEdit"),
