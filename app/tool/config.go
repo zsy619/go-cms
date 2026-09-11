@@ -72,10 +72,13 @@ func init() {
 	Smn_Alias = C("smn.alias", "")
 	Smn_Subject = C("smn.subject", "")
 
+	// 初始化 Google OAuth 配置
+	InitGoogleOAuth()
+}
 
-// Google OAuth 配置
+// GoogleOAuth Google OAuth 配置(包级 init 时调用)
 var (
-	GoogleEnabled   bool
+	GoogleEnabled      bool
 	GoogleClientID     string
 	GoogleClientSecret string
 	GoogleRedirectURI  string
@@ -84,7 +87,7 @@ var (
 	GoogleUserInfoURL  string
 )
 
-func initGoogleOAuth() {
+func InitGoogleOAuth() {
 	GoogleEnabled, _ = web.AppConfig.Bool("google.enabled")
 	GoogleClientID = C("google.clientID", "")
 	GoogleClientSecret = C("google.clientSecret", "")
@@ -92,7 +95,6 @@ func initGoogleOAuth() {
 	GoogleAuthURL = "https://accounts.google.com/o/oauth2/v2/auth"
 	GoogleTokenURL = "https://oauth2.googleapis.com/token"
 	GoogleUserInfoURL = "https://www.googleapis.com/oauth2/v2/userinfo"
-}
 }
 
 func C(name, value string) string {

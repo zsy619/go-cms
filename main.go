@@ -34,6 +34,7 @@ import (
 
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
+	"github.com/beego/beego/v2/server/web/context"
 	"github.com/beego/beego/v2/server/web/filter/cors"
 	"github.com/beego/beego/v2/server/web/session"
 	"github.com/kardianos/service"
@@ -46,6 +47,13 @@ import (
 	_ "haedu.gov.cn/cms/controllers/plugin"
 	_ "haedu.gov.cn/cms/controllers/www"
 )
+
+// PermissionsPolicyMiddleware 设置 Permissions-Policy 响应头
+// 解决 "Permissions policy violation: unload" 警告
+var PermissionsPolicyMiddleware = func(ctx *context.Context) {
+	// 允许使用 unload 事件
+	ctx.ResponseWriter.Header().Set("Permissions-Policy", "unload=()")
+}
 
 var globalSessions *session.Manager
 
@@ -66,6 +74,9 @@ func InitSession() {
 }
 
 func init() {
+	// Permissions Policy 中间件（解决 unload 警告）
+	web.InsertFilter("*", web.BeforeRouter, PermissionsPolicyMiddleware)
+
 	// InsertFilter是提供一个过滤函数
 	web.InsertFilter("*", web.BeforeRouter, cors.Allow(&cors.Options{
 		// 允许访问所有源
