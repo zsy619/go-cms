@@ -40,6 +40,11 @@ type CmsSite struct {
 	MetaKeyword     string    `gorm:"column:meta_keyword;type:varchar(512)" json:"meta_keyword" form:"meta_keyword"`                        // META关键词
 	MetaDescription string    `gorm:"column:meta_description;type:varchar(128)" json:"meta_description" form:"meta_description"`            // META描述
 	SortID          int32     `gorm:"column:sort_id;type:int" json:"sort_id" form:"sort_id"`                                                // 排序
+	LanguageCode    string    `gorm:"column:language_code;type:varchar(16);default:zh-CN" json:"language_code" form:"language_code"`           // 主语言代码 (ISO 639-1, 如 zh-CN/en/ja 等)
+	DefaultLanguage string    `gorm:"column:default_language;type:varchar(16);default:zh-CN" json:"default_language" form:"default_language"` // 默认语言 (与 IsDefault 不同: 此字段指语言, IsDefault 指站点)
+	AvailableLanguages string  `gorm:"column:available_languages;type:varchar(512);default:zh-CN,en" json:"available_languages" form:"available_languages"` // 可选语言列表 (逗号分隔的多语言代码)
+	Timezone        string    `gorm:"column:timezone;type:varchar(64);default:Asia/Shanghai" json:"timezone" form:"timezone"`                // 站点时区 (IANA 时区标识)
+	FallbackLanguage string   `gorm:"column:fallback_language;type:varchar(16);default:zh-CN" json:"fallback_language" form:"fallback_language"` // 回退语言 (主语言无对应资源时使用)
 	Status          int32     `gorm:"column:status;type:tinyint" json:"status" form:"status"`                                               // 状态0草稿1提交2审核通过3审核未通过4驳回
 	CreateID        int32     `gorm:"column:create_id;type:int" json:"create_id" form:"create_id"`                                          // 创建人ID
 	CreateName      string    `gorm:"column:create_name;type:varchar(64)" json:"create_name" form:"create_name"`                            // 创建人姓名
