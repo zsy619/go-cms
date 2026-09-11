@@ -1,0 +1,184 @@
+<article class="prose-doc">
+    <h1>站点语言 API</h1>
+    <p>站点语言 API 用于查询站点（<code>cms_site</code>）与语言（<code>cms_language</code>）的关联信息，是多语言站点的核心数据接口。</p>
+
+    <h2>🔍 关联查询 SQL</h2>
+    <textarea id="codeSiteLangSql" code-type="sql">SELECT a.site_id,
+       b.language_id,
+       a.language_code,
+       b.name,
+       b.description,
+       b.icon
+FROM cms_site a
+LEFT JOIN cms_language b
+       ON a.language_code = b.code
+WHERE b.language_id IS NOT NULL
+ORDER BY b.is_default DESC</textarea>
+
+    <h2>📊 数据模型</h2>
+
+    <h3>SiteLanguage 视图模型</h3>
+    <p>关联查询返回的字段结构。</p>
+    <textarea id="codeSiteLangModel" code-type="go">type SiteLanguage struct {
+    SiteID       int64  `json:"site_id"`       // 站点ID
+    LanguageID   int64  `json:"language_id"`   // 语言ID
+    LanguageCode string `json:"language_code"` // 语言代码
+    Name         string `json:"name"`          // 语言名称
+    Description  string `json:"description"`   // 语言描述
+    Icon         string `json:"icon"`          // 语言图标 (emoji)
+}</textarea>
+
+    <h3>CMS 数据库表</h3>
+    <p>涉及两张表：</p>
+    <ul>
+        <li><code>cms_site</code> - 站点主表（含 <code>language_code</code> 字段）</li>
+        <li><code>cms_language</code> - 语言设置表</li>
+    </ul>
+
+    <h2>📡 API 接口</h2>
+    <div class="doc-table-wrapper">
+        <div class="doc-table-meta"><span>📋 站点语言接口</span><span class="row-count">3 个</span></div>
+        <div class="doc-table-scroll">
+            <table class="doc-table">
+                <thead><tr><th style="width:280px">URL</th><th>方法</th><th>说明</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><code>/api/site/language/list</code></td>
+                        <td>GET</td>
+                        <td>获取所有站点语言关联（按 is_default 降序）</td>
+                    </tr>
+                    <tr>
+                        <td><code>/api/site/language/find</code></td>
+                        <td>GET</td>
+                        <td>根据站点ID获取语言信息（参数 <code>site_id</code>）</td>
+                    </tr>
+                    <tr>
+                        <td><code>/api/site/language/by-code</code></td>
+                        <td>GET</td>
+                        <td>根据语言代码查询站点（参数 <code>code</code>）</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <h2>📝 请求/响应示例</h2>
+
+    <h3>1. 获取所有站点语言关联</h3>
+    <textarea id="codeApiList" code-type="bash"># 请求
+GET /api/site/language/list
+
+# 响应
+{
+  "code": 0,
+  "msg": "success",
+  "count": 2,
+  "data": [
+    {
+      "site_id": 1,
+      "language_id": 1,
+      "language_code": "zh-CN",
+      "name": "简体中文",
+      "description": "简体中文",
+      "icon": "🇨🇳"
+    },
+    {
+      "site_id": 2,
+      "language_id": 2,
+      "language_code": "en",
+      "name": "English",
+      "description": "英语",
+      "icon": "🇺🇸"
+    }
+  ]
+}</textarea>
+
+    <h3>2. 根据站点ID查询</h3>
+    <textarea id="codeApiFind" code-type="bash"># 请求
+GET /api/site/language/find?site_id=1
+
+# 响应
+{
+  "code": 0,
+  "msg": "获取成功",
+  "data": [
+    {
+      "site_id": 1,
+      "language_id": 1,
+      "language_code": "zh-CN",
+      "name": "简体中文",
+      "description": "简体中文",
+      "icon": "🇨🇳"
+    }
+  ]
+}</textarea>
+
+    <h3>3. 根据语言代码查询</h3>
+    <textarea id="codeApiByCode" code-type="bash"># 请求
+GET /api/site/language/by-code?code=zh-CN
+
+# 响应
+{
+  "code": 0,
+  "msg": "获取成功",
+  "data": [
+    {
+      "site_id": 1,
+      "language_id": 1,
+      "language_code": "zh-CN",
+      "name": "简体中文",
+      "description": "简体中文",
+      "icon": "🇨🇳"
+    }
+  ]
+}</textarea>
+
+    <h2>💡 典型应用场景</h2>
+
+    <h3>1. 多语言站点切换</h3>
+    <p>在前端页面展示语言切换下拉框：</p>
+    <textarea id="codeScenario1" code-type="javascript">// 获取所有站点语言
+fetch('/api/site/language/list')
+  .then(res => res.json())
+  .then(res => {
+    if (res.code === 0) {
+      const languages = res.data;
+      // 渲染语言切换器
+      languages.forEach(lang => {
+        console.log(lang.icon, lang.name);
+      });
+    }
+  });</textarea>
+
+    <h3>2. 根据当前域名获取站点语言</h3>
+    <p>结合域名查询接口，先获取站点 ID，再查询语言信息：</p>
+    <textarea id="codeScenario2" code-type="javascript">// 先获取站点
+fetch('/api/site/find?site_id=1')
+  .then(res => res.json())
+  .then(res => {
+    const site = res.data;
+    // 再查询语言
+    return fetch('/api/site/language/find?site_id=' + site.site_id);
+  })
+  .then(res => res.json())
+  .then(res => {
+    const langInfo = res.data[0];
+    console.log('当前站点语言:', langInfo.name, langInfo.icon);
+  });</textarea>
+
+    <h2>⚠️ 注意事项</h2>
+    <ul>
+        <li>接口仅返回已配置语言（<code>language_code</code>）的站点数据</li>
+        <li>未配置语言的站点不会出现在结果中</li>
+        <li>使用 <code>utf8mb4</code> 字符集以支持 emoji 图标</li>
+        <li>排序规则：默认语言优先（<code>is_default DESC</code>）</li>
+    </ul>
+
+    <h2>📂 文件位置</h2>
+    <div class="doc-callout">
+        <p><strong>Domain:</strong> <code>app/cms/domain/site_language.go</code></p>
+        <p><strong>Service:</strong> <code>app/cms/service/site_language.go</code></p>
+        <p><strong>Controller:</strong> <code>controllers/www/api_site.go</code></p>
+        <p><strong>Router:</strong> <code>controllers/www/a.go</code></p>
+    </div>
+</article>

@@ -1,0 +1,173 @@
+<article class="prose-doc">
+    <h1>语言设置（管理端）</h1>
+    <p>CMS 系统支持多语言管理，通过语言设置功能可以管理站点支持的所有语言，包括简体中文、English、日本語、한국어 等全球主流语言。</p>
+
+    <h2>📍 入口位置</h2>
+    <div class="doc-callout">
+        <p><strong>路径：</strong><code>站点管理 → 语言设置</code></p>
+        <p><strong>URL：</strong><code>/admin/site/language</code></p>
+    </div>
+
+    <h2>✨ 功能特性</h2>
+    <ul>
+        <li>🌍 内置 197 种语言（含 emoji 国旗图标）</li>
+        <li>🔍 支持按名称/代码搜索</li>
+        <li>📝 支持新增、编辑、删除语言</li>
+        <li>📊 支持排序、启用/禁用</li>
+        <li>⭐ 支持设置默认语言</li>
+        <li>🚀 一键初始化语言数据</li>
+    </ul>
+
+    <h2>📊 数据表结构</h2>
+    <p><code>cms_language</code> 表存储所有语言配置信息。</p>
+    <textarea id="codeLangTable" code-type="sql">CREATE TABLE cms_language (
+    language_id   BIGINT       PRIMARY KEY AUTO_INCREMENT COMMENT '主键',
+    name          VARCHAR(64)  NOT NULL COMMENT '语言名称',
+    code          VARCHAR(16)  NOT NULL COMMENT '语言代码 (如: zh-CN, en)',
+    icon          VARCHAR(64)  COMMENT '图标/国旗',
+    sort_id       INT          DEFAULT 99 COMMENT '排序',
+    description   VARCHAR(256) COMMENT '描述',
+    status        TINYINT      DEFAULT 1 COMMENT '状态: 0禁用 1启用',
+    is_default    TINYINT(1)   DEFAULT 0 COMMENT '是否默认',
+    create_id     INT          COMMENT '创建人ID',
+    create_name   VARCHAR(64)  COMMENT '创建人姓名',
+    create_time   DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_id     INT          COMMENT '更新人ID',
+    update_name   VARCHAR(64)  COMMENT '更新人姓名',
+    update_time   DATETIME     COMMENT '修改时间',
+    tenant_id     BIGINT       NOT NULL DEFAULT 0 COMMENT '租户ID',
+    deleted       TINYINT(1)   NOT NULL DEFAULT 0 COMMENT '逻辑删除',
+    INDEX idx_tenant_id (tenant_id),
+    INDEX idx_deleted (deleted)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='语言设置表';</textarea>
+
+    <h2>🔌 API 接口</h2>
+    <div class="doc-table-wrapper">
+        <div class="doc-table-meta"><span>📋 后台管理接口</span><span class="row-count">8 个</span></div>
+        <div class="doc-table-scroll">
+            <table class="doc-table">
+                <thead><tr><th style="width:300px">URL</th><th>方法</th><th>说明</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><code>/admin/site/language</code></td>
+                        <td>GET</td>
+                        <td>语言设置列表页面</td>
+                    </tr>
+                    <tr>
+                        <td><code>/admin/site/language/data</code></td>
+                        <td>GET</td>
+                        <td>获取语言列表数据（不分页）</td>
+                    </tr>
+                    <tr>
+                        <td><code>/admin/site/language/edit</code></td>
+                        <td>GET</td>
+                        <td>语言编辑页面</td>
+                    </tr>
+                    <tr>
+                        <td><code>/admin/site/language/save</code></td>
+                        <td>POST</td>
+                        <td>保存语言（新增/修改）</td>
+                    </tr>
+                    <tr>
+                        <td><code>/admin/site/language/delete</code></td>
+                        <td>GET</td>
+                        <td>删除语言（支持批量，参数 ids）</td>
+                    </tr>
+                    <tr>
+                        <td><code>/admin/site/language/sort</code></td>
+                        <td>GET</td>
+                        <td>更新排序（参数 id, sort_id）</td>
+                    </tr>
+                    <tr>
+                        <td><code>/admin/site/language/status</code></td>
+                        <td>GET</td>
+                        <td>切换状态（参数 id, status）</td>
+                    </tr>
+                    <tr>
+                        <td><code>/admin/site/language/init</code></td>
+                        <td>GET</td>
+                        <td>初始化语言数据（内置 197 种）</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <h2>📦 请求/响应示例</h2>
+
+    <h3>1. 获取语言列表</h3>
+    <textarea id="codeGetList" code-type="bash"># 请求
+GET /admin/site/language/data?name=中&code=zh
+
+# 响应
+{
+  "code": 0,
+  "msg": "success",
+  "data": {
+    "list": [
+      {
+        "language_id": 1,
+        "name": "简体中文",
+        "code": "zh-CN",
+        "icon": "🇨🇳",
+        "sort_id": 1,
+        "description": "简体中文",
+        "status": 1,
+        "is_default": true,
+        "create_time": "2024-01-01T10:00:00Z"
+      }
+    ],
+    "total": 1
+  }
+}</textarea>
+
+    <h3>2. 保存语言</h3>
+    <textarea id="codeSave" code-type="bash"># 请求
+POST /admin/site/language/save
+Content-Type: application/x-www-form-urlencoded
+
+id=0&name=新语言&code=new-lang&icon=🏳️&sort_id=99&description=新语言描述&status=1&is_default=on
+
+# 响应
+{
+  "code": 0,
+  "msg": "保存成功",
+  "data": null
+}</textarea>
+
+    <h3>3. 初始化语言数据</h3>
+    <textarea id="codeInit" code-type="bash"># 请求
+GET /admin/site/language/init
+
+# 响应
+{
+  "code": 0,
+  "msg": "成功初始化 197 种语言",
+  "data": null
+}</textarea>
+
+    <h2>🔧 初始化方法</h2>
+    <p>系统提供两种方式初始化语言数据：</p>
+
+    <h3>方式一：通过 API 初始化（推荐）</h3>
+    <p>访问管理后台，点击页面右上角"初始化数据"按钮，或调用 API：</p>
+    <textarea id="codeInitApi" code-type="bash">curl -X GET "http://localhost:8125/admin/site/language/init"</textarea>
+
+    <h3>方式二：通过 SQL 初始化</h3>
+    <p>手动执行 <code>sql/init_language.sql</code> 文件：</p>
+    <textarea id="codeInitSql" code-type="bash">mysql -u root -p cms < sql/init_language.sql</textarea>
+
+    <h2>⚙️ 数据库配置</h2>
+    <p>确保数据库连接使用 <code>utf8mb4</code> 字符集（支持 emoji 图标）：</p>
+    <textarea id="codeDbConfig" code-type="go">dsn := "user:password@tcp(host:port)/cms?charset=utf8mb4&parseTime=true"</textarea>
+
+    <h2>📂 文件位置</h2>
+    <div class="doc-callout">
+        <p><strong>Domain:</strong> <code>app/cms/domain/cms_language.gen.go</code></p>
+        <p><strong>Service:</strong> <code>app/cms/service/cms_language.go</code></p>
+        <p><strong>Controller:</strong> <code>controllers/admin/language.go</code></p>
+        <p><strong>视图列表:</strong> <code>views/admin/Site/Language.html</code></p>
+        <p><strong>视图编辑:</strong> <code>views/admin/Site/LanguageEdit.html</code></p>
+        <p><strong>SQL:</strong> <code>sql/init_language.sql</code></p>
+    </div>
+</article>

@@ -1,0 +1,143 @@
+<article class="prose-doc">
+    <h1>站点与频道语言字段</h1>
+    <p>CMS 系统的站点（<code>cms_site</code>）和频道（<code>cms_site_channel</code>）都支持 <code>language_code</code> 字段，用于标识该站点/频道使用的语言。</p>
+
+    <h2>📊 字段说明</h2>
+    <div class="doc-table-wrapper">
+        <div class="doc-table-meta"><span>📋 language_code 字段</span><span class="row-count">2 处</span></div>
+        <div class="doc-table-scroll">
+            <table class="doc-table">
+                <thead><tr><th style="width:200px">属性</th><th>说明</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>字段名</strong></td>
+                        <td><code>language_code</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>类型</strong></td>
+                        <td><code>varchar(16)</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>关联表</strong></td>
+                        <td><code>cms_language.code</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>默认值</strong></td>
+                        <td>空字符串</td>
+                    </tr>
+                    <tr>
+                        <td><strong>示例值</strong></td>
+                        <td><code>zh-CN</code>, <code>en</code>, <code>ja</code>, <code>ko</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <h2>🏗️ 站点语言字段</h2>
+    <h3>cms_site 表</h3>
+    <textarea id="codeCmsSite" code-type="go">type CmsSite struct {
+    SiteID          int64
+    Name            string
+    Flag            string
+    Title           string
+    Template        string
+    IsDefault       bool
+    IsMobile        bool
+    // ... 其他字段
+    LanguageCode    string    `gorm:"column:language_code;type:varchar(16)" json:"language_code" form:"language_code"`  // 语言代码
+    // ... 审计字段
+}</textarea>
+
+    <h3>cms_site_channel 表</h3>
+    <textarea id="codeCmsChannel" code-type="go">type CmsSiteChannel struct {
+    ChannelID       int64
+    ParentID        int64
+    SiteID          int64
+    Name            string
+    Title           string
+    // ... 其他字段
+    LanguageCode    string    `gorm:"column:language_code;type:varchar(16)" json:"language_code" form:"language_code"`  // 语言代码
+    // ... 审计字段
+}</textarea>
+
+    <h2>📝 SQL 更新脚本</h2>
+    <p>对于已存在的数据库，需要手动添加 <code>language_code</code> 字段：</p>
+    <textarea id="codeAlterTable" code-type="sql">-- cms_site 表添加 language_code 字段
+ALTER TABLE cms_site
+ADD COLUMN language_code VARCHAR(16) DEFAULT '' COMMENT '语言代码' AFTER sort_id;
+
+-- cms_site_channel 表添加 language_code 字段
+ALTER TABLE cms_site_channel
+ADD COLUMN language_code VARCHAR(16) DEFAULT '' COMMENT '语言代码' AFTER sort_id;</textarea>
+
+    <p>或者重启 CMS 服务（GORM AutoMigrate 会自动添加新列）。</p>
+
+    <h2>🖥️ 前端实现</h2>
+
+    <h3>站点编辑页 (SiteEdit.html)</h3>
+    <p>在"是否默认"后添加语言下拉选择框：</p>
+    <textarea id="codeSiteEditHtml" code-type="html"><div class="layui-form-item">
+    <label class="layui-form-label">站点语言</label>
+    <div class="layui-input-inline" style="width: 500px;">
+        <select name="language_code" id="language_code" lay-search="">
+            <option value="">请选择语言</option>
+            {{range .languageList}}
+            <option value="{{.Code}}" {{if eq $.site.LanguageCode .Code}}selected{{end}}>
+                {{.Icon}} {{.Name}} ({{.Code}})
+            </option>
+            {{end}}
+        </select>
+    </div>
+    <div class="layui-form-mid layui-word-aux">选择站点的默认语言</div>
+</div></textarea>
+
+    <h3>频道编辑页 (ChannelEdit.html)</h3>
+    <p>在"排序号"前添加语言下拉选择框：</p>
+    <textarea id="codeChannelEditHtml" code-type="html"><div class="layui-form-item">
+    <label class="layui-form-label">频道语言</label>
+    <div class="layui-input-inline" style="width: 500px;">
+        <select name="language_code" id="language_code" lay-search="">
+            <option value="">请选择语言</option>
+            {{range .languageList}}
+            <option value="{{.Code}}" {{if eq $.mdl.LanguageCode .Code}}selected{{end}}>
+                {{.Icon}} {{.Name}} ({{.Code}})
+            </option>
+            {{end}}
+        </select>
+    </div>
+    <div class="layui-form-mid layui-word-aux">选择频道使用的语言</div>
+</div></textarea>
+
+    <h2>🔧 后端实现</h2>
+
+    <h3>控制器加载语言列表</h3>
+    <textarea id="codeController" code-type="go">// SiteEdit 函数
+func (ctrl *SiteController) SiteEdit() {
+    // ... 其他逻辑
+
+    // 加载语言列表
+    langService := service.NewCmsLanguage()
+    langList, _ := langService.LanguageAll("", "")
+    ctrl.Data["languageList"] = langList
+
+    ctrl.display()
+}</textarea>
+
+    <h2>💡 使用建议</h2>
+    <ul>
+        <li><strong>层级关系：</strong>频道语言应与所属站点保持一致</li>
+        <li><strong>多语言站点：</strong>为每个语言创建独立站点，关联对应语言</li>
+        <li><strong>单语言站点：</strong>设置 <code>language_code</code> 为空表示通用站点</li>
+        <li><strong>查询过滤：</strong>通过 <code>language_code</code> 过滤对应语言的内容</li>
+    </ul>
+
+    <h2>📂 文件位置</h2>
+    <div class="doc-callout">
+        <p><strong>站点 Domain:</strong> <code>app/cms/domain/cms_site.gen.go</code></p>
+        <p><strong>频道 Domain:</strong> <code>app/cms/domain/cms_site_channel.gen.go</code></p>
+        <p><strong>站点视图:</strong> <code>views/admin/Site/SiteEdit.html</code></p>
+        <p><strong>频道视图:</strong> <code>views/admin/Site/ChannelEdit.html</code></p>
+        <p><strong>站点控制器:</strong> <code>controllers/admin/site.go</code></p>
+    </div>
+</article>

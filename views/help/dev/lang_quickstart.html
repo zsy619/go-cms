@@ -1,0 +1,89 @@
+<article class="prose-doc">
+    <h1>多语言功能 - 快速开始</h1>
+    <p>本指南帮助您快速在 CMS 系统中启用多语言功能。</p>
+
+    <h2>🚀 5 分钟快速集成</h2>
+
+    <h3>步骤 1：执行数据库迁移</h3>
+    <p>确保 cms_language 表已创建。如果使用 GORM AutoMigrate，重启服务即可。</p>
+    <textarea id="codeStep1" code-type="bash"># 方式一：通过 API 初始化
+curl -X GET "http://localhost:8125/admin/site/language/init"
+
+# 方式二：执行 SQL 文件
+mysql -u root -p cms < sql/init_language.sql
+
+# 方式三：手动执行
+# 重启服务，GORM AutoMigrate 会自动创建表</textarea>
+
+    <h3>步骤 2：配置数据库字符集</h3>
+    <p>修改 MySQL 连接配置为 <code>utf8mb4</code>，支持 emoji 图标。</p>
+    <textarea id="codeStep2" code-type="go">// app/db/consts.go
+dsn := "user:password@tcp(host:port)/cms?charset=utf8mb4&parseTime=true"</textarea>
+
+    <h3>步骤 3：设置站点语言</h3>
+    <ol>
+        <li>访问 <code>站点管理 → 站点列表</code></li>
+        <li>点击"编辑"按钮</li>
+        <li>在"站点语言"下拉框中选择语言</li>
+        <li>点击"立即提交"保存</li>
+    </ol>
+
+    <h3>步骤 4：配置频道语言</h3>
+    <ol>
+        <li>访问 <code>站点管理 → 频道列表</code></li>
+        <li>点击频道"编辑"按钮</li>
+        <li>在"频道语言"下拉框中选择语言</li>
+        <li>保存设置</li>
+    </ol>
+
+    <h3>步骤 5：前端调用 API</h3>
+    <p>使用站点语言 API 获取语言信息：</p>
+    <textarea id="codeStep5" code-type="javascript">// 获取所有站点语言
+fetch('/api/site/language/list')
+  .then(res => res.json())
+  .then(res => {
+    if (res.code === 0) {
+      const languages = res.data;
+      // 渲染语言切换器
+      renderLanguageSwitcher(languages);
+    }
+  });
+
+function renderLanguageSwitcher(languages) {
+  const html = languages.map(lang =>
+    `<a href="?lang=${lang.language_code}">${lang.icon} ${lang.name}</a>`
+  ).join(' | ');
+  document.getElementById('language-switcher').innerHTML = html;
+}</textarea>
+
+    <h2>📋 检查清单</h2>
+    <div class="doc-callout">
+        <p>✅ 数据库使用 utf8mb4 字符集</p>
+        <p>✅ cms_language 表已创建并初始化数据</p>
+        <p>✅ cms_site 表已添加 language_code 字段</p>
+        <p>✅ cms_site_channel 表已添加 language_code 字段</p>
+        <p>✅ 站点已配置语言代码</p>
+        <p>✅ 频道已配置语言代码</p>
+    </div>
+
+    <h2>🔍 常见问题</h2>
+
+    <h3>Q: Emoji 图标显示为方块？</h3>
+    <p>A: 数据库字符集必须为 <code>utf8mb4</code>。同时确保应用连接字符串也使用 <code>utf8mb4</code>。</p>
+
+    <h3>Q: 新增的语言在站点下拉框中不显示？</h3>
+    <p>A: 检查 cms_language 表中该语言的 <code>status=1</code> 且 <code>deleted=0</code>。</p>
+
+    <h3>Q: 如何添加自定义语言？</h3>
+    <p>A: 在管理后台点击"添加语言"按钮，填写语言信息即可。</p>
+
+    <h3>Q: 如何实现多语言内容？</h3>
+    <p>A: 在内容表中添加 <code>language_code</code> 字段，发布内容时选择对应语言。前端根据当前语言过滤显示。</p>
+
+    <h2>📚 相关文档</h2>
+    <ul>
+        <li><a class="cell-link" href="#lang_admin">语言设置（管理端）</a></li>
+        <li><a class="cell-link" href="#api_site_language">站点语言 API</a></li>
+        <li><a class="cell-link" href="#site_language_field">站点与频道语言字段</a></li>
+    </ul>
+</article>

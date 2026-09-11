@@ -1,0 +1,184 @@
+<article class="prose-doc">
+    <h1>多语言 - 前端集成</h1>
+    <p>本文档介绍如何在 CMS 前端模板中集成多语言功能。</p>
+
+    <h2>🌐 语言切换器</h2>
+
+    <h3>基础 HTML 结构</h3>
+    <textarea id="codeBasic" code-type="html"><!-- 语言切换器 -->
+<div id="language-switcher" class="lang-switcher">
+    <!-- 动态生成 -->
+</div></textarea>
+
+    <h3>JavaScript 实现</h3>
+    <textarea id="codeJs" code-type="javascript">// 获取站点语言列表
+async function loadSiteLanguages() {
+    const response = await fetch('/api/site/language/list');
+    const result = await response.json();
+
+    if (result.code === 0) {
+        const languages = result.data;
+        const currentLang = localStorage.getItem('current_lang') || 'zh-CN';
+
+        // 渲染语言切换器
+        const switcher = document.getElementById('language-switcher');
+        switcher.innerHTML = languages.map(lang => `
+            <a href="javascript:void(0);"
+               class="lang-item ${lang.language_code === currentLang ? 'active' : ''}"
+               onclick="switchLanguage('${lang.language_code}', '${lang.name}')">
+                ${lang.icon} ${lang.name}
+            </a>
+        `).join('');
+    }
+}
+
+// 切换语言
+function switchLanguage(code, name) {
+    localStorage.setItem('current_lang', code);
+    document.cookie = `lang=${code}; path=/; max-age=31536000`;
+
+    // 刷新页面或重新加载内容
+    console.log('切换到语言:', name, code);
+    location.reload();
+}
+
+// 初始化
+document.addEventListener('DOMContentLoaded', loadSiteLanguages);</textarea>
+
+    <h3>CSS 样式</h3>
+    <textarea id="codeCss" code-type="css">.lang-switcher {
+    display: inline-flex;
+    gap: 10px;
+    padding: 10px;
+}
+
+.lang-item {
+    padding: 5px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #333;
+    transition: all 0.3s;
+}
+
+.lang-item:hover {
+    background: #f0f0f0;
+}
+
+.lang-item.active {
+    background: #1e88e5;
+    color: white;
+    font-weight: bold;
+}</textarea>
+
+    <h2>🎯 URL 参数方式</h2>
+    <p>通过 URL 参数切换语言：</p>
+    <textarea id="codeUrlParam" code-type="javascript">// 获取 URL 中的语言参数
+function getLangFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('lang') || 'zh-CN';
+}
+
+// 切换语言（URL 参数方式）
+function switchLanguageByUrl(code) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('lang', code);
+    window.location.href = url.toString();
+}</textarea>
+
+    <h2>🔄 根据语言过滤内容</h2>
+    <textarea id="codeFilterContent" code-type="javascript">// 根据当前语言获取内容
+async function fetchContentByLang(siteId, langCode) {
+    const response = await fetch(`/api/article/paginate?site_id=${siteId}&lang=${langCode}`);
+    const result = await response.json();
+    return result.code === 0 ? result.data : null;
+}
+
+// 使用示例
+const currentLang = localStorage.getItem('current_lang') || 'zh-CN';
+const articles = await fetchContentByLang(1, currentLang);
+console.log(`获取了 ${articles.length} 条 ${currentLang} 文章`);</textarea>
+
+    <h2>💾 Cookie 持久化</h2>
+    <textarea id="codeCookie" code-type="javascript">// 设置语言 Cookie
+function setLangCookie(code) {
+    document.cookie = `cms_lang=${code}; path=/; max-age=31536000`;
+}
+
+// 读取语言 Cookie
+function getLangCookie() {
+    const match = document.cookie.match(/cms_lang=([^;]+)/);
+    return match ? match[1] : 'zh-CN';
+}
+
+// 删除语言 Cookie
+function clearLangCookie() {
+    document.cookie = 'cms_lang=; path=/; max-age=0';
+}</textarea>
+
+    <h2>🎨 模板标签方式</h2>
+    <p>在 CMS 模板中直接使用语言切换：</p>
+    <textarea id="codeTemplate" code-type="html"><!-- 模板语法 -->
+{{define "language-switcher"}}
+<div class="lang-dropdown">
+    <button class="lang-btn">
+        {{.currentLang.Icon}} {{.currentLang.Name}}
+        <i class="arrow-down"></i>
+    </button>
+    <ul class="lang-menu">
+        {{range .languages}}
+        <li>
+            <a href="?lang={{.Code}}">{{.Icon}} {{.Name}}</a>
+        </li>
+        {{end}}
+    </ul>
+</div>
+{{end}}</textarea>
+
+    <h2>📱 移动端集成</h2>
+    <textarea id="codeMobile" code-type="html"><!-- 移动端下拉选择 -->
+<select id="lang-select" onchange="switchLanguage(this.value)">
+    <option value="zh-CN">🇨🇳 简体中文</option>
+    <option value="en">🇺🇸 English</option>
+    <option value="ja">🇯🇵 日本語</option>
+    <option value="ko">🇰🇷 한국어</option>
+</select>
+
+<script>
+document.getElementById('lang-select').addEventListener('change', function() {
+    switchLanguage(this.value);
+});
+</script></textarea>
+
+    <h2>🔧 服务端语言识别</h2>
+    <p>Go 后端读取语言 Cookie 或请求头：</p>
+    <textarea id="codeServerLang" code-type="go">func getLanguageCode(ctrl *BaseController) string {
+    // 优先从 URL 参数获取
+    if lang := ctrl.GetStringTrim("lang", ""); lang != "" {
+        return lang
+    }
+
+    // 从 Cookie 获取
+    if cookie, err := ctrl.Ctx.Request.Cookie("cms_lang"); err == nil {
+        return cookie.Value
+    }
+
+    // 从 Accept-Language 头获取
+    al := ctrl.Ctx.Request.Header.Get("Accept-Language")
+    if strings.Contains(al, "en") {
+        return "en"
+    }
+
+    // 默认中文
+    return "zh-CN"
+}</textarea>
+
+    <h2>📋 最佳实践</h2>
+    <ul>
+        <li>🌐 默认语言应与站点主语言一致</li>
+        <li>💾 切换语言后应保存到 Cookie 或 localStorage</li>
+        <li>🔗 URL 参数方式更利于 SEO 和分享</li>
+        <li>📱 移动端建议使用下拉选择器</li>
+        <li>🎨 语言切换器应放置在显眼位置</li>
+        <li>♻️ 切换语言后刷新页面以确保内容更新</li>
+    </ul>
+</article>
