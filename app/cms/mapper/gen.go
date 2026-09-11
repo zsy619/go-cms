@@ -8,54 +8,53 @@ import (
 	"context"
 	"database/sql"
 
-	"gorm.io/gorm"
-
 	"gorm.io/gen"
-
+	"gorm.io/gorm"
 	"gorm.io/plugin/dbresolver"
 )
 
 var (
-	Q = new(Query)
-	CmsAdCategoryRelation      *cmsAdCategoryRelation        
-	CmsAdmin                   *cmsAdmin                     
-	CmsAdminLog                *cmsAdminLog                  
-	CmsAdminNav                *cmsAdminNav                  
-	CmsAdminNotice             *cmsAdminNotice               
-	CmsAdminRole               *cmsAdminRole                 
-	CmsAdminRoleSite           *cmsAdminRoleSite             
-	CmsAdminRoleValue          *cmsAdminRoleValue            
-	CmsAds                     *cmsAds                       
-	CmsAdsCategory             *cmsAdsCategory               
-	CmsAdsCategoryRelation     *cmsAdsCategoryRelation       
-	CmsAlbum                   *cmsAlbum                     
-	CmsArticle                 *cmsArticle                   
-	CmsArticleCategory         *cmsArticleCategory           
-	CmsArticleCategoryRelation *cmsArticleCategoryRelation   
-	CmsArticleComment          *cmsArticleComment            
-	CmsArticleLabel            *cmsArticleLabel              
-	CmsArticleLabelRelation    *cmsArticleLabelRelation      
-	CmsArticleProperty         *cmsArticleProperty           
-	CmsAttach                  *cmsAttach                    
-	CmsLink                    *cmsLink                      
-	CmsLinkCategory            *cmsLinkCategory              
-	CmsLinkCategoryRelation    *cmsLinkCategoryRelation      
-	CmsSite                    *cmsSite                      
-	CmsSiteChannel             *cmsSiteChannel               
-	CmsSiteChannelAlbum        *cmsSiteChannelAlbum          
-	CmsSiteChannelField        *cmsSiteChannelField          
-	CmsSiteDomain              *cmsSiteDomain                
-	CmsTag                     *cmsTag                       
-	CmsTenant                  *cmsTenant                    
-	CmsTheme                   *cmsTheme                     
-	CmsTopic                   *cmsTopic                     
-	PlgOnlineRegister          *plgOnlineRegister            
-	WeixinAccount              *weixinAccount                
-	WeixinMenu                 *weixinMenu                   
-	WeixinMpVerify             *weixinMpVerify               
-	WeixinRequestContent       *weixinRequestContent         
-	WeixinRequestRule          *weixinRequestRule            
-	WeixinResponseContent      *weixinResponseContent        
+	Q                          = new(Query)
+	CmsAdCategoryRelation      *cmsAdCategoryRelation
+	CmsAdmin                   *cmsAdmin
+	CmsAdminLog                *cmsAdminLog
+	CmsAdminNav                *cmsAdminNav
+	CmsAdminNotice             *cmsAdminNotice
+	CmsAdminRole               *cmsAdminRole
+	CmsAdminRoleSite           *cmsAdminRoleSite
+	CmsAdminRoleValue          *cmsAdminRoleValue
+	CmsAds                     *cmsAds
+	CmsAdsCategory             *cmsAdsCategory
+	CmsAdsCategoryRelation     *cmsAdsCategoryRelation
+	CmsAlbum                   *cmsAlbum
+	CmsArticle                 *cmsArticle
+	CmsArticleCategory         *cmsArticleCategory
+	CmsArticleCategoryRelation *cmsArticleCategoryRelation
+	CmsArticleComment          *cmsArticleComment
+	CmsArticleLabel            *cmsArticleLabel
+	CmsArticleLabelRelation    *cmsArticleLabelRelation
+	CmsArticleProperty         *cmsArticleProperty
+	CmsAttach                  *cmsAttach
+
+	CmsLanguage             *cmsLanguage
+	CmsLinkCategory         *cmsLinkCategory
+	CmsLinkCategoryRelation *cmsLinkCategoryRelation
+	CmsSite                 *cmsSite
+	CmsSiteChannel          *cmsSiteChannel
+	CmsSiteChannelAlbum     *cmsSiteChannelAlbum
+	CmsSiteChannelField     *cmsSiteChannelField
+	CmsSiteDomain           *cmsSiteDomain
+	CmsTag                  *cmsTag
+	CmsTenant               *cmsTenant
+	CmsTheme                *cmsTheme
+	CmsTopic                *cmsTopic
+	PlgOnlineRegister       *plgOnlineRegister
+	WeixinAccount           *weixinAccount
+	WeixinMenu              *weixinMenu
+	WeixinMpVerify          *weixinMpVerify
+	WeixinRequestContent    *weixinRequestContent
+	WeixinRequestRule       *weixinRequestRule
+	WeixinResponseContent   *weixinResponseContent
 )
 
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
@@ -80,7 +79,8 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	CmsArticleLabelRelation = &Q.CmsArticleLabelRelation
 	CmsArticleProperty = &Q.CmsArticleProperty
 	CmsAttach = &Q.CmsAttach
-	CmsLink = &Q.CmsLink
+
+	CmsLanguage = &Q.CmsLanguage
 	CmsLinkCategory = &Q.CmsLinkCategory
 	CmsLinkCategoryRelation = &Q.CmsLinkCategoryRelation
 	CmsSite = &Q.CmsSite
@@ -103,137 +103,143 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
-		db: db,                         
-		CmsAdCategoryRelation:      newCmsAdCategoryRelation     (db, opts...),
-		CmsAdmin:                   newCmsAdmin                  (db, opts...),
-		CmsAdminLog:                newCmsAdminLog               (db, opts...),
-		CmsAdminNav:                newCmsAdminNav               (db, opts...),
-		CmsAdminNotice:             newCmsAdminNotice            (db, opts...),
-		CmsAdminRole:               newCmsAdminRole              (db, opts...),
-		CmsAdminRoleSite:           newCmsAdminRoleSite          (db, opts...),
-		CmsAdminRoleValue:          newCmsAdminRoleValue         (db, opts...),
-		CmsAds:                     newCmsAds                    (db, opts...),
-		CmsAdsCategory:             newCmsAdsCategory            (db, opts...),
-		CmsAdsCategoryRelation:     newCmsAdsCategoryRelation    (db, opts...),
-		CmsAlbum:                   newCmsAlbum                  (db, opts...),
-		CmsArticle:                 newCmsArticle                (db, opts...),
-		CmsArticleCategory:         newCmsArticleCategory        (db, opts...),
+		db:                         db,
+		CmsAdCategoryRelation:      newCmsAdCategoryRelation(db, opts...),
+		CmsAdmin:                   newCmsAdmin(db, opts...),
+		CmsAdminLog:                newCmsAdminLog(db, opts...),
+		CmsAdminNav:                newCmsAdminNav(db, opts...),
+		CmsAdminNotice:             newCmsAdminNotice(db, opts...),
+		CmsAdminRole:               newCmsAdminRole(db, opts...),
+		CmsAdminRoleSite:           newCmsAdminRoleSite(db, opts...),
+		CmsAdminRoleValue:          newCmsAdminRoleValue(db, opts...),
+		CmsAds:                     newCmsAds(db, opts...),
+		CmsAdsCategory:             newCmsAdsCategory(db, opts...),
+		CmsAdsCategoryRelation:     newCmsAdsCategoryRelation(db, opts...),
+		CmsAlbum:                   newCmsAlbum(db, opts...),
+		CmsArticle:                 newCmsArticle(db, opts...),
+		CmsArticleCategory:         newCmsArticleCategory(db, opts...),
 		CmsArticleCategoryRelation: newCmsArticleCategoryRelation(db, opts...),
-		CmsArticleComment:          newCmsArticleComment         (db, opts...),
-		CmsArticleLabel:            newCmsArticleLabel           (db, opts...),
-		CmsArticleLabelRelation:    newCmsArticleLabelRelation   (db, opts...),
-		CmsArticleProperty:         newCmsArticleProperty        (db, opts...),
-		CmsAttach:                  newCmsAttach                 (db, opts...),
-		CmsLink:                    newCmsLink                   (db, opts...),
-		CmsLinkCategory:            newCmsLinkCategory           (db, opts...),
-		CmsLinkCategoryRelation:    newCmsLinkCategoryRelation   (db, opts...),
-		CmsSite:                    newCmsSite                   (db, opts...),
-		CmsSiteChannel:             newCmsSiteChannel            (db, opts...),
-		CmsSiteChannelAlbum:        newCmsSiteChannelAlbum       (db, opts...),
-		CmsSiteChannelField:        newCmsSiteChannelField       (db, opts...),
-		CmsSiteDomain:              newCmsSiteDomain             (db, opts...),
-		CmsTag:                     newCmsTag                    (db, opts...),
-		CmsTenant:                  newCmsTenant                 (db, opts...),
-		CmsTheme:                   newCmsTheme                  (db, opts...),
-		CmsTopic:                   newCmsTopic                  (db, opts...),
-		PlgOnlineRegister:          newPlgOnlineRegister         (db, opts...),
-		WeixinAccount:              newWeixinAccount             (db, opts...),
-		WeixinMenu:                 newWeixinMenu                (db, opts...),
-		WeixinMpVerify:             newWeixinMpVerify            (db, opts...),
-		WeixinRequestContent:       newWeixinRequestContent      (db, opts...),
-		WeixinRequestRule:          newWeixinRequestRule         (db, opts...),
-		WeixinResponseContent:      newWeixinResponseContent     (db, opts...),
+		CmsArticleComment:          newCmsArticleComment(db, opts...),
+		CmsArticleLabel:            newCmsArticleLabel(db, opts...),
+		CmsArticleLabelRelation:    newCmsArticleLabelRelation(db, opts...),
+		CmsArticleProperty:         newCmsArticleProperty(db, opts...),
+		CmsAttach:                  newCmsAttach(db, opts...),
+
+		CmsLanguage:             newCmsLanguage(db, opts...),
+		CmsLinkCategory:         newCmsLinkCategory(db, opts...),
+		CmsLinkCategoryRelation: newCmsLinkCategoryRelation(db, opts...),
+		CmsSite:                 newCmsSite(db, opts...),
+		CmsSiteChannel:          newCmsSiteChannel(db, opts...),
+		CmsSiteChannelAlbum:     newCmsSiteChannelAlbum(db, opts...),
+		CmsSiteChannelField:     newCmsSiteChannelField(db, opts...),
+		CmsSiteDomain:           newCmsSiteDomain(db, opts...),
+		CmsTag:                  newCmsTag(db, opts...),
+		CmsTenant:               newCmsTenant(db, opts...),
+		CmsTheme:                newCmsTheme(db, opts...),
+		CmsTopic:                newCmsTopic(db, opts...),
+		PlgOnlineRegister:       newPlgOnlineRegister(db, opts...),
+		WeixinAccount:           newWeixinAccount(db, opts...),
+		WeixinMenu:              newWeixinMenu(db, opts...),
+		WeixinMpVerify:          newWeixinMpVerify(db, opts...),
+		WeixinRequestContent:    newWeixinRequestContent(db, opts...),
+		WeixinRequestRule:       newWeixinRequestRule(db, opts...),
+		WeixinResponseContent:   newWeixinResponseContent(db, opts...),
 	}
 }
 
 type Query struct {
 	db *gorm.DB
 
-	CmsAdCategoryRelation      cmsAdCategoryRelation      
-	CmsAdmin                   cmsAdmin                   
-	CmsAdminLog                cmsAdminLog                
-	CmsAdminNav                cmsAdminNav                
-	CmsAdminNotice             cmsAdminNotice             
-	CmsAdminRole               cmsAdminRole               
-	CmsAdminRoleSite           cmsAdminRoleSite           
-	CmsAdminRoleValue          cmsAdminRoleValue          
-	CmsAds                     cmsAds                     
-	CmsAdsCategory             cmsAdsCategory             
-	CmsAdsCategoryRelation     cmsAdsCategoryRelation     
-	CmsAlbum                   cmsAlbum                   
-	CmsArticle                 cmsArticle                 
-	CmsArticleCategory         cmsArticleCategory         
-	CmsArticleCategoryRelation cmsArticleCategoryRelation 
-	CmsArticleComment          cmsArticleComment          
-	CmsArticleLabel            cmsArticleLabel            
-	CmsArticleLabelRelation    cmsArticleLabelRelation    
-	CmsArticleProperty         cmsArticleProperty         
-	CmsAttach                  cmsAttach                  
-	CmsLink                    cmsLink                    
-	CmsLinkCategory            cmsLinkCategory            
-	CmsLinkCategoryRelation    cmsLinkCategoryRelation    
-	CmsSite                    cmsSite                    
-	CmsSiteChannel             cmsSiteChannel             
-	CmsSiteChannelAlbum        cmsSiteChannelAlbum        
-	CmsSiteChannelField        cmsSiteChannelField        
-	CmsSiteDomain              cmsSiteDomain              
-	CmsTag                     cmsTag                     
-	CmsTenant                  cmsTenant                  
-	CmsTheme                   cmsTheme                   
-	CmsTopic                   cmsTopic                   
-	PlgOnlineRegister          plgOnlineRegister          
-	WeixinAccount              weixinAccount              
-	WeixinMenu                 weixinMenu                 
-	WeixinMpVerify             weixinMpVerify             
-	WeixinRequestContent       weixinRequestContent       
-	WeixinRequestRule          weixinRequestRule          
-	WeixinResponseContent      weixinResponseContent      
+	CmsAdCategoryRelation      cmsAdCategoryRelation
+	CmsAdmin                   cmsAdmin
+	CmsAdminLog                cmsAdminLog
+	CmsAdminNav                cmsAdminNav
+	CmsAdminNotice             cmsAdminNotice
+	CmsAdminRole               cmsAdminRole
+	CmsAdminRoleSite           cmsAdminRoleSite
+	CmsAdminRoleValue          cmsAdminRoleValue
+	CmsAds                     cmsAds
+	CmsAdsCategory             cmsAdsCategory
+	CmsAdsCategoryRelation     cmsAdsCategoryRelation
+	CmsAlbum                   cmsAlbum
+	CmsArticle                 cmsArticle
+	CmsArticleCategory         cmsArticleCategory
+	CmsArticleCategoryRelation cmsArticleCategoryRelation
+	CmsArticleComment          cmsArticleComment
+	CmsArticleLabel            cmsArticleLabel
+	CmsArticleLabelRelation    cmsArticleLabelRelation
+	CmsArticleProperty         cmsArticleProperty
+	CmsAttach                  cmsAttach
+
+	CmsLanguage cmsLanguage
+
+	CmsLink                 cmsLink
+	CmsLinkCategory         cmsLinkCategory
+	CmsLinkCategoryRelation cmsLinkCategoryRelation
+	CmsSite                 cmsSite
+	CmsSiteChannel          cmsSiteChannel
+	CmsSiteChannelAlbum     cmsSiteChannelAlbum
+	CmsSiteChannelField     cmsSiteChannelField
+	CmsSiteDomain           cmsSiteDomain
+	CmsTag                  cmsTag
+	CmsTenant               cmsTenant
+	CmsTheme                cmsTheme
+	CmsTopic                cmsTopic
+	PlgOnlineRegister       plgOnlineRegister
+	WeixinAccount           weixinAccount
+	WeixinMenu              weixinMenu
+	WeixinMpVerify          weixinMpVerify
+	WeixinRequestContent    weixinRequestContent
+	WeixinRequestRule       weixinRequestRule
+	WeixinResponseContent   weixinResponseContent
 }
 
 func (q *Query) Available() bool { return q.db != nil }
 
 func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
-		db: db,                         
-		CmsAdCategoryRelation:      q.CmsAdCategoryRelation.clone(db),                              
-		CmsAdmin:                   q.CmsAdmin.clone(db),                                           
-		CmsAdminLog:                q.CmsAdminLog.clone(db),                                        
-		CmsAdminNav:                q.CmsAdminNav.clone(db),                                        
-		CmsAdminNotice:             q.CmsAdminNotice.clone(db),                                     
-		CmsAdminRole:               q.CmsAdminRole.clone(db),                                       
-		CmsAdminRoleSite:           q.CmsAdminRoleSite.clone(db),                                   
-		CmsAdminRoleValue:          q.CmsAdminRoleValue.clone(db),                                  
-		CmsAds:                     q.CmsAds.clone(db),                                             
-		CmsAdsCategory:             q.CmsAdsCategory.clone(db),                                     
-		CmsAdsCategoryRelation:     q.CmsAdsCategoryRelation.clone(db),                             
-		CmsAlbum:                   q.CmsAlbum.clone(db),                                           
-		CmsArticle:                 q.CmsArticle.clone(db),                                         
-		CmsArticleCategory:         q.CmsArticleCategory.clone(db),                                 
-		CmsArticleCategoryRelation: q.CmsArticleCategoryRelation.clone(db),                         
-		CmsArticleComment:          q.CmsArticleComment.clone(db),                                  
-		CmsArticleLabel:            q.CmsArticleLabel.clone(db),                                    
-		CmsArticleLabelRelation:    q.CmsArticleLabelRelation.clone(db),                            
-		CmsArticleProperty:         q.CmsArticleProperty.clone(db),                                 
-		CmsAttach:                  q.CmsAttach.clone(db),                                          
-		CmsLink:                    q.CmsLink.clone(db),                                            
-		CmsLinkCategory:            q.CmsLinkCategory.clone(db),                                    
-		CmsLinkCategoryRelation:    q.CmsLinkCategoryRelation.clone(db),                            
-		CmsSite:                    q.CmsSite.clone(db),                                            
-		CmsSiteChannel:             q.CmsSiteChannel.clone(db),                                     
-		CmsSiteChannelAlbum:        q.CmsSiteChannelAlbum.clone(db),                                
-		CmsSiteChannelField:        q.CmsSiteChannelField.clone(db),                                
-		CmsSiteDomain:              q.CmsSiteDomain.clone(db),                                      
-		CmsTag:                     q.CmsTag.clone(db),                                             
-		CmsTenant:                  q.CmsTenant.clone(db),                                          
-		CmsTheme:                   q.CmsTheme.clone(db),                                           
-		CmsTopic:                   q.CmsTopic.clone(db),                                           
-		PlgOnlineRegister:          q.PlgOnlineRegister.clone(db),                                  
-		WeixinAccount:              q.WeixinAccount.clone(db),                                      
-		WeixinMenu:                 q.WeixinMenu.clone(db),                                         
-		WeixinMpVerify:             q.WeixinMpVerify.clone(db),                                     
-		WeixinRequestContent:       q.WeixinRequestContent.clone(db),                               
-		WeixinRequestRule:          q.WeixinRequestRule.clone(db),                                  
-		WeixinResponseContent:      q.WeixinResponseContent.clone(db),                              
+		db:                         db,
+		CmsAdCategoryRelation:      q.CmsAdCategoryRelation.clone(db),
+		CmsAdmin:                   q.CmsAdmin.clone(db),
+		CmsAdminLog:                q.CmsAdminLog.clone(db),
+		CmsAdminNav:                q.CmsAdminNav.clone(db),
+		CmsAdminNotice:             q.CmsAdminNotice.clone(db),
+		CmsAdminRole:               q.CmsAdminRole.clone(db),
+		CmsAdminRoleSite:           q.CmsAdminRoleSite.clone(db),
+		CmsAdminRoleValue:          q.CmsAdminRoleValue.clone(db),
+		CmsAds:                     q.CmsAds.clone(db),
+		CmsAdsCategory:             q.CmsAdsCategory.clone(db),
+		CmsAdsCategoryRelation:     q.CmsAdsCategoryRelation.clone(db),
+		CmsAlbum:                   q.CmsAlbum.clone(db),
+		CmsArticle:                 q.CmsArticle.clone(db),
+		CmsArticleCategory:         q.CmsArticleCategory.clone(db),
+		CmsArticleCategoryRelation: q.CmsArticleCategoryRelation.clone(db),
+		CmsArticleComment:          q.CmsArticleComment.clone(db),
+		CmsArticleLabel:            q.CmsArticleLabel.clone(db),
+		CmsArticleLabelRelation:    q.CmsArticleLabelRelation.clone(db),
+		CmsArticleProperty:         q.CmsArticleProperty.clone(db),
+		CmsAttach:                  q.CmsAttach.clone(db),
+
+		CmsLanguage:             q.CmsLanguage.clone(db),
+		CmsLink:                 q.CmsLink.clone(db),
+		CmsLinkCategory:         q.CmsLinkCategory.clone(db),
+		CmsLinkCategoryRelation: q.CmsLinkCategoryRelation.clone(db),
+		CmsSite:                 q.CmsSite.clone(db),
+		CmsSiteChannel:          q.CmsSiteChannel.clone(db),
+		CmsSiteChannelAlbum:     q.CmsSiteChannelAlbum.clone(db),
+		CmsSiteChannelField:     q.CmsSiteChannelField.clone(db),
+		CmsSiteDomain:           q.CmsSiteDomain.clone(db),
+		CmsTag:                  q.CmsTag.clone(db),
+		CmsTenant:               q.CmsTenant.clone(db),
+		CmsTheme:                q.CmsTheme.clone(db),
+		CmsTopic:                q.CmsTopic.clone(db),
+		PlgOnlineRegister:       q.PlgOnlineRegister.clone(db),
+		WeixinAccount:           q.WeixinAccount.clone(db),
+		WeixinMenu:              q.WeixinMenu.clone(db),
+		WeixinMpVerify:          q.WeixinMpVerify.clone(db),
+		WeixinRequestContent:    q.WeixinRequestContent.clone(db),
+		WeixinRequestRule:       q.WeixinRequestRule.clone(db),
+		WeixinResponseContent:   q.WeixinResponseContent.clone(db),
 	}
 }
 
@@ -247,132 +253,135 @@ func (q *Query) WriteDB() *Query {
 
 func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 	return &Query{
-		db: db,                         
-		CmsAdCategoryRelation:      q.CmsAdCategoryRelation.replaceDB(db),                              
-		CmsAdmin:                   q.CmsAdmin.replaceDB(db),                                           
-		CmsAdminLog:                q.CmsAdminLog.replaceDB(db),                                        
-		CmsAdminNav:                q.CmsAdminNav.replaceDB(db),                                        
-		CmsAdminNotice:             q.CmsAdminNotice.replaceDB(db),                                     
-		CmsAdminRole:               q.CmsAdminRole.replaceDB(db),                                       
-		CmsAdminRoleSite:           q.CmsAdminRoleSite.replaceDB(db),                                   
-		CmsAdminRoleValue:          q.CmsAdminRoleValue.replaceDB(db),                                  
-		CmsAds:                     q.CmsAds.replaceDB(db),                                             
-		CmsAdsCategory:             q.CmsAdsCategory.replaceDB(db),                                     
-		CmsAdsCategoryRelation:     q.CmsAdsCategoryRelation.replaceDB(db),                             
-		CmsAlbum:                   q.CmsAlbum.replaceDB(db),                                           
-		CmsArticle:                 q.CmsArticle.replaceDB(db),                                         
-		CmsArticleCategory:         q.CmsArticleCategory.replaceDB(db),                                 
-		CmsArticleCategoryRelation: q.CmsArticleCategoryRelation.replaceDB(db),                         
-		CmsArticleComment:          q.CmsArticleComment.replaceDB(db),                                  
-		CmsArticleLabel:            q.CmsArticleLabel.replaceDB(db),                                    
-		CmsArticleLabelRelation:    q.CmsArticleLabelRelation.replaceDB(db),                            
-		CmsArticleProperty:         q.CmsArticleProperty.replaceDB(db),                                 
-		CmsAttach:                  q.CmsAttach.replaceDB(db),                                          
-		CmsLink:                    q.CmsLink.replaceDB(db),                                            
-		CmsLinkCategory:            q.CmsLinkCategory.replaceDB(db),                                    
-		CmsLinkCategoryRelation:    q.CmsLinkCategoryRelation.replaceDB(db),                            
-		CmsSite:                    q.CmsSite.replaceDB(db),                                            
-		CmsSiteChannel:             q.CmsSiteChannel.replaceDB(db),                                     
-		CmsSiteChannelAlbum:        q.CmsSiteChannelAlbum.replaceDB(db),                                
-		CmsSiteChannelField:        q.CmsSiteChannelField.replaceDB(db),                                
-		CmsSiteDomain:              q.CmsSiteDomain.replaceDB(db),                                      
-		CmsTag:                     q.CmsTag.replaceDB(db),                                             
-		CmsTenant:                  q.CmsTenant.replaceDB(db),                                          
-		CmsTheme:                   q.CmsTheme.replaceDB(db),                                           
-		CmsTopic:                   q.CmsTopic.replaceDB(db),                                           
-		PlgOnlineRegister:          q.PlgOnlineRegister.replaceDB(db),                                  
-		WeixinAccount:              q.WeixinAccount.replaceDB(db),                                      
-		WeixinMenu:                 q.WeixinMenu.replaceDB(db),                                         
-		WeixinMpVerify:             q.WeixinMpVerify.replaceDB(db),                                     
-		WeixinRequestContent:       q.WeixinRequestContent.replaceDB(db),                               
-		WeixinRequestRule:          q.WeixinRequestRule.replaceDB(db),                                  
-		WeixinResponseContent:      q.WeixinResponseContent.replaceDB(db),                              
+		db:                         db,
+		CmsAdCategoryRelation:      q.CmsAdCategoryRelation.replaceDB(db),
+		CmsAdmin:                   q.CmsAdmin.replaceDB(db),
+		CmsAdminLog:                q.CmsAdminLog.replaceDB(db),
+		CmsAdminNav:                q.CmsAdminNav.replaceDB(db),
+		CmsAdminNotice:             q.CmsAdminNotice.replaceDB(db),
+		CmsAdminRole:               q.CmsAdminRole.replaceDB(db),
+		CmsAdminRoleSite:           q.CmsAdminRoleSite.replaceDB(db),
+		CmsAdminRoleValue:          q.CmsAdminRoleValue.replaceDB(db),
+		CmsAds:                     q.CmsAds.replaceDB(db),
+		CmsAdsCategory:             q.CmsAdsCategory.replaceDB(db),
+		CmsAdsCategoryRelation:     q.CmsAdsCategoryRelation.replaceDB(db),
+		CmsAlbum:                   q.CmsAlbum.replaceDB(db),
+		CmsArticle:                 q.CmsArticle.replaceDB(db),
+		CmsArticleCategory:         q.CmsArticleCategory.replaceDB(db),
+		CmsArticleCategoryRelation: q.CmsArticleCategoryRelation.replaceDB(db),
+		CmsArticleComment:          q.CmsArticleComment.replaceDB(db),
+		CmsArticleLabel:            q.CmsArticleLabel.replaceDB(db),
+		CmsArticleLabelRelation:    q.CmsArticleLabelRelation.replaceDB(db),
+		CmsArticleProperty:         q.CmsArticleProperty.replaceDB(db),
+		CmsAttach:                  q.CmsAttach.replaceDB(db),
+
+		CmsLanguage:             q.CmsLanguage.replaceDB(db),
+		CmsLinkCategory:         q.CmsLinkCategory.replaceDB(db),
+		CmsLinkCategoryRelation: q.CmsLinkCategoryRelation.replaceDB(db),
+		CmsSite:                 q.CmsSite.replaceDB(db),
+		CmsSiteChannel:          q.CmsSiteChannel.replaceDB(db),
+		CmsSiteChannelAlbum:     q.CmsSiteChannelAlbum.replaceDB(db),
+		CmsSiteChannelField:     q.CmsSiteChannelField.replaceDB(db),
+		CmsSiteDomain:           q.CmsSiteDomain.replaceDB(db),
+		CmsTag:                  q.CmsTag.replaceDB(db),
+		CmsTenant:               q.CmsTenant.replaceDB(db),
+		CmsTheme:                q.CmsTheme.replaceDB(db),
+		CmsTopic:                q.CmsTopic.replaceDB(db),
+		PlgOnlineRegister:       q.PlgOnlineRegister.replaceDB(db),
+		WeixinAccount:           q.WeixinAccount.replaceDB(db),
+		WeixinMenu:              q.WeixinMenu.replaceDB(db),
+		WeixinMpVerify:          q.WeixinMpVerify.replaceDB(db),
+		WeixinRequestContent:    q.WeixinRequestContent.replaceDB(db),
+		WeixinRequestRule:       q.WeixinRequestRule.replaceDB(db),
+		WeixinResponseContent:   q.WeixinResponseContent.replaceDB(db),
 	}
 }
 
 type queryCtx struct {
-	CmsAdCategoryRelation      *cmsAdCategoryRelationDo        
-	CmsAdmin                   *cmsAdminDo                     
-	CmsAdminLog                *cmsAdminLogDo                  
-	CmsAdminNav                *cmsAdminNavDo                  
-	CmsAdminNotice             *cmsAdminNoticeDo               
-	CmsAdminRole               *cmsAdminRoleDo                 
-	CmsAdminRoleSite           *cmsAdminRoleSiteDo             
-	CmsAdminRoleValue          *cmsAdminRoleValueDo            
-	CmsAds                     *cmsAdsDo                       
-	CmsAdsCategory             *cmsAdsCategoryDo               
-	CmsAdsCategoryRelation     *cmsAdsCategoryRelationDo       
-	CmsAlbum                   *cmsAlbumDo                     
-	CmsArticle                 *cmsArticleDo                   
-	CmsArticleCategory         *cmsArticleCategoryDo           
-	CmsArticleCategoryRelation *cmsArticleCategoryRelationDo   
-	CmsArticleComment          *cmsArticleCommentDo            
-	CmsArticleLabel            *cmsArticleLabelDo              
-	CmsArticleLabelRelation    *cmsArticleLabelRelationDo      
-	CmsArticleProperty         *cmsArticlePropertyDo           
-	CmsAttach                  *cmsAttachDo                    
-	CmsLink                    *cmsLinkDo                      
-	CmsLinkCategory            *cmsLinkCategoryDo              
-	CmsLinkCategoryRelation    *cmsLinkCategoryRelationDo      
-	CmsSite                    *cmsSiteDo                      
-	CmsSiteChannel             *cmsSiteChannelDo               
-	CmsSiteChannelAlbum        *cmsSiteChannelAlbumDo          
-	CmsSiteChannelField        *cmsSiteChannelFieldDo          
-	CmsSiteDomain              *cmsSiteDomainDo                
-	CmsTag                     *cmsTagDo                       
-	CmsTenant                  *cmsTenantDo                    
-	CmsTheme                   *cmsThemeDo                     
-	CmsTopic                   *cmsTopicDo                     
-	PlgOnlineRegister          *plgOnlineRegisterDo            
-	WeixinAccount              *weixinAccountDo                
-	WeixinMenu                 *weixinMenuDo                   
-	WeixinMpVerify             *weixinMpVerifyDo               
-	WeixinRequestContent       *weixinRequestContentDo         
-	WeixinRequestRule          *weixinRequestRuleDo            
-	WeixinResponseContent      *weixinResponseContentDo        
+	CmsAdCategoryRelation      *cmsAdCategoryRelationDo
+	CmsAdmin                   *cmsAdminDo
+	CmsAdminLog                *cmsAdminLogDo
+	CmsAdminNav                *cmsAdminNavDo
+	CmsAdminNotice             *cmsAdminNoticeDo
+	CmsAdminRole               *cmsAdminRoleDo
+	CmsAdminRoleSite           *cmsAdminRoleSiteDo
+	CmsAdminRoleValue          *cmsAdminRoleValueDo
+	CmsAds                     *cmsAdsDo
+	CmsAdsCategory             *cmsAdsCategoryDo
+	CmsAdsCategoryRelation     *cmsAdsCategoryRelationDo
+	CmsAlbum                   *cmsAlbumDo
+	CmsArticle                 *cmsArticleDo
+	CmsArticleCategory         *cmsArticleCategoryDo
+	CmsArticleCategoryRelation *cmsArticleCategoryRelationDo
+	CmsArticleComment          *cmsArticleCommentDo
+	CmsArticleLabel            *cmsArticleLabelDo
+	CmsArticleLabelRelation    *cmsArticleLabelRelationDo
+	CmsArticleProperty         *cmsArticlePropertyDo
+	CmsAttach                  *cmsAttachDo
+
+	CmsLanguage             *cmsLanguageDo
+	CmsLinkCategory         *cmsLinkCategoryDo
+	CmsLinkCategoryRelation *cmsLinkCategoryRelationDo
+	CmsSite                 *cmsSiteDo
+	CmsSiteChannel          *cmsSiteChannelDo
+	CmsSiteChannelAlbum     *cmsSiteChannelAlbumDo
+	CmsSiteChannelField     *cmsSiteChannelFieldDo
+	CmsSiteDomain           *cmsSiteDomainDo
+	CmsTag                  *cmsTagDo
+	CmsTenant               *cmsTenantDo
+	CmsTheme                *cmsThemeDo
+	CmsTopic                *cmsTopicDo
+	PlgOnlineRegister       *plgOnlineRegisterDo
+	WeixinAccount           *weixinAccountDo
+	WeixinMenu              *weixinMenuDo
+	WeixinMpVerify          *weixinMpVerifyDo
+	WeixinRequestContent    *weixinRequestContentDo
+	WeixinRequestRule       *weixinRequestRuleDo
+	WeixinResponseContent   *weixinResponseContentDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
-		CmsAdCategoryRelation:      q.CmsAdCategoryRelation.WithContext(ctx),                              
-		CmsAdmin:                   q.CmsAdmin.WithContext(ctx),                                           
-		CmsAdminLog:                q.CmsAdminLog.WithContext(ctx),                                        
-		CmsAdminNav:                q.CmsAdminNav.WithContext(ctx),                                        
-		CmsAdminNotice:             q.CmsAdminNotice.WithContext(ctx),                                     
-		CmsAdminRole:               q.CmsAdminRole.WithContext(ctx),                                       
-		CmsAdminRoleSite:           q.CmsAdminRoleSite.WithContext(ctx),                                   
-		CmsAdminRoleValue:          q.CmsAdminRoleValue.WithContext(ctx),                                  
-		CmsAds:                     q.CmsAds.WithContext(ctx),                                             
-		CmsAdsCategory:             q.CmsAdsCategory.WithContext(ctx),                                     
-		CmsAdsCategoryRelation:     q.CmsAdsCategoryRelation.WithContext(ctx),                             
-		CmsAlbum:                   q.CmsAlbum.WithContext(ctx),                                           
-		CmsArticle:                 q.CmsArticle.WithContext(ctx),                                         
-		CmsArticleCategory:         q.CmsArticleCategory.WithContext(ctx),                                 
-		CmsArticleCategoryRelation: q.CmsArticleCategoryRelation.WithContext(ctx),                         
-		CmsArticleComment:          q.CmsArticleComment.WithContext(ctx),                                  
-		CmsArticleLabel:            q.CmsArticleLabel.WithContext(ctx),                                    
-		CmsArticleLabelRelation:    q.CmsArticleLabelRelation.WithContext(ctx),                            
-		CmsArticleProperty:         q.CmsArticleProperty.WithContext(ctx),                                 
-		CmsAttach:                  q.CmsAttach.WithContext(ctx),                                          
-		CmsLink:                    q.CmsLink.WithContext(ctx),                                            
-		CmsLinkCategory:            q.CmsLinkCategory.WithContext(ctx),                                    
-		CmsLinkCategoryRelation:    q.CmsLinkCategoryRelation.WithContext(ctx),                            
-		CmsSite:                    q.CmsSite.WithContext(ctx),                                            
-		CmsSiteChannel:             q.CmsSiteChannel.WithContext(ctx),                                     
-		CmsSiteChannelAlbum:        q.CmsSiteChannelAlbum.WithContext(ctx),                                
-		CmsSiteChannelField:        q.CmsSiteChannelField.WithContext(ctx),                                
-		CmsSiteDomain:              q.CmsSiteDomain.WithContext(ctx),                                      
-		CmsTag:                     q.CmsTag.WithContext(ctx),                                             
-		CmsTenant:                  q.CmsTenant.WithContext(ctx),                                          
-		CmsTheme:                   q.CmsTheme.WithContext(ctx),                                           
-		CmsTopic:                   q.CmsTopic.WithContext(ctx),                                           
-		PlgOnlineRegister:          q.PlgOnlineRegister.WithContext(ctx),                                  
-		WeixinAccount:              q.WeixinAccount.WithContext(ctx),                                      
-		WeixinMenu:                 q.WeixinMenu.WithContext(ctx),                                         
-		WeixinMpVerify:             q.WeixinMpVerify.WithContext(ctx),                                     
-		WeixinRequestContent:       q.WeixinRequestContent.WithContext(ctx),                               
-		WeixinRequestRule:          q.WeixinRequestRule.WithContext(ctx),                                  
-		WeixinResponseContent:      q.WeixinResponseContent.WithContext(ctx),                              
+		CmsAdCategoryRelation:      q.CmsAdCategoryRelation.WithContext(ctx),
+		CmsAdmin:                   q.CmsAdmin.WithContext(ctx),
+		CmsAdminLog:                q.CmsAdminLog.WithContext(ctx),
+		CmsAdminNav:                q.CmsAdminNav.WithContext(ctx),
+		CmsAdminNotice:             q.CmsAdminNotice.WithContext(ctx),
+		CmsAdminRole:               q.CmsAdminRole.WithContext(ctx),
+		CmsAdminRoleSite:           q.CmsAdminRoleSite.WithContext(ctx),
+		CmsAdminRoleValue:          q.CmsAdminRoleValue.WithContext(ctx),
+		CmsAds:                     q.CmsAds.WithContext(ctx),
+		CmsAdsCategory:             q.CmsAdsCategory.WithContext(ctx),
+		CmsAdsCategoryRelation:     q.CmsAdsCategoryRelation.WithContext(ctx),
+		CmsAlbum:                   q.CmsAlbum.WithContext(ctx),
+		CmsArticle:                 q.CmsArticle.WithContext(ctx),
+		CmsArticleCategory:         q.CmsArticleCategory.WithContext(ctx),
+		CmsArticleCategoryRelation: q.CmsArticleCategoryRelation.WithContext(ctx),
+		CmsArticleComment:          q.CmsArticleComment.WithContext(ctx),
+		CmsArticleLabel:            q.CmsArticleLabel.WithContext(ctx),
+		CmsArticleLabelRelation:    q.CmsArticleLabelRelation.WithContext(ctx),
+		CmsArticleProperty:         q.CmsArticleProperty.WithContext(ctx),
+		CmsAttach:                  q.CmsAttach.WithContext(ctx),
+
+		CmsLanguage:             q.CmsLanguage.WithContext(ctx),
+		CmsLinkCategory:         q.CmsLinkCategory.WithContext(ctx),
+		CmsLinkCategoryRelation: q.CmsLinkCategoryRelation.WithContext(ctx),
+		CmsSite:                 q.CmsSite.WithContext(ctx),
+		CmsSiteChannel:          q.CmsSiteChannel.WithContext(ctx),
+		CmsSiteChannelAlbum:     q.CmsSiteChannelAlbum.WithContext(ctx),
+		CmsSiteChannelField:     q.CmsSiteChannelField.WithContext(ctx),
+		CmsSiteDomain:           q.CmsSiteDomain.WithContext(ctx),
+		CmsTag:                  q.CmsTag.WithContext(ctx),
+		CmsTenant:               q.CmsTenant.WithContext(ctx),
+		CmsTheme:                q.CmsTheme.WithContext(ctx),
+		CmsTopic:                q.CmsTopic.WithContext(ctx),
+		PlgOnlineRegister:       q.PlgOnlineRegister.WithContext(ctx),
+		WeixinAccount:           q.WeixinAccount.WithContext(ctx),
+		WeixinMenu:              q.WeixinMenu.WithContext(ctx),
+		WeixinMpVerify:          q.WeixinMpVerify.WithContext(ctx),
+		WeixinRequestContent:    q.WeixinRequestContent.WithContext(ctx),
+		WeixinRequestRule:       q.WeixinRequestRule.WithContext(ctx),
+		WeixinResponseContent:   q.WeixinResponseContent.WithContext(ctx),
 	}
 }
 

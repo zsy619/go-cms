@@ -129,6 +129,12 @@ func CmsAttachDo() (cmsAttach, *cmsAttachDo) {
 	return u, u.WithContext(defaultContext).Debug()
 }
 
+// CmsLanguageDo returns the entity model and its Data Object query builder
+func CmsLanguageDo() (cmsLanguage, *cmsLanguageDo) {
+	u := Use(db.CmsDatabase.DB).CmsLanguage
+	return u, u.WithContext(defaultContext).Debug()
+}
+
 // CmsLinkDo returns the entity model and its Data Object query builder
 func CmsLinkDo() (cmsLink, *cmsLinkDo) {
 	u := Use(db.CmsDatabase.DB).CmsLink

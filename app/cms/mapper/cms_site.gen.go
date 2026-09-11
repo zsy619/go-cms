@@ -7,11 +7,11 @@ package mapper
 import (
 	"context"
 
+	"gorm.io/gen"
+	"gorm.io/gen/field"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"gorm.io/gorm/schema"
-	"gorm.io/gen"
-	"gorm.io/gen/field"
 	"gorm.io/plugin/dbresolver"
 
 	"haedu.gov.cn/cms/app/cms/domain"
@@ -53,6 +53,11 @@ func newCmsSite(db *gorm.DB, opts ...gen.DOOption) cmsSite {
 	_cmsSite.MetaKeyword = field.NewString(tableName, "meta_keyword")
 	_cmsSite.MetaDescription = field.NewString(tableName, "meta_description")
 	_cmsSite.SortID = field.NewInt32(tableName, "sort_id")
+	_cmsSite.LanguageCode = field.NewString(tableName, "language_code")
+	_cmsSite.DefaultLanguage = field.NewString(tableName, "default_language")
+	_cmsSite.AvailableLanguages = field.NewString(tableName, "available_languages")
+	_cmsSite.Timezone = field.NewString(tableName, "timezone")
+	_cmsSite.FallbackLanguage = field.NewString(tableName, "fallback_language")
 	_cmsSite.Status = field.NewInt32(tableName, "status")
 	_cmsSite.CreateID = field.NewInt32(tableName, "create_id")
 	_cmsSite.CreateName = field.NewString(tableName, "create_name")
@@ -100,6 +105,11 @@ type cmsSite struct {
 	MetaKeyword field.String // META关键词
 	MetaDescription field.String // META描述
 	SortID field.Int32 // 排序
+	LanguageCode field.String // 主语言代码 (ISO 639-1, 如 zh-CN/en/ja 等)
+	DefaultLanguage field.String // 默认语言 (与 IsDefault 不同: 此字段指语言, IsDefault 指站点)
+	AvailableLanguages field.String // 可选语言列表 (逗号分隔的多语言代码)
+	Timezone field.String // 站点时区 (IANA 时区标识)
+	FallbackLanguage field.String // 回退语言 (主语言无对应资源时使用)
 	Status field.Int32 // 状态0草稿1提交2审核通过3审核未通过4驳回
 	CreateID field.Int32 // 创建人ID
 	CreateName field.String // 创建人姓名
@@ -153,6 +163,11 @@ func (c *cmsSite) updateTableName(table string) *cmsSite {
 	c.MetaKeyword = field.NewString(table, "meta_keyword")
 	c.MetaDescription = field.NewString(table, "meta_description")
 	c.SortID = field.NewInt32(table, "sort_id")
+	c.LanguageCode = field.NewString(table, "language_code")
+	c.DefaultLanguage = field.NewString(table, "default_language")
+	c.AvailableLanguages = field.NewString(table, "available_languages")
+	c.Timezone = field.NewString(table, "timezone")
+	c.FallbackLanguage = field.NewString(table, "fallback_language")
 	c.Status = field.NewInt32(table, "status")
 	c.CreateID = field.NewInt32(table, "create_id")
 	c.CreateName = field.NewString(table, "create_name")
@@ -188,7 +203,7 @@ func (c *cmsSite) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *cmsSite) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 37)
+	c.fieldMap = make(map[string]field.Expr, 42)
 	c.fieldMap["site_id"] = c.SiteID
 	c.fieldMap["parent_id"] = c.ParentID
 	c.fieldMap["name"] = c.Name
@@ -217,6 +232,11 @@ func (c *cmsSite) fillFieldMap() {
 	c.fieldMap["meta_keyword"] = c.MetaKeyword
 	c.fieldMap["meta_description"] = c.MetaDescription
 	c.fieldMap["sort_id"] = c.SortID
+	c.fieldMap["language_code"] = c.LanguageCode
+	c.fieldMap["default_language"] = c.DefaultLanguage
+	c.fieldMap["available_languages"] = c.AvailableLanguages
+	c.fieldMap["timezone"] = c.Timezone
+	c.fieldMap["fallback_language"] = c.FallbackLanguage
 	c.fieldMap["status"] = c.Status
 	c.fieldMap["create_id"] = c.CreateID
 	c.fieldMap["create_name"] = c.CreateName
