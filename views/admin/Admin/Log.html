@@ -44,7 +44,7 @@
 
 <script src="/static/admin/lib/layui-v2.9.21/layui.js"></script>
 <script>
-// 使用 String.fromCharCode 构造 {{ }} 字符串，避免被 Go template 解析
+// 使用 String.fromCharCode 构造大括号字符串，避免被 Go template 解析
 var OPEN = String.fromCharCode(123, 123);
 var CLOSE = String.fromCharCode(125, 125);
 var HASH = '#';
