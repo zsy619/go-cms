@@ -56,15 +56,15 @@ type dsnOptions struct {
 // dbDialectConfig 每种数据库方言的配置信息
 // 通过 RegisterDialect 函数注册,支持运行时扩展
 type dbDialectConfig struct {
-	opener          func(string) gorm.Dialector                    // GORM驱动开启器(dsn→Dialector)
-	buildDSN        func(dsnOptions) string                        // DSN构建函数
-	tableComment    func(table, comment string) string             // 表注释SQL语句生成函数
-	columnComment   func(table, column, ctype, comment string) string // 列注释SQL语句生成函数
-	addIndex        func(table, name string, cols []string, unique bool) string // 建索引SQL
-	addColumn       func(table, column, ctype string, notNull bool, def string) string // 加列SQL
-	modifyColumn    func(table, column, newType string) string    // 改列类型SQL
-	checkColumn     func(table, column string) string             // 检查列是否存在SQL (返回 EXISTS/SELECT)
-	defaultPort     string                                        // 默认端口
+	opener        func(string) gorm.Dialector                                        // GORM驱动开启器(dsn→Dialector)
+	buildDSN      func(dsnOptions) string                                            // DSN构建函数
+	tableComment  func(table, comment string) string                                 // 表注释SQL语句生成函数
+	columnComment func(table, column, ctype, comment string) string                  // 列注释SQL语句生成函数
+	addIndex      func(table, name string, cols []string, unique bool) string        // 建索引SQL
+	addColumn     func(table, column, ctype string, notNull bool, def string) string // 加列SQL
+	modifyColumn  func(table, column, newType string) string                         // 改列类型SQL
+	checkColumn   func(table, column string) string                                  // 检查列是否存在SQL (返回 EXISTS/SELECT)
+	defaultPort   string                                                             // 默认端口
 }
 
 // dialectRegistry 全局方言注册表
@@ -80,147 +80,147 @@ func RegisterDialect(name string, cfg dbDialectConfig) {
 func init() {
 	// 注册 MySQL 驱动
 	RegisterDialect(DialectMySQL, dbDialectConfig{
-	opener: mysql.Open,
-	buildDSN: func(o dsnOptions) string {
-		dsn := o.user + ":" + o.password + "@tcp(" + o.host + ":" + o.port + ")/" + o.dbname + "?charset=utf8&parseTime=true"
-		if o.timezone != "" {
-			dsn = dsn + "&loc=" + url.QueryEscape(o.timezone)
-		}
-		return dsn
-	},
-	tableComment: func(table, comment string) string {
-		return fmt.Sprintf("ALTER TABLE `%s` COMMENT = '%s'", table, comment)
-	},
-	columnComment: func(table, column, ctype, comment string) string {
-		return fmt.Sprintf("ALTER TABLE `%s` MODIFY COLUMN `%s` %s COMMENT '%s'", table, column, ctype, comment)
-	},
-	addIndex: func(table, name string, cols []string, unique bool) string {
-		quoted := make([]string, len(cols))
-		for i, c := range cols {
-			quoted[i] = "`" + c + "`"
-		}
-		kw := "INDEX"
-		if unique {
-			kw = "UNIQUE INDEX"
-		}
-		return fmt.Sprintf("ALTER TABLE `%s` ADD %s `%s` (%s)", table, kw, name, strings.Join(quoted, ","))
-	},
-	addColumn: func(table, column, ctype string, notNull bool, def string) string {
-		parts := []string{"ALTER TABLE `" + table + "` ADD COLUMN `" + column + "`", ctype}
-		if notNull {
-			parts = append(parts, "NOT NULL")
-		}
-		if def != "" {
-			parts = append(parts, "DEFAULT "+def)
-		}
-		return strings.Join(parts, " ")
-	},
-	modifyColumn: func(table, column, newType string) string {
-		return fmt.Sprintf("ALTER TABLE `%s` MODIFY COLUMN `%s` %s", table, column, newType)
-	},
-	checkColumn: func(table, column string) string {
-		return fmt.Sprintf("SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = '%s' AND COLUMN_NAME = '%s'", table, column)
-	},
-	defaultPort: "3306",
-})
+		opener: mysql.Open,
+		buildDSN: func(o dsnOptions) string {
+			dsn := o.user + ":" + o.password + "@tcp(" + o.host + ":" + o.port + ")/" + o.dbname + "?charset=utf8mb4&parseTime=true"
+			if o.timezone != "" {
+				dsn = dsn + "&loc=" + url.QueryEscape(o.timezone)
+			}
+			return dsn
+		},
+		tableComment: func(table, comment string) string {
+			return fmt.Sprintf("ALTER TABLE `%s` COMMENT = '%s'", table, comment)
+		},
+		columnComment: func(table, column, ctype, comment string) string {
+			return fmt.Sprintf("ALTER TABLE `%s` MODIFY COLUMN `%s` %s COMMENT '%s'", table, column, ctype, comment)
+		},
+		addIndex: func(table, name string, cols []string, unique bool) string {
+			quoted := make([]string, len(cols))
+			for i, c := range cols {
+				quoted[i] = "`" + c + "`"
+			}
+			kw := "INDEX"
+			if unique {
+				kw = "UNIQUE INDEX"
+			}
+			return fmt.Sprintf("ALTER TABLE `%s` ADD %s `%s` (%s)", table, kw, name, strings.Join(quoted, ","))
+		},
+		addColumn: func(table, column, ctype string, notNull bool, def string) string {
+			parts := []string{"ALTER TABLE `" + table + "` ADD COLUMN `" + column + "`", ctype}
+			if notNull {
+				parts = append(parts, "NOT NULL")
+			}
+			if def != "" {
+				parts = append(parts, "DEFAULT "+def)
+			}
+			return strings.Join(parts, " ")
+		},
+		modifyColumn: func(table, column, newType string) string {
+			return fmt.Sprintf("ALTER TABLE `%s` MODIFY COLUMN `%s` %s", table, column, newType)
+		},
+		checkColumn: func(table, column string) string {
+			return fmt.Sprintf("SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = '%s' AND COLUMN_NAME = '%s'", table, column)
+		},
+		defaultPort: "3306",
+	})
 
 	// 注册 PostgreSQL 驱动
 	RegisterDialect(DialectPostgres, dbDialectConfig{
-	opener: postgres.Open,
-	buildDSN: func(o dsnOptions) string {
-		if o.sslmode == "" {
-			o.sslmode = "disable"
-		}
-		return fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=%s",
-			o.host, o.user, o.password, o.dbname, o.port, o.sslmode, o.timezone)
-	},
-	tableComment: func(table, comment string) string {
-		return fmt.Sprintf("COMMENT ON TABLE %s IS '%s'", table, comment)
-	},
-	columnComment: func(table, column, ctype, comment string) string {
-		return fmt.Sprintf("COMMENT ON COLUMN %s.%s IS '%s'", table, column, comment)
-	},
-	addIndex: func(table, name string, cols []string, unique bool) string {
-		quoted := make([]string, len(cols))
-		for i, c := range cols {
-			quoted[i] = `"` + c + `"`
-		}
-		kw := "INDEX"
-		if unique {
-			kw = "UNIQUE INDEX"
-		}
-		return fmt.Sprintf("CREATE %s IF NOT EXISTS %s ON %s (%s)", kw, name, table, strings.Join(quoted, ","))
-	},
-	addColumn: func(table, column, ctype string, notNull bool, def string) string {
-		parts := []string{"ALTER TABLE", table, "ADD COLUMN", column, ctype}
-		if notNull {
-			parts = append(parts, "NOT NULL")
-		}
-		if def != "" {
-			parts = append(parts, "DEFAULT "+def)
-		}
-		return strings.Join(parts, " ")
-	},
-	modifyColumn: func(table, column, newType string) string {
-		return fmt.Sprintf("ALTER TABLE %s ALTER COLUMN %s TYPE %s", table, column, newType)
-	},
-	checkColumn: func(table, column string) string {
-		return fmt.Sprintf("SELECT COUNT(*) FROM information_schema.columns WHERE table_name = '%s' AND column_name = '%s'", table, column)
-	},
-	defaultPort: "5432",
-})
+		opener: postgres.Open,
+		buildDSN: func(o dsnOptions) string {
+			if o.sslmode == "" {
+				o.sslmode = "disable"
+			}
+			return fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=%s",
+				o.host, o.user, o.password, o.dbname, o.port, o.sslmode, o.timezone)
+		},
+		tableComment: func(table, comment string) string {
+			return fmt.Sprintf("COMMENT ON TABLE %s IS '%s'", table, comment)
+		},
+		columnComment: func(table, column, ctype, comment string) string {
+			return fmt.Sprintf("COMMENT ON COLUMN %s.%s IS '%s'", table, column, comment)
+		},
+		addIndex: func(table, name string, cols []string, unique bool) string {
+			quoted := make([]string, len(cols))
+			for i, c := range cols {
+				quoted[i] = `"` + c + `"`
+			}
+			kw := "INDEX"
+			if unique {
+				kw = "UNIQUE INDEX"
+			}
+			return fmt.Sprintf("CREATE %s IF NOT EXISTS %s ON %s (%s)", kw, name, table, strings.Join(quoted, ","))
+		},
+		addColumn: func(table, column, ctype string, notNull bool, def string) string {
+			parts := []string{"ALTER TABLE", table, "ADD COLUMN", column, ctype}
+			if notNull {
+				parts = append(parts, "NOT NULL")
+			}
+			if def != "" {
+				parts = append(parts, "DEFAULT "+def)
+			}
+			return strings.Join(parts, " ")
+		},
+		modifyColumn: func(table, column, newType string) string {
+			return fmt.Sprintf("ALTER TABLE %s ALTER COLUMN %s TYPE %s", table, column, newType)
+		},
+		checkColumn: func(table, column string) string {
+			return fmt.Sprintf("SELECT COUNT(*) FROM information_schema.columns WHERE table_name = '%s' AND column_name = '%s'", table, column)
+		},
+		defaultPort: "5432",
+	})
 
 	// 注册 SQL Server 驱动
 	RegisterDialect(DialectSQLServer, dbDialectConfig{
-	opener: sqlserver.Open,
-	buildDSN: func(o dsnOptions) string {
-		dsn := fmt.Sprintf("sqlserver://%s:%s@%s:%s?database=%s",
-			url.QueryEscape(o.user), url.QueryEscape(o.password),
-			o.host, o.port, o.dbname)
-		encrypt, _ := web.AppConfig.String(o.prefix + ".encrypt")
-		if encrypt == "" {
-			encrypt = "disable"
-		}
-		dsn = dsn + "&encrypt=" + encrypt
-		return dsn
-	},
-	tableComment: func(table, comment string) string {
-		return fmt.Sprintf("EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'%s', @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'%s'",
-			comment, table)
-	},
-	columnComment: func(table, column, ctype, comment string) string {
-		return fmt.Sprintf("EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'%s', @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'%s', @level2type=N'COLUMN', @level2name=N'%s'",
-			comment, table, column)
-	},
-	addIndex: func(table, name string, cols []string, unique bool) string {
-		quoted := make([]string, len(cols))
-		for i, c := range cols {
-			quoted[i] = "[" + c + "]"
-		}
-		kw := "INDEX"
-		if unique {
-			kw = "UNIQUE INDEX"
-		}
-		return fmt.Sprintf("CREATE %s [%s] ON [dbo].[%s] (%s)", kw, name, table, strings.Join(quoted, ","))
-	},
-	addColumn: func(table, column, ctype string, notNull bool, def string) string {
-		parts := []string{"ALTER TABLE [dbo].[" + table + "] ADD [" + column + "]", ctype}
-		if notNull {
-			parts = append(parts, "NOT NULL")
-		}
-		if def != "" {
-			parts = append(parts, "DEFAULT "+def)
-		}
-		return strings.Join(parts, " ")
-	},
-	modifyColumn: func(table, column, newType string) string {
-		return fmt.Sprintf("ALTER TABLE [dbo].[%s] ALTER COLUMN [%s] %s", table, column, newType)
-	},
-	checkColumn: func(table, column string) string {
-		return fmt.Sprintf("SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '%s' AND COLUMN_NAME = '%s'", table, column)
-	},
-	defaultPort: "1433",
-})
+		opener: sqlserver.Open,
+		buildDSN: func(o dsnOptions) string {
+			dsn := fmt.Sprintf("sqlserver://%s:%s@%s:%s?database=%s",
+				url.QueryEscape(o.user), url.QueryEscape(o.password),
+				o.host, o.port, o.dbname)
+			encrypt, _ := web.AppConfig.String(o.prefix + ".encrypt")
+			if encrypt == "" {
+				encrypt = "disable"
+			}
+			dsn = dsn + "&encrypt=" + encrypt
+			return dsn
+		},
+		tableComment: func(table, comment string) string {
+			return fmt.Sprintf("EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'%s', @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'%s'",
+				comment, table)
+		},
+		columnComment: func(table, column, ctype, comment string) string {
+			return fmt.Sprintf("EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'%s', @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'%s', @level2type=N'COLUMN', @level2name=N'%s'",
+				comment, table, column)
+		},
+		addIndex: func(table, name string, cols []string, unique bool) string {
+			quoted := make([]string, len(cols))
+			for i, c := range cols {
+				quoted[i] = "[" + c + "]"
+			}
+			kw := "INDEX"
+			if unique {
+				kw = "UNIQUE INDEX"
+			}
+			return fmt.Sprintf("CREATE %s [%s] ON [dbo].[%s] (%s)", kw, name, table, strings.Join(quoted, ","))
+		},
+		addColumn: func(table, column, ctype string, notNull bool, def string) string {
+			parts := []string{"ALTER TABLE [dbo].[" + table + "] ADD [" + column + "]", ctype}
+			if notNull {
+				parts = append(parts, "NOT NULL")
+			}
+			if def != "" {
+				parts = append(parts, "DEFAULT "+def)
+			}
+			return strings.Join(parts, " ")
+		},
+		modifyColumn: func(table, column, newType string) string {
+			return fmt.Sprintf("ALTER TABLE [dbo].[%s] ALTER COLUMN [%s] %s", table, column, newType)
+		},
+		checkColumn: func(table, column string) string {
+			return fmt.Sprintf("SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '%s' AND COLUMN_NAME = '%s'", table, column)
+		},
+		defaultPort: "1433",
+	})
 
 	// 注册 人大金仓 — PG兼容,复用PostgreSQL驱动
 	RegisterDialect(DialectKingbase, dbDialectConfig{
@@ -240,49 +240,49 @@ func init() {
 
 	// 注册 高斯数据库 — PG兼容,复用PostgreSQL驱动
 	RegisterDialect(DialectGaussDB, dbDialectConfig{
-	opener: postgres.Open,
-	buildDSN: func(o dsnOptions) string {
-		if o.sslmode == "" {
-			o.sslmode = "disable"
-		}
-		return fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=%s",
-			o.host, o.user, o.password, o.dbname, o.port, o.sslmode, o.timezone)
-	},
-	tableComment: func(table, comment string) string {
-		return fmt.Sprintf("COMMENT ON TABLE %s IS '%s'", table, comment)
-	},
-	columnComment: func(table, column, ctype, comment string) string {
-		return fmt.Sprintf("COMMENT ON COLUMN %s.%s IS '%s'", table, column, comment)
-	},
-	addIndex: func(table, name string, cols []string, unique bool) string {
-		quoted := make([]string, len(cols))
-		for i, c := range cols {
-			quoted[i] = `"` + c + `"`
-		}
-		kw := "INDEX"
-		if unique {
-			kw = "UNIQUE INDEX"
-		}
-		return fmt.Sprintf("CREATE %s IF NOT EXISTS %s ON %s (%s)", kw, name, table, strings.Join(quoted, ","))
-	},
-	addColumn: func(table, column, ctype string, notNull bool, def string) string {
-		parts := []string{"ALTER TABLE", table, "ADD COLUMN", column, ctype}
-		if notNull {
-			parts = append(parts, "NOT NULL")
-		}
-		if def != "" {
-			parts = append(parts, "DEFAULT "+def)
-		}
-		return strings.Join(parts, " ")
-	},
-	modifyColumn: func(table, column, newType string) string {
-		return fmt.Sprintf("ALTER TABLE %s ALTER COLUMN %s TYPE %s", table, column, newType)
-	},
-	checkColumn: func(table, column string) string {
-		return fmt.Sprintf("SELECT COUNT(*) FROM information_schema.columns WHERE table_name = '%s' AND column_name = '%s'", table, column)
-	},
-	defaultPort: "5432",
-})
+		opener: postgres.Open,
+		buildDSN: func(o dsnOptions) string {
+			if o.sslmode == "" {
+				o.sslmode = "disable"
+			}
+			return fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=%s",
+				o.host, o.user, o.password, o.dbname, o.port, o.sslmode, o.timezone)
+		},
+		tableComment: func(table, comment string) string {
+			return fmt.Sprintf("COMMENT ON TABLE %s IS '%s'", table, comment)
+		},
+		columnComment: func(table, column, ctype, comment string) string {
+			return fmt.Sprintf("COMMENT ON COLUMN %s.%s IS '%s'", table, column, comment)
+		},
+		addIndex: func(table, name string, cols []string, unique bool) string {
+			quoted := make([]string, len(cols))
+			for i, c := range cols {
+				quoted[i] = `"` + c + `"`
+			}
+			kw := "INDEX"
+			if unique {
+				kw = "UNIQUE INDEX"
+			}
+			return fmt.Sprintf("CREATE %s IF NOT EXISTS %s ON %s (%s)", kw, name, table, strings.Join(quoted, ","))
+		},
+		addColumn: func(table, column, ctype string, notNull bool, def string) string {
+			parts := []string{"ALTER TABLE", table, "ADD COLUMN", column, ctype}
+			if notNull {
+				parts = append(parts, "NOT NULL")
+			}
+			if def != "" {
+				parts = append(parts, "DEFAULT "+def)
+			}
+			return strings.Join(parts, " ")
+		},
+		modifyColumn: func(table, column, newType string) string {
+			return fmt.Sprintf("ALTER TABLE %s ALTER COLUMN %s TYPE %s", table, column, newType)
+		},
+		checkColumn: func(table, column string) string {
+			return fmt.Sprintf("SELECT COUNT(*) FROM information_schema.columns WHERE table_name = '%s' AND column_name = '%s'", table, column)
+		},
+		defaultPort: "5432",
+	})
 
 	// CMS数据库初始化
 	{
@@ -459,7 +459,7 @@ func configureConnectionPool(db *gorm.DB, dbName string) {
 
 // GetDbConn 构建数据库连接字符串(DSN)
 // 根据数据库中言自动生成对应格式的连接串:
-//   - MySQL:       user:password@tcp(host:port)/dbname?charset=utf8&parseTime=true&loc=...
+//   - MySQL:       user:password@tcp(host:port)/dbname?charset=utf8mb4&parseTime=true&loc=...
 //   - PostgreSQL:  host=host user=user password=pwd dbname=db port=port sslmode=disable
 //   - SQL Server:  sqlserver://user:password@host:port?database=db
 //   - Kingbase:    host=host user=user ... (与PostgreSQL相同)
