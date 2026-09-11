@@ -26,7 +26,7 @@ func (svc *SiteLanguageService) SiteLanguageList() ([]*domain.SiteLanguage, int6
 	err := db.CmsDatabase.Table("cms_site a").
 		Select("a.site_id, b.language_id, a.language_code, b.name, b.description, b.icon").
 		Joins("LEFT JOIN cms_language b ON a.language_code = b.code").
-		Where("b.language_id IS NOT NULL").
+		Where("b.language_id IS NOT NULL AND b.`status` = 1").
 		Where("a.deleted = ?", false).
 		Where("b.deleted = ?", false).
 		Order("b.is_default DESC, a.site_id ASC").
@@ -42,7 +42,7 @@ func (svc *SiteLanguageService) SiteLanguageListBySiteID(siteID int64) ([]*domai
 	err := db.CmsDatabase.Table("cms_site a").
 		Select("a.site_id, b.language_id, a.language_code, b.name, b.description, b.icon").
 		Joins("LEFT JOIN cms_language b ON a.language_code = b.code").
-		Where("b.language_id IS NOT NULL").
+		Where("b.language_id IS NOT NULL AND b.`status` = 1").
 		Where("a.deleted = ?", false).
 		Where("b.deleted = ?", false).
 		Where("a.site_id = ?", siteID).
@@ -59,7 +59,7 @@ func (svc *SiteLanguageService) SiteLanguageListByCode(code string) ([]*domain.S
 	err := db.CmsDatabase.Table("cms_site a").
 		Select("a.site_id, b.language_id, a.language_code, b.name, b.description, b.icon").
 		Joins("LEFT JOIN cms_language b ON a.language_code = b.code").
-		Where("b.language_id IS NOT NULL").
+		Where("b.language_id IS NOT NULL AND b.`status` = 1").
 		Where("a.deleted = ?", false).
 		Where("b.deleted = ?", false).
 		Where("a.language_code = ?", code).
