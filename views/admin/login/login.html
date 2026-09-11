@@ -507,7 +507,61 @@
 				width: 360px !important;
 			}
 		}
-	</style>
+	
+
+		/* Google 登录按钮 */
+		.google-login-separator {
+			text-align: center;
+			margin: 12px auto;
+			position: relative;
+			width: 288px;
+		}
+		.google-login-separator::before,
+		.google-login-separator::after {
+			content: '';
+			position: absolute;
+			top: 50%;
+			width: 110px;
+			height: 1px;
+			background: #e6e6e6;
+		}
+		.google-login-separator::before { left: 0; }
+		.google-login-separator::after { right: 0; }
+		.google-login-separator span {
+			color: #9abcda;
+			font-size: 12px;
+			background: #fff;
+			padding: 0 10px;
+			position: relative;
+		}
+		.google-login-btn {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 8px;
+			width: 288px;
+			height: 40px;
+			border: 1px solid #e6e6e6;
+			border-radius: 16px;
+			background: #fff;
+			color: #333;
+			font-size: 14px;
+			text-decoration: none;
+			cursor: pointer;
+			transition: all 0.2s ease;
+			margin: 0 auto;
+		}
+		.google-login-btn:hover {
+			background: #f7f7f7;
+			border-color: #d0d0d0;
+			box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+		}
+		.google-login-btn:active {
+			transform: scale(0.99);
+		}
+		.google-icon {
+			flex-shrink: 0;
+		}</style>
 </head>
 
 <body>
@@ -519,7 +573,7 @@
 				<span class="bg1"></span>
 				<span class="bg2"></span>
 			</div>
-			<form class="layui-form login-bottom">
+			<form class="layui-form login-bottom" method="post">
 				<div class="center">
 					<div class="item" data-field="username">
 						<span class="icon" aria-hidden="true">

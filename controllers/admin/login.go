@@ -28,6 +28,7 @@ func (ctrl *LoginController) AdminLogin() {
 	ctrl.Data["captcha"] = "/captcha"
 	ctrl.TplName = "admin/login/login.html"
 }
+	ctrl.Data["googleEnabled"] = lib.GoogleEnabled
 
 // SavaAdminState 保存管理员登录状态到Session和全局变量
 // @param user *domain.CmsAdmin 管理员用户实体
