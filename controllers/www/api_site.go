@@ -7,6 +7,7 @@ import (
 
 	"github.com/beego/beego/v2/core/logs"
 
+	"haedu.gov.cn/cms/app/cms/domain"
 	"haedu.gov.cn/cms/app/cms/service"
 	lib "haedu.gov.cn/cms/app/tool"
 )
@@ -128,4 +129,63 @@ func (ctrl *ApiSiteController) MenuFlag() {
 		ctrl.JSONErrorOfData(err.Error(), out)
 	}
 	ctrl.JSONSuccess("", out)
+}
+
+
+/**
+ * @description: SiteLanguageList 获取站点语言关联列表
+ * 返回所有站点及其关联的语言信息（基于 SQL JOIN 查询）
+ * @return {*}
+ */
+// @router /api/site/language/list [get]
+func (ctrl *ApiSiteController) SiteLanguageList() {
+    list, total, err := service.NewSiteLanguageService().SiteLanguageList()
+    if err != nil {
+        logs.Error("SiteLanguageList query failed:", err)
+        ctrl.JSONPage(lib.CodeError, err.Error(), nil, 0)
+        return
+    }
+    ctrl.JSONPageSuccess(list, total)
+}
+
+/**
+ * @description: SiteLanguageBySiteID 根据站点ID获取语言信息
+ * @param {int64} site_id 站点ID
+ * @return {*}
+ */
+// @router /api/site/language/find [get]
+func (ctrl *ApiSiteController) SiteLanguageBySiteID() {
+    siteID, _ := ctrl.GetInt64("site_id")
+    if siteID == 0 {
+        ctrl.JSONError("site_id is required")
+        return
+    }
+    list, err := service.NewSiteLanguageService().SiteLanguageListBySiteID(siteID)
+    if err != nil {
+        logs.Error("SiteLanguageBySiteID query failed:", err)
+        ctrl.JSONError(err.Error())
+        return
+    }
+    ctrl.JSONSuccess("获取成功", list)
+}
+
+/**
+ * @description: SiteLanguageByCode 根据语言代码获取使用该语言的站点列表
+ * @param {string} code 语言代码
+ * @return {*}
+ */
+// @router /api/site/language/by-code [get]
+func (ctrl *ApiSiteController) SiteLanguageByCode() {
+    code := ctrl.GetStringTrim("code", "")
+    if code == "" {
+        ctrl.JSONError("code is required")
+        return
+    }
+    list, err := service.NewSiteLanguageService().SiteLanguageListByCode(code)
+    if err != nil {
+        logs.Error("SiteLanguageByCode query failed:", err)
+        ctrl.JSONError(err.Error())
+        return
+    }
+    ctrl.JSONSuccess("获取成功", list)
 }

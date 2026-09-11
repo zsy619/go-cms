@@ -59,6 +59,9 @@ func init() {
 		web.Router(ApiPrefix+"/site/menu/:site_id", &ApiSiteController{}, "*:Menu")
 		web.Router(ApiPrefix+"/site/menu/flag", &ApiSiteController{}, "*:MenuFlag")
 		web.Router(ApiPrefix+"/site/menu/flag/:site_flag", &ApiSiteController{}, "*:MenuFlag")
+		web.Router(ApiPrefix+"/site/language/list", &ApiSiteController{}, "*:SiteLanguageList")
+		web.Router(ApiPrefix+"/site/language/find", &ApiSiteController{}, "*:SiteLanguageBySiteID")
+		web.Router(ApiPrefix+"/site/language/by-code", &ApiSiteController{}, "*:SiteLanguageByCode")
 
 		web.Router(ApiPrefix+"/category/nav", &ApiArticleController{}, "*:CategoryNav")
 		web.Router(ApiPrefix+"/category/get", &ApiArticleController{}, "*:CategoryGet")
