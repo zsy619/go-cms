@@ -74,7 +74,64 @@
             min-height: 0;
             overflow: hidden;
         }
-        .help-sidebar {
+        /* 一级目录标题样式 - 醒目 */
+.sidebar-section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 14px;
+    margin-top: 16px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 800;
+    color: #ffffff;
+    background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+    border-left: 4px solid #f59e0b;
+    border-radius: 6px;
+    text-transform: none;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3), 0 1px 3px rgba(0,0,0,0.08);
+    position: relative;
+    overflow: hidden;
+}
+
+.sidebar-section-title::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.6s;
+}
+
+.sidebar-section-title:hover {
+    background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+    transform: translateX(2px);
+    transition: all 0.2s ease;
+}
+
+.sidebar-section-title:hover::before {
+    left: 100%;
+}
+
+/* 第一条分类（顶部）去掉顶部间距 */
+.help-sidebar ul {
+    margin: 4px 0 12px 0;
+    padding: 6px 8px;
+    border-left: 2px dashed #cbd5e1;
+    margin-left: 14px;
+    background: rgba(248, 250, 252, 0.5);
+    border-radius: 0 6px 6px 0;
+}
+
+.sidebar-section-title:first-child,
+.sidebar-section-title.first-section {
+    margin-top: 0;
+}
+
+.help-sidebar {
             width: var(--sidebar-w);
             flex-shrink: 0;
             height: 100%;
@@ -147,7 +204,7 @@
             </div>
             <div class="p-2">
                 <div class="mb-1">
-                    <p class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">🌍 多语言功能</p>
+                    <p class="sidebar-section-title">🌍 多语言功能</p>
                     <ul class="space-y-0.5">
                         <li><a href="/help/dev/lang_quickstart" class="nav-link">🚀 快速开始</a></li>
                         <li><a href="/help/dev/lang_admin" class="nav-link">⚙️ 后台管理</a></li>
@@ -157,7 +214,7 @@
                     </ul>
                 </div>
                 <div class="mb-1">
-                    <p class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">🔌 开放 API 接口</p>
+                    <p class="sidebar-section-title">🔌 开放 API 接口</p>
                     <ul class="space-y-0.5">
                         <li><a href="/help/dev/api_site" class="nav-link">📡 站点 API</a></li>
                         <li><a href="/help/dev/api_ads" class="nav-link">📺 广告 API</a></li>
@@ -171,7 +228,7 @@
                     </ul>
                 </div>
                 <div class="mt-2 mb-1">
-                    <p class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">🧰 模板函数接口</p>
+                    <p class="sidebar-section-title">🧰 模板函数接口</p>
                     <ul class="space-y-0.5">
                         <li><a href="/help/dev/apii_front" class="nav-link">⚡ 公共函数</a></li>
                         <li><a href="/help/dev/apii_var" class="nav-link">📦 内置变量</a></li>
@@ -185,7 +242,7 @@
                     </ul>
                 </div>
                 <div class="mt-2 mb-1">
-                    <p class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">📘 模板语法</p>
+                    <p class="sidebar-section-title">📘 模板语法</p>
                     <ul class="space-y-0.5">
                         <li><a href="/help/dev/grammar_grammar" class="nav-link">📚 语法总览</a></li>
                         <li><a href="/help/dev/grammar_tmpl" class="nav-link">🧩 模板嵌套</a></li>
@@ -197,7 +254,7 @@
                     </ul>
                 </div>
                 <div class="mt-2 mb-1">
-                    <p class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">🎨 主题模板</p>
+                    <p class="sidebar-section-title">🎨 主题模板</p>
                     <ul class="space-y-0.5">
                         <li><a href="/help/dev/theme_config" class="nav-link">⚙️ 主题配置</a></li>
                         <li><a href="/help/dev/theme_index" class="nav-link">🏠 首页</a></li>
