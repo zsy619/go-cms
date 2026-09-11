@@ -123,6 +123,12 @@ func (ctrl *SiteController) SiteEdit() {
 	ctrl.Data["domainList"] = list
 	ctrl.Data["site"] = site
 	ctrl.Data["siteList"] = siteList
+
+	// 加载语言列表
+	langService := service.NewCmsLanguage()
+	langList, _ := langService.LanguageAll("", "")
+	ctrl.Data["languageList"] = langList
+
 	ctrl.display()
 }
 
@@ -237,6 +243,12 @@ func (ctrl *SiteController) ChannelEdit() {
 	ctrl.Data["mdl"] = mdl
 	roleMap := ctrl.RolePowerGet("site_channel")
 	ctrl.Data["roleMap"] = roleMap
+
+	// 加载语言列表
+	langService := service.NewCmsLanguage()
+	langList, _ := langService.LanguageAll("", "")
+	ctrl.Data["languageList"] = langList
+
 	ctrl.display()
 }
 

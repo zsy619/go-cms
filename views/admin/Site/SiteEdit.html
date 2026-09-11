@@ -66,6 +66,18 @@
                         <div class="layui-form-mid layui-word-aux">只允许一个默认站点</div>
                     </div>
                     <div class="layui-form-item">
+                        <label class="layui-form-label">站点语言</label>
+                        <div class="layui-input-inline" style="width: 500px;">
+                            <select name="language_code" id="language_code" lay-search="">
+                                <option value="">请选择语言</option>
+                                {{range .languageList}}
+                                <option value="{{.Code}}" {{if eq $.site.LanguageCode .Code}}selected{{end}}>{{.Icon}} {{.Name}} ({{.Code}})</option>
+                                {{end}}
+                            </select>
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">选择站点的默认语言</div>
+                    </div>
+                    <div class="layui-form-item">
                         <label class="layui-form-label">移动站点</label>
                         <div class="layui-input-inline" style="width: 500px;">
                             <input name="is_mobile" type="checkbox" value="1" title="是" {{if eq .site.IsMobile true}} checked="" {{end}}>
@@ -429,6 +441,7 @@
                 , "meta_keyword": ""
                 , "meta_description": ""
                 , "copyright": ""
+                , "language_code": ""
             });
             $("img").attr("src", "");
             form.render();
