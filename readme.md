@@ -1,4 +1,4 @@
-# 河南省大中专学生智慧就业平台 - CMS 内容管理系统
+# CMS 内容管理系统
 
 基于 **Go + Beego + GORM** 的多租户 CMS 内容管理系统，提供文章/广告/站点/链接/标签/微信等核心模块，支持 MySQL/PostgreSQL/SQL Server/人大金仓/高斯等多种数据库方言。
 
@@ -25,7 +25,7 @@
 
 ## 项目简介
 
-本项目是**河南省大中专学生智慧就业平台**的 CMS 内容管理系统，基于 Beego + GORM 构建，提供：
+本项目 是一个通用的 CMS 内容管理系统，基于 Beego + GORM 构建，提供：
 
 - **多租户隔离**：通过 `tenant_id` 字段实现业务数据隔离
 - **软删除**：通过 `deleted` 字段（`tinyint(1)`）实现数据软删除，与 MyBatis-Plus / 芋道 yudao 设计对齐
@@ -38,17 +38,17 @@
 
 ## 技术栈
 
-| 层级 | 技术 | 版本 | 用途 |
-|------|------|------|------|
-| 语言 | Go | 1.27 | 程序语言 |
-| Web 框架 | Beego | v2.3.8 | MVC 框架 / 路由 / 配置 / Session |
-| ORM | GORM | v1.30.0 | 数据库访问 |
-| 代码生成 | gorm.io/gen | v0.3.27 | 生成 domain/mapper |
-| 数据库驱动 | GORM drivers | mysql/postgres/sqlserver | 多方言数据库支持 |
-| 监控 | Prometheus | v1.22.0 | 指标采集（`/metrics`） |
-| 模板引擎 | Beego Template | - | HTML 视图渲染 |
-| 前端 UI | LayUI + KindEditor + ECharts + UEditor Plus | - | 后台界面 / 富文本 / 图表 |
-| 热重载 | Air | - | 开发模式热部署 |
+| 层级       | 技术                                        | 版本                     | 用途                             |
+| ---------- | ------------------------------------------- | ------------------------ | -------------------------------- |
+| 语言       | Go                                          | 1.27                     | 程序语言                         |
+| Web 框架   | Beego                                       | v2.3.8                   | MVC 框架 / 路由 / 配置 / Session |
+| ORM        | GORM                                        | v1.30.0                  | 数据库访问                       |
+| 代码生成   | gorm.io/gen                                 | v0.3.27                  | 生成 domain/mapper               |
+| 数据库驱动 | GORM drivers                                | mysql/postgres/sqlserver | 多方言数据库支持                 |
+| 监控       | Prometheus                                  | v1.22.0                  | 指标采集（`/metrics`）           |
+| 模板引擎   | Beego Template                              | -                        | HTML 视图渲染                    |
+| 前端 UI    | LayUI + KindEditor + ECharts + UEditor Plus | -                        | 后台界面 / 富文本 / 图表         |
+| 热重载     | Air                                         | -                        | 开发模式热部署                   |
 
 ---
 
@@ -181,10 +181,10 @@ _, err = do.Where(mdl.ArticleID.Eq(articleId)).UpdateColumns(
 
 ### 关键设计
 
-| 字段 | 类型 | NOT NULL | DEFAULT | 用途 |
-|------|------|----------|---------|------|
-| `tenant_id` | `bigint` | ✅ | `0` | 多租户隔离 |
-| `deleted` | `tinyint(1)` | ✅ | `0` | 软删除标记 |
+| 字段        | 类型         | NOT NULL | DEFAULT | 用途       |
+| ----------- | ------------ | -------- | ------- | ---------- |
+| `tenant_id` | `bigint`     | ✅        | `0`     | 多租户隔离 |
+| `deleted`   | `tinyint(1)` | ✅        | `0`     | 软删除标记 |
 
 > **重要**：`deleted` 列必须为 `tinyint(1)` 而非 `bit(1)`，否则 Go MySQL 驱动会返回 `[]byte`，无法 Scan 到 `bool`，导致 `Scan error: couldn't convert "\\x00" into type bool` 错误。
 
@@ -265,13 +265,13 @@ LOCAL_DOMAIN = http://localhost:8125
 
 ### 支持的方言
 
-| 方言 | 常量 | 默认端口 | 说明 |
-|------|------|----------|------|
-| MySQL / MariaDB | mysql | 3306 | 默认方言 |
-| PostgreSQL | postgres | 5432 | 含 openGauss |
-| SQL Server | sqlserver | 1433 | TDS 加密默认 disable |
-| 人大金仓 | kingbase | 54321 | KingbaseES，PG 协议 |
-| 高斯数据库 | gaussdb | 5432 | openGauss，PG 协议 |
+| 方言            | 常量      | 默认端口 | 说明                 |
+| --------------- | --------- | -------- | -------------------- |
+| MySQL / MariaDB | mysql     | 3306     | 默认方言             |
+| PostgreSQL      | postgres  | 5432     | 含 openGauss         |
+| SQL Server      | sqlserver | 1433     | TDS 加密默认 disable |
+| 人大金仓        | kingbase  | 54321    | KingbaseES，PG 协议  |
+| 高斯数据库      | gaussdb   | 5432     | openGauss，PG 协议   |
 
 ### 双数据库支持
 
@@ -291,11 +291,11 @@ CREATE TABLE IF NOT EXISTS + ADD COLUMN IF NOT EXISTS — 39 张业务表全部�
 
 从 struct gorm tag comment:xxx 提取注释，按方言生成 SQL：
 
-| 方言 | SQL |
-|------|-----|
-| MySQL | ALTER TABLE `t` MODIFY COLUMN `c` TYPE COMMENT xxx |
-| PostgreSQL | COMMENT ON COLUMN t.c IS xxx |
-| SQL Server | EXEC sys.sp_addextendedproperty ... |
+| 方言       | SQL                                                |
+| ---------- | -------------------------------------------------- |
+| MySQL      | ALTER TABLE `t` MODIFY COLUMN `c` TYPE COMMENT xxx |
+| PostgreSQL | COMMENT ON COLUMN t.c IS xxx                       |
+| SQL Server | EXEC sys.sp_addextendedproperty ...                |
 
 ### 3. 索引自动创建
 
@@ -339,44 +339,44 @@ FixBit1ToTinyInt1(db, dialect, table) error
 
 ### CMS 基础模块
 
-| 模块 | 控制器 | 视图 | 说明 |
-|------|--------|------|------|
-| 文章管理 | article.go | views/admin/Article/ | 文章 CRUD / 审核 / 回收站 / 评论 |
-| 栏目分类 | article.go | 同上 | 树形栏目结构 + 模板配置 |
-| 专题管理 | article.go | - | 专题聚合 |
-| 标签管理 | tag.go | views/admin/Tag/ | 标签 CRUD |
-| 主题管理 | theme.go | views/admin/Theme/ | 模板主题 |
-| 链接管理 | link.go | views/admin/Link/ | 快捷链接 |
-| 广告管理 | ads.go | views/admin/Ads/ | 广告位 / 分类 / 内容 |
-| 站点管理 | site.go | views/admin/Site/ | 多站点 / 频道 / 域名 |
-| 相册管理 | common_album.go | - | 图片附件 |
-| 公告管理 | notice.go | views/admin/Notice/ | 后台公告 |
-| 菜单管理 | menu.go | - | 后台导航菜单 |
-| 缓存管理 | cache.go | views/admin/Cache/ | Redis / 内存缓存 |
-| 文件管理 | file.go | views/admin/File/ | 资源上传 / 浏览 |
+| 模块     | 控制器          | 视图                 | 说明                             |
+| -------- | --------------- | -------------------- | -------------------------------- |
+| 文章管理 | article.go      | views/admin/Article/ | 文章 CRUD / 审核 / 回收站 / 评论 |
+| 栏目分类 | article.go      | 同上                 | 树形栏目结构 + 模板配置          |
+| 专题管理 | article.go      | -                    | 专题聚合                         |
+| 标签管理 | tag.go          | views/admin/Tag/     | 标签 CRUD                        |
+| 主题管理 | theme.go        | views/admin/Theme/   | 模板主题                         |
+| 链接管理 | link.go         | views/admin/Link/    | 快捷链接                         |
+| 广告管理 | ads.go          | views/admin/Ads/     | 广告位 / 分类 / 内容             |
+| 站点管理 | site.go         | views/admin/Site/    | 多站点 / 频道 / 域名             |
+| 相册管理 | common_album.go | -                    | 图片附件                         |
+| 公告管理 | notice.go       | views/admin/Notice/  | 后台公告                         |
+| 菜单管理 | menu.go         | -                    | 后台导航菜单                     |
+| 缓存管理 | cache.go        | views/admin/Cache/   | Redis / 内存缓存                 |
+| 文件管理 | file.go         | views/admin/File/    | 资源上传 / 浏览                  |
 
 ### 业务插件模块
 
-| 模块 | 控制器 | 说明 |
-|------|--------|------|
-| 空中宣讲会 | plugin/airKeynote.go | 视频宣讲直播 |
-| 招聘会 | plugin/jobFair.go | 线下招聘会管理 |
-| 就业岗位 | plugin/job.go | 岗位发布 |
-| 线上报名 | plugin/xsbm.go | 用户报名 |
-| 企业管理 | plugin/company.go | 企业入驻 |
+| 模块       | 控制器               | 说明           |
+| ---------- | -------------------- | -------------- |
+| 空中宣讲会 | plugin/airKeynote.go | 视频宣讲直播   |
+| 招聘会     | plugin/jobFair.go    | 线下招聘会管理 |
+| 就业岗位   | plugin/job.go        | 岗位发布       |
+| 线上报名   | plugin/xsbm.go       | 用户报名       |
+| 企业管理   | plugin/company.go    | 企业入驻       |
 
 ### 前台 API
 
-| 模块 | 控制器 | 说明 |
-|------|--------|------|
-| 文章 API | www/api_article.go | 文章列表 / 详情 / 搜索 |
-| 广告 API | www/api_ads.go | 广告位渲染 |
-| 链接 API | www/api_link.go | 友情链接 |
-| 标签 API | www/api_tag.go | 标签云 |
-| 专题 API | www/api_topic.go | 专题页 |
-| 站点 API | www/api_site.go | 站点配置 |
-| 报名 API | www/api_plg_online_register.go | 线上报名 |
-| 实时推送 | www/sse.go | Server-Sent Events |
+| 模块     | 控制器                         | 说明                   |
+| -------- | ------------------------------ | ---------------------- |
+| 文章 API | www/api_article.go             | 文章列表 / 详情 / 搜索 |
+| 广告 API | www/api_ads.go                 | 广告位渲染             |
+| 链接 API | www/api_link.go                | 友情链接               |
+| 标签 API | www/api_tag.go                 | 标签云                 |
+| 专题 API | www/api_topic.go               | 专题页                 |
+| 站点 API | www/api_site.go                | 站点配置               |
+| 报名 API | www/api_plg_online_register.go | 线上报名               |
+| 实时推送 | www/sse.go                     | Server-Sent Events     |
 
 ---
 
@@ -395,14 +395,14 @@ app/wechat/
 
 ### 6 张微信业务表
 
-| 表名 | 用途 |
-|------|------|
-| weixin_account | 公众号配置（AppID/AppSecret/Token/AES Key） |
-| weixin_menu | 自定义菜单（含 parent_id/account_id 外键） |
-| weixin_mp_verify | 公众号验证文件（MP_verify_xxx.txt） |
-| weixin_request_content | 关键字触发的回复内容 |
-| weixin_request_rule | 关键字规则（默认/模糊/响应类型） |
-| weixin_response_content | 消息记录日志（请求/响应/xml） |
+| 表名                    | 用途                                        |
+| ----------------------- | ------------------------------------------- |
+| weixin_account          | 公众号配置（AppID/AppSecret/Token/AES Key） |
+| weixin_menu             | 自定义菜单（含 parent_id/account_id 外键）  |
+| weixin_mp_verify        | 公众号验证文件（MP_verify_xxx.txt）         |
+| weixin_request_content  | 关键字触发的回复内容                        |
+| weixin_request_rule     | 关键字规则（默认/模糊/响应类型）            |
+| weixin_response_content | 消息记录日志（请求/响应/xml）               |
 
 ### 控制器
 
@@ -435,10 +435,10 @@ app/wechat/
 
 每张业务表自动包含：
 
-| 列名 | MySQL | PostgreSQL | SQL Server |
-|------|-------|------------|------------|
-| tenant_id | bigint NOT NULL DEFAULT 0 | bigint NOT NULL DEFAULT 0 | BIGINT NOT NULL DEFAULT 0 |
-| deleted | tinyint(1) NOT NULL DEFAULT 0 | boolean DEFAULT false | BIT NOT NULL DEFAULT 0 |
+| 列名      | MySQL                         | PostgreSQL                | SQL Server                |
+| --------- | ----------------------------- | ------------------------- | ------------------------- |
+| tenant_id | bigint NOT NULL DEFAULT 0     | bigint NOT NULL DEFAULT 0 | BIGINT NOT NULL DEFAULT 0 |
+| deleted   | tinyint(1) NOT NULL DEFAULT 0 | boolean DEFAULT false     | BIT NOT NULL DEFAULT 0    |
 
 ### 多租户实现
 
@@ -607,12 +607,12 @@ curl http://localhost:8125/metrics
 
 ### 关键迁移脚本
 
-| 文件 | 适用 |
-|------|------|
-| 01_mysql.sql | MySQL/MariaDB |
-| 02_postgres.sql | PostgreSQL/openGauss/KingbaseES |
-| 03_sqlserver.sql | SQL Server |
-| 04_weixin_init.sql | 微信模块 6 表 |
+| 文件               | 适用                            |
+| ------------------ | ------------------------------- |
+| 01_mysql.sql       | MySQL/MariaDB                   |
+| 02_postgres.sql    | PostgreSQL/openGauss/KingbaseES |
+| 03_sqlserver.sql   | SQL Server                      |
+| 04_weixin_init.sql | 微信模块 6 表                   |
 
 ---
 
@@ -639,17 +639,17 @@ go run gen.go
 
 ### 字段命名规范
 
-| 字段 | 类型 | 用途 |
-|------|------|------|
-| xxx_id | bigint | 主键（auto_increment） |
-| create_id / create_name | int / varchar | 创建人 |
-| create_time | datetime | 创建时间（默认 CURRENT_TIMESTAMP） |
-| update_id / update_name | int / varchar | 更新人 |
-| update_time | datetime | 修改时间 |
-| sort_id | int | 排序字段 |
-| status | tinyint | 状态（0草稿 1提交 2审核通过 3未通过 4驳回） |
-| tenant_id | bigint | 多租户隔离 |
-| deleted | tinyint(1) | 软删除标记 |
+| 字段                    | 类型          | 用途                                        |
+| ----------------------- | ------------- | ------------------------------------------- |
+| xxx_id                  | bigint        | 主键（auto_increment）                      |
+| create_id / create_name | int / varchar | 创建人                                      |
+| create_time             | datetime      | 创建时间（默认 CURRENT_TIMESTAMP）          |
+| update_id / update_name | int / varchar | 更新人                                      |
+| update_time             | datetime      | 修改时间                                    |
+| sort_id                 | int           | 排序字段                                    |
+| status                  | tinyint       | 状态（0草稿 1提交 2审核通过 3未通过 4驳回） |
+| tenant_id               | bigint        | 多租户隔离                                  |
+| deleted                 | tinyint(1)    | 软删除标记                                  |
 
 ---
 
@@ -713,21 +713,21 @@ A: 检查：
 
 ## 项目里程碑
 
-| 日期 | 提交 | 说明 |
-|------|------|------|
+| 日期       | 提交    | 说明                                                                     |
+| ---------- | ------- | ------------------------------------------------------------------------ |
 | 2026-09-09 | d7f1410 | 一键修订 domain/mapper/service 三层映射关系（39 实体 / 722 字段 0 偏差） |
-| 2026-09-09 | 295c77f | 实现 GORM 自动建表 + 列注释 + 索引 + 类型修复 |
-| 2026-09-09 | 2437fb0 | 添加多租户 + 软删除 + weixin 模块迁移脚本 |
-| 2026-09-09 | 115bd6f | 登录页背景动画 + 居中布局 |
-| 2026-09-09 | a524bcb | 修订 Deleted 字段引用 + bit(1) 修复 |
-| 2026-09-09 | 5282a7c | Spring Boot 风格启动 Banner |
-| 2026-09-09 | 27a93e7 | 升级 go 1.27 + 新增 sqlserver/postgres 驱动 |
+| 2026-09-09 | 295c77f | 实现 GORM 自动建表 + 列注释 + 索引 + 类型修复                            |
+| 2026-09-09 | 2437fb0 | 添加多租户 + 软删除 + weixin 模块迁移脚本                                |
+| 2026-09-09 | 115bd6f | 登录页背景动画 + 居中布局                                                |
+| 2026-09-09 | a524bcb | 修订 Deleted 字段引用 + bit(1) 修复                                      |
+| 2026-09-09 | 5282a7c | Spring Boot 风格启动 Banner                                              |
+| 2026-09-09 | 27a93e7 | 升级 go 1.27 + 新增 sqlserver/postgres 驱动                              |
 
 ---
 
 ## 许可证
 
-本项目仅供河南省大中专学生智慧就业平台内部使用。
+本项目可用于商业用途。
 
 ---
 
