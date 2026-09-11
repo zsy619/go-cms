@@ -1,7 +1,10 @@
 package admin
 
 import (
+	"encoding/json"
+	"io"
 	"net/http"
+	"net/url"
 
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/zsy619/tools/xcache"
@@ -13,11 +16,6 @@ import (
 	lib "haedu.gov.cn/cms/app/tool"
 	"haedu.gov.cn/cms/controllers"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
-	"encoding/json"
-	"fmt"
-	"io"
-	"net/http"
-	"net/url"
 )
 
 type LoginController struct{ controllers.BaseController }
@@ -28,7 +26,6 @@ func (ctrl *LoginController) AdminLogin() {
 	ctrl.Data["captcha"] = "/captcha"
 	ctrl.TplName = "admin/login/login.html"
 }
-	ctrl.Data["googleEnabled"] = lib.GoogleEnabled
 
 // SavaAdminState 保存管理员登录状态到Session和全局变量
 // @param user *domain.CmsAdmin 管理员用户实体
@@ -84,7 +81,12 @@ func (ctrl *LoginController) AdminLoginVerify() {
 	}
 	ctrl.SavaAdminState(user)
 	adminDo.LoginLog(user.UserID, username, "AdminLoginVerify", "", "", "OK", ctrl.GetClientIp())
-	result.Url = "/admin/inde
+	result.Url = "/admin/index"
+	ctrl.Data["json"] = &result
+	ctrl.ServeJSON()
+}
+
+// GoogleLogin Google OAuth 登录入口
 
 // GoogleLogin Google OAuth 登录入口
 // @router cms/admin/google [get]
@@ -196,10 +198,6 @@ func (ctrl *LoginController) GoogleCallback() {
 	ctrl.SavaAdminState(user)
 	adminDo.LoginLog(user.UserID, userInfo.Email, "GoogleOAuth", userInfo.Name, userInfo.Picture, "OK", ctrl.GetClientIp())
 	ctrl.Redirect("/admin/index", 302)
-}
-x"
-	ctrl.Data["json"] = &result
-	ctrl.ServeJSON()
 }
 
 // Logout 管理员退出登录
