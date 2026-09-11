@@ -8,15 +8,15 @@ import (
 )
 
 var (
-	GlobalAdminId    int64  // 管理员id
-	GlobalAuthFlag   string // admin:管理员 school:学校
-	GlobalUserType   int    // 用户类型
-	GlobalAdminName  string // 管理员名称
-	GlobalRealName   string // 管理员名称
-	GlobalSchoolName string // 学校名称
-	GlobalIsAudit    int32  // 是否审核
-	GlobalRoleId     int64  // 管理员角色id
-	GlobalRoleType   string // 管理员角色类型
+	GlobalAdminId     int64  // 管理员id
+	GlobalAuthFlag    string // admin:管理员 school:学校
+	GlobalUserType    int    // 用户类型
+	GlobalAdminName   string // 管理员名称
+	GlobalRealName    string // 管理员名称
+	GlobalSchoolName  string // 学校名称
+	GlobalIsAudit     int32  // 是否审核
+	GlobalRoleId      int64  // 管理员角色id
+	GlobalRoleType    string // 管理员角色类型
 )
 
 const (
@@ -41,16 +41,27 @@ func init() {
 		web.NSAutoRouter(&UEditorController{}),
 		web.NSRouter("index", &IndexController{}, "*:Index"),
 
+		// site namespace 包含站点管理和语言设置
 		web.NSNamespace("site",
 			web.NSRouter("edit", &SiteController{}, "get:SiteEdit"),
 			web.NSRouter("data", &SiteController{}, "get:SiteData"),
 			web.NSRouter("delete", &SiteController{}, "get:Delete"),
 			web.NSRouter("save", &SiteController{}, "get:Save"),
+			// 语言设置路由
+			web.NSRouter("language", &LanguageController{}, "*:LanguagePage"),
+			web.NSRouter("language/data", &LanguageController{}, "*:LanguageData"),
+			web.NSRouter("language/edit", &LanguageController{}, "*:LanguageEdit"),
+			web.NSRouter("language/save", &LanguageController{}, "post:LanguageSave"),
+			web.NSRouter("language/delete", &LanguageController{}, "get:LanguageDelete"),
+			web.NSRouter("language/sort", &LanguageController{}, "get:LanguageSort"),
+			web.NSRouter("language/status", &LanguageController{}, "get:LanguageStatus"),
+			web.NSRouter("language/init", &LanguageController{}, "get:LanguageInit"),
 		),
 
 		web.NSAutoRouter(&CommonController{}),
 		web.NSAutoRouter(&ThemeController{}),
 		web.NSAutoRouter(&SiteController{}),
+		web.NSAutoRouter(&LanguageController{}),
 		web.NSAutoRouter(&IndexController{}),
 		web.NSAutoRouter(&TagController{}),
 		web.NSAutoRouter(&TopicController{}),
@@ -75,7 +86,7 @@ func init() {
 			web.NSRouter("/verify/list", &WeixinMpVerifyController{}, "*:List"),
 			web.NSRouter("/verify/edit", &WeixinMpVerifyController{}, "*:Edit"),
 			web.NSRouter("/verify/savesortid", &WeixinMpVerifyController{}, "*:SaveSortId"),
-			web.NSRouter("/verify/destory", &WeixinMpVerifyController{}, "*:Destory"),
+			web.NSRouter("/verify/destory", &WeixinMpVerifyController{}, "post:Destory"),
 			web.NSRouter("/verify/upload", &WeixinMpVerifyController{}, "*:Upload"),
 			web.NSRouter("/verify/refrshcache", &WeixinMpVerifyController{}, "*:RefrshCache"),
 		),
@@ -85,7 +96,7 @@ func init() {
 			web.NSRouter("/register/paginate", &PlgOnlineRegisterController{}, "*:Paginate"),
 			web.NSRouter("/register/edit", &PlgOnlineRegisterController{}, "*:Edit"),
 			web.NSRouter("/register/save", &PlgOnlineRegisterController{}, "*:Save"),
-			web.NSRouter("/register/destory", &PlgOnlineRegisterController{}, "*:Destory"),
+			web.NSRouter("/register/destory", &PlgOnlineRegisterController{}, "post:Destory"),
 			web.NSRouter("/register/read", &PlgOnlineRegisterController{}, "*:ChangeRead"),
 		),
 	)
