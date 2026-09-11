@@ -12,7 +12,7 @@
 FROM cms_site a
 LEFT JOIN cms_language b
        ON a.language_code = b.code
-WHERE b.language_id IS NOT NULL
+WHERE b.language_id IS NOT NULL AND b.`status` = 1
 ORDER BY b.is_default DESC</textarea>
 
     <h2>📊 数据模型</h2>
