@@ -13,6 +13,11 @@ import (
 	lib "haedu.gov.cn/cms/app/tool"
 	"haedu.gov.cn/cms/controllers"
 	"haedu.gov.cn/cms/controllers/admin/vmodel"
+	"encoding/json"
+	"fmt"
+	"io"
+	"net/http"
+	"net/url"
 )
 
 type LoginController struct{ controllers.BaseController }
@@ -78,7 +83,120 @@ func (ctrl *LoginController) AdminLoginVerify() {
 	}
 	ctrl.SavaAdminState(user)
 	adminDo.LoginLog(user.UserID, username, "AdminLoginVerify", "", "", "OK", ctrl.GetClientIp())
-	result.Url = "/admin/index"
+	result.Url = "/admin/inde
+
+// GoogleLogin Google OAuth 登录入口
+// @router cms/admin/google [get]
+func (ctrl *LoginController) GoogleLogin() {
+	if !lib.GoogleEnabled {
+		ctrl.Abort("404")
+		return
+	}
+	params := url.Values{}
+	params.Set("client_id", lib.GoogleClientID)
+	params.Set("redirect_uri", lib.GoogleRedirectURI)
+	params.Set("response_type", "code")
+	params.Set("scope", "openid email profile")
+	params.Set("access_type", "online")
+	params.Set("prompt", "select_account")
+	authURL := lib.GoogleAuthURL + "?" + params.Encode()
+	ctrl.Redirect(authURL, 302)
+}
+
+// GoogleCallback Google OAuth 回调处理
+// @router cms/admin/google/callback [get]
+func (ctrl *LoginController) GoogleCallback() {
+	if !lib.GoogleEnabled {
+		ctrl.Abort("404")
+		return
+	}
+	code := ctrl.GetString("code")
+	if code == "" {
+		ctrl.Abort("400")
+		return
+	}
+	tokenParams := url.Values{}
+	tokenParams.Set("code", code)
+	tokenParams.Set("client_id", lib.GoogleClientID)
+	tokenParams.Set("client_secret", lib.GoogleClientSecret)
+	tokenParams.Set("redirect_uri", lib.GoogleRedirectURI)
+	tokenParams.Set("grant_type", "authorization_code")
+	resp, err := http.PostForm(lib.GoogleTokenURL, tokenParams)
+	if err != nil || resp.StatusCode != 200 {
+		logs.Error("Google Token exchange failed: %v status:%d", err, resp.StatusCode)
+		ctrl.Abort("500")
+		return
+	}
+	defer resp.Body.Close()
+	body, _ := io.ReadAll(resp.Body)
+	var tokenResp struct {
+		AccessToken string `json:"access_token"`
+		IDToken     string `json:"id_token"`
+		ExpiresIn  int    `json:"expires_in"`
+	}
+	if err := json.Unmarshal(body, &tokenResp); err != nil {
+		logs.Error("Parse Google token failed: %v", err)
+		ctrl.Abort("500")
+		return
+	}
+	userInfoResp, err := http.Get(lib.GoogleUserInfoURL + "?access_token=" + tokenResp.AccessToken)
+	if err != nil || userInfoResp.StatusCode != 200 {
+		logs.Error("Google UserInfo failed: %v", err)
+		ctrl.Abort("500")
+		return
+	}
+	defer userInfoResp.Body.Close()
+	userInfoBody, _ := io.ReadAll(userInfoResp.Body)
+	var userInfo struct {
+		ID            string `json:"id"`
+		Email         string `json:"email"`
+		VerifiedEmail bool   `json:"verified_email"`
+		Name          string `json:"name"`
+		Picture       string `json:"picture"`
+	}
+	if err := json.Unmarshal(userInfoBody, &userInfo); err != nil {
+		logs.Error("Parse Google userinfo failed: %v", err)
+		ctrl.Abort("500")
+		return
+	}
+	if userInfo.Email == "" || !userInfo.VerifiedEmail {
+		logs.Warning("Google login: invalid email:%s verified:%v", userInfo.Email, userInfo.VerifiedEmail)
+		ctrl.Abort("403")
+		return
+	}
+	adminDo := service.NewCmsAdmin()
+	user, err := adminDo.FindByAccount(userInfo.Email)
+	if err != nil || user == nil || user.UserName == "" {
+		logs.Info("Google login: creating user:%s", userInfo.Email)
+		user = &domain.CmsAdmin{
+			UserName:   userInfo.Email,
+			NickName:   userInfo.Name,
+			RealName:   userInfo.Name,
+			Email:      userInfo.Email,
+			UserNumber: userInfo.ID,
+			Mobile:     userInfo.ID,
+			UserType:   1,
+			Enabled:    true,
+			IsAudit:    1,
+			Remark:     "Google OAuth",
+		}
+		if err := adminDo.AdminSave(user); err != nil {
+			logs.Error("Google login: create user failed: %v", err)
+			ctrl.Abort("500")
+			return
+		}
+		user, err = adminDo.FindByAccount(userInfo.Email)
+		if err != nil || user == nil {
+			logs.Error("Google login: find user after create failed: %v", err)
+			ctrl.Abort("500")
+			return
+		}
+	}
+	ctrl.SavaAdminState(user)
+	adminDo.LoginLog(user.UserID, userInfo.Email, "GoogleOAuth", userInfo.Name, userInfo.Picture, "OK", ctrl.GetClientIp())
+	ctrl.Redirect("/admin/index", 302)
+}
+x"
 	ctrl.Data["json"] = &result
 	ctrl.ServeJSON()
 }
