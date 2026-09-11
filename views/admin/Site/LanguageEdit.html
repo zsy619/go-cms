@@ -1,0 +1,87 @@
+<div class="layuimini-main">
+    <form class="layui-form" lay-filter="form">
+        <input type="hidden" name="id" value="{{.language.LanguageID}}" />
+        <div class="layui-form-item">
+            <label class="layui-form-label"><span class="layui-required">*</span>语言名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" value="{{.language.Name}}" required lay-verify="required" placeholder="如：简体中文、English" class="layui-input" style="width: 300px;">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><span class="layui-required">*</span>语言代码</label>
+            <div class="layui-input-block">
+                <input type="text" name="code" value="{{.language.Code}}" required lay-verify="required" placeholder="如：zh-CN、en、ja" class="layui-input" style="width: 300px;">
+                <div class="layui-form-mid layui-word-aux">格式：ISO 639-1 或 BCP 47，如 zh-CN, en-US, ja</div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">图标/国旗</label>
+            <div class="layui-input-block">
+                <input type="text" name="icon" value="{{.language.Icon}}" placeholder="如：🇨🇳、🇺🇸、🇯🇵" class="layui-input" style="width: 300px;">
+                <div class="layui-form-mid layui-word-aux">输入 emoji 国旗或图标</div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">排序</label>
+            <div class="layui-input-block">
+                <input type="number" name="sort_id" value="{{.language.SortID}}" placeholder="数值越小越靠前" class="layui-input" style="width: 150px;" min="0">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">描述</label>
+            <div class="layui-input-block">
+                <textarea name="description" placeholder="请输入描述信息" class="layui-textarea" style="width: 400px; height: 80px;">{{.language.Description}}</textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">状态</label>
+            <div class="layui-input-block">
+                <input type="radio" name="status" value="1" title="启用" {{if or (eq .language.Status 1) (not .language)}}checked{{end}}>
+                <input type="radio" name="status" value="0" title="禁用" {{if eq .language.Status 0}}checked{{end}}>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">设为默认</label>
+            <div class="layui-input-block">
+                <input type="checkbox" name="is_default" lay-skin="switch" lay-text="是|否" {{if .language.IsDefault}}checked{{end}}>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="submit">保存</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    layui.use(['form', 'layer'], function () {
+        var form = layui.form;
+        var layer = layui.layer;
+
+        form.render();
+
+        // 提交
+        form.on('submit(submit)', function (data) {
+            var field = data.field;
+            field.is_default = field.is_default ? 'on' : 'off';
+
+            $.ajax({
+                url: '/admin/site/language/save',
+                type: 'POST',
+                data: field,
+                success: function (res) {
+                    if (res.code == CodeSuccess) {
+                        layer.msg('保存成功', function () {
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        });
+                    } else {
+                        layer.msg(res.msg || '保存失败');
+                    }
+                }
+            });
+            return false;
+        });
+    });
+</script>
