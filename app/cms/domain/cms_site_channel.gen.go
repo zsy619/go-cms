@@ -28,6 +28,7 @@ type CmsSiteChannel struct {
 	IsAttach   int32     `gorm:"column:is_attach;type:tinyint" json:"is_attach" form:"is_attach"`                                  // 是否开启附件功能
 	IsSpec     int32     `gorm:"column:is_spec;type:tinyint" json:"is_spec" form:"is_spec"`                                        // 是否开启规格
 	SortID     int32     `gorm:"column:sort_id;type:int" json:"sort_id" form:"sort_id"`                                            // 排序
+	LanguageCode    string    `gorm:"column:language_code;type:varchar(16)" json:"language_code" form:"language_code"`                     // 语言代码
 	Status     int32     `gorm:"column:status;type:tinyint" json:"status" form:"status"`                                           // 状态0草稿1提交2审核通过3审核未通过4驳回
 	IsShow     bool      `gorm:"column:is_show;type:tinyint(1);default:1" json:"is_show" form:"is_show"`                           // 是否显示:1显示，0隐藏
 	TmplChnl   string    `gorm:"column:tmpl_chnl;type:varchar(256)" json:"tmpl_chnl" form:"tmpl_chnl"`                             // 频道模板路径
