@@ -243,7 +243,7 @@
 <script type="text/template" id="domainTemplate">
     <tr>
         <td>
-            <input type="text" maxlength="50" name="domain" lay-verify="domain" value="" autocomplete="off" placeholder="请输入域名" class="layui-input">
+            <input type="text" maxlength="50" name="domain" lay-verify="domain" value="" autocomplete="off" placeholder="如：example.com 或 localhost" class="layui-input">
         </td>
         <td>
             <input type="text" maxlength="50" name="remark" value="" autocomplete="off" placeholder="请输入域名备注" class="layui-input">
@@ -369,7 +369,7 @@
             // }
             flag: [/^[a-zA-Z0-9\-\_]{2,50}$/, '请填写正确的网站标识'],
             dir_path: [/^[a-zA-Z0-9\-\_]{2,50}$/, "目录只能为字母、数字、下划线、中划线"]
-            , domain: [/^\s*$|^([a-zA-Z0-9\-\u4e00-\u9fa5]+\.)+[a-zA-Z\u4e00-\u9fa5]+$/, "域名是去除“http(s)://”部分"]
+            , domain: [/^\s*$|^([a-zA-Z0-9\-\u4e00-\u9fa5]+\.)+[a-zA-Z\u4e00-\u9fa5]+$|^localhost(:\d+)?$/, "请输入有效的域名（如 localhost 或 example.com）"]
             // , money: [
             //     /^\d+\.\b\d{2}\b$/
             //     , '金额必须为小数保留两位'
