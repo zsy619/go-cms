@@ -20,6 +20,23 @@ func NewCmsSite() *CmsSite {
 	return &CmsSite{}
 }
 
+// CleanDomain 清理域名
+// 去除 http:// https:// 前缀以及首尾的斜杠和空白
+func CleanDomain(domain string) string {
+	if domain == "" {
+		return ""
+	}
+	domain = strings.TrimSpace(domain)
+	// 去除 http:// 前缀
+	domain = strings.TrimPrefix(domain, "http://")
+	domain = strings.TrimPrefix(domain, "https://")
+	// 去除首尾的斜杠
+	domain = strings.Trim(domain, "/")
+	// 转小写
+	domain = strings.ToLower(domain)
+	return domain
+}
+
 func (svc *CmsSite) SiteSaveSortId(siteId int64, sortId int32) error {
 	site, siteDo := mapper.CmsSiteDo()
 	_, err := siteDo.Where(site.SiteID.Eq(siteId)).UpdateColumns(
@@ -92,6 +109,11 @@ func (svc *CmsSite) SiteOne(id int64) (*domain.CmsSite, error) {
 func (svc *CmsSite) SiteSave(mdl *domain.CmsSite, domains []string, remarks []string) error {
 	if mdl.Title == "" {
 		return errors.New("站点名称不能为空")
+	}
+
+	// 清理域名：去除 http:// https:// 前缀及尾部斜杠
+	for i, d := range domains {
+		domains[i] = CleanDomain(d)
 	}
 	// if mdl.DirPath == "" {
 	// 	return errors.New("生成目录名不能为空")
