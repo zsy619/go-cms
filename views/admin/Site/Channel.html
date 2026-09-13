@@ -15,7 +15,7 @@
                             <div class="layui-input-inline">
                                 <select id="siteId" name="siteId" lay-filter="siteId">
                                     {{range $index,$item := .siteList}}
-                                    <option value="{{$item.SiteID}}">{{$item.Title}}</option>
+                                    <option value="{{$item.SiteID}}">{{$item.Title}} ({{$item.Flag}})</option>
                                     {{end}}
                                 </select>
                             </div>
@@ -30,6 +30,24 @@
         <table class="layui-hide" id="tableContainer" lay-filter="currentTableFilter"></table>
     </div>
 </div>
+
+<!-- 行操作按钮模板 -->
+<script type="text/html" id="currentTableBar">
+    <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit layui-btn-radius" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+    <a class="layui-btn layui-btn-primary layui-btn-xs data-count-add layui-btn-radius" lay-event="add"><i class="layui-icon layui-icon-add-circle"></i>添加子类</a>
+    <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete layui-btn-radius" lay-event="delete"><i class="layui-icon layui-icon-delete"></i>删除</a>
+</script>
+
+<!-- 顶部工具栏 -->
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加频道</button>
+        <button class="layui-btn layui-btn-sm layui-btn-primary" lay-event="expandAll"> 全部展开</button>
+        <button class="layui-btn layui-btn-sm layui-btn-primary" lay-event="foldAll"> 全部折叠</button>
+        <button class="layui-btn layui-btn-sm" lay-event="save"> 保存排序</button>
+    </div>
+</script>
+
 {{template "admin/Public/Button_AddSave.html" }}
 <script>
     layui.use(['form', 'table', 'layer', 'wangEditor', 'upload', 'treetable'], function () {
@@ -112,19 +130,7 @@
                                 return '<input type="number" name="sort_id" channel_id="' + d.channel_id + '" value="' + d.sort_id + '" class="layui-input" style="" />';
                             }
                         },
-                        { title: '操作', width: 210, align: "center", fixed: "right", templet: function (d){
-                                var htmlValue = "<div class=\"layui-btn-container layui-btn-group\">\n";
-                                if ("{{.roleMap}}" != null && "{{.roleMap.IsSuccess}}" === "true") {
-                                    if ("{{.roleMap.IsHasEdit}}" === "true") {
-                                        htmlValue += "<a class=\"layui-btn layui-btn-normal layui-btn-xs data-count-edit layui-btn-radius\" lay-event=\"edit\"><i class=\"layui-icon layui-icon-edit\"></i>编辑</a>\n";
-                                    }
-                                    if ("{{.roleMap.IsHasAdd}}" === "true") {
-                                        htmlValue += "<a class=\"layui-btn layui-btn-primary layui-btn-xs data-count-add layui-btn-radius\" lay-event=\"add\"><i class=\"layui-icon layui-icon-add-circle\"></i>添加子类</a>\n";
-                                    }
-                                }
-                                htmlValue += "</div>";
-                                return htmlValue;
-                            } }
+                        { title: '操作', width: 280, align: "center", fixed: "right", toolbar: '#currentTableBar' }
                     ]],
                     limits: [10, 15, 20, 25, 50, 100],
                     limit: 20,
