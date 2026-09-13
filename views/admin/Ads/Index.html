@@ -72,7 +72,7 @@
             url: '/admin/ads/adspaginate',
             where: { status: -1 },
             toolbar: '#toolbarDemo',
-            height: "full-200",
+            height: "full-180",
             defaultToolbar: ['filter', 'exports', 'print'],
             cols: [[
                 { type: "checkbox", width: 50 },
@@ -133,20 +133,20 @@
                         return '<input type="number" name="sort_id" ads_id="' + d.ads_id + '" value="' + d.sort_id + '" class="layui-input" style="" />';
                     }
                 },
-                { title: '操作', width: 210, align: "center", fixed: "right", templet: function (d){
-                        var htmlValue = "<div class=\"layui-btn-group\">\n";
+                { title: '操作', width: 230, align: "center", fixed: "right", templet: function (d){
+                        var htmlValue = "";
                         if ("{{.roleMap}}" != null && "{{.roleMap.IsSuccess}}" === "true") {
                             if ("{{.roleMap.IsHasEdit}}" === "true") {
                                 htmlValue += "<a class=\"layui-btn layui-btn-normal layui-btn-xs data-count-edit layui-btn-radius\" lay-event=\"edit\"><i class=\"layui-icon layui-icon-edit\"></i>编辑</a>\n";
                             }
                             if ("{{.roleMap.IsHasAdd}}" === "true") {
-                                htmlValue += "<a class=\"layui-btn layui-btn-primary layui-btn-xs data-count-clone\" lay-event=\"clone\"><i class=\"layui-icon layui-icon-form\"></i>拷贝</a>\n";
+                                htmlValue += "<a class=\"layui-btn layui-btn-primary layui-btn-xs data-count-clone layui-btn-radius\" lay-event=\"clone\"><i class=\"layui-icon layui-icon-form\"></i>拷贝</a>\n";
                             }
                             if ("{{.roleMap.IsHasDelete}}" === "true") {
                                 htmlValue += "<a class=\"layui-btn layui-btn-xs layui-btn-danger data-count-delete layui-btn-radius\" lay-event=\"delete\"><i class=\"layui-icon layui-icon-close\"></i>删除</a>\n";
                             }
                         }
-                        htmlValue += "</div>";
+                        htmlValue += "";
                         return htmlValue;
                     } }
             ]],

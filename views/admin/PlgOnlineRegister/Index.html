@@ -70,10 +70,8 @@
     </div>
 </script>
 <script type="text/html" id="currentTableBar">
-    <div class="layui-btn-container layui-btn-group">
-        <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit layui-btn-radius" lay-event="edit"><i class="layui-icon layui-icon-view"></i>浏览</a>
-        <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete layui-btn-radius" lay-event="delete"><i class="layui-icon layui-icon-close"></i>删除</a>
-    </div>
+    <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit layui-btn-radius" lay-event="edit"><i class="layui-icon layui-icon-view"></i>浏览</a>
+    <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete layui-btn-radius" lay-event="delete"><i class="layui-icon layui-icon-close"></i>删除</a>
 </script>
 <script>
     layui.use(['form', 'table'], function () {
@@ -85,7 +83,7 @@
             elem: '#tableContainer',
             url: '/admin/plg/register/paginate?isRead=-1',
             toolbar: '#toolbarDemo',
-            height: "full-200",
+            height: "full-180",
             defaultToolbar: ['filter', 'exports', 'print'],
             cols: [[
                 { type: "checkbox", width: 50 },
