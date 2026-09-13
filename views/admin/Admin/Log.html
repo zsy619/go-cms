@@ -1,134 +1,138 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <title>操作日志</title>
     <link rel="stylesheet" href="/static/admin/lib/layui-v2.9.21/css/layui.css">
     <style>
-        .layui-table-cell { word-break: break-all; }
+        .layui-table-cell {
+            word-break: break-all;
+        }
     </style>
 </head>
+
 <body>
-<div class="layui-fluid" style="padding: 20px;">
-    <div class="layui-card">
-        <div class="layui-card-header">
-            <span style="font-size:18px;font-weight:bold;">操作日志</span>
-            <div class="layui-form" style="display:inline-block;float:right;">
-                <div class="layui-form-item" style="margin:0;">
-                    <div class="layui-inline">
-                        <input type="text" id="pathInput" placeholder="请求路径" class="layui-input" style="width:200px;">
+    <div class="layui-fluid" style="padding: 20px;">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                <span style="font-size:18px;font-weight:bold;">操作日志</span>
+                <div class="layui-form" style="display:inline-block;float:right;">
+                    <div class="layui-form-item" style="margin:0;">
+                        <div class="layui-inline">
+                            <input type="text" id="pathInput" placeholder="请求路径" class="layui-input" style="width:200px;">
+                        </div>
+                        <div class="layui-inline">
+                            <select id="methodSelect">
+                                <option value="">请求方法</option>
+                                <option value="GET">GET</option>
+                                <option value="POST">POST</option>
+                                <option value="PUT">PUT</option>
+                                <option value="DELETE">DELETE</option>
+                            </select>
+                        </div>
+                        <button class="layui-btn" id="searchBtn">查询</button>
+                        <button class="layui-btn layui-btn-danger" id="clearBtn">清理30天前</button>
                     </div>
-                    <div class="layui-inline">
-                        <select id="methodSelect">
-                            <option value="">请求方法</option>
-                            <option value="GET">GET</option>
-                            <option value="POST">POST</option>
-                            <option value="PUT">PUT</option>
-                            <option value="DELETE">DELETE</option>
-                        </select>
-                    </div>
-                    <button class="layui-btn" id="searchBtn">查询</button>
-                    <button class="layui-btn layui-btn-danger" id="clearBtn">清理30天前</button>
                 </div>
             </div>
-        </div>
-        <div class="layui-card-body">
-            <table class="layui-hide" id="logTable" lay-filter="logTable"></table>
+            <div class="layui-card-body">
+                <table class="layui-hide" id="logTable" lay-filter="logTable"></table>
+            </div>
         </div>
     </div>
-</div>
-
-<script type="text/html" id="actionTpl">
-    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">删除</a>
+    <script type="text/html" id="actionTpl">
+    <a class="layui-btn layui-btn-xs layui-btn-danger layui-btn-radius" lay-event="delete">删除</a>
 </script>
+    <script src="/static/admin/lib/layui-v2.9.21/layui.js"></script>
+    <script>
+        // 使用 String.fromCharCode 构造大括号字符串，避免被 Go template 解析
+        var OPEN = String.fromCharCode(123, 123);
+        var CLOSE = String.fromCharCode(125, 125);
+        var HASH = '#';
 
-<script src="/static/admin/lib/layui-v2.9.21/layui.js"></script>
-<script>
-// 使用 String.fromCharCode 构造大括号字符串，避免被 Go template 解析
-var OPEN = String.fromCharCode(123, 123);
-var CLOSE = String.fromCharCode(125, 125);
-var HASH = '#';
+        // 状态码模板
+        var statusTpl = OPEN + HASH + ' if(d.status_code == 200){ ' + CLOSE +
+            '<span style="color:#5fb878;">' + OPEN + ' d.status_code ' + CLOSE + '</span>' +
+            OPEN + HASH + ' } else { ' + CLOSE +
+            '<span style="color:#ff5722;">' + OPEN + ' d.status_code ' + CLOSE + '</span>' +
+            OPEN + HASH + ' } ' + CLOSE;
 
-// 状态码模板
-var statusTpl = OPEN + HASH + ' if(d.status_code == 200){ ' + CLOSE +
-    '<span style="color:#5fb878;">' + OPEN + ' d.status_code ' + CLOSE + '</span>' +
-    OPEN + HASH + ' } else { ' + CLOSE +
-    '<span style="color:#ff5722;">' + OPEN + ' d.status_code ' + CLOSE + '</span>' +
-    OPEN + HASH + ' } ' + CLOSE;
+        // 方法模板
+        var methodTpl = OPEN + HASH + ' var color = ""; ' + CLOSE +
+            OPEN + HASH + ' if(d.method == "GET"){ color = "#1e88e5"; } ' + CLOSE +
+            OPEN + HASH + ' if(d.method == "POST"){ color = "#5fb878"; } ' + CLOSE +
+            OPEN + HASH + ' if(d.method == "PUT"){ color = "#ff9800"; } ' + CLOSE +
+            OPEN + HASH + ' if(d.method == "DELETE"){ color = "#ff5722"; } ' + CLOSE +
+            '<span style="color:' + OPEN + ' color ' + CLOSE + ';font-weight:bold;">' +
+            OPEN + ' d.method ' + CLOSE + '</span>';
 
-// 方法模板
-var methodTpl = OPEN + HASH + ' var color = ""; ' + CLOSE +
-    OPEN + HASH + ' if(d.method == "GET"){ color = "#1e88e5"; } ' + CLOSE +
-    OPEN + HASH + ' if(d.method == "POST"){ color = "#5fb878"; } ' + CLOSE +
-    OPEN + HASH + ' if(d.method == "PUT"){ color = "#ff9800"; } ' + CLOSE +
-    OPEN + HASH + ' if(d.method == "DELETE"){ color = "#ff5722"; } ' + CLOSE +
-    '<span style="color:' + OPEN + ' color ' + CLOSE + ';font-weight:bold;">' +
-    OPEN + ' d.method ' + CLOSE + '</span>';
+        // 动态注入 laytpl 模板（必须在 layui.use 之前）
+        var statusScript = document.createElement('script');
+        statusScript.type = 'text/html';
+        statusScript.id = 'statusTpl';
+        statusScript.innerHTML = statusTpl;
+        document.head.appendChild(statusScript);
 
-// 动态注入 laytpl 模板（必须在 layui.use 之前）
-var statusScript = document.createElement('script');
-statusScript.type = 'text/html';
-statusScript.id = 'statusTpl';
-statusScript.innerHTML = statusTpl;
-document.head.appendChild(statusScript);
+        var methodScript = document.createElement('script');
+        methodScript.type = 'text/html';
+        methodScript.id = 'methodTpl';
+        methodScript.innerHTML = methodTpl;
+        document.head.appendChild(methodScript);
 
-var methodScript = document.createElement('script');
-methodScript.type = 'text/html';
-methodScript.id = 'methodTpl';
-methodScript.innerHTML = methodTpl;
-document.head.appendChild(methodScript);
+        layui.use(['table', 'form'], function () {
+            var table = layui.table;
 
-layui.use(['table', 'form'], function(){
-    var table = layui.table;
+            table.render({
+                elem: '#logTable'
+                , url: '/admin/log/data'
+                , height: 'full-180'
+                , page: { layout: ['count', 'prev', 'page', 'next', 'limit', 'skip'] }
+                , cols: [[
+                    { field: 'log_id', width: 80, title: 'ID' }
+                    , { field: 'user_name', width: 120, title: '操作人' }
+                    , { field: 'method', width: 90, title: '方法', templet: '#methodTpl' }
+                    , { field: 'path', width: 300, title: '请求路径' }
+                    , { field: 'query', width: 200, title: '请求参数' }
+                    , { field: 'status_code', width: 90, title: '状态', templet: '#statusTpl' }
+                    , { field: 'ip', width: 130, title: 'IP' }
+                    , { field: 'create_time', width: 170, title: '时间' }
+                    , { fixed: 'right', width: 80, title: '操作', toolbar: '#actionTpl' }
+                ]]
+            });
 
-    table.render({
-        elem: '#logTable'
-        ,url: '/admin/log/data'
-        ,page: { layout: ['count', 'prev', 'page', 'next', 'limit', 'skip'] }
-        ,cols: [[
-            {field:'log_id', width:80, title: 'ID'}
-            ,{field:'user_name', width:120, title: '操作人'}
-            ,{field:'method', width:90, title: '方法', templet: '#methodTpl'}
-            ,{field:'path', width:300, title: '请求路径'}
-            ,{field:'query', width:200, title: '请求参数'}
-            ,{field:'status_code', width:90, title: '状态', templet: '#statusTpl'}
-            ,{field:'ip', width:130, title: 'IP'}
-            ,{field:'create_time', width:170, title: '时间'}
-            ,{fixed:'right', width:80, title: '操作', toolbar: '#actionTpl'}
-        ]]
-    });
-
-    document.getElementById('searchBtn').onclick = function(){
-        var path = document.getElementById('pathInput').value;
-        var method = document.getElementById('methodSelect').value;
-        table.reload('logTable', {
-            where: { path: path, method: method }
-            ,page: { curr: 1 }
-        });
-    };
-
-    table.on('tool(logTable)', function(obj){
-        if(obj.event === 'delete'){
-            layer.confirm('确定删除?', function(index){
-                layui.$.get('/admin/log/delete?id=' + obj.data.log_id, function(res){
-                    layer.msg(res.msg || '操作完成');
-                    if(res.code === 0) obj.del();
+            document.getElementById('searchBtn').onclick = function () {
+                var path = document.getElementById('pathInput').value;
+                var method = document.getElementById('methodSelect').value;
+                table.reload('logTable', {
+                    where: { path: path, method: method }
+                    , page: { curr: 1 }
                 });
-                layer.close(index);
-            });
-        }
-    });
+            };
 
-    document.getElementById('clearBtn').onclick = function(){
-        layer.confirm('确定清理30天前的日志?', function(index){
-            layui.$.get('/admin/log/clear?days=30', function(res){
-                layer.msg(res.msg || '清理完成');
-                if(res.code === 0) table.reload('logTable');
+            table.on('tool(logTable)', function (obj) {
+                if (obj.event === 'delete') {
+                    layer.confirm('确定删除?', function (index) {
+                        layui.$.get('/admin/log/delete?id=' + obj.data.log_id, function (res) {
+                            layer.msg(res.msg || '操作完成');
+                            if (res.code === 0) obj.del();
+                        });
+                        layer.close(index);
+                    });
+                }
             });
-            layer.close(index);
+
+            document.getElementById('clearBtn').onclick = function () {
+                layer.confirm('确定清理30天前的日志?', function (index) {
+                    layui.$.get('/admin/log/clear?days=30', function (res) {
+                        layer.msg(res.msg || '清理完成');
+                        if (res.code === 0) table.reload('logTable');
+                    });
+                    layer.close(index);
+                });
+            };
         });
-    };
-});
-</script>
+    </script>
 </body>
+
 </html>

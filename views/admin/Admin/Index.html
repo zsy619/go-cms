@@ -79,19 +79,7 @@
                         return '<input type="number" name="sort_id" user_id="' + d.user_id + '" value="' + d.sort_id + '" class="layui-input" style="" />';
                     }
                 },
-                { title: '操作', width: 150, align: "center", fixed: "right", templet: function (d){
-                        var htmlValue = "<div class=\"layui-btn-container layui-btn-group\">\n";
-                        if ("{{.roleMap}}" != null && "{{.roleMap.IsSuccess}}" === "true") {
-                            if ("{{.roleMap.IsHasEdit}}" === "true") {
-                                htmlValue += "<a class=\"layui-btn layui-btn-normal layui-btn-xs data-count-edit layui-btn-radius\" lay-event=\"edit\"><i class=\"layui-icon layui-icon-edit\"></i>编辑</a>\n";
-                            }
-                            if ("{{.roleMap.IsHasDelete}}" === "true") {
-                                htmlValue += "<a class=\"layui-btn layui-btn-xs layui-btn-danger data-count-delete layui-btn-radius\" lay-event=\"delete\"><i class=\"layui-icon layui-icon-close\"></i>删除</a>\n";
-                            }
-                        }
-                        htmlValue += "</div>";
-                        return htmlValue;
-                    } }
+                { title: '操作', width: 210, align: "center", fixed: "right", toolbar: '#currentTableBar' }
             ]],
             limits: [10, 15, 20, 25, 50, 100],
             limit: 20,
@@ -111,12 +99,12 @@
                     });
                 });
             },
-            before: function (){
-                if ("{{.roleMap}}" != null && "{{.roleMap.IsSuccess}}" === "true"){
-                    if ("{{.roleMap.IsHasAdd}}" === "false"){
+            before: function () {
+                if ("{{.roleMap}}" != null && "{{.roleMap.IsSuccess}}" === "true") {
+                    if ("{{.roleMap.IsHasAdd}}" === "false") {
                         $("button[lay-event='add']").remove();
                     }
-                    if ("{{.roleMap.IsHasEdit}}" === "false"){
+                    if ("{{.roleMap.IsHasEdit}}" === "false") {
                         $("button[lay-event='save']").remove();
                     }
                 }
